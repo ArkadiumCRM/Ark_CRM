@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Operations / Email & Kalender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+/* ===== EMAIL & KALENDER — Scope Styles ===== */
+
+/* Segment-Toggle im Banner (Email ↔ Kalender) */
+.mode-seg { display:inline-flex; border:1px solid var(--border-strong); border-radius:3px; overflow:hidden; background:var(--surface); }
+.mode-seg button { padding:6px 16px; font-size:12.5px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-mid); font-family:inherit; border-right:1px solid var(--border); display:inline-flex; align-items:center; gap:6px; }
+.mode-seg button:last-child { border-right:none; }
+.mode-seg button:hover { background:var(--bg); color:var(--text); }
+.mode-seg button.active { background:var(--accent); color:#fff; font-weight:600; }
+
+/* Mode-Container */
+.mode-pane { display:none; }
+.mode-pane.active { display:block; }
+
+/* ===== EMAIL MODE ===== */
+.email-3pane {
+  display:grid; grid-template-columns:220px 340px 1fr;
+  height:calc(100vh - 185px);
+  background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  overflow:hidden; box-shadow:var(--shadow-sm);
+}
+@media (max-width:1280px) { .email-3pane { grid-template-columns:200px 320px 1fr; } }
+
+/* Folders (Pane 1) */
+.ep-folders { border-right:1px solid var(--border); padding:10px 0; background:var(--bg); overflow-y:auto; }
+.ep-folder-head { font-size:9px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); padding:12px 14px 4px; font-weight:600; }
+.ep-folder { display:flex; align-items:center; gap:8px; padding:7px 14px; font-size:12.5px; cursor:pointer; color:var(--text-mid); border-left:2px solid transparent; transition:0.15s; }
+.ep-folder:hover { background:var(--surface); color:var(--text); }
+.ep-folder.active { background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+.ep-folder .ep-folder-icon { width:16px; text-align:center; flex-shrink:0; }
+.ep-folder-count { margin-left:auto; font-size:10.5px; color:var(--text-light); background:var(--surface); padding:1px 6px; border-radius:8px; font-weight:500; }
+.ep-folder.active .ep-folder-count { background:var(--accent); color:#fff; }
+.ep-folder.alert .ep-folder-count { background:var(--red); color:#fff; }
+
+/* Mail-List (Pane 2) */
+.ep-list { border-right:1px solid var(--border); overflow-y:auto; background:var(--surface); }
+.ep-list-head {
+  padding:10px 14px; font-size:11.5px; color:var(--text-mid); border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--surface); position:sticky; top:0; z-index:3;
+}
+.ep-list-search { flex:1; padding:4px 8px; font-size:11px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+.ep-list-filter-bar { display:flex; gap:4px; padding:6px 14px; background:var(--surface); border-bottom:1px solid var(--border); font-size:11px; flex-wrap:wrap; }
+.ep-filter-pill { padding:3px 10px; border:1px solid var(--border); border-radius:12px; cursor:pointer; color:var(--text-mid); font-size:11px; }
+.ep-filter-pill:hover { border-color:var(--accent-mid); color:var(--accent); }
+.ep-filter-pill.active { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:500; }
+
+.ep-mail { padding:10px 14px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.1s; }
+.ep-mail:hover { background:var(--bg); }
+.ep-mail.active { background:var(--accent-soft); border-left:3px solid var(--accent); padding-left:11px; }
+.ep-mail.unread .ep-mail-from,
+.ep-mail.unread .ep-mail-sub { font-weight:600; color:var(--text); }
+.ep-mail-top { display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; margin-bottom:2px; gap:6px; }
+.ep-mail-from { color:var(--text); font-weight:500; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ep-mail-time { font-size:10.5px; color:var(--text-light); flex-shrink:0; font-weight:400; }
+.ep-mail-sub { font-size:12.5px; color:var(--text-mid); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ep-mail-prev { font-size:11px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.4; }
+.ep-mail-meta { display:flex; gap:6px; margin-top:5px; align-items:center; }
+.ep-mail-chip { display:inline-block; font-size:9.5px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.3px; }
+.chip-kandidat { background:var(--blue-soft); color:var(--blue); }
+.chip-mandat { background:var(--gold-soft); color:var(--gold); }
+.chip-account { background:var(--accent-soft); color:var(--accent); }
+.chip-unbekannt { background:var(--amber-soft); color:var(--amber); }
+.chip-auto { background:var(--purple-soft); color:var(--purple); }
+.ep-mail-icon { font-size:10px; color:var(--text-light); margin-left:auto; }
+.ep-mail-icon.attach::after { content:'📎'; }
+.ep-mail-icon.flagged::after { content:'⚑'; color:var(--red); }
+
+/* Reader (Pane 3) */
+.ep-reader { overflow-y:auto; background:var(--surface); display:flex; flex-direction:column; }
+.ep-rdr-head { padding:18px 22px 12px; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:2; }
+.ep-rdr-sub { font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); font-weight:700; letter-spacing:-0.01em; margin-bottom:10px; line-height:1.25; }
+.ep-rdr-meta-row { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--text-mid); margin-bottom:4px; }
+.ep-rdr-from strong { color:var(--text); font-weight:600; }
+.ep-rdr-meta-bottom { display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:11.5px; color:var(--text-light); margin-top:8px; }
+.linked-entity {
+  display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
+  background:var(--accent-soft); color:var(--accent); border-radius:3px;
+  font-size:11px; font-weight:500; cursor:pointer; text-decoration:none; border:1px solid transparent;
+}
+.linked-entity:hover { border-color:var(--accent); }
+.linked-entity.mandat { background:var(--gold-soft); color:var(--gold); }
+.linked-entity.mandat:hover { border-color:var(--gold); }
+.linked-entity.kandidat { background:var(--blue-soft); color:var(--blue); }
+.linked-entity.kandidat:hover { border-color:var(--blue); }
+.ep-rdr-body { padding:18px 22px; font-size:13px; line-height:1.65; color:var(--text); flex:1; }
+.ep-rdr-body p { margin-bottom:12px; }
+.ep-rdr-body .signature { color:var(--text-mid); font-size:12.5px; border-top:1px solid var(--border-soft, var(--border)); padding-top:10px; margin-top:16px; }
+
+.ep-attach-bar { padding:8px 22px; background:var(--bg); border-top:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; font-size:11.5px; }
+.ep-attach-item { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; background:var(--surface); border:1px solid var(--border); border-radius:3px; cursor:pointer; color:var(--text-mid); }
+.ep-attach-item:hover { border-color:var(--accent); color:var(--accent); }
+
+/* Match-Suggestion-Banner (für Unbekannt-Mails) */
+.match-banner {
+  background:color-mix(in srgb, var(--amber) 6%, transparent); border-left:3px solid var(--amber);
+  padding:10px 14px; margin:10px 22px 0; font-size:12px; display:flex; align-items:center; gap:10px; border-radius:3px;
+}
+.match-banner-text { flex:1; }
+.match-banner-text strong { color:var(--amber); font-weight:600; }
+
+/* Inline-Quick-Reply */
+.ep-quick-reply { padding:12px 22px; border-top:1px solid var(--border); background:var(--bg); }
+.ep-qr-collapsed {
+  padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  font-size:12px; color:var(--text-light); cursor:text; display:flex; align-items:center; gap:8px;
+}
+.ep-qr-collapsed:hover { border-color:var(--accent-mid); }
+.ep-qr-collapsed::before { content:'↵'; color:var(--text-mid); font-size:14px; }
+.ep-qr-expanded { display:none; background:var(--surface); border:1px solid var(--accent-mid); border-radius:3px; box-shadow:0 0 0 3px var(--accent-soft); }
+.ep-quick-reply.expanded .ep-qr-collapsed { display:none; }
+.ep-quick-reply.expanded .ep-qr-expanded { display:block; }
+.ep-qr-to { padding:6px 14px; font-size:11.5px; color:var(--text-mid); border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:center; }
+.ep-qr-to strong { color:var(--text); }
+.ep-qr-textarea { width:100%; padding:12px 14px; border:none; outline:none; resize:vertical; min-height:100px; font-family:inherit; font-size:13px; background:var(--surface); color:var(--text); }
+.ep-qr-foot { display:flex; gap:8px; align-items:center; padding:8px 14px; border-top:1px solid var(--border); }
+.ep-qr-foot .spacer { flex:1; }
+.ep-qr-hint { font-size:10.5px; color:var(--text-light); font-style:italic; }
+
+/* Reader Actions Bar */
+.ep-actions-bar { padding:10px 22px; border-top:1px solid var(--border); background:var(--surface); display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.ep-actions-bar .spacer { flex:1; }
+
+/* ===== KALENDER MODE ===== */
+.cal-wrap {
+  display:grid; grid-template-columns:220px 1fr;
+  height:calc(100vh - 185px);
+  background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  overflow:hidden; box-shadow:var(--shadow-sm);
+}
+@media (max-width:1280px) { .cal-wrap { grid-template-columns:200px 1fr; } }
+
+/* Sidebar */
+.cal-side { border-right:1px solid var(--border); background:var(--bg); overflow-y:auto; padding:12px 0; }
+
+/* Mini-Month-Cal */
+.mini-cal { padding:0 12px 14px; border-bottom:1px solid var(--border); }
+.mc-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:2px 2px; }
+.mc-title { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); }
+.mc-nav { color:var(--text-light); cursor:pointer; padding:2px 6px; font-size:14px; border-radius:2px; }
+.mc-nav:hover { background:var(--surface); color:var(--text); }
+.mc-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; font-size:10.5px; text-align:center; }
+.mc-dow { color:var(--text-light); padding:3px 0; font-weight:600; font-size:9.5px; }
+.mc-day { padding:5px 0; color:var(--text-mid); cursor:pointer; border-radius:2px; transition:0.1s; }
+.mc-day:hover { background:var(--accent-soft); color:var(--accent); }
+.mc-day.today { background:var(--accent); color:#fff; font-weight:700; }
+.mc-day.today:hover { background:var(--accent-mid); color:#fff; }
+.mc-day.has-ev { font-weight:600; color:var(--accent); }
+.mc-day.has-ev::after { content:''; display:block; width:3px; height:3px; border-radius:50%; background:var(--gold); margin:1px auto 0; }
+.mc-day.today.has-ev::after { background:#fff; }
+.mc-day.other { color:var(--border-strong); }
+
+/* Filter-Sections */
+.cal-filter-sec { padding:12px 14px; border-bottom:1px solid var(--border); }
+.cal-filter-head { font-size:9.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); margin-bottom:8px; font-weight:600; }
+.cal-filter-item { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:11.5px; color:var(--text-mid); cursor:pointer; }
+.cal-filter-item:hover { color:var(--text); }
+.cal-filter-item input[type=checkbox] { margin:0; }
+.cal-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.cal-dot.coaching { background:var(--blue); }
+.cal-dot.debriefing { background:var(--purple); }
+.cal-dot.mandat { background:var(--gold); }
+.cal-dot.team { background:var(--green); }
+.cal-dot.extern { background:var(--red); }
+.cal-dot.interview { background:var(--amber); }
+
+.cal-emp-item { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:11.5px; color:var(--text-mid); cursor:pointer; }
+.cal-emp-sign { width:22px; height:22px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-weight:700; font-size:10px; display:inline-flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; }
+
+/* Main Calendar */
+.cal-main { overflow:auto; background:var(--surface); display:flex; flex-direction:column; }
+.cal-toolbar { padding:10px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; background:var(--surface); position:sticky; top:0; z-index:5; flex-wrap:wrap; }
+.cal-month { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); font-weight:700; margin:0 4px; }
+.cal-toolbar .spacer { flex:1; }
+.view-seg { display:inline-flex; border:1px solid var(--border-strong); border-radius:3px; overflow:hidden; }
+.view-seg button { padding:5px 12px; font-size:11.5px; font-weight:500; cursor:pointer; border:none; background:var(--surface); color:var(--text-mid); font-family:inherit; border-right:1px solid var(--border); }
+.view-seg button:last-child { border-right:none; }
+.view-seg button.active { background:var(--accent); color:#fff; font-weight:600; }
+
+/* Week Grid */
+.cal-view { display:none; flex:1; overflow:auto; }
+.cal-view.active { display:block; }
+
+.cal-week-grid { display:grid; grid-template-columns:54px repeat(7,1fr); border-top:1px solid var(--border); }
+.cal-week-head {
+  position:sticky; top:0; background:var(--surface); z-index:4;
+  padding:8px 4px; border-bottom:1px solid var(--border); border-right:1px solid var(--border-soft, var(--border));
+  font-size:10px; text-align:center; color:var(--text-light); font-weight:600; text-transform:uppercase; letter-spacing:0.8px;
+}
+.cal-week-head.today { background:var(--accent-soft); color:var(--accent); }
+.cal-dow-num { font-family:'Libre Baskerville',serif; font-size:18px; color:var(--text); display:block; margin-top:2px; font-weight:700; }
+.cal-week-head.today .cal-dow-num { color:var(--accent); }
+.cal-time { font-size:10px; color:var(--text-light); padding:4px 6px; text-align:right; border-right:1px solid var(--border-soft, var(--border)); border-bottom:1px solid var(--border-soft, var(--border)); line-height:1; }
+.cal-slot { border-right:1px solid var(--border-soft, var(--border)); border-bottom:1px solid var(--border-soft, var(--border)); position:relative; min-height:32px; cursor:pointer; transition:background 0.1s; }
+.cal-slot:hover { background:var(--bg); }
+.cal-slot.today { background:color-mix(in srgb, var(--accent) 2%, transparent); }
+
+.cal-event {
+  position:absolute; left:3px; right:3px; padding:4px 7px; border-radius:2px;
+  font-size:10.5px; font-weight:500; overflow:hidden; cursor:pointer;
+  border-left:3px solid; background:var(--surface); z-index:2;
+  box-shadow:0 1px 3px rgba(0,0,0,0.09); transition:0.1s;
+}
+.cal-event:hover { box-shadow:0 2px 6px rgba(0,0,0,0.18); transform:translateY(-1px); }
+.cal-event.coaching { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-event.debriefing { border-color:var(--purple); background:var(--purple-soft); color:var(--purple); }
+.cal-event.mandat { border-color:var(--gold); background:var(--gold-soft); color:var(--gold); }
+.cal-event.team { border-color:var(--green); background:var(--green-soft); color:var(--green); }
+.cal-event.extern { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.cal-event.interview { border-color:var(--amber); background:var(--amber-soft); color:var(--amber); }
+.cal-event.colleague { opacity:0.45; border-left-style:dashed; }
+.cal-event-title { font-weight:600; line-height:1.25; }
+.cal-event-time { font-size:9.5px; opacity:0.8; line-height:1.25; }
+.cal-event-entity { font-size:9px; opacity:0.75; margin-top:1px; }
+
+/* Tag-View */
+.cal-day-grid { display:grid; grid-template-columns:60px 1fr; border-top:1px solid var(--border); }
+.cal-day-slot { border-right:1px solid var(--border-soft, var(--border)); border-bottom:1px solid var(--border-soft, var(--border)); position:relative; min-height:40px; padding-right:8px; }
+.cal-day-time { font-size:10.5px; color:var(--text-light); padding:4px 8px; text-align:right; border-right:1px solid var(--border); border-bottom:1px solid var(--border-soft, var(--border)); line-height:1; }
+.cal-day-event { position:absolute; left:6px; right:6px; padding:6px 10px; border-radius:3px; font-size:12px; border-left:4px solid; background:var(--surface); box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; }
+.cal-day-event.coaching { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-day-event.debriefing { border-color:var(--purple); background:var(--purple-soft); color:var(--purple); }
+.cal-day-event.mandat { border-color:var(--gold); background:var(--gold-soft); color:var(--gold); }
+.cal-day-event.team { border-color:var(--green); background:var(--green-soft); color:var(--green); }
+.cal-day-event.extern { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.cal-day-event-top { font-weight:600; font-size:12.5px; }
+.cal-day-event-meta { font-size:10.5px; opacity:0.85; margin-top:2px; }
+
+/* Monat-View */
+.cal-month-grid { display:grid; grid-template-columns:repeat(7,1fr); border-top:1px solid var(--border); border-left:1px solid var(--border); }
+.cal-mc-dow { background:var(--bg); padding:8px 4px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); font-size:10px; text-align:center; color:var(--text-light); font-weight:600; text-transform:uppercase; letter-spacing:0.8px; }
+.cal-mc-day { min-height:112px; padding:6px 6px 3px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--surface); position:relative; cursor:pointer; transition:0.1s; display:flex; flex-direction:column; gap:2px; }
+.cal-mc-day:hover { background:var(--bg); }
+.cal-mc-day.other { background:var(--bg); color:var(--text-light); }
+.cal-mc-day.today { background:var(--accent-soft); }
+.cal-mc-day-num { font-family:'Libre Baskerville',serif; font-weight:700; font-size:13px; color:var(--text-mid); }
+.cal-mc-day.today .cal-mc-day-num { color:var(--accent); }
+.cal-mc-event { padding:2px 5px; border-radius:2px; font-size:10px; border-left:2px solid; background:var(--surface); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.3; }
+.cal-mc-event.coaching { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-mc-event.debriefing { border-color:var(--purple); background:var(--purple-soft); color:var(--purple); }
+.cal-mc-event.mandat { border-color:var(--gold); background:var(--gold-soft); color:var(--gold); }
+.cal-mc-event.team { border-color:var(--green); background:var(--green-soft); color:var(--green); }
+.cal-mc-event.extern { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.cal-mc-more { font-size:10px; color:var(--text-light); padding:0 4px; cursor:pointer; font-weight:500; }
+.cal-mc-more:hover { color:var(--accent); }
+
+/* Compose-Drawer Form */
+.form-row { margin-bottom:12px; }
+.form-row label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-light); margin-bottom:4px; font-weight:600; }
+.form-row input[type=text], .form-row input[type=email], .form-row textarea, .form-row select {
+  width:100%; padding:7px 10px; font-size:13px; font-family:inherit;
+  background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:3px;
+}
+.form-row input:focus, .form-row textarea:focus, .form-row select:focus {
+  outline:none; border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft);
+}
+.form-row textarea { resize:vertical; min-height:200px; line-height:1.55; }
+/* Defensive: alle drawer-body Inputs/Textareas nutzen volle Breite (auch ohne .form-row-Wrapper) */
+.drawer-body textarea, .drawer-body input[type=text], .drawer-body input[type=email], .drawer-body input[type=datetime-local], .drawer-body select {
+  width:100%; box-sizing:border-box; font-family:inherit; font-size:13px;
+  padding:7px 10px; border:1px solid var(--border); border-radius:3px;
+  background:var(--surface); color:var(--text);
+}
+.drawer-body textarea { resize:vertical; min-height:120px; line-height:1.55; }
+.drawer-body input:focus, .drawer-body textarea:focus, .drawer-body select:focus {
+  outline:none; border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft);
+}
+.form-row.compact { display:grid; grid-template-columns:80px 1fr; gap:10px; align-items:center; }
+.form-row.compact label { margin-bottom:0; text-transform:none; font-size:12px; color:var(--text-mid); letter-spacing:0; font-weight:500; }
+.form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.tpl-picker-btn {
+  display:inline-flex; align-items:center; gap:6px; padding:5px 10px;
+  background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent);
+  border-radius:3px; cursor:pointer; font-size:11.5px; font-weight:500;
+}
+.tpl-picker-btn:hover { background:var(--accent); color:#fff; }
+
+.attach-upload {
+  border:1px dashed var(--border-strong); border-radius:3px; padding:18px;
+  text-align:center; color:var(--text-light); font-size:12px; cursor:pointer;
+}
+.attach-upload:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+
+.auto-classif-banner {
+  padding:10px 12px; background:var(--purple-soft); border-left:3px solid var(--purple);
+  border-radius:3px; margin-bottom:12px; font-size:12px; color:var(--text);
+}
+.auto-classif-banner strong { color:var(--purple); }
+
+/* Template-Picker-Drawer Grid */
+.tpl-grid-list { display:flex; flex-direction:column; gap:8px; }
+.tpl-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  padding:12px 14px; cursor:pointer; transition:0.15s;
+}
+.tpl-card:hover { border-color:var(--accent); box-shadow:var(--shadow-sm); }
+.tpl-card.automation { border-left:3px solid var(--amber); }
+.tpl-card-head { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.tpl-card-name { font-weight:600; font-size:13px; color:var(--text); flex:1; }
+.tpl-card-badge { font-size:9px; padding:1px 6px; background:var(--amber-soft); color:var(--amber); border-radius:2px; font-weight:700; letter-spacing:0.3px; }
+.tpl-card-sub { font-size:11.5px; color:var(--text-light); }
+.tpl-card-preview { margin-top:6px; padding:6px 10px; background:var(--bg); border-radius:2px; font-size:11px; color:var(--text-mid); font-style:italic; }
+
+.tpl-cat-head { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; padding:10px 0 4px; }
+
+/* Konten-Drawer */
+.acc-status-card {
+  padding:12px 14px; border:1px solid var(--border); border-radius:3px; margin-bottom:10px;
+  background:var(--surface);
+}
+.acc-status-card.ok { border-left:3px solid var(--green); }
+.acc-status-card.warn { border-left:3px solid var(--amber); }
+.acc-status-card.err { border-left:3px solid var(--red); }
+.acc-status-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.acc-status-name { font-weight:600; font-size:13px; flex:1; }
+.acc-status-pill { font-size:10px; padding:2px 8px; border-radius:2px; font-weight:700; letter-spacing:0.3px; text-transform:uppercase; }
+.acc-status-pill.ok { background:var(--green-soft); color:var(--green); }
+.acc-status-pill.warn { background:var(--amber-soft); color:var(--amber); }
+.acc-status-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11.5px; }
+.acc-status-grid div { display:flex; justify-content:space-between; gap:6px; color:var(--text-mid); }
+.acc-status-grid strong { color:var(--text); font-weight:500; }
+
+.ignore-list { border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.ignore-row { padding:8px 12px; display:flex; align-items:center; gap:10px; font-size:12px; border-bottom:1px solid var(--border); }
+.ignore-row:last-child { border-bottom:none; }
+.ignore-row .x { color:var(--text-light); cursor:pointer; font-size:14px; }
+.ignore-row .x:hover { color:var(--red); }
+.ignore-type { font-size:10px; padding:1px 6px; background:var(--bg); border-radius:2px; color:var(--text-light); font-weight:600; letter-spacing:0.3px; text-transform:uppercase; }
+
+/* Entity-Match-Drawer */
+.match-list { display:flex; flex-direction:column; gap:8px; }
+.match-row {
+  display:grid; grid-template-columns:40px 1fr auto auto; gap:10px; align-items:center;
+  padding:10px 14px; border:1px solid var(--border); border-radius:3px; background:var(--surface); cursor:pointer;
+}
+.match-row:hover { border-color:var(--accent); background:var(--accent-soft); }
+.match-avatar { width:36px; height:36px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center; }
+.match-info { min-width:0; }
+.match-name { font-weight:600; font-size:13px; color:var(--text); }
+.match-sub { font-size:11px; color:var(--text-light); }
+.match-score { font-family:'Libre Baskerville',serif; font-weight:700; font-size:15px; color:var(--accent); }
+.match-score-lbl { font-size:9px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.6px; }
+.match-score-wrap { text-align:center; }
+
+/* Event-Drawer: Attendees-List */
+.att-list { display:flex; flex-direction:column; gap:6px; }
+.att-row { display:grid; grid-template-columns:32px 1fr auto; gap:10px; align-items:center; padding:6px 10px; background:var(--bg); border-radius:3px; font-size:12px; }
+.att-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-family:'Libre Baskerville',serif; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; }
+.att-name { font-weight:500; }
+.att-role { font-size:10.5px; color:var(--text-light); }
+.att-status { font-size:10px; padding:2px 6px; border-radius:2px; font-weight:600; }
+.att-status.accepted { background:var(--green-soft); color:var(--green); }
+.att-status.tentative { background:var(--amber-soft); color:var(--amber); }
+.att-status.declined { background:var(--red-soft); color:var(--red); }
+.att-status.pending { background:var(--bg); color:var(--text-light); border:1px dashed var(--border-strong); }
+
+/* Teams-Meeting-Link */
+.teams-link-row {
+  padding:10px 12px; background:color-mix(in srgb, #6264A7 6%, transparent); border:1px solid color-mix(in srgb, #6264A7 25%, var(--border));
+  border-radius:3px; display:flex; align-items:center; gap:10px; font-size:12px;
+}
+.teams-link-row::before { content:'⏵'; background:#6264A7; color:#fff; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:3px; font-size:12px; font-weight:700; }
+.teams-link-url { flex:1; color:var(--accent); font-family:monospace; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Coaching-Notiz-Feld (conditional) */
+.coach-notes-box {
+  padding:12px 14px; background:var(--blue-soft); border-left:3px solid var(--blue); border-radius:3px; margin-top:10px;
+}
+.coach-notes-box h5 { font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:var(--blue); margin-bottom:8px; font-weight:700; }
+
+/* Action-Buttons in Reader */
+.btn-icon-only { padding:6px 9px; }
+
+/* Toast (success/info) */
+.toast-host { position:fixed; bottom:20px; right:20px; z-index:1000; display:flex; flex-direction:column; gap:8px; }
+.toast { padding:10px 16px; background:var(--green-soft); color:var(--green); border-left:3px solid var(--green); border-radius:3px; font-size:12.5px; box-shadow:var(--shadow); min-width:240px; display:flex; align-items:center; gap:10px; }
+.toast.info { background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); }
+.toast.err { background:var(--red-soft); color:var(--red); border-left-color:var(--red); }
+
+/* ===== MOBILE / TABLET ===== */
+@media (max-width:960px) and (min-width:641px) {
+  .email-3pane { grid-template-columns:180px 280px 1fr; }
+  .cal-wrap { grid-template-columns:180px 1fr; }
+}
+
+@media (max-width:640px) {
+  /* Page-Banner + Mode-Toggle */
+  .page-banner > div { flex-wrap:wrap !important; gap:8px; }
+  .mode-seg button { padding:5px 12px; font-size:11px; }
+
+  /* Email-3-Pane → Mobile-Stack mit Pane-Toggle */
+  .email-3pane {
+    grid-template-columns:1fr !important;
+    height:calc(100vh - 145px);
+    position:relative;
+  }
+  .ep-folders, .ep-list, .ep-reader {
+    position:absolute; inset:0; border-right:none;
+    transition:transform 0.25s ease; background:var(--surface); z-index:1;
+  }
+  /* Default-State: Mail-Liste sichtbar, Folders + Reader slide-in */
+  .ep-folders { transform:translateX(-100%); z-index:3; box-shadow:var(--shadow); }
+  .ep-list { transform:translateX(0); z-index:2; }
+  .ep-reader { transform:translateX(100%); z-index:3; box-shadow:var(--shadow); }
+
+  /* Pane-States (via JS oder data-pane-Attribut auf .email-3pane) */
+  .email-3pane[data-pane="folders"] .ep-folders { transform:translateX(0); }
+  .email-3pane[data-pane="reader"] .ep-reader { transform:translateX(0); }
+
+  /* Mobile-Back-Bar im Pane-Head */
+  .ep-list-head::before,
+  .ep-rdr-head::before {
+    content:"← ";
+    display:inline-block; cursor:pointer; margin-right:8px;
+    font-size:16px; color:var(--accent); font-weight:600;
+  }
+  .ep-folders-head::after {
+    content:""; /* Folders hat kein Back-Button */
+  }
+
+  /* Kompakt: Folder-Pane volle Breite wenn aktiv */
+  .ep-folders { width:100%; }
+  .ep-list { width:100%; }
+  .ep-reader { width:100%; }
+
+  /* Header-Brand kompakt (erbt aus editorial.css) */
+
+  /* Kalender-Mode: Sidebar → Drawer, Main volle Breite */
+  .cal-wrap {
+    grid-template-columns:1fr !important;
+    position:relative;
+  }
+  .cal-side {
+    position:fixed; top:0; left:0; bottom:0; width:260px;
+    transform:translateX(-100%); transition:transform 0.25s ease;
+    z-index:250; background:var(--surface); box-shadow:var(--shadow);
+    padding-top:60px;
+  }
+  .cal-wrap.sidebar-open .cal-side { transform:translateX(0); }
+
+  /* Kalender-Main: Monatsraster 7-col bleibt aber enger */
+  .cal-main { padding:8px; }
+  .mini-cal { display:none; }
+  .cal-week-grid { font-size:10px; }
+
+  /* Reader-Body + Quick-Reply kompakt */
+  .ep-rdr-body { padding:14px 16px; font-size:12.5px; }
+  .ep-rdr-head { padding:14px 16px 10px; }
+  .ep-actions-bar { flex-wrap:wrap; gap:4px; padding:8px 12px; }
+  .ep-actions-bar .btn { font-size:11px; }
+
+  /* Linked-Entities wrappen */
+  .ep-rdr-meta-bottom { flex-wrap:wrap; gap:6px; }
+  .linked-entity { font-size:10px; padding:2px 7px; }
+
+  /* Drawer Email-Compose full-screen (geerbt aus editorial.css) */
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Operations</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="crm.html">Home</a><span class="sep">/</span>
+    <a href="#">Operations</a><span class="sep">/</span>
+    <span class="current">Email & Kalender</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- PAGE BANNER mit Mode-Switch -->
+<div class="page-banner" style="padding:18px 24px 14px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:22px;color:var(--accent);font-weight:700;letter-spacing:-0.01em">📬 Email & Kalender</h1>
+    <span class="muted" id="bannerMeta">7 ungelesen · 4 Termine heute · 3 Entwürfe offen</span>
+    <span class="spacer" style="flex:1"></span>
+    <div class="mode-seg">
+      <button class="active" data-mode="email" onclick="switchMode('email')"><span>✉</span><span>Email</span></button>
+      <button data-mode="cal" onclick="switchMode('cal')"><span>📅</span><span>Kalender</span></button>
+    </div>
+    <button class="btn btn-primary btn-sm" id="bannerCta" onclick="bannerCtaClick()">+ Neue Email</button>
+  </div>
+</div>
+
+<!-- ============================= EMAIL MODE ============================= -->
+<div class="mode-pane active" id="emailMode" style="padding:0 16px 16px">
+
+<div class="email-3pane">
+
+  <!-- Pane 1: Folders -->
+  <div class="ep-folders">
+    <div class="ep-folder-head">Posteingang</div>
+    <div class="ep-folder active" onclick="selectFolder(this,'inbox')"><span class="ep-folder-icon">📥</span><span>Inbox</span><span class="ep-folder-count">7</span></div>
+    <div class="ep-folder" onclick="selectFolder(this,'classified')"><span class="ep-folder-icon">🏷</span><span>Klassifiziert</span><span class="ep-folder-count">124</span></div>
+    <div class="ep-folder alert" onclick="selectFolder(this,'unknown')"><span class="ep-folder-icon">❓</span><span>Unbekannt</span><span class="ep-folder-count">3</span></div>
+
+    <div class="ep-folder-head">Arbeit</div>
+    <div class="ep-folder" onclick="selectFolder(this,'drafts')"><span class="ep-folder-icon">📝</span><span>Entwürfe</span><span class="ep-folder-count">3</span></div>
+    <div class="ep-folder" onclick="selectFolder(this,'sent')"><span class="ep-folder-icon">📤</span><span>Gesendet</span></div>
+    <div class="ep-folder" onclick="selectFolder(this,'archive')"><span class="ep-folder-icon">🗄</span><span>Archiv</span></div>
+
+    <div class="ep-folder-head">Filter nach Kategorie</div>
+    <div class="ep-folder" onclick="selectFolder(this,'cat-kandidat')"><span class="ep-folder-icon">👤</span><span>Kandidat-Mails</span><span class="ep-folder-count">56</span></div>
+    <div class="ep-folder" onclick="selectFolder(this,'cat-mandat')"><span class="ep-folder-icon">🎯</span><span>Mandat / Account</span><span class="ep-folder-count">48</span></div>
+    <div class="ep-folder" onclick="selectFolder(this,'cat-auto')"><span class="ep-folder-icon">⚡</span><span>Template-Automation</span><span class="ep-folder-count">20</span></div>
+
+    <div class="ep-folder-head">Konten & System</div>
+    <div class="ep-folder" onclick="openDrawer('tplDrawer')"><span class="ep-folder-icon">📋</span><span>Templates</span><span class="ep-folder-count">38</span></div>
+    <div class="ep-folder" onclick="openDrawer('kontenDrawer')"><span class="ep-folder-icon">⚙</span><span>Konten & Sync</span></div>
+  </div>
+
+  <!-- Pane 2: Mail-Liste -->
+  <div class="ep-list">
+    <div class="ep-list-head">
+      <span style="font-weight:600;color:var(--text)">Inbox</span>
+      <span style="color:var(--text-light);font-size:11px">7 ungelesen · 18 heute</span>
+    </div>
+    <div class="ep-list-filter-bar">
+      <span class="ep-filter-pill active" onclick="filterMails(this,'all')">Alle</span>
+      <span class="ep-filter-pill" onclick="filterMails(this,'unread')">Ungelesen</span>
+      <span class="ep-filter-pill" onclick="filterMails(this,'flagged')">Markiert</span>
+      <span class="ep-filter-pill" onclick="filterMails(this,'attach')">Mit Anhang</span>
+    </div>
+
+    <div class="ep-mail unread active" onclick="selectMail(this,'m1')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Hans Müller · Muster AG</span>
+        <span class="ep-mail-time">09:42</span>
+      </div>
+      <div class="ep-mail-sub">Re: Kandidatenvorstellung J. Keller — Feedback nach 2nd</div>
+      <div class="ep-mail-prev">Peter, vielen Dank für die Unterlagen. Wir würden gerne in die 3rd Runde mit Herrn Keller...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-mandat">🎯 Muster AG · CFO</span>
+        <span class="ep-mail-icon attach"></span>
+      </div>
+    </div>
+
+    <div class="ep-mail unread" onclick="selectMail(this,'m2')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Tobias Furrer</span>
+        <span class="ep-mail-time">08:15</span>
+      </div>
+      <div class="ep-mail-sub">Coaching-Vorbereitung morgen — Fragen zur Halter AG</div>
+      <div class="ep-mail-prev">Hi Peter, anbei die Firmenpräsentation die Halter AG mir geschickt hat. Ich wollte...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-kandidat">👤 T. Furrer</span>
+        <span class="ep-mail-icon attach"></span>
+      </div>
+    </div>
+
+    <div class="ep-mail unread" onclick="selectMail(this,'m3')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">LinkedIn Recruiter</span>
+        <span class="ep-mail-time">Gestern</span>
+      </div>
+      <div class="ep-mail-sub">3 neue InMails zu Ihrer Suche „CFO Bau Zürich"</div>
+      <div class="ep-mail-prev">Sandra V. hat auf Ihre Nachricht geantwortet. Zwei weitere Empfehlungen...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-unbekannt">❓ Unbekannt</span>
+      </div>
+    </div>
+
+    <div class="ep-mail" onclick="selectMail(this,'m4')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Halter AG · Sandra Weber</span>
+        <span class="ep-mail-time">Gestern</span>
+      </div>
+      <div class="ep-mail-sub">Mandats-Briefing Position CFO — Rücksprache zum Lohnband</div>
+      <div class="ep-mail-prev">Peter, folgende Punkte sind uns seit dem Pitch noch eingefallen. Lohnband 220-240k...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-mandat">🎯 Halter AG</span>
+      </div>
+    </div>
+
+    <div class="ep-mail" onclick="selectMail(this,'m5')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Julia Keller</span>
+        <span class="ep-mail-time">Gestern</span>
+      </div>
+      <div class="ep-mail-sub">Terminbestätigung 3rd Interview 22.04.</div>
+      <div class="ep-mail-prev">Hallo Peter, Termin passt mir. Ich habe Muster AG direkt bestätigt. Danke.</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-kandidat">👤 J. Keller</span>
+      </div>
+    </div>
+
+    <div class="ep-mail unread" onclick="selectMail(this,'m6')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Michael Bachmann</span>
+        <span class="ep-mail-time">Di</span>
+      </div>
+      <div class="ep-mail-sub">Re: Mündliche GOs — Halter-Mandat</div>
+      <div class="ep-mail-prev">Peter, wir haben die Prelead-Liste gesichtet. Freigabe für folgende Profile...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-auto">⚡ Template-Auto</span>
+      </div>
+    </div>
+
+    <div class="ep-mail unread" onclick="selectMail(this,'m7')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">info@xing-businessnetwork.ch</span>
+        <span class="ep-mail-time">Di</span>
+      </div>
+      <div class="ep-mail-sub">Profil-Match — 5 neue passende Kontakte</div>
+      <div class="ep-mail-prev">Aufgrund Ihrer Recherchen könnten diese Profile für Sie relevant sein...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-unbekannt">❓ Unbekannt</span>
+      </div>
+    </div>
+
+    <div class="ep-mail" onclick="selectMail(this,'m8')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Peter Lüthi · Implenia</span>
+        <span class="ep-mail-time">Mo</span>
+      </div>
+      <div class="ep-mail-sub">Potentielles Mandat — Leitung Region Ost</div>
+      <div class="ep-mail-prev">Lieber Peter, wir überlegen eine neue Position im Hochbau Region Ost zu besetzen...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-account">🏢 Implenia</span>
+      </div>
+    </div>
+
+    <div class="ep-mail" onclick="selectMail(this,'m9')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">Sandra Vogt</span>
+        <span class="ep-mail-time">15.04.</span>
+      </div>
+      <div class="ep-mail-sub">Dankeschön für das Gespräch — Unterlagen anbei</div>
+      <div class="ep-mail-prev">Peter, vielen Dank für das offene Gespräch gestern. Anbei der aktualisierte CV...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-kandidat">👤 S. Vogt</span>
+        <span class="ep-mail-icon attach"></span>
+      </div>
+    </div>
+
+    <div class="ep-mail" onclick="selectMail(this,'m10')">
+      <div class="ep-mail-top">
+        <span class="ep-mail-from">no-reply@outlook.system</span>
+        <span class="ep-mail-time">15.04.</span>
+      </div>
+      <div class="ep-mail-sub">Kalenderbestätigung: Pitch Halter AG · Fr 17.04. 09:00</div>
+      <div class="ep-mail-prev">Termin automatisch bestätigt. Teams-Link: https://teams.ms/...</div>
+      <div class="ep-mail-meta">
+        <span class="ep-mail-chip chip-auto">⚡ System-Mail</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pane 3: Reader -->
+  <div class="ep-reader">
+
+    <div class="ep-rdr-head">
+      <div class="ep-rdr-sub">Re: Kandidatenvorstellung J. Keller — Feedback nach 2nd</div>
+      <div class="ep-rdr-meta-row">
+        <div>
+          <div class="ep-rdr-from">Von <strong>Hans Müller</strong> &lt;h.mueller@muster.ch&gt;</div>
+          <div class="ep-rdr-from" style="margin-top:2px">An <strong>Peter Wiederkehr</strong> &lt;pw@arkadium.ch&gt;</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--text-light)">Heute, 09:42</div>
+          <div style="font-size:10.5px;color:var(--text-light);margin-top:2px">Thread · 4 Nachrichten</div>
+        </div>
+      </div>
+      <div class="ep-rdr-meta-bottom">
+        <span class="linked-entity mandat" onclick="openEntity('mandat')">🎯 Mandat · Muster AG CFO</span>
+        <span class="linked-entity kandidat" onclick="openEntity('kandidat')">👤 Julia Keller</span>
+        <span style="font-size:11px;color:var(--text-light)">Prozess-Stage: 2nd · → 3rd anstehend</span>
+      </div>
+    </div>
+
+    <div class="ep-rdr-body">
+      <p>Peter,</p>
+      <p>vielen Dank für die Kandidatenunterlagen zu Frau Keller. Die 2nd-Runde gestern verlief sehr positiv. Wir würden sie gerne zur 3rd-Runde einladen, idealerweise nächste Woche.</p>
+      <p>Zwei Punkte aus der Diskussion:</p>
+      <ol style="margin-left:20px;margin-bottom:12px">
+        <li style="margin-bottom:6px"><strong>Lohnband:</strong> Wir sind bei 220–240k · Bonus 20%. Bitte prüfen ob das zu ihren Vorstellungen passt.</li>
+        <li><strong>Startdatum:</strong> Frühestens 01.07. aufgrund ihrer Kündigungsfrist — ist das realistisch?</li>
+      </ol>
+      <p>Könnten wir das morgen kurz telefonisch besprechen? Ich bin ab 10:00 erreichbar.</p>
+      <p>Beste Grüsse</p>
+      <div class="signature">
+        Hans Müller<br>
+        Head HR · Muster AG<br>
+        +41 44 123 45 67 · h.mueller@muster.ch
+      </div>
+    </div>
+
+    <div class="ep-attach-bar">
+      <span class="ep-attach-item">📎 Feedback_Keller_2nd.pdf · 240 KB</span>
+      <span class="ep-attach-item">📎 Onboarding_Muster.pdf · 1.2 MB</span>
+    </div>
+
+    <!-- Quick-Reply inline -->
+    <div class="ep-quick-reply" id="quickReply">
+      <div class="ep-qr-collapsed" onclick="expandQuickReply()">Schnellantwort schreiben…</div>
+      <div class="ep-qr-expanded">
+        <div class="ep-qr-to">An: <strong>Hans Müller</strong> &lt;h.mueller@muster.ch&gt;</div>
+        <textarea class="ep-qr-textarea" placeholder="Antwort schreiben…&#10;&#10;Tipp: ⌘+Enter zum Senden · Esc zum Abbrechen"></textarea>
+        <div class="ep-qr-foot">
+          <button class="btn btn-primary btn-sm" onclick="sendQuickReply()">Senden</button>
+          <button class="btn btn-sm" onclick="expandToDrawer()">↗ Als Entwurf erweitern</button>
+          <span class="spacer"></span>
+          <span class="ep-qr-hint">Für Anhänge · CC · Template → „Erweitern"</span>
+          <button class="btn btn-sm" onclick="collapseQuickReply()">× Verwerfen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions-Bar -->
+    <div class="ep-actions-bar">
+      <button class="btn btn-primary btn-sm" onclick="openComposeDrawer('reply')">↵ Antworten</button>
+      <button class="btn btn-sm" onclick="openComposeDrawer('reply-all')">↩ Allen</button>
+      <button class="btn btn-sm" onclick="openComposeDrawer('forward')">→ Weiterleiten</button>
+      <button class="btn btn-sm" onclick="openDrawer('tplDrawer')">📝 Mit Template</button>
+      <button class="btn btn-sm" onclick="logAsActivity()">→ Als Aktivität erfassen</button>
+      <button class="btn btn-sm" onclick="openDrawer('eventDrawer')">📅 Termin vereinbaren</button>
+      <span class="spacer"></span>
+      <button class="btn btn-sm btn-icon-only" title="Archivieren">🗄</button>
+      <button class="btn btn-sm btn-icon-only" title="Löschen">🗑</button>
+      <button class="btn btn-sm btn-icon-only" title="Mehr">⋯</button>
+    </div>
+
+  </div>
+
+</div>
+</div><!-- /emailMode -->
+
+<!-- ============================= KALENDER MODE ============================= -->
+<div class="mode-pane" id="calMode" style="padding:0 16px 16px">
+
+<div class="cal-wrap">
+
+  <!-- Sidebar -->
+  <div class="cal-side">
+    <div class="mini-cal">
+      <div class="mc-head">
+        <span class="mc-nav" onclick="miniCalNav(-1)">‹</span>
+        <span class="mc-title" id="miniCalTitle">April 2026</span>
+        <span class="mc-nav" onclick="miniCalNav(1)">›</span>
+      </div>
+      <div class="mc-grid" id="miniCalGrid">
+        <span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">F</span><span class="mc-dow">S</span><span class="mc-dow">S</span>
+        <span class="mc-day other">30</span><span class="mc-day other">31</span><span class="mc-day">1</span><span class="mc-day">2</span><span class="mc-day">3</span><span class="mc-day">4</span><span class="mc-day">5</span>
+        <span class="mc-day">6</span><span class="mc-day has-ev">7</span><span class="mc-day">8</span><span class="mc-day has-ev">9</span><span class="mc-day">10</span><span class="mc-day">11</span><span class="mc-day">12</span>
+        <span class="mc-day has-ev">13</span><span class="mc-day has-ev">14</span><span class="mc-day has-ev">15</span><span class="mc-day has-ev">16</span><span class="mc-day today has-ev">17</span><span class="mc-day">18</span><span class="mc-day">19</span>
+        <span class="mc-day">20</span><span class="mc-day has-ev">21</span><span class="mc-day has-ev">22</span><span class="mc-day">23</span><span class="mc-day">24</span><span class="mc-day">25</span><span class="mc-day">26</span>
+        <span class="mc-day">27</span><span class="mc-day">28</span><span class="mc-day has-ev">29</span><span class="mc-day">30</span><span class="mc-day other">1</span><span class="mc-day other">2</span><span class="mc-day other">3</span>
+      </div>
+    </div>
+
+    <div class="cal-filter-sec">
+      <div class="cal-filter-head">Aktivitäts-Typ</div>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot coaching"></span><span>Coaching</span></label>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot debriefing"></span><span>Debriefing</span></label>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot mandat"></span><span>Mandats-Akquise</span></label>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot interview"></span><span>Interview (extern)</span></label>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot team"></span><span>Team-intern</span></label>
+      <label class="cal-filter-item"><input type="checkbox" checked><span class="cal-dot extern"></span><span>Extern / Kunde</span></label>
+    </div>
+
+    <div class="cal-filter-sec">
+      <div class="cal-filter-head">Mitarbeiter</div>
+      <label class="cal-emp-item"><input type="checkbox" checked><span class="cal-emp-sign">PW</span><span>Peter · eigen</span></label>
+      <label class="cal-emp-item"><input type="checkbox"><span class="cal-emp-sign" style="background:var(--purple-soft);color:var(--purple)">JV</span><span>Jonas · frei/busy</span></label>
+      <label class="cal-emp-item"><input type="checkbox"><span class="cal-emp-sign" style="background:var(--gold-soft);color:var(--gold)">LR</span><span>Lea · frei/busy</span></label>
+      <label class="cal-emp-item"><input type="checkbox"><span class="cal-emp-sign" style="background:var(--green-soft);color:var(--green)">MF</span><span>Manuel · frei/busy</span></label>
+      <div style="font-size:10px;color:var(--text-light);margin-top:6px;font-style:italic;line-height:1.4">Kollegen-Kalender zeigen nur frei/busy (DSG)</div>
+    </div>
+
+    <div class="cal-filter-sec">
+      <div class="cal-filter-head">Quick-Links</div>
+      <div class="ep-folder" style="padding:5px 0;font-size:11.5px" onclick="jumpToToday()"><span>📍</span><span>Heute</span></div>
+      <div class="ep-folder" style="padding:5px 0;font-size:11.5px" onclick="openNewEventDrawer()"><span>➕</span><span>Neuer Termin</span></div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="cal-main">
+    <div class="cal-toolbar">
+      <button class="btn btn-sm" onclick="calNav(-1)">‹</button>
+      <button class="btn btn-sm" onclick="jumpToToday()">Heute</button>
+      <button class="btn btn-sm" onclick="calNav(1)">›</button>
+      <span class="cal-month" id="calMainTitle">KW 16 · 13.–19. April 2026</span>
+      <span class="spacer"></span>
+      <div class="view-seg">
+        <button onclick="switchCalView('day')">Tag</button>
+        <button class="active" onclick="switchCalView('week')">Woche</button>
+        <button onclick="switchCalView('month')">Monat</button>
+      </div>
+    </div>
+
+    <!-- WEEK VIEW (default) -->
+    <div class="cal-view active" id="calWeekView">
+      <div class="cal-week-grid">
+        <div class="cal-week-head"></div>
+        <div class="cal-week-head">Mo<span class="cal-dow-num">13</span></div>
+        <div class="cal-week-head">Di<span class="cal-dow-num">14</span></div>
+        <div class="cal-week-head">Mi<span class="cal-dow-num">15</span></div>
+        <div class="cal-week-head">Do<span class="cal-dow-num">16</span></div>
+        <div class="cal-week-head today">Fr<span class="cal-dow-num">17</span></div>
+        <div class="cal-week-head">Sa<span class="cal-dow-num">18</span></div>
+        <div class="cal-week-head">So<span class="cal-dow-num">19</span></div>
+
+        <div class="cal-time">08:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event coaching" style="top:30px;height:30px" onclick="openEventDrawer('ev-01')"><div class="cal-event-time">08:30-09:00</div><div class="cal-event-title">Coach · S. Fischer</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">09:00</div>
+        <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:60px" onclick="openEventDrawer('ev-02')"><div class="cal-event-time">09:00-10:00</div><div class="cal-event-title">Mandats-Pitch Halter AG</div><div class="cal-event-entity">🎯 Halter AG</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px" onclick="openEventDrawer('ev-03')"><div class="cal-event-time">09:30-10:00</div><div class="cal-event-title">Debr. Keller 2nd</div></div></div>
+        <div class="cal-slot today"><div class="cal-event coaching" style="top:30px;height:30px" onclick="openEventDrawer('ev-04')"><div class="cal-event-time">09:30-10:00</div><div class="cal-event-title">Coach · T. Furrer</div><div class="cal-event-entity">👤 T. Furrer · pre-2nd</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">10:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">11:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event extern" style="top:0;height:90px" onclick="openEventDrawer('ev-05')"><div class="cal-event-time">11:00-12:30</div><div class="cal-event-title">Update Müller · Muster</div><div class="cal-event-entity">🎯 Muster AG · Weekly</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event team" style="top:0;height:30px" onclick="openEventDrawer('ev-06')"><div class="cal-event-time">11:00-11:30</div><div class="cal-event-title">Team-Standup</div></div></div>
+        <div class="cal-slot today"><div class="cal-event extern colleague" style="top:0;height:60px" onclick="openEventDrawer('ev-07')"><div class="cal-event-time">JV · 11:00-12:00</div><div class="cal-event-title">Besetzt</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">12:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">13:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">14:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px" onclick="openEventDrawer('ev-08')"><div class="cal-event-title">Debr. Halter</div></div></div>
+        <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:60px" onclick="openEventDrawer('ev-09')"><div class="cal-event-time">14:00-15:00</div><div class="cal-event-title">Pitch Meier AG</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"><div class="cal-event extern" style="top:30px;height:60px" onclick="openEventDrawer('ev-10')"><div class="cal-event-time">14:30-15:30</div><div class="cal-event-title">Pitch Halter AG</div><div class="cal-event-entity">🎯 Halter · Neukunde</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">15:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">16:00</div>
+        <div class="cal-slot"><div class="cal-event coaching" style="top:0;height:30px" onclick="openEventDrawer('ev-11')"><div class="cal-event-title">Coach · Bachmann</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"><div class="cal-event team" style="top:30px;height:30px" onclick="openEventDrawer('ev-12')"><div class="cal-event-title">Weekly AM</div></div></div>
+        <div class="cal-slot today"><div class="cal-event team" style="top:0;height:30px" onclick="openEventDrawer('ev-13')"><div class="cal-event-time">16:00-16:15</div><div class="cal-event-title">Team-Standup</div></div></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">17:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">18:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+
+        <div class="cal-time">19:00</div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot today"></div>
+        <div class="cal-slot"></div>
+        <div class="cal-slot"></div>
+      </div>
+    </div>
+
+    <!-- DAY VIEW -->
+    <div class="cal-view" id="calDayView">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--accent-soft)">
+        <div style="font-family:'Libre Baskerville',serif;font-size:18px;color:var(--accent);font-weight:700">Freitag, 17. April 2026</div>
+        <div style="font-size:11.5px;color:var(--text-mid);margin-top:2px">4 Termine · 3 Coachings/Debriefings · 1 Pitch · 1 Team</div>
+      </div>
+      <div class="cal-day-grid">
+        <div class="cal-day-time">09:00</div>
+        <div class="cal-day-slot"><div class="cal-day-event coaching" style="top:4px;height:36px"><div class="cal-day-event-top">Coaching · Tobias Furrer · Vorbereitung 2nd Interview</div><div class="cal-day-event-meta">09:30–10:00 · Teams · 👤 T. Furrer</div></div></div>
+        <div class="cal-day-time">10:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">11:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">12:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">13:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">14:00</div>
+        <div class="cal-day-slot"><div class="cal-day-event extern" style="top:30px;height:75px"><div class="cal-day-event-top">Pitch Halter AG · Neukunden-Akquise</div><div class="cal-day-event-meta">14:30–15:30 · Halter Hauptsitz · 🎯 Halter AG</div></div></div>
+        <div class="cal-day-time">15:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">16:00</div>
+        <div class="cal-day-slot"><div class="cal-day-event team" style="top:4px;height:32px"><div class="cal-day-event-top">Team-Standup</div><div class="cal-day-event-meta">16:00–16:15 · Büro · ARK-Team</div></div></div>
+        <div class="cal-day-time">17:00</div>
+        <div class="cal-day-slot"></div>
+        <div class="cal-day-time">18:00</div>
+        <div class="cal-day-slot"></div>
+      </div>
+    </div>
+
+    <!-- MONTH VIEW -->
+    <div class="cal-view" id="calMonthView">
+      <div class="cal-month-grid">
+        <div class="cal-mc-dow">Mo</div><div class="cal-mc-dow">Di</div><div class="cal-mc-dow">Mi</div><div class="cal-mc-dow">Do</div><div class="cal-mc-dow">Fr</div><div class="cal-mc-dow">Sa</div><div class="cal-mc-dow">So</div>
+
+        <div class="cal-mc-day other"><div class="cal-mc-day-num">30</div></div>
+        <div class="cal-mc-day other"><div class="cal-mc-day-num">31</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">1</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">2</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">3</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">4</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">5</div></div>
+
+        <div class="cal-mc-day"><div class="cal-mc-day-num">6</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">7</div><div class="cal-mc-event coaching">Coach Fischer</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">8</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">9</div><div class="cal-mc-event mandat">Pitch Bucher</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">10</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">11</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">12</div></div>
+
+        <div class="cal-mc-day"><div class="cal-mc-day-num">13</div><div class="cal-mc-event mandat">Pitch Halter</div><div class="cal-mc-event coaching">Coach Fischer</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">14</div><div class="cal-mc-event extern">Update Müller</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">15</div><div class="cal-mc-event mandat">Pitch Meier</div><div class="cal-mc-event debriefing">Debr. Halter</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">16</div><div class="cal-mc-event debriefing">Debr. Keller</div><div class="cal-mc-event team">Weekly AM</div></div>
+        <div class="cal-mc-day today"><div class="cal-mc-day-num">17</div><div class="cal-mc-event coaching">Coach Furrer</div><div class="cal-mc-event extern">Pitch Halter</div><div class="cal-mc-event team">Standup</div><div class="cal-mc-more">+1 mehr</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">18</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">19</div></div>
+
+        <div class="cal-mc-day"><div class="cal-mc-day-num">20</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">21</div><div class="cal-mc-event coaching">Coach Vogt</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">22</div><div class="cal-mc-event interview">3rd Keller</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">23</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">24</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">25</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">26</div></div>
+
+        <div class="cal-mc-day"><div class="cal-mc-day-num">27</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">28</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">29</div><div class="cal-mc-event team">Quartals-Review</div></div>
+        <div class="cal-mc-day"><div class="cal-mc-day-num">30</div></div>
+        <div class="cal-mc-day other"><div class="cal-mc-day-num">1</div></div>
+        <div class="cal-mc-day other"><div class="cal-mc-day-num">2</div></div>
+        <div class="cal-mc-day other"><div class="cal-mc-day-num">3</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /calMode -->
+
+
+<!-- ============================= DRAWER: BACKDROP ============================= -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+
+<!-- ============================= DRAWER 1: COMPOSE ============================= -->
+<div class="drawer drawer-wide" id="composeDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--accent-soft);color:var(--accent);font-size:18px">✉</div>
+    <div class="info">
+      <h2 id="composeTitle">Neue Email</h2>
+      <div class="sub" id="composeSub">Senden als pw@arkadium.ch</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('composeDrawer')">×</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="drawerTab('composeDrawer',0)">Inhalt</div>
+    <div class="drawer-tab" onclick="drawerTab('composeDrawer',1)">Verknüpfung</div>
+    <div class="drawer-tab" onclick="drawerTab('composeDrawer',2)">Optionen</div>
+  </div>
+  <div class="drawer-body">
+    <!-- Tab 0: Inhalt -->
+    <div class="drawer-pane" style="display:block">
+      <div class="auto-classif-banner" id="autoClassifBanner" style="display:none">
+        <strong>⚡ Auto-Klassifikation aktiv.</strong> Template „Mündliche GOs" erkannt → wird als <em>Emailverkehr · Mündliche GOs</em> in Historie erfasst.
+      </div>
+      <div class="form-row compact">
+        <label>An</label>
+        <input type="text" value="h.mueller@muster.ch" placeholder="Empfänger…">
+      </div>
+      <div class="form-row compact">
+        <label>CC</label>
+        <input type="text" placeholder="Optionale CC-Empfänger…">
+      </div>
+      <div class="form-row compact">
+        <label>BCC</label>
+        <input type="text" placeholder="Optionale BCC-Empfänger…">
+      </div>
+      <div class="form-row compact">
+        <label>Betreff</label>
+        <input type="text" value="Re: Kandidatenvorstellung J. Keller — Feedback nach 2nd">
+      </div>
+      <div class="form-row">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <label style="margin:0;flex:1">Nachrichten-Text</label>
+          <span class="tpl-picker-btn" onclick="openDrawer('tplDrawer')">📋 Template einfügen</span>
+        </div>
+        <textarea placeholder="Nachricht schreiben…">Hans,
+
+vielen Dank für das positive Feedback. Zu Deinen Punkten:
+
+1. Lohnband 220–240k + Bonus 20%: passt sehr gut zu Frau Kellers Vorstellungen. Bestätige ich nach kurzem Abgleich.
+
+2. Startdatum 01.07.: realistisch. Sie hat 3 Monate Kündigungsfrist.
+
+Morgen 10:30 Uhr passt mir — rufe Dich an.
+
+Beste Grüsse
+Peter</textarea>
+      </div>
+      <div class="form-row">
+        <label>Anhänge</label>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="btn btn-sm" style="flex:1" onclick="openDrawer('fileAttachDrawer')">📁 Aus CRM anhängen</button>
+          <button class="btn btn-sm" style="flex:1">💻 Lokale Datei</button>
+        </div>
+        <div class="attach-upload" style="padding:14px">📎 Oder Dateien per Drag &amp; Drop ablegen</div>
+        <div id="composeAttachList" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="ep-attach-item" style="background:var(--accent-soft);color:var(--accent);border-color:var(--accent)">📎 CV_Keller_2026-04.pdf · 340 KB <span style="cursor:pointer;margin-left:4px;opacity:0.6">×</span></span>
+          <span class="ep-attach-item" style="background:var(--gold-soft);color:var(--gold);border-color:var(--gold)">📎 Mandats-Briefing_Muster.pdf · 1.2 MB <span style="cursor:pointer;margin-left:4px;opacity:0.6">×</span></span>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 1: Verknüpfung -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Verknüpfte Einträge</h4>
+        <div style="font-size:12px;color:var(--text-light);margin-bottom:10px">Mail wird mit diesen Einträgen in der Historie verknüpft. Auto-erkannt aus Empfänger-Adresse.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gold-soft);border-radius:3px">
+            <span style="font-size:16px">🎯</span>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:13px;color:var(--gold)">Mandat Muster AG · CFO</div>
+              <div style="font-size:11px;color:var(--text-mid)">Auto-erkannt via h.mueller@muster.ch</div>
+            </div>
+            <span class="x" style="cursor:pointer;color:var(--text-light)">×</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--blue-soft);border-radius:3px">
+            <span style="font-size:16px">👤</span>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:13px;color:var(--blue)">Julia Keller</div>
+              <div style="font-size:11px;color:var(--text-mid)">Thread-Kontext aus Prozess</div>
+            </div>
+            <span class="x" style="cursor:pointer;color:var(--text-light)">×</span>
+          </div>
+          <button class="btn btn-sm" style="align-self:flex-start;margin-top:6px">+ Weitere Verknüpfung</button>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Aktivitäts-Typ für Historie</h4>
+        <select>
+          <option selected>Emailverkehr - Allgemeine Kommunikation</option>
+          <option>Emailverkehr - CV Chase</option>
+          <option>Emailverkehr - Absage Briefing</option>
+          <option>Emailverkehr - Absage Bewerbung</option>
+          <option>Emailverkehr - Absage vor GO Termin</option>
+          <option>Emailverkehr - Mündliche GOs versendet</option>
+          <option>Emailverkehr - Absage nach GO Termin</option>
+          <option>Emailverkehr - Schriftliche GOs</option>
+          <option>Emailverkehr - Eingangsbestätigung Bewerbung</option>
+          <option>Emailverkehr - Mandatskommunikation</option>
+          <option>Emailverkehr - AGB Verhandlungen</option>
+        </select>
+        <div class="edit-hint" style="margin-top:4px">Aus Activity-Types-Katalog · Kategorie „Emailverkehr" · 11 Einträge (Stammdaten §14)</div>
+      </div>
+    </div>
+    <!-- Tab 2: Optionen -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Versand-Optionen</h4>
+        <div class="form-grid-2">
+          <div class="form-row"><label>Priorität</label><select><option>Normal</option><option>Hoch</option><option>Niedrig</option></select></div>
+          <div class="form-row"><label>Absender</label><select><option>pw@arkadium.ch · Peter Wiederkehr</option></select></div>
+        </div>
+        <div class="form-row"><label><input type="checkbox"> Lesebestätigung anfordern</label></div>
+        <div class="form-row" style="padding:10px 12px;background:color-mix(in srgb, #6264A7 6%, transparent);border-left:3px solid #6264A7;border-radius:3px;font-size:12px;line-height:1.55;color:var(--text)">
+          <strong style="color:#6264A7">Signatur · CodeTwo</strong><br>
+          Wird automatisch server-seitig ergänzt (Exchange/M365-Regel · zentrale Verwaltung).
+          <span style="color:var(--text-light);font-style:italic">→ Template: „Arkadium Senior Partner (DE)" · aktiv</span>
+          <button class="btn btn-sm" style="margin-top:6px" onclick="openDrawer('kontenDrawer');drawerTab('kontenDrawer',0)">Einstellungen öffnen</button>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Zeitplanung</h4>
+        <div class="form-row">
+          <label><input type="radio" name="schedule" checked> Sofort senden</label>
+        </div>
+        <div class="form-row">
+          <label><input type="radio" name="schedule"> Später senden</label>
+          <div style="display:flex;gap:8px;margin-top:6px;margin-left:22px">
+            <input type="datetime-local" style="flex:1">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Senden</button>
+    <button class="btn">Als Entwurf speichern</button>
+    <span class="spacer" style="flex:1"></span>
+    <span style="font-size:11px;color:var(--text-light);font-style:italic">Auto-Save aktiv · zuletzt 12:04</span>
+    <button class="btn" onclick="closeDrawer('composeDrawer')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 2: EVENT (Termin) ============================= -->
+<div class="drawer drawer-wide" id="eventDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--gold-soft);color:var(--gold);font-size:18px">📅</div>
+    <div class="info">
+      <h2>Coaching · Tobias Furrer</h2>
+      <div class="sub">Vorbereitung 2nd Interview Halter AG · Fr 17.04.2026 09:30-10:00</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('eventDrawer')">×</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="drawerTab('eventDrawer',0)">Basis</div>
+    <div class="drawer-tab" onclick="drawerTab('eventDrawer',1)">Teilnehmer</div>
+    <div class="drawer-tab" onclick="drawerTab('eventDrawer',2)">Verknüpfung</div>
+    <div class="drawer-tab" onclick="drawerTab('eventDrawer',3)">Coaching-Notizen</div>
+  </div>
+  <div class="drawer-body">
+    <!-- Tab 0: Basis -->
+    <div class="drawer-pane" style="display:block">
+      <div class="form-row">
+        <label>Titel</label>
+        <input type="text" value="Coaching · Tobias Furrer · Vorbereitung 2nd Halter AG">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Start</label>
+          <input type="datetime-local" value="2026-04-17T09:30">
+        </div>
+        <div class="form-row">
+          <label>Ende</label>
+          <input type="datetime-local" value="2026-04-17T10:00">
+        </div>
+      </div>
+      <div class="form-row">
+        <label><input type="checkbox"> Ganztags</label>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Ort</label>
+          <input type="text" value="Teams-Meeting">
+        </div>
+        <div class="form-row">
+          <label>Aktivitäts-Typ</label>
+          <select>
+            <option selected>Coaching · Kandidat (vor Interview)</option>
+            <option>Debriefing · Kandidat (nach Interview)</option>
+            <option>Debriefing · Kunde (nach Interview)</option>
+            <option>Mandats-Akquise · Pitch</option>
+            <option>Mandats-Akquise · Update-Call</option>
+            <option>Referenzauskunft</option>
+            <option>Team-intern · Standup</option>
+            <option>Interview · extern (Kunde+Kandidat)</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="teams-link-row">
+          <span class="teams-link-url">https://teams.microsoft.com/l/meetup-join/19%3ameeting_MzZl...</span>
+          <button class="btn btn-sm">Kopieren</button>
+          <button class="btn btn-sm">Neu generieren</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Notizen / Agenda</label>
+        <textarea style="min-height:100px">Vorbereitung 2nd Interview Halter AG:
+- Halter AG Geschäftsmodell & Positionierung im Markt
+- Erwartungen an CFO-Rolle (Transformation)
+- Kandidaten-Fragen an Kunde vorbereiten
+- Gehaltsverhandlung Taktik</textarea>
+      </div>
+    </div>
+    <!-- Tab 1: Teilnehmer -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Teilnehmer</h4>
+        <div class="att-list">
+          <div class="att-row">
+            <div class="att-avatar">PW</div>
+            <div><div class="att-name">Peter Wiederkehr · Organisator</div><div class="att-role">Senior Partner · AM</div></div>
+            <span class="att-status accepted">Zugesagt</span>
+          </div>
+          <div class="att-row">
+            <div class="att-avatar" style="background:var(--blue-soft);color:var(--blue)">TF</div>
+            <div><div class="att-name">Tobias Furrer</div><div class="att-role">Kandidat · Prozess Halter AG CFO</div></div>
+            <span class="att-status accepted">Zugesagt</span>
+          </div>
+        </div>
+        <button class="btn btn-sm" style="margin-top:10px">+ Teilnehmer einladen</button>
+      </div>
+      <div class="drawer-section">
+        <h4>Erinnerung</h4>
+        <div class="form-grid-2">
+          <div class="form-row"><label>Vor Termin</label><select><option>15 Minuten</option><option selected>30 Minuten</option><option>1 Stunde</option><option>1 Tag</option></select></div>
+          <div class="form-row"><label>Kanal</label><select><option>Push + Email</option><option>Nur Push</option><option>Nur Email</option></select></div>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 2: Verknüpfung -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Verknüpfte Einträge</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--blue-soft);border-radius:3px">
+            <span style="font-size:16px">👤</span>
+            <div style="flex:1"><div style="font-weight:600;color:var(--blue)">Tobias Furrer</div><div style="font-size:11px;color:var(--text-mid)">Kandidat · Prozess-Stage 2nd</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gold-soft);border-radius:3px">
+            <span style="font-size:16px">🎯</span>
+            <div style="flex:1"><div style="font-weight:600;color:var(--gold)">Halter AG · Mandat CFO</div><div style="font-size:11px;color:var(--text-mid)">Target · laufend seit 01.03.2026</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-soft);border-radius:3px">
+            <span style="font-size:16px">→</span>
+            <div style="flex:1"><div style="font-weight:600;color:var(--accent)">Prozess T. Furrer × Halter AG</div><div style="font-size:11px;color:var(--text-mid)">Aktuelle Stage: 2nd · Nächster Termin: 2nd Interview 21.04.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Historie-Eintrag</h4>
+        <div style="font-size:12px;color:var(--text-light);line-height:1.5">Nach Ende des Termins wird automatisch ein Aktivitäts-Eintrag in der Historie angelegt — bei Kandidat Furrer und Mandat Halter. Notizen werden übernommen.</div>
+      </div>
+    </div>
+    <!-- Tab 3: Coaching-Notizen (conditional) -->
+    <div class="drawer-pane" style="display:none">
+      <div class="coach-notes-box">
+        <h5>Coaching-Checkliste · vor 2nd Interview</h5>
+        <div style="font-size:12.5px;line-height:1.7">
+          <label style="display:block"><input type="checkbox" checked> Kandidaten-Motivation aufgefrischt</label>
+          <label style="display:block"><input type="checkbox" checked> Firmen-Know-How (Halter) geprüft</label>
+          <label style="display:block"><input type="checkbox"> Fragen an Kunde vorbereitet</label>
+          <label style="display:block"><input type="checkbox"> Gehalts-Verhandlungs-Taktik besprochen</label>
+          <label style="display:block"><input type="checkbox"> Red-Flag-Check bestanden</label>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Offene Punkte</h4>
+        <textarea style="min-height:220px" placeholder="Notizen, Red Flags, Follow-Ups…">- Kandidat etwas unsicher bezüglich Umzug nach Zürich (45min Pendler)
+- Ehefrau-Abstimmung noch offen, Entscheidung bis Fr 24.04.
+- Gehaltsband OK, aber Bonus-Struktur hinterfragt</textarea>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Speichern &amp; schliessen</button>
+    <button class="btn">Speichern</button>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn" style="color:var(--red)">Termin löschen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 3: CREATE-CANDIDATE ============================= -->
+<div class="drawer" id="createCandDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--blue-soft);color:var(--blue);font-size:18px">👤</div>
+    <div class="info">
+      <h2>Neuer Kandidat aus Email</h2>
+      <div class="sub">Vor-befüllt aus Absender-Daten</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('createCandDrawer')">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Basis-Daten</h4>
+      <div class="form-grid-2">
+        <div class="form-row"><label>Vorname</label><input type="text" value="Sandra"></div>
+        <div class="form-row"><label>Nachname</label><input type="text" value="Vogt"></div>
+      </div>
+      <div class="form-row"><label>Email</label><input type="email" value="s.vogt@privat.ch"></div>
+      <div class="form-row"><label>Telefon mobil</label><input type="text" placeholder="+41 …"></div>
+      <div class="form-row"><label>LinkedIn-URL</label><input type="text" placeholder="linkedin.com/in/…"></div>
+    </div>
+    <div class="drawer-section">
+      <h4>Zuordnung</h4>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Sparte</label>
+          <select><option>—</option><option>ARC · Architektur</option><option>GT · Generalunternehmer</option><option>ING · Ingenieurwesen</option><option>PUR · Procurement</option><option>REM · Real Estate Management</option></select>
+        </div>
+        <div class="form-row">
+          <label>Org-Funktion</label>
+          <select><option>—</option><option>VR/Board</option><option>Executive</option><option>HR</option><option>Einkauf</option><option>Assistenz</option></select>
+        </div>
+      </div>
+      <div class="form-row"><label>Aktueller Arbeitgeber</label><input type="text" placeholder="Firmenname…"></div>
+      <div class="form-row"><label>Aktuelle Position</label><input type="text" placeholder="z.B. CFO"></div>
+    </div>
+    <div class="drawer-section">
+      <h4>Email-Herkunft</h4>
+      <div style="padding:10px 12px;background:var(--bg);border-radius:3px;font-size:12px;line-height:1.5">
+        <div><strong>Betreff:</strong> Dankeschön für das Gespräch — Unterlagen anbei</div>
+        <div><strong>Empfangen:</strong> 15.04.2026 14:22</div>
+        <div><strong>Anhänge:</strong> CV_Vogt_2026.pdf (übernehmen)</div>
+      </div>
+      <label style="display:block;margin-top:8px;font-size:12px"><input type="checkbox" checked> Email als Historien-Eintrag anlegen</label>
+      <label style="display:block;margin-top:4px;font-size:12px"><input type="checkbox" checked> CV-Anhang automatisch parsen</label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Kandidat anlegen &amp; öffnen</button>
+    <button class="btn" onclick="closeDrawer('createCandDrawer')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 4: CREATE-ACCOUNT ============================= -->
+<div class="drawer" id="createAccDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--accent-soft);color:var(--accent);font-size:18px">🏢</div>
+    <div class="info">
+      <h2>Neuer Account aus Email</h2>
+      <div class="sub">Vor-befüllt aus Domain & Signatur</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('createAccDrawer')">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Firmen-Daten</h4>
+      <div class="form-row"><label>Firmenname</label><input type="text" value="Implenia AG"></div>
+      <div class="form-grid-2">
+        <div class="form-row"><label>Kurzbezeichnung</label><input type="text" value="Implenia"></div>
+        <div class="form-row"><label>Firmengruppe</label><select><option>—</option><option>Implenia-Gruppe</option></select></div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row"><label>Website</label><input type="text" value="implenia.com"></div>
+        <div class="form-row"><label>Haupt-Email</label><input type="email" value="info@implenia.com"></div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Zuordnung</h4>
+      <div class="form-grid-2">
+        <div class="form-row"><label>Sparten</label><select multiple><option selected>GT</option><option selected>ING</option><option>ARC</option></select></div>
+        <div class="form-row"><label>Account-Manager</label><select><option>PW · Peter Wiederkehr</option><option>JV · Jonas Vogel</option><option>LR · Lea Rüegg</option></select></div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Erst-Kontakt</h4>
+      <div class="form-row"><label>Ansprechpartner (aus Email)</label><input type="text" value="Peter Lüthi"></div>
+      <div class="form-row"><label>Funktion</label><input type="text" placeholder="z.B. Head HR"></div>
+      <label style="display:block;margin-top:8px;font-size:12px"><input type="checkbox" checked> Email als Historien-Eintrag anlegen</label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Account anlegen &amp; öffnen</button>
+    <button class="btn" onclick="closeDrawer('createAccDrawer')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 5: TEMPLATE-PICKER ============================= -->
+<div class="drawer" id="tplDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--purple-soft);color:var(--purple);font-size:18px">📋</div>
+    <div class="info">
+      <h2>Email-Template auswählen</h2>
+      <div class="sub">38 Templates · 4 mit Automations-Auslöser</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('tplDrawer')">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <input type="text" placeholder="Template suchen…" style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--text)">
+    </div>
+    <div class="drawer-section">
+      <div class="tpl-cat-head">Jobbasket / GOs (Automations-Trigger)</div>
+      <div class="tpl-grid-list">
+        <div class="tpl-card automation">
+          <div class="tpl-card-head">
+            <span class="tpl-card-name">Mündliche GOs versendet</span>
+            <span class="tpl-card-badge">AUTO</span>
+          </div>
+          <div class="tpl-card-sub">Löst Jobbasket-Markierung „Mündliche GO bestätigt" aus · Aktivität „Emailverkehr · Mündliche GOs"</div>
+          <div class="tpl-card-preview">„Guten Tag [Kunde], anbei die mündliche Freigabe-Liste für Mandat [Mandat]…"</div>
+        </div>
+        <div class="tpl-card automation">
+          <div class="tpl-card-head">
+            <span class="tpl-card-name">Schriftliche GOs versendet</span>
+            <span class="tpl-card-badge">AUTO</span>
+          </div>
+          <div class="tpl-card-sub">Löst Jobbasket-Markierung „Schriftliche GO erhalten" aus · Aktivität „Emailverkehr · Schriftliche GOs"</div>
+          <div class="tpl-card-preview">„Anbei die schriftliche Freigabe mit offiziellem Jobbasket-Anhang…"</div>
+        </div>
+        <div class="tpl-card automation">
+          <div class="tpl-card-head">
+            <span class="tpl-card-name">Prelead-Info versendet</span>
+            <span class="tpl-card-badge">AUTO</span>
+          </div>
+          <div class="tpl-card-sub">Markiert Prelead-Status „Info versendet" · Aktivität „Emailverkehr · Prelead-Info"</div>
+          <div class="tpl-card-preview">„Guten Tag Herr/Frau [Kandidat], in Ihrer Branche sind wir auf ein Mandat aufmerksam geworden…"</div>
+        </div>
+        <div class="tpl-card automation">
+          <div class="tpl-card-head">
+            <span class="tpl-card-name">Schutzfrist-Hinweis</span>
+            <span class="tpl-card-badge">AUTO</span>
+          </div>
+          <div class="tpl-card-sub">Aktiviert Schutzfrist-Counter bei Kandidat × Kunde</div>
+          <div class="tpl-card-preview">„Wir stellen Ihnen hiermit Frau/Herr [Kandidat] vor…"</div>
+        </div>
+      </div>
+
+      <div class="tpl-cat-head">Kandidaten-Kommunikation</div>
+      <div class="tpl-grid-list">
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Erstkontakt — Kaltakquise</span></div><div class="tpl-card-sub">Standard-Ansprache potenzieller Kandidaten</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Briefing-Einladung</span></div><div class="tpl-card-sub">Terminvorschlag Eignungsgespräch</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Coaching-Vorbereitung</span></div><div class="tpl-card-sub">Vor Interview · Unterlagen anfordern</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Nachfrage nach Interview</span></div><div class="tpl-card-sub">Debriefing-Termin vereinbaren</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Absage an Kandidat</span></div><div class="tpl-card-sub">Höflich &amp; professionell</div></div>
+      </div>
+
+      <div class="tpl-cat-head">Kunden-Kommunikation</div>
+      <div class="tpl-grid-list">
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Mandats-Bestätigung</span></div><div class="tpl-card-sub">Nach Pitch-Unterzeichnung</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">CV-Versand</span></div><div class="tpl-card-sub">Kandidaten-Unterlagen an Kunde</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Interview-Terminvorschlag</span></div><div class="tpl-card-sub">3 Termin-Optionen für Kunde</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Honorar-Rechnung Ankündigung</span></div><div class="tpl-card-sub">Vor Placement · Ratenplan</div></div>
+      </div>
+
+      <div class="tpl-cat-head">Platzierung &amp; Nachbetreuung</div>
+      <div class="tpl-grid-list">
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Placement-Gratulation Kandidat</span></div><div class="tpl-card-sub">Mit Onboarding-Check-In-Ankündigung</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">30-/60-/90-Tage Check-In</span></div><div class="tpl-card-sub">Post-Placement-Nachbetreuung</div></div>
+        <div class="tpl-card"><div class="tpl-card-head"><span class="tpl-card-name">Garantie-Ablauf-Info</span></div><div class="tpl-card-sub">3-Mt-Garantie-Ende-Hinweis</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Template verwenden</button>
+    <button class="btn" onclick="closeDrawer('tplDrawer')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 6: KONTEN ============================= -->
+<div class="drawer" id="kontenDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--bg);color:var(--text-mid);font-size:18px">⚙</div>
+    <div class="info">
+      <h2>Konten &amp; Sync</h2>
+      <div class="sub">MS Graph Outlook · Kalender-Verbindung · Ignore-Liste</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('kontenDrawer')">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Email-Konten</h4>
+      <div class="acc-status-card ok">
+        <div class="acc-status-head">
+          <div class="acc-status-name">Mein Postfach</div>
+          <span class="acc-status-pill ok">✓ OK</span>
+        </div>
+        <div class="acc-status-grid">
+          <div>Adresse <strong>pw@arkadium.ch</strong></div>
+          <div>Tenant <strong>arkadium.onmicrosoft.com</strong></div>
+          <div>Letzter Sync <strong>vor 2 Min.</strong></div>
+          <div>Token-Health <strong style="color:var(--green)">Gültig bis 19.04.</strong></div>
+          <div>Kalender <strong>✓ verbunden</strong></div>
+          <div>Mails heute <strong>47 empfangen</strong></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button class="btn btn-sm">Token erneuern</button>
+          <button class="btn btn-sm" style="color:var(--red)">Trennen</button>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-light);margin-top:10px;font-style:italic;line-height:1.5">
+        Pro User eigene OAuth-Verbindung zum persönlichen Outlook-Postfach (MS Graph · Calendars.ReadWrite · Mail.Send · Mail.Read).
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Sync-Log (letzte Ereignisse)</h4>
+      <div style="font-family:monospace;font-size:10.5px;background:var(--bg);padding:10px;border-radius:3px;max-height:150px;overflow-y:auto;line-height:1.6">
+        <div style="color:var(--green)">✓ 17.04. 12:02 · Inbox-Sync · 3 neue Mails · 0 Fehler</div>
+        <div style="color:var(--green)">✓ 17.04. 11:47 · Calendar-Sync · 2 Termine aktualisiert</div>
+        <div style="color:var(--green)">✓ 17.04. 11:32 · Inbox-Sync · 1 neue Mail</div>
+        <div style="color:var(--amber)">⚠ 17.04. 10:15 · Attachment-Download verzögert (retry OK)</div>
+        <div style="color:var(--green)">✓ 17.04. 09:00 · Token-Refresh OK</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Ignore-Liste · Auto-Blocklist</h4>
+      <div class="ignore-list">
+        <div class="ignore-row"><span class="ignore-type">Domain</span><span style="flex:1">newsletter.linkedin.com</span><span class="x">×</span></div>
+        <div class="ignore-row"><span class="ignore-type">Domain</span><span style="flex:1">noreply.xing.com</span><span class="x">×</span></div>
+        <div class="ignore-row"><span class="ignore-type">Absender</span><span style="flex:1">marketing@indeed.ch</span><span class="x">×</span></div>
+        <div class="ignore-row"><span class="ignore-type">Betreff</span><span style="flex:1">„Ihr Wochen-Report"</span><span class="x">×</span></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <input type="text" placeholder="Domain / Email / Muster…" style="flex:1;padding:5px 8px;font-size:12px;border:1px solid var(--border);border-radius:3px">
+        <select style="padding:5px 8px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--text)">
+          <option>Domain</option><option>Absender</option><option>Betreff</option>
+        </select>
+        <button class="btn btn-sm">+ Hinzufügen</button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Email-Signatur · CodeTwo</h4>
+      <div class="acc-status-card ok" style="border-left-color:#6264A7">
+        <div class="acc-status-head">
+          <div class="acc-status-name" style="display:flex;align-items:center;gap:8px">
+            <span style="background:#6264A7;color:#fff;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:3px;font-size:10px;font-weight:700">C2</span>
+            CodeTwo Email Signatures for Office 365
+          </div>
+          <span class="acc-status-pill ok">✓ aktiv</span>
+        </div>
+        <div class="acc-status-grid">
+          <div>Aktives Template <strong>Arkadium Senior Partner (DE)</strong></div>
+          <div>Tenant-Scope <strong>arkadium.onmicrosoft.com</strong></div>
+          <div>Verwaltung <strong>Admin-Panel codetwo.com</strong></div>
+          <div>Status <strong style="color:var(--green)">Server-seitig · alle Mails</strong></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text-mid);margin-top:10px;line-height:1.55">
+          Signaturen werden <strong>automatisch von CodeTwo</strong> auf Exchange-/M365-Server-Ebene nach Versand angehängt — zentrale Verwaltung durch Admin, kein manuelles Anhängen im CRM-Compose nötig.
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button class="btn btn-sm">Template wechseln</button>
+          <button class="btn btn-sm">Vorschau anzeigen</button>
+          <button class="btn btn-sm">Admin-Panel öffnen ↗</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:8px;font-style:italic;line-height:1.5">
+        Bei Kampagnen oder Out-of-Office: Template via CodeTwo-Regeln serverseitig umschalten, nicht im CRM.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Sync-Scope</h4>
+      <label style="display:block;font-size:12px;margin-bottom:6px"><input type="checkbox" checked> Nur Mails mit Kandidaten-/Account-Adressen synchronisieren</label>
+      <label style="display:block;font-size:12px;margin-bottom:6px"><input type="checkbox" checked> Automations-Templates erkennen &amp; Historie automatisch befüllen</label>
+      <label style="display:block;font-size:12px;margin-bottom:6px"><input type="checkbox" checked> Kalender-Termine bidirektional (ARK ↔ Outlook)</label>
+      <label style="display:block;font-size:12px"><input type="checkbox"> Interne Team-Mails (@arkadium.ch) ebenfalls synchronisieren</label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Änderungen speichern</button>
+    <button class="btn" onclick="closeDrawer('kontenDrawer')">Schliessen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 7: ENTITY-MATCH ============================= -->
+<div class="drawer" id="matchDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--amber-soft);color:var(--amber);font-size:18px">🔍</div>
+    <div class="info">
+      <h2>Email zuordnen</h2>
+      <div class="sub">3 mögliche Treffer · Fuzzy-Match nach Name, Domain, Historie</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('matchDrawer')">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Vorschläge</h4>
+      <div class="match-list">
+        <div class="match-row">
+          <div class="match-avatar" style="background:var(--blue-soft);color:var(--blue)">SV</div>
+          <div class="match-info">
+            <div class="match-name">Sandra Vogt</div>
+            <div class="match-sub">Kandidat · CFO · Bouygues (CH) · letzter Kontakt 15.04.</div>
+          </div>
+          <div class="match-score-wrap">
+            <div class="match-score">92</div>
+            <div class="match-score-lbl">Match</div>
+          </div>
+          <button class="btn btn-sm btn-primary">Zuordnen</button>
+        </div>
+        <div class="match-row">
+          <div class="match-avatar" style="background:var(--blue-soft);color:var(--blue)">SV</div>
+          <div class="match-info">
+            <div class="match-name">Samuel Vogel</div>
+            <div class="match-sub">Kandidat · Leiter Einkauf · Basler &amp; Hofmann</div>
+          </div>
+          <div class="match-score-wrap">
+            <div class="match-score">68</div>
+            <div class="match-score-lbl">Match</div>
+          </div>
+          <button class="btn btn-sm">Zuordnen</button>
+        </div>
+        <div class="match-row">
+          <div class="match-avatar" style="background:var(--accent-soft);color:var(--accent)">BG</div>
+          <div class="match-info">
+            <div class="match-name">Bouygues Schweiz</div>
+            <div class="match-sub">Account · gleiche Domain @bouygues.ch</div>
+          </div>
+          <div class="match-score-wrap">
+            <div class="match-score">54</div>
+            <div class="match-score-lbl">Match</div>
+          </div>
+          <button class="btn btn-sm">Zuordnen</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Keine Übereinstimmung?</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="closeDrawer('matchDrawer');openDrawer('createCandDrawer')">+ Neuen Kandidaten anlegen</button>
+        <button class="btn btn-sm" onclick="closeDrawer('matchDrawer');openDrawer('createAccDrawer')">+ Neuen Account anlegen</button>
+        <button class="btn btn-sm">Mail ignorieren</button>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <span style="font-size:11px;color:var(--text-light);font-style:italic">Fuzzy-Match: Name (Levenshtein) + Domain + Historie</span>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn" onclick="closeDrawer('matchDrawer')">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ============================= DRAWER 8: FILE-ATTACH (CRM-Dokumente) ============================= -->
+<div class="drawer drawer-wide" id="fileAttachDrawer">
+  <div class="drawer-head">
+    <div class="avatar" style="background:var(--green-soft);color:var(--green);font-size:18px">📁</div>
+    <div class="info">
+      <h2>Datei aus CRM anhängen</h2>
+      <div class="sub">Dokumente aus verknüpften Einträgen oder alle CRM-Dokumente durchsuchen</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('fileAttachDrawer')">×</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="drawerTab('fileAttachDrawer',0)">Aus Kontext (12)</div>
+    <div class="drawer-tab" onclick="drawerTab('fileAttachDrawer',1)">Alle Dokumente</div>
+    <div class="drawer-tab" onclick="drawerTab('fileAttachDrawer',2)">Zuletzt verwendet</div>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Tab 0: Aus Kontext (verknüpfte Entities) -->
+    <div class="drawer-pane" style="display:block">
+      <input type="text" placeholder="Dateien durchsuchen…" style="width:100%;margin-bottom:14px">
+
+      <div class="drawer-section" style="padding:10px 0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:14px">👤</span>
+          <h4 style="margin:0;font-size:12px;letter-spacing:0.4px">Kandidat · Julia Keller</h4>
+          <span style="font-size:10.5px;color:var(--text-light)">5 Dokumente</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label class="file-row"><input type="checkbox" checked><span class="file-icon">📄</span><span class="file-info"><div class="file-name">CV_Keller_2026-04.pdf</div><div class="file-meta">340 KB · hochgeladen 14.04.2026 · Kandidatenmaske</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Zeugnis_MBA_INSEAD.pdf</div><div class="file-meta">820 KB · hochgeladen 02.03.2026 · Kandidatenmaske</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Arbeitszeugnis_Implenia.pdf</div><div class="file-meta">440 KB · hochgeladen 02.03.2026 · Kandidatenmaske</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📊</span><span class="file-info"><div class="file-name">Keller_Assessment-Report.pdf</div><div class="file-meta">1.2 MB · Assessment SCHEELEN MDI · 10.04.2026</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">🖼</span><span class="file-info"><div class="file-name">Keller_Portrait.jpg</div><div class="file-meta">2.1 MB · Kandidatenmaske</div></span></label>
+        </div>
+      </div>
+
+      <div class="drawer-section" style="padding:10px 0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:14px">🎯</span>
+          <h4 style="margin:0;font-size:12px;letter-spacing:0.4px">Mandat · Muster AG · CFO</h4>
+          <span style="font-size:10.5px;color:var(--text-light)">4 Dokumente</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label class="file-row"><input type="checkbox" checked><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Mandats-Briefing_Muster.pdf</div><div class="file-meta">1.2 MB · Mandats-Dossier · 12.03.2026</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Jobbasket_Muster_CFO.pdf</div><div class="file-meta">280 KB · Jobbasket · 15.03.2026</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">AGB_Muster_signiert.pdf</div><div class="file-meta">640 KB · AGB-Dossier · 01.03.2026</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📊</span><span class="file-info"><div class="file-name">Stellenprofil_CFO_Muster.docx</div><div class="file-meta">180 KB · Mandats-Dossier</div></span></label>
+        </div>
+      </div>
+
+      <div class="drawer-section" style="padding:10px 0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:14px">🏢</span>
+          <h4 style="margin:0;font-size:12px;letter-spacing:0.4px">Account · Muster AG</h4>
+          <span style="font-size:10.5px;color:var(--text-light)">3 Dokumente</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label class="file-row"><input type="checkbox"><span class="file-icon">🖼</span><span class="file-info"><div class="file-name">Muster_Logo.svg</div><div class="file-meta">24 KB · Account-Branding</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Muster_Firmenprofil_2026.pdf</div><div class="file-meta">3.4 MB · Account-Dossier</div></span></label>
+          <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Organigramm_Muster.pdf</div><div class="file-meta">560 KB · Account-Strukturen</div></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Alle Dokumente -->
+    <div class="drawer-pane" style="display:none">
+      <input type="text" placeholder="Alle Dokumente durchsuchen… (z.B. „Assessment", „Muster", „2026")" style="width:100%;margin-bottom:10px">
+      <div class="ep-list-filter-bar" style="padding:4px 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px">
+        <span class="ep-filter-pill active">Alle</span>
+        <span class="ep-filter-pill">PDF</span>
+        <span class="ep-filter-pill">Word/Excel</span>
+        <span class="ep-filter-pill">Bilder</span>
+        <span class="ep-filter-pill">Assessment-Reports</span>
+        <span class="ep-filter-pill">Jobbasket</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-bottom:8px">1.248 Dokumente · sortiert nach Relevanz</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">CV_Keller_2026-04.pdf</div><div class="file-meta">340 KB · 👤 J. Keller · 14.04.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Mandats-Briefing_Muster.pdf</div><div class="file-meta">1.2 MB · 🎯 Muster AG CFO · 12.03.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📊</span><span class="file-info"><div class="file-name">Keller_Assessment-Report.pdf</div><div class="file-meta">1.2 MB · Assessment SCHEELEN MDI · 10.04.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Jobbasket_Halter_CIO.pdf</div><div class="file-meta">290 KB · 🎯 Halter AG · 15.04.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">CV_Furrer_2026-03.pdf</div><div class="file-meta">380 KB · 👤 T. Furrer · 15.03.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">AGB_Halter_Entwurf.pdf</div><div class="file-meta">660 KB · 🎯 Halter AG · 10.04.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📊</span><span class="file-info"><div class="file-name">Furrer_Assessment-Report.pdf</div><div class="file-meta">1.1 MB · Assessment SCHEELEN ASSESS · 28.03.2026</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Honorar-Rechnung_Bucher_2026-Q1.pdf</div><div class="file-meta">180 KB · 🎯 Bucher AG · 31.03.2026</div></span></label>
+      </div>
+      <div style="text-align:center;padding:12px;color:var(--accent);font-size:12px;cursor:pointer">→ Weitere 1.240 Ergebnisse laden</div>
+    </div>
+
+    <!-- Tab 2: Zuletzt verwendet -->
+    <div class="drawer-pane" style="display:none">
+      <div style="font-size:11px;color:var(--text-light);margin-bottom:10px">Von dir zuletzt in Emails angehängt</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">CV_Keller_2026-04.pdf</div><div class="file-meta">Heute 09:42 · an Müller/Muster AG</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Mandats-Briefing_Halter.pdf</div><div class="file-meta">Gestern 14:30 · an Weber/Halter AG</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📊</span><span class="file-info"><div class="file-name">Keller_Assessment-Report.pdf</div><div class="file-meta">Gestern 10:15 · an Müller/Muster AG</div></span></label>
+        <label class="file-row"><input type="checkbox"><span class="file-icon">📄</span><span class="file-info"><div class="file-name">Jobbasket_Bucher_CIO.pdf</div><div class="file-meta">14.04.2026 · an Bachmann/Bucher</div></span></label>
+      </div>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-primary">3 Dateien anhängen</button>
+    <button class="btn" onclick="closeDrawer('fileAttachDrawer')">Abbrechen</button>
+    <span class="spacer" style="flex:1"></span>
+    <span style="font-size:11px;color:var(--text-light);font-style:italic">Direktzugriff auf alle CRM-Dokumente (Kandidat/Mandat/Account/Job/Assessment)</span>
+  </div>
+</div>
+
+<style>
+/* File-Attach Drawer-Rows */
+.file-row { display:grid; grid-template-columns:20px 24px 1fr; gap:10px; align-items:center; padding:7px 10px; border:1px solid var(--border); border-radius:3px; background:var(--surface); cursor:pointer; font-size:12.5px; }
+.file-row:hover { border-color:var(--accent); background:var(--accent-soft); }
+.file-row input[type=checkbox] { margin:0; }
+.file-row .file-icon { font-size:16px; text-align:center; }
+.file-row .file-info { min-width:0; }
+.file-row .file-name { font-weight:500; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.file-row .file-meta { font-size:10.5px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.file-row:has(input:checked) { background:var(--accent-soft); border-color:var(--accent); }
+</style>
+
+<!-- ============================= TOAST HOST ============================= -->
+<div class="toast-host" id="toastHost"></div>
+
+<script>
+/* ========= THEME TOGGLE ========= */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  const b = document.getElementById('themeBtn');
+  if (b) b.textContent = t === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', t);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+(function(){ applyTheme(localStorage.getItem('ark-theme') || 'light'); })();
+
+/* ========= MODE-SWITCH (Email ↔ Kalender) ========= */
+function switchMode(m) {
+  document.querySelectorAll('.mode-seg button').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+  document.getElementById('emailMode').classList.toggle('active', m === 'email');
+  document.getElementById('calMode').classList.toggle('active', m === 'cal');
+  const cta = document.getElementById('bannerCta');
+  const meta = document.getElementById('bannerMeta');
+  if (m === 'email') {
+    cta.textContent = '+ Neue Email';
+    meta.textContent = '7 ungelesen · 4 Termine heute · 3 Entwürfe offen';
+  } else {
+    cta.textContent = '+ Neuer Termin';
+    meta.textContent = '4 Termine heute · 12 diese Woche · 38 diesen Monat';
+  }
+}
+function bannerCtaClick() {
+  const mode = document.querySelector('.mode-seg button.active').dataset.mode;
+  if (mode === 'email') openDrawer('composeDrawer');
+  else openNewEventDrawer();
+}
+
+/* ========= FOLDER / FILTER ========= */
+function selectFolder(el, key) {
+  document.querySelectorAll('#emailMode .ep-folder').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  // Mobile: nach Folder-Wahl zurück zu Mail-Liste
+  if (isMobile()) setPane('list');
+  toast('Ordner: ' + (el.querySelector('span:nth-child(2)')?.textContent || key), 'info');
+}
+function filterMails(el, key) {
+  el.parentElement.querySelectorAll('.ep-filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+function selectMail(el, id) {
+  document.querySelectorAll('.ep-mail').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  el.classList.remove('unread');
+  // Mobile: beim Mail-Click zum Reader-Pane
+  if (isMobile()) setPane('reader');
+}
+
+/* ===== MOBILE PANE-TOGGLE ===== */
+function isMobile() { return window.matchMedia('(max-width:640px)').matches; }
+function setPane(name) {
+  const wrap = document.querySelector('.email-3pane');
+  if (!wrap) return;
+  wrap.setAttribute('data-pane', name);
+}
+/* Back-Pfeil in Pane-Heads (Pseudo-Element ::before → Click auf Head-Element) */
+document.addEventListener('click', (e) => {
+  if (!isMobile()) return;
+  // Rect-Check: Click in den linken 40px der sticky-Heads = Back-Pfeil
+  const head = e.target.closest('.ep-list-head, .ep-rdr-head');
+  if (!head) return;
+  const rect = head.getBoundingClientRect();
+  if (e.clientX - rect.left > 40) return;
+  e.preventDefault();
+  if (head.classList.contains('ep-list-head')) setPane('folders');
+  else if (head.classList.contains('ep-rdr-head')) setPane('list');
+});
+/* Default-Pane bei Mobile-Resize: list */
+window.addEventListener('resize', () => {
+  if (isMobile()) {
+    const wrap = document.querySelector('.email-3pane');
+    if (wrap && !wrap.getAttribute('data-pane')) wrap.setAttribute('data-pane', 'list');
+  }
+});
+(function initPane(){
+  if (isMobile()) {
+    const wrap = document.querySelector('.email-3pane');
+    if (wrap) wrap.setAttribute('data-pane', 'list');
+  }
+})();
+
+/* ===== TOUCH: Swipe-Back zwischen Email-Panes (Mobile) ===== */
+(function initEmailSwipe() {
+  let startX = 0, startY = 0, currentPane = null;
+  const THRESHOLD = 60;
+  const Y_CANCEL = 50;
+
+  document.addEventListener('touchstart', (e) => {
+    if (!isMobile()) return;
+    const wrap = document.querySelector('.email-3pane');
+    if (!wrap) return;
+    currentPane = wrap.getAttribute('data-pane') || 'list';
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive:true });
+
+  document.addEventListener('touchend', (e) => {
+    if (!isMobile() || !currentPane) return;
+    const t = (e.changedTouches && e.changedTouches[0]) || {};
+    const dx = (t.clientX || startX) - startX;
+    const dy = Math.abs((t.clientY || startY) - startY);
+    currentPane = null;
+    if (dy > Y_CANCEL || Math.abs(dx) < THRESHOLD) return;
+    const wrap = document.querySelector('.email-3pane');
+    const cur = wrap.getAttribute('data-pane');
+    if (dx > 0) {
+      // Swipe right → zurück
+      if (cur === 'reader') setPane('list');
+      else if (cur === 'list') setPane('folders');
+    } else {
+      // Swipe left → vorwärts
+      if (cur === 'folders') setPane('list');
+      else if (cur === 'list') setPane('reader');
+    }
+  });
+})();
+
+/* ========= QUICK-REPLY ========= */
+function expandQuickReply() {
+  document.getElementById('quickReply').classList.add('expanded');
+  setTimeout(() => document.querySelector('.ep-qr-textarea')?.focus(), 50);
+}
+function collapseQuickReply() {
+  document.getElementById('quickReply').classList.remove('expanded');
+}
+function sendQuickReply() {
+  toast('Antwort versendet · Historien-Eintrag erstellt');
+  collapseQuickReply();
+}
+function expandToDrawer() {
+  const txt = document.querySelector('.ep-qr-textarea').value;
+  collapseQuickReply();
+  openDrawer('composeDrawer');
+  toast('Als Entwurf in Compose-Drawer übernommen', 'info');
+}
+function logAsActivity() {
+  toast('Mail als Aktivität „Emailverkehr" in Historie erfasst');
+}
+
+/* ========= CALENDAR ========= */
+function switchCalView(v) {
+  document.querySelectorAll('.view-seg button').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().startsWith(v.substr(0,3))));
+  document.getElementById('calWeekView').classList.toggle('active', v === 'week');
+  document.getElementById('calDayView').classList.toggle('active', v === 'day');
+  document.getElementById('calMonthView').classList.toggle('active', v === 'month');
+  const t = document.getElementById('calMainTitle');
+  if (v === 'day') t.textContent = 'Fr · 17. April 2026';
+  if (v === 'week') t.textContent = 'KW 16 · 13.–19. April 2026';
+  if (v === 'month') t.textContent = 'April 2026';
+}
+function calNav(dir) { toast(dir > 0 ? 'Vorwärts navigiert' : 'Rückwärts navigiert', 'info'); }
+function miniCalNav(dir) { toast('Mini-Kalender navigiert', 'info'); }
+function jumpToToday() { toast('Sprung zu heute', 'info'); }
+
+/* ========= DRAWER ========= */
+function openDrawer(id) {
+  closeAllDrawers();
+  document.getElementById('drawerBackdrop').classList.add('open');
+  const d = document.getElementById(id);
+  if (d) d.classList.add('open');
+}
+function closeDrawer(id) {
+  const d = document.getElementById(id);
+  if (d) d.classList.remove('open');
+  // Nur Backdrop schliessen wenn kein Drawer mehr offen
+  if (!document.querySelector('.drawer.open')) {
+    document.getElementById('drawerBackdrop').classList.remove('open');
+  }
+}
+function closeAllDrawers() {
+  document.querySelectorAll('.drawer.open').forEach(d => d.classList.remove('open'));
+  document.getElementById('drawerBackdrop').classList.remove('open');
+}
+function drawerTab(drawerId, idx) {
+  const d = document.getElementById(drawerId);
+  d.querySelectorAll('.drawer-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+  d.querySelectorAll('.drawer-pane').forEach((p,i) => p.style.display = i === idx ? 'block' : 'none');
+}
+function openComposeDrawer(mode) {
+  const titles = { 'reply':'Antwort schreiben', 'reply-all':'Allen antworten', 'forward':'Weiterleiten' };
+  const t = document.getElementById('composeTitle');
+  if (t && titles[mode]) t.textContent = titles[mode];
+  openDrawer('composeDrawer');
+}
+function openEventDrawer(id) {
+  // Bestehender Termin — aktuell Demo-Data (Coaching Furrer)
+  const d = document.getElementById('eventDrawer');
+  d.querySelector('.drawer-head h2').textContent = 'Coaching · Tobias Furrer';
+  d.querySelector('.drawer-head .sub').textContent = 'Vorbereitung 2nd Interview Halter AG · Fr 17.04.2026 09:30-10:00';
+  // Delete-Button + Coaching-Tab sichtbar
+  const delBtn = d.querySelector('.drawer-foot button[style*="red"]');
+  if (delBtn) delBtn.style.display = '';
+  const coachTab = d.querySelectorAll('.drawer-tab')[3];
+  if (coachTab) coachTab.style.display = '';
+  drawerTab('eventDrawer', 0);
+  openDrawer('eventDrawer');
+}
+function openNewEventDrawer() {
+  // Neuer Termin — leeres Formular, sinnvolle Defaults
+  const d = document.getElementById('eventDrawer');
+  d.querySelector('.drawer-head h2').textContent = 'Neuer Termin';
+  d.querySelector('.drawer-head .sub').textContent = 'Neuen Kalender-Eintrag anlegen';
+  // Tab 0: leeres Formular
+  const inputs = d.querySelectorAll('.drawer-pane input[type=text]');
+  inputs.forEach(i => i.value = '');
+  // Default Start/Ende: nächste volle Stunde, 30 Min Dauer
+  const now = new Date(); now.setMinutes(0,0,0); now.setHours(now.getHours()+1);
+  const end = new Date(now.getTime() + 30*60000);
+  const fmt = d => d.toISOString().slice(0,16);
+  const dtInputs = d.querySelectorAll('.drawer-pane input[type=datetime-local]');
+  if (dtInputs[0]) dtInputs[0].value = fmt(now);
+  if (dtInputs[1]) dtInputs[1].value = fmt(end);
+  // Default Aktivitäts-Typ zurücksetzen
+  const sel = d.querySelector('.drawer-pane select');
+  if (sel) sel.selectedIndex = 0;
+  // Textareas leeren
+  d.querySelectorAll('.drawer-pane textarea').forEach(t => t.value = '');
+  // Teilnehmer-Liste auf nur Organisator (PW) reduzieren
+  const attList = d.querySelector('.att-list');
+  if (attList) attList.innerHTML = '<div class="att-row"><div class="att-avatar">PW</div><div><div class="att-name">Peter Wiederkehr · Organisator</div><div class="att-role">Senior Partner · AM</div></div><span class="att-status accepted">Zugesagt</span></div>';
+  // Verknüpfung-Tab: Hinweis statt Demo-Daten
+  const linkPane = d.querySelectorAll('.drawer-pane')[2];
+  if (linkPane) linkPane.innerHTML = '<div class="drawer-section"><h4>Verknüpfte Einträge</h4><div style="font-size:12px;color:var(--text-light);line-height:1.5;margin-bottom:10px">Kandidat · Account · Mandat · Prozess verknüpfen — löst Auto-Historie-Eintrag bei Termin-Ende aus.</div><button class="btn btn-sm">+ Kandidat verknüpfen</button> <button class="btn btn-sm">+ Mandat verknüpfen</button> <button class="btn btn-sm">+ Account verknüpfen</button></div>';
+  // Coaching-Notes-Tab ausblenden (erscheint erst wenn Typ=Coaching gewählt)
+  const coachTab = d.querySelectorAll('.drawer-tab')[3];
+  if (coachTab) coachTab.style.display = 'none';
+  // Delete-Button ausblenden (neuer Termin hat nix zu löschen)
+  const delBtn = d.querySelector('.drawer-foot button[style*="red"]');
+  if (delBtn) delBtn.style.display = 'none';
+  // Auf Tab 0 setzen
+  drawerTab('eventDrawer', 0);
+  openDrawer('eventDrawer');
+  // Titel-Feld fokussieren
+  setTimeout(() => d.querySelector('.drawer-pane input[type=text]')?.focus(), 100);
+}
+function openEntity(kind) {
+  toast('Öffnet ' + (kind === 'mandat' ? 'Mandat · Muster AG' : 'Kandidat · J. Keller'), 'info');
+}
+
+/* ========= TOAST ========= */
+function toast(msg, kind) {
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind === 'info' ? ' info' : (kind === 'err' ? ' err' : ''));
+  el.innerHTML = '<span>' + (kind === 'err' ? '✕' : (kind === 'info' ? 'ℹ' : '✓')) + '</span><span>' + msg + '</span>';
+  host.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; }, 2400);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ========= KEYBOARD ========= */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAllDrawers();
+});
+</script>
+
+</body>
+</html>

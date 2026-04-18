@@ -1,0 +1,567 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Jobs" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: CFO / Finanzleitung
+    - generic [ref=e16]:
+      - generic [ref=e17]: ⌘K
+      - button "☀" [ref=e18] [cursor=pointer]
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - text: ℹ
+      - strong [ref=e21]: "Mockup-Demo:"
+      - text: Dieser Job ist „Aktiv". Scraper-Proposal-Banner als Header-Pattern für status=scraper_proposal-Jobs (z.B. Losinger-Lausanne in der Liste) —
+    - button "Banner anzeigen / ausblenden" [ref=e22] [cursor=pointer]
+  - generic [ref=e24]:
+    - generic [ref=e25]: 💼
+    - generic [ref=e26]:
+      - heading "CFO / Finanzleitung Bauherr Muster AG" [level=1] [ref=e27]
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - text: Owner AM
+          - strong [ref=e30]: PW
+        - generic [ref=e32]: Eröffnet 14.01.2026 · offen seit 91 Tagen
+        - generic [ref=e34]: Ehem. Scraper-Proposal · am 02.04.2026 bestätigt
+      - generic [ref=e35]:
+        - button "📤 Kandidat vorschlagen" [ref=e36] [cursor=pointer]
+        - button "📞 Ansprechperson" [ref=e37] [cursor=pointer]
+        - button "✉ Email" [ref=e38] [cursor=pointer]
+        - button "📄 Stellenausschreibung" [ref=e39] [cursor=pointer]
+        - button "🔁 Matching neu" [ref=e40] [cursor=pointer]
+        - button "✕ Schliessen" [ref=e41] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: Status
+        - combobox [ref=e45] [cursor=pointer]:
+          - option "⚠ Scraper-Vorschlag"
+          - option "● Aktiv" [selected]
+          - option "⏸ On Hold"
+          - option "✓ Besetzt"
+          - option "✕ Geschlossen"
+          - option "⊘ Abgelehnt"
+          - text: ▾
+      - generic [ref=e46]:
+        - 'link "🎯 Mandat: CFO-Suche" [ref=e47] [cursor=pointer]':
+          - /url: mandates.html
+        - 'link "📋 Stellenplan #PLN-2026-01" [ref=e48] [cursor=pointer]':
+          - /url: "#"
+        - generic [ref=e49]: 🔒 verdeckt
+  - generic [ref=e50]:
+    - generic [ref=e51]:
+      - generic [ref=e52]: 🎯 Matches ≥ 70 %
+      - generic [ref=e53]: "124"
+      - generic [ref=e54]: +7 seit 7 d · Top 94 %
+    - generic [ref=e55]:
+      - generic [ref=e56]: 🧺 Im Jobbasket
+      - generic [ref=e57]: "12"
+      - generic [ref=e58]: 4 Prelead · 3 Versandt
+    - generic [ref=e59]:
+      - generic [ref=e60]: ⚙ Aktive Prozesse
+      - generic [ref=e61]: "6"
+      - generic [ref=e62]: 5 Mandat · 1 EB
+    - generic [ref=e63]:
+      - generic [ref=e64]: 📍 Standort
+      - generic [ref=e65]: Zürich
+      - generic [ref=e66]: 80–100 % · hybrid
+    - generic [ref=e67]:
+      - generic [ref=e68]: 💰 TC-Range
+      - generic [ref=e69]: CHF 220–270k
+      - generic [ref=e70]: inkl. Bonus
+    - generic [ref=e71]:
+      - generic [ref=e72]: 🌡 Ø Match-Score
+      - generic [ref=e73]: 76 %
+      - generic [ref=e74]: über 124 Matches
+  - navigation [ref=e75]:
+    - generic [ref=e76] [cursor=pointer]: 1Übersicht
+    - generic [ref=e77] [cursor=pointer]: 2Matching
+    - generic [ref=e78] [cursor=pointer]: 3Jobbasket
+    - generic [ref=e79] [cursor=pointer]: 4Prozesse
+    - generic [ref=e80] [cursor=pointer]: 5Dokumente
+    - generic [ref=e81] [cursor=pointer]: 6History
+    - generic [ref=e82] [cursor=pointer]: 7Reminders
+  - generic [ref=e83]:
+    - text: ▾ ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e960]:
+      - generic [ref=e961]:
+        - generic [ref=e962]:
+          - strong [ref=e963]: 📤 Stellenausschreibung-Generator
+          - generic [ref=e964]: Aus Tab 1 §3 Stellenbeschreibung + §4 Konditionen · PDF + optionale Portal-Publikation
+        - generic [ref=e965]:
+          - text: Sprache
+          - combobox "Sprache" [ref=e966] [cursor=pointer]:
+            - option "Deutsch" [selected]
+            - option "Français"
+            - option "Italiano"
+            - option "English"
+        - generic [ref=e967]:
+          - checkbox "Logo ARK" [checked] [ref=e968]
+          - text: Logo ARK
+        - generic [ref=e969]:
+          - checkbox "Verdeckt (ohne AG-Name)" [ref=e970]
+          - text: Verdeckt (ohne AG-Name)
+        - button "🎯 Generieren" [ref=e971] [cursor=pointer]
+      - generic [ref=e972]:
+        - generic [ref=e973]:
+          - generic [ref=e974]: Total
+          - generic [ref=e975]: "14"
+          - generic [ref=e976]: dieser Job
+        - generic [ref=e977]:
+          - generic [ref=e978]: Stellenausschreibung
+          - generic [ref=e979]: "4"
+          - generic [ref=e980]: DE/FR/IT/EN Versionen
+        - generic [ref=e981]:
+          - generic [ref=e982]: Briefing
+          - generic [ref=e983]: "2"
+          - generic [ref=e984]: v3 aktuell
+        - generic [ref=e985]:
+          - generic [ref=e986]: Matching-Export
+          - generic [ref=e987]: "3"
+          - generic [ref=e988]: CSV/PDF
+        - generic [ref=e989]:
+          - generic [ref=e990]: Zuletzt hochgeladen
+          - generic [ref=e991]: 14.04.2026
+          - generic [ref=e992]: von JV
+      - generic [ref=e993]:
+        - searchbox "🔍 Suche in Dateinamen, Tags …" [ref=e994]
+        - combobox [ref=e995] [cursor=pointer]:
+          - option "Alle Sprachen" [selected]
+          - option "Deutsch"
+          - option "Français"
+          - option "Italiano"
+          - option "English"
+        - combobox [ref=e996] [cursor=pointer]:
+          - option "Alle Versionen" [selected]
+          - option "aktuell (v-latest)"
+          - option "historisch"
+        - combobox [ref=e997] [cursor=pointer]:
+          - option "Alle Urheber" [selected]
+          - option "PW"
+          - option "JV"
+          - option "LR"
+          - option "MF"
+          - option "— Doc-Generator —"
+          - option "— Upload —"
+        - generic [ref=e998]:
+          - generic [ref=e999] [cursor=pointer]: Liste
+          - generic [ref=e1000] [cursor=pointer]: Kacheln
+        - button "+ Upload" [ref=e1001] [cursor=pointer]
+      - generic [ref=e1003]:
+        - generic [ref=e1004] [cursor=pointer]:
+          - text: Alle
+          - generic [ref=e1005]: "14"
+        - generic [ref=e1006] [cursor=pointer]:
+          - text: Stellenausschreibung
+          - generic [ref=e1007]: "4"
+        - generic [ref=e1008] [cursor=pointer]:
+          - text: Briefing
+          - generic [ref=e1009]: "2"
+        - generic [ref=e1010] [cursor=pointer]:
+          - text: Matching-Export
+          - generic [ref=e1011]: "3"
+        - generic [ref=e1012] [cursor=pointer]:
+          - text: Organigramm-Position
+          - generic [ref=e1013]: "1"
+        - generic [ref=e1014] [cursor=pointer]:
+          - text: Sonstiges
+          - generic [ref=e1015]: "4"
+      - table [ref=e1018]:
+        - rowgroup [ref=e1019]:
+          - row "Name Kategorie Verknüpfung Erstellt Urheber Grösse ›" [ref=e1020]:
+            - columnheader [ref=e1021]
+            - columnheader "Name" [ref=e1022]
+            - columnheader "Kategorie" [ref=e1023]
+            - columnheader "Verknüpfung" [ref=e1024]
+            - columnheader "Erstellt" [ref=e1025]
+            - columnheader "Urheber" [ref=e1026]
+            - columnheader "Grösse" [ref=e1027]
+            - columnheader "›" [ref=e1028]
+        - rowgroup [ref=e1029]:
+          - row "PDF Stellenausschreibung · CFO Bauherr Muster AG · DE v4 · aktuell · Logo + Portal-Publikation Stellenausschreibung DE · v4 15.04.2026 Doc-Gen 284 KB ›" [ref=e1030] [cursor=pointer]:
+            - cell "PDF" [ref=e1031]:
+              - generic [ref=e1032]: PDF
+            - cell "Stellenausschreibung · CFO Bauherr Muster AG · DE v4 · aktuell · Logo + Portal-Publikation" [ref=e1033]:
+              - strong [ref=e1034]: Stellenausschreibung · CFO Bauherr Muster AG · DE
+              - generic [ref=e1035]: v4 · aktuell · Logo + Portal-Publikation
+            - cell "Stellenausschreibung" [ref=e1036]:
+              - generic [ref=e1037]: Stellenausschreibung
+            - cell "DE · v4" [ref=e1038]
+            - cell "15.04.2026" [ref=e1039]
+            - cell "Doc-Gen" [ref=e1040]:
+              - generic [ref=e1041]: Doc-Gen
+            - cell "284 KB" [ref=e1042]
+            - cell "›" [ref=e1043]:
+              - button "›" [ref=e1044]
+          - row "PDF Stellenausschreibung · CFO · FR v2 · Romandie-Version Stellenausschreibung FR · v2 15.04.2026 Doc-Gen 268 KB ›" [ref=e1045] [cursor=pointer]:
+            - cell "PDF" [ref=e1046]:
+              - generic [ref=e1047]: PDF
+            - cell "Stellenausschreibung · CFO · FR v2 · Romandie-Version" [ref=e1048]:
+              - strong [ref=e1049]: Stellenausschreibung · CFO · FR
+              - generic [ref=e1050]: v2 · Romandie-Version
+            - cell "Stellenausschreibung" [ref=e1051]:
+              - generic [ref=e1052]: Stellenausschreibung
+            - cell "FR · v2" [ref=e1053]
+            - cell "15.04.2026" [ref=e1054]
+            - cell "Doc-Gen" [ref=e1055]:
+              - generic [ref=e1056]: Doc-Gen
+            - cell "268 KB" [ref=e1057]
+            - cell "›" [ref=e1058]:
+              - button "›" [ref=e1059]
+          - row "PDF Stellenausschreibung · CFO · EN v1 · für LinkedIn International Stellenausschreibung EN · v1 15.04.2026 Doc-Gen 272 KB ›" [ref=e1060] [cursor=pointer]:
+            - cell "PDF" [ref=e1061]:
+              - generic [ref=e1062]: PDF
+            - cell "Stellenausschreibung · CFO · EN v1 · für LinkedIn International" [ref=e1063]:
+              - strong [ref=e1064]: Stellenausschreibung · CFO · EN
+              - generic [ref=e1065]: v1 · für LinkedIn International
+            - cell "Stellenausschreibung" [ref=e1066]:
+              - generic [ref=e1067]: Stellenausschreibung
+            - cell "EN · v1" [ref=e1068]
+            - cell "15.04.2026" [ref=e1069]
+            - cell "Doc-Gen" [ref=e1070]:
+              - generic [ref=e1071]: Doc-Gen
+            - cell "272 KB" [ref=e1072]
+            - cell "›" [ref=e1073]:
+              - button "›" [ref=e1074]
+          - row "PDF Stellenausschreibung · CFO · DE (v3) historisch Superseded von v4 Stellenausschreibung DE · v3 02.04.2026 Doc-Gen 280 KB ›" [ref=e1075] [cursor=pointer]:
+            - cell "PDF" [ref=e1076]:
+              - generic [ref=e1077]: PDF
+            - cell "Stellenausschreibung · CFO · DE (v3) historisch Superseded von v4" [ref=e1078]:
+              - strong [ref=e1079]: Stellenausschreibung · CFO · DE (v3)
+              - generic [ref=e1080]: historisch
+              - generic [ref=e1081]: Superseded von v4
+            - cell "Stellenausschreibung" [ref=e1082]:
+              - generic [ref=e1083]: Stellenausschreibung
+            - cell "DE · v3" [ref=e1084]
+            - cell "02.04.2026" [ref=e1085]
+            - cell "Doc-Gen" [ref=e1086]:
+              - generic [ref=e1087]: Doc-Gen
+            - cell "280 KB" [ref=e1088]
+            - cell "›" [ref=e1089]:
+              - button "›" [ref=e1090]
+          - row "DOCX Stellenbriefing CFO · Bauherr Muster AG 9 Sektionen · v3 · Kunden-Briefing Briefing intern 14.01.2026 JV 186 KB ›" [ref=e1091] [cursor=pointer]:
+            - cell "DOCX" [ref=e1092]:
+              - generic [ref=e1093]: DOCX
+            - cell "Stellenbriefing CFO · Bauherr Muster AG 9 Sektionen · v3 · Kunden-Briefing" [ref=e1094]:
+              - strong [ref=e1095]: Stellenbriefing CFO · Bauherr Muster AG
+              - generic [ref=e1096]: 9 Sektionen · v3 · Kunden-Briefing
+            - cell "Briefing" [ref=e1097]:
+              - generic [ref=e1098]: Briefing
+            - cell "intern" [ref=e1099]
+            - cell "14.01.2026" [ref=e1100]
+            - cell "JV" [ref=e1101]:
+              - generic [ref=e1102]: JV
+            - cell "186 KB" [ref=e1103]
+            - cell "›" [ref=e1104]:
+              - button "›" [ref=e1105]
+          - row "PDF Kultur-Briefing Bauherr Muster AG Werte, Entscheidungskultur, 360°-Feedback Briefing Account-Level 03.2025 PW 580 KB ›" [ref=e1106] [cursor=pointer]:
+            - cell "PDF" [ref=e1107]:
+              - generic [ref=e1108]: PDF
+            - cell "Kultur-Briefing Bauherr Muster AG Werte, Entscheidungskultur, 360°-Feedback" [ref=e1109]:
+              - strong [ref=e1110]: Kultur-Briefing Bauherr Muster AG
+              - generic [ref=e1111]: Werte, Entscheidungskultur, 360°-Feedback
+            - cell "Briefing" [ref=e1112]:
+              - generic [ref=e1113]: Briefing
+            - cell "Account-Level" [ref=e1114]
+            - cell "03.2025" [ref=e1115]
+            - cell "PW" [ref=e1116]:
+              - generic [ref=e1117]: PW
+            - cell "580 KB" [ref=e1118]
+            - cell "›" [ref=e1119]:
+              - button "›" [ref=e1120]
+          - row "XLSX Matching-Export · 124 Kandidaten ≥ 70 % Snapshot 15.04.2026 · 7 Sub-Scores Matching-Export Tab 2 Snapshot 15.04.2026 PW 112 KB ›" [ref=e1121] [cursor=pointer]:
+            - cell "XLSX" [ref=e1122]:
+              - generic [ref=e1123]: XLSX
+            - cell "Matching-Export · 124 Kandidaten ≥ 70 % Snapshot 15.04.2026 · 7 Sub-Scores" [ref=e1124]:
+              - strong [ref=e1125]: Matching-Export · 124 Kandidaten ≥ 70 %
+              - generic [ref=e1126]: Snapshot 15.04.2026 · 7 Sub-Scores
+            - cell "Matching-Export" [ref=e1127]:
+              - generic [ref=e1128]: Matching-Export
+            - cell "Tab 2 Snapshot" [ref=e1129]
+            - cell "15.04.2026" [ref=e1130]
+            - cell "PW" [ref=e1131]:
+              - generic [ref=e1132]: PW
+            - cell "112 KB" [ref=e1133]
+            - cell "›" [ref=e1134]:
+              - button "›" [ref=e1135]
+          - row "PDF Longlist-PDF · Top 20 Matches Anonymisiert, für Kunden-Vorbesprechung Matching-Export Tab 2 Snapshot 10.04.2026 Doc-Gen · JV 480 KB ›" [ref=e1136] [cursor=pointer]:
+            - cell "PDF" [ref=e1137]:
+              - generic [ref=e1138]: PDF
+            - cell "Longlist-PDF · Top 20 Matches Anonymisiert, für Kunden-Vorbesprechung" [ref=e1139]:
+              - strong [ref=e1140]: Longlist-PDF · Top 20 Matches
+              - generic [ref=e1141]: Anonymisiert, für Kunden-Vorbesprechung
+            - cell "Matching-Export" [ref=e1142]:
+              - generic [ref=e1143]: Matching-Export
+            - cell "Tab 2 Snapshot" [ref=e1144]
+            - cell "10.04.2026" [ref=e1145]
+            - cell "Doc-Gen · JV" [ref=e1146]:
+              - generic [ref=e1147]: Doc-Gen · JV
+            - cell "480 KB" [ref=e1148]
+            - cell "›" [ref=e1149]:
+              - button "›" [ref=e1150]
+          - row "XLSX Matching-Export · Baseline 08.04.2026 historisch Matching-Export Tab 2 Snapshot 08.04.2026 PW 98 KB ›" [ref=e1151] [cursor=pointer]:
+            - cell "XLSX" [ref=e1152]:
+              - generic [ref=e1153]: XLSX
+            - cell "Matching-Export · Baseline 08.04.2026 historisch" [ref=e1154]:
+              - strong [ref=e1155]: Matching-Export · Baseline 08.04.2026
+              - generic [ref=e1156]: historisch
+            - cell "Matching-Export" [ref=e1157]:
+              - generic [ref=e1158]: Matching-Export
+            - cell "Tab 2 Snapshot" [ref=e1159]
+            - cell "08.04.2026" [ref=e1160]
+            - cell "PW" [ref=e1161]:
+              - generic [ref=e1162]: PW
+            - cell "98 KB" [ref=e1163]
+            - cell "›" [ref=e1164]:
+              - button "›" [ref=e1165]
+          - row "IMG Organigramm-Position · CFO in Bauherr Muster AG Snapshot aus Account Tab 8 · Pos. direkt unter CEO Organigramm Account-Snapshot 10.04.2026 JV 124 KB ›" [ref=e1166] [cursor=pointer]:
+            - cell "IMG" [ref=e1167]:
+              - generic [ref=e1168]: IMG
+            - cell "Organigramm-Position · CFO in Bauherr Muster AG Snapshot aus Account Tab 8 · Pos. direkt unter CEO" [ref=e1169]:
+              - strong [ref=e1170]: Organigramm-Position · CFO in Bauherr Muster AG
+              - generic [ref=e1171]: Snapshot aus Account Tab 8 · Pos. direkt unter CEO
+            - cell "Organigramm" [ref=e1172]:
+              - generic [ref=e1173]: Organigramm
+            - cell "Account-Snapshot" [ref=e1174]
+            - cell "10.04.2026" [ref=e1175]
+            - cell "JV" [ref=e1176]:
+              - generic [ref=e1177]: JV
+            - cell "124 KB" [ref=e1178]
+            - cell "›" [ref=e1179]:
+              - button "›" [ref=e1180]
+          - row "DOCX Interview-Leitfaden CFO Hochbau Kompetenz-basiert · 12 Fragen Sonstiges Template 03.04.2026 PW 52 KB ›" [ref=e1181] [cursor=pointer]:
+            - cell "DOCX" [ref=e1182]:
+              - generic [ref=e1183]: DOCX
+            - cell "Interview-Leitfaden CFO Hochbau Kompetenz-basiert · 12 Fragen" [ref=e1184]:
+              - strong [ref=e1185]: Interview-Leitfaden CFO Hochbau
+              - generic [ref=e1186]: Kompetenz-basiert · 12 Fragen
+            - cell "Sonstiges" [ref=e1187]:
+              - generic [ref=e1188]: Sonstiges
+            - cell "Template" [ref=e1189]
+            - cell "03.04.2026" [ref=e1190]
+            - cell "PW" [ref=e1191]:
+              - generic [ref=e1192]: PW
+            - cell "52 KB" [ref=e1193]
+            - cell "›" [ref=e1194]:
+              - button "›" [ref=e1195]
+          - row "PDF Arbeitgeber-Portrait · Bauherr Muster AG Beilage für Kandidaten Sonstiges Account-Level 01.04.2026 JV 1.8 MB ›" [ref=e1196] [cursor=pointer]:
+            - cell "PDF" [ref=e1197]:
+              - generic [ref=e1198]: PDF
+            - cell "Arbeitgeber-Portrait · Bauherr Muster AG Beilage für Kandidaten" [ref=e1199]:
+              - strong [ref=e1200]: Arbeitgeber-Portrait · Bauherr Muster AG
+              - generic [ref=e1201]: Beilage für Kandidaten
+            - cell "Sonstiges" [ref=e1202]:
+              - generic [ref=e1203]: Sonstiges
+            - cell "Account-Level" [ref=e1204]
+            - cell "01.04.2026" [ref=e1205]
+            - cell "JV" [ref=e1206]:
+              - generic [ref=e1207]: JV
+            - cell "1.8 MB" [ref=e1208]
+            - cell "›" [ref=e1209]:
+              - button "›" [ref=e1210]
+          - row "DOCX Anforderungsprofil · Intern-Draft Vorstufe zum Stellenbriefing Sonstiges intern 05.01.2026 JV 64 KB ›" [ref=e1211] [cursor=pointer]:
+            - cell "DOCX" [ref=e1212]:
+              - generic [ref=e1213]: DOCX
+            - cell "Anforderungsprofil · Intern-Draft Vorstufe zum Stellenbriefing" [ref=e1214]:
+              - strong [ref=e1215]: Anforderungsprofil · Intern-Draft
+              - generic [ref=e1216]: Vorstufe zum Stellenbriefing
+            - cell "Sonstiges" [ref=e1217]:
+              - generic [ref=e1218]: Sonstiges
+            - cell "intern" [ref=e1219]
+            - cell "05.01.2026" [ref=e1220]
+            - cell "JV" [ref=e1221]:
+              - generic [ref=e1222]: JV
+            - cell "64 KB" [ref=e1223]
+            - cell "›" [ref=e1224]:
+              - button "›" [ref=e1225]
+          - row "PDF Vergütungs-Benchmark CFO Hochbau CH Peer-Analyse · 18 CH-Firmen Sonstiges Benchmark 18.01.2026 PW 420 KB ›" [ref=e1226] [cursor=pointer]:
+            - cell "PDF" [ref=e1227]:
+              - generic [ref=e1228]: PDF
+            - cell "Vergütungs-Benchmark CFO Hochbau CH Peer-Analyse · 18 CH-Firmen" [ref=e1229]:
+              - strong [ref=e1230]: Vergütungs-Benchmark CFO Hochbau CH
+              - generic [ref=e1231]: Peer-Analyse · 18 CH-Firmen
+            - cell "Sonstiges" [ref=e1232]:
+              - generic [ref=e1233]: Sonstiges
+            - cell "Benchmark" [ref=e1234]
+            - cell "18.01.2026" [ref=e1235]
+            - cell "PW" [ref=e1236]:
+              - generic [ref=e1237]: PW
+            - cell "420 KB" [ref=e1238]
+            - cell "›" [ref=e1239]:
+              - button "›" [ref=e1240]
+      - generic [ref=e1241]:
+        - text: "Job-Profile-Dokumente (5 Kategorien):"
+        - strong [ref=e1242]: Stellenausschreibung
+        - text: (Generator, PDF, Mehrsprachig) ·
+        - strong [ref=e1243]: Briefing
+        - text: (intern, 9-Sektionen, versioniert) ·
+        - strong [ref=e1244]: Matching-Export
+        - text: (Tab-2-Snapshots CSV/PDF) ·
+        - strong [ref=e1245]: Organigramm-Position
+        - text: (Account-Tab-8-Snapshot) ·
+        - strong [ref=e1246]: Sonstiges
+        - text: . Kandidat-Dokumente (ARK-CV/Exposé) leben am Kandidat, Mandat-Dokumente (Offerte/Vertrag/Rechnung) am Mandat.
+  - generic [ref=e225]:
+    - generic [ref=e226]: 1–7 Tabs
+    - generic [ref=e227]: M Matching neu
+    - generic [ref=e228]: T Theme
+    - generic [ref=e229]: ⌘K
+  - generic [ref=e230]:
+    - generic [ref=e231]:
+      - generic [ref=e232]: ↑
+      - generic [ref=e233]:
+        - heading "Dokument hochladen" [level=2] [ref=e234]
+        - generic [ref=e235]: Stellenausschreibung, Briefing oder Matching-Export
+      - button "✕" [ref=e236] [cursor=pointer]
+    - generic [ref=e238]:
+      - generic [ref=e239]:
+        - heading "Datei" [level=4] [ref=e240]
+        - generic [ref=e241] [cursor=pointer]:
+          - generic [ref=e242]: 📄
+          - generic [ref=e243]: Datei hierher ziehen oder klicken
+          - generic [ref=e244]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e245]:
+        - heading "Metadaten" [level=4] [ref=e246]
+        - generic [ref=e247]:
+          - generic [ref=e248]: Kategorie *
+          - combobox [ref=e249] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Stellenausschreibung"
+            - option "Briefing-Protokoll"
+            - option "Matching-Export"
+            - option "Organigramm-Position"
+            - option "Sonstiges"
+          - generic [ref=e250]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e251]
+          - generic [ref=e252]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e253]
+          - generic [ref=e254]: Sprache
+          - combobox [ref=e255] [cursor=pointer]:
+            - option "Deutsch" [selected]
+            - option "Französisch"
+            - option "Italienisch"
+            - option "Englisch"
+          - generic [ref=e256]: Urheber
+          - generic [ref=e257]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e258]:
+      - button "Abbrechen" [ref=e259] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e261] [cursor=pointer]
+  - generic [ref=e262]:
+    - generic [ref=e263]:
+      - generic [ref=e264]: 💬
+      - generic [ref=e265]:
+        - heading "Event-Detail" [level=2] [ref=e266]
+        - generic [ref=e267]: —
+      - button "✕" [ref=e268] [cursor=pointer]
+    - generic [ref=e271]:
+      - button "Schliessen" [ref=e272] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e273] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e274] [cursor=pointer]
+  - generic [ref=e275]:
+    - generic [ref=e276]:
+      - generic [ref=e277]: ⏰
+      - generic [ref=e278]:
+        - heading "Neuer Reminder" [level=2] [ref=e279]
+        - generic [ref=e280]: Job-Reminder anlegen (Stage-Deadline, Matching-Refresh, etc.)
+        - generic [ref=e282]: neu
+      - button "✕" [ref=e283] [cursor=pointer]
+    - generic [ref=e284]:
+      - generic [ref=e285]:
+        - heading "Reminder" [level=4] [ref=e286]
+        - generic [ref=e287]:
+          - generic [ref=e288]: Titel *
+          - textbox "z.B. Stage-Deadline 3rd Interview" [ref=e289]
+          - generic [ref=e290]: Typ *
+          - combobox [ref=e291] [cursor=pointer]:
+            - option "Stage-Deadline" [selected]
+            - option "Vakanz-Bestätigung"
+            - option "Matching-Refresh"
+            - option "Schließungs-Check"
+            - option "Stellenausschreibung-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e292]: Fällig am *
+          - textbox [ref=e293]
+          - generic [ref=e294]: Zuständig *
+          - combobox [ref=e295] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Backoffice"
+          - generic [ref=e296]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e297]
+          - generic [ref=e298]: Verknüpfung
+          - combobox [ref=e299] [cursor=pointer]:
+            - option "Job-Level (keine Verknüpfung)" [selected]
+            - option "Kandidat · Tobias Furrer"
+            - option "Prozess · Stage V"
+            - option "Mandat · CFO-Suche"
+            - option "Stellenausschreibung DE"
+          - generic [ref=e300]: Wiederholen
+          - combobox [ref=e301] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+      - generic [ref=e302]:
+        - heading "Benachrichtigung" [level=4] [ref=e303]
+        - generic [ref=e304]:
+          - generic [ref=e305]: Vorlaufzeit
+          - combobox [ref=e306] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e307]: Eskalation
+          - generic [ref=e308]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead
+    - generic [ref=e309]:
+      - button "Abbrechen" [ref=e310] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e312] [cursor=pointer]
+  - generic [ref=e313]:
+    - generic [ref=e314]:
+      - generic [ref=e315]: 📤
+      - generic [ref=e316]:
+        - heading "Kandidat vorschlagen" [level=2] [ref=e317]
+        - generic [ref=e318]: "Kandidat manuell in den Jobbasket dieses Jobs aufnehmen (Stage: Prelead)"
+        - generic [ref=e320]: CFO · Bauherr Muster AG
+      - button "✕" [ref=e321] [cursor=pointer]
+    - generic [ref=e322]:
+      - generic [ref=e323]:
+        - heading "Kandidaten-Auswahl" [level=4] [ref=e324]
+        - generic [ref=e325]:
+          - generic [ref=e326]: Kandidat *
+          - combobox "🔍 Kandidat suchen (Name, Aktueller AG, Funktion) …" [ref=e327]
+          - generic [ref=e328]: Source
+          - combobox [ref=e329] [cursor=pointer]:
+            - option "Manuelle AM-Empfehlung" [selected]
+            - option "Bestehender Kandidat (outside Matching)"
+            - option "Referral"
+            - option "Ex-Kandidat re-aktiviert"
+          - generic [ref=e330]: Start-Stage
+          - combobox [ref=e331] [cursor=pointer]:
+            - option "Prelead (Default)" [selected]
+            - option "GO mündlich (direkt, falls schon gesprochen)"
+      - generic [ref=e332]:
+        - heading "Begründung (optional)" [level=4] [ref=e333]
+        - textbox "z.B. Ex-Kollege von H. Müller, bekannt aus früherem Mandat, passt auch ohne Matching-Hit …" [ref=e334]
+      - generic [ref=e335]:
+        - text: ℹ Nach dem Anlegen erscheint der Kandidat in
+        - strong [ref=e336]: Tab 3 Jobbasket
+        - text: . Stage-Wechsel und Gate-Logik (Expose, TI, etc.) werden im
+        - strong [ref=e337]: Kandidat-Briefing Tab 5 Jobbasket
+        - text: verwaltet — nicht hier.
+    - generic [ref=e338]:
+      - button "Abbrechen" [ref=e339] [cursor=pointer]
+      - button "+ In Jobbasket aufnehmen" [ref=e341] [cursor=pointer]

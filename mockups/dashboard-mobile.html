@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Dashboard Mobile-Viewport-Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+  /* === Showcase-Page-Layout === */
+  .showcase-head {
+    padding:24px 32px; background:var(--surface);
+    border-bottom:1px solid var(--border);
+  }
+  .showcase-head h1 {
+    font-family:'Libre Baskerville',serif; font-size:24px;
+    color:var(--accent); margin:0 0 6px;
+  }
+  .breakpoint-tabs {
+    display:flex; gap:8px; margin-top:16px; border-bottom:1px solid var(--border);
+  }
+  .bp-tab {
+    padding:10px 18px; cursor:pointer; font-size:13px; color:var(--text-mid);
+    border-bottom:2px solid transparent;
+  }
+  .bp-tab.active {
+    color:var(--accent); border-bottom-color:var(--gold); font-weight:600;
+  }
+
+  .showcase-body {
+    padding:32px; background:var(--bg); min-height:calc(100vh - 180px);
+    display:flex; flex-wrap:wrap; gap:32px; justify-content:center; align-items:flex-start;
+  }
+
+  /* === Device-Frames === */
+  .device {
+    background:#1a1a1a; border-radius:24px; padding:12px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.3);
+    display:flex; flex-direction:column; align-items:center;
+    flex-shrink:0;
+  }
+  .device-label {
+    color:#fff; font-size:11px; margin-bottom:6px;
+    letter-spacing:0.5px; text-transform:uppercase;
+  }
+  .device-screen {
+    background:var(--surface); border-radius:16px; overflow-y:auto; overflow-x:hidden;
+    position:relative;
+  }
+
+  .device-mobile .device-screen { width:375px; height:740px; }
+  .device-tablet .device-screen { width:720px; height:540px; }
+  .device-desktop .device-screen { width:980px; height:620px; }
+
+  .device-mobile { border-radius:32px; padding:8px; }
+  .device-tablet { border-radius:16px; }
+  .device-desktop { border-radius:8px; padding:8px; }
+
+  .device-notch {
+    background:#1a1a1a; width:120px; height:20px; border-radius:0 0 12px 12px;
+    position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:10;
+  }
+
+  /* === Mobile-Dashboard-Simulation (innerhalb device-mobile) === */
+  .mobile-dashboard { font-size:13px; padding:0; }
+  .mobile-head {
+    padding:32px 16px 12px; background:var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .mobile-head .mobile-burger {
+    background:transparent; border:none; font-size:18px; cursor:pointer;
+  }
+  .mobile-head .mobile-title {
+    font-family:'Libre Baskerville',serif; font-size:16px; color:var(--accent);
+  }
+
+  .mobile-content { padding:12px; }
+  .mobile-content h2 {
+    font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent);
+    margin:4px 0 6px;
+  }
+  .mobile-content .muted { font-size:11px; margin-bottom:12px; }
+
+  .mobile-kpi-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:12px;
+  }
+  .mobile-kpi {
+    background:var(--surface); border:1px solid var(--border); border-radius:4px;
+    padding:10px; text-align:center;
+  }
+  .mobile-kpi .val { font-family:'Libre Baskerville',serif; font-size:18px; font-weight:700; color:var(--accent); }
+  .mobile-kpi.gold .val { color:var(--gold); }
+  .mobile-kpi.red .val { color:var(--red); }
+  .mobile-kpi .lbl { font-size:9px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px; }
+  .mobile-kpi .sub { font-size:9.5px; color:var(--text-light); margin-top:2px; }
+
+  .mobile-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:4px;
+    padding:10px 12px; margin-bottom:10px;
+  }
+  .mobile-card-head {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:6px; font-size:12.5px;
+  }
+  .mobile-card-head strong { color:var(--text); }
+  .mobile-card-head .count {
+    background:var(--gold-soft); color:var(--gold); padding:1px 7px;
+    border-radius:10px; font-size:10px; font-weight:600;
+  }
+  .mobile-card-head .count.red { background:var(--red-soft); color:var(--red); }
+  .mobile-card .link-to-detail {
+    display:block; text-align:center; padding:6px;
+    background:var(--bg); border-radius:3px; font-size:11.5px;
+    text-decoration:none; color:var(--accent); font-weight:500;
+    margin-top:4px;
+  }
+  .mobile-card .tiny-row {
+    display:flex; justify-content:space-between; font-size:11px;
+    padding:4px 0; border-bottom:1px solid var(--border);
+  }
+  .mobile-card .tiny-row:last-child { border-bottom:none; }
+
+  /* Tablet uses mixed grid */
+  .tablet-dashboard { padding:12px; font-size:12.5px; }
+  .tablet-dashboard .kpi-row {
+    display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:10px;
+  }
+  .tablet-dashboard .grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
+  }
+  .tablet-dashboard .card {
+    background:var(--surface); border:1px solid var(--border); border-radius:3px;
+    padding:8px 10px; font-size:11px;
+  }
+  .tablet-dashboard .card strong { font-size:12px; }
+
+  /* Desktop embed */
+  .desktop-preview {
+    padding:6px; font-size:12px; transform:scale(0.72); transform-origin:top left;
+    width:1361px; height:860px;
+  }
+
+  /* Annotations beside devices */
+  .annotations {
+    width:280px; color:var(--text); font-size:12px; line-height:1.6;
+  }
+  .annotations h3 {
+    font-family:'Libre Baskerville',serif; font-size:14px;
+    color:var(--accent); margin:0 0 8px;
+  }
+  .annotations .anno-item {
+    padding:8px 10px; background:var(--surface); border-left:3px solid var(--accent);
+    border-radius:2px; margin-bottom:6px; font-size:12px;
+  }
+  .annotations .anno-item .lbl {
+    font-size:10.5px; color:var(--text-light); letter-spacing:0.3px;
+    text-transform:uppercase; font-weight:600; margin-bottom:2px;
+  }
+
+  /* Mobile-Mode-Legende */
+  .mode-legend {
+    display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;
+  }
+  .mode-legend .chip {
+    padding:2px 8px; font-size:10.5px; border-radius:3px; background:var(--bg);
+    border:1px solid var(--border);
+  }
+  .mode-legend .chip.full { background:#d1fae5; color:#065f46; border-color:#a7f3d0; }
+  .mode-legend .chip.compact { background:#ede9fe; color:#6d28d9; border-color:#ddd6fe; }
+  .mode-legend .chip.link { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+  .mode-legend .chip.hidden { background:#e5e7eb; color:#4b5563; border-color:#d1d5db; text-decoration:line-through; }
+
+  /* Tabs-Sections */
+  .bp-section { display:none; }
+  .bp-section.active { display:flex; flex-wrap:wrap; gap:32px; justify-content:center; align-items:flex-start; width:100%; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="dashboard.html">Dashboard</a>
+    <span class="sep">/</span>
+    <span class="current">Mobile-Viewport-Demo</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="showcase-head">
+  <h1>Dashboard · Responsive-Breakpoints-Demo</h1>
+  <div class="muted" style="font-size:13px">Zeigt wie das Dashboard bei den 3 Breakpoints aus <code>ARK_DASHBOARD_CUSTOMIZATION_SCHEMA_v1.md §7</code> rendert. Pro Widget gesteuert durch <code>mobile_mode</code>-Feld im Widget-Katalog.</div>
+
+  <div class="mode-legend">
+    <span class="chip full">mode: full</span>
+    <span class="chip compact">mode: compact</span>
+    <span class="chip link">mode: link-only</span>
+    <span class="chip hidden">mode: hidden</span>
+    <span style="font-size:11px;color:var(--text-light);margin-left:8px">· Edit-Modus + Role-Toggle auf Mobile versteckt</span>
+  </div>
+
+  <div class="breakpoint-tabs">
+    <div class="bp-tab active" onclick="switchBp(0, this)">📱 Mobile (< 768px)</div>
+    <div class="bp-tab" onclick="switchBp(1, this)">📱 Tablet (768–1279px)</div>
+    <div class="bp-tab" onclick="switchBp(2, this)">💻 Desktop (≥ 1280px)</div>
+    <div class="bp-tab" onclick="switchBp(3, this)">🔀 Vergleich</div>
+  </div>
+</div>
+
+<div class="showcase-body">
+
+  <!-- SECTION 1: Mobile -->
+  <div class="bp-section active" id="bp-mobile">
+    <div class="device device-mobile">
+      <div class="device-label">iPhone 14 · 375 × 812</div>
+      <div class="device-screen">
+        <div class="device-notch"></div>
+        <div class="mobile-dashboard">
+          <div class="mobile-head">
+            <button class="mobile-burger">☰</button>
+            <div class="mobile-title">Dashboard</div>
+            <button class="mobile-burger">🔔 <span style="color:var(--red);font-size:10px">3</span></button>
+          </div>
+          <div class="mobile-content">
+            <h2>Hallo Peter</h2>
+            <div class="muted">Dienstag · 17.04.2026</div>
+
+            <!-- KPI-Grid 2-Spaltig auf Mobile -->
+            <div class="mobile-kpi-grid">
+              <div class="mobile-kpi"><div class="lbl">Umsatz YTD</div><div class="val">1.2M</div><div class="sub">+18 %</div></div>
+              <div class="mobile-kpi gold"><div class="lbl">Placements</div><div class="val">18</div><div class="sub">Ziel 32</div></div>
+              <div class="mobile-kpi"><div class="lbl">Mandate</div><div class="val">14</div><div class="sub">8T · 4TF · 2T</div></div>
+              <div class="mobile-kpi"><div class="lbl">Prozesse</div><div class="val">47</div><div class="sub">31 Kandidaten</div></div>
+              <div class="mobile-kpi red" style="grid-column:span 2"><div class="lbl">Blocker</div><div class="val">3</div><div class="sub">1 Claim · 2 stale</div></div>
+            </div>
+
+            <!-- Heute · Agenda (mode=full) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>📅 Heute</strong>
+                <span class="muted" style="font-size:10.5px">4 Termine</span>
+              </div>
+              <div class="tiny-row"><span>09:30 Coaching Furrer</span><span class="muted">JV</span></div>
+              <div class="tiny-row"><span>11:00 Update-Call Müller</span><span class="muted">PW</span></div>
+              <div class="tiny-row"><span>14:30 Pitch Halter AG</span><span class="muted">MF</span></div>
+              <div class="tiny-row"><span>16:00 Team-Standup</span><span class="muted">alle</span></div>
+            </div>
+
+            <!-- Pending Calls (mode=compact) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>📞 Pending Calls</strong>
+                <span class="count">7 pending</span>
+              </div>
+              <a href="#" class="link-to-detail">→ Alle ansehen &amp; klassifizieren</a>
+            </div>
+
+            <!-- Pending Emails (mode=compact) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>✉️ Pending Emails</strong>
+                <span class="count red">4 pending</span>
+              </div>
+              <a href="#" class="link-to-detail">→ Alle ansehen &amp; klassifizieren</a>
+            </div>
+
+            <!-- Meine Reminders (mode=full) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>🔔 Meine Reminders</strong>
+                <span class="count red">3 überfällig</span>
+              </div>
+              <div class="tiny-row"><span style="color:var(--red)">3d überfällig · Debriefing Müller</span><span>✓</span></div>
+              <div class="tiny-row"><span style="color:var(--red)">1d überfällig · Onboarding Furrer</span><span>✓</span></div>
+              <div class="tiny-row"><span>Heute 14:00 · Coaching Gerber</span><span>⏰</span></div>
+              <a href="#" class="link-to-detail">→ Alle 12 Reminders</a>
+            </div>
+
+            <!-- Garantie-14d (mode=link-only) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>🛡 Garantie-Ablauf</strong>
+                <span class="count red">2 kritisch</span>
+              </div>
+              <a href="#" class="link-to-detail">→ 6 Placements · Check-ins fällig</a>
+            </div>
+
+            <!-- To-Send-Inbox (mode=compact) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>📤 To-Send-Inbox</strong>
+                <span class="count">6 bereit</span>
+              </div>
+              <a href="#" class="link-to-detail">→ Versand-Liste öffnen</a>
+            </div>
+
+            <!-- Activity Feed (mode=link-only) -->
+            <div class="mobile-card">
+              <div class="mobile-card-head">
+                <strong>📡 Team-Aktivität</strong>
+                <span class="muted" style="font-size:10.5px">24 h</span>
+              </div>
+              <a href="#" class="link-to-detail">→ Gesamte Team-Aktivität ansehen</a>
+            </div>
+
+            <!-- HIDDEN auf Mobile: Team-Workload, System-Health, alle Analytics -->
+            <div class="muted" style="font-size:10.5px;text-align:center;padding:14px 0;border-top:1px dashed var(--border);margin-top:10px">
+              5 Widgets auf Mobile ausgeblendet<br>
+              (Team-Workload · System-Health · Time-to-Fill · Placement-Sparte · Honorar-Cashflow)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h3>📱 Mobile-Layout (&lt; 768px)</h3>
+
+      <div class="anno-item">
+        <div class="lbl">Grid</div>
+        1 Spalte · stacked · full-width
+      </div>
+      <div class="anno-item">
+        <div class="lbl">KPI-Strip</div>
+        5-Spaltig → <strong>2-Spaltig</strong> · Blocker spannt 2 Kacheln
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Role-Toggle + Edit-Modus</div>
+        <strong>versteckt</strong> · Customization nur Desktop (Touch-Drag fehleranfällig)
+      </div>
+      <div class="anno-item">
+        <div class="lbl">mode: full</div>
+        volle Card bleibt · Agenda · Reminders · KPIs
+      </div>
+      <div class="anno-item">
+        <div class="lbl">mode: compact</div>
+        Titel + Count-Badge + Link („→ Alle ansehen") · Pending Calls/Emails · To-Send
+      </div>
+      <div class="anno-item">
+        <div class="lbl">mode: link-only</div>
+        Nur Headline + Count + Link · Garantie-Ablauf · Activity-Feed
+      </div>
+      <div class="anno-item">
+        <div class="lbl">mode: hidden</div>
+        <strong>display:none</strong> · Team-Workload · System-Health · Analytics (Time-to-Fill · Placement-Sparte · Honorar-Cashflow)
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Performance</div>
+        Mobile lädt nur Widgets mit mode ≠ hidden · Payload-Ersparnis ~30 %
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Navigation</div>
+        Hamburger-Icon öffnet Sidebar-Drawer · Bell-Icon direkte Reminder-Inbox
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Tablet -->
+  <div class="bp-section" id="bp-tablet">
+    <div class="device device-tablet">
+      <div class="device-label">iPad · 768 × 1024</div>
+      <div class="device-screen">
+        <div class="tablet-dashboard">
+          <!-- KPI 5-Spaltig bleibt -->
+          <div class="kpi-row">
+            <div class="card" style="text-align:center;padding:8px"><div class="muted" style="font-size:9px">Umsatz</div><strong style="color:var(--accent);font-size:14px">1.2M</strong></div>
+            <div class="card" style="text-align:center;padding:8px"><div class="muted" style="font-size:9px">Placements</div><strong style="color:var(--gold);font-size:14px">18</strong></div>
+            <div class="card" style="text-align:center;padding:8px"><div class="muted" style="font-size:9px">Mandate</div><strong style="font-size:14px">14</strong></div>
+            <div class="card" style="text-align:center;padding:8px"><div class="muted" style="font-size:9px">Prozesse</div><strong style="font-size:14px">47</strong></div>
+            <div class="card" style="text-align:center;padding:8px"><div class="muted" style="font-size:9px">Blocker</div><strong style="color:var(--red);font-size:14px">3</strong></div>
+          </div>
+          <!-- 2-Spaltig statt 4 -->
+          <div class="grid">
+            <div class="card"><strong>📅 Heute-Agenda</strong><div class="muted">4 Termine</div></div>
+            <div class="card"><strong>📊 Pipeline-Snapshot</strong><div class="muted">18 Late-Stage · 4 Offer · 3 Stale</div></div>
+            <div class="card"><strong>🎯 Mein Fokus</strong><div class="muted">4 Items</div></div>
+            <div class="card"><strong>👥 Team-Workload</strong><div class="muted">5 Mitarbeiter</div></div>
+            <div class="card" style="grid-column:span 2"><strong>📞 Pending Calls</strong> <span style="float:right">7 pending</span></div>
+            <div class="card" style="grid-column:span 2"><strong>✉️ Pending Emails</strong> <span style="float:right">4 pending</span></div>
+            <div class="card" style="grid-column:span 2"><strong>📤 To-Send-Inbox</strong> <span style="float:right">6 bereit</span></div>
+            <div class="card"><strong>🔔 Reminders</strong><div class="muted">3 überfällig</div></div>
+            <div class="card"><strong>🛡 Garantie-14d</strong><div class="muted">2 kritisch</div></div>
+            <div class="card"><strong>⏳ Stale-Prozesse</strong><div class="muted">8 stale</div></div>
+            <div class="card"><strong>📡 Activity-Feed</strong><div class="muted">24 h</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h3>📱 Tablet-Layout (768–1279px)</h3>
+
+      <div class="anno-item">
+        <div class="lbl">Grid</div>
+        2 Spalten (statt 4) · grössere Karten + bessere Lesbarkeit
+      </div>
+      <div class="anno-item">
+        <div class="lbl">KPI-Strip</div>
+        5 Kacheln bleiben horizontal · kompakter
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Size-Override</div>
+        <code>quarter</code> + <code>third</code> werden zu <code>half</code>
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Role-Toggle + Edit-Modus</div>
+        <strong>sichtbar</strong> · Customization verfügbar
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Alle mode-Widgets</div>
+        wie Desktop gerendert · kein compact/link-only bei ≥ 768px
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Touch-Targets</div>
+        Drag-Handles vergrössert (16px statt 12px) · Resize-Handles 24×24
+      </div>
+      <div class="anno-item">
+        <div class="lbl">CSS-Breakpoint</div>
+        <code>@media (max-width: 1279px) and (min-width: 768px)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Desktop (full dashboard link) -->
+  <div class="bp-section" id="bp-desktop">
+    <div class="device device-desktop">
+      <div class="device-label">MacBook · 1280 × 800</div>
+      <div class="device-screen" style="overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:40px">
+        <div style="font-size:48px">💻</div>
+        <h2 style="font-family:'Libre Baskerville',serif;color:var(--accent);margin:0;text-align:center">Desktop-Dashboard</h2>
+        <div class="muted" style="font-size:14px;max-width:420px;text-align:center;line-height:1.6">
+          Volle Dashboard-Ansicht mit Role-Toggle · Edit-Modus · Widget-Katalog-Drawer · Drag-Reorder · Resize-Handles.
+        </div>
+        <a href="dashboard.html" class="btn btn-sm btn-primary" style="font-size:13px;padding:10px 20px;margin-top:16px">
+          → Zum vollen Dashboard
+        </a>
+        <div class="muted" style="font-size:11px;margin-top:12px">Öffnet <code>dashboard.html</code> in gleichem Tab</div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h3>💻 Desktop-Layout (≥ 1280px)</h3>
+
+      <div class="anno-item">
+        <div class="lbl">Grid</div>
+        12 Spalten · beliebige Widget-Grössen (quarter/third/half/full)
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Role-Toggle</div>
+        Dropdown oben rechts mit 7 Rollen + Combined
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Edit-Modus</div>
+        Drag-Reorder · Resize · ✕ entfernen · ⚙ konfigurieren · + Widget-Katalog-Drawer
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Widget-Katalog-Drawer</div>
+        540px slide-in · Search + Kategorie-Filter · Add/Already-Active-Markierung
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Admin-Features</div>
+        Template-Editor-Link bei Rolle Admin
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Performance</div>
+        Lazy-Load Widgets beim Scroll · WebSocket Live-Updates für Triage-Widgets
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Comparison (side-by-side) -->
+  <div class="bp-section" id="bp-comparison">
+    <div style="display:flex;gap:20px;align-items:flex-start;justify-content:center;flex-wrap:wrap">
+      <div class="device device-mobile" style="transform:scale(0.75);transform-origin:top center;margin-top:-40px;margin-bottom:-100px">
+        <div class="device-label">📱 Mobile</div>
+        <div class="device-screen">
+          <div class="device-notch"></div>
+          <div class="mobile-dashboard">
+            <div class="mobile-head">
+              <button class="mobile-burger">☰</button>
+              <div class="mobile-title">Dashboard</div>
+              <button class="mobile-burger">🔔</button>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-kpi-grid">
+                <div class="mobile-kpi"><div class="lbl">Umsatz</div><div class="val">1.2M</div></div>
+                <div class="mobile-kpi gold"><div class="lbl">Placements</div><div class="val">18</div></div>
+                <div class="mobile-kpi"><div class="lbl">Mandate</div><div class="val">14</div></div>
+                <div class="mobile-kpi"><div class="lbl">Prozesse</div><div class="val">47</div></div>
+              </div>
+              <div class="mobile-card"><div class="mobile-card-head"><strong>📅 Heute</strong></div></div>
+              <div class="mobile-card"><div class="mobile-card-head"><strong>📞 Pending Calls</strong><span class="count">7</span></div></div>
+              <div class="mobile-card"><div class="mobile-card-head"><strong>✉️ Pending Emails</strong><span class="count red">4</span></div></div>
+              <div class="mobile-card"><div class="mobile-card-head"><strong>🔔 Reminders</strong><span class="count red">3</span></div></div>
+              <div class="mobile-card"><div class="mobile-card-head"><strong>🛡 Garantie-14d</strong></div></div>
+              <div class="muted" style="font-size:10px;text-align:center;padding:8px">5 Widgets ausgeblendet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device device-tablet" style="transform:scale(0.7);transform-origin:top center;margin-top:-50px">
+        <div class="device-label">📱 Tablet</div>
+        <div class="device-screen">
+          <div class="tablet-dashboard">
+            <div class="kpi-row">
+              <div class="card" style="text-align:center;padding:6px"><strong style="color:var(--accent)">1.2M</strong></div>
+              <div class="card" style="text-align:center;padding:6px"><strong style="color:var(--gold)">18</strong></div>
+              <div class="card" style="text-align:center;padding:6px"><strong>14</strong></div>
+              <div class="card" style="text-align:center;padding:6px"><strong>47</strong></div>
+              <div class="card" style="text-align:center;padding:6px"><strong style="color:var(--red)">3</strong></div>
+            </div>
+            <div class="grid">
+              <div class="card"><strong>📅 Heute</strong></div>
+              <div class="card"><strong>📊 Pipeline</strong></div>
+              <div class="card"><strong>🎯 Fokus</strong></div>
+              <div class="card"><strong>👥 Team</strong></div>
+              <div class="card" style="grid-column:span 2"><strong>📞 Pending Calls · 7</strong></div>
+              <div class="card" style="grid-column:span 2"><strong>✉️ Pending Emails · 4</strong></div>
+              <div class="card" style="grid-column:span 2"><strong>📤 To-Send · 6</strong></div>
+              <div class="card"><strong>🔔 Reminders</strong></div>
+              <div class="card"><strong>🛡 Garantie</strong></div>
+              <div class="card"><strong>⏳ Stale</strong></div>
+              <div class="card"><strong>📡 Activity</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device device-desktop" style="transform:scale(0.55);transform-origin:top center;margin-top:-80px;margin-bottom:-250px">
+        <div class="device-label">💻 Desktop</div>
+        <div class="device-screen" style="display:flex;align-items:center;justify-content:center;padding:40px">
+          <div style="text-align:center">
+            <div style="font-size:40px">💻</div>
+            <div style="margin-top:10px">Volle Ansicht</div>
+            <a href="dashboard.html" class="btn btn-sm btn-primary" style="font-size:11px;margin-top:14px;display:inline-block">→ dashboard.html</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+function switchBp(idx, el) {
+  document.querySelectorAll('.bp-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const sections = document.querySelectorAll('.bp-section');
+  sections.forEach(s => s.classList.remove('active'));
+  sections[idx].classList.add('active');
+}
+</script>
+</body>
+</html>

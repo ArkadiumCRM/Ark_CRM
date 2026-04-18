@@ -1,0 +1,631 @@
+# ARK CRM — Projekt-Detailmaske Schema v0.1
+
+**Stand:** 13.04.2026
+**Status:** Erstentwurf — Review ausstehend
+**Quellen:** Wiki [[projekt-datenmodell]], [[stammdaten]] (Cluster, Sparten, BKP, SIA), ARK_DATABASE_SCHEMA_v1_2.md, ARK_BKP_CODES_STAMMDATEN.md, Entscheidungen 2026-04-13 (15 Fragen PR)
+**Begleitdokument:** `ARK_PROJEKT_DETAILMASKE_INTERACTIONS_v0_1.md`
+**Vorrang:** Stammdaten > dieses Schema > Frontend Freeze > Mockups
+
+---
+
+## 0. ZIELBILD
+
+Vollseite `/projects/[id]` — zentrale Datenstruktur für Bauprojekte als Matching-Basis und Marktübersicht.
+
+**Zwei primäre Use Cases (PR-1 A+D):**
+1. **Matching-Basis**: Welche Kandidaten haben Erfahrung mit ähnlichen Projekten? (BKP/SIA/Cluster-Match)
+2. **Marktkenntnis**: Überblick über relevante Bauprojekte in der Branche
+
+**Architektur (PR-3 bestätigt — 3-Tier, breit + tief):**
+- **Level 1 — Projekt** (z.B. "Überbauung Kalkbreite Zürich")
+- **Level 2 — Gewerk** (BKP-basiert, mehrere pro Projekt, z.B. BKP 2.1 Baukonstruktionen)
+- **Level 3 — Beteiligungen** pro Gewerk — **mehrere Firmen und Kandidaten pro Gewerk möglich**, mit SIA-Phasen, Rollen, Summen, Kommentaren
+
+**Primäre Nutzer:**
+- AM: Projekt-Stammdaten pflegen, Matching-Kontext
+- Researcher / Hunter: Kandidaten mit passender Projekt-Erfahrung finden
+- CM: Kontext für Kandidaten-Pitch (welche Projekte hat er gemacht)
+- Admin: Marktübersicht, strategische Projekte
+
+**Keine neue Projekt-Typen-Tabelle** — Klassifikation via bestehende Cluster/Sparten (Entscheidung 2026-04-13, PR-6).
+
+---
+
+## 1. DESIGNSYSTEM-REFERENZ
+
+Erbt aus [[kandidatenmaske-schema]] § 0. Projekt-spezifisch:
+
+### Farb-Tokens
+
+| Token | Hex | Verwendung |
+|-------|-----|-----------|
+| Projekt-Primär | Teal `#196774` | Projekt-Badge, BKP-Section-Header |
+| Status Planung | Amber `#f59e0b` | Planungs-Phase |
+| Status Ausführung | Green `#5DCAA5` | In Ausführung |
+| Status Abgeschlossen | Gold-dim | Abgeschlossen |
+| Status Gestoppt | Red `#ef4444` | Gestoppt |
+| BKP-Badge | Teal-hell | Pro BKP-Gewerk |
+| SIA-Badge | Purple `#a78bfa` | Pro SIA-Phase |
+| Beteiligung-Rolle | Blue `#60a5fa` | Rollen-Pill |
+
+### Mockup-Dateien (zu erstellen)
+
+| # | Tab | Datei (geplant) |
+|---|-----|-----------------|
+| 1 | Übersicht | `projekt_uebersicht_v1.html` |
+| 2 | Gewerke (BKP) | `projekt_gewerke_v1.html` |
+| 3 | Matching | `projekt_matching_v1.html` |
+| 4 | Galerie | `projekt_galerie_v1.html` |
+| 5 | Dokumente | `projekt_dokumente_v1.html` |
+| 6 | History | `projekt_history_v1.html` |
+
+---
+
+## 2. GESAMT-LAYOUT
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ Breadcrumb: Projekte / Überbauung Kalkbreite Zürich              │
+├──────────────────────────────────────────────────────────────────┤
+│ HEADER                                                             │
+│ ┌──────────────────────────────────────────────────────────────┐ │
+│ │ [Hero-Bild] Überbauung Kalkbreite Zürich  [Ausführung ▼]      │ │
+│ │ Bauherr: Volare Group · Zürich · Hochbau · BKP 2 + 3          │ │
+│ │                                                                  │ │
+│ │ SNAPSHOT-BAR (sticky, 6 Slots)                                 │ │
+│ │ 🏗Status  📅Zeitraum  💰Volumen  🏢Firmen  👥Kandidaten  📸Fotos│ │
+│ │                                                                  │ │
+│ │ [📄 Projekt-Report] [➕ Beteiligung hinzufügen] [🔔 Reminder]  │ │
+│ └──────────────────────────────────────────────────────────────┘ │
+│ TAB-BAR: Übersicht │ Gewerke │ Matching │ Galerie │ Dok │ Hist  │
+│                                                                    │
+│ TAB-CONTENT                                                        │
+│ KEYBOARD-HINTS-BAR                                                 │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 3. BREADCRUMB
+
+```
+Projekte / [Projekt-Name]        🔍 Ctrl+K  [Avatar]
+```
+
+Alternative Einstiege (Referrer-basiert):
+- `Accounts / [Account] / Projekte / [Projekt-Name]`
+- `Candidates / [Kandidat] / Werdegang / [Projekt]`
+
+---
+
+## 4. HEADER
+
+### 4.1 Hero-Bild
+
+Klein (60×60) im Header, bei Klick → Galerie-Tab mit diesem als primäres Bild.
+
+### 4.2 Titel-Zeile
+
+| Element | Inhalt | Interaktion |
+|---------|--------|-------------|
+| Projekt-Name | `fact_projects.project_name` (32px, fett) | Inline-Edit |
+| Status-Dropdown | Planung / Ausschreibung / Ausführung / Abgenommen / Abgeschlossen / Gestoppt | Confirm bei Wechsel |
+
+### 4.3 Meta-Zeile
+
+| Element | Inhalt |
+|---------|--------|
+| Bauherr | Account-Link |
+| Standort | Adresse (kurz) |
+| Cluster | Badge (Hauptcluster, z.B. "Hochbau") |
+| BKP-Hauptgewerke | Badge-Liste (aus Tab 2 aggregiert) |
+
+### 4.4 Snapshot-Bar (sticky, 6 Slots)
+
+| Slot | Inhalt | Source |
+|------|--------|--------|
+| 1 | 🏗 Status | `status` |
+| 2 | 📅 Zeitraum | `start_date – end_date_planned` (bzw. actual) |
+| 3 | 💰 Volumen | `volume_chf` oder Range-Label |
+| 4 | 🏢 Beteiligte Firmen | `COUNT(DISTINCT account_id FROM fact_project_bkp_participations)` |
+| 5 | 👥 Beteiligte Kandidaten | `COUNT(DISTINCT candidate_id FROM fact_project_candidate_participations)` |
+| 6 | 📸 Fotos | `COUNT(fact_project_media WHERE type='photo' OR 'rendering')` |
+
+### 4.5 Quick Actions
+
+| Button | Aktion |
+|--------|--------|
+| 📄 Projekt-Report | PDF mit Stammdaten, Gewerken, Beteiligungen, Galerie-Preview (Arkadium-Pitch-Format) |
+| ➕ Beteiligung hinzufügen | Drawer für neue Firmen-/Kandidaten-Beteiligung an einem Gewerk |
+| 🔔 Reminder | Quick-Popover |
+
+### 4.6 Tab-Bar
+
+6 Tabs, Keyboard `1`–`6`:
+
+```
+│ Übersicht │ Gewerke (BKP) │ Matching │ Galerie │ Dokumente │ History │
+```
+
+---
+
+## 5. TAB 1 — ÜBERSICHT
+
+### 5.1 Layout
+
+2-col Grid, Sektionen collapsible.
+
+### 5.2 Öffentlich / Intern Trennung (PR-15)
+
+Oberer Bereich **"Öffentliche Infos"** (können z.B. in Projekt-Report fliessen, potentiell auch Kunden-facing):
+- Grunddaten, Volumen, Zeitraum, Bauherr, Standort, Foto-Highlights
+
+Unterer Bereich **"Arkadium-interne Infos"** (geschützt):
+- Strategische Bewertung, Arkadium-Kunde-Beziehung, interne Tags
+- AM-Notizen pro Account — via `fact_account_project_notes` Bridge (siehe § 14)
+
+### 5.3 Sektionen
+
+#### Sektion 1 — Grunddaten (öffentlich)
+
+| Feld | Typ | DB |
+|------|-----|-----|
+| `project_name` | Text | `fact_projects.project_name` |
+| `bauherr_account_id` | Account-Link (FK) | Bezug zum primären Bauherrn |
+| Standort | Adresse (Strasse, PLZ, Ort, Kanton) | `address_*` |
+| Koordinaten | Lat/Long (optional, Phase 2 für Karte) | — |
+| Cluster | Multi-Select aus `dim_clusters` | `cluster_ids` JSONB |
+| Sparten | Multi-Toggle (ING/GT/ARC/REM/PUR) | `sparte_ids` JSONB |
+| Status | Enum | `status` |
+| Start-Datum | Date | `start_date` |
+| End-Datum (geplant) | Date | `end_date_planned` |
+| End-Datum (tatsächlich) | Date | `end_date_actual` |
+
+#### Sektion 2 — Volumen & Dimensionen (öffentlich)
+
+| Feld | Typ | DB |
+|------|-----|-----|
+| Projektvolumen (CHF) | CHF exakt oder Range-Dropdown | `volume_chf_exact`, `volume_range` |
+| Bruttogeschossfläche (m²) | Int | `bgf_sqm` |
+| Anzahl Wohnungen / Einheiten | Int | `unit_count` |
+| Anzahl Stockwerke | Int | `floor_count` |
+| Baugrube-Tiefe | Decimal | `pit_depth_m` |
+
+#### Sektion 3 — Projekt-Beschreibung (öffentlich)
+
+Rich-Text / Markdown Editor. Quelle: extrahiert aus Baublatt/simap/Pressemeldungen oder manuell.
+
+#### Sektion 4 — Öffentliche Referenzen (öffentlich)
+
+| Feld | Typ | Source |
+|------|-----|--------|
+| Baublatt-URL | URL | `baublatt_url` |
+| simap.ch-URL | URL | `simap_url` |
+| Presse-URLs | Multi-URL | `press_urls` JSONB |
+| Weitere Referenzen | Freitext-Liste | — |
+
+#### Sektion 5 — Arkadium-interne Strategie (intern)
+
+| Feld | Typ | DB |
+|------|-----|-----|
+| Strategische Bewertung | Dropdown (Top-Projekt / Standard / Nischen / Low Priority) | `strategic_rating` |
+| Tags | Multi-Select Freie Tags | `tags` JSONB |
+| Interne Kommentare | Textarea | `internal_notes` |
+| Arkadium-Involvement-Level | Dropdown (Aktiv / Beobachtet / Keine Beteiligung) | `involvement_level` |
+
+#### Sektion 6 — AM-Notizen pro Account (intern, per Account)
+
+Tabellen-Sub-Section:
+- Pro Account der mit diesem Projekt verknüpft ist, zeigt AM-spezifische Notizen
+- Liste der Notizen mit Account-Link + Autor + Datum + Text
+- Nur der AM des jeweiligen Accounts kann seine Notiz editieren
+- Datenquelle: `fact_account_project_notes` Bridge
+
+---
+
+## 6. TAB 2 — GEWERKE (BKP) — KERN-ARBEITSUMGEBUNG
+
+Die operative Tiefen-Ansicht: pro BKP-Gewerk welche Firmen + Kandidaten beteiligt sind, in welchen SIA-Phasen, mit welchen Summen und Kommentaren.
+
+### 6.1 Layout
+
+Akkordeon-Liste: jede BKP-Gewerk-Zeile ist expandable. Default: **erste 3 expandiert**, Rest kollabiert.
+
+### 6.2 BKP-Gewerk-Zeile (kollabiert)
+
+```
+▶ BKP 2.1 — Baukonstruktionen                 CHF 12'500'000   👥 8 Kandidaten · 🏢 3 Firmen
+```
+
+### 6.3 BKP-Gewerk-Detail (expandiert)
+
+```
+▼ BKP 2.1 — Baukonstruktionen                 CHF 12'500'000   👥 8 · 🏢 3
+
+   📝 Gewerk-Kommentar: [editable textarea — Arkadium-interne Einschätzung]
+
+   🏢 BETEILIGTE FIRMEN (3)
+   ─────────────────────────────────────────────────────────────────
+   │ Implenia AG         │ Generalunternehmer │ CHF 12'500'000 │ ⋯ │
+   │ Muster Bau AG       │ Subunternehmer     │ CHF 2'100'000  │ ⋯ │
+   │ XYZ Handwerk        │ Subunternehmer     │ CHF 450'000    │ ⋯ │
+
+   👥 BETEILIGTE KANDIDATEN (8)
+   ─────────────────────────────────────────────────────────────────
+   │ Max Muster    │ Bauleiter   │ via Implenia    │ SIA 41, 51, 52    │ 2023-2025 │ ⋯ │
+   │ Anna Klein    │ Projektleit.│ via Implenia    │ SIA 41, 51        │ 2023-2024 │ ⋯ │
+   │ …                                                                               │
+
+   [+ Firma hinzufügen]  [+ Kandidat hinzufügen]
+```
+
+### 6.4 Firmen-Beteiligungs-Drawer
+
+Beim Klick auf Firmen-Zeile oder "+ Firma hinzufügen":
+
+| Feld | Typ |
+|------|-----|
+| Account (FK) | Autocomplete aus `dim_accounts` (Kein-Match → "Als Account anlegen") |
+| Rolle | Dropdown (Bauherr / Architekt / Generalplaner / TU / GU / Fachplaner / Subunternehmer / Bauleitung / Handwerker / Lieferant / Andere) |
+| Zeitraum (von/bis) | Date-Range |
+| Summe (CHF) | Decimal (optional) |
+| Kommentar | Textarea (Arkadium-intern) |
+| SIA-Phasen (Multi-Select) | Multi-Select aus 11 SIA-Phasen |
+
+### 6.5 Kandidaten-Beteiligungs-Drawer
+
+Beim Klick auf Kandidaten-Zeile oder "+ Kandidat hinzufügen":
+
+| Feld | Typ |
+|------|-----|
+| Kandidat (FK) | Autocomplete aus `dim_candidates_profile` (Kein-Match → "Als Kandidat anlegen") |
+| Rolle | Dropdown (Projektleiter / Bauleiter / Architekt / Planer / Polier / Fachspezialist / …) |
+| Anstellungs-Firma zum Zeitpunkt | FK zu `dim_accounts` (optional, Default aus Werdegang) |
+| SIA-Phasen | Multi-Select (11 Phasen) |
+| Zeitraum (von/bis) | Date-Range |
+| Verantwortungsgrad | Dropdown (Führend / Mitarbeitend / Beratend) |
+| Kommentar | Textarea (Arkadium-intern, z.B. "Sehr gute Leistung laut Referenzen") |
+
+### 6.6 Gewerk hinzufügen / entfernen
+
+Button "+ BKP-Gewerk hinzufügen" → Dropdown aus BKP-Katalog (~425 Codes).
+
+### 6.7 Aggregate-KPIs pro Gewerk
+
+Für jedes Gewerk werden automatisch berechnet:
+- Summe aller Firmen-Beteiligungen
+- Summe aller SIA-Phasen-Dauern
+- Anzahl beteiligte Firmen / Kandidaten
+
+### 6.8 Gewerk-Validierung
+
+- Ein Gewerk kann mehrere Firmen und mehrere Kandidaten haben (breit+tief, PR-3 bestätigt)
+- Ein Kandidat kann in mehreren SIA-Phasen eines Gewerks beteiligt sein
+- Duplikate (gleicher Kandidat + gleiche Firma + gleiches Gewerk + überlappender Zeitraum) werden **als Warnung** angezeigt (Confirm statt Block)
+
+---
+
+## 7. TAB 3 — MATCHING
+
+Findet Kandidaten mit ähnlicher Projekt-Erfahrung.
+
+### 7.1 Matching-Kriterien
+
+Zwei Richtungen:
+
+**(A) Kandidaten → dieses Projekt:**
+Welche Kandidaten wären gut für dieses Projekt (aufgrund ihrer bisherigen Projekt-Erfahrung in ähnlichen Gewerken/Clustern)?
+
+**(B) Ähnliche Projekte:**
+Welche anderen Projekte im CRM sind diesem ähnlich (Cluster + BKP + Volumen-Range + Standort)?
+
+### 7.2 Tab-Sub-Sections
+
+#### Sub-Section A: Passende Kandidaten
+
+Tabelle mit Score (analog Job-Matching):
+
+| Spalte | Inhalt |
+|--------|--------|
+| Kandidat | Foto + Name |
+| Aktuelle Funktion / Arbeitgeber | |
+| Score (0–100) | Gauge + Breakdown |
+| Bisherige Projekte gleichen Clusters | Count (z.B. "5 Hochbau-Projekte") |
+| Bisherige BKP-Erfahrung | Match-Liste (z.B. "BKP 2.1 ✓, BKP 3.4 ✓") |
+| SIA-Phasen-Abdeckung | ✓ pro benötigte Phase |
+| Aktionen | → Profil / + Pitch-Vorbereitung |
+
+#### Sub-Section B: Ähnliche Projekte
+
+Tabelle mit Ähnlichkeits-Score:
+
+| Spalte | Inhalt |
+|--------|--------|
+| Projekt | Link |
+| Bauherr | Account |
+| Cluster-Match | % |
+| BKP-Überlappung | % |
+| Volumen-Ähnlichkeit | % |
+| Geografie-Distanz | km |
+| Overall-Score | 0–100 |
+
+### 7.3 Filter
+
+- Mindest-Score-Schwelle
+- Cluster (pre-set)
+- SIA-Phasen
+- Kandidat-Temperatur
+
+---
+
+## 8. TAB 4 — GALERIE
+
+Foto-/Rendering-Sammlung des Projekts.
+
+### 8.1 Layout
+
+Masonry-Grid oder Karten-Grid, klickbar zur Lightbox.
+
+### 8.2 Medien-Typen
+
+| Typ | Beschreibung |
+|-----|-------------|
+| Foto | Echtes Projekt-Foto |
+| Rendering | Visualisierung (Architekt) |
+| Plan | Grundriss / Schnitt |
+| Baustelle | Aktuelle Baustellenfotos |
+| After-Move-In | Post-Completion-Bilder |
+
+### 8.3 Upload-Drawer
+
+- Multi-File-Upload (Drag & Drop)
+- Pro Bild: Typ, Bildunterschrift, Aufnahmedatum, Autor, Copyright-Info
+- Privacy-Flag: Öffentlich / Intern
+
+### 8.4 Lightbox
+
+Vollbild-Ansicht mit Navigation, Download, Zuschneiden (Phase 2).
+
+### 8.5 Empty-State
+
+> "Noch keine Fotos. Lade Bilder hoch, um das Projekt visuell zu dokumentieren. [📤 Upload]"
+
+---
+
+## 9. TAB 5 — DOKUMENTE
+
+### 9.1 Kategorien
+
+| Kategorie | Zweck |
+|-----------|-------|
+| Projekt-Beschreibung (offiziell) | Vom Kunden bereitgestellt |
+| Pressemeldungen | Medien-PDFs |
+| Baublatt / simap.ch Extracts | Automatisiert aus Scraper oder manuell |
+| Arkadium-Pitch-Unterlagen | Für neue Mandate bei ähnlichen Projekten |
+| Referenz-Schreiben | Kunden-Referenzen |
+| Sonstiges | Manuell |
+
+**Explizit NICHT hier:** AM-Notizen zum Projekt (→ `fact_account_project_notes` im Account-Kontext, angezeigt in Tab 1 Sektion 6).
+
+### 9.2 Layout
+
+Card-Grid mit Kategorie-Filter (analog Mandat Tab 6).
+
+### 9.3 Auto-Enrichment
+
+Bei Upload werden via AI:
+- Dokumente automatisch kategorisiert
+- Metadaten extrahiert (Datum, Titel)
+- Falls PDF mit Projekt-Beschreibung: Text-Extraction für Matching
+
+---
+
+## 10. TAB 6 — HISTORY
+
+### 10.1 Event-Typen (projekt-spezifisch)
+
+- `project_created_manual` / `_from_candidate_werdegang` / `_from_scraper`
+- `status_changed`
+- `bauherr_changed`
+- `bkp_gewerk_added` / `_removed`
+- `company_participation_added` / `_changed` / `_removed`
+- `candidate_participation_added` / `_changed` / `_removed`
+- `media_uploaded`
+- `document_uploaded`
+- `internal_notes_updated`
+- `account_project_note_added` (pro Account-Kontext)
+
+### 10.2 Filter
+
+Event-Typ, User, Zeitraum, Scope (Grunddaten / Gewerke / Beteiligungen / Medien / Notizen).
+
+---
+
+## 11. KEYBOARD-HINTS-BAR
+
+**Global:** `1`–`6` Tab · `Ctrl+K` Suche · `Esc`
+
+**Tab 1 Übersicht:** `E` Edit · `S` Save
+
+**Tab 2 Gewerke:** `G` Gewerk hinzufügen · `F` Firma hinzufügen (in selected Gewerk) · `K` Kandidat hinzufügen
+
+**Tab 3 Matching:** `↑`/`↓` Navigation
+
+**Tab 4 Galerie:** `U` Upload · `←`/`→` Lightbox-Navigation
+
+**Tab 5 Dokumente:** `U` Upload · `F` Filter
+
+---
+
+## 12. RESPONSIVE
+
+**Desktop (≥ 1280px):** 2-col Sektionen, Masonry-Galerie.
+**Tablet (768–1279px):** 1-col, 2-Column-Galerie.
+**Mobile (< 768px):** Phase 2.
+
+---
+
+## 13. BERECHTIGUNGEN (RBAC)
+
+| Aktion | AM (Bauherr-Account) | AM (andere Accounts, beteiligt) | AM (fremd) | Researcher | Admin | Backoffice |
+|--------|---------------------|----------------------------------|------------|-----------|---------|-----------|
+| Lesen (alle Tabs) | ✅ | ✅ | ⚠ (nur öffentliche Infos) | ✅ | ✅ | ❌ |
+| Grunddaten editieren | ✅ | ⚠ (Vorschläge) | ❌ | ❌ | ✅ | ❌ |
+| BKP-Gewerk hinzufügen | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Firmen-Beteiligung hinzufügen | ✅ | ✅ (eigene Firma) | ❌ | ❌ | ✅ | ❌ |
+| Kandidaten-Beteiligung hinzufügen | ✅ | ✅ | ❌ | ⚠ | ✅ | ❌ |
+| Fotos hochladen | ✅ | ✅ | ❌ | ⚠ | ✅ | ❌ |
+| AM-Notizen (pro Account) | ⚠ (nur eigene) | ⚠ (nur eigene) | ❌ | ❌ | ✅ | ❌ |
+| Projekt-Report generieren | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Projekt löschen | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+
+---
+
+## 14. DATENBANK-REFERENZ
+
+### Neue Tabellen
+
+```sql
+fact_projects (
+  id uuid PK,
+  tenant_id FK,
+  project_name VARCHAR NOT NULL,
+  bauherr_account_id FK NOT NULL,  -- primärer Bauherr
+  address_street VARCHAR,
+  address_zip VARCHAR,
+  address_city VARCHAR,
+  address_canton VARCHAR,
+  lat DECIMAL NULL, long DECIMAL NULL,       -- Phase 2
+  cluster_ids JSONB,                          -- Multi-Select
+  sparte_ids JSONB,                           -- Multi-Toggle
+  status ENUM('planung','ausschreibung','ausfuehrung','abgenommen','abgeschlossen','gestoppt'),
+  start_date DATE NULL,
+  end_date_planned DATE NULL,
+  end_date_actual DATE NULL,
+  volume_chf_exact DECIMAL NULL,
+  volume_range ENUM('<5M','5-20M','20-50M','>50M') NULL,
+  bgf_sqm INT NULL,
+  unit_count INT NULL,
+  floor_count INT NULL,
+  pit_depth_m DECIMAL NULL,
+  description_md TEXT,
+  baublatt_url VARCHAR NULL,
+  simap_url VARCHAR NULL,
+  press_urls JSONB,
+  strategic_rating ENUM('top','standard','niche','low') NULL,
+  tags JSONB,
+  internal_notes TEXT,                        -- Arkadium-global, nicht pro Account
+  involvement_level ENUM('active','observed','none'),
+  is_public_flag BOOLEAN DEFAULT TRUE,
+  source ENUM('manual','scraper','candidate_werdegang'),
+  source_ref_id VARCHAR,
+  created_at, updated_at, created_by, updated_by
+)
+
+fact_project_bkp_gewerke (
+  id uuid PK,
+  project_id FK,
+  bkp_code_id FK,                             -- aus bestehendem BKP-Katalog
+  total_volume_chf DECIMAL NULL,
+  gewerk_comment TEXT,                        -- Arkadium-intern
+  order_index INT,                            -- Sortier-Reihenfolge
+  created_at
+)
+
+fact_project_company_participations (
+  id uuid PK,
+  project_id FK,
+  bkp_gewerk_id FK,                           -- an welchem Gewerk beteiligt
+  account_id FK,                              -- welche Firma
+  role ENUM('bauherr','architekt','generalplaner','tu','gu','fachplaner',
+           'subunternehmer','bauleitung','handwerker','lieferant','andere'),
+  from_date DATE NULL,
+  to_date DATE NULL,
+  contract_volume_chf DECIMAL NULL,
+  sia_phase_ids JSONB,                        -- Multi-Select
+  comment TEXT,                               -- Arkadium-intern
+  created_at, updated_at
+)
+
+fact_project_candidate_participations (
+  id uuid PK,
+  project_id FK,
+  bkp_gewerk_id FK,
+  candidate_id FK,
+  employer_account_id FK NULL,                -- Anstellungs-Firma zum Zeitpunkt
+  role VARCHAR,                               -- Freitext oder aus Dropdown (Projektleiter, Bauleiter, ...)
+  sia_phase_ids JSONB,
+  responsibility_level ENUM('leading','contributing','advisory'),
+  from_date DATE NULL,
+  to_date DATE NULL,
+  comment TEXT,
+  created_at, updated_at
+)
+
+fact_project_media (
+  id uuid PK,
+  project_id FK,
+  media_type ENUM('photo','rendering','plan','construction_site','after_move_in'),
+  file_url VARCHAR,
+  caption TEXT,
+  taken_at DATE NULL,
+  author VARCHAR NULL,
+  copyright_info VARCHAR NULL,
+  is_public BOOLEAN DEFAULT FALSE,
+  order_index INT,
+  created_at
+)
+
+fact_account_project_notes (
+  id uuid PK,
+  project_id FK,
+  account_id FK,                              -- Account-Kontext für diese Notiz
+  notes TEXT,
+  created_by FK,
+  updated_by FK,
+  created_at, updated_at,
+  UNIQUE(project_id, account_id)              -- max. 1 Notiz-Eintrag pro Projekt+Account
+)
+
+fact_project_similarities (                   -- Phase 1.5: Matching-Vorberechnung
+  id uuid PK,
+  project_id FK,
+  similar_project_id FK,
+  similarity_score DECIMAL,
+  computed_at TIMESTAMP,
+  UNIQUE(project_id, similar_project_id)
+)
+```
+
+### Erweiterte bestehende Tabellen
+
+```sql
+dim_candidates_profile.werdegang (bzw. fact_candidate_werdegang):
+  + project_id FK NULL  -- bei Briefing/Werdegang-Eintrag: Verknüpfung zu fact_projects
+  -- Freitext bleibt bestehen als Fallback, strukturierter Link bevorzugt (PR-12 Hybrid)
+```
+
+---
+
+## 15. OFFENE SPEC-PUNKTE
+
+| # | Punkt | Priorität |
+|---|-------|-----------|
+| 1 | Interactions v0.1 | P0 (direkt folgend) |
+| 2 | Mockup-HTMLs für 6 Tabs | P1 |
+| 3 | Scraper-Integration simap/Baublatt/TEC21/Account-Referenzen | P1 (bereits in Scraper-Spec aufgenommen) |
+| 4 | Kartenansicht (Lat/Long) | Phase 2 |
+| 5 | Projekt-Ähnlichkeits-Algorithmus (`fact_project_similarities`) | Phase 1.5 |
+| 6 | AI-Extraktion aus Projekt-PDFs | Phase 1.5 |
+| 7 | Werdegang-/Briefing-Integration (PR-12 Hybrid-Autocomplete) | P1 |
+
+---
+
+## 16. RELATED SPECS / WIKI
+
+- `ARK_PROJEKT_DETAILMASKE_INTERACTIONS_v0_1.md`
+- `ARK_KANDIDATENMASKE_SCHEMA_v1_2.md` (Werdegang mit Projekt-Verknüpfung, Phase 1.5 Update)
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_1.md` (Account-Projekte-Tab — Phase 1.5 Nachbearbeitung)
+- `ARK_SCRAPER_MODUL_INTERACTIONS_v0_1.md` (Projekt-Scraper-Source)
+- [[projekt-datenmodell]], [[stammdaten]] (Cluster, Sparten, BKP, SIA)
+- [[detailseiten-guideline]]

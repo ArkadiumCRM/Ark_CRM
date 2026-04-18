@@ -1,0 +1,972 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Projekte" [ref=e9] [cursor=pointer]:
+        - /url: projects-list.html
+      - generic [ref=e10]: /
+      - generic [ref=e11]: Wohnsiedlung Uetlihof
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - text: ℹ
+      - strong [ref=e17]: "Mockup-Demo:"
+      - text: Dieses Projekt ist „manuell" angelegt. Scraper-Source-Banner als Header-Pattern für
+      - code [ref=e18]: source='scraper'
+      - text: "-Projekte —"
+    - button "Banner anzeigen / ausblenden" [ref=e19] [cursor=pointer]
+  - generic [ref=e21]:
+    - generic "Zur Galerie" [ref=e22] [cursor=pointer]:
+      - generic [ref=e23]: 🏗
+    - generic [ref=e25]:
+      - heading "Wohnsiedlung Uetlihof" [level=1] [ref=e26]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - text: Bauherr
+          - link "Bauherr Muster AG" [ref=e29] [cursor=pointer]:
+            - /url: accounts.html
+            - strong [ref=e30]: Bauherr Muster AG
+        - generic [ref=e32]: Zürich-Albisrieden
+        - generic [ref=e34]:
+          - text: "Cluster:"
+          - strong [ref=e35]: Wohnungsbau
+          - text: (primary)
+        - generic [ref=e37]: "BKP-Hauptgewerke: 2 · 3 · 4"
+      - generic [ref=e38]:
+        - button "➕ Beteiligung hinzufügen" [ref=e39] [cursor=pointer]
+        - button "+ BKP-Gewerk" [ref=e40] [cursor=pointer]
+        - button "📄 Projekt-Report" [ref=e41] [cursor=pointer]
+        - button "🔁 Matching neu" [ref=e42] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e43] [cursor=pointer]
+        - button "⋯ Mehr" [ref=e44] [cursor=pointer]
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: Status
+        - combobox [ref=e48] [cursor=pointer]:
+          - option "📐 In Planung" [selected]
+          - option "📋 Ausschreibung"
+          - option "🏗 In Ausführung"
+          - option "✓ Abgenommen"
+          - option "🏆 Abgeschlossen"
+          - option "⛔ Gestoppt"
+          - text: ▾
+      - generic [ref=e49]:
+        - generic "Sparten" [ref=e50]: ARC · ING
+        - generic "Strategische Bewertung" [ref=e51]: 🏆 Top-Projekt
+        - generic "Quelle" [ref=e52]: ✍ manuell
+      - generic [ref=e54]:
+        - text: Erstellt 10.02.2026 ·
+        - generic [ref=e55]: PW
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: 💰 Volumen
+      - generic [ref=e59]: CHF 80–100 M
+      - generic [ref=e60]: "Range (exakt: n/a)"
+    - generic [ref=e61]:
+      - generic [ref=e62]: 📅 Zeitraum
+      - generic [ref=e63]: 2026–2028
+      - generic [ref=e64]: 29 Monate · SIA 32 läuft
+    - generic [ref=e65]:
+      - generic [ref=e66]: 🏗 BKP-Gewerke
+      - generic [ref=e67]: "8"
+      - generic [ref=e68]: 4 vergeben · 1 Ausschreibung · 3 offen
+    - generic [ref=e69]:
+      - generic [ref=e70]: 🏢 Firmen
+      - generic [ref=e71]: "14"
+      - generic [ref=e72]: über 8 Gewerke
+    - generic [ref=e73]:
+      - generic [ref=e74]: 👥 Kandidaten
+      - generic [ref=e75]: "32"
+      - generic [ref=e76]: Projekt-Referenzen
+    - generic [ref=e77]:
+      - generic [ref=e78]: 📸 Medien
+      - generic [ref=e79]: "24"
+      - generic [ref=e80]: 18 Foto · 4 Render · 2 Plan
+  - navigation [ref=e81]:
+    - generic [ref=e82] [cursor=pointer]: 1Übersicht
+    - generic [ref=e83] [cursor=pointer]: 2Gewerke (BKP)
+    - generic [ref=e84] [cursor=pointer]: 3Matching
+    - generic [ref=e85] [cursor=pointer]: 4Galerie
+    - generic [ref=e86] [cursor=pointer]: 5Dokumente
+    - generic [ref=e87] [cursor=pointer]: 6History
+  - generic [ref=e693]:
+    - generic [ref=e694]:
+      - generic [ref=e695]:
+        - generic [ref=e696]: BKP-Gewerke
+        - generic [ref=e697]: "8"
+        - generic [ref=e698]: 4 vergeben · 1 Ausschreibung · 3 offen
+      - generic [ref=e699]:
+        - generic [ref=e700]: Summe vergeben
+        - generic [ref=e701]: CHF 35.5 M
+        - generic [ref=e702]: 38 % vom Range-Max
+      - generic [ref=e703]:
+        - generic [ref=e704]: Beteiligte Firmen
+        - generic [ref=e705]: "14"
+        - generic [ref=e706]: 11 CH · 3 intl.
+      - generic [ref=e707]:
+        - generic [ref=e708]: Kandidaten-Refs
+        - generic [ref=e709]: "32"
+        - generic [ref=e710]: aus Werdegängen
+      - generic [ref=e711]:
+        - generic [ref=e712]: SIA-Phasen aktiv
+        - generic [ref=e713]: "4"
+        - generic [ref=e714]: 21 · 31 · 32 · 41
+    - generic [ref=e715]:
+      - generic [ref=e716]:
+        - generic [ref=e717] [cursor=pointer]: 📋 Akkordeon
+        - generic [ref=e718] [cursor=pointer]: 📊 Gantt
+        - generic [ref=e719] [cursor=pointer]: 🕸 Netzwerk
+      - searchbox "🔍 BKP-Code, Firma, Kandidat …" [ref=e721]
+      - combobox [ref=e722] [cursor=pointer]:
+        - option "Alle BKP-Hauptgruppen" [selected]
+        - option "BKP 0 Grundstück"
+        - option "BKP 1 Vorbereitung"
+        - option "BKP 2 Gebäude"
+        - option "BKP 3 Betriebseinrichtungen"
+        - option "BKP 4 Umgebung + Tiefbau"
+      - combobox [ref=e723] [cursor=pointer]:
+        - option "Alle Status" [selected]
+        - option "offen"
+        - option "Ausschreibung"
+        - option "vergeben"
+      - button "▼ Alle" [ref=e724] [cursor=pointer]
+      - button "▶ Alle" [ref=e725] [cursor=pointer]
+      - button "+ BKP-Gewerk" [ref=e726] [cursor=pointer]
+    - generic [ref=e727]:
+      - generic [ref=e728]:
+        - strong [ref=e729]: SIA-primäre Gliederung
+        - text: · 6 Haupt-Phasen (SIA 112) · Darunter BKP-Gewerke, die in dieser Phase aktiv sind, mit Firmen + Kandidaten gefiltert auf diese Phase. Firmen/Kandidaten die in mehreren SIA-Phasen aktiv sind, erscheinen unter jeder Phase mit phase-spezifischen Daten.
+      - generic [ref=e730]:
+        - generic [ref=e732] [cursor=pointer]:
+          - generic [ref=e733]: ▶
+          - generic [ref=e734]: SIA 2
+          - generic [ref=e735]: Vorstudien
+          - generic [ref=e736]: abgeschlossen · 1 Gewerk · 2 Firmen · 0 Kandidaten
+        - generic [ref=e737]:
+          - generic [ref=e738] [cursor=pointer]:
+            - generic [ref=e739]: ▼
+            - generic [ref=e740]: SIA 3
+            - generic [ref=e741]: Projektierung
+            - generic [ref=e742]: aktuell läuft
+            - generic [ref=e743]: 5 Gewerke · 6 Firmen · 8 Kandidaten
+          - generic [ref=e744]:
+            - generic [ref=e745]:
+              - generic [ref=e746] [cursor=pointer]:
+                - generic [ref=e747]: ▼
+                - generic [ref=e748]: SIA 31
+                - strong [ref=e749]: Vorprojekt
+                - generic [ref=e750]: 2 Gewerke · abgeschlossen 02/2026
+              - generic [ref=e752]:
+                - generic [ref=e753] [cursor=pointer]:
+                  - generic [ref=e754]: ▼
+                  - generic [ref=e755]: BKP 211
+                  - strong [ref=e756]: Baumeisterarbeiten
+                  - generic [ref=e757]: 🏢 1 · 👥 2 (in SIA 31)
+                  - button "⋯" [ref=e758]
+                - generic [ref=e759]:
+                  - generic [ref=e760]:
+                    - generic [ref=e761]:
+                      - strong [ref=e762]: 🏢 Firmen (1)
+                      - button "+ Firma" [ref=e763] [cursor=pointer]
+                    - table [ref=e764]:
+                      - rowgroup [ref=e765]:
+                        - row "Firma Rolle Zeitraum in SIA 31 Summe ›" [ref=e766]:
+                          - columnheader "Firma" [ref=e767]
+                          - columnheader "Rolle" [ref=e768]
+                          - columnheader "Zeitraum in SIA 31" [ref=e769]
+                          - columnheader "Summe" [ref=e770]
+                          - columnheader "›" [ref=e771]
+                      - rowgroup [ref=e772]:
+                        - row "Meili Peter Architekten Architekt 09/2025 – 02/2026 CHF 850'000 ›" [ref=e773] [cursor=pointer]:
+                          - cell "Meili Peter Architekten" [ref=e774]:
+                            - link "Meili Peter Architekten" [ref=e775]:
+                              - /url: accounts.html
+                          - cell "Architekt" [ref=e776]:
+                            - generic [ref=e777]: Architekt
+                          - cell "09/2025 – 02/2026" [ref=e778]
+                          - cell "CHF 850'000" [ref=e779]
+                          - cell "›" [ref=e780]:
+                            - button "›" [ref=e781]
+                  - generic [ref=e782]:
+                    - generic [ref=e783]:
+                      - strong [ref=e784]: 👥 Kandidaten (2)
+                      - button "+ Kandidat" [ref=e785] [cursor=pointer]
+                    - table [ref=e786]:
+                      - rowgroup [ref=e787]:
+                        - row "Kandidat Rolle via Firma Verantwortung ›" [ref=e788]:
+                          - columnheader "Kandidat" [ref=e789]
+                          - columnheader "Rolle" [ref=e790]
+                          - columnheader "via Firma" [ref=e791]
+                          - columnheader "Verantwortung" [ref=e792]
+                          - columnheader "›" [ref=e793]
+                      - rowgroup [ref=e794]:
+                        - row "Nicolas Meili Projektarchitekt Meili Peter ● Führend ›" [ref=e795] [cursor=pointer]:
+                          - cell "Nicolas Meili" [ref=e796]:
+                            - link "Nicolas Meili" [ref=e797]:
+                              - /url: candidates.html
+                          - cell "Projektarchitekt" [ref=e798]
+                          - cell "Meili Peter" [ref=e799]:
+                            - link "Meili Peter" [ref=e800]:
+                              - /url: accounts.html
+                          - cell "● Führend" [ref=e801]:
+                            - generic [ref=e802]: ● Führend
+                          - cell "›" [ref=e803]:
+                            - button "›" [ref=e804]
+                        - row "Sarah Berger Konzeptplanerin Meili Peter ○ Mitarbeitend ›" [ref=e805] [cursor=pointer]:
+                          - cell "Sarah Berger" [ref=e806]:
+                            - link "Sarah Berger" [ref=e807]:
+                              - /url: candidates.html
+                          - cell "Konzeptplanerin" [ref=e808]
+                          - cell "Meili Peter" [ref=e809]:
+                            - link "Meili Peter" [ref=e810]:
+                              - /url: accounts.html
+                          - cell "○ Mitarbeitend" [ref=e811]:
+                            - generic [ref=e812]: ○ Mitarbeitend
+                          - cell "›" [ref=e813]:
+                            - button "›" [ref=e814]
+            - generic [ref=e815]:
+              - generic [ref=e816] [cursor=pointer]:
+                - generic [ref=e817]: ▼
+                - generic [ref=e818]: SIA 32
+                - strong [ref=e819]: Bauprojekt
+                - generic [ref=e820]: läuft aktuell
+                - generic [ref=e821]: 3 Gewerke · 4 Firmen · 6 Kandidaten
+              - generic [ref=e822]:
+                - generic [ref=e823]:
+                  - generic [ref=e824] [cursor=pointer]:
+                    - generic [ref=e825]: ▼
+                    - generic [ref=e826]: BKP 211
+                    - strong [ref=e827]: Baumeisterarbeiten
+                    - generic [ref=e828]: 🏢 1 · 👥 2 (in SIA 32)
+                    - button "⋯" [ref=e829]
+                  - generic [ref=e830]:
+                    - generic [ref=e831]:
+                      - generic [ref=e832]:
+                        - strong [ref=e833]: 🏢 Firmen (1)
+                        - button "+ Firma" [ref=e834] [cursor=pointer]
+                      - table [ref=e835]:
+                        - rowgroup [ref=e836]:
+                          - row "Firma Rolle Zeitraum in SIA 32 Summe ›" [ref=e837]:
+                            - columnheader "Firma" [ref=e838]
+                            - columnheader "Rolle" [ref=e839]
+                            - columnheader "Zeitraum in SIA 32" [ref=e840]
+                            - columnheader "Summe" [ref=e841]
+                            - columnheader "›" [ref=e842]
+                        - rowgroup [ref=e843]:
+                          - row "Implenia AG Generalunternehmer 09/2026 – 02/2027 Planung pauschal ›" [ref=e844] [cursor=pointer]:
+                            - cell "Implenia AG" [ref=e845]:
+                              - link "Implenia AG" [ref=e846]:
+                                - /url: accounts.html
+                                - strong [ref=e847]: Implenia AG
+                            - cell "Generalunternehmer" [ref=e848]:
+                              - generic [ref=e849]: Generalunternehmer
+                            - cell "09/2026 – 02/2027" [ref=e850]
+                            - cell "Planung pauschal" [ref=e851]
+                            - cell "›" [ref=e852]:
+                              - button "›" [ref=e853]
+                    - generic [ref=e854]:
+                      - generic [ref=e855]:
+                        - strong [ref=e856]: 👥 Kandidaten (2)
+                        - button "+ Kandidat" [ref=e857] [cursor=pointer]
+                      - table [ref=e858]:
+                        - rowgroup [ref=e859]:
+                          - row "Kandidat Rolle via Firma Verantwortung ›" [ref=e860]:
+                            - columnheader "Kandidat" [ref=e861]
+                            - columnheader "Rolle" [ref=e862]
+                            - columnheader "via Firma" [ref=e863]
+                            - columnheader "Verantwortung" [ref=e864]
+                            - columnheader "›" [ref=e865]
+                        - rowgroup [ref=e866]:
+                          - row "Tobias Furrer Gesamtprojektleiter Implenia AG ● Führend ›" [ref=e867] [cursor=pointer]:
+                            - cell "Tobias Furrer" [ref=e868]:
+                              - link "Tobias Furrer" [ref=e869]:
+                                - /url: candidates.html
+                                - strong [ref=e870]: Tobias Furrer
+                            - cell "Gesamtprojektleiter" [ref=e871]
+                            - cell "Implenia AG" [ref=e872]:
+                              - link "Implenia AG" [ref=e873]:
+                                - /url: accounts.html
+                            - cell "● Führend" [ref=e874]:
+                              - generic [ref=e875]: ● Führend
+                            - cell "›" [ref=e876]:
+                              - button "›" [ref=e877]
+                          - row "Anna Klein Projektleiter-Assistenz Implenia AG ○ Mitarbeitend ›" [ref=e878] [cursor=pointer]:
+                            - cell "Anna Klein" [ref=e879]:
+                              - link "Anna Klein" [ref=e880]:
+                                - /url: candidates.html
+                            - cell "Projektleiter-Assistenz" [ref=e881]
+                            - cell "Implenia AG" [ref=e882]:
+                              - link "Implenia AG" [ref=e883]:
+                                - /url: accounts.html
+                            - cell "○ Mitarbeitend" [ref=e884]:
+                              - generic [ref=e885]: ○ Mitarbeitend
+                            - cell "›" [ref=e886]:
+                              - button "›" [ref=e887]
+                - generic [ref=e889] [cursor=pointer]:
+                  - generic [ref=e890]: ▶
+                  - generic [ref=e891]: BKP 230
+                  - strong [ref=e892]: Elektroinstallationen
+                  - generic [ref=e893]: 🏢 2 · 👥 2 (in SIA 32)
+                  - button "⋯" [ref=e894]
+                - generic [ref=e896] [cursor=pointer]:
+                  - generic [ref=e897]: ▶
+                  - generic [ref=e898]: BKP 244
+                  - strong [ref=e899]: Heizung / Lüftung (HLK)
+                  - generic [ref=e900]: 🏢 1 · 👥 2 (in SIA 32)
+                  - button "⋯" [ref=e901]
+            - generic [ref=e903] [cursor=pointer]:
+              - generic [ref=e904]: ▶
+              - generic [ref=e905]: SIA 33
+              - strong [ref=e906]: Bewilligungsverfahren
+              - generic [ref=e907]: eingereicht 03/2026
+              - generic [ref=e908]: 1 Gewerk · 1 Firma · 0 Kandidaten
+        - generic [ref=e910] [cursor=pointer]:
+          - generic [ref=e911]: ▶
+          - generic [ref=e912]: SIA 4
+          - generic [ref=e913]: Ausschreibung
+          - generic [ref=e914]: läuft · Submissionsfrist 15.06.26
+          - generic [ref=e915]: 2 Gewerke · 0 Firmen (noch) · 0 Kandidaten
+        - generic [ref=e916]:
+          - generic [ref=e917] [cursor=pointer]:
+            - generic [ref=e918]: ▼
+            - generic [ref=e919]: SIA 5
+            - generic [ref=e920]: Realisierung
+            - generic [ref=e921]: ab 09/2026
+            - generic [ref=e922]: 8 Gewerke geplant · 11 Firmen · 28 Kandidaten (projiziert)
+          - generic [ref=e923]:
+            - generic [ref=e924]:
+              - generic [ref=e925] [cursor=pointer]:
+                - generic [ref=e926]: ▼
+                - generic [ref=e927]: SIA 51
+                - strong [ref=e928]: Ausführungsprojekt
+                - generic [ref=e929]: 3 Gewerke · 4 Firmen · 8 Kandidaten
+              - generic [ref=e931]:
+                - generic [ref=e932] [cursor=pointer]:
+                  - generic [ref=e933]: ▼
+                  - generic [ref=e934]: BKP 211
+                  - strong [ref=e935]: Baumeisterarbeiten
+                  - generic [ref=e936]: 🏢 2 · 👥 3 (in SIA 51)
+                - generic [ref=e937]:
+                  - generic [ref=e938]:
+                    - generic [ref=e939]:
+                      - strong [ref=e940]: 🏢 Firmen (2)
+                      - button "+ Firma" [ref=e941] [cursor=pointer]
+                    - table [ref=e942]:
+                      - rowgroup [ref=e943]:
+                        - row "Firma Rolle Zeitraum in SIA 51 Summe ›" [ref=e944]:
+                          - columnheader "Firma" [ref=e945]
+                          - columnheader "Rolle" [ref=e946]
+                          - columnheader "Zeitraum in SIA 51" [ref=e947]
+                          - columnheader "Summe" [ref=e948]
+                          - columnheader "›" [ref=e949]
+                      - rowgroup [ref=e950]:
+                        - row "Implenia AG Generalunternehmer 09/2026 – 03/2027 8'500'000 ›" [ref=e951] [cursor=pointer]:
+                          - cell "Implenia AG" [ref=e952]:
+                            - link "Implenia AG" [ref=e953]:
+                              - /url: accounts.html
+                              - strong [ref=e954]: Implenia AG
+                          - cell "Generalunternehmer" [ref=e955]:
+                            - generic [ref=e956]: Generalunternehmer
+                          - cell "09/2026 – 03/2027" [ref=e957]
+                          - cell "8'500'000" [ref=e958]
+                          - cell "›" [ref=e959]:
+                            - button "›" [ref=e960]
+                        - row "Muster Bau AG Subunternehmer 03/2027 – 11/2027 2'100'000 ›" [ref=e961] [cursor=pointer]:
+                          - cell "Muster Bau AG" [ref=e962]:
+                            - link "Muster Bau AG" [ref=e963]:
+                              - /url: accounts.html
+                          - cell "Subunternehmer" [ref=e964]:
+                            - generic [ref=e965]: Subunternehmer
+                          - cell "03/2027 – 11/2027" [ref=e966]
+                          - cell "2'100'000" [ref=e967]
+                          - cell "›" [ref=e968]:
+                            - button "›" [ref=e969]
+                  - generic [ref=e970]:
+                    - generic [ref=e971]:
+                      - strong [ref=e972]: 👥 Kandidaten (3)
+                      - button "+ Kandidat" [ref=e973] [cursor=pointer]
+                    - table [ref=e974]:
+                      - rowgroup [ref=e975]:
+                        - row "Kandidat Rolle via Firma Verantwortung ›" [ref=e976]:
+                          - columnheader "Kandidat" [ref=e977]
+                          - columnheader "Rolle" [ref=e978]
+                          - columnheader "via Firma" [ref=e979]
+                          - columnheader "Verantwortung" [ref=e980]
+                          - columnheader "›" [ref=e981]
+                      - rowgroup [ref=e982]:
+                        - row "Tobias Furrer Gesamtprojektleiter Implenia AG ● Führend ›" [ref=e983] [cursor=pointer]:
+                          - cell "Tobias Furrer" [ref=e984]:
+                            - link "Tobias Furrer" [ref=e985]:
+                              - /url: candidates.html
+                              - strong [ref=e986]: Tobias Furrer
+                          - cell "Gesamtprojektleiter" [ref=e987]
+                          - cell "Implenia AG" [ref=e988]:
+                            - link "Implenia AG" [ref=e989]:
+                              - /url: accounts.html
+                          - cell "● Führend" [ref=e990]:
+                            - generic [ref=e991]: ● Führend
+                          - cell "›" [ref=e992]:
+                            - button "›" [ref=e993]
+                        - row "Max Muster Bauleiter Implenia AG ● Führend ›" [ref=e994] [cursor=pointer]:
+                          - cell "Max Muster" [ref=e995]:
+                            - link "Max Muster" [ref=e996]:
+                              - /url: candidates.html
+                          - cell "Bauleiter" [ref=e997]
+                          - cell "Implenia AG" [ref=e998]:
+                            - link "Implenia AG" [ref=e999]:
+                              - /url: accounts.html
+                          - cell "● Führend" [ref=e1000]:
+                            - generic [ref=e1001]: ● Führend
+                          - cell "›" [ref=e1002]:
+                            - button "›" [ref=e1003]
+                        - row "Anna Klein Projektleiter-Assistenz Implenia AG ○ Mitarbeitend ›" [ref=e1004] [cursor=pointer]:
+                          - cell "Anna Klein" [ref=e1005]:
+                            - link "Anna Klein" [ref=e1006]:
+                              - /url: candidates.html
+                          - cell "Projektleiter-Assistenz" [ref=e1007]
+                          - cell "Implenia AG" [ref=e1008]:
+                            - link "Implenia AG" [ref=e1009]:
+                              - /url: accounts.html
+                          - cell "○ Mitarbeitend" [ref=e1010]:
+                            - generic [ref=e1011]: ○ Mitarbeitend
+                          - cell "›" [ref=e1012]:
+                            - button "›" [ref=e1013]
+            - generic [ref=e1015] [cursor=pointer]:
+              - generic [ref=e1016]: ▶
+              - generic [ref=e1017]: SIA 52
+              - strong [ref=e1018]: Ausführung (Baustelle)
+              - generic [ref=e1019]: 8 Gewerke · 11 Firmen · 28 Kandidaten (projiziert)
+            - generic [ref=e1021] [cursor=pointer]:
+              - generic [ref=e1022]: SIA 53
+              - strong [ref=e1023]: Inbetriebnahme / Abschluss
+              - generic [ref=e1024]: projiziert 12/2028
+        - generic [ref=e1026] [cursor=pointer]:
+          - generic [ref=e1027]: ▶
+          - generic [ref=e1028]: SIA 6
+          - generic [ref=e1029]: Bewirtschaftung
+          - generic [ref=e1030]: ab 2029
+          - generic [ref=e1031]: — noch nicht erfasst —
+    - generic [ref=e1032]:
+      - strong [ref=e1033]: "3-Tier-Struktur:"
+      - text: "Projekt → Gewerk (BKP-Code) → Beteiligungen breit+tief. Ein Gewerk kann mehrere Firmen und Kandidaten haben · ein Kandidat kann in mehreren SIA-Phasen eines Gewerks beteiligt sein. Keyboard: G Gewerk + · F Firma + · K Kandidat + (im fokussierten Gewerk)."
+  - generic [ref=e231]:
+    - generic [ref=e232]: 1–6 Tabs
+    - generic [ref=e233]: G + Gewerk
+    - generic [ref=e234]: F + Firma
+    - generic [ref=e235]: K + Kandidat
+    - generic [ref=e236]: M Matching
+    - generic [ref=e237]: T Theme
+    - generic [ref=e238]: ⌘K
+  - generic [ref=e239]:
+    - generic [ref=e240]:
+      - generic [ref=e241]: 🔨
+      - generic [ref=e242]:
+        - heading "BKP-Gewerk hinzufügen" [level=2] [ref=e243]
+        - generic [ref=e244]: Aus 425 BKP-Codes (dim_bkp_codes) wählen
+      - button "✕" [ref=e245] [cursor=pointer]
+    - generic [ref=e246]:
+      - generic [ref=e247]:
+        - heading "BKP-Code *" [level=4] [ref=e248]
+        - combobox "🔍 z.B. 211, Baumeister, Heizung …" [ref=e249]
+        - generic [ref=e250]: "Hauptgruppen: 0 Grundstück · 1 Vorbereitung · 2 Gebäude · 3 Betriebseinrichtungen · 4 Umgebung+Tiefbau · 5 Baunebenkosten · 9 Ausstattung"
+      - generic [ref=e251]:
+        - heading "Initial-Werte (optional)" [level=4] [ref=e252]
+        - generic [ref=e253]:
+          - generic [ref=e254]: Budget-Volumen
+          - generic [ref=e255]:
+            - generic [ref=e256]: CHF
+            - textbox "0" [ref=e257]
+          - generic [ref=e258]: Status
+          - combobox [ref=e259] [cursor=pointer]:
+            - option "geplant" [selected]
+            - option "Ausschreibung"
+            - option "vergeben"
+          - generic [ref=e260]: Kommentar
+          - textbox "Arkadium-interne Einschätzung …" [ref=e261]
+      - generic [ref=e262]: ℹ Nach dem Anlegen erscheint das Gewerk als neue Akkordeon-Zeile. SIA-Phasen werden über die Beteiligungen bestimmt.
+    - generic [ref=e263]:
+      - button "Abbrechen" [ref=e264] [cursor=pointer]
+      - button "+ Gewerk anlegen" [ref=e266] [cursor=pointer]
+  - generic [ref=e267]:
+    - generic [ref=e268]:
+      - generic [ref=e269]: ⚙
+      - generic [ref=e270]:
+        - heading "BKP 211 · Baumeisterarbeiten" [level=2] [ref=e271]
+        - generic [ref=e272]: Gewerk-Einstellungen · inline-Edit oder löschen
+      - button "✕" [ref=e273] [cursor=pointer]
+    - generic [ref=e274]:
+      - generic [ref=e275]:
+        - heading "Grunddaten" [level=4] [ref=e276]
+        - generic [ref=e277]:
+          - generic [ref=e278]: BKP-Code
+          - textbox [disabled] [ref=e279]: "211"
+          - generic [ref=e280]: Bezeichnung
+          - textbox [ref=e281]: Baumeisterarbeiten
+          - generic [ref=e282]: Budget-Volumen
+          - generic [ref=e283]:
+            - generic [ref=e284]: CHF
+            - textbox [ref=e285]: 22'000'000
+          - generic [ref=e286]: Status
+          - combobox [ref=e287] [cursor=pointer]:
+            - option "geplant"
+            - option "vergeben" [selected]
+            - option "Ausschreibung"
+          - generic [ref=e288]: Sortier-Index
+          - spinbutton [ref=e289]: "1"
+      - generic [ref=e290]:
+        - heading "Kommentar (auto-save aus Akkordeon)" [level=4] [ref=e291]
+        - textbox [ref=e292]: Hauptgewerk mit GU-Verantwortung Implenia. Budget-Risiko wegen Spezialtiefbau (Grundwasser). Polier-Position extern vergeben an ZETT Bau.
+      - generic [ref=e293]:
+        - strong [ref=e294]: ⚠ Gefahrenzone
+        - generic [ref=e295]: Gewerk löschen entfernt auch 3 Firmen-Beteiligungen + 8 Kandidaten-Beteiligungen (Cascade Delete).
+        - button "🗑 Gewerk entfernen" [ref=e296] [cursor=pointer]
+    - generic [ref=e297]:
+      - button "Abbrechen" [ref=e298] [cursor=pointer]
+      - button "💾 Speichern" [ref=e300] [cursor=pointer]
+  - generic [ref=e301]:
+    - generic [ref=e302]:
+      - generic [ref=e303]: IM
+      - generic [ref=e304]:
+        - heading "Firma-Beteiligung · Implenia AG" [level=2] [ref=e305]
+        - generic [ref=e306]: "in BKP 211 Baumeisterarbeiten · Rolle: Generalunternehmer · CHF 12.5 M"
+        - link "→ Account" [ref=e308] [cursor=pointer]:
+          - /url: accounts.html
+      - button "✕" [ref=e309] [cursor=pointer]
+    - generic [ref=e310]:
+      - generic [ref=e311] [cursor=pointer]: 1 · Basis
+      - generic [ref=e312] [cursor=pointer]: 2 · SIA-Phasen
+      - generic [ref=e313] [cursor=pointer]: 3 · Kontakte
+      - generic [ref=e314] [cursor=pointer]: 4 · Verträge + Dok.
+      - generic [ref=e315] [cursor=pointer]: 5 · Kontext + Referenz
+    - generic [ref=e317]:
+      - generic [ref=e318]:
+        - heading "Firma + Rolle" [level=4] [ref=e319]
+        - generic [ref=e320]:
+          - generic [ref=e321]: Account *
+          - combobox [ref=e322]: Implenia AG
+          - generic [ref=e323]: Rolle *
+          - combobox [ref=e324] [cursor=pointer]:
+            - option "Bauherr"
+            - option "Architekt"
+            - option "Generalplaner"
+            - option "Totalunternehmer (TU)"
+            - option "Generalunternehmer (GU)" [selected]
+            - option "Fachplaner"
+            - option "Subunternehmer"
+            - option "Bauleitung"
+            - option "Handwerker"
+            - option "Lieferant"
+            - option "Andere"
+          - generic [ref=e325]: Gewerk
+          - textbox [disabled] [ref=e326]: BKP 211 · Baumeisterarbeiten
+          - generic [ref=e327]: Vertragsart
+          - combobox [ref=e328] [cursor=pointer]:
+            - option "— offen —"
+            - option "Pauschalvertrag" [selected]
+            - option "Einheitspreis-Vertrag"
+            - option "Globalpreis-Vertrag"
+            - option "Cost-Plus-Vertrag"
+      - generic [ref=e329]:
+        - heading "Zeitraum + Summen" [level=4] [ref=e330]
+        - generic [ref=e331]:
+          - generic [ref=e332]: Von
+          - textbox [ref=e333]: 2026-09-01
+          - generic [ref=e334]: Bis
+          - textbox [ref=e335]: 2028-12-31
+          - generic [ref=e336]: Auftragssumme
+          - generic [ref=e337]:
+            - generic [ref=e338]: CHF
+            - textbox [ref=e339]: 12'500'000
+          - generic [ref=e340]: Abgerufen
+          - generic [ref=e341]:
+            - generic [ref=e342]: CHF
+            - textbox [ref=e343]: 4'750'000
+            - generic [ref=e344]: = 38 %
+    - generic [ref=e345]:
+      - button "Abbrechen" [ref=e346] [cursor=pointer]
+      - button "🗑 Entfernen" [ref=e347] [cursor=pointer]
+      - button "💾 Speichern" [ref=e348] [cursor=pointer]
+  - generic [ref=e349]:
+    - generic [ref=e350]:
+      - generic [ref=e351]: TF
+      - generic [ref=e352]:
+        - heading "Kandidat-Beteiligung · Tobias Furrer" [level=2] [ref=e353]
+        - generic [ref=e354]: in BKP 211 Baumeisterarbeiten · via Implenia AG · 2026–2028
+        - generic [ref=e355]:
+          - link "→ Kandidat" [ref=e356] [cursor=pointer]:
+            - /url: candidates.html
+          - generic [ref=e357]: 🤖 AI-Match 91 %
+      - button "✕" [ref=e358] [cursor=pointer]
+    - generic [ref=e359]:
+      - generic [ref=e360] [cursor=pointer]: 1 · Basis
+      - generic [ref=e361] [cursor=pointer]: 2 · SIA-Phasen
+      - generic [ref=e362] [cursor=pointer]: 3 · Rolle
+      - generic [ref=e363] [cursor=pointer]: 4 · Team-Kontext
+      - generic [ref=e364] [cursor=pointer]: 5 · Evidence + Referenz
+      - generic [ref=e365] [cursor=pointer]: 6 · Kontext + Werdegang
+    - generic [ref=e367]:
+      - generic [ref=e368]:
+        - heading "Kandidat + Anstellung" [level=4] [ref=e369]
+        - generic [ref=e370]:
+          - generic [ref=e371]: Kandidat *
+          - combobox [ref=e372]: Tobias Furrer
+          - generic [ref=e373]: Anstellungs-Firma
+          - searchbox [ref=e374]: Implenia AG
+          - generic [ref=e375]: Default aus Werdegang-Eintrag des Kandidaten zum Zeitraum.
+          - generic [ref=e376]: Gewerk
+          - textbox [disabled] [ref=e377]: BKP 211 · Baumeisterarbeiten
+      - generic [ref=e378]:
+        - heading "Zeitraum" [level=4] [ref=e379]
+        - generic [ref=e380]:
+          - generic [ref=e381]: Von
+          - textbox [ref=e382]: 2026-09-01
+          - generic [ref=e383]: Bis
+          - textbox [ref=e384]: 2028-12-31
+      - generic [ref=e385]: "ℹ Beim Speichern: Option „Auch im Werdegang des Kandidaten erfassen?\" (falls noch nicht vorhanden)."
+    - generic [ref=e386]:
+      - button "Abbrechen" [ref=e387] [cursor=pointer]
+      - button "🗑 Entfernen" [ref=e388] [cursor=pointer]
+      - button "💾 Speichern + Werdegang syncen" [ref=e389] [cursor=pointer]
+  - generic [ref=e390]:
+    - generic [ref=e391]:
+      - generic [ref=e392]: 📸
+      - generic [ref=e393]:
+        - heading "Medien hochladen" [level=2] [ref=e394]
+        - generic [ref=e395]: Drag & Drop oder File-Picker · Multi-Upload möglich
+      - button "✕" [ref=e396] [cursor=pointer]
+    - generic [ref=e397]:
+      - generic [ref=e399] [cursor=pointer]:
+        - generic [ref=e400]: 📁
+        - strong [ref=e401]: Dateien hierher ziehen
+        - generic [ref=e402]: oder klicken zum Auswählen · JPG · PNG · PDF · bis 50 MB
+      - generic [ref=e403]:
+        - heading "Standard-Metadaten" [level=4] [ref=e404]
+        - generic [ref=e405]:
+          - generic [ref=e406]: Typ *
+          - combobox [ref=e407] [cursor=pointer]:
+            - option "📸 Foto" [selected]
+            - option "🖼 Rendering"
+            - option "📐 Plan"
+            - option "🏗 Baustelle"
+            - option "🏠 After-Move-In"
+          - generic [ref=e408]: Privacy
+          - generic [ref=e409]:
+            - generic [ref=e410]: 🌐 Öffentlich
+            - generic [ref=e411]: 🔒 Intern
+          - generic [ref=e412]: Aufnahmedatum
+          - textbox [ref=e413]
+          - generic [ref=e414]: Autor / Copyright
+          - textbox "z.B. Foto © Meili Peter Architekten" [ref=e415]
+          - generic [ref=e416]: Caption
+          - textbox "Kurze Beschreibung (pro Bild editierbar nach Upload)" [ref=e417]
+    - generic [ref=e418]:
+      - button "Abbrechen" [ref=e419] [cursor=pointer]
+      - button "⬆ Hochladen" [ref=e421] [cursor=pointer]
+  - generic [ref=e422]:
+    - generic [ref=e423]:
+      - generic [ref=e424]: ✏
+      - generic [ref=e425]:
+        - heading "Medium bearbeiten" [level=2] [ref=e426]
+        - generic [ref=e427]: Luftaufnahme Areal Uetlihof · 12.03.2026
+      - button "✕" [ref=e428] [cursor=pointer]
+    - generic [ref=e429]:
+      - generic [ref=e432] [cursor=pointer]: 📸 Foto
+      - generic [ref=e434]:
+        - generic [ref=e435]: Caption
+        - textbox [ref=e436]: Luftaufnahme Areal Uetlihof
+        - generic [ref=e437]: Typ
+        - combobox [ref=e438] [cursor=pointer]:
+          - option "📸 Foto" [selected]
+          - option "🖼 Rendering"
+          - option "📐 Plan"
+          - option "🏗 Baustelle"
+          - option "🏠 After-Move-In"
+        - generic [ref=e439]: Privacy
+        - generic [ref=e440]:
+          - generic [ref=e441]: 🌐 Öffentlich
+          - generic [ref=e442]: 🔒 Intern
+        - generic [ref=e443]: Aufnahmedatum
+        - textbox [ref=e444]: 2026-03-12
+        - generic [ref=e445]: Autor
+        - textbox [ref=e446]: NP · Arkadium
+        - generic [ref=e447]: Copyright
+        - textbox [ref=e448]: © Arkadium 2026
+    - generic [ref=e449]:
+      - button "Abbrechen" [ref=e450] [cursor=pointer]
+      - button "🗑 Löschen" [ref=e452] [cursor=pointer]
+      - button "💾 Speichern" [ref=e453] [cursor=pointer]
+  - generic [ref=e454]:
+    - generic [ref=e455]:
+      - generic [ref=e456]: ↑
+      - generic [ref=e457]:
+        - heading "Dokument hochladen" [level=2] [ref=e458]
+        - generic [ref=e459]: Projekt-Profile · 6 Kategorien · AI-Auto-Kategorisierung aktiv
+      - button "✕" [ref=e460] [cursor=pointer]
+    - generic [ref=e461]:
+      - generic [ref=e463]:
+        - generic [ref=e464]: 📁
+        - strong [ref=e465]: PDF / DOCX / XLSX hierher ziehen
+        - generic [ref=e466]: bis 50 MB · AI schlägt Kategorie vor
+      - generic [ref=e467]:
+        - heading "Metadaten (kann AI-Vorschlag überschreiben)" [level=4] [ref=e468]
+        - generic [ref=e469]:
+          - generic [ref=e470]: Kategorie *
+          - combobox [ref=e471] [cursor=pointer]:
+            - option "— AI-Vorschlag wird nach Upload angezeigt —" [selected]
+            - option "Projekt-Beschreibung"
+            - option "Pressemeldung"
+            - option "Baublatt / simap"
+            - option "Pitch-Unterlage"
+            - option "Referenz-Schreiben"
+            - option "Sonstiges"
+          - generic [ref=e472]: Titel
+          - textbox "wird AI-extrahiert" [ref=e473]
+          - generic [ref=e474]: Datum
+          - textbox [ref=e475]
+    - generic [ref=e476]:
+      - button "Abbrechen" [ref=e477] [cursor=pointer]
+      - button "⬆ Hochladen" [ref=e479] [cursor=pointer]
+  - generic [ref=e480]:
+    - generic [ref=e481]:
+      - generic [ref=e482]: 🎯
+      - generic [ref=e483]:
+        - heading "Pitch-Vorbereitung · Tobias Furrer" [level=2] [ref=e484]
+        - generic [ref=e485]: Kandidat → Projekt „Wohnsiedlung Uetlihof" · Match-Score 92 %
+      - button "✕" [ref=e486] [cursor=pointer]
+    - generic [ref=e487]:
+      - generic [ref=e488]:
+        - heading "Match-Begründung (AI-generiert · Phase 1.5)" [level=4] [ref=e489]
+        - generic [ref=e490]: Tobias Furrer bringt 5 abgeschlossene Hochbau-Projekte vergleichbarer Grösse mit (Spitaltiefbau Zürich, Sihlcity-Ausbau). Erfahrung in BKP 211 + 230 + 244 passend zum Projekt-Mix. Regional ZH-affin, aktuell bei Implenia (würde auch die neue Rolle via Implenia-Taskforce ermöglichen). Führende Verantwortung in SIA 32/51/52 in ähnlichen Projekten dokumentiert.
+      - generic [ref=e491]:
+        - heading "Projekt-Kontext auf einen Blick" [level=4] [ref=e492]
+        - generic [ref=e493]:
+          - term [ref=e494]: Projekt
+          - definition [ref=e495]:
+            - link "Wohnsiedlung Uetlihof" [ref=e496] [cursor=pointer]:
+              - /url: projects.html
+            - text: · CHF 80–100 M · 186 Whg
+          - term [ref=e497]: Bauherr
+          - definition [ref=e498]:
+            - link "Bauherr Muster AG" [ref=e499] [cursor=pointer]:
+              - /url: accounts.html
+          - term [ref=e500]: Cluster
+          - definition [ref=e501]: Wohnungsbau (primary) · Urban Development
+          - term [ref=e502]: BKP-Hauptgewerke
+          - definition [ref=e503]: 2 · 3 · 4 (Gebäude + Betriebseinrichtungen + Umgebung)
+      - generic [ref=e504]:
+        - heading "Aktionen" [level=4] [ref=e505]
+        - generic [ref=e506]:
+          - button "→ Kandidat-Briefing anlegen" [ref=e507] [cursor=pointer]
+          - button "→ In Mandat-Longlist übernehmen" [ref=e508] [cursor=pointer]
+          - button "📋 Match-Begründung kopieren" [ref=e509] [cursor=pointer]
+          - button "📄 Pitch-PDF generieren" [ref=e510] [cursor=pointer]
+    - button "Schliessen" [ref=e512] [cursor=pointer]
+  - generic [ref=e513]:
+    - generic [ref=e514]:
+      - generic [ref=e515]: 📄
+      - generic [ref=e516]:
+        - heading "Projekt-Report generieren" [level=2] [ref=e517]
+        - generic [ref=e518]: PDF mit Stammdaten, Gewerken, Galerie-Preview
+      - button "✕" [ref=e519] [cursor=pointer]
+    - generic [ref=e520]:
+      - generic [ref=e521]:
+        - heading "Report-Typ *" [level=4] [ref=e522]
+        - generic [ref=e523]:
+          - generic [ref=e524] [cursor=pointer]:
+            - radio "🏆 Arkadium-Pitch (extern) Nur öffentliche Infos · anonymisiertes Foto-Highlight · ideal für Kundenpräsentationen" [checked] [ref=e525]
+            - generic [ref=e526]:
+              - strong [ref=e527]: 🏆 Arkadium-Pitch (extern)
+              - generic [ref=e528]: Nur öffentliche Infos · anonymisiertes Foto-Highlight · ideal für Kundenpräsentationen
+          - generic [ref=e529] [cursor=pointer]:
+            - radio "🔒 Vollbericht (intern) Mit allen Beteiligungen, Kandidaten-Namen, internen Kommentaren · nur für Arkadium-Mitarbeiter" [ref=e530]
+            - generic [ref=e531]:
+              - strong [ref=e532]: 🔒 Vollbericht (intern)
+              - generic [ref=e533]: Mit allen Beteiligungen, Kandidaten-Namen, internen Kommentaren · nur für Arkadium-Mitarbeiter
+      - generic [ref=e534]:
+        - heading "Optionen" [level=4] [ref=e535]
+        - generic [ref=e536]:
+          - generic [ref=e537]: Sprache
+          - combobox [ref=e538] [cursor=pointer]:
+            - option "Deutsch" [selected]
+            - option "Français"
+            - option "English"
+          - generic [ref=e539]: Galerie einschliessen
+          - generic [ref=e540]:
+            - checkbox [checked] [ref=e541]
+            - text: Max. 6 Highlight-Bilder (öffentliche)
+          - generic [ref=e542]: Logo
+          - generic [ref=e543]:
+            - checkbox [checked] [ref=e544]
+            - text: Arkadium-Logo im Header
+    - generic [ref=e545]:
+      - button "Abbrechen" [ref=e546] [cursor=pointer]
+      - button "📄 Generieren + als Dokument speichern" [ref=e548] [cursor=pointer]
+  - generic [ref=e549]:
+    - generic [ref=e550]:
+      - generic [ref=e551]: ➕
+      - generic [ref=e552]:
+        - heading "Beteiligung hinzufügen" [level=2] [ref=e553]
+        - generic [ref=e554]: "Quick-Workflow: Gewerk + Typ wählen → Detail-Drawer öffnet"
+      - button "✕" [ref=e555] [cursor=pointer]
+    - generic [ref=e556]:
+      - generic [ref=e557]:
+        - heading "1 · An welchem Gewerk? *" [level=4] [ref=e558]
+        - combobox [ref=e559] [cursor=pointer]:
+          - option "— Gewerk wählen —" [selected]
+          - option "BKP 211 · Baumeisterarbeiten"
+          - option "BKP 221 · Fenster / Aussentüren"
+          - option "BKP 230 · Elektroinstallationen"
+          - option "BKP 244 · Heizung / Lüftung"
+          - option "BKP 251 · Sanitärinstallationen"
+          - option "BKP 271 · Gipserarbeiten"
+          - option "BKP 411 · Umgebungsgestaltung"
+          - option "BKP 421 · Tiefgarage / UG-Ausbau"
+        - generic [ref=e560]: oder „+ Neues Gewerk" via BKP-Code-Auswahl
+      - generic [ref=e561]:
+        - heading "2 · Typ *" [level=4] [ref=e562]
+        - generic [ref=e563]:
+          - button "🏢 Firma Account mit Rolle + Summe" [ref=e564] [cursor=pointer]:
+            - generic [ref=e565]: 🏢
+            - strong [ref=e566]: Firma
+            - generic [ref=e567]: Account mit Rolle + Summe
+          - button "👥 Kandidat Mit Rolle + SIA-Phasen" [ref=e568] [cursor=pointer]:
+            - generic [ref=e569]: 👥
+            - strong [ref=e570]: Kandidat
+            - generic [ref=e571]: Mit Rolle + SIA-Phasen
+  - generic [ref=e572]:
+    - generic [ref=e573]:
+      - generic [ref=e574]: 📝
+      - generic [ref=e575]:
+        - heading "AM-Notiz zu Account" [level=2] [ref=e576]
+        - generic [ref=e577]: Eine Notiz pro Projekt+Account · nur eigene editierbar
+      - button "✕" [ref=e578] [cursor=pointer]
+    - generic [ref=e579]:
+      - generic [ref=e580]:
+        - heading "Account *" [level=4] [ref=e581]
+        - combobox [ref=e582] [cursor=pointer]:
+          - option "Bauherr Muster AG (Bauherr)" [selected]
+          - option "Implenia AG (GU)"
+          - option "Meili Peter Architekten (Architekt)"
+          - option "BKW Energie AG (Elektro)"
+          - option "Hälg Group (HLK)"
+        - generic [ref=e583]: Dropdown beschränkt auf am Projekt beteiligte Accounts (als Bauherr oder via Tab 2 Beteiligungen)
+      - generic [ref=e584]:
+        - heading "Notiz" [level=4] [ref=e585]
+        - textbox "Arkadium-interne Einschätzung zu diesem Account im Kontext dieses Projekts — z.B. Entscheidungsträger-Dynamik, Folgemandat-Potenzial, Risiken …" [ref=e586]
+        - generic [ref=e587]: Autor + Datum werden automatisch gesetzt · UNIQUE(project_id, account_id) · Duplikat überschreibt nicht
+    - generic [ref=e588]:
+      - button "Abbrechen" [ref=e589] [cursor=pointer]
+      - button "🗑 Notiz löschen" [ref=e591] [cursor=pointer]
+      - button "💾 Speichern" [ref=e592] [cursor=pointer]
+  - generic [ref=e593]:
+    - generic [ref=e594]:
+      - generic [ref=e595]: ⚠
+      - generic [ref=e596]:
+        - heading "Duplikat-Merge · Wohnsiedlung Uetlihof" [level=2] [ref=e597]
+        - generic [ref=e598]: 3-stufige Duplikat-Prüfung · AI-Confidence 91 %
+      - button "✕" [ref=e599] [cursor=pointer]
+    - generic [ref=e600]:
+      - generic [ref=e601] [cursor=pointer]: 1 · Scan-Ergebnis
+      - generic [ref=e602] [cursor=pointer]: 2 · Feld-Kollisionen
+      - generic [ref=e603] [cursor=pointer]: 3 · Bestätigen
+    - generic [ref=e605]:
+      - generic [ref=e606]:
+        - heading "Duplikat-Prüfung (3-stufig)" [level=4] [ref=e607]
+        - table [ref=e608]:
+          - rowgroup [ref=e609]:
+            - row "Methode Treffer Score Status" [ref=e610]:
+              - columnheader "Methode" [ref=e611]
+              - columnheader "Treffer" [ref=e612]
+              - columnheader "Score" [ref=e613]
+              - columnheader "Status" [ref=e614]
+          - rowgroup [ref=e615]:
+            - row "String-Similarity (Levenshtein + Standort) „Uetlihof Wohnen\" 88 % Match" [ref=e616]:
+              - cell "String-Similarity (Levenshtein + Standort)" [ref=e617]
+              - cell "„Uetlihof Wohnen\"" [ref=e618]
+              - cell "88 %" [ref=e619]:
+                - strong [ref=e620]: 88 %
+              - cell "Match" [ref=e621]:
+                - generic [ref=e622]: Match
+            - row "AI-Matching (LLM-Check) „Überbauung Uetlihof\" 91 % Match" [ref=e623]:
+              - cell "AI-Matching (LLM-Check)" [ref=e624]
+              - cell "„Überbauung Uetlihof\"" [ref=e625]
+              - cell "91 %" [ref=e626]:
+                - strong [ref=e627]: 91 %
+              - cell "Match" [ref=e628]:
+                - generic [ref=e629]: Match
+            - row "Standort + Volumen-Kontext „Zürich-Albisrieden · CHF 80–100 M\" 95 % Match" [ref=e630]:
+              - cell "Standort + Volumen-Kontext" [ref=e631]
+              - cell "„Zürich-Albisrieden · CHF 80–100 M\"" [ref=e632]
+              - cell "95 %" [ref=e633]:
+                - strong [ref=e634]: 95 %
+              - cell "Match" [ref=e635]:
+                - generic [ref=e636]: Match
+        - generic [ref=e637]:
+          - text: "Confidence ≥ 85 % → Merge-Vorschlag. Gesamt:"
+          - strong [ref=e638]: 91 %
+      - generic [ref=e639]:
+        - heading "Ziel-Projekt wählen (bleibt erhalten)" [level=4] [ref=e640]
+        - generic [ref=e641]:
+          - generic [ref=e642] [cursor=pointer]:
+            - radio "Wohnsiedlung Uetlihof dieses 14 Firmen · 32 Kandidaten · 24 Fotos · erstellt 10.02.2026" [checked] [ref=e643]
+            - generic [ref=e644]:
+              - strong [ref=e645]: Wohnsiedlung Uetlihof
+              - generic [ref=e646]: dieses
+              - generic [ref=e647]: 14 Firmen · 32 Kandidaten · 24 Fotos · erstellt 10.02.2026
+          - generic [ref=e648] [cursor=pointer]:
+            - radio "Überbauung Uetlihof 3 Firmen · 4 Kandidaten · 0 Fotos · erstellt 22.01.2026 (Scraper)" [ref=e649]
+            - generic [ref=e650]:
+              - strong [ref=e651]: Überbauung Uetlihof
+              - generic [ref=e652]: 3 Firmen · 4 Kandidaten · 0 Fotos · erstellt 22.01.2026 (Scraper)
+    - generic [ref=e653]:
+      - button "Abbrechen" [ref=e654] [cursor=pointer]
+      - button "✓ Merge durchführen" [ref=e655] [cursor=pointer]
+  - generic [ref=e656]:
+    - generic [ref=e657]:
+      - generic [ref=e658]: ⏰
+      - generic [ref=e659]:
+        - heading "Neuer Reminder" [level=2] [ref=e660]
+        - generic [ref=e661]: Projekt-Reminder (Baustart, Galerie-Update, Beteiligungs-Review …)
+      - button "✕" [ref=e662] [cursor=pointer]
+    - generic [ref=e665]:
+      - generic [ref=e666]: Titel *
+      - textbox "z.B. Baustellen-Foto Spatenstich" [ref=e667]
+      - generic [ref=e668]: Typ *
+      - combobox [ref=e669] [cursor=pointer]:
+        - option "Baustart / Meilenstein" [selected]
+        - option "Galerie-Update"
+        - option "Beteiligungs-Review"
+        - option "Status-Change-Check"
+        - option "Pitch-Unterlage aktualisieren"
+        - option "Follow-up"
+        - option "Custom"
+      - generic [ref=e670]: Fällig am *
+      - textbox [ref=e671]
+      - generic [ref=e672]: Zuständig
+      - combobox [ref=e673] [cursor=pointer]:
+        - option "PW" [selected]
+        - option "JV"
+        - option "LR"
+        - option "MF"
+      - generic [ref=e674]: Notiz
+      - textbox [ref=e675]
+    - generic [ref=e676]:
+      - button "Abbrechen" [ref=e677] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e679] [cursor=pointer]
+  - generic [ref=e680]:
+    - generic [ref=e681]:
+      - generic [ref=e682]: 💬
+      - generic [ref=e683]:
+        - heading "Event-Detail" [level=2] [ref=e684]
+        - generic [ref=e685]: —
+      - button "✕" [ref=e686] [cursor=pointer]
+    - generic [ref=e689]:
+      - button "Schliessen" [ref=e690] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e691] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e692] [cursor=pointer]

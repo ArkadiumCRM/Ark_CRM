@@ -1,0 +1,526 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Firmengruppen" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: 🏛 Muster Holding AG
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]: 🤖
+    - generic [ref=e17]:
+      - strong [ref=e18]: Scraper-Vorschlag · UID-Match
+      - text: ": Potenzielle Konzernstruktur identifiziert (CHE-123.456.789 ↔ CHE-987.654.321 beide unter Holding „Muster-Gruppe\"). Admin-Bestätigung erforderlich."
+    - button "✓ Bestätigen" [ref=e19] [cursor=pointer]
+    - button "✕ Ablehnen" [ref=e20] [cursor=pointer]
+    - button "✕" [ref=e21] [cursor=pointer]
+  - generic [ref=e23]:
+    - generic [ref=e24]: 🏛
+    - generic [ref=e25]:
+      - heading "Muster Holding AG" [level=1] [ref=e26]
+      - generic [ref=e27]: 🏛 Holding
+      - generic [ref=e28]: Klasse A (aggregiert)
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - text: Gruppen-Manager
+          - strong [ref=e31]: PW
+        - generic [ref=e33]: Sitz Zürich · CHE-123.456.789
+        - link "muster-holding.ch" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e38]: gegründet 1978 (Holding 2012)
+      - generic [ref=e39]:
+        - button "📞 Anrufen" [ref=e40] [cursor=pointer]
+        - button "✉ Email" [ref=e41] [cursor=pointer]
+        - button "📄 Gruppen-Report" [ref=e42] [cursor=pointer]
+        - button "+ Gesellschaft hinzufügen" [ref=e43] [cursor=pointer]
+        - button "+ Gruppen-Mandat" [ref=e44] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e45] [cursor=pointer]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: Status
+        - combobox [ref=e49] [cursor=pointer]:
+          - option "● Aktiv" [selected]
+          - option "⏸ In Review"
+          - option "✕ Archiviert"
+          - option "🔗 Merger / Restrukturierung"
+          - text: ▾
+      - generic [ref=e51]: Rahmenvertrag aktiv bis 31.12.2028
+      - generic [ref=e52]:
+        - link "🛡 1 Gruppen-Schutzfrist" [ref=e53] [cursor=pointer]:
+          - /url: "#"
+        - link "6 offene Mandate" [ref=e54] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e55]: bestätigt durch PW · 12.03.2024
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: 🏢 Gesellschaften
+      - generic [ref=e59]: "2"
+      - generic [ref=e60]: BM AG · MI AG
+    - generic [ref=e61]:
+      - generic [ref=e62]: 👥 Mitarbeitende
+      - generic [ref=e63]: "505"
+      - generic [ref=e64]: +24 vs. 2024
+    - generic [ref=e65]:
+      - generic [ref=e66]: 💰 Umsatz 2025
+      - generic [ref=e67]: CHF 340 M
+      - generic [ref=e68]: Konsolidiert
+    - generic [ref=e69]:
+      - generic [ref=e70]: ⚙ Aktive Prozesse
+      - generic [ref=e71]: "8"
+      - generic [ref=e72]: über 2 Gesellschaften
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🏆 Placements YTD
+      - generic [ref=e75]: "12"
+      - generic [ref=e76]: Q1 stark
+    - generic [ref=e77]:
+      - generic [ref=e78]: 💰 Arkadium-Umsatz YTD
+      - generic [ref=e79]: CHF 380k
+      - generic [ref=e80]: 68 % vom Total
+  - navigation [ref=e81]:
+    - generic [ref=e82] [cursor=pointer]: 1Übersicht
+    - generic [ref=e83] [cursor=pointer]: 2Kultur (Gruppen-Analyse)
+    - generic [ref=e84] [cursor=pointer]: 3Kontakte
+    - generic [ref=e85] [cursor=pointer]: 4Mandate & Prozesse
+    - generic [ref=e86] [cursor=pointer]: 5Dokumente
+    - generic [ref=e87] [cursor=pointer]: 6History
+    - generic [ref=e88] [cursor=pointer]: 7Reminders
+  - generic [ref=e947]:
+    - generic [ref=e948]:
+      - generic [ref=e949]:
+        - generic [ref=e950]: Total
+        - generic [ref=e951]: "11"
+        - generic [ref=e952]: alle Kategorien Gruppen-Ebene
+      - generic [ref=e953]:
+        - generic [ref=e954]: Rahmenvertrag
+        - generic [ref=e955]: "1"
+        - generic [ref=e956]: aktiv bis 31.12.2028
+      - generic [ref=e957]:
+        - generic [ref=e958]: Master-NDA
+        - generic [ref=e959]: "2"
+        - generic [ref=e960]: beide unterschrieben
+      - generic [ref=e961]:
+        - generic [ref=e962]: Geschäftsberichte
+        - generic [ref=e963]: "3"
+        - generic [ref=e964]: 2023 · 2024 · 2025
+      - generic [ref=e965]:
+        - generic [ref=e966]: Zuletzt hochgeladen
+        - generic [ref=e967]: 14.04.2026
+        - generic [ref=e968]: von PW
+    - generic [ref=e969]:
+      - searchbox "🔍 Suche in Dateinamen, Tags, Gültigkeitsbereich …" [ref=e970]
+      - combobox [ref=e971] [cursor=pointer]:
+        - option "Alle Jahre" [selected]
+        - option "2026"
+        - option "2025"
+        - option "2024"
+        - option "älter"
+      - combobox [ref=e972] [cursor=pointer]:
+        - option "Alle Gültigkeitsbereiche" [selected]
+        - option "Nur ganze Gruppe"
+        - option "Nur Subset (Gesellschaften)"
+      - combobox [ref=e973] [cursor=pointer]:
+        - option "Alle Urheber" [selected]
+        - option "PW"
+        - option "JV"
+        - option "MF"
+        - option "Admin"
+        - option "— Upload extern —"
+      - generic [ref=e974]:
+        - generic [ref=e975] [cursor=pointer]: Liste
+        - generic [ref=e976] [cursor=pointer]: Kacheln
+      - button "+ Upload" [ref=e977] [cursor=pointer]
+    - generic [ref=e979]:
+      - generic [ref=e980] [cursor=pointer]:
+        - text: Alle
+        - generic [ref=e981]: "11"
+      - generic [ref=e982] [cursor=pointer]:
+        - text: Rahmenvertrag
+        - generic [ref=e983]: "1"
+      - generic [ref=e984] [cursor=pointer]:
+        - text: Master-NDA
+        - generic [ref=e985]: "2"
+      - generic [ref=e986] [cursor=pointer]:
+        - text: Konzern-AGB
+        - generic [ref=e987]: "1"
+      - generic [ref=e988] [cursor=pointer]:
+        - text: Gruppen-Präsentationen
+        - generic [ref=e989]: "2"
+      - generic [ref=e990] [cursor=pointer]:
+        - text: Holdings-Geschäftsberichte
+        - generic [ref=e991]: "3"
+      - generic [ref=e992] [cursor=pointer]:
+        - text: Sonstiges
+        - generic [ref=e993]: "2"
+    - table [ref=e996]:
+      - rowgroup [ref=e997]:
+        - row "Name Kategorie Gültigkeitsbereich Erstellt Urheber Grösse ›" [ref=e998]:
+          - columnheader [ref=e999]
+          - columnheader "Name" [ref=e1000]
+          - columnheader "Kategorie" [ref=e1001]
+          - columnheader "Gültigkeitsbereich" [ref=e1002]
+          - columnheader "Erstellt" [ref=e1003]
+          - columnheader "Urheber" [ref=e1004]
+          - columnheader "Grösse" [ref=e1005]
+          - columnheader "›" [ref=e1006]
+      - rowgroup [ref=e1007]:
+        - row "PDF Rahmenvertrag Muster-Gruppe 2025–2028 Sonder-Konditionen −2 % · Gültig 01.01.2025 bis 31.12.2028 Rahmenvertrag 🏛 Ganze Gruppe 12.12.2024 Upload · PW 512 KB ›" [ref=e1008] [cursor=pointer]:
+          - cell "PDF" [ref=e1009]:
+            - generic [ref=e1010]: PDF
+          - cell "Rahmenvertrag Muster-Gruppe 2025–2028 Sonder-Konditionen −2 % · Gültig 01.01.2025 bis 31.12.2028" [ref=e1011]:
+            - strong [ref=e1012]: Rahmenvertrag Muster-Gruppe 2025–2028
+            - generic [ref=e1013]: Sonder-Konditionen −2 % · Gültig 01.01.2025 bis 31.12.2028
+          - cell "Rahmenvertrag" [ref=e1014]:
+            - generic [ref=e1015]: Rahmenvertrag
+          - cell "🏛 Ganze Gruppe" [ref=e1016]
+          - cell "12.12.2024" [ref=e1017]
+          - cell "Upload · PW" [ref=e1018]:
+            - generic [ref=e1019]: Upload · PW
+          - cell "512 KB" [ref=e1020]
+          - cell "›" [ref=e1021]:
+            - button "›" [ref=e1022]
+        - row "PDF Master-NDA Muster Holding AG Gegenseitige Geheimhaltung, unbefristet Master-NDA 🏛 Ganze Gruppe 10.12.2024 Upload · PW 186 KB ›" [ref=e1023] [cursor=pointer]:
+          - cell "PDF" [ref=e1024]:
+            - generic [ref=e1025]: PDF
+          - cell "Master-NDA Muster Holding AG Gegenseitige Geheimhaltung, unbefristet" [ref=e1026]:
+            - strong [ref=e1027]: Master-NDA Muster Holding AG
+            - generic [ref=e1028]: Gegenseitige Geheimhaltung, unbefristet
+          - cell "Master-NDA" [ref=e1029]:
+            - generic [ref=e1030]: Master-NDA
+          - cell "🏛 Ganze Gruppe" [ref=e1031]
+          - cell "10.12.2024" [ref=e1032]
+          - cell "Upload · PW" [ref=e1033]:
+            - generic [ref=e1034]: Upload · PW
+          - cell "186 KB" [ref=e1035]
+          - cell "›" [ref=e1036]:
+            - button "›" [ref=e1037]
+        - 'row "PDF NDA Muster Immobilien AG · M&A-Projekt Spezifisch für DACH-Expansion-Opportunity Master-NDA Subset: Muster Immobilien AG 05.03.2026 Upload · MF 142 KB ›" [ref=e1038] [cursor=pointer]':
+          - cell "PDF" [ref=e1039]:
+            - generic [ref=e1040]: PDF
+          - cell "NDA Muster Immobilien AG · M&A-Projekt Spezifisch für DACH-Expansion-Opportunity" [ref=e1041]:
+            - strong [ref=e1042]: NDA Muster Immobilien AG · M&A-Projekt
+            - generic [ref=e1043]: Spezifisch für DACH-Expansion-Opportunity
+          - cell "Master-NDA" [ref=e1044]:
+            - generic [ref=e1045]: Master-NDA
+          - 'cell "Subset: Muster Immobilien AG" [ref=e1046]'
+          - cell "05.03.2026" [ref=e1047]
+          - cell "Upload · MF" [ref=e1048]:
+            - generic [ref=e1049]: Upload · MF
+          - cell "142 KB" [ref=e1050]
+          - cell "›" [ref=e1051]:
+            - button "›" [ref=e1052]
+        - row "PDF Konzern-AGB Muster-Gruppe Abweichend vom Standard Arkadium-AGB · gilt für alle Mandate der Gruppe Konzern-AGB 🏛 Ganze Gruppe 12.12.2024 Upload · PW 280 KB ›" [ref=e1053] [cursor=pointer]:
+          - cell "PDF" [ref=e1054]:
+            - generic [ref=e1055]: PDF
+          - cell "Konzern-AGB Muster-Gruppe Abweichend vom Standard Arkadium-AGB · gilt für alle Mandate der Gruppe" [ref=e1056]:
+            - strong [ref=e1057]: Konzern-AGB Muster-Gruppe
+            - generic [ref=e1058]: Abweichend vom Standard Arkadium-AGB · gilt für alle Mandate der Gruppe
+          - cell "Konzern-AGB" [ref=e1059]:
+            - generic [ref=e1060]: Konzern-AGB
+          - cell "🏛 Ganze Gruppe" [ref=e1061]
+          - cell "12.12.2024" [ref=e1062]
+          - cell "Upload · PW" [ref=e1063]:
+            - generic [ref=e1064]: Upload · PW
+          - cell "280 KB" [ref=e1065]
+          - cell "›" [ref=e1066]:
+            - button "›" [ref=e1067]
+        - row "PDF Strategie-Präsentation Muster-Gruppe 2026–2030 Konzern-Strategie, ESG-Transformation, DACH-Expansion Gruppen-Präsentation 🏛 Ganze Gruppe 28.01.2026 Upload · Admin 8.4 MB ›" [ref=e1068] [cursor=pointer]:
+          - cell "PDF" [ref=e1069]:
+            - generic [ref=e1070]: PDF
+          - cell "Strategie-Präsentation Muster-Gruppe 2026–2030 Konzern-Strategie, ESG-Transformation, DACH-Expansion" [ref=e1071]:
+            - strong [ref=e1072]: Strategie-Präsentation Muster-Gruppe 2026–2030
+            - generic [ref=e1073]: Konzern-Strategie, ESG-Transformation, DACH-Expansion
+          - cell "Gruppen-Präsentation" [ref=e1074]:
+            - generic [ref=e1075]: Gruppen-Präsentation
+          - cell "🏛 Ganze Gruppe" [ref=e1076]
+          - cell "28.01.2026" [ref=e1077]
+          - cell "Upload · Admin" [ref=e1078]:
+            - generic [ref=e1079]: Upload · Admin
+          - cell "8.4 MB" [ref=e1080]
+          - cell "›" [ref=e1081]:
+            - button "›" [ref=e1082]
+        - row "DOCX Kick-off Meeting Deck · Rahmenvertrag-Partner Gruppen-Präsentation 🏛 Ganze Gruppe 20.12.2024 PW 2.1 MB ›" [ref=e1083] [cursor=pointer]:
+          - cell "DOCX" [ref=e1084]:
+            - generic [ref=e1085]: DOCX
+          - cell "Kick-off Meeting Deck · Rahmenvertrag-Partner" [ref=e1086]:
+            - strong [ref=e1087]: Kick-off Meeting Deck · Rahmenvertrag-Partner
+          - cell "Gruppen-Präsentation" [ref=e1088]:
+            - generic [ref=e1089]: Gruppen-Präsentation
+          - cell "🏛 Ganze Gruppe" [ref=e1090]
+          - cell "20.12.2024" [ref=e1091]
+          - cell "PW" [ref=e1092]:
+            - generic [ref=e1093]: PW
+          - cell "2.1 MB" [ref=e1094]
+          - cell "›" [ref=e1095]:
+            - button "›" [ref=e1096]
+        - row "PDF Geschäftsbericht 2025 Muster Holding AG Konsolidiert · 340 Mio. Umsatz · 505 MA Geschäftsbericht 🏛 Ganze Gruppe 14.04.2026 Upload · PW 12 MB ›" [ref=e1097] [cursor=pointer]:
+          - cell "PDF" [ref=e1098]:
+            - generic [ref=e1099]: PDF
+          - cell "Geschäftsbericht 2025 Muster Holding AG Konsolidiert · 340 Mio. Umsatz · 505 MA" [ref=e1100]:
+            - strong [ref=e1101]: Geschäftsbericht 2025 Muster Holding AG
+            - generic [ref=e1102]: Konsolidiert · 340 Mio. Umsatz · 505 MA
+          - cell "Geschäftsbericht" [ref=e1103]:
+            - generic [ref=e1104]: Geschäftsbericht
+          - cell "🏛 Ganze Gruppe" [ref=e1105]
+          - cell "14.04.2026" [ref=e1106]
+          - cell "Upload · PW" [ref=e1107]:
+            - generic [ref=e1108]: Upload · PW
+          - cell "12 MB" [ref=e1109]
+          - cell "›" [ref=e1110]:
+            - button "›" [ref=e1111]
+        - row "PDF Geschäftsbericht 2024 Muster Holding AG Geschäftsbericht 🏛 Ganze Gruppe 12.03.2025 Upload · PW 10 MB ›" [ref=e1112] [cursor=pointer]:
+          - cell "PDF" [ref=e1113]:
+            - generic [ref=e1114]: PDF
+          - cell "Geschäftsbericht 2024 Muster Holding AG" [ref=e1115]:
+            - strong [ref=e1116]: Geschäftsbericht 2024 Muster Holding AG
+          - cell "Geschäftsbericht" [ref=e1117]:
+            - generic [ref=e1118]: Geschäftsbericht
+          - cell "🏛 Ganze Gruppe" [ref=e1119]
+          - cell "12.03.2025" [ref=e1120]
+          - cell "Upload · PW" [ref=e1121]:
+            - generic [ref=e1122]: Upload · PW
+          - cell "10 MB" [ref=e1123]
+          - cell "›" [ref=e1124]:
+            - button "›" [ref=e1125]
+        - row "PDF Geschäftsbericht 2023 Muster Holding AG Geschäftsbericht 🏛 Ganze Gruppe 08.04.2024 Upload · PW 9.2 MB ›" [ref=e1126] [cursor=pointer]:
+          - cell "PDF" [ref=e1127]:
+            - generic [ref=e1128]: PDF
+          - cell "Geschäftsbericht 2023 Muster Holding AG" [ref=e1129]:
+            - strong [ref=e1130]: Geschäftsbericht 2023 Muster Holding AG
+          - cell "Geschäftsbericht" [ref=e1131]:
+            - generic [ref=e1132]: Geschäftsbericht
+          - cell "🏛 Ganze Gruppe" [ref=e1133]
+          - cell "08.04.2024" [ref=e1134]
+          - cell "Upload · PW" [ref=e1135]:
+            - generic [ref=e1136]: Upload · PW
+          - cell "9.2 MB" [ref=e1137]
+          - cell "›" [ref=e1138]:
+            - button "›" [ref=e1139]
+        - row "XLSX Gruppen-KPI-Dashboard Q1 2026 Aggregiert · alle Gesellschaften Sonstiges 🏛 Ganze Gruppe 05.04.2026 PW 520 KB ›" [ref=e1140] [cursor=pointer]:
+          - cell "XLSX" [ref=e1141]:
+            - generic [ref=e1142]: XLSX
+          - cell "Gruppen-KPI-Dashboard Q1 2026 Aggregiert · alle Gesellschaften" [ref=e1143]:
+            - strong [ref=e1144]: Gruppen-KPI-Dashboard Q1 2026
+            - generic [ref=e1145]: Aggregiert · alle Gesellschaften
+          - cell "Sonstiges" [ref=e1146]:
+            - generic [ref=e1147]: Sonstiges
+          - cell "🏛 Ganze Gruppe" [ref=e1148]
+          - cell "05.04.2026" [ref=e1149]
+          - cell "PW" [ref=e1150]:
+            - generic [ref=e1151]: PW
+          - cell "520 KB" [ref=e1152]
+          - cell "›" [ref=e1153]:
+            - button "›" [ref=e1154]
+        - row "DOCX Gruppen-Organigramm 2026 Holding → Gesellschaften, Ownership-Struktur Sonstiges 🏛 Ganze Gruppe 15.01.2026 Admin 340 KB ›" [ref=e1155] [cursor=pointer]:
+          - cell "DOCX" [ref=e1156]:
+            - generic [ref=e1157]: DOCX
+          - cell "Gruppen-Organigramm 2026 Holding → Gesellschaften, Ownership-Struktur" [ref=e1158]:
+            - strong [ref=e1159]: Gruppen-Organigramm 2026
+            - generic [ref=e1160]: Holding → Gesellschaften, Ownership-Struktur
+          - cell "Sonstiges" [ref=e1161]:
+            - generic [ref=e1162]: Sonstiges
+          - cell "🏛 Ganze Gruppe" [ref=e1163]
+          - cell "15.01.2026" [ref=e1164]
+          - cell "Admin" [ref=e1165]:
+            - generic [ref=e1166]: Admin
+          - cell "340 KB" [ref=e1167]
+          - cell "›" [ref=e1168]:
+            - button "›" [ref=e1169]
+    - generic [ref=e1170]:
+      - text: "Gruppen-Dokumente: gruppenweite Rahmenverträge, Master-NDAs, Konzern-AGB, Strategie-Präsentationen, Holdings-Geschäftsberichte."
+      - strong [ref=e1171]: Gültigkeitsbereich
+      - text: ": „🏛 Ganze Gruppe\" (Default) oder „Subset\" (nur ausgewählte Gesellschaften). Account-spezifische Dokumente (Offerten, Rechnungen, Stellenbriefings) leben auf Account-Ebene — hier nicht dupliziert."
+  - generic [ref=e250]:
+    - generic [ref=e251]: 1–7 Tabs
+    - generic [ref=e252]: T Theme
+    - generic [ref=e253]: ⌘K
+  - generic [ref=e254]:
+    - generic [ref=e255]:
+      - generic [ref=e256]: ↑
+      - generic [ref=e257]:
+        - heading "Dokument hochladen" [level=2] [ref=e258]
+        - generic [ref=e259]: Gruppen-weit oder für Subset der Gesellschaften
+      - button "✕" [ref=e260] [cursor=pointer]
+    - generic [ref=e262]:
+      - generic [ref=e263]:
+        - heading "Datei" [level=4] [ref=e264]
+        - generic [ref=e265] [cursor=pointer]:
+          - generic [ref=e266]: 📄
+          - generic [ref=e267]: Datei hierher ziehen oder klicken
+          - generic [ref=e268]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e269]:
+        - heading "Metadaten" [level=4] [ref=e270]
+        - generic [ref=e271]:
+          - generic [ref=e272]: Kategorie *
+          - combobox [ref=e273] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Rahmenvertrag"
+            - option "Master-NDA"
+            - option "Konzern-AGB"
+            - option "Gruppen-Präsentation"
+            - option "Holdings-Geschäftsbericht"
+            - option "Sonstiges"
+          - generic [ref=e274]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e275]
+          - generic [ref=e276]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e277]
+          - generic [ref=e278]: Gültigkeitsbereich
+          - combobox [ref=e279] [cursor=pointer]:
+            - option "Ganze Gruppe (Default)" [selected]
+            - option "Nur ausgewählte Gesellschaften …"
+          - generic [ref=e280]: Urheber
+          - generic [ref=e281]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e282]:
+      - button "Abbrechen" [ref=e283] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e285] [cursor=pointer]
+  - generic [ref=e286]:
+    - generic [ref=e287]:
+      - generic [ref=e288]: 💬
+      - generic [ref=e289]:
+        - heading "Event-Detail" [level=2] [ref=e290]
+        - generic [ref=e291]: —
+      - button "✕" [ref=e292] [cursor=pointer]
+    - generic [ref=e295]:
+      - button "Schliessen" [ref=e296] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e297] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e298] [cursor=pointer]
+  - generic [ref=e299]:
+    - generic [ref=e300]:
+      - generic [ref=e301]: ⏰
+      - generic [ref=e302]:
+        - heading "Neuer Reminder" [level=2] [ref=e303]
+        - generic [ref=e304]: Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)
+        - generic [ref=e306]: neu
+      - button "✕" [ref=e307] [cursor=pointer]
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - heading "Reminder" [level=4] [ref=e310]
+        - generic [ref=e311]:
+          - generic [ref=e312]: Titel *
+          - textbox "z.B. Rahmenvertrag-Review Q3" [ref=e313]
+          - generic [ref=e314]: Typ *
+          - combobox [ref=e315] [cursor=pointer]:
+            - option "Rahmenvertrag-Review" [selected]
+            - option "Jahres-Report"
+            - option "Gruppen-Mandats-Opportunity"
+            - option "Scraper-Group-Match"
+            - option "Kultur-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e316]: Fällig am *
+          - textbox [ref=e317]
+          - generic [ref=e318]: Zuständig *
+          - combobox [ref=e319] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Admin"
+          - generic [ref=e320]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e321]
+          - generic [ref=e322]: Verknüpfung
+          - combobox [ref=e323] [cursor=pointer]:
+            - option "Gruppen-Level (keine Verknüpfung)" [selected]
+            - option "Gesellschaft · Muster Holding AG"
+            - option "Gesellschaft · Muster Baubetrieb AG"
+            - option "Gruppen-Mandat · Taskforce PL Hochbau"
+            - option "Rahmenvertrag 2026"
+          - generic [ref=e324]: Wiederholen
+          - combobox [ref=e325] [cursor=pointer]:
+            - option "Einmalig"
+            - option "Quartalsweise"
+            - option "Jährlich" [selected]
+      - generic [ref=e326]:
+        - heading "Benachrichtigung" [level=4] [ref=e327]
+        - generic [ref=e328]:
+          - generic [ref=e329]: Vorlaufzeit
+          - combobox [ref=e330] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+            - option "1 Monat vorher"
+          - generic [ref=e331]: Eskalation
+          - generic [ref=e332]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Admin
+    - generic [ref=e333]:
+      - button "Abbrechen" [ref=e334] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e336] [cursor=pointer]
+  - generic [ref=e337]:
+    - generic [ref=e338]:
+      - generic [ref=e339]: HM
+      - generic [ref=e340]:
+        - heading "Hans Müller" [level=2] [ref=e341]
+        - generic [ref=e342]: CEO · Geschäftsleitung · Bauherr Muster AG
+        - generic [ref=e343]:
+          - generic "Executive" [ref=e344]: E
+          - link "→ Kandidatenprofil" [ref=e345] [cursor=pointer]:
+            - /url: "#"
+      - button "✕" [ref=e346] [cursor=pointer]
+    - generic [ref=e347]:
+      - generic [ref=e348] [cursor=pointer]: Stammdaten
+      - generic [ref=e349] [cursor=pointer]: Kommunikation
+      - generic [ref=e350] [cursor=pointer]: Prozesse
+      - generic [ref=e351] [cursor=pointer]: Notizen
+    - generic [ref=e353]:
+      - generic [ref=e354]:
+        - heading "Personen-Stammdaten read-only · beim Kandidaten pflegen" [level=4] [ref=e355]
+        - generic [ref=e356]:
+          - term [ref=e357]: Name
+          - definition [ref=e358]: Hans Müller
+          - term [ref=e359]: E-Mail
+          - definition [ref=e360]: h.mueller@muster-bauherr.ch
+          - term [ref=e361]: Telefon direkt
+          - definition [ref=e362]: +41 44 123 45 67
+          - term [ref=e363]: Mobile
+          - definition [ref=e364]: +41 79 123 45 67
+          - term [ref=e365]: LinkedIn
+          - definition [ref=e366]:
+            - link "linkedin.com/in/hans-mueller" [ref=e367] [cursor=pointer]:
+              - /url: "#"
+          - term [ref=e368]: Geburtstag
+          - definition [ref=e369]: 14.03.1968
+      - generic [ref=e370]:
+        - heading "Account-Beziehung (bearbeitbar auf Account-Ebene)" [level=4] [ref=e371]
+        - generic [ref=e372]:
+          - term [ref=e373]: Gesellschaft
+          - definition [ref=e374]:
+            - link "Bauherr Muster AG" [ref=e375] [cursor=pointer]:
+              - /url: accounts.html
+            - text: · Teil der Muster Holding
+          - term [ref=e376]: Position
+          - definition [ref=e377]: CEO
+          - term [ref=e378]: Department
+          - definition [ref=e379]: Geschäftsleitung
+          - term [ref=e380]: Standort
+          - definition [ref=e381]: Zürich (HQ)
+          - term [ref=e382]: Org-Funktion
+          - definition [ref=e383]:
+            - generic [ref=e384]: E
+            - text: Executive · CEO · Geschäftsleitung
+          - term [ref=e385]: Relationship Score
+          - definition [ref=e386]:
+            - strong [ref=e387]: "8"
+            - text: / 10
+          - term [ref=e388]: Kommunikations-Präferenz
+          - definition [ref=e389]: Telefon vor E-Mail · keine Teams-Calls
+          - term [ref=e390]: Beste Kontaktzeit
+          - definition [ref=e391]: Montag–Donnerstag · 07:30–09:00
+          - term [ref=e392]: Status
+          - definition [ref=e393]:
+            - generic [ref=e394]: Aktiv
+          - term [ref=e395]: Do not contact
+          - definition [ref=e396]: Nein
+      - generic [ref=e397]:
+        - heading "Onboarding-Notizen" [level=4] [ref=e398]
+        - paragraph [ref=e399]: Sohn des VR-Präsidenten Dr. U. Gerber. Seit 2015 im Unternehmen, CEO seit 2020. Grosses Interesse an Nachfolge-Themen. Bevorzugt kurze, direkte Gespräche. Ablehnung von „Corporate-Sprache" — bei ihm wird geduzt nach kurzer Anwärm-Phase.
+    - generic [ref=e400]:
+      - button "📞 Anrufen" [ref=e401] [cursor=pointer]
+      - button "✉ E-Mail" [ref=e402] [cursor=pointer]
+      - button "🔔 Reminder" [ref=e403] [cursor=pointer]
+      - button "Bearbeiten (→ Account)" [ref=e404] [cursor=pointer]

@@ -1,0 +1,453 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Firmengruppen" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: 🏛 Muster Holding AG
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]: 🤖
+    - generic [ref=e17]:
+      - strong [ref=e18]: Scraper-Vorschlag · UID-Match
+      - text: ": Potenzielle Konzernstruktur identifiziert (CHE-123.456.789 ↔ CHE-987.654.321 beide unter Holding „Muster-Gruppe\"). Admin-Bestätigung erforderlich."
+    - button "✓ Bestätigen" [ref=e19] [cursor=pointer]
+    - button "✕ Ablehnen" [ref=e20] [cursor=pointer]
+    - button "✕" [ref=e21] [cursor=pointer]
+  - generic [ref=e23]:
+    - generic [ref=e24]: 🏛
+    - generic [ref=e25]:
+      - heading "Muster Holding AG" [level=1] [ref=e26]
+      - generic [ref=e27]: 🏛 Holding
+      - generic [ref=e28]: Klasse A (aggregiert)
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - text: Gruppen-Manager
+          - strong [ref=e31]: PW
+        - generic [ref=e33]: Sitz Zürich · CHE-123.456.789
+        - link "muster-holding.ch" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e38]: gegründet 1978 (Holding 2012)
+      - generic [ref=e39]:
+        - button "📞 Anrufen" [ref=e40] [cursor=pointer]
+        - button "✉ Email" [ref=e41] [cursor=pointer]
+        - button "📄 Gruppen-Report" [ref=e42] [cursor=pointer]
+        - button "+ Gesellschaft hinzufügen" [ref=e43] [cursor=pointer]
+        - button "+ Gruppen-Mandat" [ref=e44] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e45] [cursor=pointer]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: Status
+        - combobox [ref=e49] [cursor=pointer]:
+          - option "● Aktiv" [selected]
+          - option "⏸ In Review"
+          - option "✕ Archiviert"
+          - option "🔗 Merger / Restrukturierung"
+          - text: ▾
+      - generic [ref=e51]: Rahmenvertrag aktiv bis 31.12.2028
+      - generic [ref=e52]:
+        - link "🛡 1 Gruppen-Schutzfrist" [ref=e53] [cursor=pointer]:
+          - /url: "#"
+        - link "6 offene Mandate" [ref=e54] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e55]: bestätigt durch PW · 12.03.2024
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: 🏢 Gesellschaften
+      - generic [ref=e59]: "2"
+      - generic [ref=e60]: BM AG · MI AG
+    - generic [ref=e61]:
+      - generic [ref=e62]: 👥 Mitarbeitende
+      - generic [ref=e63]: "505"
+      - generic [ref=e64]: +24 vs. 2024
+    - generic [ref=e65]:
+      - generic [ref=e66]: 💰 Umsatz 2025
+      - generic [ref=e67]: CHF 340 M
+      - generic [ref=e68]: Konsolidiert
+    - generic [ref=e69]:
+      - generic [ref=e70]: ⚙ Aktive Prozesse
+      - generic [ref=e71]: "8"
+      - generic [ref=e72]: über 2 Gesellschaften
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🏆 Placements YTD
+      - generic [ref=e75]: "12"
+      - generic [ref=e76]: Q1 stark
+    - generic [ref=e77]:
+      - generic [ref=e78]: 💰 Arkadium-Umsatz YTD
+      - generic [ref=e79]: CHF 380k
+      - generic [ref=e80]: 68 % vom Total
+  - navigation [ref=e81]:
+    - generic [ref=e82] [cursor=pointer]: 1Übersicht
+    - generic [ref=e83] [cursor=pointer]: 2Kultur (Gruppen-Analyse)
+    - generic [ref=e84] [cursor=pointer]: 3Kontakte
+    - generic [ref=e85] [cursor=pointer]: 4Mandate & Prozesse
+    - generic [ref=e86] [cursor=pointer]: 5Dokumente
+    - generic [ref=e87] [cursor=pointer]: 6History
+    - generic [ref=e88] [cursor=pointer]: 7Reminders
+  - generic [ref=e1419]:
+    - generic [ref=e1420]:
+      - generic [ref=e1421]:
+        - generic [ref=e1422]: Offen
+        - generic [ref=e1423]: "6"
+        - generic [ref=e1424]: alle offenen Reminders
+      - generic [ref=e1425]:
+        - generic [ref=e1426]: Überfällig
+        - generic [ref=e1427]: "1"
+        - generic [ref=e1428]: sofortiges Handeln
+      - generic [ref=e1429]:
+        - generic [ref=e1430]: Heute
+        - generic [ref=e1431]: "1"
+        - generic [ref=e1432]: fällig am 16.04.2026
+      - generic [ref=e1433]:
+        - generic [ref=e1434]: Diese Woche
+        - generic [ref=e1435]: "2"
+        - generic [ref=e1436]: bis 20.04.2026
+      - generic [ref=e1437]:
+        - generic [ref=e1438]: Erledigt (30 d)
+        - generic [ref=e1439]: "9"
+        - generic [ref=e1440]: seit 16.03.2026
+    - generic [ref=e1441]:
+      - searchbox "🔍 Suche in Reminder-Titel, Kontext, Gesellschaft …" [ref=e1442]
+      - combobox [ref=e1443] [cursor=pointer]:
+        - option "Alle Typen" [selected]
+        - option "Rahmenvertrag-Review"
+        - option "Jahres-Report"
+        - option "Gruppen-Mandats-Opportunity"
+        - option "Scraper-Group-Match"
+        - option "Kultur-Update"
+        - option "Follow-up"
+        - option "Custom"
+      - combobox [ref=e1444] [cursor=pointer]:
+        - option "Alle Zuständigen" [selected]
+        - option "PW"
+        - option "JV"
+        - option "LR"
+        - option "MF"
+        - option "Admin"
+      - combobox [ref=e1445] [cursor=pointer]:
+        - option "Alle Gesellschaften" [selected]
+        - option "Muster Holding AG"
+        - option "Muster Baubetrieb AG"
+      - button "+ Reminder" [ref=e1446] [cursor=pointer]
+    - generic [ref=e1448]:
+      - generic [ref=e1449] [cursor=pointer]:
+        - text: Alle offenen
+        - generic [ref=e1450]: "6"
+      - generic [ref=e1451] [cursor=pointer]:
+        - generic [ref=e1452]: ●
+        - text: Überfällig
+        - generic [ref=e1453]: "1"
+      - generic [ref=e1454] [cursor=pointer]:
+        - text: Heute
+        - generic [ref=e1455]: "1"
+      - generic [ref=e1456] [cursor=pointer]:
+        - text: Diese Woche
+        - generic [ref=e1457]: "2"
+      - generic [ref=e1458] [cursor=pointer]:
+        - text: Später
+        - generic [ref=e1459]: "2"
+      - generic [ref=e1460] [cursor=pointer]:
+        - text: Erledigt
+        - generic [ref=e1461]: "9"
+    - generic [ref=e1462]:
+      - generic [ref=e1463]:
+        - heading "⚠ Überfällig" [level=3] [ref=e1464]
+        - generic [ref=e1465]: "1"
+      - table [ref=e1467]:
+        - rowgroup [ref=e1468]:
+          - row "Rahmenvertrag-Review Muster Holding Jährliche Konditions-Überprüfung seit 01.04 offen Rahmenvertrag-Review 16 d überfällig PW Erledigen" [ref=e1469] [cursor=pointer]:
+            - cell [ref=e1470]:
+              - checkbox [ref=e1471]
+            - cell "Rahmenvertrag-Review Muster Holding Jährliche Konditions-Überprüfung seit 01.04 offen" [ref=e1472]:
+              - strong [ref=e1473]: Rahmenvertrag-Review Muster Holding
+              - generic [ref=e1474]: Jährliche Konditions-Überprüfung seit 01.04 offen
+            - cell "Rahmenvertrag-Review" [ref=e1475]:
+              - generic [ref=e1476]: Rahmenvertrag-Review
+            - cell "16 d überfällig" [ref=e1477]
+            - cell "PW" [ref=e1478]:
+              - generic [ref=e1479]: PW
+            - cell "Erledigen" [ref=e1480]:
+              - button "Erledigen" [ref=e1481]
+    - generic [ref=e1482]:
+      - generic [ref=e1483]:
+        - heading "Heute · 16.04.2026" [level=3] [ref=e1484]
+        - generic [ref=e1485]: "1"
+      - table [ref=e1487]:
+        - rowgroup [ref=e1488]:
+          - row "Gruppen-Jahres-Report Q2 finalisieren PDF mit aggregierten KPIs, Mandaten, Placements, Kulturübersicht Jahres-Report 15:00 Uhr PW Erledigen" [ref=e1489] [cursor=pointer]:
+            - cell [ref=e1490]:
+              - checkbox [ref=e1491]
+            - cell "Gruppen-Jahres-Report Q2 finalisieren PDF mit aggregierten KPIs, Mandaten, Placements, Kulturübersicht" [ref=e1492]:
+              - strong [ref=e1493]: Gruppen-Jahres-Report Q2 finalisieren
+              - generic [ref=e1494]: PDF mit aggregierten KPIs, Mandaten, Placements, Kulturübersicht
+            - cell "Jahres-Report" [ref=e1495]:
+              - generic [ref=e1496]: Jahres-Report
+            - cell "15:00 Uhr" [ref=e1497]
+            - cell "PW" [ref=e1498]:
+              - generic [ref=e1499]: PW
+            - cell "Erledigen" [ref=e1500]:
+              - button "Erledigen" [ref=e1501]
+    - generic [ref=e1502]:
+      - generic [ref=e1503]:
+        - heading "Diese Woche · bis 20.04.2026" [level=3] [ref=e1504]
+        - generic [ref=e1505]: "2"
+      - table [ref=e1507]:
+        - rowgroup [ref=e1508]:
+          - row "Scraper-Group-Match prüfen · 3 Job-Wechsel Gruppen-Schutzfrist-Verletzungen aus Scraper-Run 14.04 bestätigen Scraper-Group-Match 18.04.2026 · in 2 d JV Erledigen" [ref=e1509] [cursor=pointer]:
+            - cell [ref=e1510]:
+              - checkbox [ref=e1511]
+            - cell "Scraper-Group-Match prüfen · 3 Job-Wechsel Gruppen-Schutzfrist-Verletzungen aus Scraper-Run 14.04 bestätigen" [ref=e1512]:
+              - strong [ref=e1513]: Scraper-Group-Match prüfen · 3 Job-Wechsel
+              - generic [ref=e1514]: Gruppen-Schutzfrist-Verletzungen aus Scraper-Run 14.04 bestätigen
+            - cell "Scraper-Group-Match" [ref=e1515]:
+              - generic [ref=e1516]: Scraper-Group-Match
+            - cell "18.04.2026 · in 2 d" [ref=e1517]
+            - cell "JV" [ref=e1518]:
+              - generic [ref=e1519]: JV
+            - cell "Erledigen" [ref=e1520]:
+              - button "Erledigen" [ref=e1521]
+          - row "Gruppen-Mandats-Opportunity · Taskforce PL Hochbau 2. Los Follow-up mit CEO Holding nach erfolgreicher Phase 1 Gruppen-Mandats-Opportunity 20.04.2026 · in 4 d PW Erledigen" [ref=e1522] [cursor=pointer]:
+            - cell [ref=e1523]:
+              - checkbox [ref=e1524]
+            - cell "Gruppen-Mandats-Opportunity · Taskforce PL Hochbau 2. Los Follow-up mit CEO Holding nach erfolgreicher Phase 1" [ref=e1525]:
+              - strong [ref=e1526]: Gruppen-Mandats-Opportunity · Taskforce PL Hochbau 2. Los
+              - generic [ref=e1527]: Follow-up mit CEO Holding nach erfolgreicher Phase 1
+            - cell "Gruppen-Mandats-Opportunity" [ref=e1528]:
+              - generic [ref=e1529]: Gruppen-Mandats-Opportunity
+            - cell "20.04.2026 · in 4 d" [ref=e1530]
+            - cell "PW" [ref=e1531]:
+              - generic [ref=e1532]: PW
+            - cell "Erledigen" [ref=e1533]:
+              - button "Erledigen" [ref=e1534]
+    - generic [ref=e1535]:
+      - generic [ref=e1536]:
+        - heading "Später" [level=3] [ref=e1537]
+        - generic [ref=e1538]: "2"
+      - table [ref=e1540]:
+        - rowgroup [ref=e1541]:
+          - row "Kultur-Update Gruppen-Analyse Geschäftsbericht 2025 gerade publiziert — AI-Analyse aktualisieren Kultur-Update 30.04.2026 Admin Erledigen" [ref=e1542] [cursor=pointer]:
+            - cell [ref=e1543]:
+              - checkbox [ref=e1544]
+            - cell "Kultur-Update Gruppen-Analyse Geschäftsbericht 2025 gerade publiziert — AI-Analyse aktualisieren" [ref=e1545]:
+              - strong [ref=e1546]: Kultur-Update Gruppen-Analyse
+              - generic [ref=e1547]: Geschäftsbericht 2025 gerade publiziert — AI-Analyse aktualisieren
+            - cell "Kultur-Update" [ref=e1548]:
+              - generic [ref=e1549]: Kultur-Update
+            - cell "30.04.2026" [ref=e1550]
+            - cell "Admin" [ref=e1551]:
+              - generic [ref=e1552]: Admin
+            - cell "Erledigen" [ref=e1553]:
+              - button "Erledigen" [ref=e1554]
+          - row "Rahmenvertrag-Verlängerung Q3 Vorbereitung Neuverhandlung, Staffel-Review Rahmenvertrag-Review 15.06.2026 PW Erledigen" [ref=e1555] [cursor=pointer]:
+            - cell [ref=e1556]:
+              - checkbox [ref=e1557]
+            - cell "Rahmenvertrag-Verlängerung Q3 Vorbereitung Neuverhandlung, Staffel-Review" [ref=e1558]:
+              - strong [ref=e1559]: Rahmenvertrag-Verlängerung Q3
+              - generic [ref=e1560]: Vorbereitung Neuverhandlung, Staffel-Review
+            - cell "Rahmenvertrag-Review" [ref=e1561]:
+              - generic [ref=e1562]: Rahmenvertrag-Review
+            - cell "15.06.2026" [ref=e1563]
+            - cell "PW" [ref=e1564]:
+              - generic [ref=e1565]: PW
+            - cell "Erledigen" [ref=e1566]:
+              - button "Erledigen" [ref=e1567]
+    - generic [ref=e1568] [cursor=pointer]:
+      - generic [ref=e1569]: ▾
+      - heading "Erledigt (letzte 30 Tage)" [level=3] [ref=e1570]
+      - generic [ref=e1571]: "9"
+    - generic [ref=e1572]: "Reminders auf Gruppen-Ebene: Rahmenvertrag-Reviews, Jahres-Reports, Mandats-Opportunities über mehrere Gesellschaften, Scraper-Group-Match-Folgeprüfungen, Kultur-Update nach Geschäftsbericht-Publikation. Auch im globalen Dashboard sichtbar."
+  - generic [ref=e250]:
+    - generic [ref=e251]: 1–7 Tabs
+    - generic [ref=e252]: T Theme
+    - generic [ref=e253]: ⌘K
+  - generic [ref=e254]:
+    - generic [ref=e255]:
+      - generic [ref=e256]: ↑
+      - generic [ref=e257]:
+        - heading "Dokument hochladen" [level=2] [ref=e258]
+        - generic [ref=e259]: Gruppen-weit oder für Subset der Gesellschaften
+      - button "✕" [ref=e260] [cursor=pointer]
+    - generic [ref=e262]:
+      - generic [ref=e263]:
+        - heading "Datei" [level=4] [ref=e264]
+        - generic [ref=e265] [cursor=pointer]:
+          - generic [ref=e266]: 📄
+          - generic [ref=e267]: Datei hierher ziehen oder klicken
+          - generic [ref=e268]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e269]:
+        - heading "Metadaten" [level=4] [ref=e270]
+        - generic [ref=e271]:
+          - generic [ref=e272]: Kategorie *
+          - combobox [ref=e273] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Rahmenvertrag"
+            - option "Master-NDA"
+            - option "Konzern-AGB"
+            - option "Gruppen-Präsentation"
+            - option "Holdings-Geschäftsbericht"
+            - option "Sonstiges"
+          - generic [ref=e274]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e275]
+          - generic [ref=e276]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e277]
+          - generic [ref=e278]: Gültigkeitsbereich
+          - combobox [ref=e279] [cursor=pointer]:
+            - option "Ganze Gruppe (Default)" [selected]
+            - option "Nur ausgewählte Gesellschaften …"
+          - generic [ref=e280]: Urheber
+          - generic [ref=e281]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e282]:
+      - button "Abbrechen" [ref=e283] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e285] [cursor=pointer]
+  - generic [ref=e286]:
+    - generic [ref=e287]:
+      - generic [ref=e288]: 💬
+      - generic [ref=e289]:
+        - heading "Event-Detail" [level=2] [ref=e290]
+        - generic [ref=e291]: —
+      - button "✕" [ref=e292] [cursor=pointer]
+    - generic [ref=e295]:
+      - button "Schliessen" [ref=e296] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e297] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e298] [cursor=pointer]
+  - generic [ref=e299]:
+    - generic [ref=e300]:
+      - generic [ref=e301]: ⏰
+      - generic [ref=e302]:
+        - heading "Neuer Reminder" [level=2] [ref=e303]
+        - generic [ref=e304]: Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)
+        - generic [ref=e306]: neu
+      - button "✕" [ref=e307] [cursor=pointer]
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - heading "Reminder" [level=4] [ref=e310]
+        - generic [ref=e311]:
+          - generic [ref=e312]: Titel *
+          - textbox "z.B. Rahmenvertrag-Review Q3" [ref=e313]
+          - generic [ref=e314]: Typ *
+          - combobox [ref=e315] [cursor=pointer]:
+            - option "Rahmenvertrag-Review" [selected]
+            - option "Jahres-Report"
+            - option "Gruppen-Mandats-Opportunity"
+            - option "Scraper-Group-Match"
+            - option "Kultur-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e316]: Fällig am *
+          - textbox [ref=e317]
+          - generic [ref=e318]: Zuständig *
+          - combobox [ref=e319] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Admin"
+          - generic [ref=e320]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e321]
+          - generic [ref=e322]: Verknüpfung
+          - combobox [ref=e323] [cursor=pointer]:
+            - option "Gruppen-Level (keine Verknüpfung)" [selected]
+            - option "Gesellschaft · Muster Holding AG"
+            - option "Gesellschaft · Muster Baubetrieb AG"
+            - option "Gruppen-Mandat · Taskforce PL Hochbau"
+            - option "Rahmenvertrag 2026"
+          - generic [ref=e324]: Wiederholen
+          - combobox [ref=e325] [cursor=pointer]:
+            - option "Einmalig"
+            - option "Quartalsweise"
+            - option "Jährlich" [selected]
+      - generic [ref=e326]:
+        - heading "Benachrichtigung" [level=4] [ref=e327]
+        - generic [ref=e328]:
+          - generic [ref=e329]: Vorlaufzeit
+          - combobox [ref=e330] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+            - option "1 Monat vorher"
+          - generic [ref=e331]: Eskalation
+          - generic [ref=e332]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Admin
+    - generic [ref=e333]:
+      - button "Abbrechen" [ref=e334] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e336] [cursor=pointer]
+  - generic [ref=e337]:
+    - generic [ref=e338]:
+      - generic [ref=e339]: HM
+      - generic [ref=e340]:
+        - heading "Hans Müller" [level=2] [ref=e341]
+        - generic [ref=e342]: CEO · Geschäftsleitung · Bauherr Muster AG
+        - generic [ref=e343]:
+          - generic "Executive" [ref=e344]: E
+          - link "→ Kandidatenprofil" [ref=e345] [cursor=pointer]:
+            - /url: "#"
+      - button "✕" [ref=e346] [cursor=pointer]
+    - generic [ref=e347]:
+      - generic [ref=e348] [cursor=pointer]: Stammdaten
+      - generic [ref=e349] [cursor=pointer]: Kommunikation
+      - generic [ref=e350] [cursor=pointer]: Prozesse
+      - generic [ref=e351] [cursor=pointer]: Notizen
+    - generic [ref=e353]:
+      - generic [ref=e354]:
+        - heading "Personen-Stammdaten read-only · beim Kandidaten pflegen" [level=4] [ref=e355]
+        - generic [ref=e356]:
+          - term [ref=e357]: Name
+          - definition [ref=e358]: Hans Müller
+          - term [ref=e359]: E-Mail
+          - definition [ref=e360]: h.mueller@muster-bauherr.ch
+          - term [ref=e361]: Telefon direkt
+          - definition [ref=e362]: +41 44 123 45 67
+          - term [ref=e363]: Mobile
+          - definition [ref=e364]: +41 79 123 45 67
+          - term [ref=e365]: LinkedIn
+          - definition [ref=e366]:
+            - link "linkedin.com/in/hans-mueller" [ref=e367] [cursor=pointer]:
+              - /url: "#"
+          - term [ref=e368]: Geburtstag
+          - definition [ref=e369]: 14.03.1968
+      - generic [ref=e370]:
+        - heading "Account-Beziehung (bearbeitbar auf Account-Ebene)" [level=4] [ref=e371]
+        - generic [ref=e372]:
+          - term [ref=e373]: Gesellschaft
+          - definition [ref=e374]:
+            - link "Bauherr Muster AG" [ref=e375] [cursor=pointer]:
+              - /url: accounts.html
+            - text: · Teil der Muster Holding
+          - term [ref=e376]: Position
+          - definition [ref=e377]: CEO
+          - term [ref=e378]: Department
+          - definition [ref=e379]: Geschäftsleitung
+          - term [ref=e380]: Standort
+          - definition [ref=e381]: Zürich (HQ)
+          - term [ref=e382]: Org-Funktion
+          - definition [ref=e383]:
+            - generic [ref=e384]: E
+            - text: Executive · CEO · Geschäftsleitung
+          - term [ref=e385]: Relationship Score
+          - definition [ref=e386]:
+            - strong [ref=e387]: "8"
+            - text: / 10
+          - term [ref=e388]: Kommunikations-Präferenz
+          - definition [ref=e389]: Telefon vor E-Mail · keine Teams-Calls
+          - term [ref=e390]: Beste Kontaktzeit
+          - definition [ref=e391]: Montag–Donnerstag · 07:30–09:00
+          - term [ref=e392]: Status
+          - definition [ref=e393]:
+            - generic [ref=e394]: Aktiv
+          - term [ref=e395]: Do not contact
+          - definition [ref=e396]: Nein
+      - generic [ref=e397]:
+        - heading "Onboarding-Notizen" [level=4] [ref=e398]
+        - paragraph [ref=e399]: Sohn des VR-Präsidenten Dr. U. Gerber. Seit 2015 im Unternehmen, CEO seit 2020. Grosses Interesse an Nachfolge-Themen. Bevorzugt kurze, direkte Gespräche. Ablehnung von „Corporate-Sprache" — bei ihm wird geduzt nach kurzer Anwärm-Phase.
+    - generic [ref=e400]:
+      - button "📞 Anrufen" [ref=e401] [cursor=pointer]
+      - button "✉ E-Mail" [ref=e402] [cursor=pointer]
+      - button "🔔 Reminder" [ref=e403] [cursor=pointer]
+      - button "Bearbeiten (→ Account)" [ref=e404] [cursor=pointer]

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Responsive Viewport Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+  /* ===== Showcase-Page-Layout ===== */
+  .showcase-head {
+    padding:24px 32px; background:var(--surface); border-bottom:1px solid var(--border);
+  }
+  .showcase-head h1 {
+    font-family:'Libre Baskerville',serif; font-size:24px;
+    color:var(--accent); margin:0 0 6px;
+  }
+  .showcase-head .sub { font-size:13px; color:var(--text-mid); line-height:1.55; max-width:840px; }
+  .showcase-head .sub code { background:var(--bg); padding:1px 5px; border-radius:2px; font-size:12px; }
+
+  /* ===== Breakpoint-Tabs ===== */
+  .breakpoint-tabs {
+    display:flex; gap:8px; margin-top:18px; border-bottom:1px solid var(--border);
+  }
+  .bp-tab {
+    padding:10px 18px; cursor:pointer; font-size:13px; color:var(--text-mid);
+    border-bottom:2px solid transparent; font-weight:500;
+  }
+  .bp-tab.active {
+    color:var(--accent); border-bottom-color:var(--gold); font-weight:600;
+  }
+  .bp-tab .bp-size { font-size:10.5px; color:var(--text-light); margin-left:6px; }
+
+  /* ===== Showcase-Body ===== */
+  .showcase-body {
+    padding:32px; background:var(--bg); min-height:calc(100vh - 200px);
+    display:flex; flex-wrap:wrap; gap:32px; justify-content:center; align-items:flex-start;
+  }
+
+  /* Frame-Content-Controls (Sub-Page-Wahl) */
+  .page-controls {
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; justify-content:center;
+  }
+  .page-btn {
+    padding:6px 14px; border:1px solid var(--border); border-radius:16px;
+    background:var(--surface); cursor:pointer; font-size:12px; color:var(--text-mid);
+    font-family:inherit;
+  }
+  .page-btn:hover { border-color:var(--accent-mid); color:var(--accent); }
+  .page-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+
+  /* ===== Device-Frames ===== */
+  .device {
+    background:#1a1a1a; border-radius:24px; padding:12px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.3);
+    display:flex; flex-direction:column; align-items:center;
+    flex-shrink:0;
+    position:relative;
+  }
+  .device-label {
+    color:#fff; font-size:11px; margin-bottom:6px;
+    letter-spacing:0.5px; text-transform:uppercase; font-weight:600;
+  }
+  .device-screen {
+    background:var(--surface); border-radius:16px; overflow:hidden;
+    position:relative;
+  }
+  .device-screen iframe { width:100%; height:100%; border:none; display:block; background:var(--bg); }
+
+  .device-mobile { border-radius:32px; padding:8px 8px 18px; }
+  .device-mobile .device-screen { width:375px; height:740px; border-radius:24px; }
+  .device-mobile .device-notch {
+    background:#1a1a1a; width:120px; height:20px; border-radius:0 0 12px 12px;
+    position:absolute; top:8px; left:50%; transform:translateX(-50%); z-index:10;
+  }
+
+  .device-tablet { border-radius:16px; padding:14px; }
+  .device-tablet .device-screen { width:820px; height:620px; border-radius:8px; }
+
+  .device-desktop { border-radius:8px; padding:8px; }
+  .device-desktop .device-screen { width:1100px; height:680px; border-radius:3px; }
+
+  /* ===== Annotations ===== */
+  .annotations {
+    width:280px; color:var(--text); font-size:12px; line-height:1.6;
+  }
+  .annotations h3 {
+    font-family:'Libre Baskerville',serif; font-size:14px;
+    color:var(--accent); margin:0 0 10px;
+  }
+  .annotations .anno-item {
+    padding:10px 12px; background:var(--surface); border-left:3px solid var(--accent);
+    border-radius:2px; margin-bottom:8px; font-size:12px;
+  }
+  .annotations .anno-item .lbl {
+    font-size:10.5px; color:var(--text-light); letter-spacing:0.3px;
+    text-transform:uppercase; font-weight:600; margin-bottom:3px;
+  }
+  .annotations .anno-item code { background:var(--bg); padding:1px 5px; border-radius:2px; font-size:11.5px; }
+
+  /* ===== Breakpoint-Legende ===== */
+  .bp-legend {
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; font-size:11px;
+  }
+  .bp-legend .chip {
+    padding:3px 10px; border-radius:3px; background:var(--bg); border:1px solid var(--border);
+    font-family:monospace;
+  }
+  .bp-legend .chip.mobile { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+  .bp-legend .chip.tablet { background:#ede9fe; color:#6d28d9; border-color:#ddd6fe; }
+  .bp-legend .chip.desktop { background:#d1fae5; color:#065f46; border-color:#a7f3d0; }
+
+  /* ===== Sections (Tab-Umschalter) ===== */
+  .bp-section { display:none; flex-wrap:wrap; gap:32px; justify-content:center; align-items:flex-start; width:100%; }
+  .bp-section.active { display:flex; }
+
+  /* Side-by-Side: alle 3 Devices nebeneinander */
+  .bp-section-all {
+    flex-wrap:wrap; gap:40px; justify-content:center; padding:10px 0;
+  }
+  .bp-section-all .device-mobile .device-screen { width:320px; height:620px; }
+  .bp-section-all .device-tablet .device-screen { width:560px; height:440px; }
+  .bp-section-all .device-desktop .device-screen { width:780px; height:480px; }
+
+  /* Responsive für die Showcase-Seite selbst */
+  @media (max-width:1400px) {
+    .showcase-body { padding:20px; gap:20px; }
+    .device-mobile .device-screen { width:340px; height:680px; }
+    .device-tablet .device-screen { width:700px; height:540px; }
+    .device-desktop .device-screen { width:900px; height:560px; }
+  }
+  @media (max-width:900px) {
+    .annotations { width:100%; }
+    .bp-section { justify-content:flex-start; overflow-x:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Responsive Demo</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="crm.html">CRM</a><span class="sep">/</span>
+    <span class="current">Responsive Viewport Demo</span>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="showcase-head">
+  <h1>CRM · Responsive Viewport Demo</h1>
+  <p class="sub">
+    Echte <code>crm.html</code> App-Shell in 3 Device-Frames (iframes). Breakpoints definiert in <code>crm.html</code> §CSS:
+    <strong>Desktop &gt; 960 px</strong> · <strong>Tablet 641–960 px</strong> · <strong>Mobile ≤ 640 px</strong>.
+    Jeder Frame lädt die echte App mit seiner Ziel-Viewport-Breite — Sidebar, Top-Bar und Nav passen sich live an.
+    Phase-1-Status: App-Shell (Sidebar/Nav) responsive. Sub-Seiten (Dashboard, Detailmasken, Tool-Masken) folgen in Phase 2 iterativ.
+  </p>
+
+  <div class="bp-legend">
+    <span class="chip mobile">≤ 640 px Mobile</span>
+    <span class="chip tablet">641–960 px Tablet</span>
+    <span class="chip desktop">&gt; 960 px Desktop</span>
+  </div>
+
+  <div class="breakpoint-tabs">
+    <div class="bp-tab active" onclick="showSection(this,'all')">Alle 3 Viewports <span class="bp-size">side-by-side</span></div>
+    <div class="bp-tab" onclick="showSection(this,'mobile')">Mobile <span class="bp-size">375 × 740</span></div>
+    <div class="bp-tab" onclick="showSection(this,'tablet')">Tablet <span class="bp-size">820 × 620</span></div>
+    <div class="bp-tab" onclick="showSection(this,'desktop')">Desktop <span class="bp-size">1100 × 680</span></div>
+  </div>
+
+  <!-- Sub-Page-Wähler -->
+  <div class="page-controls" style="margin-top:16px">
+    <span style="font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;font-weight:600;align-self:center">Start-Seite:</span>
+    <button class="page-btn active" onclick="setPage(this,'dashboard.html')">Dashboard</button>
+    <button class="page-btn" onclick="setPage(this,'candidates-list.html')">Kandidaten</button>
+    <button class="page-btn" onclick="setPage(this,'reminders.html')">Reminders</button>
+    <button class="page-btn" onclick="setPage(this,'accounts-list.html')">Accounts</button>
+    <button class="page-btn" onclick="setPage(this,'mandates-list.html')">Mandate</button>
+    <button class="page-btn" onclick="setPage(this,'processes-list.html')">Prozesse</button>
+    <button class="page-btn" onclick="setPage(this,'scraper.html')">Scraper</button>
+  </div>
+</div>
+
+<div class="showcase-body">
+
+  <!-- SECTION: ALLE 3 -->
+  <section class="bp-section bp-section-all active" data-section="all">
+    <div class="device device-mobile">
+      <div class="device-notch"></div>
+      <div class="device-label">iPhone · 375 × 740</div>
+      <div class="device-screen">
+        <iframe data-device="mobile" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+
+    <div class="device device-tablet">
+      <div class="device-label">iPad · 820 × 620</div>
+      <div class="device-screen">
+        <iframe data-device="tablet" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+
+    <div class="device device-desktop">
+      <div class="device-label">Desktop · 1100 × 680</div>
+      <div class="device-screen">
+        <iframe data-device="desktop" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: MOBILE -->
+  <section class="bp-section" data-section="mobile">
+    <div class="device device-mobile">
+      <div class="device-notch"></div>
+      <div class="device-label">iPhone · 375 × 740</div>
+      <div class="device-screen">
+        <iframe data-device="mobile" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+    <div class="annotations">
+      <h3>Mobile (≤ 640 px)</h3>
+      <div class="anno-item">
+        <div class="lbl">App-Shell</div>
+        Top-Bar 52 px mit Hamburger-☰ links, Brand mittig, Suche + Theme rechts. Sidebar versteckt, slide-in Drawer von links bei Click auf ☰. Backdrop schliesst Drawer.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Safe-Area</div>
+        <code>env(safe-area-inset-top/bottom)</code> für iOS-Notch + Home-Indicator. Viewport-Meta <code>viewport-fit=cover</code>.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Touch-Targets</div>
+        Nav-Items 14 px Padding (min 44 × 44 px). Keyboard-Shortcuts nicht sichtbar, Nav via Touch.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Sub-Seiten</div>
+        Iframe lädt echte Seite. Phase-1: Dashboard hat bereits <code>data-mobile</code>-Flags (full/compact/link-only/hidden). Andere Seiten zeigen Desktop-Layout mit horizontalem Scroll — Phase 2.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: TABLET -->
+  <section class="bp-section" data-section="tablet">
+    <div class="device device-tablet">
+      <div class="device-label">iPad · 820 × 620</div>
+      <div class="device-screen">
+        <iframe data-device="tablet" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+    <div class="annotations">
+      <h3>Tablet (641–960 px)</h3>
+      <div class="anno-item">
+        <div class="lbl">Sidebar</div>
+        Bleibt collapsed 56 px sichtbar (ikonbasierte Nav). Hover-Expand aus (weil Touch), stattdessen Pin-Toggle-Button ⇔ oben rechts der Sidebar. Sidebar.expanded fixiert auf 240 px.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Sub-Seiten</div>
+        Erben Desktop-Layout — Detailmasken mit 7–13 Tabs passen rein. Tabs werden horizontal scrollbar bei Platzmangel.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Command-Bar</div>
+        Kein ⌘K-Pill sichtbar (kein Mac-Shortcut-Hinweis), Suche via Touch-Burger-Icon (Phase 2).
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: DESKTOP -->
+  <section class="bp-section" data-section="desktop">
+    <div class="device device-desktop">
+      <div class="device-label">Desktop · 1100 × 680</div>
+      <div class="device-screen">
+        <iframe data-device="desktop" src="crm.html#/dashboard"></iframe>
+      </div>
+    </div>
+    <div class="annotations">
+      <h3>Desktop (&gt; 960 px)</h3>
+      <div class="anno-item">
+        <div class="lbl">App-Shell</div>
+        Sidebar 56 px collapsed, hover auf 240 px expand. Cmd-Bar oben rechts mit ⌘K-Pill. Power-User-Modus mit Keyboard-Shortcuts.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Vollständiger Scope</div>
+        Alle Detailmasken Vollbreite, Tabs sichtbar, Drawer 540 px slide-in, DataTable mit TanStack Virtual.
+      </div>
+      <div class="anno-item">
+        <div class="lbl">Keine Änderung</div>
+        Alt-Verhalten 1:1 erhalten (Regression-frei).
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// Theme-Toggle
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', next);
+  // Iframes Theme mitziehen
+  document.querySelectorAll('iframe').forEach(f => {
+    try {
+      f.contentDocument.documentElement.setAttribute('data-theme', next);
+    } catch(e){}
+  });
+}
+(function(){
+  const saved = localStorage.getItem('ark-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').textContent = saved === 'dark' ? '☾' : '☀';
+})();
+
+// Section-Switch
+function showSection(tab, key) {
+  document.querySelectorAll('.bp-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.bp-section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.bp-section[data-section="${key}"]`).classList.add('active');
+}
+
+// Start-Seite pro iframe wechseln (setzt src aller sichtbaren iframes)
+function setPage(btn, page) {
+  document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const hash = '#/' + page.replace('.html','');
+  document.querySelectorAll('iframe').forEach(f => {
+    f.src = 'crm.html' + hash;
+  });
+}
+
+// Theme-Propagation nach iframe-Load
+document.querySelectorAll('iframe').forEach(f => {
+  f.addEventListener('load', () => {
+    try {
+      const t = document.documentElement.getAttribute('data-theme');
+      f.contentDocument.documentElement.setAttribute('data-theme', t);
+    } catch(e){}
+  });
+});
+</script>
+</body>
+</html>

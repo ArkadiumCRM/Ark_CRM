@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Admin · Dashboard-Templates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+  /* === Admin-Template-Editor-Layout === */
+  .admin-warn-banner {
+    background:color-mix(in srgb, var(--gold) 12%, var(--surface));
+    border-left:4px solid var(--gold);
+    padding:10px 24px; display:flex; align-items:center; gap:10px;
+    font-size:12.5px;
+  }
+  .admin-warn-banner strong { color:var(--gold); }
+
+  .split-layout {
+    display:grid; grid-template-columns:280px 1fr; gap:0;
+    height:calc(100vh - 180px); min-height:600px;
+  }
+
+  /* Sidebar · Rollen-Liste */
+  .role-sidebar {
+    background:var(--surface); border-right:1px solid var(--border);
+    padding:16px 0; overflow-y:auto;
+  }
+  .role-sidebar-head {
+    padding:4px 20px 12px; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:1.2px; color:var(--text-light); font-weight:600;
+  }
+  .role-item {
+    display:flex; align-items:center; gap:10px; padding:12px 20px;
+    cursor:pointer; border-left:3px solid transparent;
+    transition:background 0.15s;
+  }
+  .role-item:hover { background:var(--bg); }
+  .role-item.active {
+    background:var(--accent-soft); border-left-color:var(--accent);
+  }
+  .role-item.active .role-name { color:var(--accent); font-weight:600; }
+  .role-icon { width:28px; height:28px; border-radius:50%;
+    background:var(--bg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; flex-shrink:0; }
+  .role-item.active .role-icon { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .role-name { font-size:13px; color:var(--text); }
+  .role-count {
+    margin-left:auto; font-size:10.5px; color:var(--text-light);
+    background:var(--bg); padding:2px 7px; border-radius:10px;
+  }
+  .role-item.active .role-count { background:var(--accent); color:#fff; }
+
+  /* Main · Template-Editor */
+  .template-editor { padding:24px 32px; overflow-y:auto; }
+  .template-editor-head {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);
+  }
+  .template-editor-title {
+    font-family:'Libre Baskerville',serif; font-size:22px;
+    color:var(--accent); margin:0;
+  }
+  .template-meta {
+    font-size:11.5px; color:var(--text-light); display:flex;
+    flex-direction:column; gap:4px; text-align:right;
+  }
+
+  /* Widget-Liste im Editor */
+  .widget-row {
+    display:flex; align-items:center; gap:10px; padding:10px 14px;
+    border:1px solid var(--border); border-radius:3px; margin-bottom:8px;
+    background:var(--surface);
+  }
+  .widget-row:hover { box-shadow:var(--shadow-sm); }
+  .widget-row.pinned { background:color-mix(in srgb, var(--gold) 5%, var(--surface)); border-color:var(--gold); }
+  .widget-drag {
+    cursor:grab; color:var(--text-light); font-size:16px;
+    letter-spacing:-2px; padding:0 2px;
+  }
+  .widget-drag:active { cursor:grabbing; }
+  .widget-sort-num {
+    width:22px; height:22px; border-radius:50%; background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:600; color:var(--text-mid);
+    flex-shrink:0;
+  }
+  .widget-info { flex:1; }
+  .widget-info .name { font-weight:500; font-size:13px; }
+  .widget-info .meta { font-size:11px; color:var(--text-light); margin-top:2px; }
+  .widget-row .chip { font-size:10.5px; }
+  .widget-row select { font-size:11.5px; padding:3px 6px; }
+  .widget-row button {
+    background:transparent; border:none; cursor:pointer; padding:4px 8px;
+    color:var(--text-light); font-size:13px; border-radius:2px;
+  }
+  .widget-row button:hover { background:var(--bg); color:var(--accent); }
+  .widget-row button.danger:hover { background:color-mix(in srgb, var(--red) 10%, transparent); color:var(--red); }
+  .widget-row button.pin-toggle.pinned { color:var(--gold); }
+
+  /* Affected-Users-Block */
+  .affected-users {
+    background:color-mix(in srgb, var(--accent) 4%, transparent);
+    border-left:3px solid var(--accent); padding:12px 14px;
+    border-radius:3px; margin-top:16px; font-size:12.5px;
+  }
+
+  /* Footer-Actions */
+  .editor-footer {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:24px; padding-top:16px; border-top:1px solid var(--border);
+  }
+  .editor-footer-actions { display:flex; gap:8px; }
+
+  /* Confirm-Modal (Ausnahme zu Drawer-Regel wegen Irreversibilität) */
+  .modal-backdrop {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:100; align-items:center; justify-content:center;
+  }
+  .modal-backdrop.open { display:flex; }
+  .modal-box {
+    background:var(--surface); border-radius:4px; padding:24px 28px;
+    max-width:480px; width:90%; box-shadow:0 12px 32px rgba(0,0,0,0.25);
+  }
+  .modal-box h3 { margin:0 0 8px; font-size:16px; color:var(--accent); }
+  .modal-box p { margin:8px 0; font-size:13px; line-height:1.55; }
+  .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:18px; }
+
+  /* ===== MOBILE / TABLET ===== */
+  @media (max-width:960px) {
+    .grid-2 { grid-template-columns:1fr !important; gap:10px; }
+  }
+  @media (max-width:640px) {
+    /* Template-Liste 1-col */
+    .template-grid { grid-template-columns:1fr !important; }
+    .modal-box { width:calc(100vw - 24px); max-width:none; }
+    .modal-actions { flex-wrap:wrap; gap:6px; }
+    /* Widget-Selector horizontal scroll */
+    .widget-selector { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="#">Admin</a>
+    <span class="sep">/</span>
+    <span class="current">Dashboard-Templates</span>
+  </div>
+  <div class="header-right">
+    <span class="actor-chip">PW</span>
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="admin-warn-banner">
+  <span style="font-size:18px">⚙️</span>
+  <div>
+    <strong>Admin-only:</strong> Änderungen an Rollen-Templates wirken auf <strong>neue User</strong> und <strong>User die „Reset auf Default" auslösen</strong>. Bestehende persönliche Layouts bleiben unverändert. Alle Änderungen werden im Audit-Log protokolliert.
+  </div>
+</div>
+
+<div class="page-banner" style="padding:20px 32px 12px">
+  <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:24px;color:var(--accent)">Dashboard-Templates</h1>
+  <div class="muted" style="margin-top:4px;font-size:12.5px">Pro Rolle definierst du das Standard-Layout · Wird bei neuen Mitarbeitern oder Reset automatisch geladen · Audit über <a href="#">Änderungs-Protokoll</a></div>
+</div>
+
+<div class="split-layout">
+
+  <!-- SIDEBAR · Rollen-Liste -->
+  <aside class="role-sidebar">
+    <div class="role-sidebar-head">Rollen (6)</div>
+    <div class="role-item" onclick="selectRole('Admin')" data-role="Admin">
+      <div class="role-icon">⚙</div>
+      <div class="role-name">Admin</div>
+      <span class="role-count">19 Widgets</span>
+    </div>
+    <div class="role-item" onclick="selectRole('CM')" data-role="CM">
+      <div class="role-icon">👤</div>
+      <div class="role-name">Candidate Manager</div>
+      <span class="role-count">12 Widgets</span>
+    </div>
+    <div class="role-item active" onclick="selectRole('AM')" data-role="AM">
+      <div class="role-icon">🏢</div>
+      <div class="role-name">Account Manager</div>
+      <span class="role-count">11 Widgets</span>
+    </div>
+    <div class="role-item" onclick="selectRole('RA')" data-role="RA">
+      <div class="role-icon">🔍</div>
+      <div class="role-name">Research Analyst</div>
+      <span class="role-count">5 Widgets</span>
+    </div>
+    <div class="role-item" onclick="selectRole('BO')" data-role="BO">
+      <div class="role-icon">💰</div>
+      <div class="role-name">Backoffice</div>
+      <span class="role-count">4 Widgets</span>
+    </div>
+    <div class="role-item" onclick="selectRole('HoD')" data-role="HoD">
+      <div class="role-icon">📊</div>
+      <div class="role-name">Head of</div>
+      <span class="role-count">10 Widgets</span>
+    </div>
+
+    <div class="role-sidebar-head" style="margin-top:16px">Statistik</div>
+    <div style="padding:0 20px;font-size:12px;line-height:1.7;color:var(--text-mid)">
+      <div>Aktive User: <strong>14</strong></div>
+      <div>Mit persönlichem Override: <strong>11</strong> (79 %)</div>
+      <div>Reset-Queue (diese Woche): <strong>2</strong></div>
+      <div style="margin-top:6px"><a href="#" style="font-size:11px">→ Audit-Log ansehen</a></div>
+    </div>
+  </aside>
+
+  <!-- MAIN · Template-Editor -->
+  <main class="template-editor" id="editorMain">
+
+    <div class="template-editor-head">
+      <div>
+        <h2 class="template-editor-title" id="editorTitle">Template: Account Manager</h2>
+        <div class="muted" style="font-size:12.5px;margin-top:4px" id="editorDesc">Default-Layout für Mitarbeiter mit Account-Manager-Rolle · Mandate · Kunden · Versand · AGB</div>
+      </div>
+      <div class="template-meta">
+        <div>Zuletzt geändert: <strong>15.03.2026 14:20</strong></div>
+        <div>Von: <span class="actor-chip">PW</span> Peter Wiederkehr</div>
+        <div>Version: <strong>v3</strong> · <a href="#" style="font-size:11px">Verlauf ansehen</a></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px;font-family:'Libre Baskerville',serif;color:var(--accent);margin:0 0 10px">Widgets im Default-Layout (<span id="widgetCount">11</span>)</h3>
+    <div class="muted" style="font-size:11.5px;margin-bottom:14px">Per Drag-and-Drop sortieren · Size per Dropdown · 🔒 = gepinnt (User kann nicht entfernen)</div>
+
+    <div id="widgetList">
+
+      <!-- Pinned Widgets (gold Background) -->
+      <div class="widget-row pinned" data-widget-key="kpi-strip">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">1</span>
+        <div class="widget-info">
+          <div class="name">📊 KPI-Strip <span class="chip" style="background:var(--gold-soft);color:var(--gold);font-size:10px">🔒 pinned</span></div>
+          <div class="meta">Scope: global · Umsatz YTD · Placements · Mandate · Prozesse · Blocker</div>
+        </div>
+        <select disabled title="Gepinnt: Size nicht änderbar"><option>full</option></select>
+        <button class="pin-toggle pinned" title="Entpinnen">🔒</button>
+        <button class="danger" disabled title="Gepinnt: nicht entfernbar">✕</button>
+      </div>
+
+      <div class="widget-row pinned" data-widget-key="to-send-inbox">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">2</span>
+        <div class="widget-info">
+          <div class="name">📤 To-Send-Inbox <span class="chip" style="background:var(--gold-soft);color:var(--gold);font-size:10px">🔒 pinned</span></div>
+          <div class="meta">Scope: user · Zentrale Versand-Station für Account Manager</div>
+        </div>
+        <select><option selected>full</option><option>half</option></select>
+        <button class="pin-toggle pinned" title="Entpinnen">🔒</button>
+        <button class="danger" disabled title="Gepinnt: nicht entfernbar">✕</button>
+      </div>
+
+      <div class="widget-row pinned" data-widget-key="agb-pending">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">3</span>
+        <div class="widget-info">
+          <div class="name">📜 AGB-Pending Alert <span class="chip" style="background:var(--gold-soft);color:var(--gold);font-size:10px">🔒 pinned</span></div>
+          <div class="meta">Scope: account · Erfolgsbasis-Accounts ohne AGB-Bestätigung</div>
+        </div>
+        <select><option>half</option><option selected>third</option><option>quarter</option></select>
+        <button class="pin-toggle pinned" title="Entpinnen">🔒</button>
+        <button class="danger" disabled title="Gepinnt: nicht entfernbar">✕</button>
+      </div>
+
+      <!-- Regular Widgets -->
+      <div class="widget-row" data-widget-key="heute-agenda">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">4</span>
+        <div class="widget-info">
+          <div class="name">📅 Heute · Agenda</div>
+          <div class="meta">Scope: user · Termine + Calls heute</div>
+        </div>
+        <select><option selected>half</option><option>third</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="pending-emails">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">5</span>
+        <div class="widget-info">
+          <div class="name">✉️ Pending Emails Triage</div>
+          <div class="meta">Scope: user · Outlook/Gmail-Auto-Import-Klassifizierung</div>
+        </div>
+        <select><option selected>half</option><option>full</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="scraper-review-queue">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">6</span>
+        <div class="widget-info">
+          <div class="name">🤖 Scraper-Findings Review</div>
+          <div class="meta">Scope: account · LinkedIn-Scraper-Queue</div>
+        </div>
+        <select><option selected>half</option><option>third</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="claim-faelle-offen">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">7</span>
+        <div class="widget-info">
+          <div class="name">⚠ Claim-Fälle offen</div>
+          <div class="meta">Scope: account · Direkteinstellungs-Schutzfrist-Verletzungen</div>
+        </div>
+        <select><option selected>third</option><option>half</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="garantie-ablauf-14d">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">8</span>
+        <div class="widget-info">
+          <div class="name">🛡 Garantie-Ablauf 14 Tage</div>
+          <div class="meta">Scope: team · Proaktive Check-in-Warnung</div>
+        </div>
+        <select><option selected>half</option><option>third</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="meine-reminders">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">9</span>
+        <div class="widget-info">
+          <div class="name">🔔 Meine überfälligen Reminders</div>
+          <div class="meta">Scope: user · Drill-Down statt nur Badge</div>
+        </div>
+        <select><option selected>half</option><option>third</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="honorar-cashflow">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">10</span>
+        <div class="widget-info">
+          <div class="name">💰 Honorar-Cashflow-Prognose</div>
+          <div class="meta">Scope: global · Q2 realisiert vs pending</div>
+        </div>
+        <select><option selected>half</option><option>full</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+      <div class="widget-row" data-widget-key="activity-feed-24h">
+        <span class="widget-drag">⋮⋮</span>
+        <span class="widget-sort-num">11</span>
+        <div class="widget-info">
+          <div class="name">📡 Activity-Feed 24h</div>
+          <div class="meta">Scope: team · Team-Puls</div>
+        </div>
+        <select><option selected>full</option><option>half</option></select>
+        <button class="pin-toggle" title="Pinnen">📍</button>
+        <button class="danger" title="Entfernen">✕</button>
+      </div>
+
+    </div>
+
+    <button class="btn btn-sm" style="margin-top:12px" onclick="openDrawer('templateCatalogDrawer')">+ Widget zum Account-Manager-Template hinzufügen</button>
+
+    <div class="affected-users">
+      <strong>📊 Auswirkung dieser Änderungen:</strong><br>
+      <div style="margin-top:6px">
+        <div>• <strong>3 aktive Account-Manager-User:</strong> <span class="actor-chip">MF</span> Marco Frei · <span class="actor-chip">NS</span> Natascha Senn · <span class="actor-chip">PW</span> Peter Wiederkehr (Doppelrolle)</div>
+        <div style="margin-top:4px">• <strong>Neue User:</strong> laden Default automatisch</div>
+        <div style="margin-top:4px">• <strong>Bestehende User:</strong> persönliche Overrides bleiben unverändert (müssen manuell „Reset" klicken)</div>
+        <div style="margin-top:4px">• <strong>Benachrichtigung:</strong> betroffene User erhalten In-App-Notification „Dein Account-Manager-Default wurde aktualisiert · <a href='#'>Layout ansehen</a>"</div>
+      </div>
+    </div>
+
+    <div class="editor-footer">
+      <div>
+        <span class="muted" style="font-size:11.5px">Unveränderte Änderungen · Version v3 bleibt aktiv</span>
+      </div>
+      <div class="editor-footer-actions">
+        <button class="btn btn-sm" onclick="previewTemplate()">👁 Vorschau als Account-Manager-User</button>
+        <button class="btn btn-sm" onclick="resetTemplate()">↺ Auf v2 zurücksetzen</button>
+        <button class="btn btn-sm" onclick="closeEditor()">Abbrechen</button>
+        <button class="btn btn-sm btn-primary" onclick="openSaveConfirm()">💾 Als neue Version speichern</button>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- ============= WIDGET-KATALOG-DRAWER (zum Hinzufügen) ============= -->
+<div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawer()"></div>
+
+<div class="drawer drawer-wide" id="templateCatalogDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">➕</div>
+    <div class="info">
+      <h2>Widget zum Account-Manager-Template hinzufügen</h2>
+      <div class="sub">24 Katalog-Widgets · gefiltert auf Rolle „Account Manager" (13 verfügbar)</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('templateCatalogDrawer')">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="search" placeholder="🔍 Widget suchen …" style="flex:1">
+        <select>
+          <option>Alle Kategorien</option>
+          <option>KPI</option><option>Triage</option><option>Alert</option>
+          <option>Ops</option><option>Analytics</option><option>Agenda</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Verfügbar (2 noch nicht aktiv)</h4>
+      <div class="list-item">
+        <div class="name">📞 <strong>Pending Calls Triage</strong> <button class="btn btn-sm btn-primary" style="float:right">+ Hinzufügen</button></div>
+        <div class="meta">Half · User · Admin · Account Manager · Candidate Manager · 3CX-Auto-Import-Klassifizierung</div>
+      </div>
+      <div class="list-item">
+        <div class="name">🛒 <strong>Jobbasket-Gate-Backlog</strong> <button class="btn btn-sm btn-primary" style="float:right">+ Hinzufügen</button></div>
+        <div class="meta">Third · Team · Candidate Manager · Account Manager · Mini-Pipeline Oral GO / Assigned / To-Send</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Bereits im Template (11)</h4>
+      <div class="muted" style="font-size:12px;margin-bottom:6px">Zur Re-Aktivierung zuerst oben entfernen</div>
+      <div class="list-item" style="opacity:0.6">
+        <div class="name">📊 <strong>KPI-Strip</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div>
+        <div class="meta">Full · Global · gepinnt · alle Rollen-Templates</div>
+      </div>
+      <div class="list-item" style="opacity:0.6">
+        <div class="name">📤 <strong>To-Send-Inbox</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div>
+        <div class="meta">Full · User · gepinnt im Account-Manager-Template</div>
+      </div>
+      <div class="list-item" style="opacity:0.5;font-size:11.5px" class="muted">… 9 weitere bereits aktiv (siehe Editor oben)</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Nicht für Account-Manager-Rolle verfügbar (11)</h4>
+      <div class="muted" style="font-size:11.5px;margin-bottom:6px">Diese Widgets sind anderen Rollen vorbehalten</div>
+      <div class="list-item" style="opacity:0.5">
+        <div class="name">⚙ <strong>System-Health</strong></div>
+        <div class="meta">Nur Admin · Circuit-Breaker · Dead-Letter · Queue-Lag</div>
+      </div>
+      <div class="list-item" style="opacity:0.5">
+        <div class="name">👥 <strong>Team-Workload</strong></div>
+        <div class="meta">Nur Admin · Head of · Team-Mitarbeiter-Übersicht</div>
+      </div>
+      <div class="list-item" style="opacity:0.5">
+        <div class="name">🏗 <strong>Placement-Rate nach Sparte</strong></div>
+        <div class="meta">Nur Admin · Head of · Sparte-KPIs</div>
+      </div>
+      <div class="list-item" style="opacity:0.5">
+        <div class="name">📈 <strong>Time-to-Fill-Trend</strong></div>
+        <div class="meta">Nur Admin · Head of · Pipeline-Velocity</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('templateCatalogDrawer')">Schliessen</button>
+  </div>
+</div>
+
+<!-- ============= CONFIRM-SAVE-MODAL (Ausnahme zu Drawer-Regel — irreversible Action) ============= -->
+<div class="modal-backdrop" id="saveConfirmModal">
+  <div class="modal-box">
+    <h3>Template „Account Manager" als neue Version speichern?</h3>
+    <p>Diese Änderungen werden als <strong>Version v4</strong> gespeichert und wirken auf:</p>
+    <ul style="font-size:12.5px;line-height:1.7;margin:8px 0 8px 20px">
+      <li><strong>Neue Account-Manager-User</strong> → laden v4 automatisch</li>
+      <li><strong>3 aktive Account-Manager-User</strong> (MF, NS, PW) → v3-Override bleibt · Reset lädt v4</li>
+      <li><strong>Audit-Log-Eintrag</strong> → <!-- ark-lint-skip:begin reason=admin-event-type --><a href="#">dashboard_template.AM.updated</a><!-- ark-lint-skip:end --> mit Diff-Detail</li>
+    </ul>
+    <p class="muted" style="font-size:11.5px">Änderungs-Zusammenfassung: Reihenfolge geändert · 1 Widget-Size-Override angepasst · keine Widgets hinzugefügt/entfernt</p>
+    <div class="modal-actions">
+      <button class="btn btn-sm" onclick="closeSaveConfirm()">Abbrechen</button>
+      <button class="btn btn-sm btn-primary" onclick="confirmSave()">💾 Version v4 speichern</button>
+    </div>
+  </div>
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+// === Admin-Template-Editor Demo-JS ===
+
+function selectRole(role) {
+  document.querySelectorAll('.role-item').forEach(r => r.classList.remove('active'));
+  document.querySelector('[data-role="' + role + '"]').classList.add('active');
+
+  const titles = {
+    Admin:    { title: 'Administrator', desc: 'Default-Layout für Admin · sieht alle Rollen-Widgets kombiniert · System-Health · Ops · Debug · Circuit-Breaker · Dead-Letter-Monitoring' },
+    CM:       { title: 'Candidate Manager', desc: 'Prozesse · Kandidaten-Triage · Coaching · Debriefing · Garantie-Ablauf' },
+    AM:       { title: 'Account Manager', desc: 'Default-Layout für Mitarbeiter mit Account-Manager-Rolle · Mandate · Kunden · Versand · AGB' },
+    RA:       { title: 'Research Analyst', desc: 'Scraper · Longlist-Research · Kandidaten-Discovery · Premarket-Transitions' },
+    BO:       { title: 'Backoffice', desc: 'Rechnungen · Honorar-Cashflow · Assessment-Credits · Stage-Zahlungen' },
+    HoD:      { title: 'Head of', desc: 'Team-Analytics · Sparte-KPIs · Time-to-Fill · Placement-Rate nach Sparte' }
+  };
+
+  document.getElementById('editorTitle').textContent = 'Template: ' + titles[role].title;
+  document.getElementById('editorDesc').textContent = titles[role].desc;
+
+  // Demo-Hinweis (echtes Re-Rendering der Widget-Liste passiert via API)
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:70px;right:24px;background:var(--accent);color:#fff;padding:10px 16px;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:12.5px;z-index:100';
+  banner.innerHTML = 'Template geladen: <strong>' + role + '</strong> · In Prod lädt GET /api/v1/admin/dashboard-templates/' + role;
+  document.body.appendChild(banner);
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; }, 2000);
+  setTimeout(() => banner.remove(), 2600);
+}
+
+function previewTemplate() {
+  alert('Öffnet Dashboard in neuem Tab als Account-Manager-User gerendert · URL: /dashboard?preview_as_role=AM · in Prod: SSR mit active_dashboard_view override');
+}
+
+function resetTemplate() {
+  if (!confirm('Änderungen verwerfen und v2 aus Versions-History laden?')) return;
+  alert('Template auf v2 zurückgesetzt · Editor zeigt nun v2-Inhalte · noch nicht gespeichert');
+}
+
+function closeEditor() {
+  if (confirm('Änderungen verwerfen und zurück zu Admin-Home?')) {
+    location.href = '#';
+  }
+}
+
+function openSaveConfirm() {
+  document.getElementById('saveConfirmModal').classList.add('open');
+}
+
+function closeSaveConfirm() {
+  document.getElementById('saveConfirmModal').classList.remove('open');
+}
+
+function confirmSave() {
+  closeSaveConfirm();
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:70px;right:24px;background:#10b981;color:#fff;padding:10px 16px;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:12.5px;z-index:100;max-width:380px;line-height:1.5';
+  banner.innerHTML = '✓ Template-Version v4 gespeichert · 3 User benachrichtigt · Audit-Log-Eintrag erstellt (<!-- ark-lint-skip:begin reason=admin-event-type --><a href="#" style="color:#fff;text-decoration:underline">dashboard_template.AM.updated</a><!-- ark-lint-skip:end -->)';
+  document.body.appendChild(banner);
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; }, 3500);
+  setTimeout(() => banner.remove(), 4100);
+}
+</script>
+</body>
+</html>

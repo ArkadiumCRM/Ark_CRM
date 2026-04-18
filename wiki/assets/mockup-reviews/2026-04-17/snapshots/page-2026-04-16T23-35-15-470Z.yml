@@ -1,0 +1,1175 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Kandidaten" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: Tobias Furrer
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - text: ℹ
+      - strong [ref=e17]: "Mockup-Demo:"
+      - text: Scraper-Fund für Kandidat (LinkedIn-Scraper detektiert Job-Wechsel · Werdegang-Updates · neue Stationen) —
+    - button "Banner anzeigen / ausblenden" [ref=e18] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e23]: TF
+      - generic "Foto hochladen" [ref=e24] [cursor=pointer]: +
+    - generic [ref=e25]:
+      - heading "Tobias Furrer 47 J. · Zollikon ZH" [level=1] [ref=e26]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - text: ✉
+          - link "tobias.furrer@gmail.com" [ref=e29] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e31]: 📞 +41 79 123 45 67
+        - generic [ref=e33]:
+          - text: 🔗
+          - link "LinkedIn" [ref=e34] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e36]: 🏢 Gesamtbauleiter Spezialtiefbau · Implenia AG
+      - generic [ref=e37]:
+        - generic [ref=e38]: Active Sourcing
+        - generic [ref=e39]: 🔥 Hot
+        - generic [ref=e40]: Grade A
+        - generic [ref=e41]: WM 4/8
+        - generic [ref=e42]: 📞 Erreichbar 14–17 Uhr
+        - generic [ref=e43]: ING
+      - generic [ref=e45]:
+        - text: Profilvollständigkeit ·
+        - strong [ref=e46]: 72 %
+      - generic [ref=e49]:
+        - button "📞 Anrufen" [ref=e50] [cursor=pointer]
+        - button "✉ Email" [ref=e51] [cursor=pointer]
+        - button "🔄 Stage ändern" [ref=e52] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e53] [cursor=pointer]
+        - button "📄 ARK-CV" [ref=e54] [cursor=pointer]
+    - generic [ref=e55]:
+      - 'button "Stage: GO schriftlich ▾" [ref=e57] [cursor=pointer]'
+      - generic [ref=e59]:
+        - text: CM
+        - strong [ref=e60]: JV
+        - text: · Researcher
+        - strong [ref=e61]: LR
+        - text: · Team ING & BT
+      - generic [ref=e63]:
+        - text: 🎯 in Prozess ·
+        - link "CFO-Suche Stage V" [ref=e64] [cursor=pointer]:
+          - /url: processes.html
+      - generic [ref=e65]:
+        - generic [ref=e66]: 🛡 Schutz bei 2 Accounts
+        - generic [ref=e67]: 7 Jobs im Basket
+  - generic [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]: 🎯 Ø Match-Score
+      - generic [ref=e71]: 84 %
+      - generic [ref=e72]: "Top-Job: 94 % (CFO)"
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🧺 Im Jobbasket
+      - generic [ref=e75]: "7"
+      - generic [ref=e76]: Jobs · 1 versandt
+    - generic [ref=e77]:
+      - generic [ref=e78]: ⚙ Aktive Prozesse
+      - generic [ref=e79]: "1"
+      - generic [ref=e80]: CFO-Suche · Stage V
+    - generic [ref=e81]:
+      - generic [ref=e82]: 🔄 Refresh-Due
+      - generic [ref=e83]: in 12 d
+      - generic [ref=e84]: letzter Touch vor 18 d
+    - generic [ref=e85]:
+      - generic [ref=e86]: 🏆 Placements hist.
+      - generic [ref=e87]: "0"
+      - generic [ref=e88]: erster Prozess läuft
+    - generic [ref=e89]:
+      - generic [ref=e90]: 🎓 Assessments
+      - generic [ref=e91]: "2"
+      - generic [ref=e92]: ASSESS 5.0 · EQ 2.0
+  - navigation [ref=e93]:
+    - generic [ref=e94] [cursor=pointer]: 1Übersicht
+    - generic [ref=e95] [cursor=pointer]: 2Briefing
+    - generic [ref=e96] [cursor=pointer]: 3Werdegang
+    - generic [ref=e97] [cursor=pointer]: 4Assessment
+    - generic [ref=e98] [cursor=pointer]: 5Jobbasket
+    - generic [ref=e99] [cursor=pointer]: 6Prozesse
+    - generic [ref=e100] [cursor=pointer]: 7History
+    - generic [ref=e101] [cursor=pointer]: 8Dokumente
+    - generic [ref=e102] [cursor=pointer]: 9Dok.-Generator
+    - generic [ref=e103] [cursor=pointer]: 0Reminders
+  - generic [ref=e104]:
+    - text: ▾ ▾ ▾ ▾ × × ▾ ▾ ▾ ▾ ★ × × ▾ × × × ▾ × × × ▾ ★ ☆ × ▾ ★ ☆ × ▾ × × × × × × × × × ▾ ★ × × ▾ × × × ▾ ✓ ✓ ✓ ✓ ✓ ✓ − ▾ ▾ × × × × × ▾ ▾ ▾ ▾ ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e2741]:
+      - generic [ref=e2742]:
+        - generic [ref=e2743]:
+          - generic [ref=e2744]: Total
+          - generic [ref=e2745]: "22"
+          - generic [ref=e2746]: alle Kategorien
+        - generic [ref=e2747]:
+          - generic [ref=e2748]: Vom Kandidat
+          - generic [ref=e2749]: "9"
+          - generic [ref=e2750]: CV · Zeugnisse · Diplome · Verträge
+        - generic [ref=e2751]:
+          - generic [ref=e2752]: Arkadium-Dossier
+          - generic [ref=e2753]: "6"
+          - generic [ref=e2754]: ARK-CV · Abstract · Exposé
+        - generic [ref=e2755]:
+          - generic [ref=e2756]: Assessment · Referenz
+          - generic [ref=e2757]: "7"
+          - generic [ref=e2758]: Reports & Letters
+        - generic [ref=e2759]:
+          - generic [ref=e2760]: Zuletzt hochgeladen
+          - generic [ref=e2761]: 14.04.2026
+          - generic [ref=e2762]: von JV
+      - generic [ref=e2763]:
+        - searchbox "🔍 Suche in Dateinamen, Tags, Verknüpfungen …" [ref=e2764]
+        - combobox [ref=e2765] [cursor=pointer]:
+          - option "Alle Jahre" [selected]
+          - option "2026"
+          - option "2025"
+          - option "2024"
+          - option "älter"
+        - combobox [ref=e2766] [cursor=pointer]:
+          - option "Alle Verknüpfungen" [selected]
+          - option "Nur Kandidat-Level"
+          - option "Prozess …"
+          - option "Assessment-Order …"
+          - option "Jobbasket …"
+          - option "Schutzfrist / Claim …"
+        - combobox [ref=e2767] [cursor=pointer]:
+          - option "Alle Urheber" [selected]
+          - option "PW"
+          - option "JV"
+          - option "LR"
+          - option "MF"
+          - option "— Doc-Generator —"
+          - option "— Upload —"
+          - option "— Kandidat —"
+        - generic [ref=e2768]:
+          - generic [ref=e2769] [cursor=pointer]: Liste
+          - generic [ref=e2770] [cursor=pointer]: Kacheln
+        - button "+ Upload" [ref=e2771] [cursor=pointer]
+      - generic [ref=e2773]:
+        - generic [ref=e2774] [cursor=pointer]:
+          - text: Alle
+          - generic [ref=e2775]: "22"
+        - generic [ref=e2776] [cursor=pointer]:
+          - text: Original CV
+          - generic [ref=e2777]: "1"
+        - generic [ref=e2778] [cursor=pointer]:
+          - text: Arbeitszeugnisse
+          - generic [ref=e2779]: "3"
+        - generic [ref=e2780] [cursor=pointer]:
+          - text: Diplome
+          - generic [ref=e2781]: "2"
+        - generic [ref=e2782] [cursor=pointer]:
+          - text: Projektliste
+          - generic [ref=e2783]: "1"
+        - generic [ref=e2784] [cursor=pointer]:
+          - text: Arbeitsvertrag
+          - generic [ref=e2785]: "2"
+        - generic [ref=e2786] [cursor=pointer]:
+          - text: ARK CV
+          - generic [ref=e2787]: "2"
+        - generic [ref=e2788] [cursor=pointer]:
+          - text: Abstract
+          - generic [ref=e2789]: "1"
+        - generic [ref=e2790] [cursor=pointer]:
+          - text: Exposé
+          - generic [ref=e2791]: "3"
+        - generic [ref=e2792] [cursor=pointer]:
+          - text: Assessment
+          - generic [ref=e2793]: "4"
+        - generic [ref=e2794] [cursor=pointer]:
+          - text: Referenz
+          - generic [ref=e2795]: "2"
+        - generic [ref=e2796] [cursor=pointer]:
+          - text: Sonstiges
+          - generic [ref=e2797]: "1"
+      - table [ref=e2800]:
+        - rowgroup [ref=e2801]:
+          - row "Name Kategorie Verknüpfung Erstellt Urheber Grösse ›" [ref=e2802]:
+            - columnheader [ref=e2803]
+            - columnheader "Name" [ref=e2804]
+            - columnheader "Kategorie" [ref=e2805]
+            - columnheader "Verknüpfung" [ref=e2806]
+            - columnheader "Erstellt" [ref=e2807]
+            - columnheader "Urheber" [ref=e2808]
+            - columnheader "Grösse" [ref=e2809]
+            - columnheader "›" [ref=e2810]
+        - rowgroup [ref=e2811]:
+          - row "PDF Original-CV · Tobias Furrer Vom Kandidaten geliefert · 12 Seiten Original CV Kandidat-Level 12.01.2026 Upload · Kandidat 640 KB ›" [ref=e2812] [cursor=pointer]:
+            - cell "PDF" [ref=e2813]:
+              - generic [ref=e2814]: PDF
+            - cell "Original-CV · Tobias Furrer Vom Kandidaten geliefert · 12 Seiten" [ref=e2815]:
+              - strong [ref=e2816]: Original-CV · Tobias Furrer
+              - generic [ref=e2817]: Vom Kandidaten geliefert · 12 Seiten
+            - cell "Original CV" [ref=e2818]:
+              - generic [ref=e2819]: Original CV
+            - cell "Kandidat-Level" [ref=e2820]
+            - cell "12.01.2026" [ref=e2821]
+            - cell "Upload · Kandidat" [ref=e2822]:
+              - generic [ref=e2823]: Upload · Kandidat
+            - cell "640 KB" [ref=e2824]
+            - cell "›" [ref=e2825]:
+              - button "›" [ref=e2826]
+          - row "PDF Arbeitszeugnis · Implenia (2015–2020) Leiter Spezialtiefbau · sehr gut Arbeitszeugnis Kandidat-Level 12.01.2026 Upload · Kandidat 320 KB ›" [ref=e2827] [cursor=pointer]:
+            - cell "PDF" [ref=e2828]:
+              - generic [ref=e2829]: PDF
+            - cell "Arbeitszeugnis · Implenia (2015–2020) Leiter Spezialtiefbau · sehr gut" [ref=e2830]:
+              - strong [ref=e2831]: Arbeitszeugnis · Implenia (2015–2020)
+              - generic [ref=e2832]: Leiter Spezialtiefbau · sehr gut
+            - cell "Arbeitszeugnis" [ref=e2833]:
+              - generic [ref=e2834]: Arbeitszeugnis
+            - cell "Kandidat-Level" [ref=e2835]
+            - cell "12.01.2026" [ref=e2836]
+            - cell "Upload · Kandidat" [ref=e2837]:
+              - generic [ref=e2838]: Upload · Kandidat
+            - cell "320 KB" [ref=e2839]
+            - cell "›" [ref=e2840]:
+              - button "›" [ref=e2841]
+          - row "PDF Arbeitszeugnis · Frutiger (2020–2024) Gesamtbauleiter · vorzüglich Arbeitszeugnis Kandidat-Level 12.01.2026 Upload · Kandidat 284 KB ›" [ref=e2842] [cursor=pointer]:
+            - cell "PDF" [ref=e2843]:
+              - generic [ref=e2844]: PDF
+            - cell "Arbeitszeugnis · Frutiger (2020–2024) Gesamtbauleiter · vorzüglich" [ref=e2845]:
+              - strong [ref=e2846]: Arbeitszeugnis · Frutiger (2020–2024)
+              - generic [ref=e2847]: Gesamtbauleiter · vorzüglich
+            - cell "Arbeitszeugnis" [ref=e2848]:
+              - generic [ref=e2849]: Arbeitszeugnis
+            - cell "Kandidat-Level" [ref=e2850]
+            - cell "12.01.2026" [ref=e2851]
+            - cell "Upload · Kandidat" [ref=e2852]:
+              - generic [ref=e2853]: Upload · Kandidat
+            - cell "284 KB" [ref=e2854]
+            - cell "›" [ref=e2855]:
+              - button "›" [ref=e2856]
+          - row "PDF Zwischenzeugnis · HRS Real Estate (2024) Arbeitszeugnis Kandidat-Level 12.01.2026 Upload · Kandidat 198 KB ›" [ref=e2857] [cursor=pointer]:
+            - cell "PDF" [ref=e2858]:
+              - generic [ref=e2859]: PDF
+            - cell "Zwischenzeugnis · HRS Real Estate (2024)" [ref=e2860]:
+              - strong [ref=e2861]: Zwischenzeugnis · HRS Real Estate (2024)
+            - cell "Arbeitszeugnis" [ref=e2862]:
+              - generic [ref=e2863]: Arbeitszeugnis
+            - cell "Kandidat-Level" [ref=e2864]
+            - cell "12.01.2026" [ref=e2865]
+            - cell "Upload · Kandidat" [ref=e2866]:
+              - generic [ref=e2867]: Upload · Kandidat
+            - cell "198 KB" [ref=e2868]
+            - cell "›" [ref=e2869]:
+              - button "›" [ref=e2870]
+          - row "PDF Diplom · HSG Executive MBA (2012) Diplom Kandidat-Level 12.01.2026 Upload · Kandidat 180 KB ›" [ref=e2871] [cursor=pointer]:
+            - cell "PDF" [ref=e2872]:
+              - generic [ref=e2873]: PDF
+            - cell "Diplom · HSG Executive MBA (2012)" [ref=e2874]:
+              - strong [ref=e2875]: Diplom · HSG Executive MBA (2012)
+            - cell "Diplom" [ref=e2876]:
+              - generic [ref=e2877]: Diplom
+            - cell "Kandidat-Level" [ref=e2878]
+            - cell "12.01.2026" [ref=e2879]
+            - cell "Upload · Kandidat" [ref=e2880]:
+              - generic [ref=e2881]: Upload · Kandidat
+            - cell "180 KB" [ref=e2882]
+            - cell "›" [ref=e2883]:
+              - button "›" [ref=e2884]
+          - row "PDF Diplom · ETH Zürich Bauingenieur (2002) Diplom Kandidat-Level 12.01.2026 Upload · Kandidat 156 KB ›" [ref=e2885] [cursor=pointer]:
+            - cell "PDF" [ref=e2886]:
+              - generic [ref=e2887]: PDF
+            - cell "Diplom · ETH Zürich Bauingenieur (2002)" [ref=e2888]:
+              - strong [ref=e2889]: Diplom · ETH Zürich Bauingenieur (2002)
+            - cell "Diplom" [ref=e2890]:
+              - generic [ref=e2891]: Diplom
+            - cell "Kandidat-Level" [ref=e2892]
+            - cell "12.01.2026" [ref=e2893]
+            - cell "Upload · Kandidat" [ref=e2894]:
+              - generic [ref=e2895]: Upload · Kandidat
+            - cell "156 KB" [ref=e2896]
+            - cell "›" [ref=e2897]:
+              - button "›" [ref=e2898]
+          - row "PDF Projektliste · 18 Referenzprojekte 2008–2025 Hochbau, Tiefbau, Spezialtiefbau · mit Volumina Projektliste Kandidat-Level 14.01.2026 Upload · Kandidat 512 KB ›" [ref=e2899] [cursor=pointer]:
+            - cell "PDF" [ref=e2900]:
+              - generic [ref=e2901]: PDF
+            - cell "Projektliste · 18 Referenzprojekte 2008–2025 Hochbau, Tiefbau, Spezialtiefbau · mit Volumina" [ref=e2902]:
+              - strong [ref=e2903]: Projektliste · 18 Referenzprojekte 2008–2025
+              - generic [ref=e2904]: Hochbau, Tiefbau, Spezialtiefbau · mit Volumina
+            - cell "Projektliste" [ref=e2905]:
+              - generic [ref=e2906]: Projektliste
+            - cell "Kandidat-Level" [ref=e2907]
+            - cell "14.01.2026" [ref=e2908]
+            - cell "Upload · Kandidat" [ref=e2909]:
+              - generic [ref=e2910]: Upload · Kandidat
+            - cell "512 KB" [ref=e2911]
+            - cell "›" [ref=e2912]:
+              - button "›" [ref=e2913]
+          - row "PDF Arbeitsvertrag · Frutiger (aktuell) Vertraulich · Kündigungsfrist 6 Monate Arbeitsvertrag Kandidat-Level 18.01.2026 Upload · Kandidat 412 KB ›" [ref=e2914] [cursor=pointer]:
+            - cell "PDF" [ref=e2915]:
+              - generic [ref=e2916]: PDF
+            - cell "Arbeitsvertrag · Frutiger (aktuell) Vertraulich · Kündigungsfrist 6 Monate" [ref=e2917]:
+              - strong [ref=e2918]: Arbeitsvertrag · Frutiger (aktuell)
+              - generic [ref=e2919]: Vertraulich · Kündigungsfrist 6 Monate
+            - cell "Arbeitsvertrag" [ref=e2920]:
+              - generic [ref=e2921]: Arbeitsvertrag
+            - cell "Kandidat-Level" [ref=e2922]
+            - cell "18.01.2026" [ref=e2923]
+            - cell "Upload · Kandidat" [ref=e2924]:
+              - generic [ref=e2925]: Upload · Kandidat
+            - cell "412 KB" [ref=e2926]
+            - cell "›" [ref=e2927]:
+              - button "›" [ref=e2928]
+          - row "PDF Arbeitsvertrag · Implenia (2015) Historisch · für Gehaltsvergleich Arbeitsvertrag Kandidat-Level 18.01.2026 Upload · Kandidat 386 KB ›" [ref=e2929] [cursor=pointer]:
+            - cell "PDF" [ref=e2930]:
+              - generic [ref=e2931]: PDF
+            - cell "Arbeitsvertrag · Implenia (2015) Historisch · für Gehaltsvergleich" [ref=e2932]:
+              - strong [ref=e2933]: Arbeitsvertrag · Implenia (2015)
+              - generic [ref=e2934]: Historisch · für Gehaltsvergleich
+            - cell "Arbeitsvertrag" [ref=e2935]:
+              - generic [ref=e2936]: Arbeitsvertrag
+            - cell "Kandidat-Level" [ref=e2937]
+            - cell "18.01.2026" [ref=e2938]
+            - cell "Upload · Kandidat" [ref=e2939]:
+              - generic [ref=e2940]: Upload · Kandidat
+            - cell "386 KB" [ref=e2941]
+            - cell "›" [ref=e2942]:
+              - button "›" [ref=e2943]
+          - row "PDF ARK CV · Tobias Furrer v3 ARK-Layout · generiert aus Tab 9 ARK CV Prozess · CFO-Suche 02.04.2026 Doc-Gen · JV 412 KB ›" [ref=e2944] [cursor=pointer]:
+            - cell "PDF" [ref=e2945]:
+              - generic [ref=e2946]: PDF
+            - cell "ARK CV · Tobias Furrer v3 ARK-Layout · generiert aus Tab 9" [ref=e2947]:
+              - strong [ref=e2948]: ARK CV · Tobias Furrer v3
+              - generic [ref=e2949]: ARK-Layout · generiert aus Tab 9
+            - cell "ARK CV" [ref=e2950]:
+              - generic [ref=e2951]: ARK CV
+            - cell "Prozess · CFO-Suche" [ref=e2952]:
+              - link "Prozess · CFO-Suche" [ref=e2953]:
+                - /url: "#"
+            - cell "02.04.2026" [ref=e2954]
+            - cell "Doc-Gen · JV" [ref=e2955]:
+              - generic [ref=e2956]: Doc-Gen · JV
+            - cell "412 KB" [ref=e2957]
+            - cell "›" [ref=e2958]:
+              - button "›" [ref=e2959]
+          - row "PDF ARK CV · Tobias Furrer v2 Superseded · Vorversion ARK CV Kandidat-Level 18.03.2026 Doc-Gen · JV 404 KB ›" [ref=e2960] [cursor=pointer]:
+            - cell "PDF" [ref=e2961]:
+              - generic [ref=e2962]: PDF
+            - cell "ARK CV · Tobias Furrer v2 Superseded · Vorversion" [ref=e2963]:
+              - strong [ref=e2964]: ARK CV · Tobias Furrer v2
+              - generic [ref=e2965]: Superseded · Vorversion
+            - cell "ARK CV" [ref=e2966]:
+              - generic [ref=e2967]: ARK CV
+            - cell "Kandidat-Level" [ref=e2968]
+            - cell "18.03.2026" [ref=e2969]
+            - cell "Doc-Gen · JV" [ref=e2970]:
+              - generic [ref=e2971]: Doc-Gen · JV
+            - cell "404 KB" [ref=e2972]
+            - cell "›" [ref=e2973]:
+              - button "›" [ref=e2974]
+          - row "PDF Abstract · Tobias Furrer 2-Seiten-Kurzzusammenfassung für Mandatsakquise Abstract Kandidat-Level 02.04.2026 Doc-Gen · JV 164 KB ›" [ref=e2975] [cursor=pointer]:
+            - cell "PDF" [ref=e2976]:
+              - generic [ref=e2977]: PDF
+            - cell "Abstract · Tobias Furrer 2-Seiten-Kurzzusammenfassung für Mandatsakquise" [ref=e2978]:
+              - strong [ref=e2979]: Abstract · Tobias Furrer
+              - generic [ref=e2980]: 2-Seiten-Kurzzusammenfassung für Mandatsakquise
+            - cell "Abstract" [ref=e2981]:
+              - generic [ref=e2982]: Abstract
+            - cell "Kandidat-Level" [ref=e2983]
+            - cell "02.04.2026" [ref=e2984]
+            - cell "Doc-Gen · JV" [ref=e2985]:
+              - generic [ref=e2986]: Doc-Gen · JV
+            - cell "164 KB" [ref=e2987]
+            - cell "›" [ref=e2988]:
+              - button "›" [ref=e2989]
+          - row "PDF Exposé · Tobias Furrer (anonymisiert) Name/Foto entfernt · für Prelead-Versand Exposé Prozess · CFO-Suche 02.04.2026 Doc-Gen · JV 1.2 MB ›" [ref=e2990] [cursor=pointer]:
+            - cell "PDF" [ref=e2991]:
+              - generic [ref=e2992]: PDF
+            - cell "Exposé · Tobias Furrer (anonymisiert) Name/Foto entfernt · für Prelead-Versand" [ref=e2993]:
+              - strong [ref=e2994]: Exposé · Tobias Furrer (anonymisiert)
+              - generic [ref=e2995]: Name/Foto entfernt · für Prelead-Versand
+            - cell "Exposé" [ref=e2996]:
+              - generic [ref=e2997]: Exposé
+            - cell "Prozess · CFO-Suche" [ref=e2998]:
+              - link "Prozess · CFO-Suche" [ref=e2999]:
+                - /url: "#"
+            - cell "02.04.2026" [ref=e3000]
+            - cell "Doc-Gen · JV" [ref=e3001]:
+              - generic [ref=e3002]: Doc-Gen · JV
+            - cell "1.2 MB" [ref=e3003]
+            - cell "›" [ref=e3004]:
+              - button "›" [ref=e3005]
+          - row "PDF Exposé · Holbach-Mandat Exposé Prozess · Holbach CTO 20.02.2026 Doc-Gen · JV 1.1 MB ›" [ref=e3006] [cursor=pointer]:
+            - cell "PDF" [ref=e3007]:
+              - generic [ref=e3008]: PDF
+            - cell "Exposé · Holbach-Mandat" [ref=e3009]:
+              - strong [ref=e3010]: Exposé · Holbach-Mandat
+            - cell "Exposé" [ref=e3011]:
+              - generic [ref=e3012]: Exposé
+            - cell "Prozess · Holbach CTO" [ref=e3013]:
+              - link "Prozess · Holbach CTO" [ref=e3014]:
+                - /url: "#"
+            - cell "20.02.2026" [ref=e3015]
+            - cell "Doc-Gen · JV" [ref=e3016]:
+              - generic [ref=e3017]: Doc-Gen · JV
+            - cell "1.1 MB" [ref=e3018]
+            - cell "›" [ref=e3019]:
+              - button "›" [ref=e3020]
+          - row "PDF Exposé · Pilatus CFO-Mandat Exposé Prozess · Pilatus CFO 14.01.2026 Doc-Gen · JV 1.0 MB ›" [ref=e3021] [cursor=pointer]:
+            - cell "PDF" [ref=e3022]:
+              - generic [ref=e3023]: PDF
+            - cell "Exposé · Pilatus CFO-Mandat" [ref=e3024]:
+              - strong [ref=e3025]: Exposé · Pilatus CFO-Mandat
+            - cell "Exposé" [ref=e3026]:
+              - generic [ref=e3027]: Exposé
+            - cell "Prozess · Pilatus CFO" [ref=e3028]:
+              - link "Prozess · Pilatus CFO" [ref=e3029]:
+                - /url: "#"
+            - cell "14.01.2026" [ref=e3030]
+            - cell "Doc-Gen · JV" [ref=e3031]:
+              - generic [ref=e3032]: Doc-Gen · JV
+            - cell "1.0 MB" [ref=e3033]
+            - cell "›" [ref=e3034]:
+              - button "›" [ref=e3035]
+          - row "PDF ASSESS 5.0 · Report Tobias Furrer Standard-Profil „Executive Leader\" · Match 87 % Assessment Order ORD-2026-042 04.04.2026 Upload · PW 2.4 MB ›" [ref=e3036] [cursor=pointer]:
+            - cell "PDF" [ref=e3037]:
+              - generic [ref=e3038]: PDF
+            - cell "ASSESS 5.0 · Report Tobias Furrer Standard-Profil „Executive Leader\" · Match 87 %" [ref=e3039]:
+              - strong [ref=e3040]: ASSESS 5.0 · Report Tobias Furrer
+              - generic [ref=e3041]: Standard-Profil „Executive Leader" · Match 87 %
+            - cell "Assessment" [ref=e3042]:
+              - generic [ref=e3043]: Assessment
+            - cell "Order ORD-2026-042" [ref=e3044]:
+              - link "Order ORD-2026-042" [ref=e3045]:
+                - /url: "#"
+            - cell "04.04.2026" [ref=e3046]
+            - cell "Upload · PW" [ref=e3047]:
+              - generic [ref=e3048]: Upload · PW
+            - cell "2.4 MB" [ref=e3049]
+            - cell "›" [ref=e3050]:
+              - button "›" [ref=e3051]
+          - row "PDF Scheelen DISC+BIP · Report Wheel-Typ Inspirator · validiert Assessment Order ORD-2025-118 15.11.2025 Upload · PW 1.8 MB ›" [ref=e3052] [cursor=pointer]:
+            - cell "PDF" [ref=e3053]:
+              - generic [ref=e3054]: PDF
+            - cell "Scheelen DISC+BIP · Report Wheel-Typ Inspirator · validiert" [ref=e3055]:
+              - strong [ref=e3056]: Scheelen DISC+BIP · Report
+              - generic [ref=e3057]: Wheel-Typ Inspirator · validiert
+            - cell "Assessment" [ref=e3058]:
+              - generic [ref=e3059]: Assessment
+            - cell "Order ORD-2025-118" [ref=e3060]:
+              - link "Order ORD-2025-118" [ref=e3061]:
+                - /url: "#"
+            - cell "15.11.2025" [ref=e3062]
+            - cell "Upload · PW" [ref=e3063]:
+              - generic [ref=e3064]: Upload · PW
+            - cell "1.8 MB" [ref=e3065]
+            - cell "›" [ref=e3066]:
+              - button "›" [ref=e3067]
+          - row "PDF TriMetrix MDI · Motivatoren-Report Assessment Order ORD-2025-118 15.11.2025 Upload · PW 1.4 MB ›" [ref=e3068] [cursor=pointer]:
+            - cell "PDF" [ref=e3069]:
+              - generic [ref=e3070]: PDF
+            - cell "TriMetrix MDI · Motivatoren-Report" [ref=e3071]:
+              - strong [ref=e3072]: TriMetrix MDI · Motivatoren-Report
+            - cell "Assessment" [ref=e3073]:
+              - generic [ref=e3074]: Assessment
+            - cell "Order ORD-2025-118" [ref=e3075]:
+              - link "Order ORD-2025-118" [ref=e3076]:
+                - /url: "#"
+            - cell "15.11.2025" [ref=e3077]
+            - cell "Upload · PW" [ref=e3078]:
+              - generic [ref=e3079]: Upload · PW
+            - cell "1.4 MB" [ref=e3080]
+            - cell "›" [ref=e3081]:
+              - button "›" [ref=e3082]
+          - row "PDF RELIEF · Stressor-Report Assessment Order ORD-2025-118 15.11.2025 Upload · PW 1.6 MB ›" [ref=e3083] [cursor=pointer]:
+            - cell "PDF" [ref=e3084]:
+              - generic [ref=e3085]: PDF
+            - cell "RELIEF · Stressor-Report" [ref=e3086]:
+              - strong [ref=e3087]: RELIEF · Stressor-Report
+            - cell "Assessment" [ref=e3088]:
+              - generic [ref=e3089]: Assessment
+            - cell "Order ORD-2025-118" [ref=e3090]:
+              - link "Order ORD-2025-118" [ref=e3091]:
+                - /url: "#"
+            - cell "15.11.2025" [ref=e3092]
+            - cell "Upload · PW" [ref=e3093]:
+              - generic [ref=e3094]: Upload · PW
+            - cell "1.6 MB" [ref=e3095]
+            - cell "›" [ref=e3096]:
+              - button "›" [ref=e3097]
+          - row "PDF Referenz-Letter · Marcel Keller (ehem. CEO Frutiger) Signiert · Telefon-Referenz dokumentiert Referenz Kandidat-Level 20.03.2026 Doc-Gen · JV 118 KB ›" [ref=e3098] [cursor=pointer]:
+            - cell "PDF" [ref=e3099]:
+              - generic [ref=e3100]: PDF
+            - cell "Referenz-Letter · Marcel Keller (ehem. CEO Frutiger) Signiert · Telefon-Referenz dokumentiert" [ref=e3101]:
+              - strong [ref=e3102]: Referenz-Letter · Marcel Keller (ehem. CEO Frutiger)
+              - generic [ref=e3103]: Signiert · Telefon-Referenz dokumentiert
+            - cell "Referenz" [ref=e3104]:
+              - generic [ref=e3105]: Referenz
+            - cell "Kandidat-Level" [ref=e3106]
+            - cell "20.03.2026" [ref=e3107]
+            - cell "Doc-Gen · JV" [ref=e3108]:
+              - generic [ref=e3109]: Doc-Gen · JV
+            - cell "118 KB" [ref=e3110]
+            - cell "›" [ref=e3111]:
+              - button "›" [ref=e3112]
+          - row "PDF Referenz-Protokoll · Andreas Meier (Implenia) Gespräch durch JV · zusammengefasst Referenz Kandidat-Level 22.03.2026 JV 94 KB ›" [ref=e3113] [cursor=pointer]:
+            - cell "PDF" [ref=e3114]:
+              - generic [ref=e3115]: PDF
+            - cell "Referenz-Protokoll · Andreas Meier (Implenia) Gespräch durch JV · zusammengefasst" [ref=e3116]:
+              - strong [ref=e3117]: Referenz-Protokoll · Andreas Meier (Implenia)
+              - generic [ref=e3118]: Gespräch durch JV · zusammengefasst
+            - cell "Referenz" [ref=e3119]:
+              - generic [ref=e3120]: Referenz
+            - cell "Kandidat-Level" [ref=e3121]
+            - cell "22.03.2026" [ref=e3122]
+            - cell "JV" [ref=e3123]:
+              - generic [ref=e3124]: JV
+            - cell "94 KB" [ref=e3125]
+            - cell "›" [ref=e3126]:
+              - button "›" [ref=e3127]
+          - row "DOCX Briefing-Protokoll · Gesprächsleitfaden ausgefüllt 10 Sektionen · Version v2 Sonstiges Kandidat-Level 14.01.2026 JV 186 KB ›" [ref=e3128] [cursor=pointer]:
+            - cell "DOCX" [ref=e3129]:
+              - generic [ref=e3130]: DOCX
+            - cell "Briefing-Protokoll · Gesprächsleitfaden ausgefüllt 10 Sektionen · Version v2" [ref=e3131]:
+              - strong [ref=e3132]: Briefing-Protokoll · Gesprächsleitfaden ausgefüllt
+              - generic [ref=e3133]: 10 Sektionen · Version v2
+            - cell "Sonstiges" [ref=e3134]:
+              - generic [ref=e3135]: Sonstiges
+            - cell "Kandidat-Level" [ref=e3136]
+            - cell "14.01.2026" [ref=e3137]
+            - cell "JV" [ref=e3138]:
+              - generic [ref=e3139]: JV
+            - cell "186 KB" [ref=e3140]
+            - cell "›" [ref=e3141]:
+              - button "›" [ref=e3142]
+      - generic [ref=e3143]: Kandidaten-Dokumente (ARK-CV / Abstract / Exposé, Assessment-Reports, Referenzen, Zeugnisse, Diplome, Briefing-Protokolle). Urheber „Doc-Gen" = automatisch generiert aus Tab 9, „Upload" = manuell hochgeladen, „Kandidat" = vom Kandidaten selbst geliefert.
+  - generic [ref=e512]:
+    - generic [ref=e513]: 1–0 Tabs
+    - generic [ref=e514]: ↑↓ Sektion
+    - generic [ref=e515]: Enter Auf-/Zuklappen
+    - generic [ref=e516]: E Edit
+    - generic [ref=e517]: S Save
+    - generic [ref=e518]: Esc Abbrechen
+    - generic [ref=e519]: T Theme
+    - generic [ref=e520]: ⌘K Suche
+  - generic [ref=e521]:
+    - generic [ref=e522]:
+      - generic [ref=e523]: +
+      - generic [ref=e524]:
+        - heading "Neues Projekt anlegen" [level=2] [ref=e525]
+        - generic [ref=e526]: Kein passendes Projekt gefunden (< 60 % Match)
+      - button "✕" [ref=e527] [cursor=pointer]
+    - generic [ref=e528]:
+      - generic [ref=e529]:
+        - heading "Pflichtfelder" [level=4] [ref=e530]
+        - generic [ref=e531]:
+          - term [ref=e532]: Projekt-Name *
+          - definition [ref=e533]:
+            - textbox "z.B. Wohnsiedlung Uetlihof" [ref=e534]
+          - term [ref=e535]: Bauherr *
+          - definition [ref=e536]:
+            - searchbox "Account suchen …" [ref=e537]
+          - term [ref=e538]: Zeitraum von *
+          - definition [ref=e539]:
+            - textbox [ref=e540]: 2023-04
+          - term [ref=e541]: Zeitraum bis *
+          - definition [ref=e542]:
+            - textbox [ref=e543]: 2025-06
+      - generic [ref=e544]:
+        - heading "Optional" [level=4] [ref=e545]
+        - generic [ref=e546]:
+          - term [ref=e547]: Standort
+          - definition [ref=e548]:
+            - textbox "Stadt / Kanton" [ref=e549]
+          - term [ref=e550]: Volumen-Range
+          - definition [ref=e551]:
+            - combobox [ref=e552] [cursor=pointer]:
+              - option "—" [selected]
+              - option "< 10 Mio."
+              - option "10–50 Mio."
+              - option "50–100 Mio."
+              - option "> 100 Mio."
+          - term [ref=e553]: Sparte
+          - definition [ref=e554]:
+            - generic [ref=e555]:
+              - generic [ref=e556] [cursor=pointer]: ARC
+              - generic [ref=e557] [cursor=pointer]: GT
+              - generic [ref=e558] [cursor=pointer]: ING
+              - generic [ref=e559] [cursor=pointer]: PUR
+              - generic [ref=e560] [cursor=pointer]: REM
+    - generic [ref=e561]:
+      - button "Abbrechen" [ref=e562] [cursor=pointer]
+      - button "Projekt anlegen & verknüpfen" [ref=e564] [cursor=pointer]
+  - generic [ref=e565]:
+    - generic [ref=e566]:
+      - generic [ref=e567]: ET
+      - generic [ref=e568]:
+        - heading "Bauingenieurwesen Master MSc ETH" [level=2] [ref=e569]:
+          - text: Bauingenieurwesen Master
+          - generic [ref=e570]: MSc ETH
+        - generic [ref=e571]: ETH Zürich · 2008 – 2013 · Vollzeit · Note Ø 5.6 · 🏆 Medaille
+      - button "×" [ref=e572] [cursor=pointer]
+    - generic [ref=e573]:
+      - generic [ref=e574] [cursor=pointer]: Basis
+      - generic [ref=e575] [cursor=pointer]: Inhalt & Schwerpunkte
+      - generic [ref=e576] [cursor=pointer]: Leistung
+      - generic [ref=e577] [cursor=pointer]: Nachweise
+    - generic [ref=e578]:
+      - generic [ref=e579]:
+        - generic [ref=e580]:
+          - generic [ref=e581]:
+            - generic [ref=e582]: 🎓
+            - heading "Ausbildungstyp" [level=3] [ref=e583]
+          - generic [ref=e584]:
+            - generic [ref=e585]:
+              - generic [ref=e586]: Bildungsgrad* dim_education_level
+              - combobox [ref=e587] [cursor=pointer]:
+                - option "MSc · Master of Science" [selected]
+                - option "BSc · Bachelor of Science"
+                - option "PhD · Doktorat"
+                - option "MBA · Master of Business Admin."
+                - option "MAS · Master of Advanced Studies"
+                - option "CAS · Certificate of Advanced Studies"
+                - option "DAS · Diploma of Advanced Studies"
+                - option "Berufslehre (EFZ/EBA)"
+                - option "Berufsmatura"
+                - option "Gymnasiale Matura"
+                - option "Höhere Fachschule (HF)"
+                - option "Weiterbildung · Kurs"
+                - option "Zertifikat · Modul"
+            - generic [ref=e588]:
+              - generic [ref=e589]: Studienform
+              - generic [ref=e590]:
+                - generic [ref=e591]: Vollzeit
+                - generic [ref=e592]: Berufsbegleitend
+                - generic [ref=e593]: Teilzeit
+                - generic [ref=e594]: Fernstudium
+            - generic [ref=e595]:
+              - generic [ref=e596]: Titel / Abschluss-Bezeichnung*
+              - textbox [ref=e597]: Bauingenieurwesen Master
+            - generic [ref=e598]:
+              - generic [ref=e599]: Fachrichtung / Studienrichtung
+              - textbox [ref=e600]: Konstruktiver Ingenieurbau, Geotechnik
+        - generic [ref=e601]:
+          - generic [ref=e602]:
+            - generic [ref=e603]: 🏫
+            - heading "Institution" [level=3] [ref=e604]
+          - generic [ref=e605]:
+            - generic [ref=e606]:
+              - generic [ref=e607]: Hochschule / Institut*
+              - generic [ref=e608]:
+                - textbox [ref=e609]: ETH Zürich · Eidgenössische Technische Hochschule
+                - button "→ Verknüpfen" [ref=e610] [cursor=pointer]
+            - generic [ref=e611]:
+              - generic [ref=e612]: Standort
+              - textbox [ref=e613]: Zürich
+            - generic [ref=e614]:
+              - generic [ref=e615]: Land
+              - combobox [ref=e616] [cursor=pointer]:
+                - option "Schweiz" [selected]
+                - option "Deutschland"
+                - option "Österreich"
+                - option "Andere"
+        - generic [ref=e617]:
+          - generic [ref=e618]:
+            - generic [ref=e619]: 📅
+            - heading "Zeitraum" [level=3] [ref=e620]
+            - generic [ref=e621]: bei Ausbildungen reichen Jahre
+          - generic [ref=e622]:
+            - generic [ref=e623]:
+              - generic [ref=e624]: Von*
+              - spinbutton [ref=e625]: "2008"
+            - generic [ref=e626]:
+              - generic [ref=e627]: Bis
+              - generic [ref=e628]:
+                - spinbutton [ref=e629]: "2013"
+                - generic [ref=e630]:
+                  - checkbox "laufend" [ref=e631]
+                  - text: laufend
+      - text: 🔍
+    - generic [ref=e632]:
+      - button "Abbrechen" [ref=e633] [cursor=pointer]
+      - button "🗑 Ausbildung löschen" [ref=e634] [cursor=pointer]
+      - button "Speichern" [ref=e635] [cursor=pointer]
+  - generic [ref=e636]:
+    - generic [ref=e637]:
+      - generic [ref=e638]: IM
+      - generic [ref=e639]:
+        - heading "Gesamtbauleiter Spezialtiefbau AKTUELL" [level=2] [ref=e640]:
+          - text: Gesamtbauleiter Spezialtiefbau
+          - generic [ref=e641]: AKTUELL
+        - generic [ref=e642]:
+          - text: Implenia AG · Zürich · 01/2023 – heute ·
+          - generic [ref=e643]: LinkedIn
+      - button "×" [ref=e644] [cursor=pointer]
+    - generic [ref=e645]:
+      - generic [ref=e646] [cursor=pointer]: Basis
+      - generic [ref=e647] [cursor=pointer]: Einordnung
+      - generic [ref=e648] [cursor=pointer]: Motivation
+      - generic [ref=e649] [cursor=pointer]: Verknüpfungen
+    - generic [ref=e650]:
+      - generic [ref=e651]:
+        - generic [ref=e652]:
+          - generic [ref=e653]:
+            - generic [ref=e654]: 📋
+            - heading "Station-Typ" [level=3] [ref=e655]
+          - generic [ref=e656]:
+            - generic [ref=e657]: ● Beruf
+            - generic [ref=e658]: Ausbildung
+            - generic [ref=e659]: Lücke / Sabbatical
+        - generic [ref=e660]:
+          - generic [ref=e661]:
+            - generic [ref=e662]: 💼
+            - heading "Position & Arbeitgeber" [level=3] [ref=e663]
+          - generic [ref=e664]:
+            - generic [ref=e665]:
+              - generic [ref=e666]: Position / Titel*
+              - textbox [ref=e667]: Gesamtbauleiter Spezialtiefbau
+            - generic [ref=e668]:
+              - generic [ref=e669]: Arbeitgeber · Account* Verknüpft mit dim_accounts · ID 412 · 9'000 MA
+              - generic [ref=e670]:
+                - textbox [ref=e671]: Implenia AG
+                - link "→ Account öffnen" [ref=e672] [cursor=pointer]:
+                  - /url: accounts.html
+            - generic [ref=e673]:
+              - generic [ref=e674]: Standort
+              - textbox [ref=e675]: Zürich
+            - generic [ref=e676]:
+              - generic [ref=e677]: Region (für Filter)
+              - combobox [ref=e678] [cursor=pointer]:
+                - option "Zürich" [selected]
+                - option "Bern"
+                - option "Basel"
+                - option "Zentralschweiz"
+                - option "Ostschweiz"
+                - option "Westschweiz"
+                - option "Tessin"
+        - generic [ref=e679]:
+          - generic [ref=e680]:
+            - generic [ref=e681]: 📅
+            - heading "Zeitraum" [level=3] [ref=e682]
+            - generic [ref=e683]: Format MM/YYYY
+          - generic [ref=e684]:
+            - generic [ref=e685]:
+              - generic [ref=e686]: Von*
+              - textbox [ref=e687]: 2023-01
+            - generic [ref=e688]:
+              - generic [ref=e689]: Bis
+              - generic [ref=e690]:
+                - textbox [ref=e691]: 2026-04
+                - generic [ref=e692]:
+                  - checkbox "heute" [checked] [ref=e693]
+                  - text: heute
+      - text: 🔍 🔍 └ 🔍
+    - generic [ref=e694]:
+      - button "Abbrechen" [ref=e695] [cursor=pointer]
+      - button "🗑 Station löschen" [ref=e696] [cursor=pointer]
+      - button "Speichern" [ref=e697] [cursor=pointer]
+  - generic [ref=e698]:
+    - generic [ref=e699]:
+      - generic [ref=e700]: SBB
+      - generic [ref=e701]:
+        - heading "Tiefbauprojekt Bahnhof Zürich Erweiterung" [level=2] [ref=e702]
+        - generic [ref=e703]: Werdegang-Projekt · bei Implenia · 2023 – 2025 · CHF 48 Mio.
+      - button "×" [ref=e704] [cursor=pointer]
+    - generic [ref=e705]:
+      - generic [ref=e706] [cursor=pointer]: Basis
+      - generic [ref=e707] [cursor=pointer]: Technik
+      - generic [ref=e708] [cursor=pointer]: Rolle
+      - generic [ref=e709] [cursor=pointer]: Kontext
+      - generic [ref=e710] [cursor=pointer]: Verknüpfungen
+    - generic [ref=e711]:
+      - generic [ref=e712]:
+        - generic [ref=e713]:
+          - generic [ref=e714]:
+            - generic [ref=e715]: 📋
+            - heading "Projekt-Stammdaten" [level=3] [ref=e716]
+          - generic [ref=e717]:
+            - generic [ref=e718]:
+              - generic [ref=e719]: Projekt-Name*
+              - textbox [ref=e720]: Tiefbauprojekt Bahnhof Zürich Erweiterung
+            - generic [ref=e721]:
+              - generic [ref=e722]: Bauherr · Account
+              - generic [ref=e723]:
+                - textbox [ref=e724]: SBB AG
+                - link "→ Account" [ref=e725] [cursor=pointer]:
+                  - /url: accounts.html
+            - generic [ref=e726]:
+              - generic [ref=e727]: Volumen (CHF)
+              - textbox [ref=e728]: 48'000'000
+            - generic [ref=e729]:
+              - generic [ref=e730]: Standort
+              - textbox [ref=e731]: Zürich HB
+        - generic [ref=e732]:
+          - generic [ref=e733]:
+            - generic [ref=e734]: 📅
+            - heading "Zeitraum" [level=3] [ref=e735]
+            - generic [ref=e736]: bei Projekten reichen Jahre
+          - generic [ref=e737]:
+            - generic [ref=e738]:
+              - generic [ref=e739]: Von
+              - spinbutton [ref=e740]: "2023"
+            - generic [ref=e741]:
+              - generic [ref=e742]: Bis
+              - spinbutton [ref=e743]: "2025"
+        - generic [ref=e744]:
+          - generic [ref=e745]:
+            - generic [ref=e746]: 📄
+            - heading "Sichtbarkeit" [level=3] [ref=e747]
+          - generic [ref=e748]:
+            - generic [ref=e749]: Ist im ARK-CV
+            - generic [ref=e750]:
+              - generic [ref=e751]: Ja · sichtbar
+              - generic [ref=e752]: Nein
+      - text: 🔍 └ └ 🔍 └ └ 🔍
+    - generic [ref=e753]:
+      - button "Abbrechen" [ref=e754] [cursor=pointer]
+      - button "🗑 Projekt aus Werdegang entfernen" [ref=e755] [cursor=pointer]
+      - button "Speichern & syncen" [ref=e756] [cursor=pointer]
+  - generic [ref=e757]:
+    - generic [ref=e758]:
+      - generic [ref=e759]: SBB
+      - generic [ref=e760]:
+        - heading "Tiefbauprojekt Bahnhof Zürich Erweiterung" [level=2] [ref=e761]
+        - generic [ref=e762]: Bauherr SBB AG · CHF 48 M · 2023–2025 · Zürich
+        - generic [ref=e763]:
+          - generic [ref=e764]: ✓ verknüpft
+          - generic [ref=e765]: aus Briefing v3
+      - button "✕" [ref=e766] [cursor=pointer]
+    - generic [ref=e767]:
+      - generic [ref=e768]:
+        - heading "Meine Beteiligung · SIA → BKP → Rolle" [level=4] [ref=e769]
+        - generic [ref=e770]:
+          - term [ref=e771]: 1. SIA-Phasen *
+          - definition [ref=e772]:
+            - generic [ref=e773]:
+              - generic [ref=e774]:
+                - text: 🔍
+                - textbox "Suchen in 18 SIA-Phasen (6 Haupt + 12 Teilphasen, SIA 112) …" [ref=e775]
+              - generic [ref=e776]:
+                - generic [ref=e777]:
+                  - text: 3 · Projektierung
+                  - generic [ref=e778] [cursor=pointer]: ×
+                - generic [ref=e779]:
+                  - text: └ 32 · Bauprojekt
+                  - generic [ref=e780] [cursor=pointer]: ×
+                - generic [ref=e781]:
+                  - text: 4 · Ausschreibung
+                  - generic [ref=e782] [cursor=pointer]: ×
+                - generic [ref=e783]:
+                  - text: └ 41 · Ausschreibung / Vergleich / Antrag
+                  - generic [ref=e784] [cursor=pointer]: ×
+                - generic [ref=e785]:
+                  - text: 5 · Realisierung
+                  - generic [ref=e786] [cursor=pointer]: ×
+                - generic [ref=e787]:
+                  - text: └ 52 · Ausführung
+                  - generic [ref=e788] [cursor=pointer]: ×
+              - text: └ └ └ └ └ └ └ └ └ └ └ └
+          - term [ref=e789]: 2. BKP-Leistungen *
+          - definition [ref=e790]:
+            - generic [ref=e791]:
+              - generic [ref=e792]:
+                - text: 🔍
+                - textbox "Suchen in 52 BKP-Codes (gefiltert nach SIA 3+4+5) …" [ref=e793]
+              - generic [ref=e794]:
+                - generic [ref=e795]:
+                  - text: 201 · Baugrubenaushub
+                  - generic [ref=e796] [cursor=pointer]: ×
+                - generic [ref=e797]:
+                  - text: 211 · Baumeisterarbeiten
+                  - generic [ref=e798] [cursor=pointer]: ×
+                - generic [ref=e799]:
+                  - text: 216 · Stahlbetonarbeiten Tiefbau
+                  - generic [ref=e800] [cursor=pointer]: ×
+                - generic [ref=e801]:
+                  - text: 239 · Spezialtiefbau
+                  - generic [ref=e802] [cursor=pointer]: ×
+            - generic [ref=e803]: Filter ändert sich live wenn SIA-Phasen oben geändert werden
+          - term [ref=e804]: 3. Rolle *
+          - definition [ref=e805]:
+            - generic [ref=e806]:
+              - generic [ref=e807]:
+                - text: 🔍
+                - textbox "Suchen in 190 Funktionen (Projektmanagement / Bauführung / Bauherrenberatung) …" [ref=e808]
+              - generic [ref=e810]:
+                - text: Gesamtbauleiter
+                - generic [ref=e811] [cursor=pointer]: ×
+            - generic [ref=e812]: Mehrfach-Auswahl möglich falls Kandidat im Projekt mehrere Rollen hatte
+          - term [ref=e813]: Verantwortungsgrad
+          - definition [ref=e814]:
+            - combobox [ref=e815] [cursor=pointer]:
+              - option "Führend" [selected]
+              - option "Mitarbeitend"
+              - option "Beratend"
+          - term [ref=e816]: Volumen / Umfang
+          - definition [ref=e817]:
+            - textbox "z.B. CHF 30 M von 48 M Projekt-Gesamt" [ref=e818]: CHF 30 M
+      - generic [ref=e819]:
+        - heading "Zeitraum der Beteiligung" [level=4] [ref=e820]
+        - generic [ref=e821]:
+          - textbox [ref=e822]: 2023-04
+          - text: bis
+          - textbox [ref=e823]: 2025-06
+          - generic [ref=e824]:
+            - checkbox "laufend" [ref=e825]
+            - text: laufend
+      - generic [ref=e826]:
+        - heading "Projekt-Details · Was / Wie / Wo / Wann / Wieso" [level=4] [ref=e827]
+        - paragraph [ref=e828]: Narrative Beschreibung der Kandidaten-Beteiligung. Dient später als Basis für ARK-CV + Exposé.
+        - generic [ref=e829]:
+          - generic [ref=e830]:
+            - generic [ref=e831]: Was & Wie — Aufgabe und Umsetzung
+            - textbox "Was hat er im Projekt konkret gemacht? Wie hat er es umgesetzt — Methoden, Tools, Herangehensweise?" [ref=e832]: Gesamt-Bauleitung der Tiefbau-Phase (Baugrubenaushub bis Rohbau Keller). BIM-basierte Bauausführung mit wöchentlichen Koordinations-Sitzungen. Abstimmung mit SBB-Planungsteam für Nacht-/Wochenendbetrieb ohne Zugunterbrechung.
+          - generic [ref=e833]:
+            - generic [ref=e834]: Wieso — Kontext / Besonderheit
+            - textbox "Was war das Besondere an diesem Projekt? Warum wurde er dafür ausgewählt? Welche Innovation / Komplexität?" [ref=e835]: "Ausgewählt wegen Erfahrung mit Spezialtiefbau bei sensiblen Infrastruktur-Projekten. Besonderheit: Bau unter laufendem Bahnbetrieb, keine Sperrpausen möglich. Erforderte 24/7-Schichtplanung."
+      - generic [ref=e836]:
+        - heading "Herausforderungen & Lessons Learned" [level=4] [ref=e837]
+        - textbox "Konkrete Krisen / Eskalationen · wie gelöst · was gelernt" [ref=e838]: "Hauptherausforderung: statische Setzungen im Bahnhofs-Untergrund während Aushub — erforderten kurzfristige Umplanung der Pfahlgründung. Gelöst mit Jet-Grouting statt klassischer Spundwand. Lesson: bei Infrastruktur-Projekten immer 2 Gründungs-Varianten in Ausschreibung."
+      - generic [ref=e839]:
+        - heading "Stakeholders & Beteiligte · Firmen und Personen" [level=4] [ref=e840]
+        - paragraph [ref=e841]: Bauherr · Behörden · Nutzer · beteiligte Firmen (andere Unternehmer) · Persönliche Ansprechpartner — wichtig für spätere Matching/Referenzen.
+        - generic [ref=e842]:
+          - generic [ref=e843]: Firmen / Institutionen
+          - generic [ref=e844]:
+            - generic [ref=e845]: Bauherr
+            - strong [ref=e847]: SBB AG
+            - generic [ref=e848]: Key Account · Herr Meier Projektleiter-Seite
+          - generic [ref=e849]:
+            - generic [ref=e850]: Generalplaner
+            - strong [ref=e852]: Basler & Hofmann
+            - generic [ref=e853]: Eingespielte Zusammenarbeit
+          - generic [ref=e854]:
+            - generic [ref=e855]: Spezialtiefbau-Partner
+            - strong [ref=e857]: Keller Grundbau
+            - generic [ref=e858]: Jet-Grouting-Spezialist
+          - generic [ref=e859]:
+            - generic [ref=e860]: Behörde
+            - strong [ref=e862]: BAV · Bundesamt für Verkehr
+            - generic [ref=e863]: strenge Auflagen Bahnbetrieb
+          - button "+ Firma / Institution" [ref=e865] [cursor=pointer]
+        - generic [ref=e866]:
+          - generic [ref=e867]: Personen / Namedropping · Autocomplete matcht bestehende Kandidaten-DB
+          - generic [ref=e868]:
+            - generic [ref=e869]: Chef (Implenia)
+            - generic [ref=e870]:
+              - strong [ref=e871]: Hans Baumann
+              - link "→ Kandidaten-Link" [ref=e872] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e873]: hat ihn geprägt, Mentor
+          - generic [ref=e874]:
+            - generic [ref=e875]: Kollege
+            - generic [ref=e876]:
+              - strong [ref=e877]: Martin Keller
+              - link "→ Kandidaten-Link" [ref=e878] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e879]: Lead Planer · jetzt bei Losinger
+          - generic [ref=e880]:
+            - generic [ref=e881]: Bauherrenvertreter
+            - generic [ref=e882]:
+              - strong [ref=e883]: Maria Huber
+              - generic [ref=e884]: nicht in DB
+            - generic [ref=e885]: als Kandidat anlegbar
+          - button "+ Person (mit Autocomplete)" [ref=e887] [cursor=pointer]
+      - generic [ref=e888]:
+        - heading "Interne Notizen / Tratsch · nur Arkadium" [level=4] [ref=e889]
+        - paragraph [ref=e890]: Informelle Anekdoten, Beobachtungen, Hintergründe über andere Beteiligte, Projekt-Politik — nichts davon landet in Kandidaten-CV oder Kunden-Unterlagen.
+        - textbox "Tratsch · Namedropping · Insider-Info …" [ref=e891]: Kandidat erwähnte dass Hans Baumann (sein damaliger Chef) kurz vor Übergabe mit Basler & Hofmann kollidiert ist wegen Honorar-Nachforderung — intern für Referenz-Check relevant. Martin Keller soll Gerüchten zufolge bei Losinger unglücklich sein und nach Wechsel-Optionen suchen. Bauherr SBB war am Anfang skeptisch gegenüber jungem BAL, am Ende sehr zufrieden.
+    - generic [ref=e892]:
+      - button "Abbrechen" [ref=e893] [cursor=pointer]
+      - button "✕ Beteiligung entfernen" [ref=e894] [cursor=pointer]
+      - button "💾 Speichern" [ref=e896] [cursor=pointer]
+  - generic [ref=e897]:
+    - generic [ref=e898]:
+      - generic [ref=e899]: ↑
+      - generic [ref=e900]:
+        - heading "Dokument hochladen" [level=2] [ref=e901]
+        - generic [ref=e902]: Kategorie wählen, Datei auswählen, optional verknüpfen
+      - button "✕" [ref=e903] [cursor=pointer]
+    - generic [ref=e905]:
+      - generic [ref=e906]:
+        - heading "Datei" [level=4] [ref=e907]
+        - generic [ref=e908] [cursor=pointer]:
+          - generic [ref=e909]: 📄
+          - generic [ref=e910]: Datei hierher ziehen oder klicken
+          - generic [ref=e911]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e912]:
+        - heading "Metadaten" [level=4] [ref=e913]
+        - generic [ref=e914]:
+          - generic [ref=e915]: Kategorie *
+          - combobox [ref=e916] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Original CV"
+            - option "Arbeitszeugnis"
+            - option "Diplom"
+            - option "Projektliste"
+            - option "Arbeitsvertrag"
+            - option "ARK CV"
+            - option "Abstract"
+            - option "Exposé"
+            - option "Assessment"
+            - option "Referenz"
+            - option "Sonstiges"
+          - generic [ref=e917]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e918]
+          - generic [ref=e919]: Notiz
+          - textbox "Kurz-Hinweis (optional) · z.B. Zeitraum, Firma, Kontext" [ref=e920]
+          - generic [ref=e921]: Verknüpfung
+          - combobox [ref=e922] [cursor=pointer]:
+            - option "Kandidat-Level (keine Verknüpfung)" [selected]
+            - option "Prozess · CFO-Suche"
+            - option "Prozess · Holbach CTO"
+            - option "Prozess · Pilatus CFO"
+            - option "Order ORD-2026-042"
+            - option "Order ORD-2025-118"
+          - generic [ref=e923]: Urheber
+          - generic [ref=e924]: Upload · JV (aktueller User · automatisch)
+          - generic [ref=e925]: Vertraulich
+          - generic [ref=e927]:
+            - checkbox "Zugriff nur AM + Zuständiger (z.B. Arbeitsvertrag)" [ref=e928]
+            - text: Zugriff nur AM + Zuständiger (z.B. Arbeitsvertrag)
+      - generic [ref=e929]:
+        - heading "Hinweise" [level=4] [ref=e930]
+        - generic [ref=e931]:
+          - strong [ref=e932]: ARK CV / Abstract / Exposé
+          - text: werden primär über
+          - emphasis [ref=e933]: Tab 9 · Dok-Generator
+          - text: erzeugt — hier nur Upload bestehender Versionen.
+          - strong [ref=e934]: Arbeitsverträge
+          - text: automatisch als vertraulich markiert.
+    - generic [ref=e935]:
+      - button "Abbrechen" [ref=e936] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e938] [cursor=pointer]
+  - generic [ref=e939]:
+    - generic [ref=e940]:
+      - generic [ref=e941]: PDF
+      - generic [ref=e942]:
+        - heading "Original-CV · Tobias Furrer" [level=2] [ref=e943]
+        - generic [ref=e944]: original_cv_furrer_2026-01.pdf · 640 KB · 12.01.2026
+        - generic [ref=e945]:
+          - generic [ref=e946]: Original CV
+          - generic [ref=e947]: Kandidat-Level
+      - button "✕" [ref=e948] [cursor=pointer]
+    - generic [ref=e949]:
+      - generic [ref=e950]:
+        - heading "Metadaten" [level=4] [ref=e951]
+        - generic [ref=e952]:
+          - term [ref=e953]: Dateiname
+          - definition [ref=e954]: original_cv_furrer_2026-01.pdf
+          - term [ref=e955]: Grösse
+          - definition [ref=e956]: 640 KB · 12 Seiten
+          - term [ref=e957]: Kategorie
+          - definition [ref=e958]: Original CV
+          - term [ref=e959]: Verknüpfung
+          - definition [ref=e960]: Kandidat-Level (keine Prozess-Verknüpfung)
+          - term [ref=e961]: Urheber
+          - definition [ref=e962]: Upload · Kandidat (selbst geliefert)
+          - term [ref=e963]: Erstellt
+          - definition [ref=e964]: 12.01.2026 · 14:32
+          - term [ref=e965]: Vertraulich
+          - definition [ref=e966]: Nein
+      - generic [ref=e967]:
+        - heading "Preview" [level=4] [ref=e968]
+        - generic [ref=e969]: "📄 PDF-Preview (in Produktion: inline PDF.js)"
+        - generic [ref=e970]:
+          - button "↓ Download" [ref=e971] [cursor=pointer]
+          - button "↗ In neuem Tab öffnen" [ref=e972] [cursor=pointer]
+          - button "✉ Per E-Mail senden" [ref=e973] [cursor=pointer]
+      - generic [ref=e974]:
+        - heading "Zugriffs-History" [level=4] [ref=e975]
+        - generic [ref=e976]:
+          - generic [ref=e979]:
+            - generic [ref=e980]:
+              - strong [ref=e981]: Heruntergeladen
+              - generic [ref=e982]: 02.04.2026 · 11:18 · JV
+            - generic [ref=e983]: Vorlage für ARK-CV-Generierung (Tab 9)
+          - generic [ref=e986]:
+            - generic [ref=e987]:
+              - strong [ref=e988]: Hochgeladen
+              - generic [ref=e989]: 12.01.2026 · 14:32 · Kandidat
+            - generic [ref=e990]: Per E-Mail-Antwort an Briefing-Termin-Einladung
+    - generic [ref=e991]:
+      - button "Schliessen" [ref=e992] [cursor=pointer]
+      - button "🗑 Archivieren" [ref=e994] [cursor=pointer]
+      - button "↓ Download" [ref=e995] [cursor=pointer]
+  - generic [ref=e996]:
+    - generic [ref=e997]:
+      - generic [ref=e998]: 💬
+      - generic [ref=e999]:
+        - heading "Event-Detail" [level=2] [ref=e1000]
+        - generic [ref=e1001]: —
+      - button "✕" [ref=e1002] [cursor=pointer]
+    - generic [ref=e1005]:
+      - button "Schliessen" [ref=e1006] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e1007] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e1008] [cursor=pointer]
+  - generic [ref=e1009]:
+    - generic [ref=e1010]:
+      - generic [ref=e1011]: ⏰
+      - generic [ref=e1012]:
+        - heading "Neuer Reminder" [level=2] [ref=e1013]
+        - generic [ref=e1014]: Erstelle einen Termin-, Follow-up- oder System-Reminder
+        - generic [ref=e1016]: neu
+      - button "✕" [ref=e1017] [cursor=pointer]
+    - generic [ref=e1018]:
+      - generic [ref=e1019]:
+        - heading "Reminder" [level=4] [ref=e1020]
+        - generic [ref=e1021]:
+          - generic [ref=e1022]: Titel *
+          - textbox "z.B. Coaching-Call vor 2nd Interview" [ref=e1023]
+          - generic [ref=e1024]: Typ *
+          - combobox [ref=e1025] [cursor=pointer]:
+            - option "Follow-up" [selected]
+            - option "Interview-Coaching"
+            - option "Debriefing"
+            - option "Schutzfrist"
+            - option "Onboarding"
+            - option "Check-In (30/90/365 d)"
+            - option "Garantie"
+            - option "Kandidaten-Refresh"
+            - option "Custom"
+          - generic [ref=e1026]: Fällig am *
+          - textbox [ref=e1027]
+          - generic [ref=e1028]: Zuständig *
+          - combobox [ref=e1029] [cursor=pointer]:
+            - option "JV" [selected]
+            - option "PW"
+            - option "LR"
+            - option "MF"
+            - option "NP"
+            - option "NS"
+            - option "Backoffice"
+          - generic [ref=e1030]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e1031]
+          - generic [ref=e1032]: Verknüpfung
+          - combobox [ref=e1033] [cursor=pointer]:
+            - option "Kandidat-Level (keine Verknüpfung)" [selected]
+            - option "Prozess · CFO-Suche"
+            - option "Prozess · Holbach CTO"
+            - option "Prozess · Pilatus CFO"
+            - option "Jobbasket"
+            - option "Assessment-Order ORD-2026-042"
+          - generic [ref=e1034]: Wiederholen
+          - combobox [ref=e1035] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+            - option "Quartalsweise"
+            - option "Jährlich"
+      - generic [ref=e1036]:
+        - heading "Benachrichtigung" [level=4] [ref=e1037]
+        - generic [ref=e1038]:
+          - generic [ref=e1039]: Vorlaufzeit
+          - combobox [ref=e1040] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e1041]: Eskalation
+          - generic [ref=e1042]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead (Standard-Regel)
+    - generic [ref=e1043]:
+      - button "Abbrechen" [ref=e1044] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e1046] [cursor=pointer]

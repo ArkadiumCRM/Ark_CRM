@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – History (Kandidat)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{--gold:#dcb479;--teal:#196774;--gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold30:rgba(220,180,121,.30);--teal15:rgba(25,103,116,.15);--teal30:rgba(25,103,116,.30);--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;--brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);--t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;--green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--blue:#60a5fa;--purple:#a78bfa}
+
+.subtabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c);padding:0 20px;overflow-x:auto}
+.subtab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;font-weight:500}
+.subtab:hover{color:var(--t2)}.subtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.content{padding:16px 20px;max-width:1000px;}
+.hist-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tb-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.tb-btn:hover{border-color:var(--gold30);color:var(--t2)}.tb-btn.primary{background:var(--gold15);border-color:var(--gold30);color:var(--gold)}
+.tb-sep{width:1px;height:20px;background:var(--brd);margin:0 2px}
+.filter-row{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;overflow-x:auto}
+.fp{padding:4px 10px;border-radius:6px;font-size:9px;font-weight:600;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;letter-spacing:.2px;white-space:nowrap}
+.fp:hover{border-color:var(--gold30);color:var(--t2)}.fp.disabled{opacity:.35;cursor:default;pointer-events:none}
+.fp.active{background:var(--gold08);border-color:var(--gold30);color:var(--gold)}
+.fp-cnt{font-weight:700;margin-left:2px}
+.fp-clear{font-size:9px;color:var(--tm);cursor:pointer;padding:4px 8px;display:none;align-items:center;gap:3px}
+.fp-clear:hover{color:var(--t1)}.fp-clear.show{display:inline-flex}
+/* Timeline */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:var(--brd)}
+.tl-group-label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px -32px;padding-left:32px;position:relative}
+.tl-group-label::before{content:'';position:absolute;left:7px;top:50%;width:10px;height:10px;border-radius:50%;background:var(--bg-c);border:2px solid var(--brd);transform:translateY(-50%)}
+.tl-item{position:relative;margin-bottom:2px;cursor:pointer;padding:10px 14px;border-radius:10px;transition:.15s;border:.5px solid transparent}
+.tl-item:hover{background:var(--bg-hv);border-color:var(--brd-s)}
+.tl-item.selected{background:var(--bg-e);border-color:var(--gold30)}
+.tl-dot{position:absolute;left:-25px;top:16px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg-c)}
+.dot-phone{background:var(--green)}.dot-email{background:var(--blue)}.dot-system{background:var(--purple)}
+.dot-meeting{background:var(--gold)}.dot-linkedin{background:#0a66c2}.dot-whatsapp{background:#25d366}
+.tl-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tl-type{font-size:10px;font-weight:600;color:var(--t2)}
+.tl-channel{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600}
+.ch-phone{background:rgba(93,202,165,.08);color:var(--green)}.ch-email{background:rgba(96,165,250,.08);color:var(--blue)}
+.ch-system{background:rgba(167,139,250,.08);color:var(--purple)}.ch-meeting{background:var(--gold08);color:var(--gold)}
+.ch-linkedin{background:rgba(10,102,194,.08);color:#5b9bd5}.ch-whatsapp{background:rgba(37,211,102,.08);color:#25d366}
+.cls-badge{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600;margin-left:auto}
+.cls-confirmed{background:rgba(93,202,165,.08);color:var(--green)}.cls-ai{background:rgba(167,139,250,.08);color:var(--purple)}
+.cls-pending{background:rgba(245,158,11,.08);color:var(--amber)}.cls-manual{background:rgba(96,165,250,.08);color:var(--blue)}
+.tl-body{font-size:12px;color:var(--t2);line-height:1.5}
+.tl-body-preview{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tl-meta{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:10px;color:var(--t3)}
+.tl-meta-tag{font-size:8px;padding:1px 6px;border-radius:3px;background:var(--bg-p);color:var(--t3)}
+.tl-time{white-space:nowrap}
+.sentiment{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px}
+.sent-pos{background:rgba(93,202,165,.08);color:var(--green)}.sent-neg{background:rgba(239,68,68,.08);color:var(--red)}.sent-neu{background:rgba(128,124,116,.08);color:var(--t3)}
+.ai-confirm{font-size:9px;padding:2px 10px;border-radius:4px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:var(--purple);cursor:pointer;transition:.15s;font-weight:600}
+.ai-confirm:hover{background:rgba(167,139,250,.15)}.ai-confirm.done{background:rgba(93,202,165,.08);border-color:rgba(93,202,165,.2);color:var(--green);pointer-events:none}
+/* Drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;backdrop-filter:blur(2px)}.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;right:-520px;width:540px;height:100vh;background:var(--bg-c);border-left:1px solid var(--brd);z-index:110;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.4)}.drawer.open{right:0}
+.drawer-head{padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.drawer-close{width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.15s}.drawer-close:hover{background:var(--bg-hv);color:var(--t1)}
+.drawer-title{font-size:14px;font-weight:600;color:var(--t1);flex:1}
+.drawer-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);flex-shrink:0}
+.drawer-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;font-weight:500;transition:.15s}.drawer-tab:hover{color:var(--t2)}.drawer-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.drawer-body{flex:1;overflow-y:auto;padding:16px 20px}
+.dov-row{display:flex;gap:8px;margin-bottom:8px}.dov-label{font-size:10px;color:var(--t3);width:100px;flex-shrink:0;text-align:right;padding-top:2px}.dov-value{font-size:12px;color:var(--t1);flex:1}
+.dov-section{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--brd-s)}
+.transcript{font-size:12px;color:var(--t2);line-height:1.8;white-space:pre-wrap}.transcript .speaker{font-weight:600;color:var(--t1)}.transcript .ts{font-size:9px;color:var(--t3);margin-left:6px}
+.ai-sum{font-size:12px;color:var(--t2);line-height:1.7}.ai-sum h4{font-size:12px;font-weight:600;color:var(--t1);margin:12px 0 4px}.ai-sum h4:first-child{margin-top:0}
+.ai-tag{display:inline-block;font-size:9px;padding:2px 8px;border-radius:4px;margin:2px;font-weight:500}
+.ai-action{background:rgba(220,180,121,.08);border:.5px solid var(--gold30);color:var(--gold)}
+.ai-flag{background:rgba(239,68,68,.06);border:.5px solid rgba(239,68,68,.12);color:var(--red)}
+.ai-insight{background:rgba(139,92,246,.06);border:.5px solid rgba(139,92,246,.12);color:var(--purple)}
+/* Email thread */
+.email-thread{display:flex;flex-direction:column;gap:12px}
+.email-msg{padding:12px;border-radius:10px;background:var(--bg-e);border:.5px solid var(--brd-s)}
+.email-msg.outgoing{border-left:3px solid var(--teal)}.email-msg.incoming{border-left:3px solid var(--gold)}
+.em-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.em-from{font-size:11px;font-weight:600;color:var(--t1)}
+.em-dir{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600}
+.em-dir-out{background:var(--teal15);color:#5bb8c9}.em-dir-in{background:var(--gold08);color:var(--gold)}
+.em-date{font-size:9px;color:var(--t3);margin-left:auto}
+.em-subject{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.em-body{font-size:12px;color:var(--t2);line-height:1.6;white-space:pre-wrap}
+.em-attachments{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.em-att{font-size:9px;padding:4px 10px;border-radius:6px;background:var(--bg-p);border:.5px solid var(--brd-s);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:4px}.em-att:hover{border-color:var(--gold30);color:var(--gold)}
+.email-reply-bar{padding:12px 0 0;border-top:1px solid var(--brd-s);margin-top:8px;display:flex;gap:8px}
+.reply-btn{padding:8px 20px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:.15s}
+.reply-primary{background:var(--teal15);border:1px solid var(--teal30);color:#5bb8c9}.reply-primary:hover{background:rgba(25,103,116,.25)}
+.reply-secondary{background:transparent;border:1px solid var(--brd);color:var(--t3)}.reply-secondary:hover{border-color:var(--gold30);color:var(--t2)}
+.new-entry-float{position:fixed;bottom:24px;right:24px;z-index:50}
+.new-entry-btn{width:48px;height:48px;border-radius:14px;background:var(--gold);border:none;color:var(--bg-c);font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(220,180,121,.3);transition:.2s;display:flex;align-items:center;justify-content:center;font-weight:700}
+.new-entry-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(220,180,121,.4)}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin-top:12px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+/* Search bar */
+.hist-search{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg-e);border-radius:10px;border:1.5px solid var(--brd-s);margin-bottom:10px;transition:border-color .2s}
+.hist-search:focus-within{border-color:var(--gold30);box-shadow:0 0 0 3px rgba(220,180,121,.06)}
+.hist-search-icon{font-size:13px;color:var(--tm);flex-shrink:0}
+.hist-search-input{flex:1;background:none;border:none;outline:none;color:var(--t1);font-size:12px;font-family:inherit}.hist-search-input::placeholder{color:var(--tm)}
+.hist-search-clear{width:20px;height:20px;border-radius:5px;display:none;align-items:center;justify-content:center;font-size:10px;color:var(--tm);cursor:pointer;transition:.15s;flex-shrink:0;border:none;background:none}.hist-search-clear:hover{color:var(--t1);background:var(--bg-hv)}
+/* Date range */
+.date-range{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.date-range label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px}
+.date-range input{padding:5px 8px;border-radius:6px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:11px;font-family:inherit;outline:none;width:130px}
+.date-range input:focus{border-color:var(--gold30)}
+.date-range-clear{font-size:9px;color:var(--tm);cursor:pointer;padding:4px 8px;border-radius:4px;transition:.15s;display:none;border:none;background:none}.date-range-clear:hover{color:var(--t1);background:var(--bg-hv)}.date-range-clear.show{display:inline-flex}
+/* Call stats */
+.call-stats{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.cs-card{padding:8px 12px;background:var(--bg-e);border-radius:8px;border:.5px solid var(--brd-s);display:flex;align-items:center;gap:8px;min-width:110px}
+.cs-value{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.cs-label{font-size:9px;color:var(--t3);line-height:1.3}
+/* Verknüpfungs badges */
+.tl-links{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.tl-link-badge{font-size:8px;padding:2px 7px;border-radius:4px;font-weight:600;cursor:pointer;transition:.15s}
+.tlb-proc{background:var(--teal15);border:.5px solid var(--teal30);color:#5bb8c9}
+.tlb-proc:hover{background:rgba(25,103,116,.25)}
+.tlb-job{background:var(--gold08);border:.5px solid var(--gold30);color:var(--gold)}
+.tlb-job:hover{background:rgba(220,180,121,.15)}
+.tlb-mandate{background:rgba(139,92,246,.06);border:.5px solid rgba(139,92,246,.15);color:var(--purple)}
+.tlb-mandate:hover{background:rgba(139,92,246,.12)}
+/* Week group (replaces day group) */
+.tl-week-label{font-size:11px;font-weight:600;color:var(--t2);margin:24px 0 8px -32px;padding:6px 12px 6px 32px;position:relative;background:rgba(220,180,121,.03);border-radius:6px;display:flex;align-items:center;justify-content:space-between}
+.tl-week-label::before{content:'';position:absolute;left:7px;top:50%;width:10px;height:10px;border-radius:50%;background:var(--bg-c);border:2px solid var(--gold30);transform:translateY(-50%)}
+.tl-week-cnt{font-size:9px;color:var(--t3);font-weight:500}
+/* Better card separation */
+.tl-item{position:relative;margin-bottom:6px;cursor:pointer;padding:12px 14px;border-radius:10px;transition:.15s;border:.5px solid var(--brd-s);background:var(--bg-e)}
+.tl-item:hover{background:var(--bg-hv);border-color:var(--brd)}
+.tl-item.selected{background:rgba(220,180,121,.04);border-color:var(--gold30)}
+.tl-item-date{font-size:9px;color:var(--tm);position:absolute;right:14px;top:12px}
+/* Reminder tab in drawer */
+.rem-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.rem-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-e);border-radius:8px;border:.5px solid var(--brd-s)}
+.rem-item.rem-done{opacity:.45}.rem-item.rem-done .rem-text{text-decoration:line-through}
+.rem-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--brd);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:.15s;flex-shrink:0}
+.rem-check:hover{border-color:var(--green);color:var(--green)}.rem-check.checked{background:rgba(93,202,165,.12);border-color:var(--green);color:var(--green)}
+.rem-body{flex:1;min-width:0}
+.rem-text{font-size:12px;color:var(--t1)}
+.rem-meta{font-size:9px;color:var(--t3);margin-top:2px}
+.rem-priority{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600;flex-shrink:0}
+.rem-p-high{background:rgba(239,68,68,.08);color:var(--red)}.rem-p-med{background:rgba(245,158,11,.08);color:var(--amber)}.rem-p-low{background:rgba(128,124,116,.08);color:var(--t3)}
+.rem-new{padding:12px;background:var(--bg-p);border-radius:10px;border:1px dashed var(--brd)}
+.rem-new-title{font-size:10px;font-weight:600;color:var(--t2);margin-bottom:8px}
+.rem-new-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.rem-new-input{flex:1;padding:7px 10px;border-radius:7px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none}
+.rem-new-input:focus{border-color:var(--gold30)}
+.rem-new-select{padding:7px 10px;border-radius:7px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:11px;font-family:inherit;outline:none;cursor:pointer}
+.rem-new-btn{padding:7px 18px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;background:var(--gold15);border:1px solid var(--gold30);color:var(--gold);transition:.15s}
+.rem-new-btn:hover{background:var(--gold30)}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab active">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+<div class="content">
+<!-- Call Stats -->
+<div class="call-stats" id="callStats"></div>
+<!-- Toolbar -->
+<div class="hist-toolbar">
+  <button class="tb-btn primary" onclick="openNewEntry()">+ Neuer Eintrag</button>
+  <div class="tb-sep"></div>
+  <span style="font-size:10px;color:var(--t3)" id="entryCount"></span>
+</div>
+<!-- Search -->
+<div class="hist-search">
+  <span class="hist-search-icon">🔍</span>
+  <input type="text" class="hist-search-input" id="histSearch" placeholder="In History suchen…" oninput="applyFilters()" autocomplete="off">
+  <button class="hist-search-clear" id="histSearchClear" onclick="document.getElementById('histSearch').value='';applyFilters();this.style.display='none'">✕</button>
+</div>
+<!-- Date range -->
+<div class="date-range">
+  <label>Von</label><input type="date" id="dateFrom" onchange="applyFilters()">
+  <label>Bis</label><input type="date" id="dateTo" onchange="applyFilters()">
+  <button class="date-range-clear" id="dateClear" onclick="document.getElementById('dateFrom').value='';document.getElementById('dateTo').value='';applyFilters();this.classList.remove('show')">✕ Datum reset</button>
+</div>
+<!-- Category filters -->
+<div class="filter-row" id="filterRow"></div>
+<div class="timeline" id="timeline"></div>
+<div class="kb-bar">
+  <span class="kb-hint-item"><span class="kb-key">↑</span><span class="kb-key">↓</span> Navigation</span>
+  <span class="kb-hint-item"><span class="kb-key">Enter</span> Drawer öffnen</span>
+  <span class="kb-hint-item"><span class="kb-key">N</span> Neuer Eintrag</span>
+  <span class="kb-hint-item"><span class="kb-key">Esc</span> Schliessen</span>
+</div>
+</div>
+<div class="new-entry-float"><button class="new-entry-btn" title="Neuer Eintrag (N)" onclick="openNewEntry()">+</button></div>
+<div class="drawer-overlay" id="dOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">✕</button><div class="drawer-title" id="dTitle"></div></div>
+  <div class="drawer-tabs" id="dTabs"></div>
+  <div class="drawer-body" id="dBody"></div>
+</div>
+<script>
+const CH_MAP={Phone:{dot:'dot-phone',ch:'ch-phone',label:'Phone'},Email:{dot:'dot-email',ch:'ch-email',label:'Email'},System:{dot:'dot-system',ch:'ch-system',label:'System'},'In-Person':{dot:'dot-meeting',ch:'ch-meeting',label:'Meeting'},LinkedIn:{dot:'dot-linkedin',ch:'ch-linkedin',label:'LinkedIn'},Whatsapp:{dot:'dot-whatsapp',ch:'ch-whatsapp',label:'WhatsApp'}};
+
+// isCall: determines if Transkript + AI tabs show. true for all Phone entries.
+// Exception: System auto entries Briefing/Rebriefing → output goes to Briefing-Maske, no transcript.
+const ENTRIES=[
+  // CASE 1: Regular reached call → Übersicht + Transkript + AI-Summary
+  {id:1,type:'Erreicht - CV expected',cat:'Erreicht',ch:'Phone',
+   date:'28.03.2026',time:'10:00',by:'PW',cls:'confirmed',
+   body:'Kandidat schickt CV zu und Briefing-Termin vereinbart. Aktuell Gesamtprojektleiter bei mittlerer GU, sucht grössere Strukturen. Stärken: Spezialtiefbau, Tunnelbau.',
+   duration:'22:10',direction:'outgoing',sentiment:'positive',
+   transcript:`[00:00] PW: Herr Muster, danke dass Sie sich die Zeit nehmen.\n[00:08] MM: Gerne, ich bin gespannt was Sie haben.\n[00:20] PW: Erzählen Sie mir zuerst von Ihrer aktuellen Situation...\n[03:15] MM: Ich bin seit 4 Jahren Gesamtprojektleiter, leite Projekte bis CHF 120 Mio. Spezialtiefbau hauptsächlich.\n[07:40] PW: Was suchen Sie als nächsten Schritt?\n[08:10] MM: Grössere Strukturen, mehr Verantwortung. Idealerweise eine GL-nahe Position.\n[12:00] PW: Können Sie mir Ihren aktuellen CV und die letzten Arbeitszeugnisse zusenden?\n[12:15] MM: Ja, ich schicke alles diese Woche noch.\n[15:30] PW: Perfekt. Ich schlage vor wir machen einen ausführlichen Briefing-Termin...\n[18:00] PW: Wie sieht es am Donnerstag 10 Uhr aus?\n[18:15] MM: Passt mir. Donnerstag 10 Uhr.\n[20:00] PW: Dann bis Donnerstag, vielen Dank Herr Muster.\n[20:10] MM: Danke Ihnen, bis dann.`,
+   aiSummary:{text:'Erstgespräch positiv. Kandidat ist aktiv wechselwillig, leitet aktuell CHF 120M+ Projekte. Sucht GL-nahe Position in grösserer Struktur. CV und Zeugnisse werden diese Woche zugestellt.',actions:['CV-Eingang überwachen','Briefing-Termin Do 28.03. vorbereiten'],flags:[],insights:['4 Jahre in aktueller Position — Wechsel überfällig','Spezialtiefbau + Tunnelbau = Nischen-Profil','Kündigung bereits eingereicht, keine Frist']}},
+
+  // CASE 2: Briefing call → Übersicht + Transkript + "AI → Briefing" (NOT AI-Summary)
+  {id:2,type:'Erreicht - GO Termin aus oder im Briefing',cat:'Erreicht',ch:'Phone',
+   date:'31.03.2026',time:'14:22',by:'PW',cls:'confirmed',isBriefingCall:true,
+   body:'GO-Termin geführt. 6 Preleads besprochen, 5 davon Oral GO. Porr abgelehnt (Standort Basel zu weit). Kandidat bevorzugt Raum Zürich/Bern.',
+   duration:'18:34',direction:'outgoing',sentiment:'positive',
+   transcript:`[00:00] PW: Grüezi Herr Muster, danke für die Zeit heute.\n[00:05] MM: Guten Tag Herr Wiederkehr, gerne.\n[00:12] PW: Ich habe sechs Positionen zusammengestellt. Starten wir mit Implenia, Gesamtprojektleiter Tiefbau...\n[02:45] MM: Implenia klingt spannend, ja, bin ich dabei.\n[04:30] PW: Strabag, Abteilungsleiter Infrastruktur in Winterthur...\n[05:15] MM: Auch interessant. Winterthur ist gut erreichbar.\n[08:20] PW: Was halten Sie von Porr Suisse in Basel?\n[08:35] MM: Basel ist mir zu weit. Über 90 Minuten einfach.\n[09:00] PW: Verstanden. Dann Brun AG, Bauleiter Hochbau in Luzern...\n[12:30] MM: Luzern geht, ja. Hochbau wäre mal was anderes.\n[15:00] PW: Losinger Marazzi und Kümmerle Bau...\n[16:20] MM: Beide spannend. Bin für alles offen.`,
+   aiSummary:{text:'GO-Termin produktiv. 5 von 6 Preleads akzeptiert. Porr abgelehnt wegen Pendeldistanz >90min.',actions:['Mündliche GOs Email versenden','Porr als Rejected markieren (Location)'],flags:[],insights:['Kandidat erwähnt Gehaltsanpassung beim aktuellen AG','Verfügbar ab sofort']}},
+
+  // CASE 3: NE call → ONLY Übersicht (no transkript, no AI)
+  {id:3,type:'Kontaktberührung - NE - Combox Nachricht',cat:'Kontaktberührung',ch:'Phone',
+   date:'25.03.2026',time:'16:40',by:'PW',cls:'confirmed',
+   body:'Nachricht auf Combox hinterlassen. Bitte um Rückruf bezüglich Briefing-Termin.',
+   duration:'00:18',direction:'outgoing'},
+
+  // CASE 4: Email outgoing → Übersicht + Email-Thread (with Reply buttons)
+  {id:4,type:'Emailverkehr - Mündliche GOs versendet',cat:'Emailverkehr',ch:'Email',
+   date:'31.03.2026',time:'14:45',by:'PW',cls:'confirmed',
+   body:'Mündliche GO-Freigaben versendet. 5 Positionen: Implenia, Strabag, Brun AG, Losinger Marazzi, Kümmerle Bau.',
+   email:{thread:[
+     {dir:'out',from:'Peter Wiederkehr',to:'Max Muster',date:'31.03.2026 14:45',subject:'Mündliche GO-Freigaben — 5 Positionen',
+      body:`Guten Tag Herr Muster,\n\nVielen Dank für das heutige Gespräch. Wie besprochen, hier die Positionen für die ich Ihr mündliches GO einholen möchte:\n\n1. Gesamtprojektleiter Tiefbau — Implenia AG, Zürich\n2. Abteilungsleiter Infrastruktur — Strabag AG, Winterthur\n3. Bauleiter Hochbau — Brun AG, Luzern\n4. Projektleiterin Tiefbau — Losinger Marazzi, Bern\n5. Bereichsleiter Spezialtiefbau — Kümmerle Bau, Winterthur\n\nBitte bestätigen Sie mir schriftlich, für welche Positionen Sie Ihr GO geben.\n\nFreundliche Grüsse\nPeter Wiederkehr\nARK Executive Search`,
+      attachments:['GO_Positionen_MaxMuster.pdf']}]}},
+
+  // CASE 5: Email incoming with reply → 2-message thread
+  {id:5,type:'Emailverkehr - Allgemeine Kommunikation',cat:'Emailverkehr',ch:'Email',
+   date:'27.03.2026',time:'09:12',by:'MM',cls:'manual',
+   body:'Kandidat sendet aktuellen CV und zwei Arbeitszeugnisse.',
+   email:{thread:[
+     {dir:'in',from:'Max Muster',to:'Peter Wiederkehr',date:'27.03.2026 09:12',subject:'CV und Zeugnisse',
+      body:`Guten Tag Herr Wiederkehr,\n\nAnbei mein aktualisierter CV sowie die letzten zwei Arbeitszeugnisse.\n\nFreundliche Grüsse\nMax Muster`,attachments:['CV_MaxMuster_2026.pdf','Zeugnis_Marti_AG.pdf','Zeugnis_Implenia.pdf']},
+     {dir:'out',from:'Peter Wiederkehr',to:'Max Muster',date:'27.03.2026 11:30',subject:'Re: CV und Zeugnisse',
+      body:`Besten Dank Herr Muster, alles erhalten!\n\nIch melde mich in Kürze mit konkreten Vorschlägen.\n\nBeste Grüsse\nPeter Wiederkehr`,attachments:[]}]}},
+
+  // CASE 6: Interview call with links → Transkript + AI-Summary + Verknüpfungs-Badges
+  {id:6,type:'Erreicht - Debriefing 2nd Interview',cat:'Interviewprozess',ch:'Phone',
+   date:'26.03.2026',time:'17:30',by:'JV',cls:'pending',
+   links:[{type:'proc',label:'Prozess Brun AG',id:'P-2026-035'},{type:'job',label:'Bauleiter Hochbau'},{type:'mandate',label:'Einzelmandat'}],
+   body:'Debriefing nach 2. Interview bei Brun AG. Kandidat sehr zufrieden, gute Chemie mit Team. Baustellenbesichtigung positiv. Kunde will zeitnah Offer vorbereiten.',
+   duration:'08:20',direction:'outgoing',sentiment:'positive',
+   transcript:`[00:00] JV: Wie lief es bei Brun?\n[00:10] MM: Sehr gut. Herr Keller war dabei und der ganze Teamleiter-Kreis.\n[01:30] MM: Die Baustellenbesichtigung hat mich überzeugt. Grosses Projekt, moderner Maschinenpark.\n[03:00] JV: Gab es kritische Fragen?\n[03:15] MM: Sie wollten wissen warum Hochbau und nicht weiter Tiefbau. Ich habe erklärt dass ich breiter werden will.\n[05:00] JV: Wie stehen Sie persönlich zu Brun?\n[05:20] MM: Aktuell mein Favorit. Gute Leute, spannende Projekte, Luzern passt.\n[07:00] JV: Herr Keller hat mir signalisiert dass sie ein Offer vorbereiten wollen.\n[07:30] MM: Das wäre natürlich super. Luzern ist mein bevorzugter Standort.\n[08:00] JV: Gut. Ich bespreche das mit dem AM und melde mich.`,
+   aiSummary:{text:'2. Interview bei Brun AG sehr positiv. Baustellenbesichtigung hat Kandidat überzeugt. Brun AG aktuell Favorit des Kandidaten. Offer-Phase erwartet.',actions:['AM SP informieren: Offer-Vorbereitung bei Brun AG','Kandidat über Zeitplan informieren','Gehaltserwartung nochmals abklären'],flags:['Kandidat hat klaren Favoriten — Risiko dass andere Prozesse vernachlässigt werden'],insights:['Kandidat bevorzugt Brun AG klar gegenüber anderen Optionen','Gehaltsrahmen CHF 135k passt laut Kandidat','Luzern als Standort ein Plus — kurzer Arbeitsweg']}},
+
+  // CASE 7: System auto → ONLY Übersicht (no transkript, no AI)
+  {id:7,type:'Briefing',cat:'System',ch:'System',
+   date:'28.03.2026',time:'10:55',by:'System',cls:'confirmed',isAuto:true,isBriefingSystem:true,
+   body:'Briefing-Maske erstmalig gespeichert. Stage-Trigger: Premarket → Active Sourcing (alle Bedingungen erfüllt: Briefing + Original CV + Diplom + Arbeitszeugnis).'}
+];
+
+// Count open classifications
+const openCls=ENTRIES.filter(e=>e.cls==='pending'||e.cls==='ai').length;
+document.getElementById('entryCount').textContent=`${ENTRIES.length} Einträge · ${openCls} offen zur Klassifizierung`;
+
+// Build filters
+const catCounts={};ENTRIES.forEach(e=>{catCounts[e.cat]=(catCounts[e.cat]||0)+1});
+const filterRow=document.getElementById('filterRow');
+let fHTML=`<button class="fp active" data-cat="all" onclick="setFilter('all',this)">Alle<span class="fp-cnt">${ENTRIES.length}</span></button>`;
+['Kontaktberührung','Erreicht','Emailverkehr','Messaging','Interviewprozess','Placementprozess','Refresh Kandidatenpflege','Mandatsakquise','Erfolgsbasis','Assessment','System'].forEach(cat=>{
+  const cnt=catCounts[cat]||0;fHTML+=`<button class="fp${cnt===0?' disabled':''}" data-cat="${cat}" onclick="${cnt?`setFilter('${cat}',this)`:'return'}">${cat}<span class="fp-cnt">${cnt}</span></button>`;
+});
+fHTML+='<span class="fp-clear" id="fpClear" onclick="setFilter(\'all\',document.querySelector(\'[data-cat=all]\'))">✕ Reset</span>';
+filterRow.innerHTML=fHTML;
+// Initial count
+const initOpen=ENTRIES.filter(e=>e.cls==='pending'||e.cls==='ai').length;
+document.getElementById('entryCount').textContent=`${ENTRIES.length} Einträge · ${initOpen} offen zur Klassifizierung`;
+
+// Call stats
+function buildCallStats(){
+  const calls=ENTRIES.filter(e=>e.ch==='Phone');
+  const reached=calls.filter(e=>e.cat!=='Kontaktberührung');
+  const totalMin=calls.reduce((s,e)=>{
+    if(!e.duration)return s;
+    const p=e.duration.split(':');return s+parseInt(p[0])*60+parseInt(p[1])+(parseInt(p[2]||0)/60);
+  },0);
+  const reachedTimes=reached.filter(e=>e.time).map(e=>parseInt(e.time.split(':')[0]));
+  let bestTime='—';
+  if(reachedTimes.length){
+    const counts={};reachedTimes.forEach(h=>{const slot=h<12?'Morgens (8–12)':h<14?'Mittag (12–14)':h<17?'Nachmittag (14–17)':'Abend (17+)';counts[slot]=(counts[slot]||0)+1});
+    bestTime=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+  }
+  document.getElementById('callStats').innerHTML=`
+    <div class="cs-card"><div class="cs-value" style="color:var(--t1)">${calls.length}</div><div class="cs-label">Anrufe<br>gesamt</div></div>
+    <div class="cs-card"><div class="cs-value" style="color:var(--green)">${reached.length}</div><div class="cs-label">Erreicht<br>(${calls.length?Math.round(reached.length/calls.length*100):0}%)</div></div>
+    <div class="cs-card"><div class="cs-value" style="color:var(--gold)">${Math.round(totalMin)}</div><div class="cs-label">Minuten<br>Gesprächszeit</div></div>
+    <div class="cs-card"><div class="cs-value" style="color:var(--blue);font-size:13px">${bestTime}</div><div class="cs-label">Beste<br>Erreichbarkeit</div></div>`;
+}
+buildCallStats();
+
+// Week helper
+function getWeekLabel(dateStr){
+  const p=dateStr.split('.');const d=new Date(+p[2],+p[1]-1,+p[0]);
+  const now=new Date('2026-03-31');const diff=Math.floor((now-d)/86400000);
+  if(diff<7)return 'Diese Woche';if(diff<14)return 'Letzte Woche';if(diff<21)return 'Vor 2 Wochen';if(diff<28)return 'Vor 3 Wochen';
+  return 'Vor '+Math.floor(diff/7)+' Wochen';
+}
+function parseDateDE(s){const p=s.split('.');return new Date(+p[2],+p[1]-1,+p[0])}
+
+// Unified filter function
+let activeCat='all';
+function applyFilters(){
+  const q=(document.getElementById('histSearch').value||'').toLowerCase().trim();
+  const from=document.getElementById('dateFrom').value;
+  const to=document.getElementById('dateTo').value;
+  const clearBtn=document.getElementById('histSearchClear');
+  clearBtn.style.display=q?'flex':'none';
+  document.getElementById('dateClear').classList.toggle('show',!!(from||to));
+
+  let filtered=[...ENTRIES];
+  if(activeCat!=='all')filtered=filtered.filter(e=>e.cat===activeCat);
+  if(q)filtered=filtered.filter(e=>e.type.toLowerCase().includes(q)||e.body.toLowerCase().includes(q)||(e.by||'').toLowerCase().includes(q));
+  if(from){const fd=new Date(from);filtered=filtered.filter(e=>parseDateDE(e.date)>=fd)}
+  if(to){const td=new Date(to);td.setHours(23,59,59);filtered=filtered.filter(e=>parseDateDE(e.date)<=td)}
+
+  const openCls=filtered.filter(e=>e.cls==='pending'||e.cls==='ai').length;
+  document.getElementById('entryCount').textContent=`${filtered.length} Einträge${openCls?' · '+openCls+' offen':''}`;
+  renderTimeline(filtered);
+}
+window.applyFilters=applyFilters;
+
+function renderTimeline(entries){
+  const tl=document.getElementById('timeline');tl.innerHTML='';let lastWeek='';
+  entries.forEach((e,idx)=>{
+    const week=getWeekLabel(e.date);
+    if(week!==lastWeek){
+      lastWeek=week;
+      const weekEntries=entries.filter(x=>getWeekLabel(x.date)===week);
+      tl.innerHTML+=`<div class="tl-week-label"><span>${week}</span><span class="tl-week-cnt">${weekEntries.length} Einträge</span></div>`;
+    }
+    const cm=CH_MAP[e.ch]||CH_MAP.System;
+    let clsBadge='';
+    if(e.cls==='confirmed')clsBadge='<span class="cls-badge cls-confirmed">✓ Bestätigt</span>';
+    else if(e.cls==='ai')clsBadge=`<span class="cls-badge cls-ai">AI</span><button class="ai-confirm" onclick="event.stopPropagation();this.textContent='✓';this.classList.add('done')">Bestätigen</button>`;
+    else if(e.cls==='pending')clsBadge='<span class="cls-badge cls-pending">⏳ Offen</span>';
+    else if(e.cls==='manual')clsBadge='<span class="cls-badge cls-manual">Manuell</span>';
+    let meta='';
+    if(e.duration)meta+=`<span class="tl-meta-tag">⏱ ${e.duration}</span>`;
+    if(e.direction)meta+=`<span class="tl-meta-tag">${e.direction==='outgoing'?'↗ Aus':'↙ Ein'}</span>`;
+    if(e.sentiment)meta+=`<span class="sentiment sent-${e.sentiment==='positive'?'pos':e.sentiment==='negative'?'neg':'neu'}">${e.sentiment==='positive'?'😊 Positiv':e.sentiment==='negative'?'😟 Negativ':'😐 Neutral'}</span>`;
+    if(e.isAuto)meta+=`<span class="tl-meta-tag">⚡ Auto</span>`;
+    meta+=`<span class="tl-time">${e.time} · ${e.by}</span>`;
+    // Links
+    let linksHTML='';
+    if(e.links&&e.links.length){
+      linksHTML='<div class="tl-links">';
+      e.links.forEach(l=>{
+        const cls=l.type==='proc'?'tlb-proc':l.type==='job'?'tlb-job':'tlb-mandate';
+        linksHTML+=`<span class="tl-link-badge ${cls}" onclick="event.stopPropagation()">${l.type==='proc'?'🔄':l.type==='job'?'💼':'📋'} ${l.label}</span>`;
+      });
+      linksHTML+='</div>';
+    }
+    const div=document.createElement('div');div.className='tl-item';div.dataset.idx=idx;div.dataset.cat=e.cat;
+    div.onclick=()=>openDrawer(idx);
+    div.innerHTML=`<div class="tl-dot ${cm.dot}"></div>
+      <span class="tl-item-date">${e.date}</span>
+      <div class="tl-head"><span class="tl-channel ${cm.ch}">${cm.label}</span><span class="tl-type">${e.type}</span>${clsBadge}</div>
+      <div class="tl-body"><div class="tl-body-preview">${e.body}</div></div>
+      ${linksHTML}
+      <div class="tl-meta">${meta}</div>`;
+    tl.appendChild(div);
+  });
+}
+renderTimeline(ENTRIES);
+
+let activeFilterX='all',filteredEntries=[...ENTRIES];
+function setFilter(cat,el){
+  activeCat=cat;
+  document.querySelectorAll('.fp').forEach(f=>f.classList.remove('active'));
+  el.classList.add('active');document.getElementById('fpClear').classList.toggle('show',cat!=='all');
+  applyFilters();
+}
+window.setFilter=setFilter;
+
+// Drawer
+let currentEntry=null;
+function getVisibleEntries(){
+  // Reconstruct from current filter state
+  let filtered=[...ENTRIES];
+  const q=(document.getElementById('histSearch').value||'').toLowerCase().trim();
+  const from=document.getElementById('dateFrom').value;
+  const to=document.getElementById('dateTo').value;
+  if(activeCat!=='all')filtered=filtered.filter(e=>e.cat===activeCat);
+  if(q)filtered=filtered.filter(e=>e.type.toLowerCase().includes(q)||e.body.toLowerCase().includes(q)||(e.by||'').toLowerCase().includes(q));
+  if(from){const fd=new Date(from);filtered=filtered.filter(e=>parseDateDE(e.date)>=fd)}
+  if(to){const td=new Date(to);td.setHours(23,59,59);filtered=filtered.filter(e=>parseDateDE(e.date)<=td)}
+  return filtered;
+}
+function openDrawer(idx){
+  const entries=getVisibleEntries();
+  const e=entries[idx];if(!e)return;currentEntry=e;
+  document.querySelectorAll('.tl-item').forEach(i=>i.classList.remove('selected'));
+  document.querySelectorAll('.tl-item')[idx]?.classList.add('selected');
+  document.getElementById('dTitle').textContent=e.type;
+  // Build tabs: Übersicht always. Email if email.
+  // Transkript + AI only for ANSWERED calls (not NE/Kontaktberührung, not System auto)
+  // Briefing calls: Transkript YES, AI-Summary NO (output → Briefing-Maske)
+  const tabs=[{id:'overview',label:'Übersicht'}];
+  if(e.email)tabs.push({id:'email',label:'Email-Thread'});
+  const isCall=e.ch==='Phone';
+  const isAnswered=isCall&&e.cat!=='Kontaktberührung'&&!e.isBriefingSystem;
+  if(isAnswered)tabs.push({id:'transcript',label:'Transkript'});
+  if(isAnswered&&!e.isBriefingCall)tabs.push({id:'ai',label:'AI-Summary'});
+  if(isAnswered&&e.isBriefingCall)tabs.push({id:'briefing_hint',label:'AI → Briefing'});
+  // Non-call entries can still have AI summary
+  if(!isCall&&e.aiSummary)tabs.push({id:'ai',label:'AI-Summary'});
+  // Reminders always available
+  tabs.push({id:'reminders',label:'Reminders'});
+  document.getElementById('dTabs').innerHTML=tabs.map((t,i)=>`<div class="drawer-tab${i===0?' active':''}" onclick="switchTab('${t.id}',this)">${t.label}</div>`).join('');
+  renderTab(tabs[0].id,e);
+  document.getElementById('dOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('dOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.querySelectorAll('.tl-item').forEach(i=>i.classList.remove('selected'));currentEntry=null;
+}
+function switchTab(tabId,el){
+  document.querySelectorAll('.drawer-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');renderTab(tabId,currentEntry);
+}
+function renderTab(tabId,e){
+  const body=document.getElementById('dBody');
+  if(tabId==='overview'){
+    let h=`<div class="dov-section">Details</div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Kategorie</div><div class="dov-value">${e.cat}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Activity-Type</div><div class="dov-value">${e.type}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Kanal</div><div class="dov-value">${e.ch}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Datum</div><div class="dov-value">${e.date} ${e.time}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Erfasst von</div><div class="dov-value">${e.by}</div></div>`;
+    if(e.duration)h+=`<div class="dov-row"><div class="dov-label">Dauer</div><div class="dov-value">${e.duration}</div></div>`;
+    if(e.direction)h+=`<div class="dov-row"><div class="dov-label">Richtung</div><div class="dov-value">${e.direction==='outgoing'?'↗ Ausgehend':'↙ Eingehend'}</div></div>`;
+    if(e.sentiment)h+=`<div class="dov-row"><div class="dov-label">Sentiment</div><div class="dov-value"><span class="sentiment sent-${e.sentiment==='positive'?'pos':'neg'}">${e.sentiment==='positive'?'😊 Positiv':'😟 Negativ'}</span></div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Status</div><div class="dov-value">${e.cls==='confirmed'?'✓ Bestätigt':e.cls==='ai'?'AI-Vorschlag':e.cls==='pending'?'⏳ Offen':'Manuell'}</div></div>`;
+    if(e.isAuto)h+=`<div class="dov-row"><div class="dov-label">Quelle</div><div class="dov-value">⚡ Automatisch</div></div>`;
+    h+=`<div class="dov-section">Notizen</div><div style="font-size:12px;color:var(--t2);line-height:1.7">${e.body}</div>`;
+    body.innerHTML=h;
+  }
+  else if(tabId==='email'&&e.email){
+    let h='<div class="email-thread">';
+    e.email.thread.forEach(m=>{
+      h+=`<div class="email-msg ${m.dir==='out'?'outgoing':'incoming'}"><div class="em-head"><span class="em-from">${m.from}</span><span class="em-dir ${m.dir==='out'?'em-dir-out':'em-dir-in'}">${m.dir==='out'?'Gesendet':'Empfangen'}</span><span class="em-date">${m.date}</span></div><div class="em-subject">${m.subject}</div><div class="em-body">${m.body}</div>`;
+      if(m.attachments?.length){h+='<div class="em-attachments">';m.attachments.forEach(a=>h+=`<span class="em-att">📎 ${a}</span>`);h+='</div>'}
+      h+='</div>';
+    });
+    h+=`</div><div class="email-reply-bar"><button class="reply-btn reply-primary">↩ Antworten</button><button class="reply-btn reply-secondary">↩↩ Allen antworten</button><button class="reply-btn reply-secondary">↗ Weiterleiten</button></div>`;
+    body.innerHTML=h;
+  }
+  else if(tabId==='transcript'){
+    if(e.transcript){
+      let lines=e.transcript.split('\n').map(l=>{const m=l.match(/^\[(\d{2}:\d{2})\]\s*(\w+):\s*(.*)/);return m?`<span class="ts">[${m[1]}]</span> <span class="speaker">${m[2]}:</span> ${m[3]}`:l}).join('\n');
+      body.innerHTML=`<div class="transcript">${lines}</div>`;
+    }else{
+      body.innerHTML=`<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:24px;margin-bottom:8px;opacity:.4">🎙</div><div style="font-size:12px">Kein Transkript verfügbar.<br>Wird automatisch erstellt bei 3CX-Anrufen.</div></div>`;
+    }
+  }
+  else if(tabId==='briefing_hint'){
+    body.innerHTML=`<div style="text-align:center;padding:40px"><div style="font-size:32px;margin-bottom:12px">📋</div><div style="font-size:14px;font-weight:600;color:var(--t1);margin-bottom:8px">AI-Output → Briefing-Maske</div><div style="font-size:12px;color:var(--t2);line-height:1.7;max-width:340px;margin:0 auto">Die AI-Zusammenfassung dieses Gesprächs wird automatisch in die Briefing-Maske übernommen und dort weiterverarbeitet.</div><div style="margin-top:16px"><button onclick="alert('→ Navigiert zu Briefing-Tab')" style="padding:8px 20px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:var(--gold15);border:1px solid var(--gold30);color:var(--gold);transition:.15s">→ Briefing-Tab öffnen</button></div></div>`;
+  }
+  else if(tabId==='ai'){
+    if(e.aiSummary){
+      const ai=e.aiSummary;
+      let h=`<div class="ai-sum"><h4>Zusammenfassung</h4><p>${ai.text}</p>`;
+      if(ai.actions?.length){h+=`<h4>Action Items</h4>`;ai.actions.forEach(a=>h+=`<div class="ai-tag ai-action">→ ${a}</div>`)}
+      if(ai.flags?.length){h+=`<h4>Red Flags</h4>`;ai.flags.forEach(f=>h+=`<div class="ai-tag ai-flag">⚠ ${f}</div>`)}
+      if(ai.insights?.length){h+=`<h4>Insights</h4>`;ai.insights.forEach(i=>h+=`<div class="ai-tag ai-insight">💡 ${i}</div>`)}
+      h+=`</div>`;body.innerHTML=h;
+    }else{
+      body.innerHTML=`<div style="text-align:center;padding:40px;color:var(--tm)"><div style="font-size:24px;margin-bottom:8px;opacity:.4">🤖</div><div style="font-size:12px">AI-Summary wird generiert…<br>Verfügbar sobald das Transkript verarbeitet ist.</div></div>`;
+    }
+  }
+  else if(tabId==='reminders'){
+    // Simulated reminders linked to this entry
+    const entryReminders=REMINDERS.filter(r=>r.entryId===e.id);
+    let h='';
+    if(entryReminders.length){
+      h+='<div class="rem-list">';
+      entryReminders.forEach((r,ri)=>{
+        const pCls=r.priority==='high'?'rem-p-high':r.priority==='medium'?'rem-p-med':'rem-p-low';
+        const pLabel=r.priority==='high'?'Hoch':r.priority==='medium'?'Mittel':'Tief';
+        h+=`<div class="rem-item${r.done?' rem-done':''}">
+          <button class="rem-check${r.done?' checked':''}" onclick="toggleReminder(${r.id},this)">${r.done?'✓':''}</button>
+          <div class="rem-body"><div class="rem-text">${r.text}</div><div class="rem-meta">${r.date} · ${r.by}</div></div>
+          <span class="rem-priority ${pCls}">${pLabel}</span>
+        </div>`;
+      });
+      h+='</div>';
+    }else{
+      h+=`<div style="text-align:center;padding:16px;color:var(--tm);font-size:11px;margin-bottom:12px">Keine Reminders für diesen Eintrag.</div>`;
+    }
+    // New reminder form
+    h+=`<div class="rem-new">
+      <div class="rem-new-title">+ Neuer Reminder</div>
+      <div class="rem-new-row"><input type="text" class="rem-new-input" id="remNewText" placeholder="Was soll erinnert werden?"></div>
+      <div class="rem-new-row">
+        <input type="date" class="rem-new-input" id="remNewDate" style="flex:.6">
+        <input type="time" class="rem-new-input" id="remNewTime" style="flex:.4" value="09:00">
+        <select class="rem-new-select" id="remNewPrio"><option value="medium">Mittel</option><option value="high">Hoch</option><option value="low">Tief</option></select>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="rem-new-btn" onclick="addReminder(${e.id})">Reminder erstellen</button></div>
+    </div>`;
+    body.innerHTML=h;
+  }
+}
+// Reminder data & functions
+const REMINDERS=[
+  {id:1,entryId:1,text:'CV-Eingang prüfen — Max Muster hat Zusendung diese Woche versprochen',date:'01.04.2026',by:'PW',priority:'high',done:false},
+  {id:2,entryId:6,text:'Debriefing mit AM SP besprechen — Offer-Vorbereitung Brun AG',date:'27.03.2026',by:'JV',priority:'high',done:true},
+  {id:3,entryId:6,text:'Kandidat über weiteren Zeitplan informieren',date:'28.03.2026',by:'JV',priority:'medium',done:false}
+];
+let remIdCounter=10;
+function toggleReminder(id,btn){
+  const r=REMINDERS.find(x=>x.id===id);if(!r)return;
+  r.done=!r.done;btn.classList.toggle('checked');btn.textContent=r.done?'✓':'';
+  btn.closest('.rem-item').classList.toggle('rem-done');
+}
+function addReminder(entryId){
+  const text=document.getElementById('remNewText').value.trim();
+  const date=document.getElementById('remNewDate').value;
+  const prio=document.getElementById('remNewPrio').value;
+  if(!text){document.getElementById('remNewText').focus();return}
+  const dateStr=date?new Date(date).toLocaleDateString('de-CH',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';
+  REMINDERS.push({id:++remIdCounter,entryId,text,date:dateStr,by:'PW',priority:prio,done:false});
+  // Re-render the tab
+  renderTab('reminders',currentEntry);
+}
+window.toggleReminder=toggleReminder;window.addReminder=addReminder;
+window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.switchTab=switchTab;
+function openNewEntry(){alert('Neuer Eintrag — Modal mit Activity-Type Dropdown (63 Typen in 11 Kategorien)')}
+window.openNewEntry=openNewEntry;
+
+// Keyboard
+let ki=-1;
+document.addEventListener('keydown',e=>{
+  const t=document.activeElement?.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(document.getElementById('drawer').classList.contains('open')){if(e.key==='Escape')closeDrawer();return}
+  const items=[...document.querySelectorAll('.tl-item')];
+  if(e.key==='ArrowDown'){e.preventDefault();ki=Math.min(ki+1,items.length-1);items.forEach(i=>i.classList.remove('selected'));if(items[ki]){items[ki].classList.add('selected');items[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='ArrowUp'){e.preventDefault();ki=Math.max(ki-1,0);items.forEach(i=>i.classList.remove('selected'));if(items[ki]){items[ki].classList.add('selected');items[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='Enter'&&ki>=0){e.preventDefault();openDrawer(ki)}
+  else if(e.key==='n'||e.key==='N'){e.preventDefault();openNewEntry()}
+  else if(e.key==='Escape'){items.forEach(i=>i.classList.remove('selected'));ki=-1}
+});
+</script>
+</body></html>

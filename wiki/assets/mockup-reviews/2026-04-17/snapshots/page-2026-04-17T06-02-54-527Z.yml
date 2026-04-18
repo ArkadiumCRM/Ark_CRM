@@ -1,0 +1,605 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Firmengruppen" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: 🏛 Muster Holding AG
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]: 🤖
+    - generic [ref=e17]:
+      - strong [ref=e18]: Scraper-Vorschlag · UID-Match
+      - text: ": Potenzielle Konzernstruktur identifiziert (CHE-123.456.789 ↔ CHE-987.654.321 beide unter Holding „Muster-Gruppe\"). Admin-Bestätigung erforderlich."
+    - button "✓ Bestätigen" [ref=e19] [cursor=pointer]
+    - button "✕ Ablehnen" [ref=e20] [cursor=pointer]
+    - button "✕" [ref=e21] [cursor=pointer]
+  - generic [ref=e23]:
+    - generic [ref=e24]: 🏛
+    - generic [ref=e25]:
+      - heading "Muster Holding AG" [level=1] [ref=e26]
+      - generic [ref=e27]: 🏛 Holding
+      - generic [ref=e28]: Klasse A (aggregiert)
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - text: Gruppen-Manager
+          - strong [ref=e31]: PW
+        - generic [ref=e33]: Sitz Zürich · CHE-123.456.789
+        - link "muster-holding.ch" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e38]: gegründet 1978 (Holding 2012)
+      - generic [ref=e39]:
+        - button "📞 Anrufen" [ref=e40] [cursor=pointer]
+        - button "✉ Email" [ref=e41] [cursor=pointer]
+        - button "📄 Gruppen-Report" [ref=e42] [cursor=pointer]
+        - button "+ Gesellschaft hinzufügen" [ref=e43] [cursor=pointer]
+        - button "+ Gruppen-Mandat" [ref=e44] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e45] [cursor=pointer]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: Status
+        - combobox [ref=e49] [cursor=pointer]:
+          - option "● Aktiv" [selected]
+          - option "⏸ In Review"
+          - option "✕ Archiviert"
+          - option "🔗 Merger / Restrukturierung"
+          - text: ▾
+      - generic [ref=e51]: Rahmenvertrag aktiv bis 31.12.2028
+      - generic [ref=e52]:
+        - link "🛡 1 Gruppen-Schutzfrist" [ref=e53] [cursor=pointer]:
+          - /url: "#"
+        - link "6 offene Mandate" [ref=e54] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e55]: bestätigt durch PW · 12.03.2024
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: 🏢 Gesellschaften
+      - generic [ref=e59]: "2"
+      - generic [ref=e60]: BM AG · MI AG
+    - generic [ref=e61]:
+      - generic [ref=e62]: 👥 Mitarbeitende
+      - generic [ref=e63]: "505"
+      - generic [ref=e64]: +24 vs. 2024
+    - generic [ref=e65]:
+      - generic [ref=e66]: 💰 Umsatz 2025
+      - generic [ref=e67]: CHF 340 M
+      - generic [ref=e68]: Konsolidiert
+    - generic [ref=e69]:
+      - generic [ref=e70]: ⚙ Aktive Prozesse
+      - generic [ref=e71]: "8"
+      - generic [ref=e72]: über 2 Gesellschaften
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🏆 Placements YTD
+      - generic [ref=e75]: "12"
+      - generic [ref=e76]: Q1 stark
+    - generic [ref=e77]:
+      - generic [ref=e78]: 💰 Arkadium-Umsatz YTD
+      - generic [ref=e79]: CHF 380k
+      - generic [ref=e80]: 68 % vom Total
+  - navigation [ref=e81]:
+    - generic [ref=e82] [cursor=pointer]: 1Übersicht
+    - generic [ref=e83] [cursor=pointer]: 2Kultur (Gruppen-Analyse)
+    - generic [ref=e84] [cursor=pointer]: 3Kontakte
+    - generic [ref=e85] [cursor=pointer]: 4Mandate & Prozesse
+    - generic [ref=e86] [cursor=pointer]: 5Dokumente
+    - generic [ref=e87] [cursor=pointer]: 6History
+    - generic [ref=e88] [cursor=pointer]: 7Reminders
+  - generic [ref=e499]:
+    - generic [ref=e500]:
+      - strong [ref=e501]: "Grundprinzip:"
+      - text: Jeder Kontakt muss auch als Kandidat erfasst sein. Personen-Stammdaten werden beim Kandidaten gepflegt — hier nur Gruppen-/Account-spezifische Beziehungsdaten. Gruppen-Ansicht ist
+      - strong [ref=e502]: read-only aggregiert
+      - text: über alle Gesellschaften.
+    - generic [ref=e503]:
+      - textbox "Suche Name, Position, Gesellschaft …" [ref=e504]
+      - combobox [ref=e505] [cursor=pointer]:
+        - option "Alle Gesellschaften" [selected]
+        - option "Bauherr Muster AG"
+        - option "Muster Immobilien AG"
+      - combobox [ref=e506] [cursor=pointer]:
+        - option "Alle Org-Funktionen" [selected]
+        - option "VR / Board"
+        - option "Executive"
+        - option "HR"
+        - option "Einkauf"
+        - option "Assistenz"
+      - combobox [ref=e507] [cursor=pointer]:
+        - option "Alle Status" [selected]
+        - option "Aktiv"
+        - option "Inactive"
+        - option "Left Company"
+    - generic [ref=e508] [cursor=pointer]:
+      - generic [ref=e509]: ▾
+      - heading "🏛 Gruppen-weite Entscheider (VR-Board + Executive)" [level=3] [ref=e510]
+      - generic [ref=e511]: "5"
+    - table [ref=e514]:
+      - rowgroup [ref=e515]:
+        - row "Name Position Gesellschaft Org-Funktion Telefon E-Mail Letzter Kontakt Status Aktionen" [ref=e516]:
+          - columnheader "Name" [ref=e517]
+          - columnheader "Position" [ref=e518]
+          - columnheader "Gesellschaft" [ref=e519]
+          - columnheader "Org-Funktion" [ref=e520]
+          - columnheader "Telefon" [ref=e521]
+          - columnheader "E-Mail" [ref=e522]
+          - columnheader "Letzter Kontakt" [ref=e523]
+          - columnheader "Status" [ref=e524]
+          - columnheader "Aktionen" [ref=e525]
+      - rowgroup [ref=e526]:
+        - row "V Dr. Thomas Muster → Kandidatenprofil VR-Präsident Holding Verwaltungsrat Holding beide Gesellschaften V VR-Board +41 44 266 12 00 thomas.muster@muster-holding.ch vor 3 Tagen 🤝 Meeting Aktiv 📞 ✉ 🕒 ›" [ref=e527]:
+          - cell "V Dr. Thomas Muster → Kandidatenprofil" [ref=e528]:
+            - generic "VR / Board" [ref=e529]: V
+            - strong [ref=e530]: Dr. Thomas Muster
+            - generic [ref=e531]: → Kandidatenprofil
+          - cell "VR-Präsident Holding Verwaltungsrat" [ref=e532]:
+            - text: VR-Präsident Holding
+            - generic [ref=e533]: Verwaltungsrat
+          - cell "Holding beide Gesellschaften" [ref=e534]:
+            - link "Holding" [ref=e535] [cursor=pointer]:
+              - /url: "#"
+            - generic [ref=e536]: beide Gesellschaften
+          - cell "V VR-Board" [ref=e537]:
+            - generic [ref=e538]: V
+            - text: VR-Board
+          - cell "+41 44 266 12 00" [ref=e539]
+          - cell "thomas.muster@muster-holding.ch" [ref=e540]
+          - cell "vor 3 Tagen 🤝 Meeting" [ref=e541]:
+            - text: vor 3 Tagen
+            - generic [ref=e542]: 🤝 Meeting
+          - cell "Aktiv" [ref=e543]:
+            - generic [ref=e544]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e545]:
+            - generic [ref=e546]:
+              - button "📞" [ref=e547] [cursor=pointer]
+              - button "✉" [ref=e548] [cursor=pointer]
+              - button "🕒" [ref=e549] [cursor=pointer]
+              - button "›" [ref=e550] [cursor=pointer]
+        - row "V Peter Keller → Kandidatenprofil VR-Mitglied Verwaltungsrat Bauherr Muster AG V VR-Board — peter.keller@muster-bauherr.ch vor 6 Wochen ✉ E-Mail Aktiv 📞 ✉ 🕒 ›" [ref=e551]:
+          - cell "V Peter Keller → Kandidatenprofil" [ref=e552]:
+            - generic "VR / Board" [ref=e553]: V
+            - strong [ref=e554]: Peter Keller
+            - generic [ref=e555]: → Kandidatenprofil
+          - cell "VR-Mitglied Verwaltungsrat" [ref=e556]:
+            - text: VR-Mitglied
+            - generic [ref=e557]: Verwaltungsrat
+          - cell "Bauherr Muster AG" [ref=e558]:
+            - link "Bauherr Muster AG" [ref=e559] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "V VR-Board" [ref=e560]:
+            - generic [ref=e561]: V
+            - text: VR-Board
+          - cell "—" [ref=e562]
+          - cell "peter.keller@muster-bauherr.ch" [ref=e563]
+          - cell "vor 6 Wochen ✉ E-Mail" [ref=e564]:
+            - text: vor 6 Wochen
+            - generic [ref=e565]: ✉ E-Mail
+          - cell "Aktiv" [ref=e566]:
+            - generic [ref=e567]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e568]:
+            - generic [ref=e569]:
+              - button "📞" [ref=e570] [cursor=pointer]
+              - button "✉" [ref=e571] [cursor=pointer]
+              - button "🕒" [ref=e572] [cursor=pointer]
+              - button "›" [ref=e573] [cursor=pointer]
+        - row "E Hans Müller → Kandidatenprofil CEO Geschäftsleitung Bauherr Muster AG E Executive +41 44 123 45 67 h.mueller@muster-bauherr.ch vor 4 Tagen 📞 Call 42 min Aktiv 📞 ✉ 🕒 ›" [ref=e574]:
+          - cell "E Hans Müller → Kandidatenprofil" [ref=e575]:
+            - generic "Executive" [ref=e576]: E
+            - strong [ref=e577]: Hans Müller
+            - generic [ref=e578]: → Kandidatenprofil
+          - cell "CEO Geschäftsleitung" [ref=e579]:
+            - text: CEO
+            - generic [ref=e580]: Geschäftsleitung
+          - cell "Bauherr Muster AG" [ref=e581]:
+            - link "Bauherr Muster AG" [ref=e582] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "E Executive" [ref=e583]:
+            - generic [ref=e584]: E
+            - text: Executive
+          - cell "+41 44 123 45 67" [ref=e585]
+          - cell "h.mueller@muster-bauherr.ch" [ref=e586]
+          - cell "vor 4 Tagen 📞 Call 42 min" [ref=e587]:
+            - text: vor 4 Tagen
+            - generic [ref=e588]: 📞 Call 42 min
+          - cell "Aktiv" [ref=e589]:
+            - generic [ref=e590]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e591]:
+            - generic [ref=e592]:
+              - button "📞" [ref=e593] [cursor=pointer]
+              - button "✉" [ref=e594] [cursor=pointer]
+              - button "🕒" [ref=e595] [cursor=pointer]
+              - button "›" [ref=e596] [cursor=pointer]
+        - row "E Regina Weber → Kandidatenprofil COO Operations Bauherr Muster AG E Executive +41 44 123 45 68 r.weber@muster-bauherr.ch vor 1 Monat 📞 Call Aktiv 📞 ✉ 🕒 ›" [ref=e597]:
+          - cell "E Regina Weber → Kandidatenprofil" [ref=e598]:
+            - generic "Executive" [ref=e599]: E
+            - strong [ref=e600]: Regina Weber
+            - generic [ref=e601]: → Kandidatenprofil
+          - cell "COO Operations" [ref=e602]:
+            - text: COO
+            - generic [ref=e603]: Operations
+          - cell "Bauherr Muster AG" [ref=e604]:
+            - link "Bauherr Muster AG" [ref=e605] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "E Executive" [ref=e606]:
+            - generic [ref=e607]: E
+            - text: Executive
+          - cell "+41 44 123 45 68" [ref=e608]
+          - cell "r.weber@muster-bauherr.ch" [ref=e609]
+          - cell "vor 1 Monat 📞 Call" [ref=e610]:
+            - text: vor 1 Monat
+            - generic [ref=e611]: 📞 Call
+          - cell "Aktiv" [ref=e612]:
+            - generic [ref=e613]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e614]:
+            - generic [ref=e615]:
+              - button "📞" [ref=e616] [cursor=pointer]
+              - button "✉" [ref=e617] [cursor=pointer]
+              - button "🕒" [ref=e618] [cursor=pointer]
+              - button "›" [ref=e619] [cursor=pointer]
+        - row "E Claudia Widmer → Kandidatenprofil CEO Geschäftsleitung Muster Immobilien AG E Executive +41 41 761 22 00 claudia.widmer@muster-immo.ch vor 2 Wochen 🤝 Meeting Aktiv 📞 ✉ 🕒 ›" [ref=e620]:
+          - cell "E Claudia Widmer → Kandidatenprofil" [ref=e621]:
+            - generic "Executive" [ref=e622]: E
+            - strong [ref=e623]: Claudia Widmer
+            - generic [ref=e624]: → Kandidatenprofil
+          - cell "CEO Geschäftsleitung" [ref=e625]:
+            - text: CEO
+            - generic [ref=e626]: Geschäftsleitung
+          - cell "Muster Immobilien AG" [ref=e627]:
+            - link "Muster Immobilien AG" [ref=e628] [cursor=pointer]:
+              - /url: "#"
+          - cell "E Executive" [ref=e629]:
+            - generic [ref=e630]: E
+            - text: Executive
+          - cell "+41 41 761 22 00" [ref=e631]
+          - cell "claudia.widmer@muster-immo.ch" [ref=e632]
+          - cell "vor 2 Wochen 🤝 Meeting" [ref=e633]:
+            - text: vor 2 Wochen
+            - generic [ref=e634]: 🤝 Meeting
+          - cell "Aktiv" [ref=e635]:
+            - generic [ref=e636]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e637]:
+            - generic [ref=e638]:
+              - button "📞" [ref=e639] [cursor=pointer]
+              - button "✉" [ref=e640] [cursor=pointer]
+              - button "🕒" [ref=e641] [cursor=pointer]
+              - button "›" [ref=e642] [cursor=pointer]
+    - generic [ref=e643] [cursor=pointer]:
+      - generic [ref=e644]: ▾
+      - heading "Weitere Kontakte (HR · Einkauf · Assistenz · …)" [level=3] [ref=e645]
+      - generic [ref=e646]: "14"
+    - table [ref=e649]:
+      - rowgroup [ref=e650]:
+        - row "Name Position Gesellschaft Org-Funktion Telefon E-Mail Letzter Kontakt Status Aktionen" [ref=e651]:
+          - columnheader "Name" [ref=e652]
+          - columnheader "Position" [ref=e653]
+          - columnheader "Gesellschaft" [ref=e654]
+          - columnheader "Org-Funktion" [ref=e655]
+          - columnheader "Telefon" [ref=e656]
+          - columnheader "E-Mail" [ref=e657]
+          - columnheader "Letzter Kontakt" [ref=e658]
+          - columnheader "Status" [ref=e659]
+          - columnheader "Aktionen" [ref=e660]
+      - rowgroup [ref=e661]:
+        - row "H Eva Studer → Kandidatenprofil HR-Leitung Human Resources Bauherr Muster AG H HR +41 44 123 45 70 e.studer@muster-bauherr.ch vor 2 Wochen ✉ E-Mail Aktiv 📞 ✉ 🕒 ›" [ref=e662]:
+          - cell "H Eva Studer → Kandidatenprofil" [ref=e663]:
+            - generic "HR" [ref=e664]: H
+            - strong [ref=e665]: Eva Studer
+            - generic [ref=e666]: → Kandidatenprofil
+          - cell "HR-Leitung Human Resources" [ref=e667]:
+            - text: HR-Leitung
+            - generic [ref=e668]: Human Resources
+          - cell "Bauherr Muster AG" [ref=e669]:
+            - link "Bauherr Muster AG" [ref=e670] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "H HR" [ref=e671]:
+            - generic [ref=e672]: H
+            - text: HR
+          - cell "+41 44 123 45 70" [ref=e673]
+          - cell "e.studer@muster-bauherr.ch" [ref=e674]
+          - cell "vor 2 Wochen ✉ E-Mail" [ref=e675]:
+            - text: vor 2 Wochen
+            - generic [ref=e676]: ✉ E-Mail
+          - cell "Aktiv" [ref=e677]:
+            - generic [ref=e678]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e679]:
+            - generic [ref=e680]:
+              - button "📞" [ref=e681] [cursor=pointer]
+              - button "✉" [ref=e682] [cursor=pointer]
+              - button "🕒" [ref=e683] [cursor=pointer]
+              - button "›" [ref=e684] [cursor=pointer]
+        - row "K Thomas Bachmann DNC → Kandidatenprofil Leiter Einkauf Procurement Bauherr Muster AG K Einkauf — DNC — — DNC — vor 8 Monaten Do not contact 📞 ›" [ref=e685]:
+          - cell "K Thomas Bachmann DNC → Kandidatenprofil" [ref=e686]:
+            - generic "Einkauf" [ref=e687]: K
+            - strong [ref=e688]: Thomas Bachmann
+            - text: DNC
+            - generic [ref=e689]: → Kandidatenprofil
+          - cell "Leiter Einkauf Procurement" [ref=e690]:
+            - text: Leiter Einkauf
+            - generic [ref=e691]: Procurement
+          - cell "Bauherr Muster AG" [ref=e692]:
+            - link "Bauherr Muster AG" [ref=e693] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "K Einkauf" [ref=e694]:
+            - generic [ref=e695]: K
+            - text: Einkauf
+          - cell "— DNC —" [ref=e696]
+          - cell "— DNC —" [ref=e697]
+          - cell "vor 8 Monaten" [ref=e698]
+          - cell "Do not contact" [ref=e699]:
+            - generic [ref=e700]: Do not contact
+          - cell "📞 ›" [ref=e701]:
+            - generic [ref=e702]:
+              - button "📞" [ref=e703] [cursor=pointer]
+              - button "›" [ref=e704] [cursor=pointer]
+        - row "A Sandra Meier → Kandidatenprofil Assistenz CEO CEO-Office Bauherr Muster AG A Assistenz +41 44 123 45 65 s.meier@muster-bauherr.ch vor 4 Tagen ✉ E-Mail Aktiv 📞 ✉ 🕒 ›" [ref=e705]:
+          - cell "A Sandra Meier → Kandidatenprofil" [ref=e706]:
+            - generic "Assistenz" [ref=e707]: A
+            - strong [ref=e708]: Sandra Meier
+            - generic [ref=e709]: → Kandidatenprofil
+          - cell "Assistenz CEO CEO-Office" [ref=e710]:
+            - text: Assistenz CEO
+            - generic [ref=e711]: CEO-Office
+          - cell "Bauherr Muster AG" [ref=e712]:
+            - link "Bauherr Muster AG" [ref=e713] [cursor=pointer]:
+              - /url: accounts.html
+          - cell "A Assistenz" [ref=e714]:
+            - generic [ref=e715]: A
+            - text: Assistenz
+          - cell "+41 44 123 45 65" [ref=e716]
+          - cell "s.meier@muster-bauherr.ch" [ref=e717]
+          - cell "vor 4 Tagen ✉ E-Mail" [ref=e718]:
+            - text: vor 4 Tagen
+            - generic [ref=e719]: ✉ E-Mail
+          - cell "Aktiv" [ref=e720]:
+            - generic [ref=e721]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e722]:
+            - generic [ref=e723]:
+              - button "📞" [ref=e724] [cursor=pointer]
+              - button "✉" [ref=e725] [cursor=pointer]
+              - button "🕒" [ref=e726] [cursor=pointer]
+              - button "›" [ref=e727] [cursor=pointer]
+        - row "H Roland Frei → Kandidatenprofil HR-Business-Partner Human Resources Muster Immobilien AG H HR +41 41 761 22 15 r.frei@muster-immo.ch vor 5 Wochen 📞 Call Aktiv 📞 ✉ 🕒 ›" [ref=e728]:
+          - cell "H Roland Frei → Kandidatenprofil" [ref=e729]:
+            - generic "HR" [ref=e730]: H
+            - strong [ref=e731]: Roland Frei
+            - generic [ref=e732]: → Kandidatenprofil
+          - cell "HR-Business-Partner Human Resources" [ref=e733]:
+            - text: HR-Business-Partner
+            - generic [ref=e734]: Human Resources
+          - cell "Muster Immobilien AG" [ref=e735]:
+            - link "Muster Immobilien AG" [ref=e736] [cursor=pointer]:
+              - /url: "#"
+          - cell "H HR" [ref=e737]:
+            - generic [ref=e738]: H
+            - text: HR
+          - cell "+41 41 761 22 15" [ref=e739]
+          - cell "r.frei@muster-immo.ch" [ref=e740]
+          - cell "vor 5 Wochen 📞 Call" [ref=e741]:
+            - text: vor 5 Wochen
+            - generic [ref=e742]: 📞 Call
+          - cell "Aktiv" [ref=e743]:
+            - generic [ref=e744]: Aktiv
+          - cell "📞 ✉ 🕒 ›" [ref=e745]:
+            - generic [ref=e746]:
+              - button "📞" [ref=e747] [cursor=pointer]
+              - button "✉" [ref=e748] [cursor=pointer]
+              - button "🕒" [ref=e749] [cursor=pointer]
+              - button "›" [ref=e750] [cursor=pointer]
+        - row "+ 10 weitere Kontakte · ↓ Mehr laden" [ref=e751]:
+          - cell "+ 10 weitere Kontakte · ↓ Mehr laden" [ref=e752]:
+            - text: + 10 weitere Kontakte ·
+            - button "↓ Mehr laden" [ref=e753] [cursor=pointer]
+    - generic [ref=e754]:
+      - generic [ref=e755]:
+        - generic [ref=e756]: V
+        - text: VR-Board
+      - generic [ref=e757]:
+        - generic [ref=e758]: E
+        - text: Executive
+      - generic [ref=e759]:
+        - generic [ref=e760]: H
+        - text: HR
+      - generic [ref=e761]:
+        - generic [ref=e762]: K
+        - text: Einkauf
+      - generic [ref=e763]:
+        - generic [ref=e764]: A
+        - text: Assistenz
+      - generic [ref=e765]: DNC Do not contact
+    - generic [ref=e766]:
+      - text: Kontakt-Pflege erfolgt auf
+      - strong [ref=e767]: Account-Ebene
+      - text: . Klick auf Aktion „›" öffnet Kontakt-Detail-Drawer (Stammdaten · Kommunikation · Prozesse · Notizen). Kein Anlegen direkt auf Gruppen-Ebene.
+  - generic [ref=e250]:
+    - generic [ref=e251]: 1–7 Tabs
+    - generic [ref=e252]: T Theme
+    - generic [ref=e253]: ⌘K
+  - generic [ref=e254]:
+    - generic [ref=e255]:
+      - generic [ref=e256]: ↑
+      - generic [ref=e257]:
+        - heading "Dokument hochladen" [level=2] [ref=e258]
+        - generic [ref=e259]: Gruppen-weit oder für Subset der Gesellschaften
+      - button "✕" [ref=e260] [cursor=pointer]
+    - generic [ref=e262]:
+      - generic [ref=e263]:
+        - heading "Datei" [level=4] [ref=e264]
+        - generic [ref=e265] [cursor=pointer]:
+          - generic [ref=e266]: 📄
+          - generic [ref=e267]: Datei hierher ziehen oder klicken
+          - generic [ref=e268]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e269]:
+        - heading "Metadaten" [level=4] [ref=e270]
+        - generic [ref=e271]:
+          - generic [ref=e272]: Kategorie *
+          - combobox [ref=e273] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Rahmenvertrag"
+            - option "Master-NDA"
+            - option "Konzern-AGB"
+            - option "Gruppen-Präsentation"
+            - option "Holdings-Geschäftsbericht"
+            - option "Sonstiges"
+          - generic [ref=e274]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e275]
+          - generic [ref=e276]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e277]
+          - generic [ref=e278]: Gültigkeitsbereich
+          - combobox [ref=e279] [cursor=pointer]:
+            - option "Ganze Gruppe (Default)" [selected]
+            - option "Nur ausgewählte Gesellschaften …"
+          - generic [ref=e280]: Urheber
+          - generic [ref=e281]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e282]:
+      - button "Abbrechen" [ref=e283] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e285] [cursor=pointer]
+  - generic [ref=e286]:
+    - generic [ref=e287]:
+      - generic [ref=e288]: 💬
+      - generic [ref=e289]:
+        - heading "Event-Detail" [level=2] [ref=e290]
+        - generic [ref=e291]: —
+      - button "✕" [ref=e292] [cursor=pointer]
+    - generic [ref=e295]:
+      - button "Schliessen" [ref=e296] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e297] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e298] [cursor=pointer]
+  - generic [ref=e299]:
+    - generic [ref=e300]:
+      - generic [ref=e301]: ⏰
+      - generic [ref=e302]:
+        - heading "Neuer Reminder" [level=2] [ref=e303]
+        - generic [ref=e304]: Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)
+        - generic [ref=e306]: neu
+      - button "✕" [ref=e307] [cursor=pointer]
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - heading "Reminder" [level=4] [ref=e310]
+        - generic [ref=e311]:
+          - generic [ref=e312]: Titel *
+          - textbox "z.B. Rahmenvertrag-Review Q3" [ref=e313]
+          - generic [ref=e314]: Typ *
+          - combobox [ref=e315] [cursor=pointer]:
+            - option "Rahmenvertrag-Review" [selected]
+            - option "Jahres-Report"
+            - option "Gruppen-Mandats-Opportunity"
+            - option "Scraper-Group-Match"
+            - option "Kultur-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e316]: Fällig am *
+          - textbox [ref=e317]
+          - generic [ref=e318]: Zuständig *
+          - combobox [ref=e319] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Admin"
+          - generic [ref=e320]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e321]
+          - generic [ref=e322]: Verknüpfung
+          - combobox [ref=e323] [cursor=pointer]:
+            - option "Gruppen-Level (keine Verknüpfung)" [selected]
+            - option "Gesellschaft · Muster Holding AG"
+            - option "Gesellschaft · Muster Baubetrieb AG"
+            - option "Gruppen-Mandat · Taskforce PL Hochbau"
+            - option "Rahmenvertrag 2026"
+          - generic [ref=e324]: Wiederholen
+          - combobox [ref=e325] [cursor=pointer]:
+            - option "Einmalig"
+            - option "Quartalsweise"
+            - option "Jährlich" [selected]
+      - generic [ref=e326]:
+        - heading "Benachrichtigung" [level=4] [ref=e327]
+        - generic [ref=e328]:
+          - generic [ref=e329]: Vorlaufzeit
+          - combobox [ref=e330] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+            - option "1 Monat vorher"
+          - generic [ref=e331]: Eskalation
+          - generic [ref=e332]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Admin
+    - generic [ref=e333]:
+      - button "Abbrechen" [ref=e334] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e336] [cursor=pointer]
+  - generic [ref=e337]:
+    - generic [ref=e338]:
+      - generic [ref=e339]: HM
+      - generic [ref=e340]:
+        - heading "Hans Müller" [level=2] [ref=e341]
+        - generic [ref=e342]: CEO · Geschäftsleitung · Bauherr Muster AG
+        - generic [ref=e343]:
+          - generic "Executive" [ref=e344]: E
+          - link "→ Kandidatenprofil" [ref=e345] [cursor=pointer]:
+            - /url: "#"
+      - button "✕" [ref=e346] [cursor=pointer]
+    - generic [ref=e347]:
+      - generic [ref=e348] [cursor=pointer]: Stammdaten
+      - generic [ref=e349] [cursor=pointer]: Kommunikation
+      - generic [ref=e350] [cursor=pointer]: Prozesse
+      - generic [ref=e351] [cursor=pointer]: Notizen
+    - generic [ref=e353]:
+      - generic [ref=e354]:
+        - heading "Personen-Stammdaten read-only · beim Kandidaten pflegen" [level=4] [ref=e355]
+        - generic [ref=e356]:
+          - term [ref=e357]: Name
+          - definition [ref=e358]: Hans Müller
+          - term [ref=e359]: E-Mail
+          - definition [ref=e360]: h.mueller@muster-bauherr.ch
+          - term [ref=e361]: Telefon direkt
+          - definition [ref=e362]: +41 44 123 45 67
+          - term [ref=e363]: Mobile
+          - definition [ref=e364]: +41 79 123 45 67
+          - term [ref=e365]: LinkedIn
+          - definition [ref=e366]:
+            - link "linkedin.com/in/hans-mueller" [ref=e367] [cursor=pointer]:
+              - /url: "#"
+          - term [ref=e368]: Geburtstag
+          - definition [ref=e369]: 14.03.1968
+      - generic [ref=e370]:
+        - heading "Account-Beziehung (bearbeitbar auf Account-Ebene)" [level=4] [ref=e371]
+        - generic [ref=e372]:
+          - term [ref=e373]: Gesellschaft
+          - definition [ref=e374]:
+            - link "Bauherr Muster AG" [ref=e375] [cursor=pointer]:
+              - /url: accounts.html
+            - text: · Teil der Muster Holding
+          - term [ref=e376]: Position
+          - definition [ref=e377]: CEO
+          - term [ref=e378]: Department
+          - definition [ref=e379]: Geschäftsleitung
+          - term [ref=e380]: Standort
+          - definition [ref=e381]: Zürich (HQ)
+          - term [ref=e382]: Org-Funktion
+          - definition [ref=e383]:
+            - generic [ref=e384]: E
+            - text: Executive · CEO · Geschäftsleitung
+          - term [ref=e385]: Relationship Score
+          - definition [ref=e386]:
+            - strong [ref=e387]: "8"
+            - text: / 10
+          - term [ref=e388]: Kommunikations-Präferenz
+          - definition [ref=e389]: Telefon vor E-Mail · keine Teams-Calls
+          - term [ref=e390]: Beste Kontaktzeit
+          - definition [ref=e391]: Montag–Donnerstag · 07:30–09:00
+          - term [ref=e392]: Status
+          - definition [ref=e393]:
+            - generic [ref=e394]: Aktiv
+          - term [ref=e395]: Do not contact
+          - definition [ref=e396]: Nein
+      - generic [ref=e397]:
+        - heading "Onboarding-Notizen" [level=4] [ref=e398]
+        - paragraph [ref=e399]: Sohn des VR-Präsidenten Dr. U. Gerber. Seit 2015 im Unternehmen, CEO seit 2020. Grosses Interesse an Nachfolge-Themen. Bevorzugt kurze, direkte Gespräche. Ablehnung von „Corporate-Sprache" — bei ihm wird geduzt nach kurzer Anwärm-Phase.
+    - generic [ref=e400]:
+      - button "📞 Anrufen" [ref=e401] [cursor=pointer]
+      - button "✉ E-Mail" [ref=e402] [cursor=pointer]
+      - button "🔔 Reminder" [ref=e403] [cursor=pointer]
+      - button "Bearbeiten (→ Account)" [ref=e404] [cursor=pointer]

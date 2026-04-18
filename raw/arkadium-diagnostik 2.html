@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arkadium · Arkademia Diagnostik</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white: #ffffff;
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --border: #e2e5ea;
+  --border-strong: #c8cdd6;
+  --text: #1a1f2e;
+  --text-mid: #4a5568;
+  --text-light: #8a95a8;
+  --accent: #1a3a5c;
+  --accent-mid: #2d5f8a;
+  --accent-light: #e8f0f8;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --green: #1a6b4a;
+  --green-light: #e8f5ef;
+  --red: #c0392b;
+  --red-light: #fdf0ee;
+  --amber: #d97706;
+  --amber-light: #fef3e2;
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.05);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--accent);
+  padding: 0 40px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+}
+
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.logo-text {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--sans);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.header-nav {
+  display: flex;
+  align-items: stretch;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.nav-item:hover { color: rgba(255,255,255,0.85); }
+
+.nav-item.active {
+  color: white;
+  border-bottom-color: var(--gold);
+  background: rgba(255,255,255,0.06);
+}
+
+.nav-num {
+  font-size: 10px;
+  opacity: 0.5;
+  font-weight: 300;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+}
+
+.header-badge {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 14px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; animation: fadeUp 0.35s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PAGE BANNER ── */
+.page-banner {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.banner-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.banner-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  letter-spacing: 0.3px;
+}
+
+.banner-chips {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  border-radius: 2px;
+}
+
+.chip-accent { background: var(--accent-light); color: var(--accent); }
+.chip-gold   { background: var(--gold-light);   color: var(--gold); }
+.chip-green  { background: var(--green-light);  color: var(--green); }
+.chip-red    { background: var(--red-light);     color: var(--red); }
+
+/* ── LAYOUT ── */
+.container { padding: 28px 40px; }
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.grid-sidebar { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
+.span2 { grid-column: span 2; }
+.span3 { grid-column: span 3; }
+.span4 { grid-column: span 4; }
+.mb20 { margin-bottom: 20px; }
+.mb28 { margin-bottom: 28px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title-accent {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--accent-mid);
+  font-weight: 500;
+}
+
+/* ── KPI ROW ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi {
+  background: var(--surface);
+  padding: 20px 22px;
+  position: relative;
+}
+
+.kpi::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 24px; right: 24px;
+  height: 2px;
+}
+
+.kpi.k-accent::after { background: var(--accent); }
+.kpi.k-gold::after   { background: var(--gold); }
+.kpi.k-green::after  { background: var(--green); }
+.kpi.k-red::after    { background: var(--red); }
+.kpi.k-amber::after  { background: var(--amber); }
+
+.kpi-val {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.k-accent .kpi-val { color: var(--accent); }
+.k-gold   .kpi-val { color: var(--gold); }
+.k-green  .kpi-val { color: var(--green); }
+.k-red    .kpi-val { color: var(--red); }
+.k-amber  .kpi-val { color: var(--amber); }
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.kpi-desc {
+  font-size: 11px;
+  color: var(--text-mid);
+  margin-top: 3px;
+}
+
+/* ── PROFILE CARD ── */
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.profile-top {
+  background: var(--accent);
+  padding: 28px 24px 24px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  background: rgba(255,255,255,0.12);
+  border: 2px solid rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.profile-role {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.5px;
+}
+
+.profile-score {
+  margin-top: 18px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 12px;
+  text-align: center;
+}
+
+.profile-score-val {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  color: #f0c040;
+  line-height: 1;
+}
+
+.profile-score-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 3px;
+}
+
+.profile-body { padding: 20px 24px; }
+
+.info-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.info-item:last-child { border-bottom: none; }
+
+.info-key {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 500;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
+}
+
+.info-val {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* ── BAR ── */
+.bar-group { margin-bottom: 14px; }
+.bar-group:last-child { margin-bottom: 0; }
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.bar-name {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.bar-score {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bar-track {
+  height: 5px;
+  background: var(--bg);
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 0;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.bf-accent { background: var(--accent); }
+.bf-gold   { background: var(--gold); }
+.bf-green  { background: var(--green); }
+.bf-red    { background: var(--red); }
+.bf-amber  { background: var(--amber); }
+
+.bar-note {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 3px;
+}
+
+/* ── GAUGE ── */
+.gauge-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.gauge-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.gauge-item { text-align: center; }
+
+.gauge-wrap {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 10px;
+  position: relative;
+}
+
+.gauge-wrap svg { transform: rotate(-90deg); }
+
+.gauge-circle-bg { fill: none; stroke: var(--bg); stroke-width: 6; }
+.gauge-circle-fill { fill: none; stroke-width: 6; stroke-linecap: butt; transition: stroke-dashoffset 1.4s ease; }
+
+.gauge-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.gauge-num {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.gauge-label {
+  font-size: 10px;
+  color: var(--text-light);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  margin-top: 2px;
+}
+
+/* ── STATUS LIST ── */
+.status-list { display: flex; flex-direction: column; gap: 0; }
+
+.status-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+
+.status-item:last-child { border-bottom: none; }
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sd-green  { background: var(--green); }
+.sd-amber  { background: var(--amber); }
+.sd-red    { background: var(--red); }
+.sd-accent { background: var(--accent); }
+.sd-gold   { background: var(--gold); }
+
+.status-label { font-size: 12px; color: var(--text-mid); flex: 1; }
+.status-value { font-size: 12px; font-weight: 600; color: var(--text); }
+.status-chip  {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.3px;
+}
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 80px 1px 1fr;
+  gap: 0 16px;
+  padding-bottom: 20px;
+}
+
+.tl-item:last-child { padding-bottom: 0; }
+
+.tl-year {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: right;
+  padding-top: 2px;
+}
+
+.tl-line {
+  background: var(--border-strong);
+  position: relative;
+  width: 1px;
+}
+
+.tl-line::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.tl-content { padding-top: 0; }
+
+.tl-role {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.tl-company {
+  font-size: 11px;
+  color: var(--text-mid);
+}
+
+.tl-note {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ── JCM ── */
+.jcm-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+
+.jcm-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px 14px;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.jcm-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+
+.jcm-num {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.jcm-name {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+.jcm-desc {
+  font-size: 10px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* ── FORMULA BOX ── */
+.formula-block {
+  background: var(--accent);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.formula-equation {
+  flex: 1;
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.3px;
+  line-height: 2;
+}
+
+.formula-equation strong { color: white; font-weight: 600; }
+
+.formula-result-box { text-align: center; flex-shrink: 0; }
+
+.formula-result-num {
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 700;
+  color: #f0c040;
+  line-height: 1;
+}
+
+.formula-result-desc {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+}
+
+.formula-divider {
+  width: 1px;
+  height: 60px;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* ── MATCH COMPARE ── */
+.match-compare {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.match-compare:last-child { border-bottom: none; }
+
+.mc-label { font-size: 12px; color: var(--text-mid); flex: 1; }
+.mc-bar-wrap { flex: 2; display: flex; gap: 6px; align-items: center; }
+
+.mc-bar {
+  height: 4px;
+  background: var(--bg);
+  flex: 1;
+  position: relative;
+}
+
+.mc-fill-a { height: 100%; background: var(--accent); }
+.mc-fill-b { height: 100%; background: var(--green); }
+
+.mc-val {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 700;
+  width: 28px;
+  text-align: right;
+}
+
+.mc-val-a { color: var(--accent); }
+.mc-val-b { color: var(--green); }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-mid);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 3px;
+}
+
+/* ── SECTION DIVIDER ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 20px;
+}
+
+.section-divider-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── RECOMMENDATION BOX ── */
+.rec-box {
+  background: var(--green-light);
+  border: 1px solid #a8d5be;
+  border-left: 4px solid var(--green);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rec-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.rec-text { font-size: 12px; color: var(--green); line-height: 1.6; }
+.rec-text strong { font-weight: 600; }
+
+/* ── RADAR SVG ── */
+.radar-wrap { display: flex; justify-content: center; padding: 8px 0; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-strong);
+  background: var(--bg);
+}
+.data-table td {
+  padding: 10px 12px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg); }
+
+.td-score {
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.td-bar { width: 120px; }
+
+/* ── FOOTER STRIP ── */
+.footer-strip {
+  background: var(--accent);
+  color: rgba(255,255,255,0.5);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.footer-strip span { color: rgba(255,255,255,0.75); }
+
+/* ── PRINT / WATERMARK ── */
+.watermark {
+  position: fixed;
+  bottom: 20px;
+  right: 24px;
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--border-strong);
+  letter-spacing: 1px;
+  pointer-events: none;
+  z-index: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <div class="logo-mark">A</div>
+    <div>
+      <div class="logo-text">Arkadium</div>
+      <div class="logo-sub">Arkademia · Diagnostik & Entwicklung</div>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <div class="nav-item active" onclick="show('kandidat', this)">
+      <span class="nav-num">01</span> Kandidatenprofil
+    </div>
+    <div class="nav-item" onclick="show('unternehmen', this)">
+      <span class="nav-num">02</span> Unternehmen
+    </div>
+    <div class="nav-item" onclick="show('jobmaske', this)">
+      <span class="nav-num">03</span> Jobmaske &amp; Matching
+    </div>
+  </nav>
+  <div class="header-meta">
+    <div class="header-badge">Vertraulich · Arkademia 2025</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 1 · KANDIDATENPROFIL
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-kandidat">
+
+  <div class="page-banner">
+    <div>
+      <div class="banner-title">Marco Steinmann – Kandidatenprofil</div>
+      <div class="banner-sub">Volldiagnostik · Arkademia-Methode · Ref. ARK-2025-0341 · 28. März 2025</div>
+    </div>
+    <div class="banner-chips">
+      <span class="chip chip-green">Latent wechselwillig</span>
+      <span class="chip chip-accent">Direktansprache</span>
+      <span class="chip chip-gold">Top 5%</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- KPI ROW -->
+    <div class="kpi-row mb20">
+      <div class="kpi k-accent">
+        <div class="kpi-val">87</div>
+        <div class="kpi-label">MPS Score</div>
+        <div class="kpi-desc">Motivationspotenzialwert</div>
+      </div>
+      <div class="kpi k-gold">
+        <div class="kpi-val">92</div>
+        <div class="kpi-label">GNS Index</div>
+        <div class="kpi-desc">Growth Need Strength</div>
+      </div>
+      <div class="kpi k-green">
+        <div class="kpi-val">94%</div>
+        <div class="kpi-label">Job-Fit</div>
+        <div class="kpi-desc">Person–Job Passung</div>
+      </div>
+      <div class="kpi k-amber">
+        <div class="kpi-val">88</div>
+        <div class="kpi-label">Selbstwirksamkeit</div>
+        <div class="kpi-desc">Bandura-Index</div>
+      </div>
+      <div class="kpi k-red">
+        <div class="kpi-val">28</div>
+        <div class="kpi-label">Stressindex</div>
+        <div class="kpi-desc">tief · stabil</div>
+      </div>
+    </div>
+
+    <!-- ROW 1 -->
+    <div class="grid-sidebar mb20">
+
+      <!-- PROFILE CARD -->
+      <div class="profile-card">
+        <div class="profile-top">
+          <div class="profile-avatar">
+            <svg width="40" height="52" viewBox="0 0 40 52" fill="none">
+              <circle cx="20" cy="12" r="11" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+              <path d="M2 50 C2 36 38 36 38 50" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="profile-name">Marco Steinmann</div>
+          <div class="profile-role">Leiter Entwicklung · Real Estate</div>
+          <div class="profile-score">
+            <div class="profile-score-val">94%</div>
+            <div class="profile-score-label">Arkademia Match-Index</div>
+          </div>
+        </div>
+        <div class="profile-body">
+          <div class="info-item">
+            <span class="info-key">Alter</span>
+            <span class="info-val">44 Jahre</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Ausbildung</span>
+            <span class="info-val">Dipl. Arch. ETH</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Erfahrung</span>
+            <span class="info-val">14 Jahre Führung</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Branche</span>
+            <span class="info-val">Real Estate Development</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Sparten</span>
+            <span class="info-val">RE · Architecture</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Wechseltyp</span>
+            <span class="info-val">Latent · entwicklungsorientiert</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Career Anchor</span>
+            <span class="info-val">Autonomie & Expertise</span>
+          </div>
+          <div class="info-item">
+            <span class="info-key">Status</span>
+            <span class="info-val"><span class="chip chip-green">Aktiv verfügbar</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COL -->
+      <div>
+        <!-- BIOGRAFIE / LAUFBAHN -->
+        <div class="card mb20">
+          <div class="card-title">Biografie & Laufbahn <span class="card-title-accent">Arkademia Erstgespräch</span></div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-year">2025</div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-role">Head of Development (interim)</div>
+                <div class="tl-company">Immobilis AG, Zürich</div>
+                <div class="tl-note">Verantwortung: 6 Projekte, CHF 120 Mio. Budget, 10 MA. Wechselmotiv: fehlende Autonomie und strategische Einbindung.</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2019</div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-role">Senior Projektleiter Entwicklung</div>
+                <div class="tl-company">Swiss Property Group, Bern</div>
+                <div class="tl-note">Eigenverantwortliche Projektrealisierung, Erstmals Führungsverantwortung. Wendepunkt: Erkenntnis, dass er strategisch mitgestalten will.</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2014</div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-role">Projektleiter Hochbau</div>
+                <div class="tl-company">Halter AG, Zürich</div>
+                <div class="tl-note">Einstieg in Development. Technische Tiefe, erste Schnittstellenverantwortung.</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2011</div>
+              <div class="tl-line"></div>
+              <div class="tl-content">
+                <div class="tl-role">Architekt</div>
+                <div class="tl-company">Müller & Partner Architekten, Basel</div>
+                <div class="tl-note">Abschluss ETH Zürich, Dipl. Arch. Fokus: Wohnbau & Siedlungsentwicklung.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION: PERSÖNLICHKEIT -->
+    <div class="section-divider">
+      <div class="section-divider-label">Persönlichkeit & Verhalten</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-3 mb20">
+
+      <!-- OCEAN -->
+      <div class="card">
+        <div class="card-title">Big Five · OCEAN <span class="card-title-accent">Normiert</span></div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Offenheit für Erfahrungen</span><span class="bar-score" style="color:var(--accent)">88</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:88%"></div></div>
+          <div class="bar-note">Innovationsfreude, Neugier, Kreativität</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Gewissenhaftigkeit</span><span class="bar-score" style="color:var(--accent)">82</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:82%"></div></div>
+          <div class="bar-note">Zuverlässigkeit, Sorgfalt, Zielorientierung</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Extraversion</span><span class="bar-score" style="color:var(--accent)">71</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:71%"></div></div>
+          <div class="bar-note">Kommunikation, Durchsetzung, Energie</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Verträglichkeit</span><span class="bar-score" style="color:var(--accent)">76</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:76%"></div></div>
+          <div class="bar-note">Kooperation, Empathie, Teamorientierung</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Neurotizismus</span><span class="bar-score" style="color:var(--red)">24</span></div>
+          <div class="bar-track"><div class="bar-fill bf-red" style="width:24%"></div></div>
+          <div class="bar-note">Emotionale Stabilität · tiefer Wert = gut</div>
+        </div>
+      </div>
+
+      <!-- TRIMETRIX -->
+      <div class="card">
+        <div class="card-title">TriMetrix · Verhaltensprofil <span class="card-title-accent">DISC-basiert</span></div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Dominanz (D)</span><span class="bar-score" style="color:var(--gold)">78</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:78%"></div></div>
+          <div class="bar-note">Entscheidungsfreude, Durchsetzungswille</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Einfluss (I)</span><span class="bar-score" style="color:var(--gold)">65</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:65%"></div></div>
+          <div class="bar-note">Überzeugungskraft, Beziehungsaufbau</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Stabilität (S)</span><span class="bar-score" style="color:var(--gold)">58</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:58%"></div></div>
+          <div class="bar-note">Beständigkeit, Verlässlichkeit, Geduld</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Gewissenhaftigkeit (C)</span><span class="bar-score" style="color:var(--gold)">84</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:84%"></div></div>
+          <div class="bar-note">Präzision, Qualitätsorientierung</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Stressresistenz</span><span class="bar-score" style="color:var(--green)">79</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:79%"></div></div>
+          <div class="bar-note">Belastbarkeit unter Druck</div>
+        </div>
+      </div>
+
+      <!-- RELIEF & MOTIVE -->
+      <div class="card">
+        <div class="card-title">RELIEF · Motive & Werte</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Verantwortung & Einfluss</div>
+            <div class="status-value">sehr stark</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Leistung & Exzellenz</div>
+            <div class="status-value">sehr stark</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Sinnhaftigkeit & Wirksamkeit</div>
+            <div class="status-value">sehr stark</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Autonomie & Freiheit</div>
+            <div class="status-value">stark</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Zugehörigkeit & Team</div>
+            <div class="status-value">mittel</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Sicherheit & Stabilität</div>
+            <div class="status-value">mittel</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-red"></div>
+            <div class="status-label">Ansehen & Status</div>
+            <div class="status-value">gering</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: KOGNITION & KOMPETENZ -->
+    <div class="section-divider">
+      <div class="section-divider-label">Kognition, Skill & Kompetenz</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-2 mb20">
+
+      <!-- OUTMATCH KOGNITION -->
+      <div class="card">
+        <div class="card-title">Kognitive Leistungsfähigkeit · Outmatch <span class="card-title-accent">Normwerte Kader CH</span></div>
+        <div class="gauge-row">
+          <div class="gauge-item">
+            <div class="gauge-wrap">
+              <svg width="76" height="76" viewBox="0 0 76 76">
+                <circle class="gauge-circle-bg" cx="38" cy="38" r="30"/>
+                <circle class="gauge-circle-fill" cx="38" cy="38" r="30"
+                  stroke="var(--accent)" stroke-dasharray="188.5" stroke-dashoffset="37.7"/>
+              </svg>
+              <div class="gauge-inner">
+                <div class="gauge-num" style="color:var(--accent)">80</div>
+              </div>
+            </div>
+            <div class="gauge-label">Analytisches<br>Denken</div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-wrap">
+              <svg width="76" height="76" viewBox="0 0 76 76">
+                <circle class="gauge-circle-bg" cx="38" cy="38" r="30"/>
+                <circle class="gauge-circle-fill" cx="38" cy="38" r="30"
+                  stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="28.3"/>
+              </svg>
+              <div class="gauge-inner">
+                <div class="gauge-num" style="color:var(--gold)">85</div>
+              </div>
+            </div>
+            <div class="gauge-label">Problemlösung<br>& Urteil</div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-wrap">
+              <svg width="76" height="76" viewBox="0 0 76 76">
+                <circle class="gauge-circle-bg" cx="38" cy="38" r="30"/>
+                <circle class="gauge-circle-fill" cx="38" cy="38" r="30"
+                  stroke="var(--green)" stroke-dasharray="188.5" stroke-dashoffset="18.9"/>
+              </svg>
+              <div class="gauge-inner">
+                <div class="gauge-num" style="color:var(--green)">90</div>
+              </div>
+            </div>
+            <div class="gauge-label">Lernfähigkeit<br>& Adaptivität</div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-wrap">
+              <svg width="76" height="76" viewBox="0 0 76 76">
+                <circle class="gauge-circle-bg" cx="38" cy="38" r="30"/>
+                <circle class="gauge-circle-fill" cx="38" cy="38" r="30"
+                  stroke="var(--amber)" stroke-dasharray="188.5" stroke-dashoffset="47.1"/>
+              </svg>
+              <div class="gauge-inner">
+                <div class="gauge-num" style="color:var(--amber)">75</div>
+              </div>
+            </div>
+            <div class="gauge-label">Methoden-<br>kompetenz</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-SÄULEN -->
+      <div class="card">
+        <div class="card-title">4-Säulen-Kompetenzmodell <span class="card-title-accent">Arkademia</span></div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Fachkompetenz</span><span class="bar-score" style="color:var(--accent)">91</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:91%"></div></div>
+          <div class="bar-note">Real Estate Development, Architektur, Projektsteuerung</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Methodenkompetenz</span><span class="bar-score" style="color:var(--accent)">84</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:84%"></div></div>
+          <div class="bar-note">Strukturierung, Planung, Analyse, Entscheidungsprozesse</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Sozialkompetenz</span><span class="bar-score" style="color:var(--green)">78</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:78%"></div></div>
+          <div class="bar-note">Teamführung, Stakeholder, Kommunikation</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Selbstkompetenz</span><span class="bar-score" style="color:var(--green)">86</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:86%"></div></div>
+          <div class="bar-note">Reflexionsfähigkeit, Eigenverantwortung, Resilienz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: MOTIVATION & SINN -->
+    <div class="section-divider">
+      <div class="section-divider-label">Motivation, Sinn & Ikigai</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-3 mb20">
+      <div class="card">
+        <div class="card-title">MPS & GNS · Hackman & Oldham</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-accent"></div>
+            <div class="status-label">Motivationspotenzialwert (MPS)</div>
+            <div class="status-value"><strong>87 / 100</strong></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-gold"></div>
+            <div class="status-label">Growth Need Strength (GNS)</div>
+            <div class="status-value"><strong>92 / 100</strong></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Erlebte Bedeutsamkeit</div>
+            <div class="status-value">sehr hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Erlebte Verantwortung</div>
+            <div class="status-value">sehr hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Wissen über Resultate</div>
+            <div class="status-value">hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Aktueller Flow-Erleben</div>
+            <div class="status-value">mittel</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ikigai & Career Anchors · Schein</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Leidenschaft (was er liebt)</div>
+            <div class="status-value">Stadtentwicklung, Architektur</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Können (worin er stark ist)</div>
+            <div class="status-value">Entwicklung, Führung, Konzept</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Bedarf (was die Welt braucht)</div>
+            <div class="status-value">Nachhaltiger Wohnraum CH</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-accent"></div>
+            <div class="status-label">Career Anchor #1</div>
+            <div class="status-value">Autonomie & Unabhängigkeit</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-accent"></div>
+            <div class="status-label">Career Anchor #2</div>
+            <div class="status-value">Fachliche Expertise</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Career Anchor #3</div>
+            <div class="status-value">Unternehmerischer Gestaltungsraum</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Resilienz & Stabilität</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Stressindex (Outmatch)</div>
+            <div class="status-value">28 · tief</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Selbstwirksamkeit (Bandura)</div>
+            <div class="status-value">88 / 100</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Work Engagement (Schaufeli)</div>
+            <div class="status-value">hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Mentale Robustheit</div>
+            <div class="status-value">sehr hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Burnout-Präventionsscore</div>
+            <div class="status-value">gering gefährdet</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">RELIEF Stabilitätsprofil</div>
+            <div class="status-value">ausgeglichen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDATION -->
+    <div class="rec-box">
+      <div class="rec-icon">✓</div>
+      <div class="rec-text">
+        <strong>Arkadium Empfehlung:</strong> Marco Steinmann zeigt ein aussergewöhnlich konsistentes Profil mit hohem MPS (87), sehr hohem GNS (92) und ausgeprägt intrinsischer Motivation. Latent wechselwillig, nicht fluchtgetrieben. Passung für anspruchsvolle Führungsmandate mit Gestaltungsspielraum – ideal für die Rolle Leiter Entwicklung, Terresta AG.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-strip">
+    <div>Arkadium AG · Arkademia Diagnostik · <span>Vertraulich</span></div>
+    <div>Kandidat: <span>Marco Steinmann</span> · Ref. ARK-2025-0341</div>
+    <div>Stand: <span>28. März 2025</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 2 · UNTERNEHMEN
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-unternehmen">
+
+  <div class="page-banner">
+    <div>
+      <div class="banner-title">Terresta AG – Unternehmensprofil</div>
+      <div class="banner-sub">Kulturdiagnostik · Strategieprofil · Mandatsgrundlage · Ref. ARK-M-2025-088</div>
+    </div>
+    <div class="banner-chips">
+      <span class="chip chip-accent">Aktives Mandat</span>
+      <span class="chip chip-gold">Real Estate</span>
+      <span class="chip chip-green">Wachstum</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="kpi-row mb20">
+      <div class="kpi k-accent">
+        <div class="kpi-val">850</div>
+        <div class="kpi-label">Mitarbeitende</div>
+        <div class="kpi-desc">CH-weit</div>
+      </div>
+      <div class="kpi k-gold">
+        <div class="kpi-val">+32%</div>
+        <div class="kpi-label">Wachstum</div>
+        <div class="kpi-desc">letzte 3 Jahre</div>
+      </div>
+      <div class="kpi k-green">
+        <div class="kpi-val">91%</div>
+        <div class="kpi-label">Kulturfit-Score</div>
+        <div class="kpi-desc">Arkadium Analyse</div>
+      </div>
+      <div class="kpi k-amber">
+        <div class="kpi-val">180</div>
+        <div class="kpi-label">Mio. CHF</div>
+        <div class="kpi-desc">Umsatz 2024</div>
+      </div>
+      <div class="kpi k-red">
+        <div class="kpi-val">4</div>
+        <div class="kpi-label">Offene Mandate</div>
+        <div class="kpi-desc">via Arkadium</div>
+      </div>
+    </div>
+
+    <div class="grid-3 mb20">
+
+      <div class="card">
+        <div class="card-title">Basisdaten</div>
+        <div class="info-item"><span class="info-key">Unternehmen</span><span class="info-val">Terresta AG</span></div>
+        <div class="info-item"><span class="info-key">Branche</span><span class="info-val">Real Estate Development</span></div>
+        <div class="info-item"><span class="info-key">Standorte</span><span class="info-val">Zürich · Bern · Basel</span></div>
+        <div class="info-item"><span class="info-key">Gründung</span><span class="info-val">2001</span></div>
+        <div class="info-item"><span class="info-key">Eigentümerstruktur</span><span class="info-val">Familiengeführt · 2. Gen.</span></div>
+        <div class="info-item"><span class="info-key">Rechtsform</span><span class="info-val">AG</span></div>
+        <div class="info-item"><span class="info-key">Kundensegment</span><span class="info-val">Premium Wohn- & Gewerbe</span></div>
+        <div class="info-item"><span class="info-key">Portfoliogrösse</span><span class="info-val">CHF 1.2 Mrd. (2024)</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Kulturprofil · Arkadium Analyse</div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Leistungsorientierung</span><span class="bar-score" style="color:var(--accent)">91</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:91%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Innovationskultur</span><span class="bar-score" style="color:var(--accent)">84</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:84%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Autonomiespielraum</span><span class="bar-score" style="color:var(--green)">79</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:79%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Feedbackkultur</span><span class="bar-score" style="color:var(--green)">72</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:72%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Hierarchieflachheit</span><span class="bar-score" style="color:var(--amber)">68</span></div>
+          <div class="bar-track"><div class="bar-fill bf-amber" style="width:68%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Transformationsreife</span><span class="bar-score" style="color:var(--amber)">70</span></div>
+          <div class="bar-track"><div class="bar-fill bf-amber" style="width:70%"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Führung & Strategie</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Führungsstil</div>
+            <div class="status-value">Kooperativ</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Entscheidungskultur</div>
+            <div class="status-value">Dezentral</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Transformationsreife</div>
+            <div class="status-value">mittel-hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Wachstumsstrategie</div>
+            <div class="status-value">Organisch + M&amp;A</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Differenzierung</div>
+            <div class="status-value">Qualität & ESG</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-amber"></div>
+            <div class="status-label">Nachfolgeregelung CEO</div>
+            <div class="status-value">in Planung</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2 mb20">
+      <div class="card">
+        <div class="card-title">Vision · Mission · Purpose</div>
+        <div style="margin-bottom:18px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Vision</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.7">Nachhaltige Lebensräume schaffen, die Generationen überdauern – als führender Schweizer Developer im Segment Qualität und ESG-Exzellenz.</div>
+        </div>
+        <div style="margin-bottom:18px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">Mission</div>
+          <div style="font-size:13px;color:var(--text-mid);line-height:1.7">Durch konsequente Qualitätsorientierung und mutige Entwicklungsprojekte den Schweizer Immobilienmarkt aktiv mitgestalten.</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px">Kernwerte</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="chip chip-accent">Nachhaltigkeit</span>
+            <span class="chip chip-gold">Qualität</span>
+            <span class="chip chip-green">Verantwortung</span>
+            <span class="chip chip-accent">Langfristigkeit</span>
+            <span class="chip chip-green">Integrität</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Offene Mandate · Priorität</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Funktion</th>
+              <th>Typ</th>
+              <th>Priorität</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Leiter Entwicklung</strong></td>
+              <td>Direktansprache</td>
+              <td><span class="chip chip-red">Prio 1</span></td>
+              <td><span class="chip chip-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>Senior PM Real Estate</td>
+              <td>Direktansprache</td>
+              <td><span class="chip chip-amber">Prio 2</span></td>
+              <td><span class="chip chip-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>CFO / Finanzdirektor</td>
+              <td>Nachfolge</td>
+              <td><span class="chip chip-amber">Prio 2</span></td>
+              <td><span class="chip chip-accent">Briefing</span></td>
+            </tr>
+            <tr>
+              <td>Teamleiter Architektur</td>
+              <td>Neuschaffung</td>
+              <td><span class="chip chip-accent">Prio 3</span></td>
+              <td><span class="chip chip-accent">Vorbereitung</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-strip">
+    <div>Arkadium AG · Mandatsprofil · <span>Vertraulich</span></div>
+    <div>Kunde: <span>Terresta AG</span> · Ref. ARK-M-2025-088</div>
+    <div>Stand: <span>März 2025</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 3 · JOBMASKE & MATCHING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-jobmaske">
+
+  <div class="page-banner">
+    <div>
+      <div class="banner-title">Jobmaske · Leiter Entwicklung – Terresta AG</div>
+      <div class="banner-sub">JCM-Profil · MPS-Berechnung · Matching Steinmann · Onboarding-Plan</div>
+    </div>
+    <div class="banner-chips">
+      <span class="chip chip-green">Match 94%</span>
+      <span class="chip chip-gold">Hackman & Oldham</span>
+      <span class="chip chip-accent">Arkadium Empfehlung</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- STELLENPROFIL + JCM -->
+    <div class="section-divider">
+      <div class="section-divider-label">Stellenprofil</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-2 mb20">
+      <div class="card">
+        <div class="card-title">Stellenbeschreibung</div>
+        <div class="info-item"><span class="info-key">Funktion</span><span class="info-val">Leiter Entwicklung</span></div>
+        <div class="info-item"><span class="info-key">Unternehmen</span><span class="info-val">Terresta AG, Zürich</span></div>
+        <div class="info-item"><span class="info-key">Pensum</span><span class="info-val">100% · Festanstellung</span></div>
+        <div class="info-item"><span class="info-key">Report an</span><span class="info-val">CEO · direkter VR-Report</span></div>
+        <div class="info-item"><span class="info-key">Teamgrösse</span><span class="info-val">8 – 12 Personen</span></div>
+        <div class="info-item"><span class="info-key">Budget</span><span class="info-val">CHF 45 – 80 Mio. p.a.</span></div>
+        <div class="info-item"><span class="info-key">Eintritt</span><span class="info-val">Q3 2025 / nach Vereinbarung</span></div>
+        <div class="info-item"><span class="info-key">Suchform</span><span class="info-val">Verdeckt · Direktansprache</span></div>
+        <div class="info-item"><span class="info-key">Mandatsnr.</span><span class="info-val">ARK-M-2025-088</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fachliche Anforderungen · Gewichtung</div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Real Estate Development</span><span class="bar-score" style="color:var(--accent)">95</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:95%"></div></div>
+          <div class="bar-note">Zwingend · 8+ Jahre Erfahrung</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Projektsteuerung & Leadership</span><span class="bar-score" style="color:var(--accent)">90</span></div>
+          <div class="bar-track"><div class="bar-fill bf-accent" style="width:90%"></div></div>
+          <div class="bar-note">Führungserfahrung Pflicht</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Business Case / Finanzierung</span><span class="bar-score" style="color:var(--gold)">80</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:80%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">Architektur / Hochbau</span><span class="bar-score" style="color:var(--gold)">75</span></div>
+          <div class="bar-track"><div class="bar-fill bf-gold" style="width:75%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-header"><span class="bar-name">ESG / Nachhaltigkeit</span><span class="bar-score" style="color:var(--green)">70</span></div>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:70%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JCM -->
+    <div class="section-divider">
+      <div class="section-divider-label">Job Characteristics Model · Hackman & Oldham</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="jcm-cards mb20">
+      <div class="jcm-card">
+        <div class="jcm-num">88</div>
+        <div class="jcm-name">Skill Variety</div>
+        <div class="jcm-desc">Breite Kompetenzanforderung: Führung, Planung, Finanzen, Stakeholder, Technik</div>
+      </div>
+      <div class="jcm-card">
+        <div class="jcm-num">92</div>
+        <div class="jcm-name">Task Identity</div>
+        <div class="jcm-desc">Projekte von der Akquisition bis zur Übergabe – vollständige Verantwortungskette</div>
+      </div>
+      <div class="jcm-card">
+        <div class="jcm-num">90</div>
+        <div class="jcm-name">Task Significance</div>
+        <div class="jcm-desc">Gesellschaftliche & strategische Wirkung: nachhaltige Lebensräume, Marktpositionierung</div>
+      </div>
+      <div class="jcm-card">
+        <div class="jcm-num">85</div>
+        <div class="jcm-name">Autonomy</div>
+        <div class="jcm-desc">Hohe Eigenverantwortung, dezentrale Entscheidungsstruktur, direkter CEO-Report</div>
+      </div>
+      <div class="jcm-card">
+        <div class="jcm-num">78</div>
+        <div class="jcm-name">Feedback</div>
+        <div class="jcm-desc">Projektmeilensteine, Quartalsreviews, direktes Führungsfeedback</div>
+      </div>
+    </div>
+
+    <!-- MPS FORMULA -->
+    <div class="formula-block mb20">
+      <div class="formula-equation">
+        <strong>MPS (Motivationspotenzialwert)</strong><br>
+        = [(Skill Variety + Task Identity + Task Significance) ÷ 3] × Autonomy × Feedback<br><br>
+        = [(88 + 92 + 90) ÷ 3] × 85 × 78 ÷ 10'000<br>
+        = 90.0 × 85 × 78 ÷ 10'000
+      </div>
+      <div class="formula-divider"></div>
+      <div class="formula-result-box">
+        <div class="formula-result-num">89.1</div>
+        <div class="formula-result-desc">Motivationspotenzialwert der Stelle</div>
+      </div>
+    </div>
+
+    <!-- MATCHING -->
+    <div class="section-divider">
+      <div class="section-divider-label">Matching · Kandidat vs. Stelle</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-2 mb20">
+      <div class="card">
+        <div class="card-title">
+          Match-Analyse · Steinmann ↔ Terresta
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Stelle</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Kandidat</div>
+          </div>
+        </div>
+        <div class="match-compare">
+          <div class="mc-label">MPS Score</div>
+          <div class="mc-bar-wrap">
+            <div class="mc-val mc-val-a">89</div>
+            <div class="mc-bar"><div class="mc-fill-a" style="width:89%"></div></div>
+            <div class="mc-bar"><div class="mc-fill-b" style="width:87%"></div></div>
+            <div class="mc-val mc-val-b">87</div>
+          </div>
+        </div>
+        <div class="match-compare">
+          <div class="mc-label">GNS Anforderung</div>
+          <div class="mc-bar-wrap">
+            <div class="mc-val mc-val-a">90</div>
+            <div class="mc-bar"><div class="mc-fill-a" style="width:90%"></div></div>
+            <div class="mc-bar"><div class="mc-fill-b" style="width:92%"></div></div>
+            <div class="mc-val mc-val-b">92</div>
+          </div>
+        </div>
+        <div class="match-compare">
+          <div class="mc-label">Fachkompetenz</div>
+          <div class="mc-bar-wrap">
+            <div class="mc-val mc-val-a">95</div>
+            <div class="mc-bar"><div class="mc-fill-a" style="width:95%"></div></div>
+            <div class="mc-bar"><div class="mc-fill-b" style="width:91%"></div></div>
+            <div class="mc-val mc-val-b">91</div>
+          </div>
+        </div>
+        <div class="match-compare">
+          <div class="mc-label">Führungskompetenz</div>
+          <div class="mc-bar-wrap">
+            <div class="mc-val mc-val-a">90</div>
+            <div class="mc-bar"><div class="mc-fill-a" style="width:90%"></div></div>
+            <div class="mc-bar"><div class="mc-fill-b" style="width:86%"></div></div>
+            <div class="mc-val mc-val-b">86</div>
+          </div>
+        </div>
+        <div class="match-compare">
+          <div class="mc-label">Werte-Alignment</div>
+          <div class="mc-bar-wrap">
+            <div class="mc-val mc-val-a">–</div>
+            <div class="mc-bar"><div class="mc-fill-a" style="width:100%"></div></div>
+            <div class="mc-bar"><div class="mc-fill-b" style="width:94%"></div></div>
+            <div class="mc-val mc-val-b">94</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Match-Scores · Zusammenfassung</div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Person–Job Fit</div>
+            <div class="status-value"><strong>94%</strong></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Person–Organisation Fit</div>
+            <div class="status-value"><strong>91%</strong></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">MPS Stelle vs. Kandidat</div>
+            <div class="status-value">89 vs. 87 · optimal</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">GNS Match</div>
+            <div class="status-value">90 vs. 92 · optimal</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">OCEAN–Profil Passung</div>
+            <div class="status-value">sehr hoch</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Career Anchor Alignment</div>
+            <div class="status-value">Autonomie ✓ Expertise ✓</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Wechselmotiv</div>
+            <div class="status-value">Entwicklung · nicht Flucht</div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot sd-green"></div>
+            <div class="status-label">Ikigai–Alignment</div>
+            <div class="status-value">Architektur + RE + Purpose</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONBOARDING -->
+    <div class="section-divider">
+      <div class="section-divider-label">Onboarding · IDENTITY – 90-Tage-Plan</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="grid-3 mb20">
+      <div class="card">
+        <div class="card-title">Tag 1–30 · Integration</div>
+        <div class="status-list">
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Kultur, Werte, Team kennenlernen</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Rollenklarheit schärfen (JCM)</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Stakeholder-Mapping</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Erste Wirksamkeitsziele setzen</div></div>
+          <div class="status-item"><div class="status-dot sd-gold"></div><div class="status-label">Check-in Arkadium · Tag 30</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tag 31–60 · Wirksamkeit</div>
+        <div class="status-list">
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Erste Projekte übernehmen</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Autonomie ausüben (JCM: Autonomy)</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Frühe Erfolgserlebnisse (Bandura)</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Feedback-Rhythmus etablieren</div></div>
+          <div class="status-item"><div class="status-dot sd-gold"></div><div class="status-label">Motivationsindex-Messung</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tag 61–90 · Eigenverantwortung</div>
+        <div class="status-list">
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Vollständige Führungsübernahme</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Strategische Ziele definieren</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Teamentwicklung initiieren</div></div>
+          <div class="status-item"><div class="status-dot sd-accent"></div><div class="status-label">Abschlussevaluation vorbereiten</div></div>
+          <div class="status-item"><div class="status-dot sd-green"></div><div class="status-label">Abschluss-Assessment Arkadium</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL REC -->
+    <div class="rec-box">
+      <div class="rec-icon">✓</div>
+      <div class="rec-text">
+        <strong>Arkadium Empfehlung · Weiterführen:</strong> Alle relevanten Dimensionen zeigen eine aussergewöhnliche Passung. MPS Stelle (89.1) trifft auf MPS Kandidat (87) bei sehr hohem GNS beider Seiten. Werte, Career Anchors und Ikigai sind aligned. Marco Steinmann ist latent wechselwillig, nicht fluchtgetrieben – und bereit für genau diese Führungsrolle. Empfehlung: Anonymes Briefing an Terresta AG einleiten.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-strip">
+    <div>Arkadium AG · Jobmaske & Matching · <span>Vertraulich</span></div>
+    <div>Mandat: <span>Leiter Entwicklung · Terresta AG</span></div>
+    <div>Stand: <span>März 2025</span></div>
+  </div>
+</div>
+
+<div class="watermark">Arkadium · Arkademia · Vertraulich</div>
+
+<script>
+function show(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

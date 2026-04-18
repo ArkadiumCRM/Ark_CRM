@@ -1,0 +1,492 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Jobs" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: CFO / Finanzleitung
+    - generic [ref=e16]:
+      - generic [ref=e17]: ⌘K
+      - button "☀" [ref=e18] [cursor=pointer]
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - text: ℹ
+      - strong [ref=e21]: "Mockup-Demo:"
+      - text: Dieser Job ist „Aktiv". Scraper-Proposal-Banner als Header-Pattern für status=scraper_proposal-Jobs (z.B. Losinger-Lausanne in der Liste) —
+    - button "Banner anzeigen / ausblenden" [ref=e22] [cursor=pointer]
+  - generic [ref=e24]:
+    - generic [ref=e25]: 💼
+    - generic [ref=e26]:
+      - heading "CFO / Finanzleitung Bauherr Muster AG" [level=1] [ref=e27]
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - text: Owner AM
+          - strong [ref=e30]: PW
+        - generic [ref=e32]: Eröffnet 14.01.2026 · offen seit 91 Tagen
+        - generic [ref=e34]: Ehem. Scraper-Proposal · am 02.04.2026 bestätigt
+      - generic [ref=e35]:
+        - button "📤 Kandidat vorschlagen" [ref=e36] [cursor=pointer]
+        - button "📞 Ansprechperson" [ref=e37] [cursor=pointer]
+        - button "✉ Email" [ref=e38] [cursor=pointer]
+        - button "📄 Stellenausschreibung" [ref=e39] [cursor=pointer]
+        - button "🔁 Matching neu" [ref=e40] [cursor=pointer]
+        - button "✕ Schliessen" [ref=e41] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: Status
+        - combobox [ref=e45] [cursor=pointer]:
+          - option "⚠ Scraper-Vorschlag"
+          - option "● Aktiv" [selected]
+          - option "⏸ On Hold"
+          - option "✓ Besetzt"
+          - option "✕ Geschlossen"
+          - option "⊘ Abgelehnt"
+          - text: ▾
+      - generic [ref=e46]:
+        - 'link "🎯 Mandat: CFO-Suche" [ref=e47] [cursor=pointer]':
+          - /url: mandates.html
+        - 'link "📋 Stellenplan #PLN-2026-01" [ref=e48] [cursor=pointer]':
+          - /url: "#"
+        - generic [ref=e49]: 🔒 verdeckt
+  - generic [ref=e50]:
+    - generic [ref=e51]:
+      - generic [ref=e52]: 🎯 Matches ≥ 70 %
+      - generic [ref=e53]: "124"
+      - generic [ref=e54]: +7 seit 7 d · Top 94 %
+    - generic [ref=e55]:
+      - generic [ref=e56]: 🧺 Im Jobbasket
+      - generic [ref=e57]: "12"
+      - generic [ref=e58]: 4 Prelead · 3 Versandt
+    - generic [ref=e59]:
+      - generic [ref=e60]: ⚙ Aktive Prozesse
+      - generic [ref=e61]: "6"
+      - generic [ref=e62]: 5 Mandat · 1 EB
+    - generic [ref=e63]:
+      - generic [ref=e64]: 📍 Standort
+      - generic [ref=e65]: Zürich
+      - generic [ref=e66]: 80–100 % · hybrid
+    - generic [ref=e67]:
+      - generic [ref=e68]: 💰 TC-Range
+      - generic [ref=e69]: CHF 220–270k
+      - generic [ref=e70]: inkl. Bonus
+    - generic [ref=e71]:
+      - generic [ref=e72]: 🌡 Ø Match-Score
+      - generic [ref=e73]: 76 %
+      - generic [ref=e74]: über 124 Matches
+  - navigation [ref=e75]:
+    - generic [ref=e76] [cursor=pointer]: 1Übersicht
+    - generic [ref=e77] [cursor=pointer]: 2Matching
+    - generic [ref=e78] [cursor=pointer]: 3Jobbasket
+    - generic [ref=e79] [cursor=pointer]: 4Prozesse
+    - generic [ref=e80] [cursor=pointer]: 5Dokumente
+    - generic [ref=e81] [cursor=pointer]: 6History
+    - generic [ref=e82] [cursor=pointer]: 7Reminders
+  - generic [ref=e83]:
+    - text: ▾ ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e342]:
+      - generic [ref=e343]:
+        - generic [ref=e344]:
+          - strong [ref=e345]: 🎯 Matching-Tool
+          - text: Async-Recompute über alle 8'400 Kandidaten · Gewichtung aus Tab 1 §5 Matching-Kriterien
+        - generic [ref=e346]:
+          - text: "Zuletzt berechnet:"
+          - strong [ref=e347]: 2026-04-16 02:14
+          - text: (vor 12 h)
+        - button "🔁 Matching neu berechnen" [ref=e348] [cursor=pointer]
+      - generic [ref=e349]:
+        - generic [ref=e350]:
+          - generic [ref=e351]: Matches ≥ Schwelle
+          - generic [ref=e352]: "124"
+          - generic [ref=e353]: aus 8'400 Kandidaten
+        - generic [ref=e354]:
+          - generic [ref=e355]: Top-Score
+          - generic [ref=e356]: 94 %
+          - generic [ref=e357]: Tobias Furrer
+        - generic [ref=e358]:
+          - generic [ref=e359]: Ø Score
+          - generic [ref=e360]: 76 %
+          - generic [ref=e361]: über Matches ≥ 70
+        - generic [ref=e362]:
+          - generic [ref=e363]: Neu seit 7 d
+          - generic [ref=e364]: "7"
+          - generic [ref=e365]: Score-Sprünge
+        - generic [ref=e366]:
+          - generic [ref=e367]: Sector-Exclude
+          - generic [ref=e368]: "3"
+          - generic [ref=e369]: geblockte Arbeitgeber
+      - generic [ref=e370]:
+        - generic [ref=e371]:
+          - generic [ref=e372]: Schwelle
+          - slider [ref=e373]: "70"
+          - generic [ref=e374]: 70 %
+        - combobox [ref=e376] [cursor=pointer]:
+          - option "Alle Sparten" [selected]
+          - option "ARC"
+          - option "GT"
+          - option "ING"
+          - option "PUR"
+          - option "REM"
+        - combobox [ref=e377] [cursor=pointer]:
+          - option "Alle Availability" [selected]
+          - option "🟢 Aktiv suchend"
+          - option "🟡 Passiv offen"
+          - option "🔴 Nicht offen"
+        - combobox [ref=e378] [cursor=pointer]:
+          - option "Alle Basket-States" [selected]
+          - option "nicht im Basket"
+          - option "im Basket"
+          - option "in Prozess"
+        - generic [ref=e379]:
+          - checkbox "Sector-Exclude aktiv" [checked] [ref=e380]
+          - text: Sector-Exclude aktiv
+        - button "+ In Jobbasket (0)" [disabled] [ref=e381] [cursor=pointer]:
+          - text: + In Jobbasket
+          - generic [ref=e382]: (0)
+      - table [ref=e384]:
+        - rowgroup [ref=e385]:
+          - row "Kandidat Score Radar Sp. Fkt. Geh. Loc. Skl. Verf. Sen. Aktueller AG Basket ›" [ref=e386]:
+            - columnheader [ref=e387]:
+              - checkbox [ref=e388]
+            - columnheader "Kandidat" [ref=e389]
+            - columnheader "Score" [ref=e390]
+            - columnheader "Radar" [ref=e391]
+            - columnheader "Sp." [ref=e392]
+            - columnheader "Fkt." [ref=e393]
+            - columnheader "Geh." [ref=e394]
+            - columnheader "Loc." [ref=e395]
+            - columnheader "Skl." [ref=e396]
+            - columnheader "Verf." [ref=e397]
+            - columnheader "Sen." [ref=e398]
+            - columnheader "Aktueller AG" [ref=e399]
+            - columnheader "Basket" [ref=e400]
+            - columnheader "›" [ref=e401]
+        - rowgroup [ref=e402]:
+          - row "Tobias Furrer 40 J · Zürich 94 % Radar 94 10 10 9 10 9 7 10 Finanzleiter · Züblin AG in Prozess ›" [ref=e403]:
+            - cell [ref=e404]:
+              - checkbox [ref=e405]
+            - cell "Tobias Furrer 40 J · Zürich" [ref=e406]:
+              - strong [ref=e407]: Tobias Furrer
+              - generic [ref=e408]: 40 J · Zürich
+            - cell "94 %" [ref=e409]:
+              - generic [ref=e410]: 94 %
+            - cell "Radar 94" [ref=e411]:
+              - img "Radar 94" [ref=e412]
+            - cell "10" [ref=e416]:
+              - strong [ref=e417]: "10"
+            - cell "10" [ref=e418]:
+              - strong [ref=e419]: "10"
+            - cell "9" [ref=e420]
+            - cell "10" [ref=e421]:
+              - strong [ref=e422]: "10"
+            - cell "9" [ref=e423]
+            - cell "7" [ref=e424]
+            - cell "10" [ref=e425]:
+              - strong [ref=e426]: "10"
+            - cell "Finanzleiter · Züblin AG" [ref=e427]
+            - cell "in Prozess" [ref=e428]:
+              - generic [ref=e429]: in Prozess
+            - cell "›" [ref=e430]:
+              - button "›" [ref=e431] [cursor=pointer]
+          - row "Claudia Zehnder 45 J · Zürich 89 % 10 9 8 10 8 9 9 CFO · Halter AG Research ›" [ref=e432]:
+            - cell [ref=e433]:
+              - checkbox [ref=e434]
+            - cell "Claudia Zehnder 45 J · Zürich" [ref=e435]:
+              - strong [ref=e436]: Claudia Zehnder
+              - generic [ref=e437]: 45 J · Zürich
+            - cell "89 %" [ref=e438]:
+              - generic [ref=e439]: 89 %
+            - cell [ref=e440]:
+              - img [ref=e441]
+            - cell "10" [ref=e444]:
+              - strong [ref=e445]: "10"
+            - cell "9" [ref=e446]
+            - cell "8" [ref=e447]
+            - cell "10" [ref=e448]:
+              - strong [ref=e449]: "10"
+            - cell "8" [ref=e450]
+            - cell "9" [ref=e451]
+            - cell "9" [ref=e452]
+            - cell "CFO · Halter AG" [ref=e453]
+            - cell "Research" [ref=e454]:
+              - generic [ref=e455]: Research
+            - cell "›" [ref=e456]:
+              - button "›" [ref=e457] [cursor=pointer]
+          - row "Markus Gerber 48 J · Zug 85 % 8 9 8 7 8 9 9 Head of Finance · HRS Real Estate Research ›" [ref=e458]:
+            - cell [ref=e459]:
+              - checkbox [ref=e460]
+            - cell "Markus Gerber 48 J · Zug" [ref=e461]:
+              - strong [ref=e462]: Markus Gerber
+              - generic [ref=e463]: 48 J · Zug
+            - cell "85 %" [ref=e464]:
+              - generic [ref=e465]: 85 %
+            - cell [ref=e466]:
+              - img [ref=e467]
+            - cell "8" [ref=e470]
+            - cell "9" [ref=e471]
+            - cell "8" [ref=e472]
+            - cell "7" [ref=e473]
+            - cell "8" [ref=e474]
+            - cell "9" [ref=e475]
+            - cell "9" [ref=e476]
+            - cell "Head of Finance · HRS Real Estate" [ref=e477]
+            - cell "Research" [ref=e478]:
+              - generic [ref=e479]: Research
+            - cell "›" [ref=e480]:
+              - button "›" [ref=e481] [cursor=pointer]
+          - row "Nina Brunner 38 J · Winterthur 82 % 10 8 8 8 8 10 6 Head of Finance · Losinger Marazzi CV Expected ›" [ref=e482]:
+            - cell [ref=e483]:
+              - checkbox [ref=e484]
+            - cell "Nina Brunner 38 J · Winterthur" [ref=e485]:
+              - strong [ref=e486]: Nina Brunner
+              - generic [ref=e487]: 38 J · Winterthur
+            - cell "82 %" [ref=e488]:
+              - generic [ref=e489]: 82 %
+            - cell [ref=e490]:
+              - img [ref=e491]
+            - cell "10" [ref=e494]:
+              - strong [ref=e495]: "10"
+            - cell "8" [ref=e496]
+            - cell "8" [ref=e497]
+            - cell "8" [ref=e498]
+            - cell "8" [ref=e499]
+            - cell "10" [ref=e500]:
+              - strong [ref=e501]: "10"
+            - cell "6" [ref=e502]
+            - cell "Head of Finance · Losinger Marazzi" [ref=e503]
+            - cell "CV Expected" [ref=e504]:
+              - generic [ref=e505]: CV Expected
+            - cell "›" [ref=e506]:
+              - button "›" [ref=e507] [cursor=pointer]
+          - row "Stefan Meier 52 J · Baar 78 % 9 7 7 8 8 7 9 Finanzchef · Priora AG — ›" [ref=e508]:
+            - cell [ref=e509]:
+              - checkbox [ref=e510]
+            - cell "Stefan Meier 52 J · Baar" [ref=e511]:
+              - strong [ref=e512]: Stefan Meier
+              - generic [ref=e513]: 52 J · Baar
+            - cell "78 %" [ref=e514]:
+              - generic [ref=e515]: 78 %
+            - cell [ref=e516]:
+              - img [ref=e517]
+            - cell "9" [ref=e520]
+            - cell "7" [ref=e521]
+            - cell "7" [ref=e522]
+            - cell "8" [ref=e523]
+            - cell "8" [ref=e524]
+            - cell "7" [ref=e525]
+            - cell "9" [ref=e526]
+            - cell "Finanzchef · Priora AG" [ref=e527]
+            - cell "—" [ref=e528]
+            - cell "›" [ref=e529]:
+              - button "›" [ref=e530] [cursor=pointer]
+          - row "Andrea Hofer 42 J · Luzern 73 % 7 8 7 6 7 8 8 Controllerin · HRS — ›" [ref=e531]:
+            - cell [ref=e532]:
+              - checkbox [ref=e533]
+            - cell "Andrea Hofer 42 J · Luzern" [ref=e534]:
+              - strong [ref=e535]: Andrea Hofer
+              - generic [ref=e536]: 42 J · Luzern
+            - cell "73 %" [ref=e537]:
+              - generic [ref=e538]: 73 %
+            - cell [ref=e539]:
+              - img [ref=e540]
+            - cell "7" [ref=e543]
+            - cell "8" [ref=e544]
+            - cell "7" [ref=e545]
+            - cell "6" [ref=e546]
+            - cell "7" [ref=e547]
+            - cell "8" [ref=e548]
+            - cell "8" [ref=e549]
+            - cell "Controllerin · HRS" [ref=e550]
+            - cell "—" [ref=e551]
+            - cell "›" [ref=e552]:
+              - button "›" [ref=e553] [cursor=pointer]
+          - row "Lukas Müller ⛔ Sector-Exclude Arbeitgeber auf Block-Liste 68 % 7 7 7 7 6 7 7 CFO · Implenia (Competitor) — ›" [ref=e554]:
+            - cell [ref=e555]:
+              - checkbox [disabled] [ref=e556]
+            - cell "Lukas Müller ⛔ Sector-Exclude Arbeitgeber auf Block-Liste" [ref=e557]:
+              - strong [ref=e558]: Lukas Müller
+              - generic [ref=e559]: ⛔ Sector-Exclude
+              - generic [ref=e560]: Arbeitgeber auf Block-Liste
+            - cell "68 %" [ref=e561]:
+              - generic [ref=e562]: 68 %
+            - cell [ref=e563]:
+              - img [ref=e564]
+            - cell "7" [ref=e567]
+            - cell "7" [ref=e568]
+            - cell "7" [ref=e569]
+            - cell "7" [ref=e570]
+            - cell "6" [ref=e571]
+            - cell "7" [ref=e572]
+            - cell "7" [ref=e573]
+            - cell "CFO · Implenia (Competitor)" [ref=e574]
+            - cell "—" [ref=e575]
+            - cell "›" [ref=e576]:
+              - button "›" [ref=e577] [cursor=pointer]
+          - row "+ 117 weitere ≥ Schwelle" [ref=e578]:
+            - cell "+ 117 weitere ≥ Schwelle" [ref=e579]
+      - generic [ref=e580]:
+        - strong [ref=e581]: "7-Sub-Score-Matrix (je 0–10):"
+        - text: Sp. = Sparte-Match · Fkt. = Funktion · Geh. = Gehalts-Fit · Loc. = Standort-Fit · Skl. = Skills-Match · Verf. = Verfügbarkeit · Sen. = Seniorität. Radar visualisiert die 7 Dimensionen. Gewichtung via Tab 1 §5 (Matching-Kriterien).
+  - generic [ref=e225]:
+    - generic [ref=e226]: 1–7 Tabs
+    - generic [ref=e227]: M Matching neu
+    - generic [ref=e228]: T Theme
+    - generic [ref=e229]: ⌘K
+  - generic [ref=e230]:
+    - generic [ref=e231]:
+      - generic [ref=e232]: ↑
+      - generic [ref=e233]:
+        - heading "Dokument hochladen" [level=2] [ref=e234]
+        - generic [ref=e235]: Stellenausschreibung, Briefing oder Matching-Export
+      - button "✕" [ref=e236] [cursor=pointer]
+    - generic [ref=e238]:
+      - generic [ref=e239]:
+        - heading "Datei" [level=4] [ref=e240]
+        - generic [ref=e241] [cursor=pointer]:
+          - generic [ref=e242]: 📄
+          - generic [ref=e243]: Datei hierher ziehen oder klicken
+          - generic [ref=e244]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e245]:
+        - heading "Metadaten" [level=4] [ref=e246]
+        - generic [ref=e247]:
+          - generic [ref=e248]: Kategorie *
+          - combobox [ref=e249] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Stellenausschreibung"
+            - option "Briefing-Protokoll"
+            - option "Matching-Export"
+            - option "Organigramm-Position"
+            - option "Sonstiges"
+          - generic [ref=e250]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e251]
+          - generic [ref=e252]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e253]
+          - generic [ref=e254]: Sprache
+          - combobox [ref=e255] [cursor=pointer]:
+            - option "Deutsch" [selected]
+            - option "Französisch"
+            - option "Italienisch"
+            - option "Englisch"
+          - generic [ref=e256]: Urheber
+          - generic [ref=e257]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e258]:
+      - button "Abbrechen" [ref=e259] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e261] [cursor=pointer]
+  - generic [ref=e262]:
+    - generic [ref=e263]:
+      - generic [ref=e264]: 💬
+      - generic [ref=e265]:
+        - heading "Event-Detail" [level=2] [ref=e266]
+        - generic [ref=e267]: —
+      - button "✕" [ref=e268] [cursor=pointer]
+    - generic [ref=e271]:
+      - button "Schliessen" [ref=e272] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e273] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e274] [cursor=pointer]
+  - generic [ref=e275]:
+    - generic [ref=e276]:
+      - generic [ref=e277]: ⏰
+      - generic [ref=e278]:
+        - heading "Neuer Reminder" [level=2] [ref=e279]
+        - generic [ref=e280]: Job-Reminder anlegen (Stage-Deadline, Matching-Refresh, etc.)
+        - generic [ref=e282]: neu
+      - button "✕" [ref=e283] [cursor=pointer]
+    - generic [ref=e284]:
+      - generic [ref=e285]:
+        - heading "Reminder" [level=4] [ref=e286]
+        - generic [ref=e287]:
+          - generic [ref=e288]: Titel *
+          - textbox "z.B. Stage-Deadline 3rd Interview" [ref=e289]
+          - generic [ref=e290]: Typ *
+          - combobox [ref=e291] [cursor=pointer]:
+            - option "Stage-Deadline" [selected]
+            - option "Vakanz-Bestätigung"
+            - option "Matching-Refresh"
+            - option "Schließungs-Check"
+            - option "Stellenausschreibung-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e292]: Fällig am *
+          - textbox [ref=e293]
+          - generic [ref=e294]: Zuständig *
+          - combobox [ref=e295] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Backoffice"
+          - generic [ref=e296]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e297]
+          - generic [ref=e298]: Verknüpfung
+          - combobox [ref=e299] [cursor=pointer]:
+            - option "Job-Level (keine Verknüpfung)" [selected]
+            - option "Kandidat · Tobias Furrer"
+            - option "Prozess · Stage V"
+            - option "Mandat · CFO-Suche"
+            - option "Stellenausschreibung DE"
+          - generic [ref=e300]: Wiederholen
+          - combobox [ref=e301] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+      - generic [ref=e302]:
+        - heading "Benachrichtigung" [level=4] [ref=e303]
+        - generic [ref=e304]:
+          - generic [ref=e305]: Vorlaufzeit
+          - combobox [ref=e306] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e307]: Eskalation
+          - generic [ref=e308]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead
+    - generic [ref=e309]:
+      - button "Abbrechen" [ref=e310] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e312] [cursor=pointer]
+  - generic [ref=e313]:
+    - generic [ref=e314]:
+      - generic [ref=e315]: 📤
+      - generic [ref=e316]:
+        - heading "Kandidat vorschlagen" [level=2] [ref=e317]
+        - generic [ref=e318]: "Kandidat manuell in den Jobbasket dieses Jobs aufnehmen (Stage: Prelead)"
+        - generic [ref=e320]: CFO · Bauherr Muster AG
+      - button "✕" [ref=e321] [cursor=pointer]
+    - generic [ref=e322]:
+      - generic [ref=e323]:
+        - heading "Kandidaten-Auswahl" [level=4] [ref=e324]
+        - generic [ref=e325]:
+          - generic [ref=e326]: Kandidat *
+          - combobox "🔍 Kandidat suchen (Name, Aktueller AG, Funktion) …" [ref=e327]
+          - generic [ref=e328]: Source
+          - combobox [ref=e329] [cursor=pointer]:
+            - option "Manuelle AM-Empfehlung" [selected]
+            - option "Bestehender Kandidat (outside Matching)"
+            - option "Referral"
+            - option "Ex-Kandidat re-aktiviert"
+          - generic [ref=e330]: Start-Stage
+          - combobox [ref=e331] [cursor=pointer]:
+            - option "Prelead (Default)" [selected]
+            - option "GO mündlich (direkt, falls schon gesprochen)"
+      - generic [ref=e332]:
+        - heading "Begründung (optional)" [level=4] [ref=e333]
+        - textbox "z.B. Ex-Kollege von H. Müller, bekannt aus früherem Mandat, passt auch ohne Matching-Hit …" [ref=e334]
+      - generic [ref=e335]:
+        - text: ℹ Nach dem Anlegen erscheint der Kandidat in
+        - strong [ref=e336]: Tab 3 Jobbasket
+        - text: . Stage-Wechsel und Gate-Logik (Expose, TI, etc.) werden im
+        - strong [ref=e337]: Kandidat-Briefing Tab 5 Jobbasket
+        - text: verwaltet — nicht hier.
+    - generic [ref=e338]:
+      - button "Abbrechen" [ref=e339] [cursor=pointer]
+      - button "+ In Jobbasket aufnehmen" [ref=e341] [cursor=pointer]

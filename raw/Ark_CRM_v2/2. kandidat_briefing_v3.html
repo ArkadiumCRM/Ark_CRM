@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Briefing Tab v2</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{
+  --gold:#dcb479;--teal:#196774;--dark:#262626;
+  --gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold20:rgba(220,180,121,.20);--gold30:rgba(220,180,121,.30);--gold40:rgba(220,180,121,.40);
+  --teal08:rgba(25,103,116,.08);--teal15:rgba(25,103,116,.15);--teal20:rgba(25,103,116,.20);--teal30:rgba(25,103,116,.30);
+  --bg-h:#232321;--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;
+  --brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);
+  --t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;
+  --green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--orange:#f97316;
+}
+
+/* === TOPBAR === */
+
+.topbar-l .sep{color:var(--tm)}.topbar-l .cur{color:var(--t1);font-weight:500}
+
+/* === HEADER === */
+
+.cl:hover{background:var(--gold08)}
+
+.bdg.wh 
+
+.bdg.lc 
+
+.ab 
+.ab 
+@media(max-width:1100px){.ab }
+
+/* === BRIEFING LAYOUT === */
+.briefing-layout{display:flex;gap:0;position:relative}
+.briefing-main{flex:1;padding:24px 32px;max-width:1100px;min-width:0}
+
+/* Quick-Jump Sidebar */
+.qj{position:sticky;top:0;width:180px;padding:24px 12px;border-left:1px solid var(--brd);height:fit-content;flex-shrink:0}
+.qj-title{font-size:9px;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600}
+.qj-item{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;font-size:11px;color:var(--t3);cursor:pointer;transition:.15s;margin-bottom:2px}
+.qj-item:hover{color:var(--t1);background:var(--bg-e)}
+.qj-item.active{color:var(--gold);background:var(--gold08)}
+.qj-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.qj-dot.full{background:var(--green)}.qj-dot.partial{background:var(--amber)}.qj-dot.empty{background:var(--tm)}
+.qj-pct{margin-left:auto;font-size:9px;color:var(--tm)}
+
+/* AI Banner */
+.ai-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:10px;margin-bottom:16px;font-size:12px;color:var(--amber)}
+.ai-banner-icon{width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.ai-banner-text{flex:1}
+.ai-banner-text strong{font-weight:600}
+.ai-banner-btn{padding:5px 14px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:var(--amber);color:#fff;border:none;flex-shrink:0}
+
+/* Verpflichtungs-Warnung */
+.verpflichtung-banner{display:none;align-items:center;gap:10px;padding:10px 16px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:10px;margin-bottom:16px;font-size:12px;color:var(--red);font-weight:500}
+.verpflichtung-banner.active{display:flex}
+
+/* Version nav */
+.vn{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.va{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg-e);border:.5px solid var(--brd);color:var(--t2);transition:.15s}
+.va:hover{background:var(--bg-hv);color:var(--t1)}.va.dis{opacity:.3;pointer-events:none}
+.va svg{width:14px;height:14px}
+.vl{font-size:14px;font-weight:500}.vd{font-size:12px;color:var(--t3)}
+.vb{font-size:10px;padding:2px 8px;border-radius:999px;background:var(--gold15);color:var(--gold);font-weight:500}
+.vnb{margin-left:auto;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;border:1px solid var(--gold30);color:var(--gold)}.vnb:hover{background:var(--gold15)}
+
+/* History link + Felder-Warnung */
+.meta-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.history-chip{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:var(--bg-e);border:.5px solid var(--brd-s);font-size:11px;color:var(--t2);cursor:pointer;transition:.15s}
+.history-chip:hover{background:var(--bg-hv);color:var(--t1)}
+.history-chip svg{width:12px;height:12px}
+.warn-chip{display:flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;background:rgba(245,158,11,.06);border:.5px solid rgba(245,158,11,.2);font-size:11px;color:var(--amber);cursor:pointer}
+
+/* Autosave indicator */
+.autosave{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:11px;color:var(--green)}
+.autosave .as-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* === SECTIONS === */
+.bs{background:var(--bg-c);border:.5px solid var(--brd);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.bsh{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;cursor:pointer;transition:.15s}
+.bsh:hover{background:rgba(220,180,121,.02)}
+.bst{font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
+.bst svg{width:18px;height:18px;flex-shrink:0}
+.bst .ico-g{color:var(--gold)}.bst .ico-t{color:var(--teal)}.bst .ico-gr{color:var(--green)}.bst .ico-a{color:var(--amber)}.bst .ico-r{color:var(--red)}
+.bsy{font-size:9px;padding:2px 6px;border-radius:999px;background:var(--gold15);color:var(--gold);margin-left:8px}
+.sec-meta{font-size:10px;color:var(--tm);margin-left:8px}
+.sec-progress{font-size:10px;color:var(--t3);display:flex;align-items:center;gap:6px;margin-right:8px}
+.sec-progress-bar{width:40px;height:3px;background:var(--bg-e);border-radius:2px;overflow:hidden}
+.sec-progress-fill{height:100%;border-radius:2px}
+.bstg{font-size:16px;color:var(--t3);transition:transform .2s}
+.bs.collapsed .bstg{transform:rotate(-90deg)}
+.bsb{padding:4px 24px 20px}
+.bs.collapsed .bsb{display:none}
+
+/* Field grid */
+.fg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 24px}
+.fg.two{grid-template-columns:1fr 1fr}
+.ff{min-width:0}.ff.full{grid-column:1/-1}.ff.half{grid-column:span 2}
+.fl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.fl .req{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.fv{font-size:13px;color:var(--t1);line-height:1.5}
+.fv.nil{color:var(--tm)}
+.fv.bold{font-weight:500}
+.fv.text{font-size:13px;color:var(--t2);line-height:1.6;background:var(--bg-e);padding:10px 14px;border-radius:8px;white-space:pre-line}
+
+/* Dropdown display */
+.dd{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;background:var(--bg-e);border:.5px solid var(--brd-s);font-size:13px;color:var(--t1);cursor:pointer;transition:.15s}
+.dd:hover{border-color:var(--gold30);background:var(--bg-hv)}
+.dd::after{content:'▾';font-size:10px;color:var(--tm)}
+
+/* Multi-select chips */
+.ms{display:flex;flex-wrap:wrap;gap:4px}
+.ms-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:12px}
+.ms-chip.on{background:var(--teal15);color:var(--teal);border:.5px solid var(--teal30)}
+.ms-chip.off{background:var(--bg-e);color:var(--tm);border:.5px solid var(--brd-s);cursor:pointer}.ms-chip.off:hover{color:var(--t2);border-color:var(--brd)}
+
+/* CHF Input */
+.chf-input{display:flex;align-items:center;gap:0;background:var(--bg-e);border-radius:8px;border:.5px solid var(--brd-s);overflow:hidden;transition:.15s}
+.chf-input:hover{border-color:var(--gold30)}
+.chf-prefix{padding:6px 10px;font-size:11px;color:var(--t3);background:rgba(255,255,255,.02);border-right:.5px solid var(--brd-s);font-weight:500}
+.chf-val{padding:6px 12px;font-size:14px;font-weight:500;color:var(--t1);cursor:pointer;flex:1}
+.chf-val:hover{color:var(--gold)}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;gap:10px}
+.toggle{width:36px;height:20px;border-radius:10px;background:var(--tm);position:relative;cursor:pointer;transition:.2s}
+.toggle.on{background:var(--green)}
+.toggle-dot{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:.2s}
+.toggle.on .toggle-dot{left:18px}
+
+/* Tags */
+.tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:6px;margin:2px 4px 2px 0}
+.tag.yes{background:rgba(93,202,165,.1);color:var(--green);border:.5px solid rgba(93,202,165,.25)}
+.tag.no{background:rgba(239,68,68,.06);color:var(--red);border:.5px solid rgba(239,68,68,.15)}
+.tag.warn{background:rgba(245,158,11,.08);color:var(--amber);border:.5px solid rgba(245,158,11,.2)}
+
+/* Salary bars */
+.sal-h{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.sal-row{display:flex;align-items:center;gap:12px}
+.sal-lbl{font-size:11px;color:var(--t3);width:100px;text-align:right;flex-shrink:0}
+.sal-trk{flex:1;height:16px;background:var(--bg-p);border-radius:4px;overflow:hidden;position:relative}
+.sal-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:600}
+.sal-amt{font-size:12px;font-weight:500;width:90px;flex-shrink:0}
+.sal-range{position:absolute;top:0;bottom:0;background:rgba(255,255,255,.04);border-left:1.5px dashed rgba(255,255,255,.15);border-right:1.5px dashed rgba(255,255,255,.15)}
+.sal-benchmark{display:flex;align-items:center;gap:8px;margin-top:4px;padding:6px 12px;border-radius:6px;background:var(--bg-e);font-size:11px;color:var(--t3)}
+.sal-benchmark svg{width:14px;height:14px;color:var(--teal)}
+
+/* Salary total */
+.sal-total{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--gold08);border:1px solid var(--gold20);border-radius:10px;margin-top:16px}
+.sal-total-label{font-size:12px;color:var(--gold);font-weight:500}
+.sal-total-val{font-size:20px;font-weight:600;color:var(--gold)}
+
+/* Bewertung */
+.bew-block{display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-e);border-radius:10px}
+.bew-grade{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700}
+.bew-grade.a{background:rgba(93,202,165,.15);color:var(--green);border:2px solid rgba(93,202,165,.4)}
+.bew-text{font-size:13px;color:var(--t2);line-height:1.5;flex:1}
+
+/* Wechselmotivation slider — clickable, professional */
+.wm-slider{margin:8px 0}
+.wm-track{display:flex;gap:2px;margin-bottom:8px}
+.wm-step{flex:1;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;cursor:pointer;transition:all .15s;border:1.5px solid transparent;text-align:center;padding:0 2px;line-height:1.2}
+.wm-step:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.wm-step.active{border-color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);transform:translateY(-2px);font-weight:700}
+.wm-step.s1{background:var(--red);color:#fff}
+.wm-step.s2{background:var(--orange);color:#fff}
+.wm-step.s3{background:var(--amber);color:#fff}
+.wm-step.s4{background:#eab308;color:#262626}
+.wm-step.s5{background:#a3a3a3;color:#262626}
+.wm-step.s6{background:#0ea5e9;color:#fff}
+.wm-step.s7{background:#6b7280;color:#fff}
+.wm-step.s8{background:#991b1b;color:#fff}
+
+/* Zonen */
+.zv{display:flex;gap:4px;margin:8px 0 16px}
+.zb{flex:1;border-radius:8px;padding:12px 10px;text-align:center;font-size:10px;font-weight:500;line-height:1.3}
+.zb.k{background:rgba(93,202,165,.08);color:var(--green);border:.5px solid rgba(93,202,165,.2)}
+.zb.l{background:var(--teal08);color:var(--teal);border:.5px solid var(--teal20)}
+.zb.w{background:var(--gold08);color:var(--gold);border:.5px solid var(--gold20)}
+.zb.a{background:rgba(239,68,68,.05);color:var(--red);border:.5px solid rgba(239,68,68,.12)}
+.sweet-box{margin-top:12px;padding:14px 18px;background:var(--gold08);border-radius:12px;border:1.5px solid var(--gold30)}
+.sweet-label{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px}
+.sweet-text{font-size:14px;color:var(--gold);font-weight:500;line-height:1.5}
+
+/* NO-GO strong */
+.nogo-box{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:10px;padding:14px 16px}
+.nogo-label{font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.nogo-text{font-size:13px;color:var(--t2);line-height:1.6;white-space:pre-line}
+
+/* Project chips */
+.pc{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-e);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s;border:.5px solid var(--brd-s)}
+.pc:hover{background:var(--bg-hv);border-color:var(--brd)}
+.pc-logo{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.pc-logo.sbb{background:#e60000;color:#fff}.pc-logo.astra{background:#1a4d8f;color:#fff}.pc-logo.default{background:var(--teal15);color:var(--teal)}
+.pc-info{flex:1;min-width:0}
+.pc-name{font-size:13px;font-weight:500;color:var(--t1)}
+.pc-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.pc-arrow{color:var(--tm);font-size:16px}
+
+/* Save bar */
+.save-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg-c);border:.5px solid var(--brd);border-radius:12px;margin-top:8px}
+.save-info{font-size:12px;color:var(--t3)}
+.save-btns{display:flex;gap:8px}
+.save-btn{padding:8px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:.15s}
+.save-btn.pri{background:var(--gold);color:var(--dark)}.save-btn.pri:hover{background:#e8c88a}
+.save-btn.sec{background:transparent;border:1px solid var(--brd);color:var(--t2)}.save-btn.sec:hover{background:var(--bg-e)}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab active">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+
+<!-- BRIEFING LAYOUT: main + quick-jump sidebar -->
+<div class="briefing-layout">
+<div class="briefing-main">
+
+  <!-- AI Banner -->
+  <div class="ai-banner">
+    <div class="ai-banner-icon">✦</div>
+    <div class="ai-banner-text"><strong>AI hat 12 Felder</strong> aus dem Briefing-Transkript vom 28.03.2026 vorausgefüllt. Bitte prüfen und bestätigen.</div>
+    <button class="ai-banner-btn">Prüfen & Bestätigen</button>
+  </div>
+
+  <!-- Version nav -->
+  <div class="vn">
+    <div class="va dis"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg></div>
+    <div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="vl">Briefing v3</span><span class="vb">Aktuell</span></div>
+      <span class="vd">28.03.2026 · Erstellt von Peter W.</span>
+    </div>
+    <div class="va"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5"/></svg></div>
+    <button class="vnb">+ Neues Briefing</button>
+    <button style="padding:7px 20px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:var(--gold);color:var(--dark);border:none;transition:.15s" onmouseover="this.style.background='#e8c88a'" onmouseout="this.style.background='var(--gold)'">Speichern</button>
+  </div>
+
+  <!-- Meta row: History link + Warning + Autosave -->
+  <div class="meta-row">
+    <div class="history-chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6.5"/><path d="M8 4v4l2.5 1.5"/></svg> Aus: Briefing-Gespräch 28.03.2026 · 45 Min</div>
+    <div class="warn-chip">⚠ 4 bewertungsrelevante Felder fehlen</div>
+    <div class="autosave"><span class="as-dot"></span> Gespeichert</div>
+  </div>
+
+  <!-- ===== 1. GEHALT ===== -->
+  <div class="bs" id="s-gehalt">
+    <div class="bsh" onclick="tog('s-gehalt')">
+      <div class="bst"><svg class="ico-g" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8"/><path d="M10 5v10M7 7.5h4.5a1.5 1.5 0 010 3H7.5M7 10.5h5a1.5 1.5 0 010 3H7"/></svg> Gehalt & Vergütung <span class="bsy">synced</span></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:85%;background:var(--green)"></div></div> 11/13</div>
+        <span class="sec-meta">28.03. 14:12</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <!-- Salary bars -->
+      <div class="sal-h">
+        <div class="sal-row"><div class="sal-lbl">Aktuell</div><div class="sal-trk"><div class="sal-fill" style="width:72%;background:var(--teal);color:#E1F5EE">145k</div></div><div class="sal-amt" style="color:var(--teal)">CHF 145'000</div></div>
+        <div class="sal-row"><div class="sal-lbl" style="color:var(--red)">Schmerzgrenze</div><div class="sal-trk"><div class="sal-fill" style="width:82%;background:var(--red);opacity:.45"></div><div class="sal-range" style="left:72%;right:8%"></div></div><div class="sal-amt" style="color:var(--red);opacity:.8">CHF 155'000</div></div>
+        <div class="sal-row"><div class="sal-lbl" style="color:var(--gold)">Ziel</div><div class="sal-trk"><div class="sal-fill" style="width:92%;background:var(--gold);color:#262626">165k</div></div><div class="sal-amt" style="color:var(--gold)">CHF 165'000</div></div>
+      </div>
+      <div class="sal-benchmark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 12l4-5 3 2 4-4 3 3"/></svg> Marktmedian Bauleiter ZH: CHF 152'000 (dim_salary_benchmark)</div>
+
+      <!-- Lohn-Zusammensetzung -->
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-weight:500">Lohn-Zusammensetzung</div>
+        <div class="fg">
+          <div class="ff"><div class="fl">Fixlohn (Basis) <span class="req"></span></div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val">145'000</span></div></div>
+          <div class="ff"><div class="fl">Gehalt Schmerzgrenze <span class="req"></span></div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val" style="color:var(--red)">155'000</span></div></div>
+          <div class="ff"><div class="fl">Gehalt Ziel <span class="req"></span></div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val" style="color:var(--gold)">165'000</span></div></div>
+          <div class="ff"><div class="fl">STI / Bonus</div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val">14'500</span></div></div>
+          <div class="ff"><div class="fl">LTI</div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val nil">—</span></div></div>
+          <div class="ff"><div class="fl">Spesen-Pauschale</div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val">6'000</span></div></div>
+          <div class="ff"><div class="fl">Aktuelle Lohnsituation</div><div class="dd">Marktgerecht</div></div>
+          <div class="ff"><div class="fl">Monatslohn?</div><div><span class="tag no">Nein — Jahreslohn</span></div></div>
+        </div>
+      </div>
+
+      <!-- Spesen & Mobilität -->
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-weight:500">Spesen & Fahrzeug</div>
+        <div class="fg">
+          <div class="ff full">
+            <div class="fl">Spesen (Mehrfachauswahl)</div>
+            <div class="ms">
+              <span class="ms-chip on">ÖV-Abo (GA 1. Klasse) <span style="margin-left:4px;color:var(--green)">+</span></span>
+              <span class="ms-chip on">Geschäftsfahrzeug mit Privatnutzung <span style="margin-left:4px;color:var(--red)">−</span></span>
+              <span class="ms-chip off">Geschäftsfahrzeug ohne Privatnutzung</span>
+              <span class="ms-chip off">Poolfahrzeug / Carsharing</span>
+              <span class="ms-chip on">Kilometervergütung <span style="margin-left:4px;color:var(--green)">+</span></span>
+            </div>
+          </div>
+          <div class="ff"><div class="fl">Fahrzeugtyp</div><div class="fv">Audi A4 Avant</div></div>
+          <div class="ff"><div class="fl">Fahrzeug-Abzug vom Lohn</div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val" style="color:var(--red)">−3'600</span></div></div>
+          <div class="ff"><div class="fl">ÖV-Abo Wert</div><div class="chf-input"><span class="chf-prefix">CHF</span><span class="chf-val">6'300</span></div></div>
+        </div>
+      </div>
+
+      <!-- Weitere Benefits -->
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-weight:500">Weitere Benefits</div>
+        <div class="ms">
+          <span class="ms-chip on">6 Wochen Ferien</span>
+          <span class="ms-chip on">Laptop + Smartphone</span>
+          <span class="ms-chip off">Parkplatz</span>
+          <span class="ms-chip off">Weiterbildungsbudget</span>
+          <span class="ms-chip off">Kinderbetreuung</span>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="sal-total">
+        <div class="sal-total-label">Total Compensation</div>
+        <div class="sal-total-val">CHF 168'200</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. ARBEIT ===== -->
+  <div class="bs" id="s-arbeit">
+    <div class="bsh" onclick="tog('s-arbeit')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="14" height="10" rx="2"/><path d="M7 7V5a3 3 0 016 0v2"/></svg> Arbeit & Verfügbarkeit</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 5/5</div>
+        <span class="sec-meta">28.03. 14:08</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg">
+        <div class="ff"><div class="fl">Pensum aktuell</div><div class="dd">100%</div></div>
+        <div class="ff"><div class="fl">Pensum gewünscht</div><div class="dd">80-100%</div></div>
+        <div class="ff"><div class="fl">Anstellungssituation</div><div class="dd">Angestellt</div></div>
+        <div class="ff"><div class="fl">Kündigungsfrist <span class="req"></span></div><div class="dd" style="color:var(--gold)">3 Monate</div></div>
+        <div class="ff half">
+          <div class="fl">Wechselmotivation <span class="req"></span></div>
+          <div class="wm-slider">
+            <div class="wm-track" id="wmTrack">
+              <div class="wm-step s1" onclick="setWM(this)" title="Arbeitslos">Arbeits­los</div>
+              <div class="wm-step s2 active" onclick="setWM(this)" title="Will/muss wechseln">Will/ muss</div>
+              <div class="wm-step s3" onclick="setWM(this)" title="Will/muss wahrscheinlich wechseln">Wahrsch.</div>
+              <div class="wm-step s4" onclick="setWM(this)" title="Wechselt bei gutem Angebot">Gutes Angebot</div>
+              <div class="wm-step s5" onclick="setWM(this)" title="Wechselmotivation spekulativ">Spekulativ</div>
+              <div class="wm-step s6" onclick="setWM(this)" title="Wechselt gerade intern & will abwarten">Intern</div>
+              <div class="wm-step s7" onclick="setWM(this)" title="Will absolut nicht wechseln">Kein Wechsel</div>
+              <div class="wm-step s8" onclick="setWM(this)" title="Will nicht mit uns zusammenarbeiten">Kein ARK</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. MOBILITÄT ===== -->
+  <div class="bs" id="s-mobil">
+    <div class="bsh" onclick="tog('s-mobil')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2a6 6 0 016 6c0 4.5-6 10-6 10S4 12.5 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg> Mobilität</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:83%;background:var(--green)"></div></div> 5/6</div>
+        <span class="sec-meta">28.03. 14:15</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg">
+        <div class="ff full">
+          <div class="fl">Mobilität (Mehrfachauswahl)</div>
+          <div class="ms"><span class="ms-chip on">Auto</span><span class="ms-chip on">ÖV</span><span class="ms-chip off">Fahrrad</span><span class="ms-chip off">Motorrad</span></div>
+        </div>
+        <div class="ff"><div class="fl">Arbeitsweg max.</div><div class="dd">45 Min</div></div>
+        <div class="ff"><div class="fl">Umzugsbereitschaft</div><div class="dd">Kein Umzug</div></div>
+        <div class="ff"><div class="fl">Homeoffice aktuell</div><div class="dd">2 Tage / Woche</div></div>
+        <div class="ff"><div class="fl">Homeoffice gewünscht</div><div class="dd">2 Tage / Woche</div></div>
+        <div class="ff"><div class="fl">Regionen</div><div class="fv">Zürich, Bern, Aargau, Luzern</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. BEWERTUNG ===== -->
+  <div class="bs" id="s-bew">
+    <div class="bsh" onclick="tog('s-bew')">
+      <div class="bst"><svg class="ico-gr" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2l2.5 5 5.5.8-4 3.9 1 5.5L10 14.5l-5 2.7 1-5.5-4-3.9 5.5-.8z"/></svg> Bewertung <span class="bsy">synced</span></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 3/3</div>
+        <span class="sec-meta">28.03. 14:30</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="bew-block">
+        <div class="bew-grade a">A</div>
+        <div class="bew-text"><strong>Top-Kandidat.</strong> Sehr erfahrener Bauleiter mit 15+ Jahren Grossprojekt-Erfahrung. Führungsstark, kommunikativ, technisch versiert. Ideal für GL-nahe Positionen im Spezialtiefbau.</div>
+      </div>
+      <div class="fg" style="margin-top:16px">
+        <div class="ff full"><div class="fl">GO-Themen <span class="req"></span></div><div class="fv text">GL-Positionen, Grossprojekte >50 Mio. CHF, BIM-Kompetenz aufbauen, Verantwortung über gesamte Bauphase, Führung >20 MA</div></div>
+        <div class="ff full">
+          <div class="nogo-box">
+            <div class="nogo-label"><svg viewBox="0 0 14 14" width="14" height="14" fill="currentColor"><path d="M7 0a7 7 0 100 14A7 7 0 007 0zm0 10.5a.88.88 0 110-1.75.88.88 0 010 1.75zM7.88 7a.88.88 0 01-1.75 0V3.5a.88.88 0 011.75 0V7z"/></svg> NO-GO-Themen</div>
+            <div class="nogo-text">Keine Nachtarbeit, kein Tessin (familiäre Gründe), keine reinen Planungsbüros (will auf der Baustelle sein), kein Lohnrückschritt unter 150k</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5. KOMPETENZEN ===== -->
+  <div class="bs" id="s-komp">
+    <div class="bsh" onclick="tog('s-komp')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 14l4-4 3 3 5-6"/><rect x="2" y="2" width="16" height="16" rx="2"/></svg> Kompetenzen</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 4/4</div>
+        <span class="sec-meta">28.03. 14:22</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg two">
+        <div class="ff"><div class="fl">Hardskills</div><div class="fv text">Baustellenmanagement, Kalkulation, AVOR, Submissions, Nachtragsmanagement, SIA-Normen (118, 380), Bauabrechnung, Qualitätssicherung</div></div>
+        <div class="ff"><div class="fl">Social Skills</div><div class="fv text">Verhandlungsstark, diplomatisch im Umgang mit Bauherren und Behörden, konfliktfähig aber lösungsorientiert</div></div>
+        <div class="ff"><div class="fl">Methodenkompetenz</div><div class="fv text">Lean Construction, Last Planner System, BIM-Koordination, MS Project, klassisches PM nach HERMES</div></div>
+        <div class="ff"><div class="fl">Führungskompetenz <span class="req"></span></div><div class="fv text">Führt Teams bis 25 Personen direkt, inkl. Sub-Unternehmer-Steuerung (bis 60 gesamt). Situativer Führungsstil.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. PERSÖNLICHKEIT ===== -->
+  <div class="bs" id="s-pers">
+    <div class="bsh" onclick="tog('s-pers')">
+      <div class="bst"><svg class="ico-a" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-4 3-7 7-7s7 3 7 7"/></svg> Persönlichkeit</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 6/6</div>
+        <span class="sec-meta">28.03. 14:25</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg two">
+        <div class="ff"><div class="fl">Selbstbild & Reflexion</div><div class="fv text">Sieht sich als Macher und Umsetzer. Ungeduldig bei langwierigen Entscheidungsprozessen. Lernbereit und offen für Coaching.</div></div>
+        <div class="ff"><div class="fl">Fremdbild</div><div class="fv text">Wird als kompetent, direkt und verlässlich wahrgenommen. Manchmal zu ungeduldig in Meetings.</div></div>
+        <div class="ff"><div class="fl">Intrinsische Motivation</div><div class="fv text">Will komplexe Projekte von A-Z verantworten. Sucht den Moment wenn ein Bauwerk fertig ist.</div></div>
+        <div class="ff"><div class="fl">Bedürfnisanalyse</div><div class="fv text">Braucht Autonomie und Vertrauen. Will nicht micromanaged werden. Work-Life-Balance wird wichtiger.</div></div>
+        <div class="ff"><div class="fl">Triggerpunkt</div><div class="fv text" style="border-left:2px solid var(--amber)">Wird frustriert wenn Entscheidungen verschleppt werden oder Politik über Sachargumente gewinnt.</div></div>
+        <div class="ff"><div class="fl">Moderation</div><div class="fv text">Zählt innerlich bis 10. Nutzt Humor als Ventil. Verlässt in hitzigen Situationen kurz den Raum.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7. ZONEN-MODELL ===== -->
+  <div class="bs" id="s-zonen">
+    <div class="bsh" onclick="tog('s-zonen')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="6"/><circle cx="10" cy="10" r="8.5"/></svg> Zonen-Modell</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 5/5</div>
+        <span class="sec-meta">28.03. 14:28</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="zv">
+        <div class="zb k"><div style="font-size:12px;font-weight:600">Komfort</div>Bekannte Projekte</div>
+        <div class="zb l"><div style="font-size:12px;font-weight:600">Lern</div>BIM-Integration</div>
+        <div class="zb w"><div style="font-size:12px;font-weight:600">Wachstum</div>GL-Verantwortung</div>
+        <div class="zb a"><div style="font-size:12px;font-weight:600">Angst</div>Reine Büroarbeit</div>
+      </div>
+      <div class="fg two">
+        <div class="ff"><div class="fl">Komfortzone</div><div class="fv text">Grossprojekte im Tiefbau/Spezialtiefbau. Baustellenleitung. Teams führen. Kalkulation.</div></div>
+        <div class="ff"><div class="fl">Lernzone</div><div class="fv text">BIM-basierte Projektsteuerung. Digitale Baustellenführung. Lean Construction vertiefen.</div></div>
+        <div class="ff"><div class="fl">Wachstumszone</div><div class="fv text">GL-Verantwortung. P&L. Strategische Unternehmensentwicklung. Akquisition.</div></div>
+        <div class="ff"><div class="fl">Angstzone</div><div class="fv text">Reine Büroarbeit ohne Baustellenbezug. Politische Ränkespiele.</div></div>
+      </div>
+      <div class="sweet-box">
+        <div class="sweet-label">Sweet Spot</div>
+        <div class="sweet-text">GL-nahe Gesamtprojektleitung im Tiefbau mit BIM-Anteil, 20+ MA Führung, Kundenkontakt und Baustellenpräsenz. Budget >50 Mio. CHF.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 8. PRIVAT ===== -->
+  <div class="bs" id="s-privat">
+    <div class="bsh" onclick="tog('s-privat')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10a7 7 0 0114 0M7 15a3 3 0 016 0"/><circle cx="10" cy="7" r="3"/></svg> Privat</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:100%;background:var(--green)"></div></div> 3/3</div>
+        <span class="sec-meta">28.03. 14:30</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg">
+        <div class="ff"><div class="fl">Zivilstand</div><div class="dd">Verheiratet</div></div>
+        <div class="ff"><div class="fl">Kinder</div><div class="dd">2</div></div>
+        <div class="ff"><div class="fl">Privates & Leidenschaft</div><div class="fv text">Bergsteigen, Mountainbike, FC Zürich, SAC-Mitglied</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 9. SONSTIGES ===== -->
+  <div class="bs" id="s-sonst">
+    <div class="bsh" onclick="tog('s-sonst')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8"/><path d="M10 6v4M10 13v.01"/></svg> Sonstiges</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sec-progress"><div class="sec-progress-bar"><div class="sec-progress-fill" style="width:60%;background:var(--amber)"></div></div> 3/5</div>
+        <span class="sec-meta">28.03. 14:32</span>
+        <span class="bstg">▾</span>
+      </div>
+    </div>
+    <div class="bsb">
+      <div class="fg">
+        <div class="ff"><div class="fl">Offene Bewerbungen</div><div class="fv text">1 laufender Prozess bei Implenia (2. Interview ausstehend)</div></div>
+        <div class="ff"><div class="fl">Andere Personaldienstleister</div><div class="fv text">Kontakt mit Hays (kein aktiver Prozess)</div></div>
+        <div class="ff"><div class="fl">Verpflichtung</div>
+          <div class="toggle-row"><div class="toggle"><div class="toggle-dot"></div></div><span style="font-size:13px;color:var(--t2)">Nein</span></div>
+        </div>
+        <div class="ff"><div class="fl">Art der Verpflichtung</div><div class="fv nil">—</div></div>
+        <div class="ff"><div class="fl">Verpflichtungs-Betrag</div><div class="fv nil">—</div></div>
+        <div class="ff"><div class="fl">Verpflichtungs-Dauer</div><div class="fv nil">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 10. PROJEKTE ===== -->
+  <div class="bs" id="s-proj">
+    <div class="bsh" onclick="tog('s-proj')">
+      <div class="bst"><svg class="ico-t" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 8h16"/></svg> Besprochene Projekte</div>
+      <div style="display:flex;align-items:center;gap:12px"><span class="bstg">▾</span></div>
+    </div>
+    <div class="bsb">
+      <div class="pc"><div class="pc-logo sbb">SBB</div><div class="pc-info"><div class="pc-name">Tunnel Weinberg (SBB)</div><div class="pc-meta">Zürich · CHF 320 Mio. · 2019–2023 · Gesamtbauleiter</div></div><span class="pc-arrow">›</span></div>
+      <div class="pc"><div class="pc-logo astra">BAS</div><div class="pc-info"><div class="pc-name">Einhausung Schwamendingen (ASTRA)</div><div class="pc-meta">Zürich · CHF 180 Mio. · 2020–2024 · OBL Spezialtiefbau</div></div><span class="pc-arrow">›</span></div>
+      <div class="pc"><div class="pc-logo default">LW</div><div class="pc-info"><div class="pc-name">Brücke Limmat Werdinsel</div><div class="pc-meta">Zürich · CHF 45 Mio. · 2023–heute · Projektleiter</div></div><span class="pc-arrow">›</span></div>
+      <button style="margin-top:8px;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;border:1px solid var(--gold30);color:var(--gold)">+ Projekt verknüpfen</button>
+    </div>
+  </div>
+
+  <!-- Save bar -->
+  <div class="save-bar">
+    <div class="save-info">Zuletzt gespeichert: 28.03.2026, 14:32 von Peter W. · Version 3 · Briefing-Dauer: 45 Min</div>
+    <div class="save-btns"><button class="save-btn sec">Abbrechen</button><button class="save-btn pri">Änderungen speichern</button></div>
+  </div>
+
+</div>
+
+<!-- QUICK-JUMP SIDEBAR -->
+<div class="qj">
+  <div class="qj-title">Sektionen</div>
+  <div class="qj-item active" onclick="jumpTo('s-gehalt')"><div class="qj-dot partial"></div>Gehalt<span class="qj-pct">85%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-arbeit')"><div class="qj-dot full"></div>Arbeit<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-mobil')"><div class="qj-dot partial"></div>Mobilität<span class="qj-pct">83%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-bew')"><div class="qj-dot full"></div>Bewertung<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-komp')"><div class="qj-dot full"></div>Kompetenzen<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-pers')"><div class="qj-dot full"></div>Persönlichkeit<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-zonen')"><div class="qj-dot full"></div>Zonen<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-privat')"><div class="qj-dot full"></div>Privat<span class="qj-pct">100%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-sonst')"><div class="qj-dot partial"></div>Sonstiges<span class="qj-pct">60%</span></div>
+  <div class="qj-item" onclick="jumpTo('s-proj')"><div class="qj-dot full"></div>Projekte</div>
+</div>
+
+</div>
+
+<script>
+function tog(id){document.getElementById(id).classList.toggle('collapsed')}
+function jumpTo(id){
+  const el=document.getElementById(id);
+  if(el.classList.contains('collapsed'))el.classList.remove('collapsed');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.qj-item').forEach(i=>i.classList.remove('active'));
+  event.target.closest('.qj-item').classList.add('active');
+}
+function setWM(el){
+  document.querySelectorAll('.wm-step').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+
+</body>
+</html>

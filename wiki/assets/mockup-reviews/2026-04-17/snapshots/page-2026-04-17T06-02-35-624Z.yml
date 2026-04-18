@@ -1,0 +1,375 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Firmengruppen" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: 🏛 Muster Holding AG
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]: 🤖
+    - generic [ref=e17]:
+      - strong [ref=e18]: Scraper-Vorschlag · UID-Match
+      - text: ": Potenzielle Konzernstruktur identifiziert (CHE-123.456.789 ↔ CHE-987.654.321 beide unter Holding „Muster-Gruppe\"). Admin-Bestätigung erforderlich."
+    - button "✓ Bestätigen" [ref=e19] [cursor=pointer]
+    - button "✕ Ablehnen" [ref=e20] [cursor=pointer]
+    - button "✕" [ref=e21] [cursor=pointer]
+  - generic [ref=e23]:
+    - generic [ref=e24]: 🏛
+    - generic [ref=e25]:
+      - heading "Muster Holding AG" [level=1] [ref=e26]
+      - generic [ref=e27]: 🏛 Holding
+      - generic [ref=e28]: Klasse A (aggregiert)
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - text: Gruppen-Manager
+          - strong [ref=e31]: PW
+        - generic [ref=e33]: Sitz Zürich · CHE-123.456.789
+        - link "muster-holding.ch" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e38]: gegründet 1978 (Holding 2012)
+      - generic [ref=e39]:
+        - button "📞 Anrufen" [ref=e40] [cursor=pointer]
+        - button "✉ Email" [ref=e41] [cursor=pointer]
+        - button "📄 Gruppen-Report" [ref=e42] [cursor=pointer]
+        - button "+ Gesellschaft hinzufügen" [ref=e43] [cursor=pointer]
+        - button "+ Gruppen-Mandat" [ref=e44] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e45] [cursor=pointer]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: Status
+        - combobox [ref=e49] [cursor=pointer]:
+          - option "● Aktiv" [selected]
+          - option "⏸ In Review"
+          - option "✕ Archiviert"
+          - option "🔗 Merger / Restrukturierung"
+          - text: ▾
+      - generic [ref=e51]: Rahmenvertrag aktiv bis 31.12.2028
+      - generic [ref=e52]:
+        - link "🛡 1 Gruppen-Schutzfrist" [ref=e53] [cursor=pointer]:
+          - /url: "#"
+        - link "6 offene Mandate" [ref=e54] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e55]: bestätigt durch PW · 12.03.2024
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: 🏢 Gesellschaften
+      - generic [ref=e59]: "2"
+      - generic [ref=e60]: BM AG · MI AG
+    - generic [ref=e61]:
+      - generic [ref=e62]: 👥 Mitarbeitende
+      - generic [ref=e63]: "505"
+      - generic [ref=e64]: +24 vs. 2024
+    - generic [ref=e65]:
+      - generic [ref=e66]: 💰 Umsatz 2025
+      - generic [ref=e67]: CHF 340 M
+      - generic [ref=e68]: Konsolidiert
+    - generic [ref=e69]:
+      - generic [ref=e70]: ⚙ Aktive Prozesse
+      - generic [ref=e71]: "8"
+      - generic [ref=e72]: über 2 Gesellschaften
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🏆 Placements YTD
+      - generic [ref=e75]: "12"
+      - generic [ref=e76]: Q1 stark
+    - generic [ref=e77]:
+      - generic [ref=e78]: 💰 Arkadium-Umsatz YTD
+      - generic [ref=e79]: CHF 380k
+      - generic [ref=e80]: 68 % vom Total
+  - navigation [ref=e81]:
+    - generic [ref=e82] [cursor=pointer]: 1Übersicht
+    - generic [ref=e83] [cursor=pointer]: 2Kultur (Gruppen-Analyse)
+    - generic [ref=e84] [cursor=pointer]: 3Kontakte
+    - generic [ref=e85] [cursor=pointer]: 4Mandate & Prozesse
+    - generic [ref=e86] [cursor=pointer]: 5Dokumente
+    - generic [ref=e87] [cursor=pointer]: 6History
+    - generic [ref=e88] [cursor=pointer]: 7Reminders
+  - generic [ref=e405]:
+    - generic [ref=e406]:
+      - generic [ref=e407]:
+        - generic [ref=e408]: Kultur-Analyse Holding-Ebene
+        - link "AI-Draft neu generieren" [ref=e409] [cursor=pointer]:
+          - /url: "#"
+      - paragraph [ref=e410]: 6 Score-Dimensionen analog Account-Tab 2, aggregiert auf Holding-Ebene (nicht Durchschnitt der Gesellschaften, sondern eigene Analyse aus Konzern-Quellen).
+    - generic [ref=e411]:
+      - generic [ref=e412]:
+        - generic [ref=e414]: 1 · Vision · Mission · Purpose
+        - paragraph [ref=e415]: "Traditionsreiche Schweizer Bau- und Immobiliengruppe mit starker regionaler Verwurzelung. Purpose: „Hochwertige, langlebige Bauwerke für Generationen schaffen.\" Konzern-Werte: Handwerk, Integrität, Nachhaltigkeit."
+      - generic [ref=e416]:
+        - generic [ref=e418]: 2 · Führung & Strategie
+        - paragraph [ref=e419]: "Familienunternehmen in 3. Generation · Dezentrale Führung der Töchter · Zentrale Holding-Strategie: Diversifikation Bau ↔ Immobilien, ESG-Transformation bis 2030."
+    - generic [ref=e420]:
+      - generic [ref=e422]: 3 · Kulturprofil · 6 Dimensionen
+      - generic [ref=e423]:
+        - term [ref=e424]: Hierarchie ↔ Flach
+        - definition [ref=e425]: Moderat hierarchisch (3. Gen. Familienunternehmen)
+        - term [ref=e426]: Entscheidungs-Tempo
+        - definition [ref=e427]: Bedacht · Konsens-orientiert
+        - term [ref=e428]: Innovation
+        - definition [ref=e429]: Pragmatisch · ESG-/Digitalisierungs-Transformation im Gang
+        - term [ref=e430]: Wertschätzung
+        - definition [ref=e431]: Hoch · lange Betriebszugehörigkeiten typisch
+        - term [ref=e432]: Kommunikation
+        - definition [ref=e433]: Direkt · Schwiizerdütsch intern · DE/EN formal
+        - term [ref=e434]: Work-Life
+        - definition [ref=e435]: Traditionell eher Office-zentriert · moderate Flexibilität
+    - generic [ref=e436]:
+      - generic [ref=e438]: 4 · Kulturfit-Score Holding
+      - generic [ref=e439]: 82 / 100
+      - paragraph [ref=e440]: Stabile, konservative Führungskultur · passt zu reiferen Kandidaten mit Langfrist-Mindset
+    - generic [ref=e441]:
+      - generic [ref=e443]: 5 · Quellen & Vertrauen
+      - generic [ref=e444]:
+        - term [ref=e445]: Holdings-Website
+        - definition [ref=e446]:
+          - link "muster-holding.ch/about" [ref=e447] [cursor=pointer]:
+            - /url: "#"
+          - text: · Stand 14.04.2026 ·
+          - generic [ref=e448]: high confidence
+        - term [ref=e449]: Geschäftsberichte
+        - definition [ref=e450]:
+          - text: GB 2023 · GB 2024 · GB 2025 (gerade publiziert) ·
+          - generic [ref=e451]: high confidence
+        - term [ref=e452]: Aggregierte News
+        - definition [ref=e453]:
+          - text: 12 News-Artikel (2024–2026) über Handelszeitung, NZZ, Baublatt ·
+          - generic [ref=e454]: medium confidence
+        - term [ref=e455]: Gesellschafts-Kultur-Scores
+        - definition [ref=e456]: 2× Account-Analysen (Bauherr Muster AG · Muster Immobilien AG) als Referenz
+        - term [ref=e457]: Manuelle Notizen AM
+        - definition [ref=e458]:
+          - text: Notizen aus 3 Update-Calls mit Dr. Thomas Muster (VR-Präsident Holding) ·
+          - generic [ref=e459]: confirmed
+        - term [ref=e460]: Letzte Generierung
+        - definition [ref=e461]: 15.03.2026 · v2 · durch Admin
+    - generic [ref=e462]:
+      - generic [ref=e464]: 6 · Gesellschafts-Kultur-Vergleich
+      - table [ref=e465]:
+        - rowgroup [ref=e466]:
+          - row "Gesellschaft Hierarchie Tempo Innovation Wertschätzung Kommunikation Work-Life Fit" [ref=e467]:
+            - columnheader "Gesellschaft" [ref=e468]
+            - columnheader "Hierarchie" [ref=e469]
+            - columnheader "Tempo" [ref=e470]
+            - columnheader "Innovation" [ref=e471]
+            - columnheader "Wertschätzung" [ref=e472]
+            - columnheader "Kommunikation" [ref=e473]
+            - columnheader "Work-Life" [ref=e474]
+            - columnheader "Fit" [ref=e475]
+        - rowgroup [ref=e476]:
+          - row "Bauherr Muster AG mod. bedacht pragmatisch hoch direkt trad. 82" [ref=e477]:
+            - cell "Bauherr Muster AG" [ref=e478]:
+              - strong [ref=e479]: Bauherr Muster AG
+            - cell "mod." [ref=e480]
+            - cell "bedacht" [ref=e481]
+            - cell "pragmatisch" [ref=e482]
+            - cell "hoch" [ref=e483]
+            - cell "direkt" [ref=e484]
+            - cell "trad." [ref=e485]
+            - cell "82" [ref=e486]:
+              - strong [ref=e487]: "82"
+          - row "Muster Immobilien AG flach dynamisch agil hoch offen flex. 78" [ref=e488]:
+            - cell "Muster Immobilien AG" [ref=e489]:
+              - strong [ref=e490]: Muster Immobilien AG
+            - cell "flach" [ref=e491]
+            - cell "dynamisch" [ref=e492]
+            - cell "agil" [ref=e493]
+            - cell "hoch" [ref=e494]
+            - cell "offen" [ref=e495]
+            - cell "flex." [ref=e496]
+            - cell "78" [ref=e497]:
+              - strong [ref=e498]: "78"
+  - generic [ref=e250]:
+    - generic [ref=e251]: 1–7 Tabs
+    - generic [ref=e252]: T Theme
+    - generic [ref=e253]: ⌘K
+  - generic [ref=e254]:
+    - generic [ref=e255]:
+      - generic [ref=e256]: ↑
+      - generic [ref=e257]:
+        - heading "Dokument hochladen" [level=2] [ref=e258]
+        - generic [ref=e259]: Gruppen-weit oder für Subset der Gesellschaften
+      - button "✕" [ref=e260] [cursor=pointer]
+    - generic [ref=e262]:
+      - generic [ref=e263]:
+        - heading "Datei" [level=4] [ref=e264]
+        - generic [ref=e265] [cursor=pointer]:
+          - generic [ref=e266]: 📄
+          - generic [ref=e267]: Datei hierher ziehen oder klicken
+          - generic [ref=e268]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e269]:
+        - heading "Metadaten" [level=4] [ref=e270]
+        - generic [ref=e271]:
+          - generic [ref=e272]: Kategorie *
+          - combobox [ref=e273] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Rahmenvertrag"
+            - option "Master-NDA"
+            - option "Konzern-AGB"
+            - option "Gruppen-Präsentation"
+            - option "Holdings-Geschäftsbericht"
+            - option "Sonstiges"
+          - generic [ref=e274]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e275]
+          - generic [ref=e276]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e277]
+          - generic [ref=e278]: Gültigkeitsbereich
+          - combobox [ref=e279] [cursor=pointer]:
+            - option "Ganze Gruppe (Default)" [selected]
+            - option "Nur ausgewählte Gesellschaften …"
+          - generic [ref=e280]: Urheber
+          - generic [ref=e281]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e282]:
+      - button "Abbrechen" [ref=e283] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e285] [cursor=pointer]
+  - generic [ref=e286]:
+    - generic [ref=e287]:
+      - generic [ref=e288]: 💬
+      - generic [ref=e289]:
+        - heading "Event-Detail" [level=2] [ref=e290]
+        - generic [ref=e291]: —
+      - button "✕" [ref=e292] [cursor=pointer]
+    - generic [ref=e295]:
+      - button "Schliessen" [ref=e296] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e297] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e298] [cursor=pointer]
+  - generic [ref=e299]:
+    - generic [ref=e300]:
+      - generic [ref=e301]: ⏰
+      - generic [ref=e302]:
+        - heading "Neuer Reminder" [level=2] [ref=e303]
+        - generic [ref=e304]: Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)
+        - generic [ref=e306]: neu
+      - button "✕" [ref=e307] [cursor=pointer]
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - heading "Reminder" [level=4] [ref=e310]
+        - generic [ref=e311]:
+          - generic [ref=e312]: Titel *
+          - textbox "z.B. Rahmenvertrag-Review Q3" [ref=e313]
+          - generic [ref=e314]: Typ *
+          - combobox [ref=e315] [cursor=pointer]:
+            - option "Rahmenvertrag-Review" [selected]
+            - option "Jahres-Report"
+            - option "Gruppen-Mandats-Opportunity"
+            - option "Scraper-Group-Match"
+            - option "Kultur-Update"
+            - option "Follow-up"
+            - option "Custom"
+          - generic [ref=e316]: Fällig am *
+          - textbox [ref=e317]
+          - generic [ref=e318]: Zuständig *
+          - combobox [ref=e319] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "Admin"
+          - generic [ref=e320]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e321]
+          - generic [ref=e322]: Verknüpfung
+          - combobox [ref=e323] [cursor=pointer]:
+            - option "Gruppen-Level (keine Verknüpfung)" [selected]
+            - option "Gesellschaft · Muster Holding AG"
+            - option "Gesellschaft · Muster Baubetrieb AG"
+            - option "Gruppen-Mandat · Taskforce PL Hochbau"
+            - option "Rahmenvertrag 2026"
+          - generic [ref=e324]: Wiederholen
+          - combobox [ref=e325] [cursor=pointer]:
+            - option "Einmalig"
+            - option "Quartalsweise"
+            - option "Jährlich" [selected]
+      - generic [ref=e326]:
+        - heading "Benachrichtigung" [level=4] [ref=e327]
+        - generic [ref=e328]:
+          - generic [ref=e329]: Vorlaufzeit
+          - combobox [ref=e330] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+            - option "1 Monat vorher"
+          - generic [ref=e331]: Eskalation
+          - generic [ref=e332]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Admin
+    - generic [ref=e333]:
+      - button "Abbrechen" [ref=e334] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e336] [cursor=pointer]
+  - generic [ref=e337]:
+    - generic [ref=e338]:
+      - generic [ref=e339]: HM
+      - generic [ref=e340]:
+        - heading "Hans Müller" [level=2] [ref=e341]
+        - generic [ref=e342]: CEO · Geschäftsleitung · Bauherr Muster AG
+        - generic [ref=e343]:
+          - generic "Executive" [ref=e344]: E
+          - link "→ Kandidatenprofil" [ref=e345] [cursor=pointer]:
+            - /url: "#"
+      - button "✕" [ref=e346] [cursor=pointer]
+    - generic [ref=e347]:
+      - generic [ref=e348] [cursor=pointer]: Stammdaten
+      - generic [ref=e349] [cursor=pointer]: Kommunikation
+      - generic [ref=e350] [cursor=pointer]: Prozesse
+      - generic [ref=e351] [cursor=pointer]: Notizen
+    - generic [ref=e353]:
+      - generic [ref=e354]:
+        - heading "Personen-Stammdaten read-only · beim Kandidaten pflegen" [level=4] [ref=e355]
+        - generic [ref=e356]:
+          - term [ref=e357]: Name
+          - definition [ref=e358]: Hans Müller
+          - term [ref=e359]: E-Mail
+          - definition [ref=e360]: h.mueller@muster-bauherr.ch
+          - term [ref=e361]: Telefon direkt
+          - definition [ref=e362]: +41 44 123 45 67
+          - term [ref=e363]: Mobile
+          - definition [ref=e364]: +41 79 123 45 67
+          - term [ref=e365]: LinkedIn
+          - definition [ref=e366]:
+            - link "linkedin.com/in/hans-mueller" [ref=e367] [cursor=pointer]:
+              - /url: "#"
+          - term [ref=e368]: Geburtstag
+          - definition [ref=e369]: 14.03.1968
+      - generic [ref=e370]:
+        - heading "Account-Beziehung (bearbeitbar auf Account-Ebene)" [level=4] [ref=e371]
+        - generic [ref=e372]:
+          - term [ref=e373]: Gesellschaft
+          - definition [ref=e374]:
+            - link "Bauherr Muster AG" [ref=e375] [cursor=pointer]:
+              - /url: accounts.html
+            - text: · Teil der Muster Holding
+          - term [ref=e376]: Position
+          - definition [ref=e377]: CEO
+          - term [ref=e378]: Department
+          - definition [ref=e379]: Geschäftsleitung
+          - term [ref=e380]: Standort
+          - definition [ref=e381]: Zürich (HQ)
+          - term [ref=e382]: Org-Funktion
+          - definition [ref=e383]:
+            - generic [ref=e384]: E
+            - text: Executive · CEO · Geschäftsleitung
+          - term [ref=e385]: Relationship Score
+          - definition [ref=e386]:
+            - strong [ref=e387]: "8"
+            - text: / 10
+          - term [ref=e388]: Kommunikations-Präferenz
+          - definition [ref=e389]: Telefon vor E-Mail · keine Teams-Calls
+          - term [ref=e390]: Beste Kontaktzeit
+          - definition [ref=e391]: Montag–Donnerstag · 07:30–09:00
+          - term [ref=e392]: Status
+          - definition [ref=e393]:
+            - generic [ref=e394]: Aktiv
+          - term [ref=e395]: Do not contact
+          - definition [ref=e396]: Nein
+      - generic [ref=e397]:
+        - heading "Onboarding-Notizen" [level=4] [ref=e398]
+        - paragraph [ref=e399]: Sohn des VR-Präsidenten Dr. U. Gerber. Seit 2015 im Unternehmen, CEO seit 2020. Grosses Interesse an Nachfolge-Themen. Bevorzugt kurze, direkte Gespräche. Ablehnung von „Corporate-Sprache" — bei ihm wird geduzt nach kurzer Anwärm-Phase.
+    - generic [ref=e400]:
+      - button "📞 Anrufen" [ref=e401] [cursor=pointer]
+      - button "✉ E-Mail" [ref=e402] [cursor=pointer]
+      - button "🔔 Reminder" [ref=e403] [cursor=pointer]
+      - button "Bearbeiten (→ Account)" [ref=e404] [cursor=pointer]

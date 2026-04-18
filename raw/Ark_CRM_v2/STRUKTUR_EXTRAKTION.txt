@@ -1,0 +1,19 @@
+# ARK CRM - 14 KANDIDATEN-MOCKUPS | STRUKTUR-EXTRAKTION
+
+## ALLGEMEIN
+Gemeinsame Komponenten ALLE 14 Dateien:
+- ARK-Topbar: Breadcrumb, Search (Ctrl+K), User-Avatar
+- ARK-Header: Avatar (120px), Name, Kontakt, Location/Sparte, Profilvollstaendigkeit
+- Tabs-Navigation: Ueberblick|Briefing|Werdegang|Assessment|Jobbasket|Prozesse|History|Dokumente|Dok-Generator|Reminders
+- Sidebar: Kandidaten-Chips + Status-Badges
+- Top-Buttons: Anrufen, Email, Stage, Reminder, Bearbeiten
+
+## 14 DATEIEN - KOMPAKTE STRUKTUR
+
+1. KANDIDAT UEBERBLICK v8: Personalien-Cards | Briefing-Eckdaten | Verfuegbarkeit | Kontaktdaten | Quality-Bars | Person-Pills | Flags | Comp-Rows (Drag-Handle)
+
+2. KANDIDAT BRIEFING v3: Quick-Jump-Sidebar (sticky, Dots: full/partial/empty) | AI-Banner (amber) | Gehalt-CHF-Bars (Range mit dashed-lines) | Version-History-Chips | Nested-Cards
+
+3. KANDIDAT WERDEGANG v2: Filter-Buttons (Alle/Jobs/Ausbildung) | Timeline (vertikal mit Dots) | Entry-Cards (Job/Ausbildung) | AI-Banner (blue) | Add-Button (Pill) | Drag-Handle
+
+4. KANDIDAT JOBBASKET v2: Spider/Radar-Chart (IMP/Gehalt/Funktion/Ort/DISC/Einzelmandat, 0-100

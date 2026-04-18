@@ -1,0 +1,442 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Mandate" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: CFO-Suche
+    - generic [ref=e16]:
+      - generic [ref=e17]: ⌘K
+      - button "☀" [ref=e18] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]: 🎯
+    - generic [ref=e22]:
+      - heading "CFO-Suche Bauherr Muster AG" [level=1] [ref=e23]
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - text: Owner AM
+          - strong [ref=e26]: PW
+        - generic [ref=e28]:
+          - text: Lead Research
+          - strong [ref=e29]: LR
+        - generic [ref=e31]: Kickoff 14.01.2026
+        - generic [ref=e33]: Zielplatzierung Q2/2026
+      - generic [ref=e34]:
+        - button "📞 Anrufen" [ref=e35] [cursor=pointer]
+        - button "✉ Email" [ref=e36] [cursor=pointer]
+        - button "📄 Mandat-Report" [ref=e37] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e38] [cursor=pointer]
+        - button "⚡ Option buchen" [ref=e39] [cursor=pointer]
+        - button "🛑 Mandat kündigen" [ref=e40] [cursor=pointer]
+        - button "⋯ Mehr" [ref=e41] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: 🎯 Target
+        - button "Aktiv ▾" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]: Stage 2/3
+        - generic [ref=e48]: Exklusiv (läuft mit Mandat)
+        - generic [ref=e49]: 🛡 3 Mt Garantie
+      - generic [ref=e51]: Briefing v3 · Stellenbriefing signiert 14.01.2026
+  - generic [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]: 📊 Idents
+      - generic [ref=e55]: 38 / 50
+      - generic [ref=e56]: 76 %
+    - generic [ref=e59]:
+      - generic [ref=e60]: 📞 Calls
+      - generic [ref=e61]: 24 / 30
+      - generic [ref=e62]: 80 %
+    - generic [ref=e65]:
+      - generic [ref=e66]: 📋 Shortlist
+      - generic [ref=e67]: 5 / 6
+      - generic [ref=e68]: 83 % · CV Sent
+    - generic [ref=e71]:
+      - generic [ref=e72]: 💰 Pauschale
+      - generic [ref=e73]: CHF 75'000
+      - generic [ref=e74]: Stage 2 läuft
+    - generic [ref=e75]:
+      - generic [ref=e76]: ⏱ Time-to-Fill
+      - generic [ref=e77]: Woche 13 / 20
+      - generic [ref=e78]: im Plan
+    - generic [ref=e81]:
+      - generic [ref=e82]: 🏆 Placements
+      - generic [ref=e83]: 0 / 1
+      - generic [ref=e84]: Target · 1 Slot
+  - navigation [ref=e85]:
+    - generic [ref=e86] [cursor=pointer]: 1Übersicht
+    - generic [ref=e87] [cursor=pointer]: 2Longlist
+    - generic [ref=e88] [cursor=pointer]: 3Prozesse
+    - generic [ref=e89] [cursor=pointer]: 4Billing
+    - generic [ref=e90] [cursor=pointer]: 5History
+    - generic [ref=e91] [cursor=pointer]: 6Dokumente
+    - generic [ref=e92] [cursor=pointer]: 7Reminders
+  - generic [ref=e93]:
+    - text: ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e773]:
+      - generic [ref=e774]:
+        - generic [ref=e775]:
+          - generic [ref=e776]: Honorar-Gesamt
+          - generic [ref=e777]: CHF 75'000
+          - generic [ref=e778]: 3 × CHF 25'000
+        - generic [ref=e779]:
+          - generic [ref=e780]: Bezahlt
+          - generic [ref=e781]: CHF 25'000
+          - generic [ref=e782]: Stage 1
+        - generic [ref=e783]:
+          - generic [ref=e784]: Offen (Rechnung läuft)
+          - generic [ref=e785]: CHF 25'000
+          - generic [ref=e786]: Stage 2 · RE-2026-0118
+        - generic [ref=e787]:
+          - generic [ref=e788]: Ausstehend (trigger-abhängig)
+          - generic [ref=e789]: CHF 25'000
+          - generic [ref=e790]: Stage 3 bei Placement
+        - generic [ref=e791]:
+          - generic [ref=e792]: Optionale Stages
+          - generic [ref=e793]: CHF 4'500
+          - generic [ref=e794]: 1 gebucht (VIII Marketing)
+      - generic [ref=e795]:
+        - generic [ref=e797]: Zahlungsplan · Target (3 Stages)
+        - table [ref=e798]:
+          - rowgroup [ref=e799]:
+            - row "# Zahlung Trigger Betrag netto Status Rechnung Aktion" [ref=e800]:
+              - columnheader "#" [ref=e801]
+              - columnheader "Zahlung" [ref=e802]
+              - columnheader "Trigger" [ref=e803]
+              - columnheader "Betrag netto" [ref=e804]
+              - columnheader "Status" [ref=e805]
+              - columnheader "Rechnung" [ref=e806]
+              - columnheader "Aktion" [ref=e807]
+          - rowgroup [ref=e808]:
+            - row "1 Kickoff / Vertragsabschluss Mandatsofferte unterschrieben CHF 25'000 ✓ Bezahlt RE-2026-0041 · 14.01.2026 · bezahlt 28.01.2026 PDF" [ref=e809]:
+              - cell "1" [ref=e810]:
+                - strong [ref=e811]: "1"
+              - cell "Kickoff / Vertragsabschluss" [ref=e812]:
+                - strong [ref=e813]: Kickoff / Vertragsabschluss
+              - cell "Mandatsofferte unterschrieben" [ref=e814]
+              - cell "CHF 25'000" [ref=e815]
+              - cell "✓ Bezahlt" [ref=e816]:
+                - generic [ref=e817]: ✓ Bezahlt
+              - cell "RE-2026-0041 · 14.01.2026 · bezahlt 28.01.2026" [ref=e818]:
+                - link "RE-2026-0041" [ref=e819] [cursor=pointer]:
+                  - /url: "#"
+                - text: · 14.01.2026 · bezahlt 28.01.2026
+              - cell "PDF" [ref=e820]:
+                - button "PDF" [ref=e821] [cursor=pointer]
+            - 'row "2 Shortlist erreicht Shortlist-Trigger: ≥ 5 Kandidaten CV Sent CHF 25''000 📄 Rechnungsstellung RE-2026-0118 · 12.04.2026 · fällig 27.05.2026 (45 d) Als bezahlt markieren" [ref=e822]':
+              - cell "2" [ref=e823]:
+                - strong [ref=e824]: "2"
+              - cell "Shortlist erreicht" [ref=e825]:
+                - strong [ref=e826]: Shortlist erreicht
+              - 'cell "Shortlist-Trigger: ≥ 5 Kandidaten CV Sent" [ref=e827]'
+              - cell "CHF 25'000" [ref=e828]
+              - cell "📄 Rechnungsstellung" [ref=e829]:
+                - generic [ref=e830]: 📄 Rechnungsstellung
+              - cell "RE-2026-0118 · 12.04.2026 · fällig 27.05.2026 (45 d)" [ref=e831]:
+                - link "RE-2026-0118" [ref=e832] [cursor=pointer]:
+                  - /url: "#"
+                - text: · 12.04.2026 · fällig 27.05.2026 (45 d)
+              - cell "Als bezahlt markieren" [ref=e833]:
+                - button "Als bezahlt markieren" [ref=e834] [cursor=pointer]
+            - row "3 Placement Kandidat platziert · Arbeitsantritt bestätigt CHF 25'000 ⏳ Ausstehend — Rechnung erstellen" [ref=e835]:
+              - cell "3" [ref=e836]:
+                - strong [ref=e837]: "3"
+              - cell "Placement" [ref=e838]:
+                - strong [ref=e839]: Placement
+              - cell "Kandidat platziert · Arbeitsantritt bestätigt" [ref=e840]
+              - cell "CHF 25'000" [ref=e841]
+              - cell "⏳ Ausstehend" [ref=e842]:
+                - generic [ref=e843]: ⏳ Ausstehend
+              - cell "—" [ref=e844]
+              - cell "Rechnung erstellen" [ref=e845]:
+                - button "Rechnung erstellen" [disabled] [ref=e846] [cursor=pointer]
+          - rowgroup [ref=e847]:
+            - row "Total netto CHF 75'000 + 8.1 % MwSt = CHF 81'075 brutto" [ref=e848]:
+              - cell "Total netto" [ref=e849]
+              - cell "CHF 75'000" [ref=e850]
+              - cell "+ 8.1 % MwSt = CHF 81'075 brutto" [ref=e851]
+      - generic [ref=e852]:
+        - generic [ref=e853]:
+          - generic [ref=e854]: Optionale Stages · gebucht
+          - button "+ Weitere buchen" [ref=e855] [cursor=pointer]
+        - table [ref=e856]:
+          - rowgroup [ref=e857]:
+            - row "Option Beschreibung Preis netto Status Auftrag / Rechnung" [ref=e858]:
+              - columnheader "Option" [ref=e859]
+              - columnheader "Beschreibung" [ref=e860]
+              - columnheader "Preis netto" [ref=e861]
+              - columnheader "Status" [ref=e862]
+              - columnheader "Auftrag / Rechnung" [ref=e863]
+              - columnheader [ref=e864]
+          - rowgroup [ref=e865]:
+            - row "VIII Marketing LinkedIn-Kampagne + Xing-Active-Sourcing CHF 4'500 ✓ Bezahlt AUF-2026-009 · RE-2026-0063 · bezahlt 15.03.2026 ›" [ref=e866]:
+              - cell "VIII Marketing" [ref=e867]:
+                - strong [ref=e868]: VIII
+                - text: Marketing
+              - cell "LinkedIn-Kampagne + Xing-Active-Sourcing" [ref=e869]
+              - cell "CHF 4'500" [ref=e870]
+              - cell "✓ Bezahlt" [ref=e871]:
+                - generic [ref=e872]: ✓ Bezahlt
+              - cell "AUF-2026-009 · RE-2026-0063 · bezahlt 15.03.2026" [ref=e873]:
+                - link "AUF-2026-009" [ref=e874] [cursor=pointer]:
+                  - /url: "#"
+                - text: ·
+                - link "RE-2026-0063" [ref=e875] [cursor=pointer]:
+                  - /url: "#"
+                - text: · bezahlt 15.03.2026
+              - cell "›" [ref=e876]:
+                - button "›" [ref=e877] [cursor=pointer]
+      - generic [ref=e878]: Kündigungs- und Rückerstattungs-Rechnungen werden hier angezeigt, sobald sie anfallen (Mandat-Kündigung 80 %-Regel oder Garantie-Refund bei Austritt innerhalb 3 Mt).
+      - generic [ref=e879]:
+        - generic [ref=e881]: Zahlungs-Historie (letzte Ereignisse)
+        - generic [ref=e882]:
+          - generic [ref=e885]:
+            - generic [ref=e886]:
+              - strong [ref=e887]: Rechnung RE-2026-0118 versandt
+              - generic [ref=e888]: 12.04.2026 · 14:30 · JV
+            - generic [ref=e889]: Stage 2 Shortlist · CHF 25'000 netto · Empfänger finance@muster-bauherr.ch · fällig 27.05.2026
+          - generic [ref=e892]:
+            - generic [ref=e893]:
+              - strong [ref=e894]: Rechnung RE-2026-0063 bezahlt
+              - generic [ref=e895]: 15.03.2026 · SYS
+            - generic [ref=e896]: Optionale Stage VIII Marketing · Zahlungseingang CHF 4'500 · bank-match konfirmiert
+          - generic [ref=e899]:
+            - generic [ref=e900]:
+              - strong [ref=e901]: Rechnung RE-2026-0041 bezahlt
+              - generic [ref=e902]: 28.01.2026 · SYS
+            - generic [ref=e903]: Stage 1 Kickoff · Zahlungseingang CHF 25'000 · bank-match konfirmiert
+          - generic [ref=e906]:
+            - generic [ref=e907]:
+              - strong [ref=e908]: Rechnung RE-2026-0041 versandt
+              - generic [ref=e909]: 14.01.2026 · JV
+            - generic [ref=e910]: Stage 1 Kickoff · CHF 25'000 netto · bei Vertragsabschluss
+      - generic [ref=e911]: "Target-Pauschale ÷ 3 Stages. Zahlungsfrist 45 Tage (Rahmenvertrag-Kondition, Standard wäre 30 d). MwSt 8.1 % wird netto zu jeder Rechnung addiert. Status-Lifecycle je Rechnung: offen → Rechnungsstellung → bezahlt / überfällig."
+  - generic [ref=e333]:
+    - generic [ref=e334]: 1–7 Tabs
+    - generic [ref=e335]: O Option buchen
+    - generic [ref=e336]: K Kündigen
+    - generic [ref=e337]: T Theme
+    - generic [ref=e338]: ⌘K Command Palette
+  - generic [ref=e339]:
+    - generic [ref=e340]:
+      - generic [ref=e341]: ⚡
+      - generic [ref=e342]:
+        - heading "Optionale Stage buchen" [level=2] [ref=e343]
+        - generic [ref=e344]: Zusatz-Leistung zum Mandat · erzeugt separaten Auftrag + Rechnung
+      - button "✕" [ref=e345] [cursor=pointer]
+    - generic [ref=e346]:
+      - generic [ref=e347]:
+        - heading "Stage wählen" [level=4] [ref=e348]
+        - generic [ref=e349]:
+          - generic [ref=e350] [cursor=pointer]:
+            - radio "VI · Mehr Idents +25 zusätzliche Identifikationen · CHF 3'500" [ref=e351]
+            - generic [ref=e352]:
+              - strong [ref=e353]: VI · Mehr Idents
+              - text: +25 zusätzliche Identifikationen · CHF 3'500
+          - generic [ref=e354] [cursor=pointer]:
+            - radio "VII · Mehr Dossiers +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800" [ref=e355]
+            - generic [ref=e356]:
+              - strong [ref=e357]: VII · Mehr Dossiers
+              - text: +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800
+          - generic [ref=e358] [cursor=pointer]:
+            - radio "VIII · Marketing-Massnahmen bereits gebucht LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500" [disabled] [ref=e359]
+            - generic [ref=e360]:
+              - strong [ref=e361]: VIII · Marketing-Massnahmen
+              - generic [ref=e362]: bereits gebucht
+              - text: LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500
+          - generic [ref=e363] [cursor=pointer]:
+            - radio "IX · Assessment ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat" [ref=e364]
+            - generic [ref=e365]:
+              - strong [ref=e366]: IX · Assessment
+              - text: ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat
+          - generic [ref=e367] [cursor=pointer]:
+            - radio "X · Fakultative Garantie +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat" [ref=e368]
+            - generic [ref=e369]:
+              - strong [ref=e370]: X · Fakultative Garantie
+              - text: +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat
+      - generic [ref=e371]:
+        - heading "Anmerkung / Begründung" [level=4] [ref=e372]
+        - textbox "Kurze Begründung (intern, audit-trail)…" [ref=e373]
+    - generic [ref=e374]:
+      - button "Abbrechen" [ref=e375] [cursor=pointer]
+      - button "⚡ Option buchen & Rechnung erstellen" [ref=e377] [cursor=pointer]
+  - generic [ref=e378]:
+    - generic [ref=e379]:
+      - generic [ref=e380]: 🛑
+      - generic [ref=e381]:
+        - heading "Mandat kündigen" [level=2] [ref=e382]
+        - generic [ref=e383]: CFO-Suche · Bauherr Muster AG
+      - button "✕" [ref=e384] [cursor=pointer]
+    - generic [ref=e385]:
+      - generic [ref=e386]:
+        - heading "Kündigung durch" [level=4] [ref=e387]
+        - generic [ref=e388]:
+          - generic [ref=e389]:
+            - radio "Kunde kündigt (häufigster Fall)" [checked] [ref=e390]
+            - text: Kunde kündigt (häufigster Fall)
+          - generic [ref=e391]:
+            - radio "Arkadium kündigt (Exit-Option Arkadium)" [ref=e392]
+            - text: Arkadium kündigt (Exit-Option Arkadium)
+          - generic [ref=e393]:
+            - radio "Einvernehmlich" [ref=e394]
+            - text: Einvernehmlich
+      - generic [ref=e395]:
+        - heading "Grund *" [level=4] [ref=e396]
+        - combobox [ref=e397] [cursor=pointer]:
+          - option "— wählen —" [selected]
+          - option "Position intern besetzt"
+          - option "Position anderweitig besetzt (Mitbewerber)"
+          - option "Strategie-Change Kunde"
+          - option "Unzufriedenheit mit Arkadium"
+          - option "Budget gestrichen"
+          - option "Sonstiges (freitext)"
+        - textbox "Details / freitext (audit-relevant) …" [ref=e398]
+      - generic [ref=e399]:
+        - heading "Billing-Konsequenz (80 %-Regel)" [level=4] [ref=e400]
+        - generic [ref=e401]:
+          - text: Mandat befindet sich in
+          - strong [ref=e402]: Stage 2 von 3
+          - text: . Bei Kundenkündigung wird die noch offene Pauschale (Stage 3) zu
+          - strong [ref=e403]: 80 %
+          - text: in Rechnung gestellt, sofern Arkadium die Shortlist geliefert hat.
+          - strong [ref=e404]: "Kündigungs-Rechnung (Vorschau):"
+          - text: "Stage 3 offen: CHF 25'000 × 80 % ="
+          - strong [ref=e405]: CHF 20'000 netto
+          - text: + MwSt 8.1 % = CHF 1'620 → Total CHF 21'620 brutto
+      - generic [ref=e406]:
+        - heading "Kündigungs-Datum" [level=4] [ref=e407]
+        - textbox [ref=e408]: 2026-04-14
+    - generic [ref=e409]:
+      - button "Abbrechen" [ref=e410] [cursor=pointer]
+      - button "🛑 Mandat kündigen & Rechnung erstellen" [ref=e412] [cursor=pointer]
+  - generic [ref=e413]:
+    - generic [ref=e414]:
+      - generic [ref=e415]: ↑
+      - generic [ref=e416]:
+        - heading "Dokument hochladen" [level=2] [ref=e417]
+        - generic [ref=e418]: Kategorie wählen, Datei auswählen, optional verknüpfen
+      - button "✕" [ref=e419] [cursor=pointer]
+    - generic [ref=e421]:
+      - generic [ref=e422]:
+        - heading "Datei" [level=4] [ref=e423]
+        - generic [ref=e424] [cursor=pointer]:
+          - generic [ref=e425]: 📄
+          - generic [ref=e426]: Datei hierher ziehen oder klicken
+          - generic [ref=e427]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e428]:
+        - heading "Metadaten" [level=4] [ref=e429]
+        - generic [ref=e430]:
+          - generic [ref=e431]: Kategorie *
+          - combobox [ref=e432] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Offerte / Vertrag"
+            - option "Rechnung"
+            - option "Stellenbriefing"
+            - option "Assessment"
+            - option "Scraper-Beleg"
+            - option "Sonstiges"
+          - generic [ref=e433]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e434]
+          - generic [ref=e435]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e436]
+          - generic [ref=e437]: Verknüpfung
+          - combobox [ref=e438] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Billing Stage II"
+          - generic [ref=e439]: Urheber
+          - generic [ref=e440]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e441]:
+      - button "Abbrechen" [ref=e442] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e444] [cursor=pointer]
+  - generic [ref=e445]:
+    - generic [ref=e446]:
+      - generic [ref=e447]: 💬
+      - generic [ref=e448]:
+        - heading "Event-Detail" [level=2] [ref=e449]
+        - generic [ref=e450]: —
+      - button "✕" [ref=e451] [cursor=pointer]
+    - generic [ref=e454]:
+      - button "Schliessen" [ref=e455] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e456] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e457] [cursor=pointer]
+  - generic [ref=e458]:
+    - generic [ref=e459]:
+      - generic [ref=e460]: ⏰
+      - generic [ref=e461]:
+        - heading "Neuer Reminder" [level=2] [ref=e462]
+        - generic [ref=e463]: Erstelle einen Termin-, Follow-up- oder System-Reminder
+        - generic [ref=e465]: neu
+      - button "✕" [ref=e466] [cursor=pointer]
+    - generic [ref=e467]:
+      - generic [ref=e468]:
+        - heading "Reminder" [level=4] [ref=e469]
+        - generic [ref=e470]:
+          - generic [ref=e471]: Titel *
+          - textbox "z.B. Stage-Deadline VI prüfen" [ref=e472]
+          - generic [ref=e473]: Typ *
+          - combobox [ref=e474] [cursor=pointer]:
+            - option "Mandat-Review" [selected]
+            - option "Stage-Deadline"
+            - option "Kandidat-Nachfassen"
+            - option "Abschluss-Rechnung"
+            - option "Debriefing"
+            - option "Follow-up"
+            - option "Schutzfrist"
+            - option "Garantie"
+            - option "Custom"
+          - generic [ref=e475]: Fällig am *
+          - textbox [ref=e476]
+          - generic [ref=e477]: Zuständig *
+          - combobox [ref=e478] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "NP"
+            - option "NS"
+            - option "Backoffice"
+          - generic [ref=e479]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e480]
+          - generic [ref=e481]: Verknüpfung
+          - combobox [ref=e482] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Prozess · Nadine Berger"
+            - option "Billing Stage II"
+          - generic [ref=e483]: Wiederholen
+          - combobox [ref=e484] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+            - option "Quartalsweise"
+      - generic [ref=e485]:
+        - heading "Benachrichtigung" [level=4] [ref=e486]
+        - generic [ref=e487]:
+          - generic [ref=e488]: Vorlaufzeit
+          - combobox [ref=e489] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e490]: Eskalation
+          - generic [ref=e491]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead
+    - generic [ref=e492]:
+      - button "Abbrechen" [ref=e493] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e495] [cursor=pointer]

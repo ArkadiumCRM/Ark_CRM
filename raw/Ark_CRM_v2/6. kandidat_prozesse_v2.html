@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Prozesse (Kandidat)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{--gold:#dcb479;--teal:#196774;--gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold30:rgba(220,180,121,.30);--teal15:rgba(25,103,116,.15);--teal30:rgba(25,103,116,.30);--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;--brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);--t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;--green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--blue:#60a5fa}
+
+.subtabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c);padding:0 20px;overflow-x:auto}
+.subtab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;font-weight:500}
+.subtab:hover{color:var(--t2)}.subtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.content{padding:16px 20px;max-width:1200px;}
+.sec{background:var(--bg-c);border-radius:12px;border:.5px solid var(--brd);margin-bottom:12px;overflow:hidden;position:relative}
+.sec-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t1)}
+.s-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sec-body{padding:4px 18px 18px}
+.tb-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.tb-btn:hover{border-color:var(--gold30);color:var(--t2)}
+.tb-btn.active{background:var(--gold08);border-color:var(--gold30);color:var(--gold)}
+.tb-sep{width:1px;height:20px;background:var(--brd);margin:0 2px}
+.sum-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sum-card{flex:1;min-width:130px;padding:12px 14px;background:var(--bg-c);border-radius:10px;border:.5px solid var(--brd)}
+.sum-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.sum-value{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.sum-sub{font-size:10px;color:var(--t3);margin-top:2px}
+.pipe-sum{display:flex;align-items:center;gap:5px;padding:10px 14px;background:var(--bg-p);border-radius:8px;margin-bottom:14px;flex-wrap:wrap}
+.pipe-chip{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid transparent}
+.pipe-chip:hover{border-color:var(--brd)}.pipe-chip.pc-active{border-color:var(--gold30);box-shadow:0 0 0 2px rgba(220,180,121,.08)}
+.pipe-chip-cnt{font-size:13px;font-weight:700}.pipe-chip-lbl{font-size:8px;color:var(--t3)}.pipe-arrow{font-size:10px;color:var(--tm)}
+.pipe-clear{font-size:9px;color:var(--tm);cursor:pointer;padding:4px 8px;border-radius:4px;transition:.15s;display:none;align-items:center;gap:3px}
+.pipe-clear:hover{color:var(--t1);background:var(--bg-hv)}.pipe-clear.show{display:inline-flex}
+.proc-list{display:flex;flex-direction:column;gap:10px}
+.proc-card{background:var(--bg-e);border-radius:12px;border:.5px solid var(--brd-s);overflow:hidden;transition:opacity .5s,transform .5s,border-color .2s,box-shadow .2s;position:relative;opacity:0;transform:translateY(12px)}
+.proc-card.vis{opacity:1;transform:translateY(0)}.proc-card.rej-card.vis{opacity:.5}
+.proc-card:hover{border-color:rgba(220,180,121,.12);box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.proc-top{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+.proc-logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:#fff;letter-spacing:.5px}
+.proc-info{flex:1;min-width:0}.proc-title{font-size:14px;font-weight:600;color:var(--t1)}.proc-meta{font-size:11px;color:var(--t2);margin-top:2px}
+.proc-pills{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.status-pill{font-size:9px;font-weight:600;padding:3px 10px;border-radius:5px;letter-spacing:.3px}
+.sp-open{background:rgba(93,202,165,.1);color:var(--green)}.sp-hold{background:rgba(245,158,11,.08);color:var(--amber)}
+.sp-rejected{background:rgba(239,68,68,.08);color:var(--red)}.sp-placed{background:rgba(96,165,250,.08);color:var(--blue)}
+.stage-pill{font-size:9px;font-weight:600;padding:3px 10px;border-radius:5px}
+.mandat-tag{font-size:9px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap}
+.mt-einzel{background:var(--gold08);border:.5px solid var(--gold30);color:var(--gold)}
+.mt-rpo{background:var(--teal15);border:.5px solid var(--teal30);color:#5bb8c9}
+.mt-erfolg{background:rgba(128,124,116,.06);border:.5px solid rgba(128,124,116,.12);color:var(--t3)}
+.proc-date{font-size:9px;color:var(--t3);padding:3px 8px;background:var(--bg-p);border-radius:5px}
+.proc-collapse{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:transform .2s,background .15s;flex-shrink:0}
+.proc-collapse:hover{background:var(--bg-hv);color:var(--t1)}
+.proc-collapsed .proc-collapse{transform:rotate(-90deg)}
+.proc-body{padding:4px 18px 18px;border-top:1px solid rgba(255,255,255,.03)}
+.proc-collapsed .proc-body{display:none}
+.tl-wrap{width:100%;overflow:visible;padding-top:6px}.tl-svg{width:100%;height:110px;overflow:visible;cursor:pointer}
+.proc-info-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.pib{flex:1;min-width:120px;padding:10px 12px;background:var(--bg-p);border-radius:8px;border:.5px solid var(--brd-s)}
+.pib-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px}
+.pib-value{font-size:13px;font-weight:600;color:var(--t1)}.pib-sub{font-size:10px;color:var(--t3);margin-top:2px}
+.proc-ctx{font-size:11px;padding:8px 14px;border-radius:8px;margin-top:8px;line-height:1.5}
+.proc-next{color:var(--t2);background:rgba(93,202,165,.05);border:.5px solid rgba(93,202,165,.1)}
+.proc-rej-box{color:var(--red);background:rgba(239,68,68,.06);border:.5px solid rgba(239,68,68,.12);padding:10px 14px;border-radius:8px;margin-top:8px}
+.proc-warn{color:var(--amber);background:rgba(245,158,11,.06);border:.5px solid rgba(245,158,11,.12)}
+.proc-warn a{color:var(--gold);cursor:pointer;font-weight:600}
+/* Popovers */
+.pop-overlay{position:fixed;inset:0;z-index:150;display:none}.pop-overlay.open{display:block}
+.stage-pop{position:fixed;z-index:200;background:var(--bg-c);border:1px solid var(--brd);border-radius:10px;padding:16px;min-width:230px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:none}
+.stage-pop.open{display:block}
+.sp-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sp-field{margin-bottom:10px}.sp-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px}
+.sp-input{width:100%;padding:7px 10px;border-radius:7px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none}
+.sp-input:focus{border-color:var(--gold30)}
+.sp-select{width:100%;padding:7px 10px;border-radius:7px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none;cursor:pointer}
+.sp-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:12px}
+.sp-btn{padding:6px 16px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;border:none;transition:.15s}
+.sp-btn-cancel{background:transparent;border:1px solid var(--brd);color:var(--t3)}.sp-btn-cancel:hover{border-color:var(--gold30);color:var(--t2)}
+.sp-btn-save{background:var(--gold15);border:1px solid var(--gold30);color:var(--gold)}.sp-btn-save:hover{background:var(--gold30)}
+.sp-btn-advance{background:var(--teal15);border:1px solid var(--teal30);color:#5bb8c9}.sp-btn-advance:hover{background:rgba(25,103,116,.25)}
+.sp-current{font-size:10px;padding:3px 8px;border-radius:4px;background:var(--gold08);color:var(--gold)}
+.sp-skip{font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(128,124,116,.08);color:var(--t3)}
+.sp-hint{font-size:10px;color:var(--t3);margin-top:6px;line-height:1.4}
+.sp-warn{font-size:10px;color:var(--amber);margin-top:6px;padding:6px 10px;background:rgba(245,158,11,.06);border:.5px solid rgba(245,158,11,.12);border-radius:6px;line-height:1.5}
+.sp-warn button{margin-top:4px;padding:4px 12px;border-radius:5px;font-size:10px;font-weight:500;cursor:pointer;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);color:var(--amber);transition:.15s}
+.sp-warn button:hover{background:rgba(245,158,11,.15)}
+/* Debriefing popover */
+.debrief-pop{position:fixed;z-index:200;background:var(--bg-c);border:1px solid var(--brd);border-radius:10px;padding:16px;width:280px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:none}
+.debrief-pop.open{display:block}
+.dp-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dp-content{font-size:11px;color:var(--t2);line-height:1.6;max-height:150px;overflow-y:auto}
+.dp-empty{font-size:11px;color:var(--tm);font-style:italic}
+.dp-meta{font-size:9px;color:var(--t3);margin-top:8px;padding-top:6px;border-top:1px solid var(--brd-s)}
+.dp-link{font-size:10px;color:var(--gold);cursor:pointer;font-weight:500;margin-top:6px;display:inline-block}
+.dp-link:hover{text-decoration:underline}
+/* Kanban date modal */
+.kb-date-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.kb-date-modal.open{display:flex}
+.kb-dm-box{background:var(--bg-c);border:1px solid var(--brd);border-radius:12px;padding:20px;width:300px;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.kb-dm-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:12px}
+/* Kanban */
+.kanban{display:none;gap:6px;overflow-x:auto;padding-bottom:12px;min-height:350px}
+.kb-col{min-width:145px;width:145px;flex-shrink:0;display:flex;flex-direction:column;border-radius:10px;background:var(--bg-e);border:.5px solid var(--brd-s);transition:background .2s}
+.kb-col.drag-over{background:#32322e;border-color:var(--gold30)}
+.kb-col-head{padding:10px 10px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--brd-s)}
+.kb-col-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.kb-col-win{font-size:8px;color:var(--t3)}.kb-col-cnt{font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.kb-col-body{flex:1;padding:6px;display:flex;flex-direction:column;gap:5px;min-height:60px}
+.kb-col-body.empty-col::after{content:'Hierher ziehen';display:flex;align-items:center;justify-content:center;height:50px;border:1.5px dashed var(--brd);border-radius:8px;font-size:9px;color:var(--tm);margin:4px 0}
+.kb-card{padding:10px;border-radius:8px;background:var(--bg-c);border:.5px solid var(--brd);cursor:grab;transition:transform .15s,box-shadow .15s,opacity .15s;position:relative}
+.kb-card:hover{border-color:rgba(220,180,121,.15);box-shadow:0 4px 16px rgba(0,0,0,.3);transform:translateY(-1px)}
+.kb-card.dragging{opacity:.4;transform:scale(.95)}
+.kb-card-top{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.kb-card-logo{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;flex-shrink:0}
+.kb-card-title{font-size:11px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.kb-card-acct{font-size:9px;color:var(--t3);margin-bottom:3px}
+.kb-card-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:3px}
+.kb-card-iv{font-size:9px;margin-top:2px}
+.kb-card-date{font-size:8px;color:var(--tm);margin-top:3px}
+.kb-card-grip{position:absolute;top:4px;right:6px;font-size:10px;color:var(--tm);opacity:0;transition:.15s}.kb-card:hover .kb-card-grip{opacity:.6}
+.iv-planned{color:var(--gold)}.iv-done{color:var(--green)}
+.proc-empty{text-align:center;padding:40px 24px;display:none}
+.proc-empty-icon{font-size:32px;margin-bottom:8px;opacity:.4}
+.proc-empty-title{font-size:14px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.proc-empty-desc{font-size:11px;color:var(--tm)}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin-top:8px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab active">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+<div class="content">
+<div class="sum-row">
+  <div class="sum-card"><div class="sum-label">Aktive Prozesse</div><div class="sum-value" style="color:var(--green)">5</div><div class="sum-sub">1 Rejected · 0 Placed</div></div>
+  <div class="sum-card"><div class="sum-label">Nächstes Interview</div><div class="sum-value" style="color:var(--t1);font-size:15px">1st · 31.03.</div><div class="sum-sub">Losinger Marazzi · heute</div></div>
+  <div class="sum-card"><div class="sum-label">Weitester Prozess</div><div class="sum-value" style="color:var(--gold);font-size:15px">Offer</div><div class="sum-sub">Strabag AG · seit 25.03.</div></div>
+  <div class="sum-card"><div class="sum-label">Ø Tage in Pipeline</div><div class="sum-value" style="color:var(--t2)">22</div><div class="sum-sub">Über alle aktiven</div></div>
+</div>
+<div class="sec">
+  <div class="sec-accent" style="background:linear-gradient(90deg,var(--teal),var(--green),var(--gold),transparent 80%)"></div>
+  <div class="sec-head">
+    <div class="sec-title"><div class="s-icon" style="background:var(--teal15);color:var(--teal)">🔄</div>Interview-Pipeline</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="tb-btn active" id="btnList" onclick="setView('list')">☰ Cards</button>
+      <button class="tb-btn" id="btnKanban" onclick="setView('kanban')">◫ Kanban</button>
+    </div>
+  </div>
+  <div class="sec-body">
+    <div class="pipe-sum" id="pipeSummary"></div>
+    <div class="proc-list" id="procList"></div>
+    <div class="proc-empty" id="procEmpty"><div class="proc-empty-icon">🔄</div><div class="proc-empty-title">Keine Prozesse</div><div class="proc-empty-desc">Prozesse werden automatisch erstellt wenn ein CV oder Exposé versendet wird.</div></div>
+    <div class="kanban" id="kanbanView"></div>
+  </div>
+</div>
+<div class="kb-bar">
+  <span class="kb-hint-item"><span class="kb-key">↑</span><span class="kb-key">↓</span> Navigation</span>
+  <span class="kb-hint-item"><span class="kb-key">Enter</span> Auf-/Zuklappen</span>
+  <span class="kb-hint-item"><span class="kb-key">L</span> Cards</span>
+  <span class="kb-hint-item"><span class="kb-key">K</span> Kanban</span>
+</div>
+</div>
+<!-- Stage popover -->
+<div class="stage-pop" id="stagePop">
+  <div class="sp-title" id="spTitle"></div>
+  <div class="sp-field" id="spDateField"><div class="sp-label">Datum</div><input type="date" class="sp-input" id="spDate"></div>
+  <div class="sp-field" id="spNextField" style="display:none"><div class="sp-label">Weiter zu</div><select class="sp-select" id="spNext"></select></div>
+  <div class="sp-hint" id="spHint"></div>
+  <div class="sp-warn" id="spWarn" style="display:none">⚠ Kein Debriefing für den aktuellen Stage vorhanden.<button onclick="forceAdvance()">Trotzdem weiter (Ghosting / Kunden-Info)</button></div>
+  <div class="sp-actions"><button class="sp-btn sp-btn-cancel" onclick="closePop()">Abbrechen</button><button class="sp-btn sp-btn-save" onclick="savePop()">Speichern</button><button class="sp-btn sp-btn-advance" id="spAdvBtn" onclick="tryAdvance()" style="display:none">→ Weiter</button></div>
+</div>
+<!-- Debriefing popover -->
+<div class="debrief-pop" id="debriefPop">
+  <div class="dp-title" id="dpTitle"></div>
+  <div class="dp-content" id="dpContent"></div>
+  <div class="dp-meta" id="dpMeta"></div>
+  <a class="dp-link" id="dpLink">→ Im History-Tab öffnen</a>
+</div>
+<!-- Kanban date modal -->
+<div class="kb-date-modal" id="kbDateModal">
+  <div class="kb-dm-box">
+    <div class="kb-dm-title" id="kbDmTitle">Interview-Datum setzen</div>
+    <div class="sp-field"><div class="sp-label">Wann findet das Interview statt?</div><input type="date" class="sp-input" id="kbDmDate"></div>
+    <div class="sp-actions"><button class="sp-btn sp-btn-cancel" onclick="closeKbModal()">Abbrechen</button><button class="sp-btn sp-btn-save" onclick="confirmKbDrop()">Bestätigen</button></div>
+  </div>
+</div>
+<script>
+const STAGES=[
+  {key:'Expose',label:'Expose',win:5,color:'rgba(128,124,116,.08)',tc:'#b5b0a8',isIv:false},
+  {key:'CV Sent',label:'CV Sent',win:10,color:'rgba(25,103,116,.06)',tc:'#5bb8c9',isIv:false},
+  {key:'TI',label:'TI',win:20,color:'rgba(96,165,250,.06)',tc:'#60a5fa',isIv:true},
+  {key:'1st',label:'1st',win:35,color:'rgba(220,180,121,.06)',tc:'#dcb479',isIv:true},
+  {key:'2nd',label:'2nd',win:55,color:'rgba(220,180,121,.08)',tc:'#dcb479',isIv:true},
+  {key:'3rd',label:'3rd',win:70,color:'rgba(93,202,165,.06)',tc:'#5DCAA5',isIv:true},
+  {key:'Assessment',label:'Assessment',win:70,color:'rgba(139,92,246,.06)',tc:'#a78bfa',isIv:false},
+  {key:'Offer',label:'Offer',win:80,color:'rgba(93,202,165,.08)',tc:'#5DCAA5',isIv:false},
+  {key:'Placement',label:'Placement',win:100,color:'rgba(93,202,165,.12)',tc:'#5DCAA5',isIv:false}
+];
+const SM={};STAGES.forEach((s,i)=>SM[s.key]=i);
+const TRANS={'Expose':['CV Sent'],'CV Sent':['TI','1st'],'TI':['1st'],'1st':['2nd','Offer'],'2nd':['3rd','Offer'],'3rd':['Assessment','Offer'],'Assessment':['Offer'],'Offer':['Placement'],'Placement':[]};
+// Interview stages where debriefing dots appear BETWEEN
+const IV_PAIRS=[[2,3],[3,4],[4,5]]; // TI↔1st, 1st↔2nd, 2nd↔3rd
+
+const PROCS=[
+  {logo:'IMP',bg:'#e60000',account:'Implenia AG',job:'Projektleiter BIM Tiefbau',
+   stage:'CV Sent',status:'Open',mandat:'erfolg',am:'SP',
+   dates:{Expose:'01.03.2026','CV Sent':'15.03.2026'},
+   debriefings:{},iv:{type:'1st',date:'04.04.2026',st:'planned'},updated:'29.03.2026'},
+
+  {logo:'KÜM',bg:'#1a4d8f',account:'Kümmerle Bau',job:'Bereichsleiter Spezialtiefbau',
+   stage:'TI',status:'Open',mandat:'erfolg',am:'YB',
+   dates:{Expose:'25.02.2026','CV Sent':'12.03.2026',TI:'28.03.2026'},
+   debriefings:{TI:{text:'Gutes Gespräch, Kunde will 1st Interview. Kandidat war gut vorbereitet, Gehaltsvorstellungen passen.',date:'28.03.2026',by:'PW'}},
+   iv:{type:'TI',date:'28.03.2026',st:'done'},updated:'28.03.2026'},
+
+  // SKIP: CV Sent → 1st (TI skipped)
+  {logo:'BRN',bg:'#2d6a4f',account:'Brun AG',job:'Bauleiter Hochbau',
+   stage:'2nd',status:'Open',mandat:'einzel',am:'SP',
+   dates:{Expose:'01.03.2026','CV Sent':'05.03.2026','1st':'18.03.2026','2nd':'26.03.2026'},
+   debriefings:{'1st':{text:'Sehr gutes Gespräch. Kunde beeindruckt von Projekterfahrung. Nächster Schritt: Besichtigung Baustelle + 2nd.',date:'19.03.2026',by:'JV'}},
+   iv:{type:'2nd',date:'26.03.2026',st:'done'},updated:'26.03.2026'},
+
+  {logo:'LOS',bg:'#8e44ad',account:'Losinger Marazzi',job:'Projektleiterin Tiefbau',
+   stage:'1st',status:'Open',mandat:'rpo',am:'YB',
+   dates:{Expose:'10.03.2026','CV Sent':'14.03.2026',TI:'22.03.2026','1st':'31.03.2026'},
+   debriefings:{TI:{text:'TI positiv. Kunde möchte Kandidat persönlich treffen.',date:'22.03.2026',by:'PW'}},
+   iv:{type:'1st',date:'31.03.2026',st:'planned'},updated:'27.03.2026'},
+
+  // SKIP: 1st → Offer (skipped 2nd, 3rd, Assessment)
+  {logo:'STR',bg:'#8b5e3c',account:'Strabag AG',job:'Abteilungsleiter Infrastruktur',
+   stage:'Offer',status:'Open',mandat:'erfolg',am:'SP',
+   dates:{Expose:'18.02.2026','CV Sent':'22.02.2026',TI:'01.03.2026','1st':'08.03.2026',Offer:'25.03.2026'},
+   debriefings:{TI:{text:'Kurzes TI, schnelle Weiterleitung.',date:'01.03.2026',by:'PW'},'1st':{text:'Sehr gut gelaufen. GL hat direkt Offer besprochen.',date:'09.03.2026',by:'PW'}},
+   iv:{type:'1st',date:'08.03.2026',st:'done'},updated:'25.03.2026'},
+
+  {logo:'EIF',bg:'#065f46',account:'Eiffage Suisse',job:'Bereichsleiter Bau',
+   stage:'Expose',status:'Open',mandat:'erfolg',am:'YB',agbMissing:true,
+   dates:{Expose:'28.03.2026'},debriefings:{},iv:null,updated:'30.03.2026'},
+
+  {logo:'POR',bg:'#555',account:'Porr Suisse',job:'Gesamtleiter Hochbau',
+   stage:'TI',status:'Rejected',mandat:'erfolg',am:'SP',
+   dates:{Expose:'25.02.2026','CV Sent':'01.03.2026',TI:'18.03.2026'},
+   debriefings:{TI:{text:'Kunde findet Profil nicht passend. Zu wenig Hochbau-Erfahrung.',date:'19.03.2026',by:'JV'}},
+   rejBy:'Kunde',rejReason:'Profil passt nicht',rejDate:'22.03.2026',
+   iv:{type:'TI',date:'18.03.2026',st:'done'},updated:'22.03.2026'}
+];
+
+function todayStr(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
+function buildPipeSummary(){
+  const ps=document.getElementById('pipeSummary');let ph='';
+  STAGES.forEach((s,i)=>{
+    const n=PROCS.filter(p=>SM[p.stage]===i&&p.status!=='Rejected').length;
+    ph+=`<div class="pipe-chip" data-f="${s.key}" onclick="filterStage('${s.key}',this)" style="background:${s.color}"><span class="pipe-chip-cnt" style="color:${s.tc}">${n}</span><span class="pipe-chip-lbl">${s.label}</span></div>`;
+    if(i<STAGES.length-1)ph+=`<div class="pipe-arrow">›</div>`;
+  });
+  const rc=PROCS.filter(p=>p.status==='Rejected').length;
+  if(rc)ph+=`<div style="width:1px;height:18px;background:var(--brd);margin:0 3px"></div><div class="pipe-chip" data-f="Rejected" onclick="filterStage('Rejected',this)" style="background:rgba(239,68,68,.04)"><span class="pipe-chip-cnt" style="color:var(--red)">${rc}</span><span class="pipe-chip-lbl">Rejected</span></div>`;
+  ph+=`<span class="pipe-clear" id="pipeClear" onclick="clearFilter()">✕ Reset</span>`;ps.innerHTML=ph;
+}
+buildPipeSummary();
+
+// ===== SVG with debriefing dots =====
+const W=780,H=110,PAD=30,Y=52;
+function buildSVG(p,idx){
+  const step=(W-2*PAD)/(STAGES.length-1);const si=SM[p.stage];const isRej=p.status==='Rejected';
+  let s=`<svg viewBox="0 0 ${W} ${H}" class="tl-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pg${idx}"><stop offset="0%" stop-color="#196774"/><stop offset="100%" stop-color="#5DCAA5"/></linearGradient></defs>`;
+  s+=`<line x1="${PAD}" y1="${Y}" x2="${W-PAD}" y2="${Y}" stroke="#2a2a27" stroke-width="4" stroke-linecap="round"/>`;
+  const px=PAD+si*step;
+  if(isRej)s+=`<line x1="${PAD}" y1="${Y}" x2="${px}" y2="${Y}" stroke="#ef4444" stroke-width="4" stroke-linecap="round" opacity=".7"/>`;
+  else s+=`<line x1="${PAD}" y1="${Y}" x2="${px}" y2="${Y}" stroke="url(#pg${idx})" stroke-width="4" stroke-linecap="round"/>`;
+
+  for(let i=0;i<STAGES.length;i++){
+    const x=PAD+i*step;const stg=STAGES[i];const hasDate=!!p.dates[stg.key];
+    const isPast=i<si,isCurrent=i===si,isFuture=i>si,dead=isRej&&i>si;
+    const skipped=isPast&&!hasDate;
+    let fill,stroke,r,lc,lw;
+    if(dead){fill='#232321';stroke='#2a2a27';r=3;lc='#3a3a35';lw=400}
+    else if(skipped){fill='transparent';stroke='#5DCAA5';r=4;lc='#726e66';lw=400}
+    else if(isPast&&hasDate){fill='#5DCAA5';stroke='#5DCAA5';r=5;lc='#9a968e';lw=500}
+    else if(isCurrent&&!isRej){fill='#dcb479';stroke='#dcb479';r=7;lc='#dcb479';lw=700}
+    else if(isCurrent&&isRej){fill='#ef4444';stroke='#ef4444';r=6;lc='#ef4444';lw=600}
+    else{fill='#2c2c28';stroke='#726e66';r=5;lc='#726e66';lw=400}
+    if(!dead){
+      if(skipped)s+=`<circle cx="${x}" cy="${Y}" r="${r}" fill="none" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="2,2" style="cursor:pointer" onclick="openPop(event,${idx},${i})"/>`;
+      else s+=`<circle cx="${x}" cy="${Y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2.5" style="cursor:pointer" onclick="openPop(event,${idx},${i})"/>`;
+    }else s+=`<circle cx="${x}" cy="${Y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    if(isCurrent&&!isRej)s+=`<circle cx="${x}" cy="${Y}" r="12" fill="none" stroke="${fill}" stroke-width="1.5" opacity=".4"><animate attributeName="r" from="9" to="20" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" from=".5" to="0" dur="2s" repeatCount="indefinite"/></circle>`;
+    if(hasDate&&!dead)s+=`<text x="${x}" y="${Y-18}" text-anchor="middle" font-size="7.5" fill="${isPast||isCurrent?'#9a968e':'#726e66'}" font-family="-apple-system,sans-serif">${p.dates[stg.key]}</text>`;
+    if(isFuture&&!dead&&!hasDate)s+=`<text x="${x}" y="${Y-14}" text-anchor="middle" font-size="8" fill="#4a4844" font-family="-apple-system,sans-serif" style="cursor:pointer" onclick="openPop(event,${idx},${i})">+</text>`;
+    if(!dead){
+      let lbl=stg.label;if(isCurrent&&isRej)lbl='✕ '+stg.label;if(skipped)lbl='';
+      if(lbl)s+=`<text x="${x}" y="${Y+22}" text-anchor="middle" font-size="8.5" font-weight="${lw}" fill="${lc}" font-family="-apple-system,sans-serif" style="cursor:pointer" onclick="openPop(event,${idx},${i})">${lbl}</text>`;
+      if(skipped)s+=`<text x="${x}" y="${Y+18}" text-anchor="middle" font-size="6.5" fill="#4a4844" font-family="-apple-system,sans-serif">${stg.label}</text>`;
+    }
+  }
+  // ===== DEBRIEFING DOTS between interview stages =====
+  IV_PAIRS.forEach(([a,b])=>{
+    const xa=PAD+a*step,xb=PAD+b*step;
+    const mx=(xa+xb)/2;
+    // Only show if stage a was passed (has date or is current)
+    const aReached=(a<si)||(a===si);
+    const bReached=(b<si)||(b===si);
+    if(!aReached||isRej)return;
+    // Check if both stages have dates (not skipped)
+    const aHasDate=!!p.dates[STAGES[a].key];
+    const bHasDate=!!p.dates[STAGES[b].key];
+    if(!aHasDate)return; // if a was skipped, no debriefing needed
+    const stgKey=STAGES[a].key; // Debriefing is for the FROM stage
+    const hasDebrief=!!p.debriefings[stgKey];
+    const dotColor=hasDebrief?'#a78bfa':'#726e66';
+    const dotR=hasDebrief?4:3;
+    s+=`<circle cx="${mx}" cy="${Y}" r="${dotR}" fill="${dotColor}" stroke="${dotColor}" stroke-width="1" style="cursor:pointer" onclick="openDebrief(event,${idx},'${stgKey}')"/>`;
+    if(hasDebrief)s+=`<text x="${mx}" y="${Y+20}" text-anchor="middle" font-size="6.5" fill="#a78bfa" font-family="-apple-system,sans-serif" style="cursor:pointer" onclick="openDebrief(event,${idx},'${stgKey}')">📝</text>`;
+    else s+=`<text x="${mx}" y="${Y+20}" text-anchor="middle" font-size="6.5" fill="#4a4844" font-family="-apple-system,sans-serif" style="cursor:pointer" onclick="openDebrief(event,${idx},'${stgKey}')">—</text>`;
+  });
+  s+=`</svg>`;return s;
+}
+
+function renderCards(procs){
+  const list=document.getElementById('procList');const empty=document.getElementById('procEmpty');
+  list.innerHTML='';if(!procs.length){empty.style.display='block';list.style.display='none';return}
+  empty.style.display='none';list.style.display='flex';
+  procs.forEach((p,idx)=>{
+    const si=SM[p.stage],sg=STAGES[si],isRej=p.status==='Rejected';
+    const c=document.createElement('div');c.className='proc-card'+(isRej?' rej-card':'');
+    c.dataset.stage=p.stage;c.dataset.status=p.status;c.dataset.idx=idx;
+    const cid='pc'+idx;const sc=p.status==='Open'?'sp-open':p.status==='On Hold'?'sp-hold':p.status==='Rejected'?'sp-rejected':'sp-placed';
+    let mt='';
+    if(p.mandat==='einzel')mt='<span class="mandat-tag mt-einzel">Einzelmandat</span>';
+    else if(p.mandat==='rpo')mt='<span class="mandat-tag mt-rpo">RPO</span>';
+    else mt='<span class="mandat-tag mt-erfolg">Erfolgsbasis</span>';
+    let ivHTML='';
+    if(p.iv){ivHTML=p.iv.st==='planned'?` · <span style="color:var(--gold)">📅 ${p.iv.type} am ${p.iv.date}</span>`:` · <span style="color:var(--green)">✅ ${p.iv.type} ${p.iv.date}</span>`}
+    let h=`<div class="proc-top" onclick="document.getElementById('${cid}').closest('.proc-card').classList.toggle('proc-collapsed')">
+      <div class="proc-logo" style="background:${p.bg}">${p.logo}</div>
+      <div class="proc-info"><div class="proc-title">${p.job}</div><div class="proc-meta">${p.account}${ivHTML}</div></div>
+      <div class="proc-pills">${mt}<span class="stage-pill" style="background:${sg.color};color:${sg.tc}">${sg.label}</span><span class="status-pill ${sc}">${p.status}</span><span class="proc-date">${p.updated}</span></div>
+      <div class="proc-collapse">▾</div></div>`;
+    h+=`<div class="proc-body" id="${cid}"><div class="tl-wrap">${buildSVG(p,idx)}</div>`;
+    if(p.agbMissing)h+=`<div class="proc-ctx proc-warn">⚠ <strong>${p.account}</strong> hat noch keine bestätigten AGB — <a>AGB-Status prüfen</a></div>`;
+    const days=Math.floor((new Date('2026-03-31')-new Date(p.dates.Expose?.split('.').reverse().join('-')||'2026-03-01'))/86400000);
+    h+=`<div class="proc-info-row"><div class="pib"><div class="pib-label">Win-Probability</div><div class="pib-value" style="color:${isRej?'var(--red)':sg.tc}">${isRej?'—':sg.win+'%'}</div></div><div class="pib"><div class="pib-label">Tage in Pipeline</div><div class="pib-value">${days}</div><div class="pib-sub">seit ${p.dates.Expose||'—'}</div></div><div class="pib"><div class="pib-label">AM</div><div class="pib-value">${p.am}</div></div></div>`;
+    if(isRej)h+=`<div class="proc-rej-box"><div style="font-size:12px;font-weight:600;margin-bottom:4px">✕ Rejected nach ${sg.label}</div><div style="font-size:11px"><strong>${p.rejBy}:</strong> ${p.rejReason}</div><div style="font-size:10px;color:var(--t3);margin-top:4px">${p.rejDate}</div></div>`;
+    if(!isRej&&p.iv&&p.iv.st==='planned')h+=`<div class="proc-ctx proc-next">→ ${p.iv.type} am <strong>${p.iv.date}</strong> bei ${p.account}</div>`;
+    h+=`</div>`;c.innerHTML=h;list.appendChild(c);setTimeout(()=>c.classList.add('vis'),idx*60);
+  });
+}
+
+// ===== KANBAN with date prompt for interview stages =====
+let dragProcIdx=null,pendingDrop=null;
+function renderKanban(procs){
+  const w=document.getElementById('kanbanView');let h='';
+  STAGES.forEach((s,i)=>{
+    const cards=procs.filter(p=>SM[p.stage]===i&&p.status!=='Rejected');
+    h+=`<div class="kb-col" data-stage="${s.key}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${s.key}')">
+      <div class="kb-col-head"><div><span class="kb-col-title" style="color:${s.tc}">${s.label}</span><br><span class="kb-col-win">${s.win}% Win</span></div><span class="kb-col-cnt" style="background:${s.color};color:${s.tc}">${cards.length}</span></div>
+      <div class="kb-col-body${!cards.length?' empty-col':''}">`;
+    cards.forEach(p=>{
+      const pi=PROCS.indexOf(p);let mt='';
+      if(p.mandat==='einzel')mt='<span class="mandat-tag mt-einzel" style="font-size:8px;padding:1px 5px">EM</span>';
+      else if(p.mandat==='rpo')mt='<span class="mandat-tag mt-rpo" style="font-size:8px;padding:1px 5px">RPO</span>';
+      let iv='';
+      if(p.iv){iv=p.iv.st==='planned'?`<div class="kb-card-iv iv-planned">📅 ${p.iv.type} · ${p.iv.date}</div>`:`<div class="kb-card-iv iv-done">✅ ${p.iv.type} · ${p.iv.date}</div>`}
+      h+=`<div class="kb-card" draggable="true" data-proc="${pi}" ondragstart="onDragStart(event,${pi})" ondragend="onDragEnd(event)"><div class="kb-card-grip">⋮⋮</div><div class="kb-card-top"><div class="kb-card-logo" style="background:${p.bg}">${p.logo}</div><div class="kb-card-title">${p.job}</div></div><div class="kb-card-acct">${p.account}</div><div class="kb-card-tags">${mt}</div>${iv}<div class="kb-card-date">${p.updated}</div></div>`;
+    });
+    h+=`</div></div>`;
+  });
+  const rj=procs.filter(p=>p.status==='Rejected');
+  if(rj.length){
+    h+=`<div class="kb-col" style="opacity:.55"><div class="kb-col-head"><span class="kb-col-title" style="color:var(--red)">Rejected</span><span class="kb-col-cnt" style="background:rgba(239,68,68,.08);color:var(--red)">${rj.length}</span></div><div class="kb-col-body">`;
+    rj.forEach(p=>{h+=`<div class="kb-card" style="cursor:default"><div class="kb-card-top"><div class="kb-card-logo" style="background:${p.bg}">${p.logo}</div><div class="kb-card-title">${p.job}</div></div><div class="kb-card-acct">${p.account}</div><div style="font-size:9px;color:var(--red);margin-top:3px">✕ ${p.rejBy}: ${p.rejReason}</div></div>`});
+    h+=`</div></div>`;
+  }
+  w.innerHTML=h;
+}
+
+function onDragStart(e,pi){dragProcIdx=pi;e.target.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',pi)}
+function onDragEnd(e){e.target.classList.remove('dragging');document.querySelectorAll('.kb-col').forEach(c=>c.classList.remove('drag-over'))}
+function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over')}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over')}
+function onDrop(e,stageKey){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(dragProcIdx===null)return;const p=PROCS[dragProcIdx];if(p.status==='Rejected')return;
+  const newSi=SM[stageKey],oldSi=SM[p.stage];if(newSi<=oldSi)return;
+  const targetStage=STAGES[newSi];
+  // Interview stages need date prompt (TI, 1st, 2nd, 3rd)
+  if(targetStage.isIv){
+    pendingDrop={procIdx:dragProcIdx,stageKey};
+    document.getElementById('kbDmTitle').textContent=targetStage.label+' — Interview-Datum';
+    document.getElementById('kbDmDate').value='';
+    document.getElementById('kbDateModal').classList.add('open');
+    return;
+  }
+  // Assessment: no date needed
+  if(stageKey==='Assessment'){executeDrop(dragProcIdx,stageKey,null);return}
+  // Other stages: set today's date
+  executeDrop(dragProcIdx,stageKey,todayStr());
+}
+function closeKbModal(){document.getElementById('kbDateModal').classList.remove('open');pendingDrop=null;dragProcIdx=null}
+function confirmKbDrop(){
+  if(!pendingDrop)return;
+  const di=document.getElementById('kbDmDate');let dateStr=todayStr();
+  if(di.value){const d=new Date(di.value);dateStr=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
+  executeDrop(pendingDrop.procIdx,pendingDrop.stageKey,dateStr);
+  closeKbModal();
+}
+function executeDrop(procIdx,stageKey,dateStr){
+  const p=PROCS[procIdx];
+  if(dateStr)p.dates[stageKey]=dateStr;
+  p.stage=stageKey;p.updated=todayStr();
+  buildPipeSummary();renderCards(fp);renderKanban(fp);dragProcIdx=null;
+}
+window.onDragStart=onDragStart;window.onDragEnd=onDragEnd;window.onDragOver=onDragOver;window.onDragLeave=onDragLeave;window.onDrop=onDrop;
+window.closeKbModal=closeKbModal;window.confirmKbDrop=confirmKbDrop;
+
+let fp=[...PROCS];renderCards(fp);renderKanban(fp);
+function setView(v){
+  document.getElementById('procList').style.display=v==='list'?'flex':'none';
+  document.getElementById('procEmpty').style.display='none';
+  document.getElementById('kanbanView').style.display=v==='kanban'?'flex':'none';
+  document.getElementById('btnList').classList.toggle('active',v==='list');
+  document.getElementById('btnKanban').classList.toggle('active',v==='kanban');
+}
+window.setView=setView;
+let af=null;
+function filterStage(k,el){if(af===k){clearFilter();return}af=k;document.querySelectorAll('.pipe-chip').forEach(c=>c.classList.remove('pc-active'));el.classList.add('pc-active');document.getElementById('pipeClear').classList.add('show');fp=k==='Rejected'?PROCS.filter(p=>p.status==='Rejected'):PROCS.filter(p=>p.stage===k&&p.status!=='Rejected');renderCards(fp);renderKanban(fp)}
+function clearFilter(){af=null;document.querySelectorAll('.pipe-chip').forEach(c=>c.classList.remove('pc-active'));document.getElementById('pipeClear').classList.remove('show');fp=[...PROCS];renderCards(fp);renderKanban(fp)}
+window.filterStage=filterStage;window.clearFilter=clearFilter;
+
+// ===== STAGE POPOVER with debriefing check =====
+const pop=document.getElementById('stagePop');let popProc=null,popStageIdx=null;
+function openPop(evt,procIdx,stageIdx){
+  evt.stopPropagation();closeDebrief();
+  const p=PROCS[procIdx];if(p.status==='Rejected')return;
+  popProc=procIdx;popStageIdx=stageIdx;
+  const stg=STAGES[stageIdx],si=SM[p.stage];
+  const isCurrent=stageIdx===si,isPast=stageIdx<si,skipped=isPast&&!p.dates[stg.key];
+  let title=stg.label;
+  if(isCurrent)title+=` <span class="sp-current">Aktuell</span>`;
+  if(skipped)title+=` <span class="sp-skip">Übersprungen</span>`;
+  document.getElementById('spTitle').innerHTML=title;
+  // Date field: hide for Assessment
+  const df=document.getElementById('spDateField');
+  if(stg.key==='Assessment'){df.style.display='none'}
+  else{df.style.display='block';const di=document.getElementById('spDate');
+    if(p.dates[stg.key]){const pts=p.dates[stg.key].split('.');di.value=`${pts[2]}-${pts[1]}-${pts[0]}`}else di.value=''}
+  // Advance
+  const nf=document.getElementById('spNextField'),ab=document.getElementById('spAdvBtn'),warn=document.getElementById('spWarn');
+  warn.style.display='none';
+  if(isCurrent&&TRANS[p.stage]&&TRANS[p.stage].length){
+    nf.style.display='block';ab.style.display='';
+    document.getElementById('spNext').innerHTML=TRANS[p.stage].map(s=>`<option value="${s}">${s}</option>`).join('');
+  }else{nf.style.display='none';ab.style.display='none'}
+  const hint=document.getElementById('spHint');
+  if(skipped)hint.textContent='Übersprungener Stage — Datum nachträglich setzbar.';
+  else if(isPast)hint.textContent='Vergangener Stage — Datum änderbar.';
+  else if(isCurrent)hint.textContent='Datum setzen oder zum nächsten Stage weiterschalten.';
+  else hint.textContent=stg.key==='Assessment'?'Wird im Assessment-Tab getrackt.':'Datum für zukünftigen Stage setzen.';
+  const rect=evt.target.getBoundingClientRect();
+  pop.style.left=Math.min(rect.left,window.innerWidth-250)+'px';
+  pop.style.top=(rect.bottom+8)+'px';pop.classList.add('open');
+}
+function closePop(){pop.classList.remove('open');popProc=null;popStageIdx=null}
+function savePop(){
+  if(popProc===null)return;const p=PROCS[popProc],stg=STAGES[popStageIdx],di=document.getElementById('spDate');
+  if(stg.key!=='Assessment'&&di.value){const d=new Date(di.value);p.dates[stg.key]=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
+  closePop();renderCards(fp);renderKanban(fp);
+}
+function tryAdvance(){
+  if(popProc===null)return;const p=PROCS[popProc];
+  const currentStg=STAGES[SM[p.stage]];
+  // Check debriefing for interview stages
+  if(currentStg.isIv&&!p.debriefings[currentStg.key]){
+    document.getElementById('spWarn').style.display='block';return;
+  }
+  doAdvance();
+}
+function forceAdvance(){document.getElementById('spWarn').style.display='none';doAdvance()}
+function doAdvance(){
+  if(popProc===null)return;const p=PROCS[popProc],next=document.getElementById('spNext').value;
+  const stg=STAGES[popStageIdx],di=document.getElementById('spDate');
+  if(stg.key!=='Assessment'&&di.value){const d=new Date(di.value);p.dates[stg.key]=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
+  closePop();
+  if(STAGES[SM[next]].key!=='Assessment')p.dates[next]=todayStr();
+  p.stage=next;p.updated=todayStr();
+  buildPipeSummary();renderCards(fp);renderKanban(fp);
+}
+window.openPop=openPop;window.closePop=closePop;window.savePop=savePop;window.tryAdvance=tryAdvance;window.forceAdvance=forceAdvance;
+
+// ===== DEBRIEFING POPOVER =====
+const dpop=document.getElementById('debriefPop');
+function openDebrief(evt,procIdx,stageKey){
+  evt.stopPropagation();closePop();
+  const p=PROCS[procIdx];const db=p.debriefings[stageKey];
+  const stgLabel=STAGES[SM[stageKey]]?.label||stageKey;
+  document.getElementById('dpTitle').innerHTML=`📝 Debriefing nach ${stgLabel}`;
+  if(db){
+    document.getElementById('dpContent').innerHTML=db.text;
+    document.getElementById('dpMeta').innerHTML=`${db.date} · ${db.by}`;
+    document.getElementById('dpLink').style.display='inline-block';
+  }else{
+    document.getElementById('dpContent').innerHTML=`<span class="dp-empty">Kein Debriefing vorhanden. → Im History-Tab erfassen.</span>`;
+    document.getElementById('dpMeta').innerHTML='';
+    document.getElementById('dpLink').style.display='none';
+  }
+  const rect=evt.target.getBoundingClientRect();
+  dpop.style.left=Math.min(rect.left-100,window.innerWidth-300)+'px';
+  dpop.style.top=(rect.bottom+8)+'px';dpop.classList.add('open');
+}
+function closeDebrief(){dpop.classList.remove('open')}
+window.openDebrief=openDebrief;window.closeDebrief=closeDebrief;
+document.addEventListener('click',e=>{if(!e.target.closest('.stage-pop')&&!e.target.closest('.debrief-pop')&&!e.target.closest('.tl-svg')){closePop();closeDebrief()}});
+
+// Keyboard
+let ki=-1;
+function getC(){return[...document.querySelectorAll('.proc-card')].filter(c=>c.style.display!=='none')}
+document.addEventListener('keydown',e=>{
+  const t=document.activeElement?.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(pop.classList.contains('open')||dpop.classList.contains('open')){if(e.key==='Escape'){closePop();closeDebrief()}return}
+  if(document.getElementById('kbDateModal').classList.contains('open')){if(e.key==='Escape')closeKbModal();return}
+  const cards=getC();
+  if(e.key==='ArrowDown'){e.preventDefault();ki=Math.min(ki+1,cards.length-1);cards.forEach(c=>c.style.outline='');if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='ArrowUp'){e.preventDefault();ki=Math.max(ki-1,0);cards.forEach(c=>c.style.outline='');if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='Enter'&&ki>=0&&cards[ki]){e.preventDefault();cards[ki].classList.toggle('proc-collapsed')}
+  else if(e.key==='l'||e.key==='L'){e.preventDefault();setView('list')}
+  else if(e.key==='k'||e.key==='K'){e.preventDefault();setView('kanban')}
+  else if(e.key==='Escape'){if(af!==null)clearFilter();else{cards.forEach(c=>c.style.outline='');ki=-1}}
+});
+</script>
+</body></html>

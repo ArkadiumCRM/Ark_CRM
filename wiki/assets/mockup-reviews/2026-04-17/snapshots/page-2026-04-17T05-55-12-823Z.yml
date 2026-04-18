@@ -1,0 +1,522 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Mandate" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: CFO-Suche
+    - generic [ref=e16]:
+      - generic [ref=e17]: ⌘K
+      - button "☀" [ref=e18] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]: 🎯
+    - generic [ref=e22]:
+      - heading "CFO-Suche Bauherr Muster AG" [level=1] [ref=e23]
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - text: Owner AM
+          - strong [ref=e26]: PW
+        - generic [ref=e28]:
+          - text: Lead Research
+          - strong [ref=e29]: LR
+        - generic [ref=e31]: Kickoff 14.01.2026
+        - generic [ref=e33]: Zielplatzierung Q2/2026
+      - generic [ref=e34]:
+        - button "📞 Anrufen" [ref=e35] [cursor=pointer]
+        - button "✉ Email" [ref=e36] [cursor=pointer]
+        - button "📄 Mandat-Report" [ref=e37] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e38] [cursor=pointer]
+        - button "⚡ Option buchen" [ref=e39] [cursor=pointer]
+        - button "🛑 Mandat kündigen" [ref=e40] [cursor=pointer]
+        - button "⋯ Mehr" [ref=e41] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: 🎯 Target
+        - button "Aktiv ▾" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]: Stage 2/3
+        - generic [ref=e48]: Exklusiv (läuft mit Mandat)
+        - generic [ref=e49]: 🛡 3 Mt Garantie
+      - generic [ref=e51]: Briefing v3 · Stellenbriefing signiert 14.01.2026
+  - generic [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]: 📊 Idents
+      - generic [ref=e55]: 38 / 50
+      - generic [ref=e56]: 76 %
+    - generic [ref=e59]:
+      - generic [ref=e60]: 📞 Calls
+      - generic [ref=e61]: 24 / 30
+      - generic [ref=e62]: 80 %
+    - generic [ref=e65]:
+      - generic [ref=e66]: 📋 Shortlist
+      - generic [ref=e67]: 5 / 6
+      - generic [ref=e68]: 83 % · CV Sent
+    - generic [ref=e71]:
+      - generic [ref=e72]: 💰 Pauschale
+      - generic [ref=e73]: CHF 75'000
+      - generic [ref=e74]: Stage 2 läuft
+    - generic [ref=e75]:
+      - generic [ref=e76]: ⏱ Time-to-Fill
+      - generic [ref=e77]: Woche 13 / 20
+      - generic [ref=e78]: im Plan
+    - generic [ref=e81]:
+      - generic [ref=e82]: 🏆 Placements
+      - generic [ref=e83]: 0 / 1
+      - generic [ref=e84]: Target · 1 Slot
+  - navigation [ref=e85]:
+    - generic [ref=e86] [cursor=pointer]: 1Übersicht
+    - generic [ref=e87] [cursor=pointer]: 2Longlist
+    - generic [ref=e88] [cursor=pointer]: 3Prozesse
+    - generic [ref=e89] [cursor=pointer]: 4Billing
+    - generic [ref=e90] [cursor=pointer]: 5History
+    - generic [ref=e91] [cursor=pointer]: 6Dokumente
+    - generic [ref=e92] [cursor=pointer]: 7Reminders
+  - generic [ref=e93]:
+    - text: ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e1329]:
+      - generic [ref=e1330]:
+        - generic [ref=e1331]:
+          - generic [ref=e1332]: Offen
+          - generic [ref=e1333]: "9"
+          - generic [ref=e1334]: alle offenen Reminders
+        - generic [ref=e1335]:
+          - generic [ref=e1336]: Überfällig
+          - generic [ref=e1337]: "2"
+          - generic [ref=e1338]: sofortiges Handeln
+        - generic [ref=e1339]:
+          - generic [ref=e1340]: Heute
+          - generic [ref=e1341]: "1"
+          - generic [ref=e1342]: fällig am 16.04.2026
+        - generic [ref=e1343]:
+          - generic [ref=e1344]: Diese Woche
+          - generic [ref=e1345]: "3"
+          - generic [ref=e1346]: bis 20.04.2026
+        - generic [ref=e1347]:
+          - generic [ref=e1348]: Erledigt (30 d)
+          - generic [ref=e1349]: "18"
+          - generic [ref=e1350]: seit 16.03.2026
+      - generic [ref=e1351]:
+        - searchbox "🔍 Suche in Reminder-Titel, Kontext, Entity …" [ref=e1352]
+        - combobox [ref=e1353] [cursor=pointer]:
+          - option "Alle Typen" [selected]
+          - option "Mandat-Review"
+          - option "Stage-Deadline"
+          - option "Kandidat-Nachfassen"
+          - option "Abschluss-Rechnung"
+          - option "Debriefing"
+          - option "Follow-up"
+          - option "Schutzfrist"
+          - option "Garantie"
+          - option "Custom"
+        - combobox [ref=e1354] [cursor=pointer]:
+          - option "Alle Zuständigen" [selected]
+          - option "PW"
+          - option "JV"
+          - option "LR"
+          - option "MF"
+          - option "NP"
+          - option "NS"
+          - option "Backoffice"
+        - combobox [ref=e1355] [cursor=pointer]:
+          - option "Alle Quellen" [selected]
+          - option "Manuell erstellt"
+          - option "Auto (System-Trigger)"
+          - option "Aus Prozess"
+          - option "Aus Billing"
+          - option "Aus Longlist"
+        - button "+ Reminder" [ref=e1356] [cursor=pointer]
+      - generic [ref=e1358]:
+        - generic [ref=e1359] [cursor=pointer]:
+          - text: Alle offenen
+          - generic [ref=e1360]: "9"
+        - generic [ref=e1361] [cursor=pointer]:
+          - generic [ref=e1362]: ●
+          - text: Überfällig
+          - generic [ref=e1363]: "2"
+        - generic [ref=e1364] [cursor=pointer]:
+          - text: Heute
+          - generic [ref=e1365]: "1"
+        - generic [ref=e1366] [cursor=pointer]:
+          - text: Diese Woche
+          - generic [ref=e1367]: "3"
+        - generic [ref=e1368] [cursor=pointer]:
+          - text: Später
+          - generic [ref=e1369]: "3"
+        - generic [ref=e1370] [cursor=pointer]:
+          - text: Erledigt
+          - generic [ref=e1371]: "18"
+      - generic [ref=e1372]:
+        - generic [ref=e1373]:
+          - heading "⚠ Überfällig" [level=3] [ref=e1374]
+          - generic [ref=e1375]: "2"
+        - table [ref=e1377]:
+          - rowgroup [ref=e1378]:
+            - 'row "Stage-Deadline VI · Mehr Idents Ziel: 28.03.2026 — noch keine neuen Idents eingetragen Stage-Deadline 19 d überfällig JV Erledigen" [ref=e1379] [cursor=pointer]':
+              - cell [ref=e1380]:
+                - checkbox [ref=e1381]
+              - 'cell "Stage-Deadline VI · Mehr Idents Ziel: 28.03.2026 — noch keine neuen Idents eingetragen" [ref=e1382]':
+                - strong [ref=e1383]: Stage-Deadline VI · Mehr Idents
+                - generic [ref=e1384]: "Ziel: 28.03.2026 — noch keine neuen Idents eingetragen"
+              - cell "Stage-Deadline" [ref=e1385]:
+                - generic [ref=e1386]: Stage-Deadline
+              - cell "19 d überfällig" [ref=e1387]
+              - cell "JV" [ref=e1388]:
+                - generic [ref=e1389]: JV
+              - cell "Erledigen" [ref=e1390]:
+                - button "Erledigen" [ref=e1391]
+            - row "Kandidat-Nachfassen · Andrea Koller Rückmeldung HM offen seit 18 Tagen Kandidat-Nachfassen 5 d überfällig JV Erledigen" [ref=e1392] [cursor=pointer]:
+              - cell [ref=e1393]:
+                - checkbox [ref=e1394]
+              - cell "Kandidat-Nachfassen · Andrea Koller Rückmeldung HM offen seit 18 Tagen" [ref=e1395]:
+                - strong [ref=e1396]: Kandidat-Nachfassen · Andrea Koller
+                - generic [ref=e1397]: Rückmeldung HM offen seit 18 Tagen
+              - cell "Kandidat-Nachfassen" [ref=e1398]:
+                - generic [ref=e1399]: Kandidat-Nachfassen
+              - cell "5 d überfällig" [ref=e1400]
+              - cell "JV" [ref=e1401]:
+                - generic [ref=e1402]: JV
+              - cell "Erledigen" [ref=e1403]:
+                - button "Erledigen" [ref=e1404]
+      - generic [ref=e1405]:
+        - generic [ref=e1406]:
+          - heading "Heute · 16.04.2026" [level=3] [ref=e1407]
+          - generic [ref=e1408]: "1"
+        - table [ref=e1410]:
+          - rowgroup [ref=e1411]:
+            - row "Mandat-Review Wochenabschluss Pipeline durchgehen, Prioritäten für nächste Woche festlegen Mandat-Review 16:00 Uhr PW Erledigen" [ref=e1412] [cursor=pointer]:
+              - cell [ref=e1413]:
+                - checkbox [ref=e1414]
+              - cell "Mandat-Review Wochenabschluss Pipeline durchgehen, Prioritäten für nächste Woche festlegen" [ref=e1415]:
+                - strong [ref=e1416]: Mandat-Review Wochenabschluss
+                - generic [ref=e1417]: Pipeline durchgehen, Prioritäten für nächste Woche festlegen
+              - cell "Mandat-Review" [ref=e1418]:
+                - generic [ref=e1419]: Mandat-Review
+              - cell "16:00 Uhr" [ref=e1420]
+              - cell "PW" [ref=e1421]:
+                - generic [ref=e1422]: PW
+              - cell "Erledigen" [ref=e1423]:
+                - button "Erledigen" [ref=e1424]
+      - generic [ref=e1425]:
+        - generic [ref=e1426]:
+          - heading "Diese Woche · bis 20.04.2026" [level=3] [ref=e1427]
+          - generic [ref=e1428]: "3"
+        - table [ref=e1430]:
+          - rowgroup [ref=e1431]:
+            - row "Debriefing 2nd Interview · Nadine Berger Assessment-Report ausstehend — nachfassen Debriefing 17.04.2026 · morgen JV Erledigen" [ref=e1432] [cursor=pointer]:
+              - cell [ref=e1433]:
+                - checkbox [ref=e1434]
+              - cell "Debriefing 2nd Interview · Nadine Berger Assessment-Report ausstehend — nachfassen" [ref=e1435]:
+                - strong [ref=e1436]: Debriefing 2nd Interview · Nadine Berger
+                - generic [ref=e1437]: Assessment-Report ausstehend — nachfassen
+              - cell "Debriefing" [ref=e1438]:
+                - generic [ref=e1439]: Debriefing
+              - cell "17.04.2026 · morgen" [ref=e1440]
+              - cell "JV" [ref=e1441]:
+                - generic [ref=e1442]: JV
+              - cell "Erledigen" [ref=e1443]:
+                - button "Erledigen" [ref=e1444]
+            - row "Stage-Abschluss III · CV Sent 6 Kandidaten versandt, Rückmeldung ausstehend Stage-Deadline 18.04.2026 · in 2 d JV Erledigen" [ref=e1445] [cursor=pointer]:
+              - cell [ref=e1446]:
+                - checkbox [ref=e1447]
+              - cell "Stage-Abschluss III · CV Sent 6 Kandidaten versandt, Rückmeldung ausstehend" [ref=e1448]:
+                - strong [ref=e1449]: Stage-Abschluss III · CV Sent
+                - generic [ref=e1450]: 6 Kandidaten versandt, Rückmeldung ausstehend
+              - cell "Stage-Deadline" [ref=e1451]:
+                - generic [ref=e1452]: Stage-Deadline
+              - cell "18.04.2026 · in 2 d" [ref=e1453]
+              - cell "JV" [ref=e1454]:
+                - generic [ref=e1455]: JV
+              - cell "Erledigen" [ref=e1456]:
+                - button "Erledigen" [ref=e1457]
+            - row "Abschluss-Rechnung prüfen Stage-III-Rechnung CHF 35'000 bereit zur Freigabe Abschluss-Rechnung 20.04.2026 · in 4 d MF Erledigen" [ref=e1458] [cursor=pointer]:
+              - cell [ref=e1459]:
+                - checkbox [ref=e1460]
+              - cell "Abschluss-Rechnung prüfen Stage-III-Rechnung CHF 35'000 bereit zur Freigabe" [ref=e1461]:
+                - strong [ref=e1462]: Abschluss-Rechnung prüfen
+                - generic [ref=e1463]: Stage-III-Rechnung CHF 35'000 bereit zur Freigabe
+              - cell "Abschluss-Rechnung" [ref=e1464]:
+                - generic [ref=e1465]: Abschluss-Rechnung
+              - cell "20.04.2026 · in 4 d" [ref=e1466]
+              - cell "MF" [ref=e1467]:
+                - generic [ref=e1468]: MF
+              - cell "Erledigen" [ref=e1469]:
+                - button "Erledigen" [ref=e1470]
+      - generic [ref=e1471]:
+        - generic [ref=e1472]:
+          - heading "Später" [level=3] [ref=e1473]
+          - generic [ref=e1474]: "3"
+        - table [ref=e1476]:
+          - rowgroup [ref=e1477]:
+            - row "Garantiefrist-Ende · Julian Egger 3 Mt Garantie läuft ab — Check mit AM Garantie 01.08.2026 Backoffice Erledigen" [ref=e1478] [cursor=pointer]:
+              - cell [ref=e1479]:
+                - checkbox [ref=e1480]
+              - cell "Garantiefrist-Ende · Julian Egger 3 Mt Garantie läuft ab — Check mit AM" [ref=e1481]:
+                - strong [ref=e1482]: Garantiefrist-Ende · Julian Egger
+                - generic [ref=e1483]: 3 Mt Garantie läuft ab — Check mit AM
+              - cell "Garantie" [ref=e1484]:
+                - generic [ref=e1485]: Garantie
+              - cell "01.08.2026" [ref=e1486]
+              - cell "Backoffice" [ref=e1487]:
+                - generic [ref=e1488]: Backoffice
+              - cell "Erledigen" [ref=e1489]:
+                - button "Erledigen" [ref=e1490]
+            - row "Mandat-Review Q2 Quartals-Bilanz mit Account-Owner Mandat-Review 28.06.2026 PW Erledigen" [ref=e1491] [cursor=pointer]:
+              - cell [ref=e1492]:
+                - checkbox [ref=e1493]
+              - cell "Mandat-Review Q2 Quartals-Bilanz mit Account-Owner" [ref=e1494]:
+                - strong [ref=e1495]: Mandat-Review Q2
+                - generic [ref=e1496]: Quartals-Bilanz mit Account-Owner
+              - cell "Mandat-Review" [ref=e1497]:
+                - generic [ref=e1498]: Mandat-Review
+              - cell "28.06.2026" [ref=e1499]
+              - cell "PW" [ref=e1500]:
+                - generic [ref=e1501]: PW
+              - cell "Erledigen" [ref=e1502]:
+                - button "Erledigen" [ref=e1503]
+            - row "Schutzfrist-Info-Request · 3 Kandidaten 10-Tage-Fenster nach Mandat-Abschluss Schutzfrist 10.05.2026 PW Erledigen" [ref=e1504] [cursor=pointer]:
+              - cell [ref=e1505]:
+                - checkbox [ref=e1506]
+              - cell "Schutzfrist-Info-Request · 3 Kandidaten 10-Tage-Fenster nach Mandat-Abschluss" [ref=e1507]:
+                - strong [ref=e1508]: Schutzfrist-Info-Request · 3 Kandidaten
+                - generic [ref=e1509]: 10-Tage-Fenster nach Mandat-Abschluss
+              - cell "Schutzfrist" [ref=e1510]:
+                - generic [ref=e1511]: Schutzfrist
+              - cell "10.05.2026" [ref=e1512]
+              - cell "PW" [ref=e1513]:
+                - generic [ref=e1514]: PW
+              - cell "Erledigen" [ref=e1515]:
+                - button "Erledigen" [ref=e1516]
+      - generic [ref=e1517] [cursor=pointer]:
+        - generic [ref=e1518]: ▾
+        - heading "Erledigt (letzte 30 Tage)" [level=3] [ref=e1519]
+        - generic [ref=e1520]: "18"
+      - generic [ref=e1521]: Reminders werden manuell angelegt oder automatisch durch System-Trigger (Stage-Deadline bei Mandat-Fortschritt, Kandidat-Nachfassen nach X Tagen ohne Bewegung, Garantiefrist-Ende nach Placement, überfällige Rechnungen). Auch im globalen Dashboard sichtbar. Overdue-Reminders erzeugen Eskalations-Mail an Zuständigen.
+  - generic [ref=e333]:
+    - generic [ref=e334]: 1–7 Tabs
+    - generic [ref=e335]: O Option buchen
+    - generic [ref=e336]: K Kündigen
+    - generic [ref=e337]: T Theme
+    - generic [ref=e338]: ⌘K Command Palette
+  - generic [ref=e339]:
+    - generic [ref=e340]:
+      - generic [ref=e341]: ⚡
+      - generic [ref=e342]:
+        - heading "Optionale Stage buchen" [level=2] [ref=e343]
+        - generic [ref=e344]: Zusatz-Leistung zum Mandat · erzeugt separaten Auftrag + Rechnung
+      - button "✕" [ref=e345] [cursor=pointer]
+    - generic [ref=e346]:
+      - generic [ref=e347]:
+        - heading "Stage wählen" [level=4] [ref=e348]
+        - generic [ref=e349]:
+          - generic [ref=e350] [cursor=pointer]:
+            - radio "VI · Mehr Idents +25 zusätzliche Identifikationen · CHF 3'500" [ref=e351]
+            - generic [ref=e352]:
+              - strong [ref=e353]: VI · Mehr Idents
+              - text: +25 zusätzliche Identifikationen · CHF 3'500
+          - generic [ref=e354] [cursor=pointer]:
+            - radio "VII · Mehr Dossiers +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800" [ref=e355]
+            - generic [ref=e356]:
+              - strong [ref=e357]: VII · Mehr Dossiers
+              - text: +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800
+          - generic [ref=e358] [cursor=pointer]:
+            - radio "VIII · Marketing-Massnahmen bereits gebucht LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500" [disabled] [ref=e359]
+            - generic [ref=e360]:
+              - strong [ref=e361]: VIII · Marketing-Massnahmen
+              - generic [ref=e362]: bereits gebucht
+              - text: LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500
+          - generic [ref=e363] [cursor=pointer]:
+            - radio "IX · Assessment ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat" [ref=e364]
+            - generic [ref=e365]:
+              - strong [ref=e366]: IX · Assessment
+              - text: ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat
+          - generic [ref=e367] [cursor=pointer]:
+            - radio "X · Fakultative Garantie +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat" [ref=e368]
+            - generic [ref=e369]:
+              - strong [ref=e370]: X · Fakultative Garantie
+              - text: +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat
+      - generic [ref=e371]:
+        - heading "Anmerkung / Begründung" [level=4] [ref=e372]
+        - textbox "Kurze Begründung (intern, audit-trail)…" [ref=e373]
+    - generic [ref=e374]:
+      - button "Abbrechen" [ref=e375] [cursor=pointer]
+      - button "⚡ Option buchen & Rechnung erstellen" [ref=e377] [cursor=pointer]
+  - generic [ref=e378]:
+    - generic [ref=e379]:
+      - generic [ref=e380]: 🛑
+      - generic [ref=e381]:
+        - heading "Mandat kündigen" [level=2] [ref=e382]
+        - generic [ref=e383]: CFO-Suche · Bauherr Muster AG
+      - button "✕" [ref=e384] [cursor=pointer]
+    - generic [ref=e385]:
+      - generic [ref=e386]:
+        - heading "Kündigung durch" [level=4] [ref=e387]
+        - generic [ref=e388]:
+          - generic [ref=e389]:
+            - radio "Kunde kündigt (häufigster Fall)" [checked] [ref=e390]
+            - text: Kunde kündigt (häufigster Fall)
+          - generic [ref=e391]:
+            - radio "Arkadium kündigt (Exit-Option Arkadium)" [ref=e392]
+            - text: Arkadium kündigt (Exit-Option Arkadium)
+          - generic [ref=e393]:
+            - radio "Einvernehmlich" [ref=e394]
+            - text: Einvernehmlich
+      - generic [ref=e395]:
+        - heading "Grund *" [level=4] [ref=e396]
+        - combobox [ref=e397] [cursor=pointer]:
+          - option "— wählen —" [selected]
+          - option "Position intern besetzt"
+          - option "Position anderweitig besetzt (Mitbewerber)"
+          - option "Strategie-Change Kunde"
+          - option "Unzufriedenheit mit Arkadium"
+          - option "Budget gestrichen"
+          - option "Sonstiges (freitext)"
+        - textbox "Details / freitext (audit-relevant) …" [ref=e398]
+      - generic [ref=e399]:
+        - heading "Billing-Konsequenz (80 %-Regel)" [level=4] [ref=e400]
+        - generic [ref=e401]:
+          - text: Mandat befindet sich in
+          - strong [ref=e402]: Stage 2 von 3
+          - text: . Bei Kundenkündigung wird die noch offene Pauschale (Stage 3) zu
+          - strong [ref=e403]: 80 %
+          - text: in Rechnung gestellt, sofern Arkadium die Shortlist geliefert hat.
+          - strong [ref=e404]: "Kündigungs-Rechnung (Vorschau):"
+          - text: "Stage 3 offen: CHF 25'000 × 80 % ="
+          - strong [ref=e405]: CHF 20'000 netto
+          - text: + MwSt 8.1 % = CHF 1'620 → Total CHF 21'620 brutto
+      - generic [ref=e406]:
+        - heading "Kündigungs-Datum" [level=4] [ref=e407]
+        - textbox [ref=e408]: 2026-04-14
+    - generic [ref=e409]:
+      - button "Abbrechen" [ref=e410] [cursor=pointer]
+      - button "🛑 Mandat kündigen & Rechnung erstellen" [ref=e412] [cursor=pointer]
+  - generic [ref=e413]:
+    - generic [ref=e414]:
+      - generic [ref=e415]: ↑
+      - generic [ref=e416]:
+        - heading "Dokument hochladen" [level=2] [ref=e417]
+        - generic [ref=e418]: Kategorie wählen, Datei auswählen, optional verknüpfen
+      - button "✕" [ref=e419] [cursor=pointer]
+    - generic [ref=e421]:
+      - generic [ref=e422]:
+        - heading "Datei" [level=4] [ref=e423]
+        - generic [ref=e424] [cursor=pointer]:
+          - generic [ref=e425]: 📄
+          - generic [ref=e426]: Datei hierher ziehen oder klicken
+          - generic [ref=e427]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e428]:
+        - heading "Metadaten" [level=4] [ref=e429]
+        - generic [ref=e430]:
+          - generic [ref=e431]: Kategorie *
+          - combobox [ref=e432] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Offerte / Vertrag"
+            - option "Rechnung"
+            - option "Stellenbriefing"
+            - option "Assessment"
+            - option "Scraper-Beleg"
+            - option "Sonstiges"
+          - generic [ref=e433]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e434]
+          - generic [ref=e435]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e436]
+          - generic [ref=e437]: Verknüpfung
+          - combobox [ref=e438] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Billing Stage II"
+          - generic [ref=e439]: Urheber
+          - generic [ref=e440]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e441]:
+      - button "Abbrechen" [ref=e442] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e444] [cursor=pointer]
+  - generic [ref=e445]:
+    - generic [ref=e446]:
+      - generic [ref=e447]: 💬
+      - generic [ref=e448]:
+        - heading "Event-Detail" [level=2] [ref=e449]
+        - generic [ref=e450]: —
+      - button "✕" [ref=e451] [cursor=pointer]
+    - generic [ref=e454]:
+      - button "Schliessen" [ref=e455] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e456] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e457] [cursor=pointer]
+  - generic [ref=e458]:
+    - generic [ref=e459]:
+      - generic [ref=e460]: ⏰
+      - generic [ref=e461]:
+        - heading "Neuer Reminder" [level=2] [ref=e462]
+        - generic [ref=e463]: Erstelle einen Termin-, Follow-up- oder System-Reminder
+        - generic [ref=e465]: neu
+      - button "✕" [ref=e466] [cursor=pointer]
+    - generic [ref=e467]:
+      - generic [ref=e468]:
+        - heading "Reminder" [level=4] [ref=e469]
+        - generic [ref=e470]:
+          - generic [ref=e471]: Titel *
+          - textbox "z.B. Stage-Deadline VI prüfen" [ref=e472]
+          - generic [ref=e473]: Typ *
+          - combobox [ref=e474] [cursor=pointer]:
+            - option "Mandat-Review" [selected]
+            - option "Stage-Deadline"
+            - option "Kandidat-Nachfassen"
+            - option "Abschluss-Rechnung"
+            - option "Debriefing"
+            - option "Follow-up"
+            - option "Schutzfrist"
+            - option "Garantie"
+            - option "Custom"
+          - generic [ref=e475]: Fällig am *
+          - textbox [ref=e476]
+          - generic [ref=e477]: Zuständig *
+          - combobox [ref=e478] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "NP"
+            - option "NS"
+            - option "Backoffice"
+          - generic [ref=e479]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e480]
+          - generic [ref=e481]: Verknüpfung
+          - combobox [ref=e482] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Prozess · Nadine Berger"
+            - option "Billing Stage II"
+          - generic [ref=e483]: Wiederholen
+          - combobox [ref=e484] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+            - option "Quartalsweise"
+      - generic [ref=e485]:
+        - heading "Benachrichtigung" [level=4] [ref=e486]
+        - generic [ref=e487]:
+          - generic [ref=e488]: Vorlaufzeit
+          - combobox [ref=e489] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e490]: Eskalation
+          - generic [ref=e491]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead
+    - generic [ref=e492]:
+      - button "Abbrechen" [ref=e493] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e495] [cursor=pointer]

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Jobbasket</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{--gold:#dcb479;--teal:#196774;--dark:#262626;--gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold20:rgba(220,180,121,.20);--gold30:rgba(220,180,121,.30);--teal15:rgba(25,103,116,.15);--teal30:rgba(25,103,116,.30);--bg-h:#232321;--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;--brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);--t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;--green:#5DCAA5;--red:#ef4444;--amber:#f59e0b}
+
+.subtabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c);padding:0 20px;overflow-x:auto}
+.subtab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;font-weight:500}
+.subtab:hover{color:var(--t2)}.subtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.content{padding:16px 20px;max-width:1200px;}
+.sec{background:var(--bg-c);border-radius:12px;border:.5px solid var(--brd);margin-bottom:12px;overflow:hidden;position:relative}
+.sec-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;cursor:pointer;user-select:none}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t1)}
+.s-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sec-toggle{font-size:12px;color:var(--tm);margin-left:6px;transition:.2s}
+.sec-body{padding:4px 18px 18px}.collapsed .sec-body{display:none}.collapsed .sec-toggle{transform:rotate(-90deg)}
+.tb-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.tb-btn:hover{border-color:var(--gold30);color:var(--t2)}.tb-btn.primary{background:var(--gold15);border-color:var(--gold30);color:var(--gold)}
+.ai-badge{font-size:8px;padding:2px 6px;border-radius:4px;background:rgba(139,92,246,.1);color:#a78bfa;border:.5px solid rgba(139,92,246,.2);margin-left:8px}
+.aim-grid{display:flex;gap:10px;flex-wrap:wrap}.ai-match-info{font-size:10px;color:var(--t3);margin-bottom:12px}
+.aim-card{flex:1;min-width:220px;background:var(--bg-e);border-radius:10px;border:.5px solid var(--brd-s);padding:14px;transition:.2s}.aim-card:hover{border-color:var(--brd);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.aim-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.aim-info{flex:1;min-width:0}
+.aim-title{font-size:12px;font-weight:600;color:var(--t1)}.aim-acct{font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px;margin-top:2px}
+.aim-logo{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;flex-shrink:0}
+.aim-dims{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.aim-dim{display:flex;align-items:center;gap:4px}.aim-dl{font-size:8px;color:var(--t3);width:42px;flex-shrink:0;text-align:right}
+.aim-db{flex:1;height:3px;background:var(--bg-p);border-radius:2px;overflow:hidden}.aim-df{height:100%;border-radius:2px}.aim-dv{font-size:8px;font-weight:600;width:22px}
+.aim-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}.aim-tag{font-size:8px;padding:2px 6px;border-radius:3px;background:var(--bg-p);color:var(--t3)}
+.aim-add{width:100%;padding:6px;border-radius:6px;font-size:10px;font-weight:500;cursor:pointer;background:var(--gold08);border:1px solid var(--gold30);color:var(--gold);transition:.15s;text-align:center}.aim-add:hover{background:var(--gold15)}
+.jb-list{display:flex;flex-direction:column;gap:12px}
+.jb-card{padding:18px 24px;border-radius:12px;background:var(--bg-e);border:.5px solid var(--brd-s);cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+.jb-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(220,180,121,.08),transparent);opacity:0;transition:.3s}
+.jb-card:hover{border-color:rgba(220,180,121,.12);box-shadow:0 4px 20px rgba(0,0,0,.25)}.jb-card:hover::before{opacity:1}
+.jb-card.jb-done{opacity:.7}.jb-card.jb-rej-card{opacity:.45}.jb-card.jb-rej-card:hover{opacity:.65}
+.jb-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.jb-logo{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;letter-spacing:.5px}
+.jb-info{flex:1;min-width:0}.jb-title{font-size:14px;font-weight:600;color:var(--t1)}.jb-meta{font-size:11px;color:var(--t2);margin-top:3px}
+.jb-date{font-size:9px;color:var(--t3);padding:3px 8px;background:var(--bg-p);border-radius:5px;flex-shrink:0}
+.jb-btn-x{width:28px;height:28px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--tm);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s;flex-shrink:0;opacity:0}
+.jb-card:hover .jb-btn-x{opacity:1}.jb-btn-x:hover{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);color:var(--red)}
+
+/* Collapse */
+.jb-body{transition:max-height .3s ease,opacity .3s;overflow:hidden}
+.jb-collapsed .jb-body{max-height:0 !important;opacity:0;padding:0;margin:0}
+.jb-collapse-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:transform .2s,background .15s,color .15s;flex-shrink:0;margin-left:4px}
+.jb-collapse-icon:hover{background:var(--bg-hv);color:var(--t1)}
+.jb-collapsed .jb-collapse-icon{transform:rotate(-90deg)}
+.jb-top{cursor:pointer}
+
+/* Stage pill in header */
+.jb-stage-pill{font-size:9px;font-weight:600;padding:3px 10px;border-radius:5px;flex-shrink:0;letter-spacing:.3px;white-space:nowrap}
+.jb-sp-0{background:rgba(128,124,116,.1);color:var(--t2)}
+.jb-sp-1{background:rgba(249,115,22,.1);color:#f97316}
+.jb-sp-2{background:rgba(234,179,8,.1);color:#eab308}
+.jb-sp-3{background:var(--teal15);color:var(--teal)}
+.jb-sp-4{background:var(--gold15);color:var(--gold)}
+.jb-sp-sent,.jb-sp-5{background:rgba(93,202,165,.1);color:var(--green)}
+.jb-sp-rej{background:rgba(239,68,68,.08);color:var(--red)}
+
+/* Gate 1 box */
+.jb-gate-box{background:rgba(239,68,68,.04);border:.5px solid rgba(239,68,68,.1);padding:10px 14px;border-radius:8px;margin-top:8px}
+.jb-gate-head{font-size:11px;font-weight:600;color:var(--t1);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.jb-gate-status{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600}
+.jb-gate-blocked{background:rgba(239,68,68,.1);color:var(--red)}
+.jb-gate-ok{background:rgba(93,202,165,.1);color:var(--green)}
+.jb-gate-checks{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;margin-bottom:6px}
+.gc-ok{color:var(--green);font-weight:600}.gc-miss{color:var(--red);font-weight:700}
+.jb-gate-action{font-size:10px;color:var(--t2)}.jb-gate-action a{color:var(--gold);cursor:pointer;font-weight:600}
+
+/* Gate 2 bar */
+.jb-gate2-bar{background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.08);padding:10px 14px;border-radius:8px;margin-top:8px}
+.jb-gate2-head{font-size:11px;font-weight:600;color:var(--t1);margin-bottom:8px}
+.jb-gate2-opts{display:flex;gap:10px;flex-wrap:wrap}
+.jb-g2-opt{display:flex;align-items:center;gap:8px;flex:1;min-width:180px;padding:6px 10px;border-radius:7px;background:var(--bg-p)}
+.jb-g2-ready{border:.5px solid rgba(93,202,165,.15)}.jb-g2-blocked{border:.5px solid rgba(239,68,68,.1);opacity:.6}
+.jb-g2-checks{font-size:10px;color:var(--t2);flex:1}
+.jb-btn-send:disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
+
+/* Rejection detail (inline, not hover) */
+.jb-rej-detail{margin-top:8px;padding:12px 14px;background:rgba(239,68,68,.06);border:.5px solid rgba(239,68,68,.12);border-radius:8px}
+.jb-rej-header{font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px}
+.jb-rej-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.jb-rej-who{display:inline-block;padding:3px 10px;border-radius:5px;background:rgba(239,68,68,.12);color:var(--red);font-weight:600;font-size:10px}
+.jb-rej-reason-type{font-size:11px;font-weight:600;color:var(--t1)}
+.jb-rej-desc{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:4px}
+.jb-rej-meta{font-size:10px;color:var(--t3)}
+.tl-wrap{width:100%;overflow:visible}.tl-svg{width:100%;height:115px;overflow:visible}
+.jb-ctx{font-size:11px;padding:8px 14px;border-radius:8px;margin-top:8px;line-height:1.5}
+.jb-hint{color:var(--t1);background:rgba(220,180,121,.06);border:.5px solid rgba(220,180,121,.12)}
+.jb-warn{color:var(--amber);background:rgba(245,158,11,.06);border:.5px solid rgba(245,158,11,.12)}
+.jb-warn a{color:var(--gold);cursor:pointer;font-weight:600}.jb-warn a:hover{text-decoration:underline}
+.jb-send{display:flex;align-items:center;gap:10px;margin-top:10px}
+.jb-send-lbl{font-size:11px;color:var(--t2);font-weight:500}
+.jb-btn-send{padding:7px 18px;border-radius:8px;font-size:11px;font-weight:500;cursor:pointer;background:var(--bg-c);border:1px solid var(--brd);color:var(--t1);transition:.2s;white-space:nowrap}
+.jb-btn-send:hover{border-color:var(--gold30);color:var(--gold);background:var(--gold08);transform:translateY(-1px)}
+.jb-btn-go{background:var(--gold15);border-color:var(--gold30);color:var(--gold);box-shadow:0 2px 8px rgba(220,180,121,.12)}
+.jb-next{color:var(--t2);background:rgba(93,202,165,.05);border:.5px solid rgba(93,202,165,.1)}
+.jb-link{color:var(--green);cursor:pointer;font-weight:600}.jb-link:hover{text-decoration:underline}
+.jb-doc-miss{color:var(--red);background:rgba(239,68,68,.06);border:.5px solid rgba(239,68,68,.12)}
+.jb-doc-miss a{color:var(--gold);cursor:pointer;font-weight:600}
+/* (rejection is now inline, not tooltip) */
+/* ===== JOB SEARCH ===== */
+.js-search-wrap{margin-bottom:4px}
+.js-input-row{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg-e);border-radius:10px;border:1.5px solid var(--brd-s);transition:border-color .2s}
+.js-input-row:focus-within{border-color:var(--gold30);box-shadow:0 0 0 3px rgba(220,180,121,.06)}
+.js-icon{font-size:14px;color:var(--tm);flex-shrink:0}
+.js-input{flex:1;background:none;border:none;outline:none;color:var(--t1);font-size:13px;font-family:inherit;min-width:0}
+.js-input::placeholder{color:var(--tm)}
+.js-filter-pills{display:flex;gap:4px;flex-shrink:0}
+.js-fp{padding:3px 10px;border-radius:5px;font-size:9px;font-weight:600;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;letter-spacing:.3px}
+.js-fp:hover{border-color:var(--gold30);color:var(--t2)}
+.js-fp.active{background:var(--gold08);border-color:var(--gold30);color:var(--gold)}
+.js-clear{width:24px;height:24px;border-radius:6px;display:none;align-items:center;justify-content:center;font-size:11px;color:var(--tm);cursor:pointer;transition:.15s;flex-shrink:0}
+.js-clear:hover{color:var(--t1);background:var(--bg-hv)}
+.js-results{display:flex;flex-direction:column;gap:2px}
+.js-result-group{margin-top:10px}
+.js-group-head{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:4px 8px;display:flex;align-items:center;gap:6px}
+.js-group-head::after{content:'';flex:1;height:1px;background:var(--brd)}
+.js-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;cursor:pointer;transition:.15s}
+.js-item:hover{background:var(--bg-hv)}
+.js-item-logo{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;color:#fff}
+.js-item-info{flex:1;min-width:0}
+.js-item-title{font-size:12px;font-weight:600;color:var(--t1)}
+.js-item-meta{font-size:10px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.js-item-tag{font-size:8px;padding:2px 6px;border-radius:3px;background:var(--bg-p);color:var(--t3)}
+.js-item-tag-m{color:var(--gold);border:.5px solid var(--gold30)}
+.js-item-badge{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;flex-shrink:0}
+.js-badge-open{background:rgba(93,202,165,.08);color:var(--green)}
+.js-badge-filled{background:rgba(128,124,116,.08);color:var(--t3);text-decoration:line-through}
+.js-badge-basket{background:rgba(220,180,121,.08);color:var(--gold)}
+.js-item-add{padding:6px 16px;border-radius:7px;font-size:10px;font-weight:500;cursor:pointer;background:var(--gold08);border:1px solid var(--gold30);color:var(--gold);transition:.2s;white-space:nowrap;flex-shrink:0;opacity:0;transform:translateX(8px)}
+.js-item:hover .js-item-add{opacity:1;transform:translateX(0)}
+.js-item-add:hover{background:var(--gold15)}
+.js-item-add.added{background:rgba(93,202,165,.08);border-color:rgba(93,202,165,.2);color:var(--green);pointer-events:none;opacity:1;transform:translateX(0)}
+.js-sub-item .js-item-add{opacity:1;transform:translateX(0)}
+.js-item-remove{padding:5px 12px;border-radius:7px;font-size:10px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(239,68,68,.2);color:var(--t3);transition:.2s;white-space:nowrap;flex-shrink:0}
+.js-item-remove:hover{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--red)}
+.js-item-remove.removed{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);color:var(--red);pointer-events:none}
+.js-empty{text-align:center;padding:24px;color:var(--tm)}
+.js-empty-icon{font-size:24px;margin-bottom:6px;opacity:.5}
+.js-empty-text{font-size:11px}
+.js-hl{color:var(--gold);font-weight:600;background:transparent}
+.js-acct-expand{margin-left:auto;font-size:10px;color:var(--teal);cursor:pointer;font-weight:500}
+.js-acct-jobs{padding:4px 0 4px 46px;display:none}
+.js-acct-jobs.open{display:block}
+.js-sub-item{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:6px;cursor:pointer;transition:.15s;border-left:2px solid var(--brd)}
+.js-sub-item:hover{background:var(--bg-hv);border-left-color:var(--gold30)}
+.js-sub-title{font-size:11px;font-weight:500;color:var(--t1);flex:1}
+.js-sub-meta{font-size:9px;color:var(--t3)}
+.jb-action-bar{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--bg-c);border:.5px solid var(--brd);border-radius:12px;margin-top:10px;flex-wrap:wrap}
+.jb-card{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s,border-color .2s,box-shadow .2s}
+.jb-card.vis{opacity:1;transform:translateY(0)}.jb-card.jb-done.vis{opacity:.7}.jb-card.jb-rej-card.vis{opacity:.45}
+.pipe-sum{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--bg-p);border-radius:8px;margin-bottom:14px;flex-wrap:wrap}
+.pipe-chip{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid transparent}.pipe-chip:hover{border-color:var(--brd)}.pipe-chip.pc-active{border-color:var(--gold30);box-shadow:0 0 0 2px rgba(220,180,121,.08)}.pipe-chip-cnt{font-size:14px;font-weight:700}.pipe-chip-lbl{font-size:9px;color:var(--t3)}.pipe-arrow{font-size:12px;color:var(--tm)}
+/* Sort dropdown */
+.jb-sort-wrap{position:relative;display:inline-flex;align-items:center}
+.jb-sort-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.jb-sort-btn:hover{border-color:var(--gold30);color:var(--t2)}
+.jb-sort-menu{position:absolute;top:100%;right:0;margin-top:4px;background:var(--bg-c);border:1px solid var(--brd);border-radius:8px;padding:4px;min-width:160px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.jb-sort-menu.open{display:block}
+.jb-sort-opt{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:5px;font-size:11px;color:var(--t2);cursor:pointer;transition:.1s;border:none;background:none;width:100%;text-align:left}
+.jb-sort-opt:hover{background:var(--bg-hv);color:var(--t1)}
+.jb-sort-opt.active{color:var(--gold)}
+.jb-sort-opt .sort-check{width:14px;color:var(--gold);font-weight:700}
+/* Action badge */
+.action-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(245,158,11,.08);color:var(--amber);border:.5px solid rgba(245,158,11,.15);animation:badge-pulse 3s ease-in-out infinite}
+@keyframes badge-pulse{0%,100%{opacity:1}50%{opacity:.7}}
+/* Rejection modal */
+.rej-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.rej-overlay.open{display:flex}
+.rej-modal{background:var(--bg-c);border:1px solid var(--brd);border-radius:14px;padding:24px;width:420px;max-width:90vw;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.rej-modal-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.rej-modal-sub{font-size:11px;color:var(--t3);margin-bottom:18px}
+.rej-field{margin-bottom:14px}
+.rej-label{font-size:10px;font-weight:600;color:var(--t2);margin-bottom:4px;letter-spacing:.3px;text-transform:uppercase}
+.rej-label .req{color:var(--red)}
+.rej-select{width:100%;padding:8px 12px;border-radius:8px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%23807c74' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.rej-select:focus{border-color:var(--gold30)}
+.rej-select option{background:var(--bg-c);color:var(--t1)}
+.rej-textarea{width:100%;padding:8px 12px;border-radius:8px;background:var(--bg-e);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none;resize:vertical;min-height:60px}
+.rej-textarea:focus{border-color:var(--gold30)}
+.rej-textarea::placeholder{color:var(--tm)}
+.rej-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.rej-btn{padding:7px 18px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:.15s}
+.rej-btn-cancel{background:transparent;border:1px solid var(--brd);color:var(--t3)}.rej-btn-cancel:hover{border-color:var(--gold30);color:var(--t2)}
+.rej-btn-confirm{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:var(--red)}.rej-btn-confirm:hover{background:rgba(239,68,68,.2)}
+.rej-btn-confirm:disabled{opacity:.35;cursor:not-allowed}
+.rej-job-preview{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-e);border-radius:8px;margin-bottom:16px}
+.rej-job-preview .jb-logo{width:32px;height:32px;font-size:9px}
+/* Empty state */
+.jb-empty{text-align:center;padding:48px 24px;display:none}
+.jb-empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
+.jb-empty-title{font-size:14px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.jb-empty-desc{font-size:11px;color:var(--tm);margin-bottom:16px;line-height:1.6}
+.jb-empty-actions{display:flex;gap:8px;justify-content:center}
+/* Keyboard focus */
+.jb-card.kb-focus{border-color:var(--gold30) !important;box-shadow:0 0 0 2px rgba(220,180,121,.1) !important}
+.jb-card.kb-focus .jb-btn-x{opacity:1}
+/* Filter active clear */
+.pipe-clear{font-size:9px;color:var(--tm);cursor:pointer;padding:4px 8px;border-radius:4px;transition:.15s;display:none;align-items:center;gap:3px}
+.pipe-clear:hover{color:var(--t1);background:var(--bg-hv)}.pipe-clear.show{display:inline-flex}
+/* Keyboard hint bar */
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin-top:8px;flex-wrap:wrap}
+.kb-hint{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3);font-family:inherit}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab active">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+<div class="content">
+<!-- AI MATCHING -->
+<div class="sec" id="sec-j-ai">
+  <div class="sec-accent" style="background:linear-gradient(90deg,#8b5cf6,var(--gold),transparent 70%)"></div>
+  <div class="sec-head" onclick="togSec(this.parentElement)"><div class="sec-title"><div class="s-icon" style="background:rgba(139,92,246,.12);color:#8b5cf6">🎯</div>Vorgeschlagene Jobs<span class="ai-badge">AI-Match</span><span class="sec-toggle">▾</span></div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:10px;color:var(--t3)">3 Vorschläge</span><button class="tb-btn primary" onclick="event.stopPropagation()" style="font-size:10px">🔄 Neu berechnen</button></div></div>
+  <div class="sec-body">
+    <div class="ai-match-info">Basierend auf Briefing, Werdegang, Assessment und Präferenzen · 31.03.2026</div>
+    <div class="aim-grid">
+      <div class="aim-card"><div class="aim-head"><svg viewBox="0 0 36 36" width="38" height="38"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#343430" stroke-width="2.5"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="10.7" style="transform:rotate(-90deg);transform-origin:center"/><text x="18" y="19.5" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="var(--green)">89</text></svg><div class="aim-info"><div class="aim-title">Gesamtprojektleiter Tiefbau</div><div class="aim-acct"><div class="aim-logo" style="background:#e60000;color:#fff">IMP</div>Implenia AG · Zürich</div></div></div><div class="aim-dims"><div class="aim-dim"><span class="aim-dl">Gehalt</span><div class="aim-db"><div class="aim-df" style="width:95%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">95</span></div><div class="aim-dim"><span class="aim-dl">Funktion</span><div class="aim-db"><div class="aim-df" style="width:92%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">92</span></div><div class="aim-dim"><span class="aim-dl">Ort</span><div class="aim-db"><div class="aim-df" style="width:100%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">100</span></div><div class="aim-dim"><span class="aim-dl">DISC</span><div class="aim-db"><div class="aim-df" style="width:72%;background:var(--amber)"></div></div><span class="aim-dv" style="color:var(--amber)">72</span></div></div><div class="aim-tags"><span class="aim-tag">CHF 155-175k</span><span class="aim-tag">100%</span><span class="aim-tag" style="color:var(--gold)">Einzelmandat</span></div><button class="aim-add">+ Als Prelead hinzufügen</button></div>
+      <div class="aim-card"><div class="aim-head"><svg viewBox="0 0 36 36" width="38" height="38"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#343430" stroke-width="2.5"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="19.5" style="transform:rotate(-90deg);transform-origin:center"/><text x="18" y="19.5" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="var(--green)">80</text></svg><div class="aim-info"><div class="aim-title">Oberbauleiter Spezialtiefbau</div><div class="aim-acct"><div class="aim-logo" style="background:#1a4d8f;color:#fff">MAR</div>Marti AG · Bern</div></div></div><div class="aim-dims"><div class="aim-dim"><span class="aim-dl">Gehalt</span><div class="aim-db"><div class="aim-df" style="width:82%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">82</span></div><div class="aim-dim"><span class="aim-dl">Funktion</span><div class="aim-db"><div class="aim-df" style="width:88%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">88</span></div><div class="aim-dim"><span class="aim-dl">Ort</span><div class="aim-db"><div class="aim-df" style="width:60%;background:var(--amber)"></div></div><span class="aim-dv" style="color:var(--amber)">60</span></div><div class="aim-dim"><span class="aim-dl">DISC</span><div class="aim-db"><div class="aim-df" style="width:78%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">78</span></div></div><div class="aim-tags"><span class="aim-tag">CHF 160-180k</span><span class="aim-tag">100%</span><span class="aim-tag">Erfolgsbasis</span></div><button class="aim-add">+ Als Prelead hinzufügen</button></div>
+      <div class="aim-card"><div class="aim-head"><svg viewBox="0 0 36 36" width="38" height="38"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#343430" stroke-width="2.5"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="29.2" style="transform:rotate(-90deg);transform-origin:center"/><text x="18" y="19.5" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="var(--amber)">70</text></svg><div class="aim-info"><div class="aim-title">Bereichsleiter Bau</div><div class="aim-acct"><div class="aim-logo" style="background:var(--teal15);color:var(--teal)">EIF</div>Eiffage · Luzern</div></div></div><div class="aim-dims"><div class="aim-dim"><span class="aim-dl">Gehalt</span><div class="aim-db"><div class="aim-df" style="width:70%;background:var(--amber)"></div></div><span class="aim-dv" style="color:var(--amber)">70</span></div><div class="aim-dim"><span class="aim-dl">Funktion</span><div class="aim-db"><div class="aim-df" style="width:65%;background:var(--amber)"></div></div><span class="aim-dv" style="color:var(--amber)">65</span></div><div class="aim-dim"><span class="aim-dl">Ort</span><div class="aim-db"><div class="aim-df" style="width:75%;background:var(--green)"></div></div><span class="aim-dv" style="color:var(--green)">75</span></div><div class="aim-dim"><span class="aim-dl">DISC</span><div class="aim-db"><div class="aim-df" style="width:55%;background:var(--amber)"></div></div><span class="aim-dv" style="color:var(--amber)">55</span></div></div><div class="aim-tags"><span class="aim-tag">CHF 170-200k</span><span class="aim-tag">100%</span><span class="aim-tag">Erfolgsbasis</span></div><button class="aim-add">+ Als Prelead hinzufügen</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- JOB SUCHE -->
+<div class="sec" id="sec-j-search">
+  <div class="sec-accent" style="background:linear-gradient(90deg,var(--gold),transparent 50%)"></div>
+  <div class="sec-head" onclick="togSec(this.parentElement)"><div class="sec-title"><div class="s-icon" style="background:var(--gold15);color:var(--gold)">🔍</div>Job suchen & hinzufügen<span class="sec-toggle">▾</span></div></div>
+  <div class="sec-body">
+    <div class="js-search-wrap">
+      <div class="js-input-row">
+        <div class="js-icon">🔍</div>
+        <input type="text" class="js-input" id="jsInput" placeholder="Account oder Jobtitel suchen…" oninput="jobSearch(this.value)" autocomplete="off">
+        <div class="js-filter-pills">
+          <button class="js-fp active" data-f="all" onclick="setFilter('all',this)">Alle</button>
+          <button class="js-fp" data-f="account" onclick="setFilter('account',this)">Accounts</button>
+          <button class="js-fp" data-f="job" onclick="setFilter('job',this)">Jobs</button>
+        </div>
+        <div class="js-clear" id="jsClear" onclick="document.getElementById('jsInput').value='';jobSearch('');this.style.display='none'">✕</div>
+      </div>
+    </div>
+    <div class="js-results" id="jsResults"></div>
+    <div class="js-empty" id="jsEmpty" style="display:none">
+      <div class="js-empty-icon">📭</div>
+      <div class="js-empty-text">Keine Ergebnisse für diese Suche</div>
+    </div>
+  </div>
+</div>
+
+<!-- GO-PIPELINE -->
+<div class="sec" id="sec-j-pipe">
+  <div class="sec-accent" style="background:linear-gradient(90deg,var(--gold),var(--teal),var(--green),transparent 80%)"></div>
+  <div class="sec-head" onclick="togSec(this.parentElement)"><div class="sec-title"><div class="s-icon" style="background:var(--gold15);color:var(--gold)">⚡</div>GO-Pipeline<span class="sec-toggle">▾</span></div><div style="display:flex;gap:8px;align-items:center"><span class="action-badge" id="actionBadge">3 benötigen Aktion</span><span style="font-size:10px;color:var(--t3)">10 Jobs · 2 versendet · 1 rejected</span><div class="jb-sort-wrap" onclick="event.stopPropagation()"><button class="jb-sort-btn" onclick="document.getElementById('sortMenu').classList.toggle('open')">↕ Sortieren</button><div class="jb-sort-menu" id="sortMenu"><button class="jb-sort-opt active" onclick="sortJobs('stage')"><span class="sort-check">✓</span>Nach Stage ↓</button><button class="jb-sort-opt" onclick="sortJobs('date')"><span class="sort-check"> </span>Nach Datum ↓</button><button class="jb-sort-opt" onclick="sortJobs('account')"><span class="sort-check"> </span>Nach Account A–Z</button></div></div></div></div>
+  <div class="sec-body">
+    <div class="pipe-sum" id="pipeSummary">
+      <div class="pipe-chip" data-filter="0" onclick="filterByStage(0,this)" style="background:rgba(128,124,116,.08)"><span class="pipe-chip-cnt" style="color:var(--t2)">2</span><span class="pipe-chip-lbl">Prelead</span></div><div class="pipe-arrow">›</div>
+      <div class="pipe-chip" data-filter="1" onclick="filterByStage(1,this)" style="background:rgba(249,115,22,.06)"><span class="pipe-chip-cnt" style="color:#f97316">1</span><span class="pipe-chip-lbl">Oral GO</span></div><div class="pipe-arrow">›</div>
+      <div class="pipe-chip" data-filter="2" onclick="filterByStage(2,this)" style="background:rgba(234,179,8,.06)"><span class="pipe-chip-cnt" style="color:#eab308">1</span><span class="pipe-chip-lbl">Written</span></div><div class="pipe-arrow">›</div>
+      <div class="pipe-chip" data-filter="3" onclick="filterByStage(3,this)" style="background:rgba(25,103,116,.06)"><span class="pipe-chip-cnt" style="color:var(--teal)">1</span><span class="pipe-chip-lbl">Assigned</span></div><div class="pipe-arrow">›</div>
+      <div class="pipe-chip" data-filter="4" onclick="filterByStage(4,this)" style="background:rgba(220,180,121,.06)"><span class="pipe-chip-cnt" style="color:var(--gold)">2</span><span class="pipe-chip-lbl">To Send</span></div><div class="pipe-arrow">›</div>
+      <div class="pipe-chip" data-filter="5" onclick="filterByStage(5,this)" style="background:rgba(93,202,165,.06)"><span class="pipe-chip-cnt" style="color:var(--green)">2</span><span class="pipe-chip-lbl">Sent</span></div>
+      <div style="width:1px;height:20px;background:var(--brd);margin:0 4px"></div>
+      <div class="pipe-chip" data-filter="-1" onclick="filterByStage(-1,this)" style="background:rgba(239,68,68,.04)"><span class="pipe-chip-cnt" style="color:var(--red)">1</span><span class="pipe-chip-lbl">Rejected</span></div>
+      <span class="pipe-clear" id="pipeClear" onclick="clearFilter()">✕ Filter zurücksetzen</span>
+    </div>
+    <div class="jb-empty" id="jbEmpty"><div class="jb-empty-icon">📦</div><div class="jb-empty-title">Noch keine Jobs im Basket</div><div class="jb-empty-desc">Füge Jobs zum Basket hinzu über die Job-Suche oben<br>oder nutze die AI-Matching Vorschläge.</div><div class="jb-empty-actions"><button class="tb-btn primary" onclick="document.getElementById('sec-j-search').querySelector('.sec-body').style.display='block';document.getElementById('jsInput').focus()">🔍 Job suchen</button><button class="tb-btn" onclick="document.getElementById('sec-j-ai').scrollIntoView({behavior:'smooth'})">🎯 AI-Vorschläge ansehen</button></div></div>
+    <div class="jb-list" id="jbList"></div>
+  </div>
+</div>
+<div class="jb-action-bar">
+  <button class="tb-btn primary" style="font-size:11px">+ Job in Basket legen</button>
+  <button class="tb-btn" style="font-size:11px">📧 Mündliche GOs versenden</button>
+  <span style="font-size:10px;color:var(--tm);margin-left:auto">31.03.2026, 14:22</span>
+</div>
+<div class="kb-bar">
+  <span class="kb-hint"><span class="kb-key">↑</span><span class="kb-key">↓</span> Navigation</span>
+  <span class="kb-hint"><span class="kb-key">Enter</span> Auf-/Zuklappen</span>
+  <span class="kb-hint"><span class="kb-key">S</span> Suche</span>
+  <span class="kb-hint"><span class="kb-key">Esc</span> Filter reset</span>
+</div>
+</div>
+<script>
+function togSec(el){el.classList.toggle('collapsed')}
+const JOBS=[
+  {logo:'SBB',bg:'#0d6efd',title:'Projektleiter Kunstbauten',meta:'SBB Infrastruktur · Zürich · CHF 140-160k · 100%',date:'28.03.2026',stage:0,
+   dates:['28.03.2026','','','',''],triggers:['Manuell hinzugefügt','⚡ Mündl. GOs Email','⚡ Schriftl. GOs Email','⚡ Gate 1 Auto','⚡ Gate 2 Auto'],
+   gate1:{go:false,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:false,abstract:false,expose:false}},
+
+  {logo:'BAS',bg:'#1a4d8f',title:'Bauleiter Strassentunnel A4',meta:'ASTRA / Bundesamt · Schwyz · CHF 130-155k · 100%',date:'27.03.2026',stage:0,
+   dates:['27.03.2026','','','',''],triggers:['Manuell hinzugefügt','⚡ Mündl. GOs Email','⚡ Schriftl. GOs Email','⚡ Gate 1 Auto','⚡ Gate 2 Auto'],
+   gate1:{go:false,cv:true,diplom:false,zeugnis:true},gate2:{arkCv:false,abstract:false,expose:false}},
+
+  {logo:'IMP',bg:'#e60000',title:'Gesamtprojektleiter Tiefbau',meta:'Implenia AG · Zürich · CHF 155-175k · <b style="color:var(--gold)">Einzelmandat</b>',date:'25.03.2026',stage:1,
+   dates:['20.03.2026','25.03.2026','','',''],triggers:['Manuell','⚡ Email versendet','⚡ Schriftl. Bestätigung','⚡ Gate 1','⚡ Gate 2'],
+   hint:'⏳ Warte auf schriftliche Bestätigung vom Kandidaten — <b>Ghosting-Frist: 08.04.2026</b> (14 Tage)',
+   gate1:{go:false,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:false,expose:false}},
+
+  {logo:'WAL',bg:'#2d6a4f',title:'OBL Grossprojekt Linth',meta:'Walo Bertschinger · Glarus · CHF 145-165k · 100%',date:'22.03.2026',stage:2,
+   dates:['15.03.2026','18.03.2026','22.03.2026','',''],triggers:['Manuell','⚡ Email','⚡ Bestätigt','⚡ Gate 1','⚡ Gate 2'],
+   gate1:{go:true,cv:true,diplom:false,zeugnis:true},gate2:{arkCv:true,abstract:true,expose:false},
+   gateBlocked:true},
+
+  {logo:'BAU',bg:'var(--teal)',title:'Spartenleiter Tiefbau',meta:'Baumag AG · Luzern · CHF 160-185k · 100%',date:'20.03.2026',stage:4,
+   dates:['10.03.2026','12.03.2026','15.03.2026','20.03.2026','22.03.2026'],triggers:['Manuell','⚡ Email','⚡ Bestätigt','⚡ Alle Docs ✓','⚡ Versandbereit'],
+   sendReady:true,sendPri:true,gate1:{go:true,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:true,expose:true}},
+
+  {logo:'STR',bg:'#8b5e3c',title:'Abteilungsleiter Infrastruktur',meta:'Strabag AG · Winterthur · CHF 150-175k · 100%',date:'19.03.2026',stage:3,
+   dates:['08.03.2026','11.03.2026','14.03.2026','19.03.2026',''],triggers:['Manuell','⚡ Email','⚡ Bestätigt','⚡ Alle Docs ✓','⚡ Gate 2'],
+   sendReady:true,gate1:{go:true,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:false,expose:false}},
+
+  {logo:'MAR',bg:'#6d4c41',title:'GL-Mitglied Bau Region Ost',meta:'Marti AG · St. Gallen · CHF 180-210k · <b style="color:var(--gold)">Einzelmandat</b>',date:'18.03.2026',stage:4,
+   dates:['05.03.2026','08.03.2026','10.03.2026','14.03.2026','18.03.2026'],triggers:['Manuell','⚡ Email','⚡ Bestätigt','⚡ Alle Docs ✓','⚡ Versandbereit'],
+   sendReady:true,sendPri:true,sendBoth:true,gate1:{go:true,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:true,expose:true}},
+
+  {logo:'IMP',bg:'#e60000',title:'Projektleiter BIM Tiefbau',meta:'Implenia AG · Zürich · CHF 135-155k · 80-100%',date:'15.03.2026',stage:5,
+   dates:['01.03.2026','04.03.2026','06.03.2026','10.03.2026','13.03.2026'],triggers:['','','','',''],
+   forkDone:['cv'],forkDates:{cv:'15.03.2026'},proc:'P-2026-041',procNext:'1. Interview am 04.04.2026',done:true,
+   gate1:{go:true,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:true,expose:false}},
+
+  {logo:'KÜM',bg:'#1a4d8f',title:'Bereichsleiter Spezialtiefbau',meta:'Kümmerle Bau · Winterthur · CHF 160-180k · 100%',date:'12.03.2026',stage:5,
+   dates:['25.02.2026','28.02.2026','02.03.2026','06.03.2026','09.03.2026'],triggers:['','','','',''],
+   forkDone:['cv','expose'],forkDates:{cv:'12.03.2026',expose:'14.03.2026'},proc:'P-2026-038',procNext:'Telefon-Interview am 02.04.2026',done:true,
+   gate1:{go:true,cv:true,diplom:true,zeugnis:true},gate2:{arkCv:true,abstract:true,expose:true}},
+
+  {logo:'POR',bg:'#555',title:'Gesamtleiter Hochbau',meta:'Porr Suisse · Basel · CHF 150-170k',date:'24.03.2026',stage:-1,
+   rejAt:1,rejBy:'Kandidat',rejReason:'Zu weit weg',rejDetail:'Pendeldistanz Basel zu weit für täglichen Arbeitsweg (>90min)',rejDate:'24.03.2026',rejUser:'Peter W.',rej:true,
+   dates:['20.03.2026','24.03.2026','','',''],triggers:['',''],gate1:{},gate2:{}}
+];
+const STAGES=['Prelead','Oral GO','Written GO','Assigned','To Send'];
+const W=820,H=115,PAD=40,Y=55;
+function buildSVG(j,idx){
+  const forkX=W-120,step=(forkX-PAD)/4,fTY=Y-18,fBY=Y+18,endX=W-PAD;
+  let s=`<svg viewBox="0 0 ${W} ${H}" class="tl-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g${idx}"><stop offset="0%" stop-color="#196774"/><stop offset="100%" stop-color="#5DCAA5"/></linearGradient></defs>`;
+  // BG rail + fork
+  s+=`<line x1="${PAD}" y1="${Y}" x2="${forkX}" y2="${Y}" stroke="#2a2a27" stroke-width="4" stroke-linecap="round"/>`;
+  s+=`<path d="M${forkX-5},${Y} C${forkX+12},${Y} ${forkX+12},${fTY} ${forkX+28},${fTY}" stroke="#2a2a27" stroke-width="3" fill="none"/>`;
+  s+=`<line x1="${forkX+28}" y1="${fTY}" x2="${endX}" y2="${fTY}" stroke="#2a2a27" stroke-width="3" stroke-linecap="round"/>`;
+  s+=`<path d="M${forkX-5},${Y} C${forkX+12},${Y} ${forkX+12},${fBY} ${forkX+28},${fBY}" stroke="#2a2a27" stroke-width="3" fill="none"/>`;
+  s+=`<line x1="${forkX+28}" y1="${fBY}" x2="${endX}" y2="${fBY}" stroke="#2a2a27" stroke-width="3" stroke-linecap="round"/>`;
+  // Progress fill
+  if(j.rej){const rx=PAD+j.rejAt*step;s+=`<line x1="${PAD}" y1="${Y}" x2="${rx}" y2="${Y}" stroke="#ef4444" stroke-width="4" stroke-linecap="round" opacity=".8"/>`}
+  else{const px=j.stage>=5?forkX:PAD+j.stage*step;s+=`<line x1="${PAD}" y1="${Y}" x2="${px}" y2="${Y}" stroke="url(#g${idx})" stroke-width="4" stroke-linecap="round"/>`;
+    if(j.forkDone){
+      if(j.forkDone.includes('cv')){s+=`<path d="M${forkX-5},${Y} C${forkX+12},${Y} ${forkX+12},${fTY} ${forkX+28},${fTY}" stroke="#5DCAA5" stroke-width="3" fill="none"/>`;s+=`<line x1="${forkX+28}" y1="${fTY}" x2="${endX}" y2="${fTY}" stroke="#5DCAA5" stroke-width="3" stroke-linecap="round"/>`}
+      if(j.forkDone.includes('expose')){s+=`<path d="M${forkX-5},${Y} C${forkX+12},${Y} ${forkX+12},${fBY} ${forkX+28},${fBY}" stroke="#5DCAA5" stroke-width="3" fill="none"/>`;s+=`<line x1="${forkX+28}" y1="${fBY}" x2="${endX}" y2="${fBY}" stroke="#5DCAA5" stroke-width="3" stroke-linecap="round"/>`}
+    }
+  }
+  // Stops
+  for(let i=0;i<5;i++){
+    const x=PAD+i*step,passed=!j.rej?i<j.stage:i<j.rejAt,active=!j.rej&&i===j.stage,isG=i===3,blocked=isG&&j.gateBlocked&&j.stage===2,isR=j.rej&&i===j.rejAt,dead=j.rej&&i>j.rejAt;
+    let f='#2c2c28',sk='#726e66',r=6,tc='#726e66',tw=500;
+    if(passed){f='#5DCAA5';sk='#5DCAA5';tc='#9a968e'}
+    if(active){f='#dcb479';sk='#dcb479';r=8;tc='#dcb479';tw=700}
+    if(blocked){f='#ef4444';sk='#ef4444';r=7;tc='#ef4444';tw=600}
+    if(isR){f='#ef4444';sk='#ef4444';r=7}
+    if(dead){f='#232321';sk='#2a2a27';r=3}
+    if(isG&&!dead){const sz=passed||active||blocked?7:6;s+=`<rect x="${x-sz}" y="${Y-sz}" width="${sz*2}" height="${sz*2}" rx="2" transform="rotate(45 ${x} ${Y})" fill="${f}" stroke="${sk}" stroke-width="2"/>`}
+    else if(!dead)s+=`<circle cx="${x}" cy="${Y}" r="${r}" fill="${f}" stroke="${sk}" stroke-width="2.5"/>`;
+    else s+=`<circle cx="${x}" cy="${Y}" r="${r}" fill="${f}" stroke="${sk}" stroke-width="1.5"/>`;
+    if(active)s+=`<circle cx="${x}" cy="${Y}" r="12" fill="none" stroke="${f}" stroke-width="1.5" opacity=".4"><animate attributeName="r" from="9" to="20" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" from=".5" to="0" dur="2s" repeatCount="indefinite"/></circle>`;
+    if(blocked)s+=`<circle cx="${x}" cy="${Y}" r="12" fill="none" stroke="#ef4444" stroke-width="1"><animate attributeName="opacity" values=".1;.5;.1" dur="2s" repeatCount="indefinite"/></circle>`;
+    // Date above
+    const dt=j.dates[i];if(dt&&!dead)s+=`<text x="${x}" y="${Y-17}" text-anchor="middle" font-size="7.5" fill="${passed||active?'#9a968e':'#726e66'}" font-family="-apple-system,sans-serif">${dt}</text>`;
+    // Label below
+    let l=STAGES[i];if(isR)l='✕ Abgelehnt';if(dead)l='';if(blocked)l='⚠ Gate 1';if(passed&&isG)l='Assigned ✓';if(active&&isG)l='Assigned ✓';
+    if(l)s+=`<text x="${x}" y="${Y+22}" text-anchor="middle" font-size="9" font-weight="${tw}" fill="${tc}" font-family="-apple-system,sans-serif">${l}</text>`;
+  }
+  // Fork nodes — CV Sent (top) and Exposé (bottom)
+  const cvD=j.forkDone&&j.forkDone.includes('cv'),exD=j.forkDone&&j.forkDone.includes('expose');
+  // CV Sent node
+  s+=`<circle cx="${endX}" cy="${fTY}" r="${cvD?7:4.5}" fill="${cvD?'#5DCAA5':'#2c2c28'}" stroke="${cvD?'#5DCAA5':'#726e66'}" stroke-width="2"/>`;
+  if(cvD)s+=`<circle cx="${endX}" cy="${fTY}" r="11" fill="none" stroke="#5DCAA5" stroke-width="1" opacity=".2"/>`;
+  s+=`<text x="${endX}" y="${fTY-13}" text-anchor="middle" font-size="9.5" font-weight="${cvD?'700':'400'}" fill="${cvD?'#5DCAA5':'#726e66'}" font-family="-apple-system,sans-serif">${cvD?'CV Sent ✓':'CV Sent'}</text>`;
+  if(cvD&&j.forkDates&&j.forkDates.cv)s+=`<text x="${endX}" y="${fTY-24}" text-anchor="middle" font-size="7.5" fill="#807c74" font-family="-apple-system,sans-serif">${j.forkDates.cv}</text>`;
+  // Exposé node
+  s+=`<circle cx="${endX}" cy="${fBY}" r="${exD?7:4.5}" fill="${exD?'#5DCAA5':'#2c2c28'}" stroke="${exD?'#5DCAA5':'#726e66'}" stroke-width="2"/>`;
+  if(exD)s+=`<circle cx="${endX}" cy="${fBY}" r="11" fill="none" stroke="#5DCAA5" stroke-width="1" opacity=".2"/>`;
+  s+=`<text x="${endX}" y="${fBY+20}" text-anchor="middle" font-size="9.5" font-weight="${exD?'700':'400'}" fill="${exD?'#5DCAA5':'#726e66'}" font-family="-apple-system,sans-serif">${exD?'Exposé ✓':'Exposé'}</text>`;
+  if(exD&&j.forkDates&&j.forkDates.expose)s+=`<text x="${endX}" y="${fBY+31}" text-anchor="middle" font-size="7.5" fill="#807c74" font-family="-apple-system,sans-serif">${j.forkDates.expose}</text>`;
+  s+=`</svg>`;return s;
+}
+const list=document.getElementById('jbList');
+JOBS.forEach((j,i)=>{
+  const c=document.createElement('div');c.className=`jb-card${j.done?' jb-done':''}${j.rej?' jb-rej-card':''}`;
+  c.dataset.stage=j.rej?-1:j.stage>=5?5:j.stage;
+  c.dataset.date=j.date;
+  c.dataset.account=j.meta.split('·')[0].trim().replace(/<[^>]+>/g,'');
+  c.dataset.idx=i;
+  const cardId='jbc'+i;
+
+  // Header with collapse toggle
+  let h=`<div class="jb-top" onclick="event.stopPropagation();document.getElementById('${cardId}').classList.toggle('jb-collapsed')">
+    <div class="jb-logo" style="background:${j.bg};color:#fff">${j.logo}</div>
+    <div class="jb-info"><div class="jb-title">${j.title}</div><div class="jb-meta">${j.meta}</div></div>
+    <div class="jb-stage-pill jb-sp-${j.stage>=5?'sent':j.rej?'rej':j.stage}">${j.rej?'Rejected':j.stage>=5?'Sent':STAGES[j.stage]}</div>
+    <div class="jb-date">${j.date}</div>
+    ${!j.done&&!j.rej?`<button class="jb-btn-x" title="Ablehnen" onclick="event.stopPropagation();openRejModal(${i})">✕</button>`:''}
+    <div class="jb-collapse-icon">▾</div>
+  </div>`;
+
+  // Collapsible body
+  h+=`<div class="jb-body" id="${cardId}">`;
+  h+=`<div class="tl-wrap">${buildSVG(j,i)}</div>`;
+
+  // Stage-aware contextual info
+  if(!j.done&&!j.rej){
+    // Stage 0 (Prelead): Next step = Mündliche GOs
+    if(j.stage===0){
+      h+=`<div class="jb-ctx jb-hint">→ Nächster Schritt: Mündliche GOs mit Kandidat besprechen und <a onclick="event.stopPropagation()" style="color:var(--gold);cursor:pointer;font-weight:600">Email &laquo;Mündliche GOs&raquo; versenden</a></div>`;
+    }
+    // Stage 1 (Oral GO): Waiting for written confirmation (ghosting hint handled separately below)
+    if(j.stage===1&&!j.hint){
+      h+=`<div class="jb-ctx jb-hint">→ Warte auf schriftliche Bestätigung vom Kandidaten</div>`;
+    }
+    // Stage 2 (Written GO): NOW Gate 1 matters — check docs for Assigned
+    if(j.stage===2&&j.gate1){
+      const g=j.gate1;
+      const docsOk=g.cv&&g.diplom&&g.zeugnis;
+      const miss=[];if(!g.cv)miss.push('Original CV');if(!g.diplom)miss.push('Diplom');if(!g.zeugnis)miss.push('Arbeitszeugnis');
+      if(!docsOk){
+        h+=`<div class="jb-ctx jb-gate-box"><div class="jb-gate-head">◆ Gate 1 — Assigned <span class="jb-gate-status jb-gate-blocked">Blockiert</span></div>
+          <div class="jb-gate-checks">
+            <span class="gc-ok">✓ Schriftl. GO</span>
+            <span class="${g.cv?'gc-ok':'gc-miss'}">${g.cv?'✓':'✗'} Original CV</span>
+            <span class="${g.diplom?'gc-ok':'gc-miss'}">${g.diplom?'✓':'✗'} Diplom</span>
+            <span class="${g.zeugnis?'gc-ok':'gc-miss'}">${g.zeugnis?'✓':'✗'} Arbeitszeugnis</span>
+          </div>
+          <div class="jb-gate-action">Fehlend: <strong>${miss.join(', ')}</strong> — <a onclick="event.stopPropagation()">Dokumente-Tab öffnen</a></div>
+        </div>`;
+      }
+    }
+  }
+
+  // Hint (ghosting etc) — shown as same style box
+  if(j.hint)h+=`<div class="jb-ctx jb-hint">${j.hint}</div>`;
+
+  // Gate 2 info (for Assigned / To Send)
+  if(!j.done&&!j.rej&&j.stage>=3&&j.gate2){
+    const g2=j.gate2;
+    const cvReady=g2.arkCv&&g2.abstract;
+    const exReady=g2.expose;
+    const bothPri=j.sendBoth;
+    h+=`<div class="jb-gate2-bar">
+      <div class="jb-gate2-head">✉ Gate 2 — Versandoptionen</div>
+      <div class="jb-gate2-opts">
+        <div class="jb-g2-opt ${cvReady?'jb-g2-ready':'jb-g2-blocked'}">
+          <span class="jb-g2-checks"><span class="${g2.arkCv?'gc-ok':'gc-miss'}">${g2.arkCv?'✓':'✗'} ARK CV</span> · <span class="${g2.abstract?'gc-ok':'gc-miss'}">${g2.abstract?'✓':'✗'} Abstract</span></span>
+          <button class="jb-btn-send${cvReady&&(j.sendPri||bothPri)?' jb-btn-go':''}" ${cvReady?'':'disabled'} onclick="event.stopPropagation()">📧 CV senden</button>
+        </div>
+        <div class="jb-g2-opt ${exReady?'jb-g2-ready':'jb-g2-blocked'}">
+          <span class="jb-g2-checks"><span class="${g2.expose?'gc-ok':'gc-miss'}">${g2.expose?'✓':'✗'} Exposé</span></span>
+          <button class="jb-btn-send${exReady&&bothPri?' jb-btn-go':''}" ${exReady?'':'disabled'} onclick="event.stopPropagation()">📋 Exposé senden</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if(j.proc){
+    let x=j.forkDone&&j.forkDone.length===2?' · <strong style="color:var(--green)">Beide Formate versendet</strong>':'';
+    h+=`<div class="jb-ctx jb-next">→ Weiter im <a class="jb-link" onclick="event.stopPropagation()">Prozess #${j.proc}</a> · ${j.procNext}${x}</div>`;
+  }
+
+  if(j.rej){
+    h+=`<div class="jb-rej-detail">
+      <div class="jb-rej-header">✕ Ablehnung nach ${STAGES[j.rejAt]||'Prelead'}</div>
+      <div class="jb-rej-row"><span class="jb-rej-who">${j.rejBy}</span><span class="jb-rej-reason-type">${j.rejReason}</span></div>
+      <div class="jb-rej-desc">${j.rejDetail}</div>
+      <div class="jb-rej-meta">${j.rejDate} · ${j.rejUser}</div>
+    </div>`;
+  }
+
+  h+=`</div>`; // close jb-body
+  c.innerHTML=h;list.appendChild(c);
+
+  const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('vis'),i*60);obs.unobserve(en.target)}})},{threshold:.1});obs.observe(c);
+});
+// Compute action-required count
+const actionCount=JOBS.filter(j=>!j.done&&!j.rej&&(
+  j.hint || // ghosting warning
+  j.sendReady || // ready to send
+  (j.stage===2&&j.gate1&&!(j.gate1.cv&&j.gate1.diplom&&j.gate1.zeugnis)) // docs missing at Written GO
+)).length;
+document.getElementById('actionBadge').textContent=actionCount+' benötig'+(actionCount===1?'t':'en')+' Aktion';
+if(actionCount===0)document.getElementById('actionBadge').style.display='none';
+// ===== JOB SEARCH =====
+const SEARCH_DATA=[
+  // Accounts with their jobs
+  {type:'account',name:'Implenia AG',logo:'IMP',bg:'#e60000',loc:'Zürich',sector:'Tiefbau / Hochbau',jobs:[
+    {title:'Gesamtprojektleiter Tiefbau',salary:'CHF 155-175k',pensum:'100%',mandat:'Einzelmandat',status:'open',inBasket:true},
+    {title:'Projektleiter BIM Tiefbau',salary:'CHF 135-155k',pensum:'80-100%',status:'open',inBasket:true},
+    {title:'Bauleiter Hochbau Grossraum ZH',salary:'CHF 120-140k',pensum:'100%',status:'open'},
+    {title:'Kalkulator Tiefbau',salary:'CHF 110-130k',pensum:'100%',status:'open'},
+  ]},
+  {type:'account',name:'Marti AG',logo:'MAR',bg:'#6d4c41',loc:'Bern / St. Gallen',sector:'Tiefbau / Spezialtiefbau',jobs:[
+    {title:'GL-Mitglied Bau Region Ost',salary:'CHF 180-210k',pensum:'100%',mandat:'Einzelmandat',status:'open',inBasket:true},
+    {title:'Oberbauleiter Spezialtiefbau',salary:'CHF 160-180k',pensum:'100%',status:'open'},
+    {title:'Projektleiter Tunnelbau',salary:'CHF 145-165k',pensum:'100%',status:'open'},
+  ]},
+  {type:'account',name:'Strabag AG',logo:'STR',bg:'#8b5e3c',loc:'Winterthur',sector:'Infrastruktur',jobs:[
+    {title:'Abteilungsleiter Infrastruktur',salary:'CHF 150-175k',pensum:'100%',status:'open',inBasket:true},
+    {title:'Bauleiter Strassenbau',salary:'CHF 115-135k',pensum:'100%',status:'open'},
+  ]},
+  {type:'account',name:'Baumag AG',logo:'BAU',bg:'var(--teal)',loc:'Luzern',sector:'Tiefbau',jobs:[
+    {title:'Spartenleiter Tiefbau',salary:'CHF 160-185k',pensum:'100%',status:'open',inBasket:true},
+    {title:'Polier Tiefbau',salary:'CHF 90-110k',pensum:'100%',status:'open'},
+  ]},
+  {type:'account',name:'SBB Infrastruktur',logo:'SBB',bg:'#0d6efd',loc:'Zürich / Bern',sector:'Infrastruktur / Kunstbauten',jobs:[
+    {title:'Projektleiter Kunstbauten',salary:'CHF 140-160k',pensum:'100%',status:'open',inBasket:true},
+    {title:'Bauherrenvertreter Grossprojekt',salary:'CHF 155-175k',pensum:'100%',status:'open'},
+    {title:'Fachspezialist Geotechnik',salary:'CHF 125-145k',pensum:'80-100%',status:'open'},
+  ]},
+  {type:'account',name:'ARGE Limmattalbahn',logo:'ALB',bg:'#7c3aed',loc:'Zürich / Dietikon',sector:'Infrastruktur',jobs:[
+    {title:'Gesamtprojektleiter Limmattalbahn Etappe 3',salary:'CHF 165-190k',pensum:'100%',mandat:'Einzelmandat',status:'open'},
+    {title:'Bauingenieur Bahntechnik',salary:'CHF 120-140k',pensum:'100%',status:'open'},
+  ]},
+  {type:'account',name:'Kanton Zürich (TBA)',logo:'TBA',bg:'#0369a1',loc:'Zürich',sector:'Öffentlich / Tiefbau',jobs:[
+    {title:'Sektionsleiter Strassenbau',salary:'CHF 140-160k',pensum:'100%',status:'open'},
+    {title:'Projektleiter Hochwasserschutz',salary:'CHF 130-150k',pensum:'80-100%',status:'open'},
+  ]},
+  {type:'account',name:'Eiffage Suisse',logo:'EIF',bg:'#065f46',loc:'Luzern / Basel',sector:'Hochbau',jobs:[
+    {title:'Bereichsleiter Bau',salary:'CHF 170-200k',pensum:'100%',status:'open'},
+    {title:'Niederlassungsleiter Basel',salary:'CHF 155-180k',pensum:'100%',status:'filled'},
+  ]},
+];
+
+let searchFilter='all';
+function setFilter(f,el){
+  searchFilter=f;
+  document.querySelectorAll('.js-fp').forEach(p=>p.classList.toggle('active',p.dataset.f===f));
+  jobSearch(document.getElementById('jsInput').value);
+}
+window.setFilter=setFilter;
+
+function hl(text,q){
+  if(!q)return text;
+  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return text.replace(re,'<span class="js-hl">$1</span>');
+}
+
+function jobSearch(q){
+  const wrap=document.getElementById('jsResults');
+  const empty=document.getElementById('jsEmpty');
+  const clear=document.getElementById('jsClear');
+  q=q.trim();
+  clear.style.display=q?'flex':'none';
+  
+  if(!q||q.length<2){wrap.innerHTML='';empty.style.display='none';return}
+  
+  const ql=q.toLowerCase();
+  let html='';
+  let matchCount=0;
+  
+  // Search accounts
+  if(searchFilter==='all'||searchFilter==='account'){
+    const acctMatches=SEARCH_DATA.filter(a=>{
+      return a.name.toLowerCase().includes(ql)||
+             a.loc.toLowerCase().includes(ql)||
+             a.sector.toLowerCase().includes(ql)||
+             a.jobs.some(j=>j.title.toLowerCase().includes(ql));
+    });
+    if(acctMatches.length){
+      html+=`<div class="js-result-group"><div class="js-group-head">Accounts (${acctMatches.length})</div>`;
+      acctMatches.forEach((a,ai)=>{
+        const openJobs=a.jobs.filter(j=>j.status==='open'&&!j.inBasket).length;
+        const totalJobs=a.jobs.length;
+        const id='jsa'+ai;
+        html+=`<div class="js-item" onclick="document.getElementById('${id}').classList.toggle('open')">
+          <div class="js-item-logo" style="background:${a.bg}">${a.logo}</div>
+          <div class="js-item-info">
+            <div class="js-item-title">${hl(a.name,q)}</div>
+            <div class="js-item-meta">${hl(a.loc,q)} · ${hl(a.sector,q)} · ${totalJobs} Jobs (${openJobs} offen)</div>
+          </div>
+          <span class="js-acct-expand">${openJobs} verfügbare Jobs ▾</span>
+        </div>`;
+        // Sub-items: jobs under this account
+        html+=`<div class="js-acct-jobs" id="${id}">`;
+        a.jobs.forEach((j,ji)=>{
+          const isFilled=j.status==='filled';
+          const inB=j.inBasket;
+          html+=`<div class="js-sub-item">
+            <div class="js-sub-title">${hl(j.title,q)}</div>
+            <div class="js-sub-meta">${j.salary} · ${j.pensum}${j.mandat?' · <span style="color:var(--gold)">'+j.mandat+'</span>':''}</div>
+            <span class="js-item-badge ${isFilled?'js-badge-filled':inB?'js-badge-basket':'js-badge-open'}">${isFilled?'Besetzt':inB?'Im Basket':'Offen'}</span>
+            ${!isFilled&&!inB?`<button class="js-item-add" onclick="event.stopPropagation();this.textContent='✓ Hinzugefügt';this.classList.add('added')">+ Prelead</button>`:''}
+            ${inB?`<button class="js-item-remove" onclick="event.stopPropagation();this.textContent='✓ Entfernt';this.classList.add('removed')">✕ Entfernen</button>`:''}
+          </div>`;
+        });
+        html+=`</div>`;
+        matchCount++;
+      });
+      html+=`</div>`;
+    }
+  }
+  
+  // Search jobs directly
+  if(searchFilter==='all'||searchFilter==='job'){
+    const jobMatches=[];
+    SEARCH_DATA.forEach(a=>{
+      a.jobs.forEach(j=>{
+        if(j.title.toLowerCase().includes(ql)||a.name.toLowerCase().includes(ql)){
+          jobMatches.push({...j,account:a.name,logo:a.logo,bg:a.bg,loc:a.loc});
+        }
+      });
+    });
+    // Deduplicate with account section if showing both
+    if(searchFilter==='job'&&jobMatches.length){
+      html+=`<div class="js-result-group"><div class="js-group-head">Jobs (${jobMatches.length})</div>`;
+      jobMatches.forEach(j=>{
+        const isFilled=j.status==='filled';
+        const inB=j.inBasket;
+        html+=`<div class="js-item">
+          <div class="js-item-logo" style="background:${j.bg}">${j.logo}</div>
+          <div class="js-item-info">
+            <div class="js-item-title">${hl(j.title,q)}</div>
+            <div class="js-item-meta">
+              ${hl(j.account,q)} · ${j.loc} · ${j.salary} · ${j.pensum}
+              ${j.mandat?'<span class="js-item-tag js-item-tag-m">'+j.mandat+'</span>':''}
+            </div>
+          </div>
+          <span class="js-item-badge ${isFilled?'js-badge-filled':inB?'js-badge-basket':'js-badge-open'}">${isFilled?'Besetzt':inB?'Im Basket':'Offen'}</span>
+          ${!isFilled&&!inB?`<button class="js-item-add" onclick="event.stopPropagation();this.textContent='✓ Hinzugefügt';this.classList.add('added')">+ Prelead</button>`:''}
+          ${inB?`<button class="js-item-remove" onclick="event.stopPropagation();this.textContent='✓ Entfernt';this.classList.add('removed')">✕ Entfernen</button>`:''}
+        </div>`;
+        matchCount++;
+      });
+      html+=`</div>`;
+    }
+  }
+  
+  wrap.innerHTML=html;
+  empty.style.display=matchCount===0?'block':'none';
+  
+  // Auto-expand first account if searching
+  if(searchFilter!=='job'){
+    const first=wrap.querySelector('.js-acct-jobs');
+    if(first)first.classList.add('open');
+  }
+}
+window.jobSearch=jobSearch;
+
+// ===== REJECTION MODAL =====
+const rejOverlay=document.createElement('div');
+rejOverlay.className='rej-overlay';
+rejOverlay.id='rejOverlay';
+rejOverlay.innerHTML=`
+<div class="rej-modal">
+  <div class="rej-modal-title"><span style="color:var(--red)">✕</span> Job ablehnen</div>
+  <div class="rej-modal-sub" id="rejModalSub">Ablehnung wird im Jobbasket dokumentiert.</div>
+  <div class="rej-job-preview" id="rejPreview"></div>
+  <div class="rej-field">
+    <div class="rej-label">Abgelehnt von <span class="req">*</span></div>
+    <select class="rej-select" id="rejWho" onchange="checkRejForm()">
+      <option value="">— Bitte auswählen —</option>
+      <option value="candidate">Kandidat</option>
+      <option value="cm">CM (Candidate Manager)</option>
+      <option value="am">AM (Account Manager)</option>
+    </select>
+  </div>
+  <div class="rej-field">
+    <div class="rej-label">Grund <span class="req">*</span></div>
+    <select class="rej-select" id="rejReason" onchange="checkRejForm()">
+      <option value="">— Bitte auswählen —</option>
+      <option value="compensation">Lohn / Gesamtpaket nicht attraktiv</option>
+      <option value="role">Position / Aufgaben passen nicht</option>
+      <option value="company">Firma / Unternehmenskultur passt nicht</option>
+      <option value="location">Standort / Pendeldistanz passt nicht</option>
+      <option value="timing">Zeitpunkt für Wechsel nicht passend</option>
+      <option value="counter_offer">Gegenangebot vom aktuellen AG</option>
+      <option value="personal">Persönliche Gründe</option>
+      <option value="stay">Bleibt beim aktuellen AG</option>
+      <option value="unknown">Grund unbekannt</option>
+    </select>
+  </div>
+  <div class="rej-field">
+    <div class="rej-label">Kommentar <span style="color:var(--tm);font-weight:400;text-transform:none">(optional)</span></div>
+    <textarea class="rej-textarea" id="rejComment" placeholder="Zusätzliche Details zur Ablehnung…"></textarea>
+  </div>
+  <div class="rej-actions">
+    <button class="rej-btn rej-btn-cancel" onclick="closeRejModal()">Abbrechen</button>
+    <button class="rej-btn rej-btn-confirm" id="rejConfirm" disabled onclick="confirmRejection()">✕ Ablehnen</button>
+  </div>
+</div>`;
+document.body.appendChild(rejOverlay);
+rejOverlay.addEventListener('click',e=>{if(e.target===rejOverlay)closeRejModal()});
+
+let rejJobIdx=null;
+function openRejModal(idx){
+  rejJobIdx=idx;
+  const j=JOBS[idx];
+  document.getElementById('rejPreview').innerHTML=`<div class="jb-logo" style="background:${j.bg};color:#fff;width:32px;height:32px;font-size:9px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700">${j.logo}</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t1)">${j.title}</div><div style="font-size:10px;color:var(--t3)">${j.meta.replace(/<[^>]+>/g,'')}</div></div><div class="jb-stage-pill jb-sp-${j.stage}">${STAGES[j.stage]||'Prelead'}</div>`;
+  document.getElementById('rejWho').value='';
+  document.getElementById('rejReason').value='';
+  document.getElementById('rejComment').value='';
+  document.getElementById('rejConfirm').disabled=true;
+  rejOverlay.classList.add('open');
+}
+function closeRejModal(){rejOverlay.classList.remove('open');rejJobIdx=null}
+function checkRejForm(){
+  const w=document.getElementById('rejWho').value;
+  const r=document.getElementById('rejReason').value;
+  document.getElementById('rejConfirm').disabled=!(w&&r);
+}
+function confirmRejection(){
+  if(rejJobIdx===null)return;
+  // Demo: flash the card as rejected
+  const card=document.querySelector(`.jb-card[data-idx="${rejJobIdx}"]`);
+  if(card){card.style.transition='opacity .5s';card.style.opacity='.2';setTimeout(()=>{card.style.opacity='.45';card.classList.add('jb-rej-card')},600)}
+  closeRejModal();
+}
+window.openRejModal=openRejModal;window.closeRejModal=closeRejModal;window.checkRejForm=checkRejForm;window.confirmRejection=confirmRejection;
+
+// ===== STAGE FILTER =====
+let activeFilter=null;
+function filterByStage(stage,el){
+  const chips=document.querySelectorAll('.pipe-chip');
+  const cards=document.querySelectorAll('.jb-card');
+  const clear=document.getElementById('pipeClear');
+  const empty=document.getElementById('jbEmpty');
+  if(activeFilter===stage){clearFilter();return}
+  activeFilter=stage;
+  chips.forEach(c=>c.classList.remove('pc-active'));
+  el.classList.add('pc-active');
+  clear.classList.add('show');
+  let visible=0;
+  cards.forEach(c=>{
+    if(parseInt(c.dataset.stage)===stage){c.style.display='';visible++}
+    else c.style.display='none';
+  });
+  empty.style.display=visible===0?'block':'none';
+}
+function clearFilter(){
+  activeFilter=null;
+  document.querySelectorAll('.pipe-chip').forEach(c=>c.classList.remove('pc-active'));
+  document.getElementById('pipeClear').classList.remove('show');
+  document.querySelectorAll('.jb-card').forEach(c=>c.style.display='');
+  document.getElementById('jbEmpty').style.display='none';
+}
+window.filterByStage=filterByStage;window.clearFilter=clearFilter;
+
+// ===== SORT =====
+let currentSort='stage';
+function sortJobs(by){
+  currentSort=by;
+  const list=document.getElementById('jbList');
+  const cards=[...list.querySelectorAll('.jb-card')];
+  cards.sort((a,b)=>{
+    if(by==='stage'){
+      const sa=parseInt(a.dataset.stage),sb=parseInt(b.dataset.stage);
+      if(sa!==sb)return sa-sb;
+      return a.dataset.date<b.dataset.date?1:-1;
+    }
+    if(by==='date'){
+      const da=a.dataset.date.split('.').reverse().join(''),db=b.dataset.date.split('.').reverse().join('');
+      return db.localeCompare(da);
+    }
+    if(by==='account')return a.dataset.account.localeCompare(b.dataset.account);
+    return 0;
+  });
+  cards.forEach(c=>list.appendChild(c));
+  // Update menu check marks
+  document.querySelectorAll('.jb-sort-opt').forEach(o=>{
+    const isActive=o.getAttribute('onclick').includes(by);
+    o.classList.toggle('active',isActive);
+    o.querySelector('.sort-check').textContent=isActive?'✓':' ';
+  });
+  document.getElementById('sortMenu').classList.remove('open');
+}
+window.sortJobs=sortJobs;
+// Close sort menu on outside click
+document.addEventListener('click',e=>{if(!e.target.closest('.jb-sort-wrap'))document.getElementById('sortMenu').classList.remove('open')});
+
+// ===== KEYBOARD NAVIGATION =====
+let kbIdx=-1;
+function getVisibleCards(){return [...document.querySelectorAll('.jb-card')].filter(c=>c.style.display!=='none')}
+function setKbFocus(idx){
+  const cards=getVisibleCards();
+  document.querySelectorAll('.jb-card.kb-focus').forEach(c=>c.classList.remove('kb-focus'));
+  if(idx<0)idx=0;if(idx>=cards.length)idx=cards.length-1;
+  kbIdx=idx;
+  if(cards[kbIdx]){
+    cards[kbIdx].classList.add('kb-focus');
+    cards[kbIdx].scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+document.addEventListener('keydown',e=>{
+  // Ignore if typing in input/textarea/select
+  const tag=document.activeElement?.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;
+  // Ignore if modal open
+  if(rejOverlay.classList.contains('open')){
+    if(e.key==='Escape')closeRejModal();
+    return;
+  }
+  const cards=getVisibleCards();
+  if(e.key==='ArrowDown'){e.preventDefault();setKbFocus(kbIdx+1)}
+  else if(e.key==='ArrowUp'){e.preventDefault();setKbFocus(kbIdx-1)}
+  else if(e.key==='Enter'&&kbIdx>=0&&cards[kbIdx]){
+    e.preventDefault();
+    const bodyId=cards[kbIdx].querySelector('.jb-body')?.id;
+    if(bodyId)cards[kbIdx].classList.toggle('jb-collapsed');
+  }
+  else if(e.key==='s'||e.key==='S'){e.preventDefault();const inp=document.getElementById('jsInput');if(inp){inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'})}}
+  else if(e.key==='Escape'){if(activeFilter!==null)clearFilter();else{document.querySelectorAll('.jb-card.kb-focus').forEach(c=>c.classList.remove('kb-focus'));kbIdx=-1}}
+});
+</script>
+</body></html>

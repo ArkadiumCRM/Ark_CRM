@@ -1,0 +1,1201 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Kandidaten" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e10]: /
+      - generic [ref=e11]: Tobias Furrer
+    - generic [ref=e12]:
+      - generic [ref=e13]: ⌘K
+      - button "☀" [ref=e14] [cursor=pointer]
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - text: ℹ
+      - strong [ref=e17]: "Mockup-Demo:"
+      - text: Scraper-Fund für Kandidat (LinkedIn-Scraper detektiert Job-Wechsel · Werdegang-Updates · neue Stationen) —
+    - button "Banner anzeigen / ausblenden" [ref=e18] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e23]: TF
+      - generic "Foto hochladen" [ref=e24] [cursor=pointer]: +
+    - generic [ref=e25]:
+      - heading "Tobias Furrer 47 J. · Zollikon ZH" [level=1] [ref=e26]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - text: ✉
+          - link "tobias.furrer@gmail.com" [ref=e29] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e31]: 📞 +41 79 123 45 67
+        - generic [ref=e33]:
+          - text: 🔗
+          - link "LinkedIn" [ref=e34] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e36]: 🏢 Gesamtbauleiter Spezialtiefbau · Implenia AG
+      - generic [ref=e37]:
+        - generic [ref=e38]: Active Sourcing
+        - generic [ref=e39]: 🔥 Hot
+        - generic [ref=e40]: Grade A
+        - generic [ref=e41]: WM 4/8
+        - generic [ref=e42]: 📞 Erreichbar 14–17 Uhr
+        - generic [ref=e43]: ING
+      - generic [ref=e45]:
+        - text: Profilvollständigkeit ·
+        - strong [ref=e46]: 72 %
+      - generic [ref=e49]:
+        - button "📞 Anrufen" [ref=e50] [cursor=pointer]
+        - button "✉ Email" [ref=e51] [cursor=pointer]
+        - button "🔄 Stage ändern" [ref=e52] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e53] [cursor=pointer]
+        - button "📄 ARK-CV" [ref=e54] [cursor=pointer]
+    - generic [ref=e55]:
+      - 'button "Stage: GO schriftlich ▾" [ref=e57] [cursor=pointer]'
+      - generic [ref=e59]:
+        - text: CM
+        - strong [ref=e60]: JV
+        - text: · Researcher
+        - strong [ref=e61]: LR
+        - text: · Team ING & BT
+      - generic [ref=e63]:
+        - text: 🎯 in Prozess ·
+        - link "CFO-Suche Stage V" [ref=e64] [cursor=pointer]:
+          - /url: processes.html
+      - generic [ref=e65]:
+        - generic [ref=e66]: 🛡 Schutz bei 2 Accounts
+        - generic [ref=e67]: 7 Jobs im Basket
+  - generic [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]: 🎯 Ø Match-Score
+      - generic [ref=e71]: 84 %
+      - generic [ref=e72]: "Top-Job: 94 % (CFO)"
+    - generic [ref=e73]:
+      - generic [ref=e74]: 🧺 Im Jobbasket
+      - generic [ref=e75]: "7"
+      - generic [ref=e76]: Jobs · 1 versandt
+    - generic [ref=e77]:
+      - generic [ref=e78]: ⚙ Aktive Prozesse
+      - generic [ref=e79]: "1"
+      - generic [ref=e80]: CFO-Suche · Stage V
+    - generic [ref=e81]:
+      - generic [ref=e82]: 🔄 Refresh-Due
+      - generic [ref=e83]: in 12 d
+      - generic [ref=e84]: letzter Touch vor 18 d
+    - generic [ref=e85]:
+      - generic [ref=e86]: 🏆 Placements hist.
+      - generic [ref=e87]: "0"
+      - generic [ref=e88]: erster Prozess läuft
+    - generic [ref=e89]:
+      - generic [ref=e90]: 🎓 Assessments
+      - generic [ref=e91]: "2"
+      - generic [ref=e92]: ASSESS 5.0 · EQ 2.0
+  - navigation [ref=e93]:
+    - generic [ref=e94] [cursor=pointer]: 1Übersicht
+    - generic [ref=e95] [cursor=pointer]: 2Briefing
+    - generic [ref=e96] [cursor=pointer]: 3Werdegang
+    - generic [ref=e97] [cursor=pointer]: 4Assessment
+    - generic [ref=e98] [cursor=pointer]: 5Jobbasket
+    - generic [ref=e99] [cursor=pointer]: 6Prozesse
+    - generic [ref=e100] [cursor=pointer]: 7History
+    - generic [ref=e101] [cursor=pointer]: 8Dokumente
+    - generic [ref=e102] [cursor=pointer]: 9Dok.-Generator
+    - generic [ref=e103] [cursor=pointer]: 0Reminders
+  - generic [ref=e104]:
+    - text: ▾ ▾ ▾ ▾ × × ▾ ▾ ▾ ▾ ★ × × ▾ × × × ▾ × × × ▾ ★ ☆ × ▾ ★ ☆ × ▾ × × × × × × × × × ▾ ★ × × ▾ × × ×
+    - generic [ref=e1047]:
+      - generic [ref=e1048]:
+        - button "←" [ref=e1049] [cursor=pointer]
+        - generic [ref=e1050]: Briefing v3
+        - generic [ref=e1051]: aktuell
+        - button "→" [disabled] [ref=e1052] [cursor=pointer]
+        - generic [ref=e1053]:
+          - text: 28.03.2026 · erstellt von
+          - generic [ref=e1054]: JV
+          - text: · Call 45 min
+        - link "Versionsliste …" [ref=e1055] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e1056]: Autosave aktiv · zuletzt 14:22
+        - button "+ Neues Briefing" [ref=e1058] [cursor=pointer]
+      - generic [ref=e1059]:
+        - generic [ref=e1060]:
+          - generic [ref=e1061] [cursor=pointer]: 🎙 Gesprächsleitfaden · Live-Call
+          - generic [ref=e1062] [cursor=pointer]: 📋 Ausgefüllte Maske · Review & Nachbessern
+        - generic [ref=e1063]: Gesprächsleitfaden führt CM durch · Maske wird AI-befüllt und nachbearbeitet
+      - generic [ref=e1064]:
+        - generic [ref=e1065]: 🤖
+        - generic [ref=e1066]:
+          - strong [ref=e1067]: Briefing von AI aus Call-Transkript 05.04.2026 erstellt
+          - text: · 5 Felder zu prüfen. CM review & nachbessern — nie von 0 füllen.
+        - button "✓ Alle akzeptieren" [ref=e1068] [cursor=pointer]
+        - button "✕ Alle ablehnen" [ref=e1069] [cursor=pointer]
+        - button "×" [ref=e1070] [cursor=pointer]
+      - generic [ref=e1071]:
+        - generic [ref=e1072]:
+          - generic [ref=e1073]:
+            - generic [ref=e1074] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1075]: 1 · Gehalt & Vergütung
+              - generic [ref=e1077]: 11/13 · 85 %
+            - generic [ref=e1080]:
+              - generic [ref=e1081]:
+                - generic [ref=e1082]: Aktuell *
+                - generic [ref=e1085]:
+                  - textbox [ref=e1086]: 145'000
+                  - text: CHF
+              - generic [ref=e1087]:
+                - generic [ref=e1088]: Schmerzgrenze *
+                - generic [ref=e1091]:
+                  - textbox [ref=e1092]: 155'000
+                  - text: CHF
+              - generic [ref=e1093]:
+                - generic [ref=e1094]: Ziel *
+                - generic [ref=e1098]:
+                  - textbox [ref=e1099]: 165'000
+                  - text: CHF
+              - generic [ref=e1100]:
+                - text: 📊 Marktmedian
+                - strong [ref=e1101]: Gesamtbauleiter ZH
+                - text: ":"
+                - strong [ref=e1102]: CHF 152'000
+                - text: "· Range 135k–175k · Basis: 23 Kandidaten"
+            - generic [ref=e1103]:
+              - term [ref=e1104]: Lohnsituation
+              - definition [ref=e1105]:
+                - combobox [ref=e1106] [cursor=pointer]:
+                  - option "Unter Markt"
+                  - option "Leicht unter Markt"
+                  - option "Im Markt" [selected]
+                  - option "Leicht über Markt"
+                  - option "Über Markt"
+              - term [ref=e1107]: STI / Bonus (CHF)
+              - definition [ref=e1108]:
+                - generic [ref=e1109]:
+                  - generic [ref=e1110]: AI
+                  - textbox [ref=e1111]: 10'000
+                  - button "✓" [ref=e1112] [cursor=pointer]
+                  - button "✕" [ref=e1113] [cursor=pointer]
+              - term [ref=e1114]: LTI (CHF)
+              - definition [ref=e1115]:
+                - textbox [ref=e1116]: 5'000
+                - text: Kaderstock · 3-J-Vesting
+              - term [ref=e1117]: Spesen-Pauschale (CHF/Mt)
+              - definition [ref=e1118]:
+                - textbox [ref=e1119]: "800"
+            - heading "Spesen-Typen" [level=4] [ref=e1120]
+            - generic [ref=e1121]:
+              - generic [ref=e1122] [cursor=pointer]: Lunch CHF 20/Tag ✓
+              - generic [ref=e1123] [cursor=pointer]: Reisespesen pauschal ✓
+              - generic [ref=e1124] [cursor=pointer]: Parking
+              - generic [ref=e1125] [cursor=pointer]: Telefon ✓
+              - generic [ref=e1126] [cursor=pointer]: Sonstiges
+            - heading "Fahrzeug" [level=4] [ref=e1127]
+            - generic [ref=e1128]:
+              - term [ref=e1129]: Fahrzeug-Typ
+              - definition [ref=e1130]:
+                - combobox [ref=e1131] [cursor=pointer]:
+                  - option "Kein Fahrzeug"
+                  - option "Privat"
+                  - option "Geschäftlich" [selected]
+                  - option "Geschäftlich mit Privatnutzung"
+              - term [ref=e1132]: Fahrzeug-Abzug (CHF/Mt)
+              - definition [ref=e1133]:
+                - textbox [ref=e1134]: "200"
+              - term [ref=e1135]: ÖV-Abo-Wert (CHF/Jahr)
+              - definition [ref=e1136]:
+                - textbox [ref=e1137]: 4'860
+                - text: GA 1. Klasse
+            - heading "Benefits" [level=4] [ref=e1138]
+            - generic [ref=e1139]:
+              - generic [ref=e1140] [cursor=pointer]: 6 Wochen Ferien ✓
+              - generic [ref=e1141] [cursor=pointer]: Laptop + Smartphone ✓
+              - generic [ref=e1142] [cursor=pointer]: Kaderplan BVG ✓
+              - generic [ref=e1143] [cursor=pointer]: Weiterbildungs-Budget
+              - generic [ref=e1144] [cursor=pointer]: Home-Office-Pauschale −
+            - generic [ref=e1145]:
+              - strong [ref=e1146]: Total Compensation (TC) · auto-berechnet
+              - generic [ref=e1147]: CHF 168'200
+            - generic [ref=e1148]: "Formel: Fixlohn + STI + LTI + Spesen + ÖV-Abo/12 − Fahrzeug-Abzug"
+          - generic [ref=e1149]:
+            - generic [ref=e1150] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1151]: 2 · Arbeit & Verfügbarkeit
+              - generic [ref=e1152]: 7/7 · 100 %
+            - generic [ref=e1153]:
+              - term [ref=e1154]: Pensum aktuell *
+              - definition [ref=e1155]:
+                - combobox [ref=e1156] [cursor=pointer]:
+                  - option "40 %"
+                  - option "50 %"
+                  - option "60 %"
+                  - option "70 %"
+                  - option "80 %"
+                  - option "80–100 %"
+                  - option "100 %" [selected]
+              - term [ref=e1157]: Pensum gewünscht *
+              - definition [ref=e1158]:
+                - combobox [ref=e1159] [cursor=pointer]:
+                  - option "40 %"
+                  - option "50 %"
+                  - option "60 %"
+                  - option "70 %"
+                  - option "80 %"
+                  - option "80–100 %" [selected]
+                  - option "100 %"
+              - term [ref=e1160]: Anstellungssituation *
+              - definition [ref=e1161]:
+                - combobox [ref=e1162] [cursor=pointer]:
+                  - option "Festangestellt" [selected]
+                  - option "Temporär"
+                  - option "Selbstständig"
+                  - option "Arbeitssuchend"
+              - term [ref=e1163]: Kündigungsfrist *
+              - definition [ref=e1164]:
+                - combobox [ref=e1165] [cursor=pointer]:
+                  - option "Sofort"
+                  - option "1 Monat"
+                  - option "2 Monate"
+                  - option "3 Monate" [selected]
+                  - option "6 Monate"
+              - term [ref=e1166]: Verfügbar ab
+              - definition [ref=e1167]:
+                - textbox [ref=e1168]: 2026-08-01
+                - text: Freistellung evtl. 01.07.2026
+            - heading "Wechselmotivation * · 8-Stufen (1–3 grün · 4–5 amber · 6–8 rot · synced mit Header-Badge)" [level=4] [ref=e1169]
+            - generic [ref=e1170]:
+              - generic [ref=e1171] [cursor=pointer]:
+                - generic [ref=e1172]: "1"
+                - generic [ref=e1173]: Arbeitslos
+              - generic [ref=e1174] [cursor=pointer]:
+                - generic [ref=e1175]: "2"
+                - generic [ref=e1176]: Will/muss wechseln
+              - generic [ref=e1177] [cursor=pointer]:
+                - generic [ref=e1178]: "3"
+                - generic [ref=e1179]: Will wahrscheinlich wechseln
+              - generic [ref=e1180] [cursor=pointer]:
+                - generic [ref=e1181]: "4"
+                - generic [ref=e1182]: Wechselt bei gutem Angebot
+              - generic [ref=e1183] [cursor=pointer]:
+                - generic [ref=e1184]: "5"
+                - generic [ref=e1185]: Spekulativ
+              - generic [ref=e1186] [cursor=pointer]:
+                - generic [ref=e1187]: "6"
+                - generic [ref=e1188]: Wechselt intern, will abwarten
+              - generic [ref=e1189] [cursor=pointer]:
+                - generic [ref=e1190]: "7"
+                - generic [ref=e1191]: Will absolut nicht wechseln
+              - generic [ref=e1192] [cursor=pointer]:
+                - generic [ref=e1193]: "8"
+                - generic [ref=e1194]: Nicht mit ARK
+            - generic [ref=e1195]: "Aktuell Stufe 4 · Kandidat wechselt bei gutem Angebot. Hauptgrund: aktueller AG vor Übernahme durch PE."
+          - generic [ref=e1196]:
+            - generic [ref=e1197] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1198]: 3 · Mobilität
+              - generic [ref=e1199]: 5/5 · 100 %
+            - generic [ref=e1200]:
+              - term [ref=e1201]: Mobilität
+              - definition [ref=e1202]:
+                - generic [ref=e1203]:
+                  - generic [ref=e1204] [cursor=pointer]: Auto ×
+                  - generic [ref=e1205] [cursor=pointer]: ÖV ×
+                  - generic [ref=e1206] [cursor=pointer]: Fahrrad
+                  - generic [ref=e1207] [cursor=pointer]: Zu Fuss
+              - term [ref=e1208]: Arbeitsweg max.
+              - definition [ref=e1209]:
+                - combobox [ref=e1210] [cursor=pointer]:
+                  - option "15 min"
+                  - option "30 min"
+                  - option "45 min" [selected]
+                  - option "60 min"
+                  - option "90 min"
+                  - option "Egal"
+              - term [ref=e1211]: Umzugsbereitschaft
+              - definition [ref=e1212]:
+                - combobox [ref=e1213] [cursor=pointer]:
+                  - option "Ja, sofort"
+                  - option "Ja, bei richtigem Angebot"
+                  - option "Eher nein"
+                  - option "Nein" [selected]
+                  - option "Nur innerhalb Kanton"
+              - term [ref=e1214]: Homeoffice aktuell
+              - definition [ref=e1215]:
+                - combobox [ref=e1216] [cursor=pointer]:
+                  - option "0 %"
+                  - option "20 %"
+                  - option "40 %" [selected]
+                  - option "60 %"
+                  - option "80 %"
+                  - option "100 %"
+              - term [ref=e1217]: Homeoffice gewünscht
+              - definition [ref=e1218]:
+                - combobox [ref=e1219] [cursor=pointer]:
+                  - option "0 %"
+                  - option "20 %"
+                  - option "40 %"
+                  - option "60 %" [selected]
+                  - option "80 %"
+                  - option "100 %"
+            - heading "Akzeptable Regionen · synced mit Tab 1 Grossregion" [level=4] [ref=e1220]
+            - generic [ref=e1221]:
+              - generic [ref=e1222] [cursor=pointer]: Région lémanique
+              - generic [ref=e1223] [cursor=pointer]: Espace Mittelland
+              - generic [ref=e1224] [cursor=pointer]: Nordwestschweiz ×
+              - generic [ref=e1225] [cursor=pointer]: Zürich ×
+              - generic [ref=e1226] [cursor=pointer]: Ostschweiz
+              - generic [ref=e1227] [cursor=pointer]: Zentralschweiz ×
+              - generic [ref=e1228] [cursor=pointer]: Tessin
+          - generic [ref=e1229]:
+            - generic [ref=e1230] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1231]: 4 · Bewertung
+              - generic [ref=e1232]: 3/4 · 75 %
+            - generic [ref=e1233]:
+              - term [ref=e1234]: Grade * (synced mit Tab 1 Zuordnung)
+              - definition [ref=e1235]:
+                - generic [ref=e1236]:
+                  - generic [ref=e1237] [cursor=pointer]: A
+                  - generic [ref=e1238] [cursor=pointer]: B
+                  - generic [ref=e1239] [cursor=pointer]: C
+            - generic [ref=e1240]:
+              - generic [ref=e1241]:
+                - generic [ref=e1242]: GO-Themen
+                - textbox "Was den Kandidaten motiviert / worauf Fokus liegt …" [ref=e1244]: Strategisch-operative Projektsteuerung · Grossprojekte CHF 20–80 Mio. · BIM-Einführung · Teamführung 10+ FTE
+              - generic [ref=e1245]:
+                - generic [ref=e1246]: NO-GO-Themen · Ausschlusskriterien
+                - textbox "Was absolut nicht in Frage kommt …" [ref=e1248]: Keine reine Reporting-Rolle · Keine Unternehmen < 200 MA · Keine Versicherung/Bank · Standort ausserhalb CH
+            - heading "Bewertungs-Notizen" [level=4] [ref=e1249]
+            - textbox [ref=e1250]: Hoch motiviert, realistische Erwartungen, glaubwürdige Wechselabsicht. 1st Interview bei Bauherr Muster sehr positiv. A-Kandidat für Executive-Search.
+          - generic [ref=e1251]:
+            - generic [ref=e1252] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1253]: 5 · Kompetenzen
+              - generic [ref=e1254]: 3/4 · 75 %
+            - generic [ref=e1255]:
+              - generic [ref=e1256]:
+                - generic [ref=e1257]: Hardskills · Methoden
+                - textbox [ref=e1258]: SIA-Phasen 31/32/51 tiefes Know-how · BIM-basierte Planung · Lean Construction · Ausschreibungs-Management
+              - generic [ref=e1259]:
+                - generic [ref=e1260]: Social Skills
+                - textbox [ref=e1261]: Ruhiger Führungsstil · klare Kommunikation unter Druck · empathisch mit Bauleitern, durchsetzungsstark mit Bauherr
+              - generic [ref=e1262]:
+                - generic [ref=e1263]: Führungskompetenz
+                - textbox [ref=e1264]: 12 FTE direkt · 30 indirekt (Subunternehmer-Koordination) · situativ-coachend · Mentoring 3 Nachwuchs-PL
+              - generic [ref=e1265]:
+                - generic [ref=e1266]: Weitere Skills / Nachweise
+                - textbox "Zertifikate · Sprachen · Software-Expertise zusätzlich …" [ref=e1267]
+          - generic [ref=e1268]:
+            - generic [ref=e1269] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1270]: 6 · Persönlichkeit
+              - generic [ref=e1271]: 4/6 · 66 %
+            - generic [ref=e1272]:
+              - generic [ref=e1273]:
+                - generic [ref=e1274]: Selbstbild
+                - textbox [ref=e1275]: Analytisch, strukturiert, mit Leidenschaft fürs technische Detail und strategischen Überblick.
+              - generic [ref=e1276]:
+                - generic [ref=e1277]: Fremdbild
+                - textbox [ref=e1278]: Verlässlich, ruhig im Sturm, tendiert zu Perfektionismus. Team schätzt seine Geduld, Peers seine Klarheit.
+              - generic [ref=e1279]:
+                - generic [ref=e1280]: Motivation / Antrieb
+                - textbox [ref=e1281]: Komplexe Grossprojekte zum Erfolg führen · technische Innovation (BIM, Digitalisierung)
+              - generic [ref=e1282]:
+                - generic [ref=e1283]: Bedürfnisse
+                - textbox [ref=e1284]: Entscheidungsspielraum · klare Hierarchie · verlässliche Bauherrschaft · Zeit für strategische Planung
+              - generic [ref=e1285]:
+                - generic [ref=e1286]: Triggerpunkt / Wo er aussteigt
+                - textbox "Was ihn zum Wechsel zwingt …" [ref=e1287]
+              - generic [ref=e1288]:
+                - generic [ref=e1289]: Moderation / Coaching-Bedarf
+                - textbox "Wo CM moderieren muss …" [ref=e1290]
+          - generic [ref=e1291]:
+            - generic [ref=e1292] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1293]: 7 · Zonen-Modell (Sweet Spot)
+              - generic [ref=e1294]: 2/2 · 100 %
+            - paragraph [ref=e1295]: Wo fühlt sich der Kandidat ideal — wo arbeitet/lernt/performt er am besten? Qualitative Einschätzung des CM (kategorisch, nicht numerisch).
+            - generic [ref=e1296]: Sweet Spot des Kandidaten · wo er typischerweise am besten performt
+            - generic [ref=e1297]:
+              - generic [ref=e1298] [cursor=pointer]: Komfort
+              - generic [ref=e1299] [cursor=pointer]: Lern
+              - generic [ref=e1300] [cursor=pointer]: Wachstum · Sweet Spot
+              - generic [ref=e1301] [cursor=pointer]: Angst
+            - generic [ref=e1302]:
+              - generic [ref=e1303]:
+                - generic [ref=e1304]: Komfort-Zone
+                - textbox [ref=e1306]: Bauleitungs-Alltag im eigenen Sparten-Umfeld · Tiefbau-Konventionen · eingespielte Teams · Schweizer Regulatorik.
+              - generic [ref=e1307]:
+                - generic [ref=e1308]: Lern-Zone
+                - textbox [ref=e1310]: BIM-Methodik (aktuell Stufe 2, will auf 4) · Lean Construction · Digitalisierungs-Tools (Procore, Fieldwire).
+              - generic [ref=e1311]:
+                - generic [ref=e1312]: Wachstums-Zone · Sweet Spot
+                - textbox [ref=e1314]: Grossprojekte 20–80 Mio. mit 30–40 % Neuheitsgrad bei stabiler Team-Basis. Hier Sweet Spot.
+              - generic [ref=e1315]:
+                - generic [ref=e1316]: Angst-Zone · möglichst vermeiden
+                - textbox [ref=e1318]: 100 % Neuheitsgrad (völlig neue Branche) · reine Hands-off-Rollen ohne Team · politisches Projekt-Umfeld.
+          - generic [ref=e1319]:
+            - generic [ref=e1320] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1321]: 8 · Privat
+              - generic [ref=e1322]: 3/3 · 100 %
+            - generic [ref=e1323]:
+              - term [ref=e1324]: Zivilstand
+              - definition [ref=e1325]:
+                - combobox [ref=e1326] [cursor=pointer]:
+                  - option "ledig"
+                  - option "verheiratet" [selected]
+                  - option "geschieden"
+                  - option "verwitwet"
+                  - option "Partnerschaft"
+              - term [ref=e1327]: Kinder
+              - definition [ref=e1328]:
+                - combobox [ref=e1329] [cursor=pointer]:
+                  - option "0"
+                  - option "1"
+                  - option "2" [selected]
+                  - option "3"
+                  - option "4"
+                  - option "5+"
+                - text: "Alter: 12, 9"
+              - term [ref=e1330]: Leidenschaften · Hobbys
+              - definition [ref=e1331]:
+                - textbox [ref=e1332]: Skitouren (winters 15+ Tage) · Rennrad (Sommer-Touren im Tessin) · Klavier (Jazz)
+          - generic [ref=e1333]:
+            - generic [ref=e1334] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1335]: 9 · Sonstiges · Verpflichtungen
+              - generic [ref=e1336]: 2/4 · 50 %
+            - generic [ref=e1337]:
+              - term [ref=e1338]: Offene Bewerbungen
+              - definition [ref=e1339]:
+                - textbox [ref=e1340]: keine aktuell
+              - term [ref=e1341]: Andere Personaldienstleister
+              - definition [ref=e1342]:
+                - textbox [ref=e1343]: Meta Executive (loser Kontakt 2024) · keine aktive Mandat-Zusammenarbeit
+              - term [ref=e1344]: Verpflichtungen / Konkurrenzklausel
+              - definition [ref=e1345]:
+                - generic [ref=e1346]:
+                  - checkbox "Konkurrenzverbot aktiv" [checked] [ref=e1347]
+                  - text: Konkurrenzverbot aktiv
+                - generic [ref=e1348]:
+                  - textbox "Betrag CHF" [ref=e1349]: 30'000
+                  - combobox [ref=e1350] [cursor=pointer]:
+                    - option "3 Monate"
+                    - option "6 Monate" [selected]
+                    - option "12 Monate"
+                    - option "24 Monate"
+                - generic [ref=e1351]: CHF 30'000 · 6 Monate · wirkt nicht für CH-Bauindustrie (begrenzt auf Vorarlberg/SBB-Umfeld)
+          - generic [ref=e1352]:
+            - generic [ref=e1353] [cursor=pointer]:
+              - text: ▾
+              - generic [ref=e1354]: 10 · Besprochene Projekte · synced mit Tab 3 Werdegang
+              - button "+ Projekt verknüpfen" [ref=e1355]
+            - paragraph [ref=e1356]: Projekte die im Briefing-Gespräch referenziert wurden. Klick auf Row öffnet Drawer mit BKP/SIA/Rolle-Details (3-Tier).
+            - generic [ref=e1357] [cursor=pointer]:
+              - generic [ref=e1358]: SBB
+              - generic [ref=e1359]:
+                - strong [ref=e1360]: Tiefbauprojekt Bahnhof Zürich Erweiterung
+                - generic [ref=e1361]: ✓ verknüpft
+              - generic [ref=e1362]: Bauherr SBB AG · CHF 48 M · 2023–2025 · Rolle Gesamtbauleiter
+              - button "✎ Bearbeiten" [ref=e1363]
+              - button "✕" [ref=e1364]
+            - generic [ref=e1365] [cursor=pointer]:
+              - generic [ref=e1366]: A4
+              - generic [ref=e1367]:
+                - strong [ref=e1368]: Autobahn A4 Thalwil-Horgen
+                - generic [ref=e1369]: ✓ verknüpft
+              - generic [ref=e1370]: Bauherr ASTRA · CHF 35 M · 2024–heute · Rolle Gesamtbauleiter
+              - button "✎ Bearbeiten" [ref=e1371]
+              - button "✕" [ref=e1372]
+            - generic [ref=e1373] [cursor=pointer]:
+              - generic [ref=e1374]: "?"
+              - generic [ref=e1375]:
+                - strong [ref=e1376]: Tramlinie Zürich-Affoltern
+                - generic [ref=e1377]: 🤖 AI · fuzzy 72 %
+              - generic [ref=e1378]: Vorschlag aus Call-Transkript · 3 Projekte mit ähnlichem Namen gefunden
+              - button "✓ Match wählen" [ref=e1379]
+              - button "+ Neu anlegen" [ref=e1380]
+              - button "✕" [ref=e1381]
+        - generic [ref=e1382]:
+          - generic [ref=e1383]: Sektionen
+          - link "1 · Gehalt 85 %" [ref=e1384] [cursor=pointer]:
+            - /url: "#bf-1"
+            - text: 1 · Gehalt
+            - generic [ref=e1386]: 85 %
+          - link "2 · Arbeit 100 %" [ref=e1387] [cursor=pointer]:
+            - /url: "#bf-2"
+            - text: 2 · Arbeit
+            - generic [ref=e1389]: 100 %
+          - link "3 · Mobilität 100 %" [ref=e1390] [cursor=pointer]:
+            - /url: "#bf-3"
+            - text: 3 · Mobilität
+            - generic [ref=e1392]: 100 %
+          - link "4 · Bewertung 75 %" [ref=e1393] [cursor=pointer]:
+            - /url: "#bf-4"
+            - text: 4 · Bewertung
+            - generic [ref=e1395]: 75 %
+          - link "5 · Kompetenzen 75 %" [ref=e1396] [cursor=pointer]:
+            - /url: "#bf-5"
+            - text: 5 · Kompetenzen
+            - generic [ref=e1398]: 75 %
+          - link "6 · Persönlichkeit 66 %" [ref=e1399] [cursor=pointer]:
+            - /url: "#bf-6"
+            - text: 6 · Persönlichkeit
+            - generic [ref=e1401]: 66 %
+          - link "7 · Zonen 100 %" [ref=e1402] [cursor=pointer]:
+            - /url: "#bf-7"
+            - text: 7 · Zonen
+            - generic [ref=e1404]: 100 %
+          - link "8 · Privat 100 %" [ref=e1405] [cursor=pointer]:
+            - /url: "#bf-8"
+            - text: 8 · Privat
+            - generic [ref=e1407]: 100 %
+          - link "9 · Sonstiges 50 %" [ref=e1408] [cursor=pointer]:
+            - /url: "#bf-9"
+            - text: 9 · Sonstiges
+            - generic [ref=e1410]: 50 %
+          - link "10 · Projekte 100 %" [ref=e1411] [cursor=pointer]:
+            - /url: "#bf-10"
+            - text: 10 · Projekte
+            - generic [ref=e1413]: 100 %
+          - strong [ref=e1416]: "Gesamt: 85 %"
+          - generic [ref=e1419]: ⚠ 2 weiche Pflichtfelder offen
+      - generic [ref=e1420]:
+        - generic "Ungespeicherte Änderungen" [ref=e1421]
+        - generic [ref=e1422]:
+          - text: Letzte Änderung 14:22 · JV ·
+          - strong [ref=e1423]: 3 Sektionen dirty
+        - button "Abbrechen" [ref=e1424] [cursor=pointer]
+        - button "💾 Briefing speichern (alle Sektionen)" [ref=e1425] [cursor=pointer]
+    - text: ▾ ▾
+  - generic [ref=e512]:
+    - generic [ref=e513]: 1–0 Tabs
+    - generic [ref=e514]: ↑↓ Sektion
+    - generic [ref=e515]: Enter Auf-/Zuklappen
+    - generic [ref=e516]: E Edit
+    - generic [ref=e517]: S Save
+    - generic [ref=e518]: Esc Abbrechen
+    - generic [ref=e519]: T Theme
+    - generic [ref=e520]: ⌘K Suche
+  - generic [ref=e521]:
+    - generic [ref=e522]:
+      - generic [ref=e523]: +
+      - generic [ref=e524]:
+        - heading "Neues Projekt anlegen" [level=2] [ref=e525]
+        - generic [ref=e526]: Kein passendes Projekt gefunden (< 60 % Match)
+      - button "✕" [ref=e527] [cursor=pointer]
+    - generic [ref=e528]:
+      - generic [ref=e529]:
+        - heading "Pflichtfelder" [level=4] [ref=e530]
+        - generic [ref=e531]:
+          - term [ref=e532]: Projekt-Name *
+          - definition [ref=e533]:
+            - textbox "z.B. Wohnsiedlung Uetlihof" [ref=e534]
+          - term [ref=e535]: Bauherr *
+          - definition [ref=e536]:
+            - searchbox "Account suchen …" [ref=e537]
+          - term [ref=e538]: Zeitraum von *
+          - definition [ref=e539]:
+            - textbox [ref=e540]: 2023-04
+          - term [ref=e541]: Zeitraum bis *
+          - definition [ref=e542]:
+            - textbox [ref=e543]: 2025-06
+      - generic [ref=e544]:
+        - heading "Optional" [level=4] [ref=e545]
+        - generic [ref=e546]:
+          - term [ref=e547]: Standort
+          - definition [ref=e548]:
+            - textbox "Stadt / Kanton" [ref=e549]
+          - term [ref=e550]: Volumen-Range
+          - definition [ref=e551]:
+            - combobox [ref=e552] [cursor=pointer]:
+              - option "—" [selected]
+              - option "< 10 Mio."
+              - option "10–50 Mio."
+              - option "50–100 Mio."
+              - option "> 100 Mio."
+          - term [ref=e553]: Sparte
+          - definition [ref=e554]:
+            - generic [ref=e555]:
+              - generic [ref=e556] [cursor=pointer]: ARC
+              - generic [ref=e557] [cursor=pointer]: GT
+              - generic [ref=e558] [cursor=pointer]: ING
+              - generic [ref=e559] [cursor=pointer]: PUR
+              - generic [ref=e560] [cursor=pointer]: REM
+    - generic [ref=e561]:
+      - button "Abbrechen" [ref=e562] [cursor=pointer]
+      - button "Projekt anlegen & verknüpfen" [ref=e564] [cursor=pointer]
+  - generic [ref=e565]:
+    - generic [ref=e566]:
+      - generic [ref=e567]: ET
+      - generic [ref=e568]:
+        - heading "Bauingenieurwesen Master MSc ETH" [level=2] [ref=e569]:
+          - text: Bauingenieurwesen Master
+          - generic [ref=e570]: MSc ETH
+        - generic [ref=e571]: ETH Zürich · 2008 – 2013 · Vollzeit · Note Ø 5.6 · 🏆 Medaille
+      - button "×" [ref=e572] [cursor=pointer]
+    - generic [ref=e573]:
+      - generic [ref=e574] [cursor=pointer]: Basis
+      - generic [ref=e575] [cursor=pointer]: Inhalt & Schwerpunkte
+      - generic [ref=e576] [cursor=pointer]: Leistung
+      - generic [ref=e577] [cursor=pointer]: Nachweise
+    - generic [ref=e578]:
+      - generic [ref=e579]:
+        - generic [ref=e580]:
+          - generic [ref=e581]:
+            - generic [ref=e582]: 🎓
+            - heading "Ausbildungstyp" [level=3] [ref=e583]
+          - generic [ref=e584]:
+            - generic [ref=e585]:
+              - generic [ref=e586]: Bildungsgrad* dim_education_level
+              - combobox [ref=e587] [cursor=pointer]:
+                - option "MSc · Master of Science" [selected]
+                - option "BSc · Bachelor of Science"
+                - option "PhD · Doktorat"
+                - option "MBA · Master of Business Admin."
+                - option "MAS · Master of Advanced Studies"
+                - option "CAS · Certificate of Advanced Studies"
+                - option "DAS · Diploma of Advanced Studies"
+                - option "Berufslehre (EFZ/EBA)"
+                - option "Berufsmatura"
+                - option "Gymnasiale Matura"
+                - option "Höhere Fachschule (HF)"
+                - option "Weiterbildung · Kurs"
+                - option "Zertifikat · Modul"
+            - generic [ref=e588]:
+              - generic [ref=e589]: Studienform
+              - generic [ref=e590]:
+                - generic [ref=e591]: Vollzeit
+                - generic [ref=e592]: Berufsbegleitend
+                - generic [ref=e593]: Teilzeit
+                - generic [ref=e594]: Fernstudium
+            - generic [ref=e595]:
+              - generic [ref=e596]: Titel / Abschluss-Bezeichnung*
+              - textbox [ref=e597]: Bauingenieurwesen Master
+            - generic [ref=e598]:
+              - generic [ref=e599]: Fachrichtung / Studienrichtung
+              - textbox [ref=e600]: Konstruktiver Ingenieurbau, Geotechnik
+        - generic [ref=e601]:
+          - generic [ref=e602]:
+            - generic [ref=e603]: 🏫
+            - heading "Institution" [level=3] [ref=e604]
+          - generic [ref=e605]:
+            - generic [ref=e606]:
+              - generic [ref=e607]: Hochschule / Institut*
+              - generic [ref=e608]:
+                - textbox [ref=e609]: ETH Zürich · Eidgenössische Technische Hochschule
+                - button "→ Verknüpfen" [ref=e610] [cursor=pointer]
+            - generic [ref=e611]:
+              - generic [ref=e612]: Standort
+              - textbox [ref=e613]: Zürich
+            - generic [ref=e614]:
+              - generic [ref=e615]: Land
+              - combobox [ref=e616] [cursor=pointer]:
+                - option "Schweiz" [selected]
+                - option "Deutschland"
+                - option "Österreich"
+                - option "Andere"
+        - generic [ref=e617]:
+          - generic [ref=e618]:
+            - generic [ref=e619]: 📅
+            - heading "Zeitraum" [level=3] [ref=e620]
+            - generic [ref=e621]: bei Ausbildungen reichen Jahre
+          - generic [ref=e622]:
+            - generic [ref=e623]:
+              - generic [ref=e624]: Von*
+              - spinbutton [ref=e625]: "2008"
+            - generic [ref=e626]:
+              - generic [ref=e627]: Bis
+              - generic [ref=e628]:
+                - spinbutton [ref=e629]: "2013"
+                - generic [ref=e630]:
+                  - checkbox "laufend" [ref=e631]
+                  - text: laufend
+      - text: 🔍
+    - generic [ref=e632]:
+      - button "Abbrechen" [ref=e633] [cursor=pointer]
+      - button "🗑 Ausbildung löschen" [ref=e634] [cursor=pointer]
+      - button "Speichern" [ref=e635] [cursor=pointer]
+  - generic [ref=e636]:
+    - generic [ref=e637]:
+      - generic [ref=e638]: IM
+      - generic [ref=e639]:
+        - heading "Gesamtbauleiter Spezialtiefbau AKTUELL" [level=2] [ref=e640]:
+          - text: Gesamtbauleiter Spezialtiefbau
+          - generic [ref=e641]: AKTUELL
+        - generic [ref=e642]:
+          - text: Implenia AG · Zürich · 01/2023 – heute ·
+          - generic [ref=e643]: LinkedIn
+      - button "×" [ref=e644] [cursor=pointer]
+    - generic [ref=e645]:
+      - generic [ref=e646] [cursor=pointer]: Basis
+      - generic [ref=e647] [cursor=pointer]: Einordnung
+      - generic [ref=e648] [cursor=pointer]: Motivation
+      - generic [ref=e649] [cursor=pointer]: Verknüpfungen
+    - generic [ref=e650]:
+      - generic [ref=e651]:
+        - generic [ref=e652]:
+          - generic [ref=e653]:
+            - generic [ref=e654]: 📋
+            - heading "Station-Typ" [level=3] [ref=e655]
+          - generic [ref=e656]:
+            - generic [ref=e657]: ● Beruf
+            - generic [ref=e658]: Ausbildung
+            - generic [ref=e659]: Lücke / Sabbatical
+        - generic [ref=e660]:
+          - generic [ref=e661]:
+            - generic [ref=e662]: 💼
+            - heading "Position & Arbeitgeber" [level=3] [ref=e663]
+          - generic [ref=e664]:
+            - generic [ref=e665]:
+              - generic [ref=e666]: Position / Titel*
+              - textbox [ref=e667]: Gesamtbauleiter Spezialtiefbau
+            - generic [ref=e668]:
+              - generic [ref=e669]: Arbeitgeber · Account* Verknüpft mit dim_accounts · ID 412 · 9'000 MA
+              - generic [ref=e670]:
+                - textbox [ref=e671]: Implenia AG
+                - link "→ Account öffnen" [ref=e672] [cursor=pointer]:
+                  - /url: accounts.html
+            - generic [ref=e673]:
+              - generic [ref=e674]: Standort
+              - textbox [ref=e675]: Zürich
+            - generic [ref=e676]:
+              - generic [ref=e677]: Region (für Filter)
+              - combobox [ref=e678] [cursor=pointer]:
+                - option "Zürich" [selected]
+                - option "Bern"
+                - option "Basel"
+                - option "Zentralschweiz"
+                - option "Ostschweiz"
+                - option "Westschweiz"
+                - option "Tessin"
+        - generic [ref=e679]:
+          - generic [ref=e680]:
+            - generic [ref=e681]: 📅
+            - heading "Zeitraum" [level=3] [ref=e682]
+            - generic [ref=e683]: Format MM/YYYY
+          - generic [ref=e684]:
+            - generic [ref=e685]:
+              - generic [ref=e686]: Von*
+              - textbox [ref=e687]: 2023-01
+            - generic [ref=e688]:
+              - generic [ref=e689]: Bis
+              - generic [ref=e690]:
+                - textbox [ref=e691]: 2026-04
+                - generic [ref=e692]:
+                  - checkbox "heute" [checked] [ref=e693]
+                  - text: heute
+      - text: 🔍 🔍 └ 🔍
+    - generic [ref=e694]:
+      - button "Abbrechen" [ref=e695] [cursor=pointer]
+      - button "🗑 Station löschen" [ref=e696] [cursor=pointer]
+      - button "Speichern" [ref=e697] [cursor=pointer]
+  - generic [ref=e698]:
+    - generic [ref=e699]:
+      - generic [ref=e700]: SBB
+      - generic [ref=e701]:
+        - heading "Tiefbauprojekt Bahnhof Zürich Erweiterung" [level=2] [ref=e702]
+        - generic [ref=e703]: Werdegang-Projekt · bei Implenia · 2023 – 2025 · CHF 48 Mio.
+      - button "×" [ref=e704] [cursor=pointer]
+    - generic [ref=e705]:
+      - generic [ref=e706] [cursor=pointer]: Basis
+      - generic [ref=e707] [cursor=pointer]: Technik
+      - generic [ref=e708] [cursor=pointer]: Rolle
+      - generic [ref=e709] [cursor=pointer]: Kontext
+      - generic [ref=e710] [cursor=pointer]: Verknüpfungen
+    - generic [ref=e711]:
+      - generic [ref=e712]:
+        - generic [ref=e713]:
+          - generic [ref=e714]:
+            - generic [ref=e715]: 📋
+            - heading "Projekt-Stammdaten" [level=3] [ref=e716]
+          - generic [ref=e717]:
+            - generic [ref=e718]:
+              - generic [ref=e719]: Projekt-Name*
+              - textbox [ref=e720]: Tiefbauprojekt Bahnhof Zürich Erweiterung
+            - generic [ref=e721]:
+              - generic [ref=e722]: Bauherr · Account
+              - generic [ref=e723]:
+                - textbox [ref=e724]: SBB AG
+                - link "→ Account" [ref=e725] [cursor=pointer]:
+                  - /url: accounts.html
+            - generic [ref=e726]:
+              - generic [ref=e727]: Volumen (CHF)
+              - textbox [ref=e728]: 48'000'000
+            - generic [ref=e729]:
+              - generic [ref=e730]: Standort
+              - textbox [ref=e731]: Zürich HB
+        - generic [ref=e732]:
+          - generic [ref=e733]:
+            - generic [ref=e734]: 📅
+            - heading "Zeitraum" [level=3] [ref=e735]
+            - generic [ref=e736]: bei Projekten reichen Jahre
+          - generic [ref=e737]:
+            - generic [ref=e738]:
+              - generic [ref=e739]: Von
+              - spinbutton [ref=e740]: "2023"
+            - generic [ref=e741]:
+              - generic [ref=e742]: Bis
+              - spinbutton [ref=e743]: "2025"
+        - generic [ref=e744]:
+          - generic [ref=e745]:
+            - generic [ref=e746]: 📄
+            - heading "Sichtbarkeit" [level=3] [ref=e747]
+          - generic [ref=e748]:
+            - generic [ref=e749]: Ist im ARK-CV
+            - generic [ref=e750]:
+              - generic [ref=e751]: Ja · sichtbar
+              - generic [ref=e752]: Nein
+      - text: 🔍 └ └ 🔍 └ └ 🔍
+    - generic [ref=e753]:
+      - button "Abbrechen" [ref=e754] [cursor=pointer]
+      - button "🗑 Projekt aus Werdegang entfernen" [ref=e755] [cursor=pointer]
+      - button "Speichern & syncen" [ref=e756] [cursor=pointer]
+  - generic [ref=e757]:
+    - generic [ref=e758]:
+      - generic [ref=e759]: SBB
+      - generic [ref=e760]:
+        - heading "Tiefbauprojekt Bahnhof Zürich Erweiterung" [level=2] [ref=e761]
+        - generic [ref=e762]: Bauherr SBB AG · CHF 48 M · 2023–2025 · Zürich
+        - generic [ref=e763]:
+          - generic [ref=e764]: ✓ verknüpft
+          - generic [ref=e765]: aus Briefing v3
+      - button "✕" [ref=e766] [cursor=pointer]
+    - generic [ref=e767]:
+      - generic [ref=e768]:
+        - heading "Meine Beteiligung · SIA → BKP → Rolle" [level=4] [ref=e769]
+        - generic [ref=e770]:
+          - term [ref=e771]: 1. SIA-Phasen *
+          - definition [ref=e772]:
+            - generic [ref=e773]:
+              - generic [ref=e774]:
+                - text: 🔍
+                - textbox "Suchen in 18 SIA-Phasen (6 Haupt + 12 Teilphasen, SIA 112) …" [ref=e775]
+              - generic [ref=e776]:
+                - generic [ref=e777]:
+                  - text: 3 · Projektierung
+                  - generic [ref=e778] [cursor=pointer]: ×
+                - generic [ref=e779]:
+                  - text: └ 32 · Bauprojekt
+                  - generic [ref=e780] [cursor=pointer]: ×
+                - generic [ref=e781]:
+                  - text: 4 · Ausschreibung
+                  - generic [ref=e782] [cursor=pointer]: ×
+                - generic [ref=e783]:
+                  - text: └ 41 · Ausschreibung / Vergleich / Antrag
+                  - generic [ref=e784] [cursor=pointer]: ×
+                - generic [ref=e785]:
+                  - text: 5 · Realisierung
+                  - generic [ref=e786] [cursor=pointer]: ×
+                - generic [ref=e787]:
+                  - text: └ 52 · Ausführung
+                  - generic [ref=e788] [cursor=pointer]: ×
+              - text: └ └ └ └ └ └ └ └ └ └ └ └
+          - term [ref=e789]: 2. BKP-Leistungen *
+          - definition [ref=e790]:
+            - generic [ref=e791]:
+              - generic [ref=e792]:
+                - text: 🔍
+                - textbox "Suchen in 52 BKP-Codes (gefiltert nach SIA 3+4+5) …" [ref=e793]
+              - generic [ref=e794]:
+                - generic [ref=e795]:
+                  - text: 201 · Baugrubenaushub
+                  - generic [ref=e796] [cursor=pointer]: ×
+                - generic [ref=e797]:
+                  - text: 211 · Baumeisterarbeiten
+                  - generic [ref=e798] [cursor=pointer]: ×
+                - generic [ref=e799]:
+                  - text: 216 · Stahlbetonarbeiten Tiefbau
+                  - generic [ref=e800] [cursor=pointer]: ×
+                - generic [ref=e801]:
+                  - text: 239 · Spezialtiefbau
+                  - generic [ref=e802] [cursor=pointer]: ×
+            - generic [ref=e803]: Filter ändert sich live wenn SIA-Phasen oben geändert werden
+          - term [ref=e804]: 3. Rolle *
+          - definition [ref=e805]:
+            - generic [ref=e806]:
+              - generic [ref=e807]:
+                - text: 🔍
+                - textbox "Suchen in 190 Funktionen (Projektmanagement / Bauführung / Bauherrenberatung) …" [ref=e808]
+              - generic [ref=e810]:
+                - text: Gesamtbauleiter
+                - generic [ref=e811] [cursor=pointer]: ×
+            - generic [ref=e812]: Mehrfach-Auswahl möglich falls Kandidat im Projekt mehrere Rollen hatte
+          - term [ref=e813]: Verantwortungsgrad
+          - definition [ref=e814]:
+            - combobox [ref=e815] [cursor=pointer]:
+              - option "Führend" [selected]
+              - option "Mitarbeitend"
+              - option "Beratend"
+          - term [ref=e816]: Volumen / Umfang
+          - definition [ref=e817]:
+            - textbox "z.B. CHF 30 M von 48 M Projekt-Gesamt" [ref=e818]: CHF 30 M
+      - generic [ref=e819]:
+        - heading "Zeitraum der Beteiligung" [level=4] [ref=e820]
+        - generic [ref=e821]:
+          - textbox [ref=e822]: 2023-04
+          - text: bis
+          - textbox [ref=e823]: 2025-06
+          - generic [ref=e824]:
+            - checkbox "laufend" [ref=e825]
+            - text: laufend
+      - generic [ref=e826]:
+        - heading "Projekt-Details · Was / Wie / Wo / Wann / Wieso" [level=4] [ref=e827]
+        - paragraph [ref=e828]: Narrative Beschreibung der Kandidaten-Beteiligung. Dient später als Basis für ARK-CV + Exposé.
+        - generic [ref=e829]:
+          - generic [ref=e830]:
+            - generic [ref=e831]: Was & Wie — Aufgabe und Umsetzung
+            - textbox "Was hat er im Projekt konkret gemacht? Wie hat er es umgesetzt — Methoden, Tools, Herangehensweise?" [ref=e832]: Gesamt-Bauleitung der Tiefbau-Phase (Baugrubenaushub bis Rohbau Keller). BIM-basierte Bauausführung mit wöchentlichen Koordinations-Sitzungen. Abstimmung mit SBB-Planungsteam für Nacht-/Wochenendbetrieb ohne Zugunterbrechung.
+          - generic [ref=e833]:
+            - generic [ref=e834]: Wieso — Kontext / Besonderheit
+            - textbox "Was war das Besondere an diesem Projekt? Warum wurde er dafür ausgewählt? Welche Innovation / Komplexität?" [ref=e835]: "Ausgewählt wegen Erfahrung mit Spezialtiefbau bei sensiblen Infrastruktur-Projekten. Besonderheit: Bau unter laufendem Bahnbetrieb, keine Sperrpausen möglich. Erforderte 24/7-Schichtplanung."
+      - generic [ref=e836]:
+        - heading "Herausforderungen & Lessons Learned" [level=4] [ref=e837]
+        - textbox "Konkrete Krisen / Eskalationen · wie gelöst · was gelernt" [ref=e838]: "Hauptherausforderung: statische Setzungen im Bahnhofs-Untergrund während Aushub — erforderten kurzfristige Umplanung der Pfahlgründung. Gelöst mit Jet-Grouting statt klassischer Spundwand. Lesson: bei Infrastruktur-Projekten immer 2 Gründungs-Varianten in Ausschreibung."
+      - generic [ref=e839]:
+        - heading "Stakeholders & Beteiligte · Firmen und Personen" [level=4] [ref=e840]
+        - paragraph [ref=e841]: Bauherr · Behörden · Nutzer · beteiligte Firmen (andere Unternehmer) · Persönliche Ansprechpartner — wichtig für spätere Matching/Referenzen.
+        - generic [ref=e842]:
+          - generic [ref=e843]: Firmen / Institutionen
+          - generic [ref=e844]:
+            - generic [ref=e845]: Bauherr
+            - strong [ref=e847]: SBB AG
+            - generic [ref=e848]: Key Account · Herr Meier Projektleiter-Seite
+          - generic [ref=e849]:
+            - generic [ref=e850]: Generalplaner
+            - strong [ref=e852]: Basler & Hofmann
+            - generic [ref=e853]: Eingespielte Zusammenarbeit
+          - generic [ref=e854]:
+            - generic [ref=e855]: Spezialtiefbau-Partner
+            - strong [ref=e857]: Keller Grundbau
+            - generic [ref=e858]: Jet-Grouting-Spezialist
+          - generic [ref=e859]:
+            - generic [ref=e860]: Behörde
+            - strong [ref=e862]: BAV · Bundesamt für Verkehr
+            - generic [ref=e863]: strenge Auflagen Bahnbetrieb
+          - button "+ Firma / Institution" [ref=e865] [cursor=pointer]
+        - generic [ref=e866]:
+          - generic [ref=e867]: Personen / Namedropping · Autocomplete matcht bestehende Kandidaten-DB
+          - generic [ref=e868]:
+            - generic [ref=e869]: Chef (Implenia)
+            - generic [ref=e870]:
+              - strong [ref=e871]: Hans Baumann
+              - link "→ Kandidaten-Link" [ref=e872] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e873]: hat ihn geprägt, Mentor
+          - generic [ref=e874]:
+            - generic [ref=e875]: Kollege
+            - generic [ref=e876]:
+              - strong [ref=e877]: Martin Keller
+              - link "→ Kandidaten-Link" [ref=e878] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e879]: Lead Planer · jetzt bei Losinger
+          - generic [ref=e880]:
+            - generic [ref=e881]: Bauherrenvertreter
+            - generic [ref=e882]:
+              - strong [ref=e883]: Maria Huber
+              - generic [ref=e884]: nicht in DB
+            - generic [ref=e885]: als Kandidat anlegbar
+          - button "+ Person (mit Autocomplete)" [ref=e887] [cursor=pointer]
+      - generic [ref=e888]:
+        - heading "Interne Notizen / Tratsch · nur Arkadium" [level=4] [ref=e889]
+        - paragraph [ref=e890]: Informelle Anekdoten, Beobachtungen, Hintergründe über andere Beteiligte, Projekt-Politik — nichts davon landet in Kandidaten-CV oder Kunden-Unterlagen.
+        - textbox "Tratsch · Namedropping · Insider-Info …" [ref=e891]: Kandidat erwähnte dass Hans Baumann (sein damaliger Chef) kurz vor Übergabe mit Basler & Hofmann kollidiert ist wegen Honorar-Nachforderung — intern für Referenz-Check relevant. Martin Keller soll Gerüchten zufolge bei Losinger unglücklich sein und nach Wechsel-Optionen suchen. Bauherr SBB war am Anfang skeptisch gegenüber jungem BAL, am Ende sehr zufrieden.
+    - generic [ref=e892]:
+      - button "Abbrechen" [ref=e893] [cursor=pointer]
+      - button "✕ Beteiligung entfernen" [ref=e894] [cursor=pointer]
+      - button "💾 Speichern" [ref=e896] [cursor=pointer]
+  - generic [ref=e897]:
+    - generic [ref=e898]:
+      - generic [ref=e899]: ↑
+      - generic [ref=e900]:
+        - heading "Dokument hochladen" [level=2] [ref=e901]
+        - generic [ref=e902]: Kategorie wählen, Datei auswählen, optional verknüpfen
+      - button "✕" [ref=e903] [cursor=pointer]
+    - generic [ref=e905]:
+      - generic [ref=e906]:
+        - heading "Datei" [level=4] [ref=e907]
+        - generic [ref=e908] [cursor=pointer]:
+          - generic [ref=e909]: 📄
+          - generic [ref=e910]: Datei hierher ziehen oder klicken
+          - generic [ref=e911]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e912]:
+        - heading "Metadaten" [level=4] [ref=e913]
+        - generic [ref=e914]:
+          - generic [ref=e915]: Kategorie *
+          - combobox [ref=e916] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Original CV"
+            - option "Arbeitszeugnis"
+            - option "Diplom"
+            - option "Projektliste"
+            - option "Arbeitsvertrag"
+            - option "ARK CV"
+            - option "Abstract"
+            - option "Exposé"
+            - option "Assessment"
+            - option "Referenz"
+            - option "Sonstiges"
+          - generic [ref=e917]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e918]
+          - generic [ref=e919]: Notiz
+          - textbox "Kurz-Hinweis (optional) · z.B. Zeitraum, Firma, Kontext" [ref=e920]
+          - generic [ref=e921]: Verknüpfung
+          - combobox [ref=e922] [cursor=pointer]:
+            - option "Kandidat-Level (keine Verknüpfung)" [selected]
+            - option "Prozess · CFO-Suche"
+            - option "Prozess · Holbach CTO"
+            - option "Prozess · Pilatus CFO"
+            - option "Order ORD-2026-042"
+            - option "Order ORD-2025-118"
+          - generic [ref=e923]: Urheber
+          - generic [ref=e924]: Upload · JV (aktueller User · automatisch)
+          - generic [ref=e925]: Vertraulich
+          - generic [ref=e927]:
+            - checkbox "Zugriff nur AM + Zuständiger (z.B. Arbeitsvertrag)" [ref=e928]
+            - text: Zugriff nur AM + Zuständiger (z.B. Arbeitsvertrag)
+      - generic [ref=e929]:
+        - heading "Hinweise" [level=4] [ref=e930]
+        - generic [ref=e931]:
+          - strong [ref=e932]: ARK CV / Abstract / Exposé
+          - text: werden primär über
+          - emphasis [ref=e933]: Tab 9 · Dok-Generator
+          - text: erzeugt — hier nur Upload bestehender Versionen.
+          - strong [ref=e934]: Arbeitsverträge
+          - text: automatisch als vertraulich markiert.
+    - generic [ref=e935]:
+      - button "Abbrechen" [ref=e936] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e938] [cursor=pointer]
+  - generic [ref=e939]:
+    - generic [ref=e940]:
+      - generic [ref=e941]: PDF
+      - generic [ref=e942]:
+        - heading "Original-CV · Tobias Furrer" [level=2] [ref=e943]
+        - generic [ref=e944]: original_cv_furrer_2026-01.pdf · 640 KB · 12.01.2026
+        - generic [ref=e945]:
+          - generic [ref=e946]: Original CV
+          - generic [ref=e947]: Kandidat-Level
+      - button "✕" [ref=e948] [cursor=pointer]
+    - generic [ref=e949]:
+      - generic [ref=e950]:
+        - heading "Metadaten" [level=4] [ref=e951]
+        - generic [ref=e952]:
+          - term [ref=e953]: Dateiname
+          - definition [ref=e954]: original_cv_furrer_2026-01.pdf
+          - term [ref=e955]: Grösse
+          - definition [ref=e956]: 640 KB · 12 Seiten
+          - term [ref=e957]: Kategorie
+          - definition [ref=e958]: Original CV
+          - term [ref=e959]: Verknüpfung
+          - definition [ref=e960]: Kandidat-Level (keine Prozess-Verknüpfung)
+          - term [ref=e961]: Urheber
+          - definition [ref=e962]: Upload · Kandidat (selbst geliefert)
+          - term [ref=e963]: Erstellt
+          - definition [ref=e964]: 12.01.2026 · 14:32
+          - term [ref=e965]: Vertraulich
+          - definition [ref=e966]: Nein
+      - generic [ref=e967]:
+        - heading "Preview" [level=4] [ref=e968]
+        - generic [ref=e969]: "📄 PDF-Preview (in Produktion: inline PDF.js)"
+        - generic [ref=e970]:
+          - button "↓ Download" [ref=e971] [cursor=pointer]
+          - button "↗ In neuem Tab öffnen" [ref=e972] [cursor=pointer]
+          - button "✉ Per E-Mail senden" [ref=e973] [cursor=pointer]
+      - generic [ref=e974]:
+        - heading "Zugriffs-History" [level=4] [ref=e975]
+        - generic [ref=e976]:
+          - generic [ref=e979]:
+            - generic [ref=e980]:
+              - strong [ref=e981]: Heruntergeladen
+              - generic [ref=e982]: 02.04.2026 · 11:18 · JV
+            - generic [ref=e983]: Vorlage für ARK-CV-Generierung (Tab 9)
+          - generic [ref=e986]:
+            - generic [ref=e987]:
+              - strong [ref=e988]: Hochgeladen
+              - generic [ref=e989]: 12.01.2026 · 14:32 · Kandidat
+            - generic [ref=e990]: Per E-Mail-Antwort an Briefing-Termin-Einladung
+    - generic [ref=e991]:
+      - button "Schliessen" [ref=e992] [cursor=pointer]
+      - button "🗑 Archivieren" [ref=e994] [cursor=pointer]
+      - button "↓ Download" [ref=e995] [cursor=pointer]
+  - generic [ref=e996]:
+    - generic [ref=e997]:
+      - generic [ref=e998]: 💬
+      - generic [ref=e999]:
+        - heading "Event-Detail" [level=2] [ref=e1000]
+        - generic [ref=e1001]: —
+      - button "✕" [ref=e1002] [cursor=pointer]
+    - generic [ref=e1005]:
+      - button "Schliessen" [ref=e1006] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e1007] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e1008] [cursor=pointer]
+  - generic [ref=e1009]:
+    - generic [ref=e1010]:
+      - generic [ref=e1011]: ⏰
+      - generic [ref=e1012]:
+        - heading "Neuer Reminder" [level=2] [ref=e1013]
+        - generic [ref=e1014]: Erstelle einen Termin-, Follow-up- oder System-Reminder
+        - generic [ref=e1016]: neu
+      - button "✕" [ref=e1017] [cursor=pointer]
+    - generic [ref=e1018]:
+      - generic [ref=e1019]:
+        - heading "Reminder" [level=4] [ref=e1020]
+        - generic [ref=e1021]:
+          - generic [ref=e1022]: Titel *
+          - textbox "z.B. Coaching-Call vor 2nd Interview" [ref=e1023]
+          - generic [ref=e1024]: Typ *
+          - combobox [ref=e1025] [cursor=pointer]:
+            - option "Follow-up" [selected]
+            - option "Interview-Coaching"
+            - option "Debriefing"
+            - option "Schutzfrist"
+            - option "Onboarding"
+            - option "Check-In (30/90/365 d)"
+            - option "Garantie"
+            - option "Kandidaten-Refresh"
+            - option "Custom"
+          - generic [ref=e1026]: Fällig am *
+          - textbox [ref=e1027]
+          - generic [ref=e1028]: Zuständig *
+          - combobox [ref=e1029] [cursor=pointer]:
+            - option "JV" [selected]
+            - option "PW"
+            - option "LR"
+            - option "MF"
+            - option "NP"
+            - option "NS"
+            - option "Backoffice"
+          - generic [ref=e1030]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e1031]
+          - generic [ref=e1032]: Verknüpfung
+          - combobox [ref=e1033] [cursor=pointer]:
+            - option "Kandidat-Level (keine Verknüpfung)" [selected]
+            - option "Prozess · CFO-Suche"
+            - option "Prozess · Holbach CTO"
+            - option "Prozess · Pilatus CFO"
+            - option "Jobbasket"
+            - option "Assessment-Order ORD-2026-042"
+          - generic [ref=e1034]: Wiederholen
+          - combobox [ref=e1035] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+            - option "Quartalsweise"
+            - option "Jährlich"
+      - generic [ref=e1036]:
+        - heading "Benachrichtigung" [level=4] [ref=e1037]
+        - generic [ref=e1038]:
+          - generic [ref=e1039]: Vorlaufzeit
+          - combobox [ref=e1040] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e1041]: Eskalation
+          - generic [ref=e1042]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead (Standard-Regel)
+    - generic [ref=e1043]:
+      - button "Abbrechen" [ref=e1044] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e1046] [cursor=pointer]

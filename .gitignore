@@ -1,0 +1,61 @@
+# Backups (rotating, nicht checked-in)
+backups/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node (future code phase)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.*.local
+
+# Build artifacts (future)
+dist/
+build/
+.next/
+out/
+
+# Python (autoresearch prototype)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Large binaries we reference but don't version
+Grundlagen MD/*.xlsx
+
+# Audio/Video in raw (assessments, interviews, recordings — NEVER commit, 100MB+)
+raw/**/*.mp4
+raw/**/*.wav
+raw/**/*.mp3
+raw/**/*.m4a
+raw/**/*.mov
+raw/**/*.webm
+raw/**/*.mkv
+
+# Claude Code local state (sessions/cache — not project-config)
+.claude/settings.local.json
+
+# Unbenannt-Ordner (offensichtlich Temp)
+Unbenannt/
+Unbenannt.canvas
+
+# Temporary / staging
+*.tmp
+*.bak

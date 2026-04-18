@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+  /* === Dashboard-Customization (NEU v1.4) === */
+  .dashboard-controls {
+    display:flex; gap:8px; align-items:center; margin-left:16px;
+  }
+  .role-toggle {
+    position:relative; display:inline-block;
+  }
+  .role-toggle > button {
+    background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent);
+    padding:5px 12px; border-radius:3px; font-size:12px; font-weight:600; cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .role-toggle > button:hover { background:var(--accent); color:#fff; }
+  .role-popover {
+    display:none; position:absolute; top:calc(100% + 4px); right:0;
+    background:var(--surface); border:1px solid var(--border); border-radius:3px;
+    padding:4px 0; min-width:260px; z-index:30;
+    box-shadow:0 6px 16px rgba(0,0,0,0.12); font-size:12.5px;
+  }
+  .role-toggle.open .role-popover { display:block; }
+  .role-popover a {
+    display:block; padding:8px 14px; color:var(--text); text-decoration:none;
+  }
+  .role-popover a:hover { background:var(--bg); color:var(--accent); }
+  .role-popover a.active { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  .role-popover a .muted { font-size:10.5px; display:block; margin-top:2px; }
+  .role-popover .sep { border-top:1px solid var(--border); margin:4px 0; }
+
+  .edit-toggle-btn {
+    background:var(--surface); border:1px solid var(--border); color:var(--text-mid);
+    padding:5px 12px; border-radius:3px; font-size:12px; font-weight:500; cursor:pointer;
+  }
+  .edit-toggle-btn:hover { background:var(--bg); color:var(--text); }
+
+  /* === Edit-Modus === */
+  body[data-edit-mode="true"] .content {
+    background:color-mix(in srgb, var(--accent) 3%, transparent);
+  }
+  body[data-edit-mode="true"] .edit-toggle-btn {
+    background:var(--accent); color:#fff; border-color:var(--accent);
+  }
+  .edit-mode-banner {
+    display:none; position:sticky; top:0; z-index:40;
+    background:var(--accent); color:#fff; padding:10px 24px;
+    font-size:12.5px; justify-content:space-between; align-items:center;
+  }
+  body[data-edit-mode="true"] .edit-mode-banner { display:flex; }
+  .edit-mode-banner button {
+    background:#fff; color:var(--accent); border:none; padding:4px 12px;
+    border-radius:3px; font-size:11.5px; font-weight:600; cursor:pointer;
+  }
+  .edit-mode-banner button:hover { background:var(--accent-soft); }
+  .edit-mode-banner button.danger { background:transparent; color:#fff; border:1px solid #fff; }
+
+  /* === Widget-Rahmen im Edit-Modus === */
+  .widget[data-widget-key] { position:relative; transition:outline 0.15s; }
+  body[data-edit-mode="true"] .widget[data-widget-key] {
+    outline:2px dashed var(--accent); outline-offset:4px;
+  }
+  body[data-edit-mode="true"] .widget[data-widget-key][data-pinned="true"] {
+    outline-color:var(--gold);
+  }
+  .widget-edit-controls {
+    display:none; position:absolute; top:8px; right:8px; z-index:5;
+    gap:4px; background:var(--surface); padding:3px; border-radius:3px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.12);
+  }
+  body[data-edit-mode="true"] .widget[data-widget-key] .widget-edit-controls {
+    display:flex;
+  }
+  .widget-edit-controls button {
+    background:transparent; border:none; cursor:pointer; font-size:14px;
+    padding:2px 6px; color:var(--text-mid); border-radius:2px;
+  }
+  .widget-edit-controls button:hover { background:var(--bg); color:var(--accent); }
+  .widget-edit-controls button.danger:hover { background:color-mix(in srgb, var(--red) 12%, transparent); color:var(--red); }
+
+  .widget-drag-handle {
+    display:none; position:absolute; top:8px; left:8px; z-index:5;
+    cursor:grab; background:var(--surface); padding:3px 6px; border-radius:2px;
+    font-size:13px; color:var(--text-light); letter-spacing:-1px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.12);
+  }
+  body[data-edit-mode="true"] .widget[data-widget-key] .widget-drag-handle {
+    display:block;
+  }
+  .widget-drag-handle:active { cursor:grabbing; }
+
+  .pin-badge { display:none; font-size:10px; font-weight:600; color:var(--gold); background:var(--gold-soft); padding:0 5px; border-radius:2px; }
+  body[data-edit-mode="true"] .widget[data-pinned="true"] .pin-badge { display:inline-block; }
+
+  /* === Add-Widget-Drop im Edit-Modus === */
+  .add-widget-drop {
+    display:none; margin-top:20px; padding:32px; text-align:center;
+    border:2px dashed var(--border); border-radius:6px; color:var(--text-mid);
+    cursor:pointer; font-size:14px; background:var(--surface);
+    transition:all 0.15s;
+  }
+  body[data-edit-mode="true"] .add-widget-drop { display:block; }
+  .add-widget-drop:hover {
+    border-color:var(--accent); background:var(--accent-soft); color:var(--accent);
+  }
+
+  /* === Rollen-Welcome-Block (v1.4 Individualisierung) === */
+  .role-welcome {
+    background:var(--surface); border:1px solid var(--border); border-radius:4px;
+    padding:18px 24px; margin-bottom:20px; display:flex;
+    gap:20px; align-items:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.03);
+    border-left:4px solid var(--accent);
+  }
+  .role-welcome-icon {
+    width:54px; height:54px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+  }
+  .role-welcome-text { flex:1; min-width:220px; }
+  .role-welcome-text h2 {
+    margin:0; font-family:'Libre Baskerville',serif; font-size:20px;
+    color:var(--accent);
+  }
+  .role-welcome-text .greeting { font-size:12.5px; color:var(--text-mid); margin-top:2px; }
+  .role-welcome-text .subtitle { font-size:11.5px; color:var(--text-light); margin-top:4px; }
+
+  .role-welcome-kpis {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    flex:2 1 400px;
+  }
+  .role-welcome-kpi {
+    text-align:center; padding:6px 10px;
+    background:var(--bg); border-radius:3px; border:1px solid var(--border);
+  }
+  .role-welcome-kpi .k-lbl {
+    font-size:9.5px; text-transform:uppercase; letter-spacing:0.6px;
+    color:var(--text-light); font-weight:600;
+  }
+  .role-welcome-kpi .k-val {
+    font-family:'Libre Baskerville',serif; font-size:17px; font-weight:700;
+    margin-top:2px;
+  }
+
+  .role-welcome-actions {
+    display:flex; flex-direction:column; gap:6px; flex-shrink:0;
+  }
+  .role-welcome-actions a {
+    display:flex; align-items:center; gap:6px;
+    padding:6px 12px; background:var(--bg); border:1px solid var(--border);
+    border-radius:3px; font-size:12px; color:var(--text);
+    text-decoration:none; white-space:nowrap;
+    transition:all 0.15s;
+  }
+  .role-welcome-actions a:hover {
+    background:var(--accent-soft); color:var(--accent); border-color:var(--accent);
+  }
+  .role-welcome-actions a span.icon { font-size:14px; }
+
+  @media (max-width: 1279px) {
+    .role-welcome { flex-wrap:wrap; }
+    .role-welcome-kpis { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 767px) {
+    .role-welcome { display:none; }
+  }
+
+  /* === Tablet (641–960) === */
+  @media (max-width: 960px) and (min-width: 641px) {
+    .header { padding:10px 14px !important; }
+    .page-banner { padding:12px 16px !important; }
+    .kpi-strip { grid-template-columns:repeat(3,1fr) !important; gap:8px !important; }
+    .widget[data-size="quarter"] { grid-column:span 6; }
+    .widget[data-size="third"]   { grid-column:span 6; }
+  }
+
+  /* === Mobile-Responsive (< 640px) === */
+  @media (max-width: 640px) {
+    /* Header kompakt */
+    .header { padding:8px 12px !important; flex-wrap:wrap; gap:6px; }
+    .header-brand .brand-text { display:none; }
+    .breadcrumb { font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cmd-hint { display:none; }
+
+    /* Page-Banner stacked */
+    .page-banner { padding:12px 16px !important; }
+    .page-banner h1 { font-size:18px !important; }
+
+    /* Controls: Role-Switcher, Edit-Mode, Filters weg */
+    .role-toggle, .edit-toggle-btn { display:none; }
+
+    /* KPI-Strip 2 Spalten statt 5 */
+    .kpi-strip { grid-template-columns:repeat(2,1fr) !important; gap:6px !important; }
+    .kpi-card { padding:8px !important; }
+    .kpi-label { font-size:9px !important; }
+    .kpi-value { font-size:16px !important; }
+    .kpi-sub { font-size:9.5px !important; }
+
+    /* Grids stacken */
+    .grid-2 { grid-template-columns:1fr !important; }
+    .grid-2[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
+
+    /* Widget-Cards kompakter */
+    .card.widget { padding:10px 12px !important; }
+    .card-head { flex-wrap:wrap; gap:6px; }
+    .card-title { font-size:12.5px !important; }
+
+    /* data-mobile-Flags */
+    .widget[data-mobile="hidden"] { display:none !important; }
+    .widget[data-mobile="link-only"] .widget-body,
+    .widget[data-mobile="link-only"] table { display:none !important; }
+    .widget[data-mobile="link-only"] .widget-mobile-link { display:block !important; }
+
+    /* Tabellen horizontal scroll statt overflow-hidden */
+    .widget table { font-size:11px; }
+    .widget .widget-body { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+    /* Kein Pin-Badge / Edit-Icon floating */
+    .pin-badge { font-size:9px !important; padding:1px 6px !important; }
+
+    /* Content-Padding body */
+    main, .dashboard-main, body > div:not(.header):not(.page-banner) { padding:10px !important; }
+
+    /* Touch-Target-Mindestgrösse für Buttons */
+    .btn, .card-link, button { min-height:36px; }
+  }
+
+  @media (min-width: 768px) {
+    .widget-mobile-link { display:none; }
+  }
+
+  @media (max-width: 1279px) and (min-width: 961px) {
+    .widget[data-size="quarter"] { grid-column:span 6; }
+    .widget[data-size="third"]   { grid-column:span 6; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb"><span class="current">Dashboard</span></div>
+  <div class="dashboard-controls">
+    <!-- Role-Toggle (Q1=B aus Decisions) -->
+    <div class="role-toggle" id="roleToggle">
+      <button onclick="toggleRolePopover(event)" id="roleToggleBtn">👤 Admin <span style="font-size:9px">▼</span></button>
+      <div class="role-popover" id="rolePopover">
+        <a href="#" class="active" onclick="setActiveRole('Admin', event)">Admin <span class="muted">alle Widgets kombiniert · System-Health · Debug · Ops</span></a>
+        <a href="#" onclick="setActiveRole('HoD', event)">Head of <span class="muted">Sparte-Analytics · Team-KPIs · Time-to-Fill</span></a>
+        <div class="sep"></div>
+        <a href="#" onclick="setActiveRole('AM', event)">Account Manager <span class="muted">Mandate · Versand · AGB</span></a>
+        <a href="#" onclick="setActiveRole('CM', event)">Candidate Manager <span class="muted">Prozesse · Triage · Coaching</span></a>
+        <a href="#" onclick="setActiveRole('RA', event)">Research Analyst <span class="muted">Scraper · Longlist</span></a>
+        <a href="#" onclick="setActiveRole('BO', event)">Backoffice <span class="muted">Rechnungen · Credits</span></a>
+        <div class="sep"></div>
+        <a href="#" onclick="setActiveRole('Combined', event)">Combined <span class="muted">Deine Rollen (Admin + Account Manager)</span></a>
+      </div>
+    </div>
+    <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">✎ anpassen</button>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- Edit-Mode-Banner (Sticky oben im Edit-Modus) -->
+<div class="edit-mode-banner">
+  <div>✎ <strong>Dashboard-Edit-Modus</strong> · Widgets verschieben per Drag · ✕ entfernt · ⚙ konfiguriert · 🔒 gepinnte bleiben · Änderungen werden pro Rolle gespeichert</div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="danger" onclick="resetLayout()">↺ Auf Default zurücksetzen</button>
+    <button onclick="toggleEditMode()">💾 Speichern &amp; Beenden</button>
+  </div>
+</div>
+
+<div class="page-banner" style="padding:28px 32px">
+  <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:28px;color:var(--accent)">Dashboard</h1>
+  <div class="muted" style="margin-top:4px">Willkommen, Peter · 15.04.2026 · Dienstag</div>
+</div>
+
+<div class="content">
+
+  <!-- Rollen-spezifische Welcome-Row (v1.4 Individualisierung · wird via JS befüllt) -->
+  <div class="role-welcome" id="roleWelcome"></div>
+
+  <!-- KPI Row -->
+  <div class="kpi-strip widget" data-widget-key="kpi-strip" data-pinned="true" data-mobile="full" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;position:relative"><span class="pin-badge">🔒 gepinnt</span>
+    <div class="kpi-card"><div class="kpi-label">Umsatz YTD</div><div class="kpi-value" style="font-size:24px">CHF 1.2 M</div><div class="kpi-sub muted">+18 % vs. 2025</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--gold)">Placements YTD</div><div class="kpi-value" style="color:var(--gold)">18</div><div class="kpi-sub muted">Ziel 32 (56 %)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Offene Mandate</div><div class="kpi-value">14</div><div class="kpi-sub muted">8 Target · 4 Taskforce · 2 Time</div></div>
+    <div class="kpi-card"><div class="kpi-label">Aktive Prozesse</div><div class="kpi-value">47</div><div class="kpi-sub muted">über 31 Kandidaten</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--red)">Blocker</div><div class="kpi-value" style="color:var(--red)">3</div><div class="kpi-sub muted">1 Claim · 2 stale</div></div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Today's Agenda -->
+    <div class="card widget" data-widget-key="heute-agenda" data-pinned="false" data-mobile="full" data-size="half">
+      <div class="card-head"><div class="card-title">Heute · 15.04.2026 <span class="pin-badge">🔒 gepinnt</span></div><a href="#" class="card-link">→ Kalender</a></div>
+      <div class="list-item">
+        <div style="width:40px;text-align:center;font-family:'Libre Baskerville',serif"><div style="font-size:10px;color:var(--text-light)">09:30</div></div>
+        <div class="name"><strong>Coaching-Call Tobias Furrer</strong> vor 2nd Interview</div>
+        <div class="meta">30 min · Teams · Candidate Manager JV</div>
+        <span class="chip chip-red">Hoch</span>
+      </div>
+      <div class="list-item">
+        <div style="width:40px;text-align:center;font-family:'Libre Baskerville',serif"><div style="font-size:10px;color:var(--text-light)">11:00</div></div>
+        <div class="name"><strong>Update-Call Hans Müller</strong> (Bauherr Muster AG)</div>
+        <div class="meta">45 min · wöchentliches Mandats-Sparring</div>
+        <span class="chip">Normal</span>
+      </div>
+      <div class="list-item">
+        <div style="width:40px;text-align:center;font-family:'Libre Baskerville',serif"><div style="font-size:10px;color:var(--text-light)">14:30</div></div>
+        <div class="name"><strong>Mandats-Pitch Halter AG</strong></div>
+        <div class="meta">60 min · Neuakquise · GL-Meeting</div>
+        <span class="chip chip-gold">Neukunde</span>
+      </div>
+      <div class="list-item">
+        <div style="width:40px;text-align:center;font-family:'Libre Baskerville',serif"><div style="font-size:10px;color:var(--text-light)">16:00</div></div>
+        <div class="name"><strong>Team-Standup</strong></div>
+        <div class="meta">15 min · ING &amp; BT Team</div>
+      </div>
+    </div>
+
+    <!-- Pipeline Snapshot -->
+    <div class="card widget" data-widget-key="pipeline-snapshot" data-pinned="false" data-mobile="compact" data-size="half">
+      <div class="card-head"><div class="card-title">Pipeline-Snapshot <span class="pin-badge">🔒 gepinnt</span></div><a href="#" class="card-link">→ Prozesse</a></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="padding:12px;background:var(--bg);border-radius:3px;text-align:center"><div class="muted" style="font-size:10px;text-transform:uppercase">Stage V–VIII</div><div style="font-family:'Libre Baskerville',serif;font-size:24px;font-weight:700;color:var(--accent)">18</div><div style="font-size:11px">Late-Stage</div></div>
+        <div style="padding:12px;background:var(--gold-soft);border-radius:3px;text-align:center"><div class="muted" style="font-size:10px;text-transform:uppercase">Offer offen</div><div style="font-family:'Libre Baskerville',serif;font-size:24px;font-weight:700;color:var(--gold)">4</div><div style="font-size:11px;color:var(--gold)">kurz vor Placement</div></div>
+        <div style="padding:12px;background:color-mix(in srgb, var(--red) 8%, transparent);border-radius:3px;text-align:center"><div class="muted" style="font-size:10px;text-transform:uppercase">Stale</div><div style="font-family:'Libre Baskerville',serif;font-size:24px;font-weight:700;color:var(--red)">3</div><div style="font-size:11px;color:var(--red)">&gt; 14 d</div></div>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:3px;font-size:12.5px">
+        <strong>Erwartete Placements Q2/2026:</strong> 6–8 · Pipeline-Wert CHF 920k (Prognose 68 % Confidence)
+      </div>
+    </div>
+
+    <!-- Mein Fokus -->
+    <div class="card widget" data-widget-key="mein-fokus-woche" data-pinned="false" data-mobile="full" data-size="half">
+      <div class="card-head"><div class="card-title">Mein Fokus diese Woche <span class="pin-badge">🔒 gepinnt</span></div></div>
+      <div class="list-item"><div class="name">🎯 <strong>CFO-Suche abschliessen</strong></div><div class="meta">Bauherr Muster AG · Offer bis Fr erwartet</div></div>
+      <div class="list-item"><div class="name">⚡ <strong>PL Hochbau Taskforce Position 3/3</strong></div><div class="meta">letzter Kandidat Scoring · Assessment-Report ausstehend</div></div>
+      <div class="list-item"><div class="name">📋 <strong>Neues Mandat Halter AG</strong></div><div class="meta">Pitch heute 14:30 · Unterlagen bereit</div></div>
+      <div class="list-item"><div class="name">🛡 <strong>Claim-Fall Tobias Sommer</strong></div><div class="meta">Bauherr Muster AG · Fall Y klassifiziert · Rechnung erstellen</div></div>
+    </div>
+
+    <!-- Team-Board -->
+    <div class="card widget" data-widget-key="team-workload" data-pinned="false" data-mobile="hidden" data-size="half">
+      <div class="card-head"><div class="card-title">Team · Workload <span class="pin-badge">🔒 gepinnt</span></div><a href="#" class="card-link">→ Team</a></div>
+      <table class="data-table">
+        <thead><tr><th>MA</th><th>Offene Mandate</th><th>Aktive Prozesse</th><th>Ø Last</th></tr></thead>
+        <tbody>
+          <tr><td><span class="actor-chip">PW</span> Peter Wiederkehr</td><td>6</td><td>12</td><td><span style="color:var(--amber)">hoch</span></td></tr>
+          <tr><td><span class="actor-chip">JV</span> Jana Vogt</td><td>—</td><td>14</td><td><span style="color:var(--green)">gut</span></td></tr>
+          <tr><td><span class="actor-chip">LR</span> Laura Roth</td><td>—</td><td>8</td><td><span style="color:var(--green)">gut</span></td></tr>
+          <tr><td><span class="actor-chip">MF</span> Marco Frei</td><td>4</td><td>9</td><td><span style="color:var(--green)">gut</span></td></tr>
+          <tr><td><span class="actor-chip">NP</span> Nina Patek</td><td>2</td><td>4</td><td><span style="color:var(--text-light)">leicht</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pending Calls Widget (NEU v1.3 — Triage unklassifizierter Anrufe) -->
+  <div class="card widget" data-widget-key="pending-calls" data-pinned="true" data-mobile="compact" data-size="full">
+    <div class="card-head">
+      <div class="card-title">📞 Unklassifizierte Anrufe <span class="pin-badge">🔒 gepinnt</span> <span class="count" style="background:var(--gold-soft);color:var(--gold);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">7 pending</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Akteure</option><option>Meine</option><option>PW</option><option>JV</option><option>LR</option></select>
+        <select style="font-size:11px;padding:3px 6px"><option>Heute</option><option>Letzte 24 h</option><option>Diese Woche</option></select>
+        <a href="#" class="card-link">→ Alle</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">3CX-Auto-Import ohne Template-Match · AI-Vorschlag verfügbar · Bulk-Accept möglich</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th style="width:24px"><input type="checkbox"></th>
+          <th style="width:70px">Zeit</th>
+          <th>Caller</th>
+          <th>Dauer</th>
+          <th>AI-Vorschlag · Activity-Type</th>
+          <th style="width:70px">Akteur</th>
+          <th style="width:160px">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ROW 1: AI-Match hoher Konfidenz (Client Update) -->
+        <tr style="cursor:pointer" onclick="openCallDrawer(1)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>10:47</td>
+          <td><strong>Hans Müller</strong> <span class="muted">(Bauherr Muster AG · CEO)</span><br><span class="muted" style="font-size:10.5px">+41 44 555 12 34 · outbound · 3CX</span></td>
+          <td>8:32 min</td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#15 Erreicht - Update Call</span> <span class="muted" style="font-size:10px">92 %</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openCallDrawer(1)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 2: AI-Match mittlere Konfidenz (Kandidat-Coaching) -->
+        <tr style="cursor:pointer" onclick="openCallDrawer(2)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>10:12</td>
+          <td><strong>Tobias Furrer</strong> <span class="muted">(Kandidat · CFO-Prozess)</span><br><span class="muted" style="font-size:10.5px">+41 78 234 56 78 · inbound · 3CX</span></td>
+          <td>4:18 min</td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#38 Erreicht - Coaching 2nd Interview</span> <span class="muted" style="font-size:10px">87 %</span></td>
+          <td><span class="actor-chip">JV</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openCallDrawer(2)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 3: Unbekannter Caller → Activity #118 unklassifiziert -->
+        <tr style="cursor:pointer" onclick="openCallDrawer(3)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>09:58</td>
+          <td><strong>+41 41 123 45 67</strong> <span class="muted">(unbekannter Caller)</span><br><span class="muted" style="font-size:10.5px">inbound · 3CX · keine Kontakt-Zuordnung</span></td>
+          <td>0:48 min</td>
+          <td><span class="chip" style="background:#fef3c7;color:#92400e">#118 Kommunikation - Eingehender Anruf (unklassifiziert)</span></td>
+          <td><span class="muted">—</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm">👤 Zuordnen</button>
+            <button class="btn btn-sm" onclick="openCallDrawer(3)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 4: Voicemail (inbound) mit AI-Vorschlag -->
+        <tr style="cursor:pointer" onclick="openCallDrawer(4)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>09:15</td>
+          <td><strong>Eva Studer</strong> <span class="muted">(Bauherr Muster AG · HR-L)</span><br><span class="muted" style="font-weight:400;font-size:10.5px">📭 Voicemail · 0:42 s · Transkript verfügbar</span></td>
+          <td>0:42 s</td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#15 Erreicht - Update Call</span> <span class="muted" style="font-size:10px">89 % · Transkript-basiert</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openCallDrawer(4)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 5: Verpasst (Activity #119) -->
+        <tr style="cursor:pointer" onclick="openCallDrawer(5)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>Gestern 16:42</td>
+          <td><strong>Marco Gerber</strong> <span class="muted">(Kandidat · Pilatus-CFO-Prozess)</span><br><span class="muted" style="font-weight:400;font-size:10.5px">🔔 Verpasst · keine Voicemail · Rückruf fällig</span></td>
+          <td>—</td>
+          <td><span class="chip" style="background:#fee2e2;color:#991b1b">#119 Kommunikation - Anruf verpasst</span></td>
+          <td><span class="actor-chip">JV</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm">📞 Rückruf</button>
+            <button class="btn btn-sm" onclick="openCallDrawer(5)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:12px">
+      <div>
+        <button class="btn btn-sm">✓ 5 ausgewählte annehmen</button>
+        <button class="btn btn-sm">⚡ Alle AI-Vorschläge mit ≥ 90 % automatisch akzeptieren</button>
+      </div>
+      <div class="muted">Ø Klassifizierungs-Dauer: 38 s · AI-Treffgenauigkeit letzte 7 d: 89 %</div>
+    </div>
+  </div>
+
+  <!-- Pending Emails Widget (NEU v1.3 — Triage unklassifizierter Emails, analog Call-Widget) -->
+  <div class="card widget" data-widget-key="pending-emails" data-pinned="true" data-mobile="compact" data-size="full">
+    <div class="card-head">
+      <div class="card-title">✉️ Unklassifizierte Emails <span class="pin-badge">🔒 gepinnt</span> <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">4 pending</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Akteure</option><option>Meine</option><option>PW</option><option>JV</option><option>LR</option></select>
+        <select style="font-size:11px;padding:3px 6px"><option>Heute</option><option>Letzte 24 h</option><option>Diese Woche</option></select>
+        <a href="#" class="card-link">→ Alle</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Outlook/Gmail-Auto-Import ohne Template-Match · AI-Vorschlag verfügbar · Bulk-Accept möglich</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th style="width:24px"><input type="checkbox"></th>
+          <th style="width:70px">Zeit</th>
+          <th>Absender · Betreff</th>
+          <th>Thread</th>
+          <th>AI-Vorschlag · Activity-Type</th>
+          <th style="width:70px">Akteur</th>
+          <th style="width:160px">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ROW 1: AI-Match hoher Konfidenz (GO-Confirmation) -->
+        <tr style="cursor:pointer" onclick="openEmailDrawer(1)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>11:03</td>
+          <td><strong>Eva Studer</strong> <span class="muted">(Bauherr Muster AG · HR-L)</span><br><span class="muted" style="font-size:10.5px">Re: Shortlist CFO-Suche — Freigabe</span></td>
+          <td><span class="muted" style="font-size:11px">3 Nachrichten</span></td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#29 Emailverkehr - Schriftliche GOs</span> <span class="muted" style="font-size:10px">94 %</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openEmailDrawer(1)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 2: Unknown Sender → #120 unklassifiziert -->
+        <tr style="cursor:pointer" onclick="openEmailDrawer(2)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>10:21</td>
+          <td><strong>john.smith@external.com</strong> <span class="muted">(unbekannter Absender)</span><br><span class="muted" style="font-size:10.5px">Anfrage bezüglich offener CFO-Position — Initiativbewerbung?</span></td>
+          <td><span class="muted" style="font-size:11px">1 Nachricht</span></td>
+          <td><span class="chip" style="background:#fef3c7;color:#92400e">#120 Kommunikation - Eingehende Email (unklassifiziert)</span></td>
+          <td><span class="muted">—</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm">👤 Zuordnen</button>
+            <button class="btn btn-sm" onclick="openEmailDrawer(2)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 3: Bounce (Activity #103 auto-logged) -->
+        <tr style="cursor:pointer" onclick="openEmailDrawer(3)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>09:48</td>
+          <td><strong>Mail Delivery Subsystem</strong> <span class="muted">(mailer-daemon@outlook.com)</span><br><span class="muted" style="font-size:10.5px">Undeliverable: t.sommer@alt-firma.ch — Mailbox not found</span></td>
+          <td><span class="muted" style="font-size:11px">Bounce</span></td>
+          <td><span class="chip" style="background:#fee2e2;color:#991b1b">#103 Emailverkehr - Bounce</span> <span class="muted" style="font-size:10px">auto</span></td>
+          <td><span class="actor-chip actor-system">integration</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm">✏️ Adresse prüfen</button>
+            <button class="btn btn-sm" onclick="openEmailDrawer(3)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 4: Kandidat-Response mit AI-Vorschlag -->
+        <tr style="cursor:pointer" onclick="openEmailDrawer(4)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>09:15</td>
+          <td><strong>Tobias Furrer</strong> <span class="muted">(Kandidat)</span><br><span class="muted" style="font-size:10.5px">Re: Termin-Vorschlag 2nd Interview — Bestätigung</span></td>
+          <td><span class="muted" style="font-size:11px">5 Nachrichten</span></td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#22 Emailverkehr - Allgemeine Kommunikation</span> <span class="muted" style="font-size:10px">78 %</span></td>
+          <td><span class="actor-chip">JV</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openEmailDrawer(4)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+        <!-- ROW 5: AGB-Confirmation hoher Konfidenz -->
+        <tr style="cursor:pointer" onclick="openEmailDrawer(5)">
+          <td onclick="event.stopPropagation()"><input type="checkbox"></td>
+          <td>Gestern 17:02</td>
+          <td><strong>Hans Müller</strong> <span class="muted">(Bauherr Muster AG · CEO)</span><br><span class="muted" style="font-size:10.5px">AGB Erfolgsbasis — hiermit bestätigt</span></td>
+          <td><span class="muted" style="font-size:11px">2 Nachrichten</span></td>
+          <td><span class="chip" style="background:#ede9fe;color:#6d28d9">#54 Erfolgsbasis - AGB bestätigt</span> <span class="muted" style="font-size:10px">96 %</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td onclick="event.stopPropagation()">
+            <button class="btn btn-sm btn-primary">✓ Annehmen</button>
+            <button class="btn btn-sm" onclick="openEmailDrawer(5)" title="Details in Drawer öffnen">⋯</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:12px">
+      <div>
+        <button class="btn btn-sm">✓ 4 ausgewählte annehmen</button>
+        <button class="btn btn-sm">⚡ Alle AI-Vorschläge mit ≥ 90 % automatisch akzeptieren</button>
+      </div>
+      <div class="muted">Ø Klassifizierungs-Dauer: 24 s · AI-Treffgenauigkeit letzte 7 d: 92 %</div>
+    </div>
+  </div>
+
+  <!-- ==================== P0 WIDGETS (visible by default) ==================== -->
+
+  <!-- WIDGET P0-1: To-Send-Inbox (CV-Versand-Station) -->
+  <div class="card widget" data-widget-key="to-send-inbox" data-pinned="true" data-mobile="compact" data-size="full">
+    <div class="card-head">
+      <div class="card-title">📤 To-Send-Inbox · CV-Versand bereit <span class="pin-badge">🔒 gepinnt</span> <span class="count" style="background:var(--gold-soft);color:var(--gold);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">6 bereit</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Akteure</option><option>Meine</option><option>PW</option><option>JV</option><option>LR</option></select>
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Accounts</option><option>Bauherr Muster</option><option>Volare Group</option><option>Halter AG</option><option>Pilatus Bau</option></select>
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Mandate</option><option>Target</option><option>Taskforce</option><option>Time</option></select>
+        <select style="font-size:11px;padding:3px 6px"><option>Heute</option><option>Diese Woche</option></select>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Kandidaten mit ARK-CV + Dokumenten vollständig · AGB-Status geprüft · Versand mit 1 Click</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th style="width:24px"><input type="checkbox"></th>
+          <th>Kandidat</th>
+          <th>Kunde</th>
+          <th>Prozess / Mandat</th>
+          <th style="width:110px;text-align:center">Dokumente</th>
+          <th style="width:90px">AGB</th>
+          <th style="width:60px">Akteur</th>
+          <th style="width:180px">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><input type="checkbox" checked></td>
+          <td><strong>T. Furrer</strong></td>
+          <td>Bauherr Muster AG</td>
+          <td>CFO · Target</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom" style="color:var(--green)">●</span>
+            <span title="Zeugnis" style="color:var(--green)">●</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">✓ bestätigt</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td><button class="btn btn-sm btn-primary">📤 Versenden</button></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" checked></td>
+          <td><strong>M. Gerber</strong></td>
+          <td>Bauherr Muster AG</td>
+          <td>CFO · Target</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom" style="color:var(--green)">●</span>
+            <span title="Zeugnis" style="color:var(--green)">●</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">✓ bestätigt</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td><button class="btn btn-sm btn-primary">📤 Versenden</button></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox"></td>
+          <td><strong>S. Burri</strong></td>
+          <td>Volare Group</td>
+          <td>COO · Taskforce</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom fehlt" style="color:var(--red)">○</span>
+            <span title="Zeugnis" style="color:var(--text-light)">—</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">✓ bestätigt</span></td>
+          <td><span class="actor-chip">JV</span></td>
+          <td><button class="btn btn-sm" style="color:var(--amber);border-color:var(--amber)">⚠ Diplom nachfordern</button></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" checked></td>
+          <td><strong>J. Meier</strong></td>
+          <td>Halter AG</td>
+          <td>Head of Finance · Erfolgsbasis</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom" style="color:var(--green)">●</span>
+            <span title="Zeugnis" style="color:var(--green)">●</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#fee2e2;color:#991b1b">⚠ AGB fehlt</span></td>
+          <td><span class="actor-chip">LR</span></td>
+          <td><button class="btn btn-sm" style="color:var(--red);border-color:var(--red)">⚠ AGB anfordern</button></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" checked></td>
+          <td><strong>R. Weber</strong></td>
+          <td>Pilatus Bau</td>
+          <td>PL Tiefbau · Target</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom" style="color:var(--green)">●</span>
+            <span title="Zeugnis" style="color:var(--green)">●</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">✓ bestätigt</span></td>
+          <td><span class="actor-chip">MF</span></td>
+          <td><button class="btn btn-sm btn-primary">📤 Versenden</button></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox"></td>
+          <td><strong>L. Spengler</strong></td>
+          <td>Volare Group</td>
+          <td>HR-Business · Taskforce</td>
+          <td style="text-align:center">
+            <span title="ARK-CV" style="color:var(--green)">●</span>
+            <span title="Diplom" style="color:var(--green)">●</span>
+            <span title="Zeugnis" style="color:var(--green)">●</span>
+            <span title="Briefing" style="color:var(--green)">●</span>
+          </td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">✓ bestätigt</span></td>
+          <td><span class="actor-chip">JV</span></td>
+          <td><button class="btn btn-sm btn-primary">📤 Versenden</button></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:12px">
+      <div>
+        <button class="btn btn-sm btn-primary">✓ 4 ausgewählte versenden</button>
+        <button class="btn btn-sm">📦 Dossier-Preview</button>
+      </div>
+      <div class="muted">Ø CV-Versand → Interview: 4.2 d · AGB-Quote: 94 %</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- WIDGET P0-2: Meine überfälligen Reminders -->
+    <div class="card widget" data-widget-key="meine-reminders" data-pinned="false" data-mobile="full" data-size="half">
+      <div class="card-head">
+        <div class="card-title">🔔 Meine überfälligen Reminders <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">3 überfällig</span> <span class="count" style="background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:4px">5 heute</span></div>
+        <select style="font-size:11px;padding:3px 6px"><option>Alle</option><option>Überfällig</option><option>Heute</option><option>Diese Woche</option></select>
+      </div>
+
+      <div class="list-item">
+        <div style="width:72px"><span class="chip" style="background:#fee2e2;color:#991b1b">3 d überfällig</span></div>
+        <div class="name"><strong>Debriefing Hans Müller</strong></div>
+        <div class="meta">Mandat CFO · Bauherr Muster AG</div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm btn-primary">✓ Erledigen</button>
+          <button class="btn btn-sm">⏰ Verschieben</button>
+        </div>
+      </div>
+
+      <div class="list-item">
+        <div style="width:72px"><span class="chip" style="background:#fee2e2;color:#991b1b">1 d überfällig</span></div>
+        <div class="name"><strong>Onboarding-Call T. Furrer</strong></div>
+        <div class="meta">07.08 geplant · Check-in vorbereiten</div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm btn-primary">✓ Erledigen</button>
+          <button class="btn btn-sm">⏰ Verschieben</button>
+        </div>
+      </div>
+
+      <div class="list-item">
+        <div style="width:72px"><span class="chip" style="background:#fef3c7;color:#92400e">Heute 14:00</span></div>
+        <div class="name"><strong>Coaching-Call Marco Gerber</strong></div>
+        <div class="meta">vor 2nd Interview · Teams</div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm">→ Öffnen</button>
+        </div>
+      </div>
+
+      <div class="list-item">
+        <div style="width:72px"><span class="chip" style="background:#fef3c7;color:#92400e">Heute 17:30</span></div>
+        <div class="name"><strong>1-Mt-Check Julian Egger</strong></div>
+        <div class="meta">Placement Muster AG · Garantie läuft</div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm">→ Öffnen</button>
+        </div>
+      </div>
+
+      <div class="list-item">
+        <div style="width:72px"><span class="chip">Morgen 09:00</span></div>
+        <div class="name"><strong>Debriefing Referenzauskunft Stadler</strong></div>
+        <div class="meta">PL Hochbau Taskforce · Arkadium ↔ Kunde</div>
+      </div>
+
+      <div style="padding:10px 0 4px 0;font-size:12.5px"><a href="reminders.html?scope=self&amp;status=all" class="card-link">→ Alle Reminders (12 offen)</a></div>
+    </div>
+
+    <!-- WIDGET P0-3: Garantie-Ablauf 14 Tage -->
+    <div class="card widget" data-widget-key="garantie-ablauf-14d" data-pinned="false" data-mobile="link-only" data-size="half">
+      <div class="card-head">
+        <div class="card-title">🛡 Garantie-Ablauf in 14 Tagen <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">2 kritisch</span> <span class="count" style="background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:4px">4 diese Woche</span></div>
+        <a href="#" class="card-link">→ Alle (6)</a>
+      </div>
+      <div class="widget-mobile-link" style="display:none;font-size:12.5px;padding:10px 0"><a href="#">6 Placements · Check-ins fällig →</a></div>
+      <div class="muted" style="font-size:11px;padding:4px 0 10px 0">AGB §5 Erfolgsbasis · 3-Mt-Garantie · Check-in proaktiv durchführen</div>
+
+      <div class="list-item">
+        <div class="name"><strong>J. Egger</strong> → Bauherr Muster AG</div>
+        <div class="meta">PL Hochbau · Garantie-Ende <strong>02.05.2026</strong> (15 d) · Status ✓ stabil</div>
+        <button class="btn btn-sm">📞 3-Mt-Check starten</button>
+      </div>
+
+      <div class="list-item" style="background:#fef3c7">
+        <div class="name"><strong>P. Stadler</strong> → Holbach AG <span class="chip" style="background:#fef3c7;color:#92400e;margin-left:4px">⚠</span></div>
+        <div class="meta">CTO · Garantie-Ende <strong>25.04.2026</strong> (8 d) · Letzter Check: vor 34 d</div>
+        <button class="btn btn-sm btn-primary">📞 Check-in jetzt</button>
+      </div>
+
+      <div class="list-item" style="background:color-mix(in srgb, var(--red) 8%, transparent)">
+        <div class="name"><strong>R. Vogt</strong> → Pilatus Bau <span class="chip" style="background:#fee2e2;color:#991b1b;margin-left:4px">🔴</span></div>
+        <div class="meta">Ltg. Energietechnik · Garantie-Ende <strong>22.04.2026</strong> (5 d) · Kein Check-in</div>
+        <button class="btn btn-sm" style="background:var(--red);color:#fff;border-color:var(--red)">📞 Check-in sofort</button>
+      </div>
+
+      <div style="padding:10px 0 4px 0;font-size:12.5px"><a href="#" class="card-link">→ Alle 14d-Ablaufen (6)</a></div>
+    </div>
+
+    <!-- WIDGET P0-4: Stale-Prozesse-Triage -->
+    <div class="card widget" data-widget-key="stale-prozesse" data-pinned="false" data-mobile="compact" data-size="half">
+      <div class="card-head">
+        <div class="card-title">⏳ Stale-Prozesse-Triage <span class="count" style="background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">8 stale</span></div>
+        <select style="font-size:11px;padding:3px 6px"><option>Alle</option><option>Meine</option><option>Client-verursacht</option><option>Kandidat-Ghosting</option></select>
+      </div>
+      <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Stage-Alter-Schwelle überschritten · Auto-Rule vom Nightly-Batch erkannt</div>
+
+      <table class="data-table" style="font-size:12px">
+        <thead>
+          <tr>
+            <th>Kandidat</th>
+            <th>Kunde</th>
+            <th>Stage</th>
+            <th style="width:60px">Tage</th>
+            <th>Grund</th>
+            <th style="width:120px">Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>T. Sommer</strong></td>
+            <td>Muster AG</td>
+            <td>2nd</td>
+            <td><strong style="color:var(--amber)">17 d</strong> <span class="muted" style="font-size:10px">(14)</span></td>
+            <td>Kunde langsam</td>
+            <td><button class="btn btn-sm">📞</button> <button class="btn btn-sm">⏰ +7d</button></td>
+          </tr>
+          <tr>
+            <td><strong>K. Bernhard</strong></td>
+            <td>Volare</td>
+            <td>Assessment</td>
+            <td><strong style="color:var(--red)">24 d</strong> <span class="muted" style="font-size:10px">(21)</span></td>
+            <td>Report offen</td>
+            <td><button class="btn btn-sm">🧪 Order prüfen</button></td>
+          </tr>
+          <tr>
+            <td><strong>A. Fluck</strong></td>
+            <td>Halter AG</td>
+            <td>Offer</td>
+            <td><strong style="color:var(--amber)">12 d</strong> <span class="muted" style="font-size:10px">(10)</span></td>
+            <td>TC-Verhandlung</td>
+            <td><button class="btn btn-sm">📞 Anrufen</button></td>
+          </tr>
+          <tr>
+            <td><strong>M. Schenk</strong></td>
+            <td>Pilatus</td>
+            <td>CV Sent</td>
+            <td><strong style="color:var(--amber)">14 d</strong> <span class="muted" style="font-size:10px">(10)</span></td>
+            <td>keine Rückmeldung</td>
+            <td><button class="btn btn-sm">↗ Nachfassen</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px">
+        <div class="muted">Ø Stale-Dauer 7 d: 18 d · Gründe: Kunde 42 % · Kandidat 31 % · System 27 %</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== P1 WIDGETS (hidden — via Widget-Katalog-Drawer) ==================== -->
+
+  <!-- WIDGET P1-5: Scraper-Review-Queue -->
+  <div class="card widget" data-widget-key="scraper-review-queue" data-pinned="false" data-mobile="compact" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">🤖 Scraper-Findings · Review pending <span class="count" style="background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">12 pending</span></div>
+      <a href="#" class="card-link">→ Alle</a>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">LinkedIn-/Webscraper-Funde · Match-Score-basiert · manuelle Bestätigung nötig</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th style="width:100px">Zeit</th>
+          <th>Finding-Typ</th>
+          <th>Entity</th>
+          <th style="width:90px">Match</th>
+          <th style="width:60px">Akteur</th>
+          <th style="width:140px">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>08:32</td>
+          <td><span class="chip" style="background:var(--accent-soft);color:var(--accent)">Neue Person</span></td>
+          <td><strong>Volare Group</strong> · Head of Finance</td>
+          <td><strong>73 %</strong> <span class="muted" style="font-size:10px">zu CFO-Profil</span></td>
+          <td><span class="actor-chip">RA</span></td>
+          <td><button class="btn btn-sm btn-primary">✓ Import</button> <button class="btn btn-sm">✕</button></td>
+        </tr>
+        <tr>
+          <td>07:15</td>
+          <td><span class="chip" style="background:var(--gold-soft);color:var(--gold)">Rollenänderung</span></td>
+          <td><strong>Bauherr Muster</strong> · T. Sommer jetzt CTO</td>
+          <td>—</td>
+          <td><span class="actor-chip">RA</span></td>
+          <td><button class="btn btn-sm">→ Prozess öffnen</button></td>
+        </tr>
+        <tr>
+          <td>Gestern 16:45</td>
+          <td><span class="chip" style="background:#d1fae5;color:#065f46">Neuer Job</span></td>
+          <td><strong>Pilatus Bau</strong> · PL Tiefbau</td>
+          <td>—</td>
+          <td><span class="actor-chip">RA</span></td>
+          <td><button class="btn btn-sm">+ Anlegen</button></td>
+        </tr>
+        <tr>
+          <td>Gestern 14:20</td>
+          <td><span class="chip" style="background:#fef3c7;color:#92400e">Person verlassen</span></td>
+          <td><strong>Halter AG</strong> · M. Brunner hat gewechselt</td>
+          <td>—</td>
+          <td><span class="actor-chip">RA</span></td>
+          <td><button class="btn btn-sm">→ Update Kontakt</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2" style="grid-template-columns:repeat(3,1fr);gap:16px">
+
+    <!-- WIDGET P1-6: AGB-Pending -->
+    <div class="card widget" data-widget-key="agb-pending" data-pinned="false" data-mobile="link-only" data-size="third" style="display:none">
+      <div class="card-head">
+        <div class="card-title">📜 AGB-Pending <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">5 fehlen</span></div>
+      </div>
+      <div class="widget-mobile-link" style="display:none;font-size:12.5px;padding:10px 0"><a href="#">5 Accounts · AGB fehlend · → Liste</a></div>
+      <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Erfolgsbasis · CV versendet ohne AGB-Bestätigung — rechtliches Risiko</div>
+
+      <div class="list-item">
+        <div class="name"><strong>Halter AG</strong></div>
+        <div class="meta">3 CVs versendet · AGB 14 d offen</div>
+        <button class="btn btn-sm">📧 Nachfassen</button>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>GS Bau</strong></div>
+        <div class="meta">1 CV · AGB 3 d</div>
+        <button class="btn btn-sm">📧 Nachfassen</button>
+      </div>
+      <div class="list-item" style="background:color-mix(in srgb, var(--red) 8%, transparent)">
+        <div class="name"><strong>Meier Immo</strong></div>
+        <div class="meta">1 CV · AGB 1 d · Erinnerung sofort</div>
+        <button class="btn btn-sm" style="color:var(--red);border-color:var(--red)">📞 Anrufen</button>
+      </div>
+    </div>
+
+    <!-- WIDGET P1-7: Claim-Fälle offen -->
+    <div class="card widget" data-widget-key="claim-faelle-offen" data-pinned="false" data-mobile="link-only" data-size="third" style="display:none">
+      <div class="card-head">
+        <div class="card-title">⚠ Claim-Fälle offen <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">3 aktiv</span></div>
+      </div>
+      <div class="widget-mobile-link" style="display:none;font-size:12.5px;padding:10px 0"><a href="#">3 Claim-Fälle · → Liste</a></div>
+      <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Direkteinstellungs-Schutzfrist verletzt · Scraper-Match bestätigt</div>
+
+      <div class="list-item">
+        <div class="name"><strong>T. Sommer</strong> · Bauherr Muster AG</div>
+        <div class="meta">Kontext Y · Schutzfrist bis 15.10.2026</div>
+        <button class="btn btn-sm">📁 Fall öffnen</button>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>K. Bernhard</strong> · Volare Group</div>
+        <div class="meta">Kontext X · Schutzfrist bis 02.03.2027</div>
+        <button class="btn btn-sm">📁 Fall öffnen</button>
+      </div>
+      <div class="list-item" style="background:var(--gold-soft)">
+        <div class="name"><strong>M. Meier</strong> · Halter AG</div>
+        <div class="meta">Kontext Z · Rechnung in Vorbereitung</div>
+        <button class="btn btn-sm" style="color:var(--gold);border-color:var(--gold)">💰 Rechnung</button>
+      </div>
+    </div>
+
+    <!-- WIDGET P1-8: Jobbasket-Gate-Backlog -->
+    <div class="card widget" data-widget-key="jobbasket-gate-backlog" data-pinned="false" data-mobile="compact" data-size="third" style="display:none">
+      <div class="card-head">
+        <div class="card-title">🛒 Jobbasket-Backlog <span class="count" style="background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">14 in Pipeline</span></div>
+      </div>
+      <div class="muted" style="font-size:11px;padding:4px 0 10px 0">5-Stage-Pipeline · Klick auf Zahl öffnet gefilterte Liste</div>
+
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px">
+        <a href="#" style="text-decoration:none;padding:10px 4px;background:var(--bg);border-radius:3px;text-align:center;color:var(--text);border:1px solid var(--border)">
+          <div class="muted" style="font-size:9.5px;text-transform:uppercase">Prelead</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--text)">3</div>
+        </a>
+        <a href="#" style="text-decoration:none;padding:10px 4px;background:var(--bg);border-radius:3px;text-align:center;color:var(--text);border:1px solid var(--border)">
+          <div class="muted" style="font-size:9.5px;text-transform:uppercase">Oral GO</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--accent)">4</div>
+        </a>
+        <a href="#" style="text-decoration:none;padding:10px 4px;background:var(--bg);border-radius:3px;text-align:center;color:var(--text);border:1px solid var(--border)">
+          <div class="muted" style="font-size:9.5px;text-transform:uppercase">Written GO</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--accent)">2</div>
+        </a>
+        <a href="#" style="text-decoration:none;padding:10px 4px;background:var(--gold-soft);border-radius:3px;text-align:center;color:var(--gold);border:1px solid var(--gold)">
+          <div class="muted" style="font-size:9.5px;text-transform:uppercase;color:var(--gold)">Assigned · Gate 1</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--gold)">3</div>
+        </a>
+        <a href="#" style="text-decoration:none;padding:10px 4px;background:var(--gold-soft);border-radius:3px;text-align:center;color:var(--gold);border:1px solid var(--gold)">
+          <div class="muted" style="font-size:9.5px;text-transform:uppercase;color:var(--gold)">To-Send · Gate 2</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--gold)">2</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WIDGET P1-9: Bounce-Alert -->
+  <div class="card widget" data-widget-key="bounce-alert" data-pinned="false" data-mobile="hidden" data-size="third" style="display:none">
+    <div class="card-head">
+      <div class="card-title">✉️ Bounce-Adressen <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">2 diese Woche</span></div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Email-Adressen mit Bounce-Retour · Pflege nötig</div>
+
+    <div class="list-item">
+      <div class="name"><strong>t.sommer@alt-firma.ch</strong></div>
+      <div class="meta">3× gebounced · letzter Versuch 15.04.</div>
+      <button class="btn btn-sm">✏ Adresse korrigieren</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>info@ehemaliger-kunde.ch</strong></div>
+      <div class="meta">1× · 13.04.</div>
+      <button class="btn btn-sm">🚫 Deaktivieren</button>
+    </div>
+  </div>
+
+  <!-- P2 ANALYTICS-WIDGETS (hidden, addable via Widget-Katalog) -->
+
+  <!-- Widget: Time-to-Fill-Trend (Sparkline pro Stage, 6 Monate) -->
+  <div class="card widget" data-widget-key="time-to-fill-trend" data-pinned="false" data-mobile="hidden" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">📈 Time-to-Fill-Trend <span class="count" style="background:var(--bg);color:var(--text-mid);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">Ø 47 d · letzte 6 Mt</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Sparten</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select>
+        <a href="#" class="card-link">→ Pipeline-Report</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Durchschnittliche Stage-Dauer letzte 6 Mt · pro Stage Sparkline-Trend · rote Dots = Schwellen-Überschreitung</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr><th>Stage</th><th>Ø Dauer</th><th>Trend 6 Mt</th><th>Median</th><th>Schwelle</th><th class="right">Δ vs Ziel</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Exposé → CV Sent</strong></td>
+          <td>8.2 d</td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="0,18 20,14 40,15 60,10 80,8 100,9 120,7"/>
+              <circle cx="120" cy="7" r="3" fill="var(--accent)"/>
+            </svg>
+          </td>
+          <td>7 d</td>
+          <td>10 d</td>
+          <td class="right"><span style="color:var(--green);font-weight:600">−1.8 d</span></td>
+        </tr>
+        <tr>
+          <td><strong>CV Sent → TI</strong></td>
+          <td>4.5 d</td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="0,10 20,12 40,9 60,11 80,8 100,10 120,9"/>
+              <circle cx="120" cy="9" r="3" fill="var(--accent)"/>
+            </svg>
+          </td>
+          <td>4 d</td>
+          <td>7 d</td>
+          <td class="right"><span style="color:var(--green);font-weight:600">−2.5 d</span></td>
+        </tr>
+        <tr>
+          <td><strong>TI → 1st Interview</strong></td>
+          <td>6.8 d</td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--amber)" stroke-width="2" points="0,14 20,13 40,10 60,11 80,8 100,6 120,4"/>
+              <circle cx="120" cy="4" r="3" fill="var(--amber)"/>
+            </svg>
+          </td>
+          <td>6 d</td>
+          <td>7 d</td>
+          <td class="right"><span style="color:var(--amber);font-weight:600">−0.2 d</span></td>
+        </tr>
+        <tr>
+          <td><strong>1st → Offer</strong></td>
+          <td>12.3 d</td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--red)" stroke-width="2" points="0,16 20,12 40,10 60,8 80,6 100,4 120,3"/>
+              <circle cx="120" cy="3" r="3" fill="var(--red)"/>
+            </svg>
+          </td>
+          <td>11 d</td>
+          <td>14 d</td>
+          <td class="right"><span style="color:var(--red);font-weight:600">+1.7 d · steigt</span></td>
+        </tr>
+        <tr>
+          <td><strong>Offer → Placement</strong></td>
+          <td>15.1 d</td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="0,18 20,16 40,14 60,12 80,10 100,8 120,6"/>
+              <circle cx="120" cy="6" r="3" fill="var(--accent)"/>
+            </svg>
+          </td>
+          <td>14 d</td>
+          <td>21 d</td>
+          <td class="right"><span style="color:var(--green);font-weight:600">−5.9 d</span></td>
+        </tr>
+        <tr style="background:var(--bg)">
+          <td><strong>🏆 Total (End-to-End)</strong></td>
+          <td><strong>46.9 d</strong></td>
+          <td>
+            <svg width="120" height="24" style="vertical-align:middle">
+              <polyline fill="none" stroke="var(--gold)" stroke-width="2" points="0,18 20,15 40,13 60,10 80,9 100,8 120,6"/>
+              <circle cx="120" cy="6" r="3" fill="var(--gold)"/>
+            </svg>
+          </td>
+          <td><strong>42 d</strong></td>
+          <td><strong>60 d</strong></td>
+          <td class="right"><strong style="color:var(--green)">−13 d vs Ziel</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px">
+      <div class="muted">Q1/2026 vs Q2/2026: Gesamt-Dauer um <strong style="color:var(--green)">−8 %</strong> gesunken · TI-Stage-Bottleneck bleibt</div>
+      <button class="btn btn-sm">↓ Detail-Report exportieren</button>
+    </div>
+  </div>
+
+  <!-- Widget: Placement-Rate nach Sparte -->
+  <div class="card widget" data-widget-key="placement-rate-sparte" data-pinned="false" data-mobile="hidden" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">🏗 Placement-Rate nach Sparte <span class="count" style="background:var(--gold-soft);color:var(--gold);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">18 YTD · Ziel 32</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>YTD 2026</option><option>Q1/2026</option><option>Q2/2026</option><option>Last 12 Mt</option></select>
+        <a href="#" class="card-link">→ Detail</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">18 Placements YTD auf 5 Sparten verteilt · Stacked-Bar vs Sparte-Ziel</div>
+
+    <!-- Stacked Horizontal Bar -->
+    <div style="padding:14px 8px;background:var(--bg);border-radius:3px;margin-bottom:12px">
+      <svg width="100%" height="30" style="display:block">
+        <g>
+          <rect x="0%" y="0" width="33.3%" height="24" fill="var(--accent)" rx="2"/>
+          <text x="16.6%" y="16" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">ARC · 6</text>
+
+          <rect x="33.8%" y="0" width="27.8%" height="24" fill="var(--gold)" rx="2"/>
+          <text x="47.7%" y="16" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">GT · 5</text>
+
+          <rect x="62.1%" y="0" width="22.2%" height="24" fill="#10b981" rx="2"/>
+          <text x="73.2%" y="16" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">ING · 4</text>
+
+          <rect x="84.8%" y="0" width="11.1%" height="24" fill="#8b5cf6" rx="2"/>
+          <text x="90.4%" y="16" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">REM · 2</text>
+
+          <rect x="96.4%" y="0" width="3.6%" height="24" fill="#f59e0b" rx="2"/>
+          <text x="98.2%" y="16" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">PUR</text>
+        </g>
+      </svg>
+    </div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr><th>Sparte</th><th class="right">YTD</th><th class="right">Ziel Q2</th><th class="right">% Ziel</th><th>Trend vs 2025</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:50%;margin-right:6px"></span><strong>ARC</strong> · Architektur</td><td class="right">6</td><td class="right">10</td><td class="right">60 %</td><td><span style="color:var(--green)">↑ +50 %</span></td></tr>
+        <tr><td><span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;margin-right:6px"></span><strong>GT</strong> · Gesamtbau/Totalunternehmung</td><td class="right">5</td><td class="right">8</td><td class="right">63 %</td><td><span style="color:var(--green)">↑ +25 %</span></td></tr>
+        <tr><td><span style="display:inline-block;width:10px;height:10px;background:#10b981;border-radius:50%;margin-right:6px"></span><strong>ING</strong> · Ingenieur</td><td class="right">4</td><td class="right">7</td><td class="right">57 %</td><td><span style="color:var(--amber)">→ stabil</span></td></tr>
+        <tr><td><span style="display:inline-block;width:10px;height:10px;background:#8b5cf6;border-radius:50%;margin-right:6px"></span><strong>REM</strong> · Real Estate Management</td><td class="right">2</td><td class="right">4</td><td class="right">50 %</td><td><span style="color:var(--amber)">→ stabil</span></td></tr>
+        <tr><td><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:50%;margin-right:6px"></span><strong>PUR</strong> · Purchasing</td><td class="right">1</td><td class="right">3</td><td class="right">33 %</td><td><span style="color:var(--red)">↓ −25 %</span></td></tr>
+        <tr style="background:var(--bg)"><td><strong>Total YTD</strong></td><td class="right"><strong>18</strong></td><td class="right"><strong>32</strong></td><td class="right"><strong>56 %</strong></td><td><strong style="color:var(--green)">↑ +22 %</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="muted" style="font-size:11.5px;margin-top:10px">ARC + GT tragen 61 % der Placements · PUR unter Ziel (Hunt-Fokus Q3 erforderlich)</div>
+  </div>
+
+  <!-- Widget: Honorar-Cashflow-Prognose Q2 -->
+  <div class="card widget" data-widget-key="honorar-cashflow" data-pinned="false" data-mobile="hidden" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">💰 Honorar-Cashflow Q2/2026 <span class="count" style="background:#d1fae5;color:#065f46;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">CHF 920k · 68 % Confidence</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Q2/2026</option><option>Q3/2026</option><option>YTD 2026</option><option>Full Year 2026</option></select>
+        <a href="#" class="card-link">→ Billing</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Realisiert + Pending + At-Risk · Prognose-Confidence aus Stage-Wahrscheinlichkeit</div>
+
+    <!-- Stacked Horizontal Bar (Cashflow) -->
+    <div style="padding:14px 8px;background:var(--bg);border-radius:3px;margin-bottom:14px">
+      <div class="muted" style="font-size:10.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600">Gesamt-Prognose Q2: CHF 920 000</div>
+      <svg width="100%" height="30" style="display:block">
+        <g>
+          <rect x="0%" y="0" width="52%" height="24" fill="#10b981" rx="2"/>
+          <text x="26%" y="16" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Realisiert · CHF 480k</text>
+
+          <rect x="52.5%" y="0" width="23%" height="24" fill="var(--accent)" rx="2"/>
+          <text x="64%" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">In Abw. · 215k</text>
+
+          <rect x="76%" y="0" width="16%" height="24" fill="var(--gold)" rx="2"/>
+          <text x="84%" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Pending · 150k</text>
+
+          <rect x="92.5%" y="0" width="7.5%" height="24" fill="var(--red)" rx="2"/>
+          <text x="96.2%" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Risiko · 75k</text>
+        </g>
+      </svg>
+    </div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr><th>Stufe</th><th>Quelle</th><th class="right">Betrag</th><th class="right">Confidence</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="display:inline-block;width:10px;height:10px;background:#10b981;border-radius:50%;margin-right:6px"></span><strong>Realisiert</strong></td>
+          <td>Stage 1+2 Target-Mandate · 8 Placements Q1→Q2-Übertrag</td>
+          <td class="right"><strong>CHF 480 000</strong></td>
+          <td class="right"><span style="color:#065f46;font-weight:600">100 %</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:50%;margin-right:6px"></span><strong>In Abwicklung</strong></td>
+          <td>Stage 3 offen (CFO-Suche · PL Hochbau · BIM-Manager) + 4 Offers laufend</td>
+          <td class="right"><strong>CHF 215 000</strong></td>
+          <td class="right"><span style="color:var(--accent);font-weight:600">85 %</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;margin-right:6px"></span><strong>Pending</strong></td>
+          <td>Pipeline Stage 2nd/3rd Interview (6 Prozesse · Conversion ~55 %)</td>
+          <td class="right"><strong>CHF 150 000</strong></td>
+          <td class="right"><span style="color:var(--gold);font-weight:600">55 %</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:10px;height:10px;background:var(--red);border-radius:50%;margin-right:6px"></span><strong>At-Risk</strong></td>
+          <td>2 Stale-Prozesse + 1 Offer mit Gehalts-Verhandlung</td>
+          <td class="right"><strong>CHF 75 000</strong></td>
+          <td class="right"><span style="color:var(--red);font-weight:600">25 %</span></td>
+        </tr>
+        <tr style="background:var(--bg)">
+          <td colspan="2"><strong>Gewichtete Prognose (Expected Value)</strong></td>
+          <td class="right"><strong>CHF 773 000</strong></td>
+          <td class="right"><strong>84 %</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:12px;padding:10px 12px;background:color-mix(in srgb, var(--red) 6%, transparent);border-left:3px solid var(--red);border-radius:3px;font-size:11.5px">
+      <strong>⚠ Abzüge (nicht eingerechnet):</strong> Referral-Payouts CHF 18k (2 Placements) · mögliche Garantie-Refunds bei Early-Exit (historisch 3 %) · Kündigungs-Rückerstattungen (keine aktuell)
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:11.5px">
+      <div class="muted">Stand: 17.04.2026 · nächstes Update: nightly 03:00</div>
+      <button class="btn btn-sm">📊 Finance-Report erstellen</button>
+    </div>
+  </div>
+
+  <!-- RA/BO SPEZIAL-WIDGETS (hidden, via Katalog-Drawer aktivierbar) -->
+
+  <!-- Widget: Longlist-Research-Backlog (RA) -->
+  <div class="card widget" data-widget-key="longlist-research-backlog" data-pinned="false" data-mobile="compact" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">🔍 Longlist-Research-Backlog <span class="count" style="background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">23 Mandate offen</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>Alle Research Analysts</option><option>Meine</option><option>NP</option><option>Unassigned</option></select>
+        <a href="#" class="card-link">→ Alle</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Mandate mit offenem Research-Auftrag · Longlist-Ziel vs. aktueller Stand · Priorität nach Shortlist-Dringlichkeit</div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th>Mandat · Rolle</th>
+          <th>Sparte</th>
+          <th class="right">Ziel</th>
+          <th class="right">Aktuell</th>
+          <th>Progress</th>
+          <th>Letztes Update</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CFO-Suche · Bauherr Muster AG</strong></td>
+          <td>GT</td>
+          <td class="right">30</td>
+          <td class="right">24</td>
+          <td>
+            <div style="background:var(--bg);border-radius:3px;height:6px;overflow:hidden;width:80px;display:inline-block"><div style="background:#10b981;height:100%;width:80%"></div></div>
+            <span class="muted" style="font-size:10.5px;margin-left:4px">80 %</span>
+          </td>
+          <td>vor 2 h · NP</td>
+          <td><button class="btn btn-sm">+ Longlist</button></td>
+        </tr>
+        <tr>
+          <td><strong>PL Hochbau · Taskforce</strong></td>
+          <td>ARC</td>
+          <td class="right">40</td>
+          <td class="right">38</td>
+          <td>
+            <div style="background:var(--bg);border-radius:3px;height:6px;overflow:hidden;width:80px;display:inline-block"><div style="background:#10b981;height:100%;width:95%"></div></div>
+            <span class="muted" style="font-size:10.5px;margin-left:4px">95 %</span>
+          </td>
+          <td>gestern · NP</td>
+          <td><button class="btn btn-sm">✓ Abschliessen</button></td>
+        </tr>
+        <tr>
+          <td><strong>BIM-Manager · Halter AG</strong></td>
+          <td>ARC</td>
+          <td class="right">25</td>
+          <td class="right">8</td>
+          <td>
+            <div style="background:var(--bg);border-radius:3px;height:6px;overflow:hidden;width:80px;display:inline-block"><div style="background:var(--red);height:100%;width:32%"></div></div>
+            <span style="font-size:10.5px;margin-left:4px;color:var(--red)">32 %</span>
+          </td>
+          <td>vor 5 d · <span style="color:var(--red)">⚠</span></td>
+          <td><button class="btn btn-sm btn-primary">🔍 Priorisieren</button></td>
+        </tr>
+        <tr>
+          <td><strong>Head of Finance · Volare Group</strong></td>
+          <td>GT</td>
+          <td class="right">25</td>
+          <td class="right">12</td>
+          <td>
+            <div style="background:var(--bg);border-radius:3px;height:6px;overflow:hidden;width:80px;display:inline-block"><div style="background:var(--amber);height:100%;width:48%"></div></div>
+            <span style="font-size:10.5px;margin-left:4px;color:var(--amber)">48 %</span>
+          </td>
+          <td>vor 3 d · NP</td>
+          <td><button class="btn btn-sm">+ Longlist</button></td>
+        </tr>
+        <tr>
+          <td><strong>Ltg. Energietechnik · Pilatus Bau</strong></td>
+          <td>ING</td>
+          <td class="right">20</td>
+          <td class="right">6</td>
+          <td>
+            <div style="background:var(--bg);border-radius:3px;height:6px;overflow:hidden;width:80px;display:inline-block"><div style="background:var(--red);height:100%;width:30%"></div></div>
+            <span style="font-size:10.5px;margin-left:4px;color:var(--red)">30 %</span>
+          </td>
+          <td>vor 7 d · unassigned</td>
+          <td><button class="btn btn-sm">👤 Zuweisen</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px">
+      <div class="muted">Ø Research-Durchsatz: 4.2 Kandidaten/Tag · Unassigned-SLA: 48 h</div>
+      <button class="btn btn-sm">📊 Research-Report</button>
+    </div>
+  </div>
+
+  <!-- Widget: Mandats-Offerten-Conversion (AM) -->
+  <div class="card widget" data-widget-key="mandats-offerten-conversion" data-pinned="false" data-mobile="hidden" data-size="half" style="display:none">
+    <div class="card-head">
+      <div class="card-title">📋 Mandats-Offerten-Conversion <span class="count" style="background:var(--gold-soft);color:var(--gold);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">12 in Pipeline · Hit-Rate 42 %</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select style="font-size:11px;padding:3px 6px"><option>YTD 2026</option><option>Q1/2026</option><option>Q2/2026</option><option>Letzte 12 Mt</option></select>
+        <a href="#" class="card-link">→ Mandate</a>
+      </div>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Funnel vom Erstkontakt bis zum aktiven Mandat · Conversion-Rate zwischen den Stages</div>
+
+    <!-- Funnel-Visualisierung -->
+    <div style="padding:14px 8px;background:var(--bg);border-radius:3px;margin-bottom:12px">
+      <svg width="100%" height="180" style="display:block;max-width:100%">
+        <g>
+          <rect x="2%" y="20" width="96%" height="22" fill="var(--accent)" rx="3"/>
+          <text x="50%" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Erstgespräch · 28</text>
+
+          <rect x="12%" y="52" width="76%" height="22" fill="#8b5cf6" rx="3"/>
+          <text x="50%" y="67" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Offerte versendet · 19 (68 %)</text>
+
+          <rect x="22%" y="84" width="56%" height="22" fill="var(--gold)" rx="3"/>
+          <text x="50%" y="99" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Verhandlung · 14 (74 %)</text>
+
+          <rect x="30%" y="116" width="40%" height="22" fill="#10b981" rx="3"/>
+          <text x="50%" y="131" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Unterschrieben · 12 (86 %)</text>
+
+          <rect x="35%" y="148" width="30%" height="22" fill="var(--accent)" rx="3"/>
+          <text x="50%" y="163" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Aktiv · 12 (100 %)</text>
+        </g>
+      </svg>
+    </div>
+
+    <table class="data-table" style="font-size:12.5px">
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Stage</th>
+          <th class="right">Erwartet</th>
+          <th class="right">Wahrsch.</th>
+          <th>Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Volare Group</strong> · COO-Suche</td>
+          <td><span class="chip" style="background:var(--gold-soft);color:var(--gold);font-size:10px">Verhandlung</span></td>
+          <td class="right">CHF 48k</td>
+          <td class="right"><span style="color:var(--green);font-weight:600">85 %</span></td>
+          <td><span class="actor-chip">MF</span></td>
+        </tr>
+        <tr>
+          <td><strong>Halter AG</strong> · Head of Finance</td>
+          <td><span class="chip" style="background:#8b5cf6;color:#fff;font-size:10px">Offerte</span></td>
+          <td class="right">CHF 38k</td>
+          <td class="right"><span style="color:var(--amber);font-weight:600">55 %</span></td>
+          <td><span class="actor-chip">PW</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pilatus Bau</strong> · PL Tiefbau</td>
+          <td><span class="chip" style="background:#8b5cf6;color:#fff;font-size:10px">Offerte</span></td>
+          <td class="right">CHF 52k</td>
+          <td class="right"><span style="color:var(--amber);font-weight:600">60 %</span></td>
+          <td><span class="actor-chip">NS</span></td>
+        </tr>
+        <tr>
+          <td><strong>GS Bau</strong> · Geschäftsleitung</td>
+          <td><span class="chip" style="background:var(--accent-soft);color:var(--accent);font-size:10px">Erstgespräch</span></td>
+          <td class="right">CHF 65k</td>
+          <td class="right"><span class="muted">30 %</span></td>
+          <td><span class="actor-chip">MF</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px">
+      <div class="muted">Hit-Rate 2026 YTD: <strong style="color:var(--green)">42 %</strong> (12 von 28) · Ø Dauer Erstgespräch → Aktiv: 18 d</div>
+      <button class="btn btn-sm">📊 Conversion-Report</button>
+    </div>
+  </div>
+
+  <!-- Widget: Assessment-Credits ablaufen (BO/CM) -->
+  <div class="card widget" data-widget-key="assessment-credits-expiring" data-pinned="false" data-mobile="link-only" data-size="third" style="display:none">
+    <div class="card-head">
+      <div class="card-title">🧪 Credits ablaufen <span class="count" style="background:var(--red-soft);color:var(--red);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px">3 kritisch</span></div>
+      <a href="#" class="card-link">→ Aufträge</a>
+    </div>
+    <div class="muted" style="font-size:11px;padding:4px 0 10px 0">Assessment-Aufträge mit bald ablaufenden oder kaum genutzten Credits · Nachbestellung prüfen</div>
+
+    <div class="widget-mobile-link" style="display:none;font-size:12.5px;padding:10px 0"><a href="#">→ 3 Aufträge · Credits ablaufen</a></div>
+
+    <div class="list-item">
+      <div class="name"><strong>ORD-2026-042 · Bauherr Muster AG</strong></div>
+      <div class="meta">10× ASSESS 5.0 + 5× EQ-Profil · <span style="color:var(--red);font-weight:600">läuft ab in 12 d</span> · 7/15 verbraucht</div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <button class="btn btn-sm">📦 Verlängern</button>
+        <button class="btn btn-sm">👁 Order-Detail</button>
+      </div>
+    </div>
+
+    <div class="list-item">
+      <div class="name"><strong>ORD-2025-118 · Halter AG</strong></div>
+      <div class="meta">5× DISC · <span style="color:var(--amber);font-weight:600">läuft ab in 28 d</span> · 2/5 verbraucht</div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <button class="btn btn-sm">📦 Verlängern</button>
+        <button class="btn btn-sm">↗ Credits umwidmen</button>
+      </div>
+    </div>
+
+    <div class="list-item">
+      <div class="name"><strong>ORD-2025-094 · Volare Group</strong></div>
+      <div class="meta">3× Scheelen 6HM · <span style="color:var(--red);font-weight:600">läuft ab in 3 d</span> · 0/3 verbraucht (ungenutzt)</div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <button class="btn btn-sm btn-primary">⚠ Sofort-Aktion</button>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:11px" class="muted">
+      Verfall-Dauer: 24 Mt ab Kauf · Ø Nutzungsrate: 67 % · Erinnerung 30 d vor Ablauf
+    </div>
+  </div>
+
+  <!-- Activity Feed -->
+  <div class="card widget" data-widget-key="activity-feed-24h" data-pinned="false" data-mobile="link-only" data-size="full">
+    <div class="card-head"><div class="card-title">Team-Aktivität (letzte 24 h) <span class="pin-badge">🔒 gepinnt</span></div></div>
+    <div class="widget-mobile-link" style="display:none;font-size:12.5px;padding:10px 0"><a href="#">→ Gesamte Team-Aktivität ansehen</a></div>
+    <div class="hist-timeline">
+      <div class="hist-row">
+        <div class="hist-time">09:45</div>
+        <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+        <div class="hist-body">
+          <div class="hist-title"><strong>E-Mail erhalten · Eva Studer</strong></div>
+          <div class="hist-sub">Bestätigung 2nd Interview Tobias Furrer · 22.04 09:00</div>
+          <div class="hist-meta"><span class="actor">JV</span> · Activity-Type #29 Schriftliche GOs · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Mandat · CFO-Suche</a></div>
+        </div>
+      </div>
+      <div class="hist-row">
+        <div class="hist-time">08:30</div>
+        <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+        <div class="hist-body">
+          <div class="hist-title"><strong>TI durchgeführt · Peter Stadler</strong></div>
+          <div class="hist-sub">PL Hochbau Taskforce · 45 min · passt</div>
+          <div class="hist-meta"><span class="actor">LR</span> · Activity-Type #66 Debriefing TI · <a href="#">Kandidat · P. Stadler</a></div>
+        </div>
+      </div>
+      <div class="hist-row">
+        <div class="hist-time">gestern 17:20</div>
+        <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+        <div class="hist-body">
+          <div class="hist-title"><strong>CV Sent · Reto Weber</strong></div>
+          <div class="hist-sub">an HR Bauherr Muster AG · Schutzfrist aktiviert</div>
+          <div class="hist-meta"><span class="actor">MF</span> · Activity-Type #95 Jobbasket CV versendet · <a href="#">Kandidat · R. Weber</a> · <a href="#">Schutzfrist · R. Weber</a></div>
+        </div>
+      </div>
+      <div class="hist-row hist-system">
+        <div class="hist-time">gestern 16:00</div>
+        <div class="hist-cat"><span class="hist-cat-chip cat-system">Garantie &amp; Schutzfrist</span></div>
+        <div class="hist-body">
+          <div class="hist-title"><strong>Schutzfrist - Claim eröffnet · Tobias Sommer</strong></div>
+          <div class="hist-sub">Bauherr Muster AG · Kontext Y klassifiziert · Rechnung in Vorbereitung</div>
+          <div class="hist-meta"><span class="actor actor-system">integration</span><span class="src-badge src-scraper">scraper</span> · Activity-Type #84 Schutzfrist - Claim eröffnet · bestätigt durch <span class="actor">PW</span> · <a href="#">Claim-Fall · T. Sommer</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- + Widget hinzufügen (nur im Edit-Modus sichtbar) -->
+  <div class="add-widget-drop" onclick="openDrawer('widgetCatalogDrawer')">
+    + Widget hinzufügen
+    <div class="muted" style="font-size:11px;margin-top:4px">Öffnet Widget-Katalog (27 verfügbare Widgets, gefiltert nach deiner Rolle)</div>
+  </div>
+</div>
+
+<!-- ============= DRAWER-BACKDROP (shared) ============= -->
+<div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawer()"></div>
+
+<!-- ============= WIDGET-KATALOG-DRAWER (NEU v1.4 Dashboard-Customization) ============= -->
+<div class="drawer drawer-wide" id="widgetCatalogDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">➕</div>
+    <div class="info">
+      <h2>Widget-Katalog</h2>
+      <div class="sub">Wähle Widgets für deine aktuelle Ansicht · gefiltert nach Rolle</div>
+      <div style="margin-top:6px">
+        <span class="actor-chip">Aktuelle Ansicht: <strong id="widgetCatalogRole">Admin</strong></span>
+        <span class="chip" style="margin-left:4px">27 Widgets verfügbar</span>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('widgetCatalogDrawer')">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="search" placeholder="🔍 Widget suchen (Name oder Beschreibung) …" style="flex:1">
+        <select>
+          <option>Alle Kategorien</option>
+          <option>KPI</option>
+          <option>Triage</option>
+          <option>Alert</option>
+          <option>Ops</option>
+          <option>Analytics</option>
+          <option>Agenda</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>KPI (6)</h4>
+      <div class="list-item"><div class="name">📊 <strong>Umsatz YTD</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Quarter · Global · Admin · Account Manager · Head of · Pinned</div></div>
+      <div class="list-item"><div class="name">🏆 <strong>Placements YTD</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Quarter · Global · alle Rollen · Pinned</div></div>
+      <div class="list-item"><div class="name">🎯 <strong>Offene Mandate</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Quarter · Team · Admin · Account Manager</div></div>
+      <div class="list-item"><div class="name">→ <strong>Aktive Prozesse</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Quarter · Team · alle Rollen</div></div>
+      <div class="list-item"><div class="name">🚫 <strong>Blocker-Count</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span> <span class="chip" style="margin-left:4px">Pinned</span></div><div class="meta">Quarter · User · alle Rollen · nicht entfernbar</div></div>
+      <div class="list-item"><div class="name">⚙ <strong>System-Health</strong> <button class="btn btn-sm btn-primary" style="float:right">+ Hinzufügen</button></div><div class="meta">Quarter · Global · Admin only · zeigt Circuit-Breaker · Dead-Letter · Queue-Lag</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Triage (3)</h4>
+      <div class="list-item"><div class="name">📞 <strong>Pending Calls Triage</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span> <span class="chip" style="margin-left:4px">Pinned</span></div><div class="meta">Half · User · Admin · Account Manager · Candidate Manager · unklassifizierte 3CX-Anrufe mit AI-Vorschlag</div></div>
+      <div class="list-item"><div class="name">✉️ <strong>Pending Emails Triage</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span> <span class="chip" style="margin-left:4px">Pinned</span></div><div class="meta">Half · User · Admin · Account Manager · Candidate Manager · unklassifizierte Outlook/Gmail-Mails</div></div>
+      <div class="list-item"><div class="name">📤 <strong>To-Send-Inbox (CV-Versand)</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span> <span class="chip" style="margin-left:4px">Pinned</span></div><div class="meta">Full · User · Account Manager · Candidate Manager · zentrale Versand-Station mit AGB-Check</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Alert (5)</h4>
+      <div class="list-item"><div class="name">🛡 <strong>Garantie-Ablauf 14 Tage</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · Team · Admin · Candidate Manager · Account Manager · proaktive Check-in-Warnung</div></div>
+      <div class="list-item"><div class="name">⏳ <strong>Stale-Prozesse-Triage</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · User · Candidate Manager · Account Manager · überschrittene Stage-Alter-Schwellen</div></div>
+      <div class="list-item"><div class="name">📜 <strong>AGB-Pending Alert</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('agb-pending')">+ Hinzufügen</button></div><div class="meta">Third · Account · Admin · Account Manager · Erfolgsbasis-Accounts ohne AGB-Bestätigung</div></div>
+      <div class="list-item"><div class="name">⚠ <strong>Claim-Fälle offen</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('claim-faelle-offen')">+ Hinzufügen</button></div><div class="meta">Third · Account · Admin · Account Manager · Direkteinstellungs-Schutzfrist-Matches</div></div>
+      <div class="list-item"><div class="name">🤖 <strong>Scraper-Findings Review</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('scraper-review-queue')">+ Hinzufügen</button></div><div class="meta">Half · Account · Admin · Account Manager · Research Analyst · Pending Scraper-Review-Queue</div></div>
+      <div class="list-item"><div class="name">✉️ <strong>Bounce-Adressen Alert</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('bounce-alert')">+ Hinzufügen</button></div><div class="meta">Third · Global · Admin · Account Manager · Candidate Manager · Email-Bounces · Desktop-only</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Ops (4)</h4>
+      <div class="list-item"><div class="name">🔔 <strong>Meine überfälligen Reminders</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · User · alle Rollen · Drill-Down statt nur Badge</div></div>
+      <div class="list-item"><div class="name">👥 <strong>Team-Workload-Tabelle</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · Team · Admin · Head of · Desktop-only</div></div>
+      <div class="list-item"><div class="name">📡 <strong>Activity-Feed 24h</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Full · Team · Admin only · Team-Puls</div></div>
+      <div class="list-item"><div class="name">🔍 <strong>Longlist-Research-Backlog</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('longlist-research-backlog')">+ Hinzufügen</button></div><div class="meta">Half · User · Admin · Research Analyst · Mandate mit offenem Research · Progress + SLA</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Analytics (6)</h4>
+      <div class="list-item"><div class="name">📊 <strong>Pipeline-Snapshot</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · Team · Admin · Candidate Manager · Head of</div></div>
+      <div class="list-item"><div class="name">📈 <strong>Time-to-Fill-Trend</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('time-to-fill-trend')">+ Hinzufügen</button></div><div class="meta">Half · Team · Admin · Head of · Pipeline-Velocity-Sparkline pro Stage</div></div>
+      <div class="list-item"><div class="name">🏗 <strong>Placement-Rate nach Sparte</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('placement-rate-sparte')">+ Hinzufügen</button></div><div class="meta">Half · Sparte · Admin · Head of · ARC/GT/ING/PUR/REM Aufschlüsselung · Stacked-Bar</div></div>
+      <div class="list-item"><div class="name">💰 <strong>Honorar-Cashflow-Prognose</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('honorar-cashflow')">+ Hinzufügen</button></div><div class="meta">Half · Global · Admin · Account Manager · Q2 realisiert vs pending mit Confidence</div></div>
+      <div class="list-item"><div class="name">🛒 <strong>Jobbasket-Gate-Backlog</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('jobbasket-gate-backlog')">+ Hinzufügen</button></div><div class="meta">Third · Team · Candidate Manager · Account Manager · Oral GO / Assigned / To-Send Mini-Pipeline</div></div>
+      <div class="list-item"><div class="name">📋 <strong>Mandats-Offerten-Conversion</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('mandats-offerten-conversion')">+ Hinzufügen</button></div><div class="meta">Half · Team · Admin · Account Manager · Head of · Funnel Erstgespräch → Aktiv · Hit-Rate YTD</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Alert (6)</h4>
+      <div class="muted" style="font-size:11px;margin-bottom:6px">Assessment-Credits ablaufen · Ergänzt bestehende Alert-Widgets oben</div>
+      <div class="list-item"><div class="name">🧪 <strong>Assessment-Credits ablaufen</strong> <button class="btn btn-sm btn-primary" style="float:right" onclick="addWidgetDemo('assessment-credits-expiring')">+ Hinzufügen</button></div><div class="meta">Third · Account · Account Manager · Candidate Manager · Backoffice · Aufträge mit bald ablaufenden Credits · Nachbestell-Trigger</div></div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Agenda (2)</h4>
+      <div class="list-item"><div class="name">📅 <strong>Heute · Agenda</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · User · alle Rollen</div></div>
+      <div class="list-item"><div class="name">🎯 <strong>Mein Fokus diese Woche</strong> <span class="chip" style="background:#d1fae5;color:#065f46;margin-left:4px">✓ aktiv</span></div><div class="meta">Half · User · alle Rollen</div></div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('widgetCatalogDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <span class="muted" style="font-size:11.5px;margin-right:8px">Klick „+ Hinzufügen" fügt Widget sofort hinzu — wird erst beim Speichern persistiert</span>
+  </div>
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+// === Dashboard-Customization Demo-JS (v1.4) ===
+
+// Widget-Rows öffnen in Prod den geteilten History-Drawer (siehe candidates.html Tab 7 pending Demo)
+function openCallDrawer(n) { alert('In Prod öffnet History-Drawer mit Call-Details. Mockup-Demo: siehe candidates.html Tab 7 (7:58 Uhr Demo-Row) — gleicher Drawer mit Klassifizierungs-Tab.'); }
+function openEmailDrawer(n) { alert('In Prod öffnet History-Drawer mit Email-Details. Mockup-Demo: siehe candidates.html Tab 7 (7:58 Uhr Demo-Row) — gleicher Drawer mit Klassifizierungs-Tab.'); }
+
+// Rolle-Toggle (Q1=B aus Decisions-Doc)
+function toggleRolePopover(ev) {
+  ev && ev.stopPropagation();
+  document.getElementById('roleToggle').classList.toggle('open');
+}
+document.addEventListener('click', (ev) => {
+  if (!ev.target.closest('#roleToggle')) {
+    document.getElementById('roleToggle')?.classList.remove('open');
+  }
+});
+
+// === Rolle-spezifische Welcome-Panels (v1.4 Individualisierung) ===
+// Pro Rolle: Greeting · 3 Mini-KPIs · 3 Quick-Actions · Background-Tint
+const ROLE_WELCOME = {
+  Admin: {
+    icon: '⚙',
+    title: 'Admin',
+    subtitle: 'System-Health · Team-Übersicht · Ops',
+    tint: '#1e293b',
+    miniKPIs: [
+      { label: 'Blocker', val: '3', color: 'var(--red)' },
+      { label: 'Dead-Letter-Queue', val: '0', color: 'var(--green)' },
+      { label: 'Circuit-Breaker', val: 'alle ok', color: 'var(--green)' },
+      { label: 'Pending Classifications', val: '11', color: 'var(--gold)' }
+    ],
+    quickActions: [
+      { icon: '📋', label: 'Event-Log', href: '#' },
+      { icon: '⚙', label: 'Template-Editor', href: 'admin-dashboard-templates.html' },
+      { icon: '📊', label: 'System-Health', href: '#' }
+    ]
+  },
+  CM: {
+    icon: '👤',
+    title: 'Candidate Manager',
+    subtitle: 'Prozesse · Triage · Coaching · Garantie',
+    tint: 'var(--accent)',
+    miniKPIs: [
+      { label: 'Meine Prozesse', val: '14', color: 'var(--accent)' },
+      { label: 'Pending Triage', val: '11', color: 'var(--gold)' },
+      { label: 'Coaching heute', val: '2', color: 'var(--accent)' },
+      { label: 'Garantie-Check 14d', val: '3', color: 'var(--amber)' }
+    ],
+    quickActions: [
+      { icon: '📝', label: '+ Briefing', href: '#' },
+      { icon: '→', label: '+ Prozess', href: '#' },
+      { icon: '⏰', label: '+ Reminder', href: '#' }
+    ]
+  },
+  AM: {
+    icon: '🏢',
+    title: 'Account Manager',
+    subtitle: 'Mandate · Kunden · Versand · AGB',
+    tint: 'var(--gold)',
+    miniKPIs: [
+      { label: 'Offene Mandate', val: '6', color: 'var(--gold)' },
+      { label: 'To-Send-Inbox', val: '6', color: 'var(--accent)' },
+      { label: 'AGB-Pending', val: '5', color: 'var(--red)' },
+      { label: 'Mandats-Pipeline', val: '12', color: 'var(--accent)' }
+    ],
+    quickActions: [
+      { icon: '🎯', label: '+ Mandat', href: '#' },
+      { icon: '🏢', label: '+ Account', href: '#' },
+      { icon: '📤', label: 'CV versenden', href: '#' }
+    ]
+  },
+  RA: {
+    icon: '🔍',
+    title: 'Research Analyst',
+    subtitle: 'Scraper · Longlist · Kandidaten-Discovery',
+    tint: '#0ea5e9',
+    miniKPIs: [
+      { label: 'Scraper-Queue', val: '12', color: '#0ea5e9' },
+      { label: 'Longlist-Backlog', val: '23', color: 'var(--amber)' },
+      { label: 'Premarket-Count', val: '87', color: 'var(--accent)' },
+      { label: 'Unassigned (>48h)', val: '1', color: 'var(--red)' }
+    ],
+    quickActions: [
+      { icon: '🤖', label: 'Scraper-Run', href: '#' },
+      { icon: '📋', label: '+ Longlist', href: '#' },
+      { icon: '🔍', label: 'Discovery-Tool', href: '#' }
+    ]
+  },
+  BO: {
+    icon: '💰',
+    title: 'Backoffice',
+    subtitle: 'Rechnungen · Honorar-Cashflow · Credits',
+    tint: '#10b981',
+    miniKPIs: [
+      { label: 'Überfällige Rechnungen', val: '3', color: 'var(--red)' },
+      { label: 'Credits ablaufen (7d)', val: '3', color: 'var(--red)' },
+      { label: 'AGB-Pending', val: '5', color: 'var(--amber)' },
+      { label: 'Q2 Cashflow (Plan)', val: 'CHF 920k', color: 'var(--green)' }
+    ],
+    quickActions: [
+      { icon: '🧾', label: '+ Rechnung', href: '#' },
+      { icon: '💳', label: 'Zahlungs-Import', href: '#' },
+      { icon: '📊', label: 'Finance-Report', href: '#' }
+    ]
+  },
+  HoD: {
+    icon: '📊',
+    title: 'Head of',
+    subtitle: 'Sparte Ingenieur · Team-Analytics · Sparte-KPIs · Strategie',
+    tint: '#8b5cf6',
+    miniKPIs: [
+      { label: 'Sparte-Placements YTD', val: '4', color: '#8b5cf6' },
+      { label: 'Team-Auslastung', val: '87 %', color: 'var(--green)' },
+      { label: 'Ø Time-to-Fill', val: '46 d', color: 'var(--accent)' },
+      { label: 'Conversion-Rate', val: '42 %', color: 'var(--gold)' }
+    ],
+    quickActions: [
+      { icon: '👥', label: 'Team-Report', href: '#' },
+      { icon: '📈', label: 'Sparte-Analytics', href: '#' },
+      { icon: '🎯', label: 'Ziele Q3', href: '#' }
+    ]
+  },
+  Combined: {
+    icon: '👑',
+    title: 'Admin + Account Manager',
+    subtitle: 'Doppelrolle · kombinierte Ansicht · alle Widgets aus beiden dedupliziert',
+    tint: 'var(--accent)',
+    miniKPIs: [
+      { label: 'Blocker', val: '3', color: 'var(--red)' },
+      { label: 'Offene Mandate', val: '6', color: 'var(--gold)' },
+      { label: 'To-Send', val: '6', color: 'var(--accent)' },
+      { label: 'Pending Triage', val: '11', color: 'var(--amber)' }
+    ],
+    quickActions: [
+      { icon: '🎯', label: '+ Mandat', href: '#' },
+      { icon: '📋', label: 'Event-Log', href: '#' },
+      { icon: '📤', label: 'To-Send', href: '#' }
+    ]
+  }
+};
+
+// === Widget-Size-Overrides pro Rolle (optional) ===
+// Gleiche Widget, unterschiedliche Grösse je nach Rollen-Priorität
+const ROLE_SIZE_OVERRIDES = {
+  HoD: {
+    // HoD priorisiert Analytics → full-width
+    'time-to-fill-trend': 'full',
+    'placement-rate-sparte': 'full',
+    'honorar-cashflow': 'full'
+  },
+  BO: {
+    // BO priorisiert Honorar + Credits
+    'honorar-cashflow': 'full',
+    'assessment-credits-expiring': 'half'
+  },
+  AM: {
+    // AM: Honorar wichtiger als im Default
+    'honorar-cashflow': 'full'
+  }
+};
+
+// Rolle → Widget-Visibility-Mapping (aus Spec §5 · Migration 002 role_defaults gespiegelt)
+const ROLE_WIDGETS = {
+  Admin: [
+    'kpi-strip','heute-agenda','pipeline-snapshot','mein-fokus-woche','team-workload',
+    'pending-calls','pending-emails','to-send-inbox',
+    'meine-reminders','garantie-ablauf-14d','stale-prozesse',
+    'claim-faelle-offen','scraper-review-queue','agb-pending','bounce-alert',
+    'time-to-fill-trend','placement-rate-sparte','honorar-cashflow',
+    'activity-feed-24h'
+  ],
+  CM: [
+    'kpi-strip','heute-agenda','mein-fokus-woche','pipeline-snapshot',
+    'pending-calls','pending-emails',
+    'meine-reminders','garantie-ablauf-14d','stale-prozesse',
+    'jobbasket-gate-backlog'
+  ],
+  AM: [
+    'kpi-strip','heute-agenda',
+    'to-send-inbox','pending-emails',
+    'agb-pending','claim-faelle-offen','scraper-review-queue','assessment-credits-expiring',
+    'garantie-ablauf-14d','meine-reminders',
+    'honorar-cashflow','mandats-offerten-conversion'
+  ],
+  RA: [
+    'kpi-strip','heute-agenda',
+    'longlist-research-backlog','scraper-review-queue',
+    'meine-reminders','pipeline-snapshot'
+  ],
+  BO: [
+    'kpi-strip','heute-agenda',
+    'agb-pending','assessment-credits-expiring','honorar-cashflow',
+    'meine-reminders','bounce-alert'
+  ],
+  HoD: [
+    'kpi-strip','heute-agenda','team-workload','pipeline-snapshot',
+    'stale-prozesse','garantie-ablauf-14d',
+    'time-to-fill-trend','placement-rate-sparte','honorar-cashflow',
+    'activity-feed-24h'
+  ],
+  Combined: null // dynamisch aus Admin ∪ AM (User-spezifisch)
+};
+
+function setActiveRole(role, ev) {
+  ev && ev.preventDefault();
+  const popover = document.getElementById('rolePopover');
+  popover.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+  ev.target.closest('a').classList.add('active');
+
+  const label = role === 'Combined' ? '👤 Combined' :
+                role === 'Admin' ? '👤 Admin' :
+                role === 'HoD' ? '👤 Head of' :
+                role === 'AM' ? '👤 Account Manager' :
+                role === 'CM' ? '👤 Candidate Manager' :
+                role === 'RA' ? '👤 Research Analyst' :
+                role === 'BO' ? '👤 Backoffice' : '👤 ' + role;
+
+  document.getElementById('roleToggleBtn').innerHTML = label + ' <span style="font-size:9px">▼</span>';
+  document.getElementById('widgetCatalogRole').textContent = role;
+  document.getElementById('roleToggle').classList.remove('open');
+
+  // v1.4: Widget-Visibility per Rolle anwenden
+  applyRoleVisibility(role);
+
+  // Banner
+  const roleLabels = { Admin:'Admin', HoD:'Head of', CM:'Candidate Manager', AM:'Account Manager',
+                       RA:'Research Analyst', BO:'Backoffice', Combined:'Admin + Account Manager' };
+  const widgetCount = role === 'Combined'
+    ? [...new Set([...ROLE_WIDGETS.Admin, ...ROLE_WIDGETS.AM])].length
+    : (ROLE_WIDGETS[role] || []).length;
+  const msg = '<strong>' + roleLabels[role] + '</strong> aktiv · ' + widgetCount + ' Widgets sichtbar · User-Overrides pro Rolle separat persistiert';
+
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:70px;right:24px;background:var(--accent);color:#fff;padding:10px 16px;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:12.5px;z-index:100;max-width:340px;line-height:1.5';
+  banner.innerHTML = msg;
+  document.body.appendChild(banner);
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; }, 2500);
+  setTimeout(() => banner.remove(), 3100);
+}
+
+function applyRoleVisibility(role) {
+  let visibleKeys;
+  if (role === 'Combined') {
+    visibleKeys = new Set([...ROLE_WIDGETS.Admin, ...ROLE_WIDGETS.AM]);
+  } else {
+    visibleKeys = new Set(ROLE_WIDGETS[role] || []);
+  }
+
+  const sizeOverrides = ROLE_SIZE_OVERRIDES[role] || {};
+  document.querySelectorAll('.widget[data-widget-key]').forEach(w => {
+    const key = w.getAttribute('data-widget-key');
+    if (visibleKeys.has(key)) {
+      w.style.display = '';
+      if (sizeOverrides[key]) {
+        w.setAttribute('data-size', sizeOverrides[key]);
+      } else {
+        const origSize = w.getAttribute('data-orig-size');
+        if (origSize) w.setAttribute('data-size', origSize);
+      }
+    } else {
+      w.style.display = 'none';
+    }
+  });
+
+  renderRoleWelcome(role);
+}
+
+function renderRoleWelcome(role) {
+  const wel = document.getElementById('roleWelcome');
+  if (!wel) return;
+  const data = ROLE_WELCOME[role];
+  if (!data) { wel.style.display = 'none'; return; }
+  wel.style.display = 'flex';
+  wel.style.borderLeftColor = data.tint;
+
+  const kpiHtml = data.miniKPIs.map(k =>
+    '<div class="role-welcome-kpi"><div class="k-lbl">' + escapeHtmlDash(k.label) +
+    '</div><div class="k-val" style="color:' + k.color + '">' + escapeHtmlDash(k.val) + '</div></div>'
+  ).join('');
+
+  const actionsHtml = data.quickActions.map(a =>
+    '<a href="' + escapeHtmlDash(a.href) + '"><span class="icon">' + a.icon + '</span>' + escapeHtmlDash(a.label) + '</a>'
+  ).join('');
+
+  wel.innerHTML =
+    '<div class="role-welcome-icon" style="background:color-mix(in srgb, ' + data.tint + ' 15%, var(--surface));color:' + data.tint + '">' + data.icon + '</div>' +
+    '<div class="role-welcome-text">' +
+      '<h2 style="color:' + data.tint + '">' + escapeHtmlDash(data.title) + '</h2>' +
+      '<div class="greeting">Hallo Peter · 17.04.2026 · Dienstag</div>' +
+      '<div class="subtitle">' + escapeHtmlDash(data.subtitle) + '</div>' +
+    '</div>' +
+    '<div class="role-welcome-kpis">' + kpiHtml + '</div>' +
+    '<div class="role-welcome-actions">' + actionsHtml + '</div>';
+}
+
+function escapeHtmlDash(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+// Initial: Orig-Size-Backup + Admin-View rendern
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.widget[data-widget-key]').forEach(w => {
+    const size = w.getAttribute('data-size');
+    if (size) w.setAttribute('data-orig-size', size);
+  });
+  applyRoleVisibility('Admin');
+});
+
+// Edit-Modus-Toggle
+function toggleEditMode() {
+  const isEditing = document.body.getAttribute('data-edit-mode') === 'true';
+  if (isEditing) {
+    document.body.removeAttribute('data-edit-mode');
+    document.getElementById('editToggleBtn').innerHTML = '✎ anpassen';
+    // Remove injected edit-controls
+    document.querySelectorAll('.widget-drag-handle-js, .widget-edit-controls-js').forEach(el => el.remove());
+    // Persist demo
+    const banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;top:70px;right:24px;background:#10b981;color:#fff;padding:10px 16px;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:12.5px;z-index:100';
+    banner.innerHTML = '💾 Layout gespeichert · Multi-Device-Sync aktiv';
+    document.body.appendChild(banner);
+    setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; }, 2000);
+    setTimeout(() => banner.remove(), 2600);
+  } else {
+    document.body.setAttribute('data-edit-mode', 'true');
+    document.getElementById('editToggleBtn').innerHTML = '💾 Speichern';
+    // Inject drag-handles + edit-controls into every .widget
+    document.querySelectorAll('.widget[data-widget-key]').forEach(w => {
+      const pinned = w.getAttribute('data-pinned') === 'true';
+      const key = w.getAttribute('data-widget-key');
+
+      const dragH = document.createElement('div');
+      dragH.className = 'widget-drag-handle widget-drag-handle-js';
+      dragH.textContent = '⋮⋮';
+      dragH.title = 'Zum Verschieben ziehen';
+      w.insertBefore(dragH, w.firstChild);
+
+      const ctrls = document.createElement('div');
+      ctrls.className = 'widget-edit-controls widget-edit-controls-js';
+      ctrls.innerHTML = (pinned
+        ? '<button title="Gepinnt — nicht entfernbar" disabled style="opacity:0.4">🔒</button>'
+        : '<button class="danger" title="Widget entfernen" onclick="removeWidget(\'' + key + '\')">✕</button>'
+      ) + '<button title="Grösse ändern" onclick="cycleWidgetSize(\'' + key + '\')">↔</button>' +
+      '<button title="Konfigurieren" onclick="alert(\'Config-Drawer für Widget: ' + key + '\')">⚙</button>';
+      w.appendChild(ctrls);
+    });
+  }
+}
+
+function removeWidget(key) {
+  if (!confirm('Widget „' + key + '" aus dieser Ansicht entfernen?\n(Nach Speichern aus Dashboard entfernt — kann jederzeit via + Widget hinzufügen wieder hinzugefügt werden.)')) return;
+  const el = document.querySelector('[data-widget-key="' + key + '"]');
+  if (el) el.style.display = 'none';
+}
+
+function cycleWidgetSize(key) {
+  const el = document.querySelector('[data-widget-key="' + key + '"]');
+  if (!el) return;
+  const current = el.getAttribute('data-size') || 'half';
+  const next = current === 'quarter' ? 'third' :
+               current === 'third' ? 'half' :
+               current === 'half' ? 'full' : 'quarter';
+  el.setAttribute('data-size', next);
+  alert('Widget „' + key + '" auf Grösse „' + next + '" gesetzt (Demo · persistiert beim Speichern).');
+}
+
+function addWidgetDemo(widgetKey) {
+  const el = document.querySelector('[data-widget-key="' + widgetKey + '"]');
+  if (!el) { alert('Widget „' + widgetKey + '" nicht im Mockup-Pool — in Prod wird es aus Widget-Registry nachgeladen.'); return; }
+  el.style.display = '';
+  closeDrawer('widgetCatalogDrawer');
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Visual-Flash
+  el.style.transition = 'background 0.6s';
+  const orig = el.style.background;
+  el.style.background = 'color-mix(in srgb, var(--gold) 10%, transparent)';
+  setTimeout(() => { el.style.background = orig; }, 1200);
+  // Banner
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:70px;right:24px;background:var(--accent);color:#fff;padding:10px 16px;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:12.5px;z-index:100';
+  banner.textContent = '✓ Widget hinzugefügt · beim Speichern persistiert';
+  document.body.appendChild(banner);
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; }, 2000);
+  setTimeout(() => banner.remove(), 2600);
+}
+
+function resetLayout() {
+  if (!confirm('Alle Anpassungen für aktuelle Ansicht zurücksetzen?\nLayout wird aus den Rollen-Standards deiner Organisation neu geladen.')) return;
+  alert('Layout auf Default zurückgesetzt · in Prod: PATCH /api/v1/me/dashboard-layout mit {views: {' + document.getElementById('widgetCatalogRole').textContent + ': null}}');
+  // Demo: hidden widgets wieder sichtbar machen
+  document.querySelectorAll('.widget[data-widget-key]').forEach(w => w.style.display = '');
+}
+</script>
+</body>
+</html>

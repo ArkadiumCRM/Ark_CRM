@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Mandate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand"><div class="logo-mark">A</div><div class="brand-text"><div class="brand-name">ARKADIUM</div><div class="brand-sub">CRM</div></div></div>
+  <div class="breadcrumb"><span class="current">Mandate</span></div>
+  <div class="header-right"><span class="cmd-hint">⌘K</span><button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button></div>
+</header>
+
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Mandate</h1>
+    <span class="muted">14 aktiv · 8 Target · 4 Taskforce · 2 Time · 6 abgeschlossen YTD</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">+ Neues Mandat</button>
+    <button class="btn btn-sm">📄 Offerte generieren</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Aktive Mandate</div><div class="kpi-value">14</div><div class="kpi-sub muted">Gesamtvolumen CHF 1.8 M</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--gold)">Placements YTD</div><div class="kpi-value" style="color:var(--gold)">18</div><div class="kpi-sub muted">Ziel 32</div></div>
+    <div class="kpi-card"><div class="kpi-label">Honorar YTD</div><div class="kpi-value">CHF 1.2 M</div><div class="kpi-sub muted">netto · inkl. Optionen</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--amber)">Stale (&gt; 60 d)</div><div class="kpi-value" style="color:var(--amber)">2</div><div class="kpi-sub muted">Review fällig</div></div>
+    <div class="kpi-card"><div class="kpi-label">Neu 30 d</div><div class="kpi-value">3</div><div class="kpi-sub muted">gewonnen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Time-to-Fill</div><div class="kpi-value">14 W</div><div class="kpi-sub muted">Median</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Mandatsname, Account, Funktion …" style="flex:1 1 280px">
+    <select><option>Alle Typen</option><option>🎯 Target</option><option>⚡ Taskforce</option><option>⏱ Time</option></select>
+    <select><option>Alle Status</option><option>Entwurf</option><option>Aktiv</option><option>Abgeschlossen</option><option>Abgebrochen</option><option>Abgelehnt</option></select>
+    <select><option>Alle AMs</option><option>PW</option><option>JV</option><option>MF</option><option>NP</option></select>
+    <select><option>Alle Sparten</option><option>ING</option><option>REM</option><option>ARC</option><option>GT</option><option>PUR</option></select>
+  </div>
+
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Aktiv <span class="count">14</span></div>
+      <div class="chip-tab">Entwurf <span class="count">2</span></div>
+      <div class="chip-tab">🎯 Target <span class="count">8</span></div>
+      <div class="chip-tab">⚡ Taskforce <span class="count">4</span></div>
+      <div class="chip-tab">⏱ Time <span class="count">2</span></div>
+      <div class="chip-tab">⚠ Stale <span class="count">2</span></div>
+      <div class="chip-tab">Abgeschlossen YTD <span class="count">6</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead><tr><th>Mandat</th><th>Account</th><th>Typ</th><th>Status</th><th>AM</th><th>Honorar</th><th>Fortschritt</th><th>Kickoff</th><th>Ziel</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer" onclick="location.href='mandates.html'">
+          <td><strong>CFO-Suche</strong></td>
+          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><span class="chip chip-accent">🎯 Target</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>CHF 75'000</td>
+          <td>Stage 2/3 · <span style="color:var(--gold)">76 %</span></td>
+          <td>14.01.2026</td>
+          <td>30.06.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>PL Hochbau Taskforce</strong></td>
+          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><span class="chip chip-accent">⚡ Taskforce</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>CHF 12k/Mt + 8k/Placement</td>
+          <td>2/3 besetzt · <span style="color:var(--gold)">67 %</span></td>
+          <td>12.02.2026</td>
+          <td>laufend</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Bauleiter Tiefbau</strong></td>
+          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><span class="chip chip-accent">🎯 Target</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>CHF 55'000</td>
+          <td>Stage 1/3 · 33 %</td>
+          <td>20.02.2026</td>
+          <td>15.08.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>CFO Muster Immobilien</strong></td>
+          <td>Muster Immobilien AG</td>
+          <td><span class="chip chip-accent">🎯 Target</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>CHF 68'000</td>
+          <td>Stage 2/3 · 67 %</td>
+          <td>03.12.2025</td>
+          <td>30.04.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer;background:color-mix(in srgb, var(--amber) 5%, var(--surface));border-left:3px solid var(--amber)">
+          <td><strong>⚠ Bauleiter Gleisbau</strong></td>
+          <td>Marti AG</td>
+          <td><span class="chip chip-accent">🎯 Target</span></td>
+          <td><span class="chip chip-amber">Aktiv · stale</span></td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>CHF 62'000</td>
+          <td>Stage 1/3 · <span style="color:var(--red)">stale 68 d</span></td>
+          <td>15.01.2026</td>
+          <td>15.07.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>BIM-Manager</strong></td>
+          <td>Implenia AG</td>
+          <td><span class="chip chip-accent">🎯 Target</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>CHF 66'000</td>
+          <td>Stage 1/3 · 45 %</td>
+          <td>15.03.2026</td>
+          <td>15.09.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Hunt Projektentwickler</strong></td>
+          <td>Losinger Marazzi</td>
+          <td><span class="chip chip-accent">⏱ Time</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td><span class="actor-chip">LR</span></td>
+          <td>CHF 8k/Slot/Woche</td>
+          <td>Woche 6/12 · 50 %</td>
+          <td>03.03.2026</td>
+          <td>27.05.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="10" style="text-align:center">+ 7 weitere aktive Mandate · <button class="btn btn-sm">↓ Alle anzeigen</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+/* Auto-wire: jeder Row-Klick → Mandat-Detailmaske */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'mandates.html');
+  });
+});
+</script>
+</body>
+</html>

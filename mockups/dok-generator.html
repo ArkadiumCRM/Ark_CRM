@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Operations / Dok-Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+/* Dok-Generator-Scope Styles */
+.step-indicator { display:flex;gap:0;align-items:center;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px }
+.step { display:flex;gap:8px;align-items:center;padding:6px 14px;color:var(--text-light);font-weight:500 }
+.step.active { color:var(--accent);font-weight:600 }
+.step-num { width:22px;height:22px;border-radius:50%;background:var(--border-soft);color:var(--text-light);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700 }
+.step.active .step-num { background:var(--accent);color:var(--surface) }
+.step-sep { color:var(--border-strong);margin:0 2px }
+.doc-main-wrap { display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 250px) }
+.doc-sidebar { background:var(--surface);border-right:1px solid var(--border);padding:16px 14px;overflow-y:auto }
+.doc-main { padding:20px 28px;overflow-y:auto }
+.tpl-grid { display:grid;grid-template-columns:repeat(auto-fill, minmax(220px,1fr));gap:14px;margin-top:14px }
+.tpl-card { background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:14px;cursor:pointer;transition:0.15s;position:relative }
+.tpl-card:hover { border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.06) }
+.tpl-icon { font-size:24px;margin-bottom:6px }
+.tpl-name { font-weight:600;font-size:13px;margin-bottom:4px;line-height:1.3 }
+.tpl-meta { font-size:11px;color:var(--text-light) }
+.tpl-card.soon { opacity:0.55;cursor:not-allowed }
+.tpl-card.soon::after { content:"🟡 ausstehend";position:absolute;top:6px;right:8px;font-size:9px;color:var(--amber);font-weight:600 }
+.tpl-fav { position:absolute;top:8px;right:8px;font-size:16px;cursor:pointer;color:var(--border-strong);line-height:1;padding:2px;user-select:none;transition:0.15s }
+.tpl-fav:hover { color:var(--gold);transform:scale(1.15) }
+.tpl-fav.active { color:var(--gold) }
+.step-pane { display:none }
+.step-pane.active { display:block }
+.sidebar-cat { margin-bottom:14px }
+.sidebar-cat-head { font-size:10px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;color:var(--text-light);margin-bottom:6px }
+.sidebar-cat-item { padding:6px 10px;font-size:12px;border-radius:2px;cursor:pointer;display:flex;justify-content:space-between }
+.sidebar-cat-item:hover { background:var(--bg) }
+.sidebar-cat-item.active { background:var(--accent-soft);color:var(--accent);font-weight:600 }
+.sidebar-cat-count { color:var(--text-light);font-size:11px }
+.editor-layout { display:grid;grid-template-columns:260px 1fr;gap:12px;align-items:start }
+.editor-sidebar { background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:12px;position:sticky;top:12px;max-height:calc(100vh - 220px);overflow-y:auto }
+.editor-sidebar h5 { font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-light);margin:14px 0 6px;font-weight:600 }
+.editor-sidebar h5:first-child { margin-top:0 }
+.es-item { display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;border-radius:2px;cursor:grab;transition:background 0.1s }
+.es-item:hover { background:var(--bg) }
+.es-grip { color:var(--text-light);font-size:10px;letter-spacing:-1px }
+.es-check input { margin:0 }
+.es-label { flex:1;font-weight:500 }
+.es-src { font-size:10px;color:var(--text-light);background:var(--bg);padding:1px 5px;border-radius:2px }
+.param-panel { padding:10px;background:var(--bg);border-radius:3px;margin-top:10px }
+.param-row { display:flex;gap:8px;align-items:center;margin-bottom:6px;font-size:12px }
+.anon-panel { background:color-mix(in srgb, var(--purple, #a78bfa) 6%, transparent);border:1px solid color-mix(in srgb, var(--purple, #a78bfa) 20%, var(--border));border-radius:3px;padding:10px;margin-top:8px }
+.editor-main { background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:14px }
+.editor-toolbar { display:flex;align-items:center;gap:2px;padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:3px;margin-bottom:12px;flex-wrap:wrap }
+.et-btn { width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;font-size:13px;color:var(--text-mid) }
+.et-btn:hover { background:var(--bg);color:var(--text) }
+.et-btn.active { background:var(--accent-soft);color:var(--accent) }
+.et-sep { width:1px;height:18px;background:var(--border);margin:0 4px }
+.et-zoom { display:flex;align-items:center;gap:4px;margin-left:auto;font-size:11px;color:var(--text-light) }
+.canvas-wrap { display:flex;justify-content:center;padding:16px 0;overflow:auto }
+.canvas-a4 { width:210mm;background:#fff;box-shadow:0 3px 16px rgba(0,0,0,0.15);min-height:297mm;padding:20mm 18mm;font-family:'Segoe UI',system-ui,sans-serif;font-size:10.5pt;line-height:1.55;color:#333;--ark-navy:#1a2540;--ark-gold:#b99a5a;transform-origin:top center;transition:transform 0.18s ease }
+.canvas-a4 .page-break { margin:8mm -18mm 0;padding:6mm 0;display:flex;align-items:center;justify-content:center;gap:8mm;font-size:8pt;color:#aaa;letter-spacing:0.25em;text-transform:uppercase;user-select:none;border-top:1px dashed #ccc;border-bottom:1px dashed #ccc }
+.canvas-a4 .page-break::before,.canvas-a4 .page-break::after { content:"";flex:0 0 30mm;height:1px;background:repeating-linear-gradient(to right, #bbb 0 3px, transparent 3px 7px) }
+.canvas-a4 h1 { font-family:'Libre Baskerville',serif;color:var(--ark-navy);font-size:20pt;margin:0 0 6mm }
+.canvas-a4 h2 { font-family:'Libre Baskerville',serif;color:var(--ark-navy);font-size:13pt;margin:6mm 0 3mm }
+.canvas-a4 .ph { background:color-mix(in srgb, var(--ark-gold) 20%, transparent);padding:1px 3px;border-radius:2px;color:var(--ark-navy);font-weight:600 }
+
+/* ===== MOBILE / TABLET ===== */
+@media (max-width:960px) and (min-width:641px) {
+  .doc-main-wrap { grid-template-columns:220px 1fr; }
+  .editor-layout { grid-template-columns:220px 1fr; }
+  .tpl-grid { grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
+}
+
+@media (max-width:640px) {
+  /* Step-Indicator: horizontal scrollbar */
+  .step-indicator, .steps-bar, [class*="step-"] { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .step-sep { display:none; }
+
+  /* Sidebar als Drawer auf Mobile */
+  .doc-main-wrap {
+    grid-template-columns:1fr !important;
+    position:relative;
+  }
+  .doc-sidebar {
+    position:fixed; top:0; left:0; bottom:0; width:280px;
+    transform:translateX(-100%); transition:transform 0.25s ease;
+    z-index:240; box-shadow:var(--shadow);
+    padding-top:60px;
+  }
+  .doc-main-wrap.sidebar-open .doc-sidebar { transform:translateX(0); }
+
+  /* Floating-Button zum Öffnen der Sidebar (sticky oben) */
+  .doc-sidebar-toggle {
+    display:inline-flex !important; align-items:center; gap:6px;
+    position:sticky; top:8px; z-index:5; margin:8px 12px;
+    padding:6px 12px; background:var(--accent-soft); color:var(--accent);
+    border:1px solid var(--accent); border-radius:3px;
+    font-size:12px; font-weight:600; cursor:pointer;
+  }
+
+  /* Template-Grid: 1 Spalte */
+  .tpl-grid { grid-template-columns:1fr !important; gap:10px; padding:12px; }
+
+  /* Editor-Layout: Sidebar oben als Collapse statt links */
+  .editor-layout { grid-template-columns:1fr !important; gap:10px; }
+  .editor-sidebar {
+    position:static; max-height:none;
+    border:1px solid var(--border); padding:10px;
+  }
+
+  /* A4-Canvas: kleinere Skalierung */
+  .canvas-wrap { padding:8px 0; }
+  .canvas-a4 {
+    width:100%; max-width:210mm;
+    transform:scale(0.55); transform-origin:top center;
+    margin-bottom:-45%; /* kompensiert Skalier-Leerraum */
+  }
+
+  /* Step-Actions Buttons kleiner */
+  .step-indicator + div .btn, [id="btnPrev"], [id="btnNext"] { padding:6px 10px; font-size:11px; }
+}
+
+/* Mobile-only Sidebar-Toggle sichtbar */
+.doc-sidebar-toggle { display:none; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Operations</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="crm.html">Home</a><span class="sep">/</span>
+    <a href="#">Operations</a><span class="sep">/</span>
+    <span class="current">Dok-Generator</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="page-banner" style="padding:20px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">📝 Dok-Generator</h1>
+    <span class="muted">38 Templates · 23 heute generiert · 312 YTD · 14 Entwürfe offen</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="goToStep(1)">+ Neues Dokument</button>
+  </div>
+</div>
+
+<div class="step-indicator">
+  <div class="step active" data-step="1">
+    <span class="step-num">1</span>
+    <span>Template</span>
+  </div>
+  <div class="step-sep">→</div>
+  <div class="step" data-step="2">
+    <span class="step-num">2</span>
+    <span>Entity</span>
+  </div>
+  <div class="step-sep">→</div>
+  <div class="step" data-step="3">
+    <span class="step-num">3</span>
+    <span>Ausfüllen</span>
+  </div>
+  <div class="step-sep">→</div>
+  <div class="step" data-step="4">
+    <span class="step-num">4</span>
+    <span>Preview</span>
+  </div>
+  <div class="step-sep">→</div>
+  <div class="step" data-step="5">
+    <span class="step-num">5</span>
+    <span>Ablage</span>
+  </div>
+  <span class="spacer" style="flex:1"></span>
+  <div style="display:flex;gap:6px">
+    <button class="btn btn-sm" disabled id="btnPrev" onclick="goToStep(currentStep-1)">← Zurück</button>
+    <button class="btn btn-sm btn-primary" id="btnNext" onclick="goToStep(currentStep+1)">Weiter →</button>
+  </div>
+</div>
+
+<div class="doc-main-wrap" id="docMainWrap">
+  <!-- Mobile-only Sidebar-Toggle -->
+  <button class="doc-sidebar-toggle" onclick="toggleDocSidebar()" aria-label="Kategorien öffnen">☰ Kategorien</button>
+  <aside class="doc-sidebar" id="docSidebar">
+    <div style="margin-bottom:14px">
+      <input type="search" id="tplSearch" placeholder="🔍 Template suchen …" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:2px;background:var(--surface);font-size:12px;font-family:inherit">
+    </div>
+
+    <div class="sidebar-cat">
+      <div class="sidebar-cat-head">Kategorien</div>
+      <div class="sidebar-cat-item active" data-cat="all"><span>Alle</span><span class="sidebar-cat-count">38</span></div>
+      <div class="sidebar-cat-item" data-cat="mandat_offerte"><span>Mandat-Offerten</span><span class="sidebar-cat-count">4</span></div>
+      <div class="sidebar-cat-item" data-cat="mandat_rechnung"><span>Mandat-Rechnungen</span><span class="sidebar-cat-count">10</span></div>
+      <div class="sidebar-cat-item" data-cat="best_effort"><span>Rechnung-Erfolgsbasis</span><span class="sidebar-cat-count">8</span></div>
+      <div class="sidebar-cat-item" data-cat="assessment"><span>Assessment</span><span class="sidebar-cat-count">3</span></div>
+      <div class="sidebar-cat-item" data-cat="rueckerstattung"><span>Rückerstattung</span><span class="sidebar-cat-count">1</span></div>
+      <div class="sidebar-cat-item" data-cat="kandidat"><span>Kandidat</span><span class="sidebar-cat-count">5</span></div>
+      <div class="sidebar-cat-item" data-cat="reporting"><span>Reportings</span><span class="sidebar-cat-count">7</span></div>
+    </div>
+
+    <div class="sidebar-cat">
+      <div class="sidebar-cat-head">Quick-Filter</div>
+      <div class="sidebar-cat-item" data-filter="favorites"><span>⭐ Favoriten</span><span class="sidebar-cat-count" id="favCount">0</span></div>
+      <div class="sidebar-cat-item" data-filter="recent"><span>Zuletzt genutzt</span><span class="sidebar-cat-count">8</span></div>
+      <div class="sidebar-cat-item" data-filter="drafts"><span>Entwürfe</span><span class="sidebar-cat-count">14</span></div>
+      <div class="sidebar-cat-item" data-filter="kunde"><span>Kunde-facing</span><span class="sidebar-cat-count">23</span></div>
+      <div class="sidebar-cat-item" data-filter="intern"><span>Intern</span><span class="sidebar-cat-count">14</span></div>
+    </div>
+
+    <div class="sidebar-cat">
+      <div class="sidebar-cat-head">Zuletzt generiert</div>
+      <div style="font-size:11px;line-height:1.5">
+        <div style="padding:5px 0;border-bottom:1px dashed var(--border-soft)"><strong>RE-2026-0094</strong><div class="muted" style="font-size:10px">Rechnung Spesen · 12.04.2026 · PW</div></div>
+        <div style="padding:5px 0;border-bottom:1px dashed var(--border-soft)"><strong>Offerte Bauherr AG</strong><div class="muted" style="font-size:10px">08.04.2026 · MF</div></div>
+        <div style="padding:5px 0"><strong>ARK-CV T. Furrer v3</strong><div class="muted" style="font-size:10px">02.04.2026 · JV</div></div>
+      </div>
+    </div>
+  </aside>
+  <main class="doc-main" id="docMain">
+
+    <!-- STEP 1: TEMPLATE WÄHLEN -->
+    <div class="step-pane active" data-step="1">
+      <div style="margin-bottom:10px">
+        <h2 style="margin:0 0 4px;font-family:'Libre Baskerville',serif;font-size:18px">Template wählen</h2>
+        <div class="muted" style="font-size:12px">42 Templates · Category-Filter in Sidebar</div>
+      </div>
+
+      <div class="tpl-grid" id="tplGrid">
+        <!-- 1.1 Mandat-Offerten (4) -->
+        <div class="tpl-card" data-tpl="mandat_offerte_target" data-cat="mandat_offerte" onclick="selectTemplate('mandat_offerte_target')">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Mandat-Offerte Target</div>
+          <div class="tpl-meta">Mandat (Target) · DE</div>
+        </div>
+        <div class="tpl-card" data-tpl="mandat_offerte_taskforce" data-cat="mandat_offerte" onclick="selectTemplate('mandat_offerte_taskforce')">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Mandat-Offerte Taskforce</div>
+          <div class="tpl-meta">Mandat (Taskforce)</div>
+        </div>
+        <div class="tpl-card soon" data-tpl="mandat_offerte_time" data-cat="mandat_offerte">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Mandat-Offerte Time</div>
+          <div class="tpl-meta">Mandat (Time) · noch nicht ausgerollt</div>
+        </div>
+        <div class="tpl-card" data-tpl="auftragserteilung_optionale_stage" data-cat="mandat_offerte" onclick="selectTemplate('auftragserteilung_optionale_stage')">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Auftragserteilung Optionale Stage</div>
+          <div class="tpl-meta">Mandat + Option VIII/IX/X</div>
+        </div>
+
+        <!-- 1.2 Mandat-Rechnungen (10) -->
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_1_sie" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_1_sie')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 1</div>
+          <div class="tpl-meta">Mandat Stage I · Sie</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_1_du" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_1_du')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 1</div>
+          <div class="tpl-meta">Mandat Stage I · Du</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_2_sie" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_2_sie')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 2</div>
+          <div class="tpl-meta">Mandat Stage II · Sie</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_2_du" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_2_du')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 2</div>
+          <div class="tpl-meta">Mandat Stage II · Du</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_3_sie" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_3_sie')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 3</div>
+          <div class="tpl-meta">Mandat Stage III · Sie</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_teilzahlung_3_du" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_teilzahlung_3_du')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Mandat · Teilzahlung 3</div>
+          <div class="tpl-meta">Mandat Stage III · Du</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_optionale_stage" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_optionale_stage')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Optionale Stage</div>
+          <div class="tpl-meta">Mandat + Option</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_mandat_kuendigung" data-cat="mandat_rechnung" onclick="selectTemplate('rechnung_mandat_kuendigung')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Kündigung Mandat</div>
+          <div class="tpl-meta">Mandat · cancellation</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_mandat_sie" data-cat="mandat_rechnung" onclick="selectTemplate('mahnung_mandat_sie')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Mandat</div>
+          <div class="tpl-meta">Rechnung Mandat · Sie</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_mandat_du" data-cat="mandat_rechnung" onclick="selectTemplate('mahnung_mandat_du')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Mandat</div>
+          <div class="tpl-meta">Rechnung Mandat · Du</div>
+        </div>
+
+        <!-- 1.3 Best-Effort (8) -->
+        <div class="tpl-card" data-tpl="rechnung_best_effort_sie" data-cat="best_effort" onclick="selectTemplate('rechnung_best_effort_sie')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Erfolgsbasis · Sie</div>
+          <div class="tpl-meta">Prozess · Placement · ohne Rabatt</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_best_effort_du" data-cat="best_effort" onclick="selectTemplate('rechnung_best_effort_du')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Erfolgsbasis · Du</div>
+          <div class="tpl-meta">Prozess · Placement · ohne Rabatt</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_best_effort_mit_rabatt_sie" data-cat="best_effort" onclick="selectTemplate('rechnung_best_effort_mit_rabatt_sie')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Erfolgsbasis mit Rabatt · Sie</div>
+          <div class="tpl-meta">Prozess · Placement</div>
+        </div>
+        <div class="tpl-card" data-tpl="rechnung_best_effort_mit_rabatt_du" data-cat="best_effort" onclick="selectTemplate('rechnung_best_effort_mit_rabatt_du')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Erfolgsbasis mit Rabatt · Du</div>
+          <div class="tpl-meta">Prozess · Placement</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_best_effort_sie" data-cat="best_effort" onclick="selectTemplate('mahnung_best_effort_sie')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Erfolgsbasis · Sie</div>
+          <div class="tpl-meta">Rechnung BE · Sie</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_best_effort_du" data-cat="best_effort" onclick="selectTemplate('mahnung_best_effort_du')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Erfolgsbasis · Du</div>
+          <div class="tpl-meta">Rechnung BE · Du</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_best_effort_mit_rabatt_sie" data-cat="best_effort" onclick="selectTemplate('mahnung_best_effort_mit_rabatt_sie')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Erfolgsbasis mit Rabatt · Sie</div>
+          <div class="tpl-meta">Rechnung BE</div>
+        </div>
+        <div class="tpl-card" data-tpl="mahnung_best_effort_mit_rabatt_du" data-cat="best_effort" onclick="selectTemplate('mahnung_best_effort_mit_rabatt_du')">
+          <div class="tpl-icon">🔔</div>
+          <div class="tpl-name">Mahnung Erfolgsbasis mit Rabatt · Du</div>
+          <div class="tpl-meta">Rechnung BE</div>
+        </div>
+
+        <!-- 1.4 Assessment (3) -->
+        <div class="tpl-card" data-tpl="assessment_offerte" data-cat="assessment" onclick="selectTemplate('assessment_offerte')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">Offerte Diagnostik &amp; Assessment</div>
+          <div class="tpl-meta">Assessment-Order</div>
+        </div>
+        <div class="tpl-card" data-tpl="assessment_rechnung" data-cat="assessment" onclick="selectTemplate('assessment_rechnung')">
+          <div class="tpl-icon">💰</div>
+          <div class="tpl-name">Rechnung Diagnostik &amp; Assessment</div>
+          <div class="tpl-meta">Assessment-Order</div>
+        </div>
+        <div class="tpl-card" data-tpl="executive_report" data-cat="assessment" onclick="selectTemplate('executive_report')">
+          <div class="tpl-icon">📋</div>
+          <div class="tpl-name">Executive Report <span class="chip chip-accent" style="font-size:9px">NEU</span></div>
+          <div class="tpl-meta">Assessment-Run + Kandidat</div>
+        </div>
+
+        <!-- 1.5 Rückerstattung (1) -->
+        <div class="tpl-card" data-tpl="rechnung_rueckerstattung" data-cat="rueckerstattung" onclick="selectTemplate('rechnung_rueckerstattung')">
+          <div class="tpl-icon">↩</div>
+          <div class="tpl-name">Rechnung Rückerstattung</div>
+          <div class="tpl-meta">Prozess · Early-Exit</div>
+        </div>
+
+        <!-- 1.6 Kandidat (5) -->
+        <div class="tpl-card" data-tpl="ark_cv" data-cat="kandidat" onclick="selectTemplate('ark_cv')">
+          <div class="tpl-icon">👤</div>
+          <div class="tpl-name">ARK CV</div>
+          <div class="tpl-meta">Kandidat · intern + Kunde</div>
+        </div>
+        <div class="tpl-card" data-tpl="abstract" data-cat="kandidat" onclick="selectTemplate('abstract')">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Abstract</div>
+          <div class="tpl-meta">Kandidat · Kurzzusammenfassung</div>
+        </div>
+        <div class="tpl-card" data-tpl="expose" data-cat="kandidat" onclick="selectTemplate('expose')">
+          <div class="tpl-icon">🎭</div>
+          <div class="tpl-name">Exposé</div>
+          <div class="tpl-meta">Kandidat · anonymisiert</div>
+        </div>
+        <div class="tpl-card" data-tpl="referenzauskunft" data-cat="kandidat" onclick="selectTemplate('referenzauskunft')">
+          <div class="tpl-icon">📞</div>
+          <div class="tpl-name">Referenzauskunft</div>
+          <div class="tpl-meta">Kandidat + Referenzperson</div>
+        </div>
+        <div class="tpl-card" data-tpl="referral_schreiben" data-cat="kandidat" onclick="selectTemplate('referral_schreiben')">
+          <div class="tpl-icon">🤝</div>
+          <div class="tpl-name">Referral-Schreiben</div>
+          <div class="tpl-meta">Kandidat</div>
+        </div>
+
+        <!-- 1.7 Reportings (7) -->
+        <div class="tpl-card" data-tpl="am_reporting" data-cat="reporting" onclick="selectTemplate('am_reporting')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">AM Reporting Fokus</div>
+          <div class="tpl-meta">Tenant + Zeitraum</div>
+        </div>
+        <div class="tpl-card" data-tpl="cm_reporting" data-cat="reporting" onclick="selectTemplate('cm_reporting')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">CM Reporting Fokus</div>
+          <div class="tpl-meta">Mitarbeiter CM + Zeitraum</div>
+        </div>
+        <div class="tpl-card" data-tpl="monatsreporting_cm" data-cat="reporting" onclick="selectTemplate('monatsreporting_cm')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">Monatsreporting CM</div>
+          <div class="tpl-meta">Mitarbeiter CM + Monat</div>
+        </div>
+        <div class="tpl-card" data-tpl="reporting_hunt" data-cat="reporting" onclick="selectTemplate('reporting_hunt')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">Reporting Hunt</div>
+          <div class="tpl-meta">Mandat + Zeitraum</div>
+        </div>
+        <div class="tpl-card" data-tpl="reporting_team_leader" data-cat="reporting" onclick="selectTemplate('reporting_team_leader')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">Reporting Team Leader</div>
+          <div class="tpl-meta">Tenant + Zeitraum</div>
+        </div>
+        <div class="tpl-card" data-tpl="mandat_report" data-cat="reporting" onclick="selectTemplate('mandat_report')">
+          <div class="tpl-icon">📊</div>
+          <div class="tpl-name">Mandat-Status-Report an Kunde</div>
+          <div class="tpl-meta">Mandat</div>
+        </div>
+        <div class="tpl-card" data-tpl="factsheet_personalgewinnung" data-cat="reporting" onclick="selectTemplate('factsheet_personalgewinnung')">
+          <div class="tpl-icon">📄</div>
+          <div class="tpl-name">Factsheet Personalgewinnung</div>
+          <div class="tpl-meta">Account</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: ENTITY WÄHLEN -->
+    <div class="step-pane" data-step="2">
+      <div style="margin-bottom:10px">
+        <h2 style="margin:0 0 4px;font-family:'Libre Baskerville',serif;font-size:18px">Entity wählen</h2>
+        <div class="muted" style="font-size:12px">Template: <strong id="pickedTpl">—</strong> · erwartet <strong id="pickedTplEntity">—</strong></div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;max-width:720px">
+        <!-- Multi-Entity Chips (auto gefüllt) -->
+        <div id="entityChipsWrap" style="display:none;margin-bottom:12px;padding:10px;background:var(--bg);border-radius:3px">
+          <div class="muted" style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Gewählte Entities</div>
+          <div id="entityChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+          <button class="btn btn-sm" id="btnAddEntity" style="margin-top:8px;display:none" onclick="showPickerFor('additional')">+ Weitere Entity hinzufügen</button>
+          <button class="btn btn-sm btn-primary" style="margin-top:8px;margin-left:4px" onclick="goToStep(3)">Weiter zu Editor →</button>
+        </div>
+
+        <!-- Bulk-Hint (nur bei Rechnungs-Templates) -->
+        <div id="bulkHint" style="display:none;padding:10px 12px;background:color-mix(in srgb, var(--accent) 5%, var(--surface));border-left:3px solid var(--accent);border-radius:2px;margin-bottom:12px;font-size:12px">
+          💡 <strong>Bulk-Modus verfügbar:</strong> Mehrere Entities wählen → generiert für alle ausgewählten auf einmal.
+        </div>
+
+        <label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Target-Entity <span style="color:var(--red)">*</span></label>
+        <input type="search" id="entitySearch" placeholder="🔍 Mandat / Kandidat / Account / Assessment-Order / Prozess …" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:2px;background:var(--surface);font-family:inherit;font-size:13px">
+
+        <div id="entityResults" style="margin-top:10px;border:1px solid var(--border-soft);border-radius:2px;max-height:360px;overflow-y:auto">
+          <!-- Mandate -->
+          <div class="entity-group" data-kind="mandate">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft)">Aktive Mandate</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Mandat · CFO-Suche (Bauherr Muster AG)')">
+              <div><strong>CFO-Suche</strong> · Bauherr Muster AG</div>
+              <div class="muted" style="font-size:11px">Taskforce · Stage 2/3 · Pauschale CHF 75'000 · Owner PW</div>
+            </div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Mandat · PL Hochbau (Implenia AG)')">
+              <div><strong>PL Hochbau</strong> · Implenia AG</div>
+              <div class="muted" style="font-size:11px">Taskforce · Stage 3/3 · Pauschale CHF 55'000 · Owner MF</div>
+            </div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Mandat · BIM-Manager (Muster Immobilien)')">
+              <div><strong>BIM-Manager</strong> · Muster Immobilien</div>
+              <div class="muted" style="font-size:11px">Target · Stage 1/3 · Pauschale CHF 66'000 · Owner MF</div>
+            </div>
+          </div>
+
+          <!-- Assessment-Orders -->
+          <div class="entity-group" data-kind="assessment_order">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Assessment-Orders</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Assessment-Order · ORD-2026-042 (Bauherr Muster AG)')">
+              <div><strong>ORD-2026-042</strong> · Bauherr Muster AG</div>
+              <div class="muted" style="font-size:11px">5 Credits · 1 eingelöst · Partner SCHEELEN</div>
+            </div>
+          </div>
+
+          <!-- Assessment-Runs (für executive_report) -->
+          <div class="entity-group" data-kind="assessment_run">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Assessment-Runs</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Run r-001 · T. Furrer MDI (ORD-2026-042)')">
+              <div><strong>Run r-001</strong> · Tobias Furrer · MDI</div>
+              <div class="muted" style="font-size:11px">completed 04.04.2026 · Report vorhanden</div>
+            </div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Run r-003 · N. Berger Relief (ORD-2026-042)')">
+              <div><strong>Run r-003</strong> · Nadine Berger · Relief</div>
+              <div class="muted" style="font-size:11px">scheduled 20.04.2026 · Report ausstehend</div>
+            </div>
+          </div>
+
+          <!-- Kandidaten -->
+          <div class="entity-group" data-kind="candidate">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Kandidaten (aktive Prozesse)</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Kandidat · Tobias Furrer (CFO-Suche)')">
+              <div><strong>Tobias Furrer</strong> · CFO</div>
+              <div class="muted" style="font-size:11px">Prozess CFO-Suche Stage V · Grade A · Hot</div>
+            </div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Kandidat · Nadine Berger (CFO-Suche)')">
+              <div><strong>Nadine Berger</strong> · Head of Finance</div>
+              <div class="muted" style="font-size:11px">Prozess CFO-Suche Stage IV · Grade A</div>
+            </div>
+          </div>
+
+          <!-- Prozesse (für Best-Effort Rechnungen + Rückerstattung) -->
+          <div class="entity-group" data-kind="process">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Prozesse mit Placement</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Prozess · J. Egger @ PL Hochbau (Placement 12.04.2026)')">
+              <div><strong>Julian Egger</strong> @ PL Hochbau</div>
+              <div class="muted" style="font-size:11px">Placement 12.04.2026 · TC CHF 138'000 · Honorar 21%</div>
+            </div>
+          </div>
+
+          <!-- Rechnungen (für Mahnungen) -->
+          <div class="entity-group" data-kind="rechnung">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Offene Rechnungen</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('RE-2026-0094 · Spesen ORD-2026-042 (CHF 340)')">
+              <div><strong>RE-2026-0094</strong> · Spesen Assessment</div>
+              <div class="muted" style="font-size:11px">CHF 340 · fällig 30.04.2026 · offen</div>
+            </div>
+          </div>
+
+          <!-- Accounts -->
+          <div class="entity-group" data-kind="account">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Accounts</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('Account · Bauherr Muster AG')">
+              <div><strong>Bauherr Muster AG</strong></div>
+              <div class="muted" style="font-size:11px">ING · A-Kunde · 3 aktive Mandate · Owner PW</div>
+            </div>
+          </div>
+
+          <!-- Mitarbeiter (für CM/AM Reportings) -->
+          <div class="entity-group" data-kind="mitarbeiter">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Mitarbeiter + Zeitraum</div>
+            <div style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border-soft)" onclick="selectEntity('JV · April 2026')">
+              <div><strong>JV</strong> · Joaquin Vega</div>
+              <div class="muted" style="font-size:11px">CM · Zeitraum April 2026</div>
+            </div>
+          </div>
+
+          <!-- Tenant (AM Reporting + Team Leader) -->
+          <div class="entity-group" data-kind="tenant">
+            <div class="muted" style="padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;background:var(--bg);border-bottom:1px solid var(--border-soft);border-top:1px solid var(--border)">Tenant + Zeitraum</div>
+            <div style="padding:10px 12px;cursor:pointer" onclick="selectEntity('Arkadium · Q1 2026')">
+              <div><strong>Arkadium AG</strong> · Q1 2026</div>
+              <div class="muted" style="font-size:11px">Alle Mandate/Prozesse/Placements</div>
+            </div>
+          </div>
+
+          <!-- Empty-State wenn keine passenden Entities -->
+          <div id="entityEmptyState" style="display:none;padding:20px;text-align:center">
+            <div class="muted" style="font-size:12px">Keine passenden Entities gefunden — bitte Template prüfen.</div>
+          </div>
+        </div>
+
+        <div class="muted" style="font-size:11px;margin-top:8px">Multi-Entity möglich für Templates wie Exposé (Kandidat + Mandat). Plus-Button erscheint nach erster Auswahl.</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: AUSFÜLLEN -->
+    <div class="step-pane" data-step="3">
+      <div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-end">
+        <div>
+          <h2 style="margin:0 0 4px;font-family:'Libre Baskerville',serif;font-size:18px">Ausfüllen</h2>
+          <div class="muted" style="font-size:12px">Template <strong id="editingTplName">—</strong> · Entity <strong id="editingEntityName">—</strong> · Platzhalter live aus DB gelöst</div>
+        </div>
+        <div class="muted" style="font-size:11px">Änderungen werden als Override gespeichert</div>
+      </div>
+
+      <div class="editor-layout">
+        <aside class="editor-sidebar">
+          <h5>Sektionen (Drag &amp; Drop)</h5>
+          <div id="editorSectionsWrap"></div>
+
+          <h5>Parameter</h5>
+          <div class="param-panel">
+            <div class="param-row">
+              <label style="flex:1">Sprache</label>
+              <select style="font-size:11px"><option>DE</option><option disabled>EN (Phase 2)</option></select>
+            </div>
+            <div class="param-row">
+              <label style="flex:1">Empfänger-Anrede</label>
+              <select style="font-size:11px"><option>Sehr geehrter Herr</option><option>Sehr geehrte Frau</option><option>Liebes Team</option></select>
+            </div>
+            <div class="param-row">
+              <label style="flex:1">Zahlungsfrist</label>
+              <select style="font-size:11px"><option>30 Tage</option><option>14 Tage</option></select>
+            </div>
+          </div>
+
+          <div class="anon-panel" id="anonPanel" style="display:none">
+            <h5 style="color:#a78bfa;margin-top:0">Anonymisierung (Exposé)</h5>
+            <div class="param-row"><input type="checkbox" checked> Name → „Kandidat m/w"</div>
+            <div class="param-row"><input type="checkbox" checked> Foto entfernen</div>
+            <div class="param-row"><input type="checkbox"> Firmennamen anonymisieren</div>
+            <div class="param-row"><input type="checkbox"> Wohnort → Kanton only</div>
+          </div>
+        </aside>
+
+        <main class="editor-main">
+          <div class="editor-toolbar">
+            <span class="et-btn" title="Bold">𝐁</span>
+            <span class="et-btn" title="Italic"><em>I</em></span>
+            <span class="et-btn" title="Underline"><u>U</u></span>
+            <span class="et-sep"></span>
+            <span class="et-btn" title="H1">H1</span>
+            <span class="et-btn" title="H2">H2</span>
+            <span class="et-sep"></span>
+            <span class="et-btn" title="List">•</span>
+            <span class="et-btn" title="Ordered">1.</span>
+            <span class="et-sep"></span>
+            <span class="et-btn" title="Link">🔗</span>
+            <span class="et-btn" title="Image">🖼</span>
+            <div class="et-zoom">Zoom: <select id="canvasZoom" style="font-size:11px" onchange="applyZoom(this.value)"><option value="1">100%</option><option value="0.75">75%</option><option value="0.5">50%</option><option value="1.25">125%</option><option value="1.5">150%</option></select></div>
+          </div>
+
+          <div class="canvas-wrap">
+            <div class="canvas-a4" id="canvasA4">
+              <h1>Template-Content folgt</h1>
+              <p class="muted">Wähle ein Template und eine Entity. Die Platzhalter werden live aufgelöst.</p>
+              <p>Beispiel Platzhalter:<br>
+                <span class="ph">{{mandat.name}}</span> · <span class="ph">{{account.name}}</span> · <span class="ph">{{mandat.honorar_pauschale}}</span>
+              </p>
+              <p class="muted" style="margin-top:8mm;font-size:9pt">Phase 2 füllt 5 Seed-Templates mit realem Content.</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- STEP 4: PREVIEW -->
+    <div class="step-pane" data-step="4">
+      <div style="margin-bottom:10px">
+        <h2 style="margin:0 0 4px;font-family:'Libre Baskerville',serif;font-size:18px">Preview</h2>
+        <div class="muted" style="font-size:12px">Read-only PDF-Preview · Änderungen? Zurück zu Step 3 Ausfüllen</div>
+      </div>
+
+      <div class="canvas-wrap" style="background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:24px">
+        <div class="canvas-a4" id="canvasA4Preview" style="pointer-events:none">
+          <h1>Preview-Dokument</h1>
+          <p>Wird in Phase 2 mit Seed-Template-Preview gefüllt.</p>
+          <p class="muted">Dieses ist der finale Stand — alle Sektionen gerendert, Platzhalter aufgelöst.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px;padding:12px;background:var(--bg);border-radius:3px">
+        <button class="btn btn-sm" onclick="goToStep(3)">← Zurück zu Ausfüllen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-sm">↓ Als PDF herunterladen</button>
+        <button class="btn btn-sm btn-primary" onclick="goToStep(5)">Weiter zu Ablage →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: ABLAGE -->
+    <div class="step-pane" data-step="5">
+      <div style="margin-bottom:10px">
+        <h2 style="margin:0 0 4px;font-family:'Libre Baskerville',serif;font-size:18px">Ablage &amp; Versand</h2>
+        <div class="muted" style="font-size:12px">Dokument speichern, optional sofort per E-Mail versenden</div>
+      </div>
+
+      <div style="max-width:720px">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Ablage-Ziel</div></div>
+          <dl class="field-grid">
+            <dt>Entity</dt><dd><strong id="saveEntity">—</strong> (aus Step 2)</dd>
+            <dt>Dokument-Label</dt><dd><span class="chip chip-accent" id="saveLabel">—</span> (auto aus Template)</dd>
+            <dt>Ablage-Ordner</dt><dd><span id="saveFolder">—</span></dd>
+            <dt>Retention</dt><dd><span id="saveRetention">—</span></dd>
+          </dl>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-head"><div class="card-title">Delivery</div></div>
+          <div style="padding:10px">
+            <label style="display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:2px;cursor:pointer;border:1px solid var(--border);margin-bottom:6px">
+              <input type="radio" name="delivery" value="save_only" style="margin-top:3px">
+              <div>
+                <div style="font-weight:600;font-size:13px">Nur speichern</div>
+                <div class="muted" style="font-size:11px">Dokument wird am Entity abgelegt, keine Email</div>
+              </div>
+            </label>
+            <label style="display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:2px;cursor:pointer;border:2px solid var(--accent);background:var(--accent-soft);margin-bottom:6px">
+              <input type="radio" name="delivery" value="save_and_email" checked style="margin-top:3px">
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:13px">Speichern + Email versenden</div>
+                <div class="muted" style="font-size:11px">Automatisch aus CRM via Outlook-/Google-Integration</div>
+                <div style="margin-top:10px;display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:12px;align-items:center">
+                  <label>Empfänger</label><select style="padding:5px;font-size:12px"><option>Hans Müller · CEO Bauherr Muster AG</option><option>Eva Studer · HR-Leiterin</option></select>
+                  <label>Betreff</label><input type="text" value="Mandats-Offerte · CFO-Suche — Vorschlag" style="padding:5px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px">
+                  <label>Email-Template</label><select style="padding:5px;font-size:12px"><option>Offerten-Anschreiben · Sie</option><option>Offerten-Anschreiben · Du</option><option>(kein Template)</option></select>
+                </div>
+              </div>
+            </label>
+            <label style="display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:2px;cursor:pointer;border:1px solid var(--border)">
+              <input type="radio" name="delivery" value="save_and_download" style="margin-top:3px">
+              <div>
+                <div style="font-weight:600;font-size:13px">Speichern + Download</div>
+                <div class="muted" style="font-size:11px">Dokument wird gespeichert und lokal als PDF heruntergeladen</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1"><strong>History-Events</strong> werden automatisch am Entity geloggt (z.B. „📄 Mandats-Offerte generiert + versendet").</div>
+          <button class="btn btn-sm" onclick="openDrawer('history-preview')">Vorschau anzeigen</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button class="btn btn-sm" onclick="goToStep(4)">← Zurück zu Preview</button>
+          <span class="spacer"></span>
+          <button class="btn btn-sm btn-primary" style="padding:10px 18px" onclick="fireGenerate()">✓ Generieren &amp; Versenden</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="kb-bar">
+  <span><kbd>←</kbd><kbd>→</kbd> Step</span>
+  <span><kbd>Ctrl+S</kbd> Save</span>
+  <span><kbd>Ctrl+Enter</kbd> Generate</span>
+  <span><kbd>Esc</kbd> Abbrechen</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd> Suche</span>
+</div>
+
+<!-- History-Preview Drawer (Standard-Pattern .drawer + #drawerBackdrop) -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<div id="gen-success" class="drawer">
+  <div class="drawer-head" style="background:color-mix(in srgb, var(--gold) 10%, var(--surface))">
+    <div class="avatar" style="background:var(--gold-soft);color:var(--gold)">✓</div>
+    <div class="info">
+      <h2 style="color:var(--gold)">Dokument generiert</h2>
+      <div class="sub" id="genSuccessSub">—</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('gen-success')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Dokument-Details</h4>
+      <dl class="field-grid">
+        <dt>Doc-ID</dt><dd><strong id="genDocId">DOC-2026-0473</strong></dd>
+        <dt>Template</dt><dd id="genTplName">—</dd>
+        <dt>Entity</dt><dd id="genEntityName">—</dd>
+        <dt>Ablage-Ordner</dt><dd id="genFolder">—</dd>
+        <dt>Erstellt</dt><dd id="genTimestamp">—</dd>
+        <dt>Erstellt von</dt><dd><span class="actor-chip">PW</span> Peter Wiederkehr</dd>
+      </dl>
+    </div>
+    <div class="drawer-section" id="genEmailSection">
+      <h4>Email-Versand</h4>
+      <dl class="field-grid">
+        <dt>Empfänger</dt><dd id="genEmailTo">Hans Müller · CEO Bauherr Muster AG</dd>
+        <dt>Betreff</dt><dd id="genEmailSubject">—</dd>
+        <dt>Status</dt><dd><span class="chip chip-gold">✓ Versendet · Open-Tracking aktiv</span></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Nachfolge-Aktionen</h4>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn btn-sm" id="genGoEntity" style="justify-content:flex-start;text-align:left">🔗 Zum Entity springen (<span id="genEntityShort">—</span>)</button>
+        <button class="btn btn-sm" style="justify-content:flex-start;text-align:left" onclick="closeDrawer('gen-success');goToStep(1)">📝 Weiteres Dokument erstellen</button>
+        <button class="btn btn-sm" style="justify-content:flex-start;text-align:left">↓ Als PDF herunterladen</button>
+        <button class="btn btn-sm" style="justify-content:flex-start;text-align:left">✉ Kopie per E-Mail senden</button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>History-Event geloggt</h4>
+      <div style="padding:10px;background:var(--bg);border-left:3px solid var(--accent);border-radius:2px;font-size:12px">
+        <strong>📄 <span id="genHistLabel">Dokument</span> generiert + versendet</strong><br>
+        <span class="muted">am <span id="genHistEntityLabel">—</span> · Akteur PW · Doc-ID DOC-2026-0473</span>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('gen-success')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" id="genFootEntity">🔗 Zum Entity</button>
+  </div>
+</div>
+
+<div id="history-preview" class="drawer">
+  <div class="drawer-head">
+    <div class="avatar">📋</div>
+    <div class="info">
+      <h2>History-Event-Vorschau</h2>
+      <div class="sub">Was wird am Entity geloggt?</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('history-preview')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Event am Entity</h4>
+      <dl class="field-grid">
+        <dt>Activity-Type</dt><dd><span class="chip chip-accent">Dokument generiert</span></dd>
+        <dt>Beschreibung</dt><dd id="histPreviewDesc">📄 Dokument generiert + versendet</dd>
+        <dt>Akteur</dt><dd><span class="actor-chip">PW</span></dd>
+        <dt>Verknüpft</dt><dd id="histPreviewEntity">—</dd>
+        <dt>Doc-ID</dt><dd class="muted">(wird bei Generierung erzeugt)</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Email (wenn „Speichern + Email")</h4>
+      <dl class="field-grid">
+        <dt>Empfänger</dt><dd id="histPreviewRecipient">Hans Müller · CEO Bauherr Muster AG</dd>
+        <dt>Betreff</dt><dd id="histPreviewSubject">Mandats-Offerte · CFO-Suche — Vorschlag</dd>
+        <dt>Tracking</dt><dd><span class="chip">Open-Tracking aktiv</span></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Ablage</h4>
+      <dl class="field-grid">
+        <dt>Ordner</dt><dd id="histPreviewFolder">—</dd>
+        <dt>Retention</dt><dd id="histPreviewRetention">—</dd>
+        <dt>Versionierung</dt><dd>Neue Version 1 · is_ark_generated=true</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('history-preview')">Schliessen</button>
+  </div>
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+/* Override layout.js drawer */
+window.openDrawer = function(name) {
+  const d = document.getElementById(name);
+  if (!d) return;
+  d.classList.add('open');
+  const bd = document.getElementById('drawerBackdrop');
+  if (bd) bd.classList.add('open');
+};
+window.closeDrawer = function(name) {
+  if (name) document.getElementById(name)?.classList.remove('open');
+  else document.querySelectorAll('.drawer.open').forEach(d => d.classList.remove('open'));
+  document.getElementById('drawerBackdrop')?.classList.remove('open');
+};
+
+let currentStep = 1;
+let currentTemplate = null;
+let currentEntity = null;
+
+const TPL_META = {
+  'mandat_offerte_target':           { display:'Mandat-Offerte Target',           entity:'Mandat (Target)',      kinds:['mandate'],            label:'Mandat-Offerte',       folder:'Account/Mandat/',             retention:'10 Jahre (Vertrag)' },
+  'mandat_offerte_taskforce':        { display:'Mandat-Offerte Taskforce',        entity:'Mandat (Taskforce)',   kinds:['mandate'],            label:'Mandat-Offerte',       folder:'Account/Mandat/',             retention:'10 Jahre (Vertrag)' },
+  'mandat_offerte_time':             { display:'Mandat-Offerte Time',             entity:'Mandat (Time)',        kinds:['mandate'],            label:'Mandat-Offerte',       folder:'Account/Mandat/',             retention:'10 Jahre (Vertrag)' },
+  'auftragserteilung_optionale_stage':{display:'Auftragserteilung Optionale Stage',entity:'Mandat + Option',     kinds:['mandate'],            label:'Mandat-Offerte',       folder:'Account/Mandat/',             retention:'10 Jahre (Vertrag)' },
+  'rechnung_mandat_teilzahlung_1_sie':{display:'Rechnung Mandat · T1 · Sie',      entity:'Mandat (Stage I)',     kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_teilzahlung_1_du':{ display:'Rechnung Mandat · T1 · Du',       entity:'Mandat (Stage I)',     kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_teilzahlung_2_sie':{display:'Rechnung Mandat · T2 · Sie',      entity:'Mandat (Stage II)',    kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_teilzahlung_2_du':{ display:'Rechnung Mandat · T2 · Du',       entity:'Mandat (Stage II)',    kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_teilzahlung_3_sie':{display:'Rechnung Mandat · T3 · Sie',      entity:'Mandat (Stage III)',   kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_teilzahlung_3_du':{ display:'Rechnung Mandat · T3 · Du',       entity:'Mandat (Stage III)',   kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_optionale_stage': { display:'Rechnung Optionale Stage',        entity:'Mandat + Option',      kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'rechnung_mandat_kuendigung':      { display:'Rechnung Kündigung Mandat',       entity:'Mandat',               kinds:['mandate'],            label:'Mandat-Rechnung',      folder:'Account/Mandat/Rechnungen/',  retention:'10 Jahre (Finanz)' },
+  'mahnung_mandat_sie':              { display:'Mahnung Mandat · Sie',            entity:'Rechnung (Mandat)',    kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Mandat/Mahnungen/',   retention:'10 Jahre (Finanz)' },
+  'mahnung_mandat_du':               { display:'Mahnung Mandat · Du',             entity:'Rechnung (Mandat)',    kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Mandat/Mahnungen/',   retention:'10 Jahre (Finanz)' },
+  'rechnung_best_effort_sie':        { display:'Rechnung Erfolgsbasis · Sie',     entity:'Prozess (Placement)',  kinds:['process'],            label:'Best-Effort-Rechnung', folder:'Account/Erfolgsbasis/',       retention:'10 Jahre (Finanz)' },
+  'rechnung_best_effort_du':         { display:'Rechnung Erfolgsbasis · Du',      entity:'Prozess (Placement)',  kinds:['process'],            label:'Best-Effort-Rechnung', folder:'Account/Erfolgsbasis/',       retention:'10 Jahre (Finanz)' },
+  'rechnung_best_effort_mit_rabatt_sie':{display:'Rechnung Erfolgsbasis mit Rabatt · Sie',entity:'Prozess',       kinds:['process'],            label:'Best-Effort-Rechnung', folder:'Account/Erfolgsbasis/',       retention:'10 Jahre (Finanz)' },
+  'rechnung_best_effort_mit_rabatt_du':{display:'Rechnung Erfolgsbasis mit Rabatt · Du',entity:'Prozess',         kinds:['process'],            label:'Best-Effort-Rechnung', folder:'Account/Erfolgsbasis/',       retention:'10 Jahre (Finanz)' },
+  'mahnung_best_effort_sie':         { display:'Mahnung Erfolgsbasis · Sie',      entity:'Rechnung (BE)',        kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Erfolgsbasis/Mahnungen/',retention:'10 Jahre (Finanz)' },
+  'mahnung_best_effort_du':          { display:'Mahnung Erfolgsbasis · Du',       entity:'Rechnung (BE)',        kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Erfolgsbasis/Mahnungen/',retention:'10 Jahre (Finanz)' },
+  'mahnung_best_effort_mit_rabatt_sie':{display:'Mahnung Erfolgsbasis mit Rabatt · Sie',entity:'Rechnung (BE)', kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Erfolgsbasis/Mahnungen/',retention:'10 Jahre (Finanz)' },
+  'mahnung_best_effort_mit_rabatt_du':{ display:'Mahnung Erfolgsbasis mit Rabatt · Du',entity:'Rechnung (BE)',  kinds:['rechnung'],           label:'Mahnung',              folder:'Account/Erfolgsbasis/Mahnungen/',retention:'10 Jahre (Finanz)' },
+  'assessment_offerte':              { display:'Offerte Diagnostik & Assessment', entity:'Assessment-Order',     kinds:['assessment_order'],   label:'Assessment-Offerte',   folder:'Account/Assessment/',         retention:'10 Jahre (Vertrag)' },
+  'assessment_rechnung':             { display:'Rechnung Diagnostik & Assessment',entity:'Assessment-Order',     kinds:['assessment_order'],   label:'Assessment-Rechnung',  folder:'Account/Assessment/',         retention:'10 Jahre (Finanz)' },
+  'executive_report':                { display:'Executive Report',                entity:'Assessment-Run',       kinds:['assessment_run'],     label:'Executive-Report',     folder:'Account/Assessment/Reports/', retention:'Standard (5 Jahre)' },
+  'rechnung_rueckerstattung':        { display:'Rechnung Rückerstattung',         entity:'Prozess (Early-Exit)', kinds:['process'],            label:'Rechnung',             folder:'Account/Erfolgsbasis/',       retention:'10 Jahre (Finanz)' },
+  'ark_cv':                          { display:'ARK CV',                          entity:'Kandidat',             kinds:['candidate'],          label:'ARK CV',               folder:'Kandidat/Dossier/',           retention:'Standard' },
+  'abstract':                        { display:'Abstract',                        entity:'Kandidat',             kinds:['candidate'],          label:'Abstract',             folder:'Kandidat/Dossier/',           retention:'Standard' },
+  'expose':                          { display:'Exposé (anonym)',                 entity:'Kandidat (+ Mandat-Kontext opt.)', kinds:['candidate','mandate'], multi:true, label:'Expose', folder:'Kandidat/Dossier/',           retention:'Standard' },
+  'referenzauskunft':                { display:'Referenzauskunft',                entity:'Kandidat + Referenz',  kinds:['candidate'],          label:'Referenzauskunft',     folder:'Kandidat/',                   retention:'Standard' },
+  'referral_schreiben':              { display:'Referral-Schreiben',              entity:'Kandidat',             kinds:['candidate'],          label:'Referral',             folder:'Kandidat/',                   retention:'Standard' },
+  'am_reporting':                    { display:'AM Reporting Fokus',              entity:'Tenant + Zeitraum',    kinds:['tenant'],             label:'Reporting',            folder:'Reports/AM/',                 retention:'Standard' },
+  'cm_reporting':                    { display:'CM Reporting Fokus',              entity:'Mitarbeiter + Zeitraum',kinds:['mitarbeiter'],        label:'Reporting',            folder:'Reports/CM/',                 retention:'Standard' },
+  'monatsreporting_cm':              { display:'Monatsreporting CM',              entity:'Mitarbeiter + Monat',  kinds:['mitarbeiter'],        label:'Reporting',            folder:'Reports/CM/Monatlich/',       retention:'Standard' },
+  'reporting_hunt':                  { display:'Reporting Hunt',                  entity:'Mandat + Zeitraum',    kinds:['mandate'],            label:'Reporting',            folder:'Reports/Hunt/',               retention:'Standard' },
+  'reporting_team_leader':           { display:'Reporting Team Leader',           entity:'Tenant + Zeitraum',    kinds:['tenant'],             label:'Reporting',            folder:'Reports/TeamLeader/',         retention:'Standard' },
+  'mandat_report':                   { display:'Mandat-Status-Report an Kunde',   entity:'Mandat',               kinds:['mandate'],            label:'Mandat Report',        folder:'Account/Mandat/Reports/',     retention:'Standard' },
+  'factsheet_personalgewinnung':     { display:'Factsheet Personalgewinnung',     entity:'Account',              kinds:['account'],            label:'Factsheet',            folder:'Account/',                    retention:'Standard' },
+};
+
+function getTplMeta(key) {
+  return TPL_META[key] || { display:key, entity:'Entity', label:'Dokument', folder:'—', retention:'Standard' };
+}
+
+function goToStep(n) {
+  if (n < 1 || n > 5) return;
+  document.querySelectorAll('.step').forEach(s => {
+    const stepNum = parseInt(s.dataset.step);
+    s.classList.toggle('active', stepNum <= n);
+  });
+  document.querySelectorAll('.step-pane').forEach(p => {
+    p.classList.toggle('active', parseInt(p.dataset.step) === n);
+  });
+  currentStep = n;
+  document.getElementById('btnPrev').disabled = (n === 1);
+  document.getElementById('btnNext').disabled = (n === 5);
+
+  if (n === 3 && currentTemplate) {
+    const m = getTplMeta(currentTemplate);
+    document.getElementById('editingTplName').textContent = m.display;
+    document.getElementById('editingEntityName').textContent = currentEntity || '—';
+    document.getElementById('anonPanel').style.display = (currentTemplate === 'expose') ? 'block' : 'none';
+    renderEditorSections(currentTemplate);
+  }
+  if (n === 5 && currentTemplate) {
+    const m = getTplMeta(currentTemplate);
+    document.getElementById('saveEntity').textContent = currentEntity || 'Entity aus Step 2';
+    document.getElementById('saveLabel').textContent = m.label;
+    document.getElementById('saveFolder').textContent = m.folder;
+    document.getElementById('saveRetention').textContent = m.retention;
+    // History-Preview-Fields
+    const e1 = document.getElementById('histPreviewDesc'); if (e1) e1.textContent = `📄 ${m.label} generiert + versendet`;
+    const e2 = document.getElementById('histPreviewEntity'); if (e2) e2.textContent = currentEntity || '—';
+    const e3 = document.getElementById('histPreviewFolder'); if (e3) e3.textContent = m.folder;
+    const e4 = document.getElementById('histPreviewRetention'); if (e4) e4.textContent = m.retention;
+  }
+}
+
+function selectTemplate(key) {
+  const card = document.querySelector(`.tpl-card[data-tpl="${key}"]`);
+  if (card && card.classList.contains('soon')) return;
+  currentTemplate = key;
+  entityList = [];
+  currentEntity = null;
+  const m = getTplMeta(key);
+  document.getElementById('pickedTpl').textContent = m.display;
+  document.getElementById('pickedTplEntity').textContent = m.entity;
+  filterEntityPicker(m.kinds || []);
+  const bulkHint = document.getElementById('bulkHint');
+  if (bulkHint) bulkHint.style.display = isBulkCapable(key) ? '' : 'none';
+  renderEntityChips();
+  goToStep(2);
+}
+
+function filterEntityPicker(kinds) {
+  let shown = 0;
+  document.querySelectorAll('.entity-group').forEach(g => {
+    const match = kinds.includes(g.dataset.kind);
+    g.style.display = match ? '' : 'none';
+    if (match) shown++;
+  });
+  const empty = document.getElementById('entityEmptyState');
+  if (empty) empty.style.display = shown === 0 ? 'block' : 'none';
+}
+
+let entityList = [];
+
+function selectEntity(id) {
+  if (!currentTemplate) return;
+  const m = getTplMeta(currentTemplate);
+  const isMulti = m.multi || isBulkCapable(currentTemplate);
+  if (isMulti) {
+    if (!entityList.includes(id)) entityList.push(id);
+    currentEntity = entityList.join(' + ');
+    renderEntityChips();
+    // Bei Single-Kind-Multi (Bulk): show "+ Weitere" button, bleib in Step 2
+    // Bei Multi-Kind (expose): auto-weiter nach 2. Entity oder manuell
+    const needMore = m.multi && entityList.length < (m.kinds || []).length;
+    if (!needMore && !isBulkCapable(currentTemplate)) goToStep(3);
+  } else {
+    entityList = [id];
+    currentEntity = id;
+    goToStep(3);
+  }
+}
+
+function removeEntity(id) {
+  entityList = entityList.filter(e => e !== id);
+  currentEntity = entityList.join(' + ') || null;
+  renderEntityChips();
+}
+
+function renderEntityChips() {
+  const wrap = document.getElementById('entityChipsWrap');
+  const chips = document.getElementById('entityChips');
+  if (!wrap || !chips) return;
+  if (entityList.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  chips.innerHTML = entityList.map(e =>
+    `<span class="chip" style="display:inline-flex;gap:6px;align-items:center;padding:4px 10px">
+      ${e}
+      <span style="cursor:pointer;color:var(--text-light)" onclick="removeEntity('${e.replace(/'/g, "\\'")}')">✕</span>
+    </span>`
+  ).join('');
+  // + Weitere-Button nur zeigen wenn multi-fähig
+  const m = currentTemplate ? getTplMeta(currentTemplate) : null;
+  const addBtn = document.getElementById('btnAddEntity');
+  if (addBtn && m) addBtn.style.display = (m.multi || isBulkCapable(currentTemplate)) ? '' : 'none';
+}
+
+function isBulkCapable(key) {
+  // Bulk für Rechnungen + Mahnungen
+  return /^(rechnung|mahnung)_/.test(key || '');
+}
+
+function showPickerFor() {
+  // Demo: einfach Picker-Scroll ins Sichtfeld
+  document.getElementById('entitySearch')?.scrollIntoView({ behavior:'smooth', block:'start' });
+  document.getElementById('entitySearch')?.focus();
+}
+
+/* Deep-Link-Handling */
+function initFromUrl() {
+  const p = new URLSearchParams(location.search);
+  const tpl = p.get('template');
+  const entity = p.get('entity');
+  if (tpl && TPL_META[tpl]) {
+    selectTemplate(tpl);
+    if (entity) selectEntity(decodeURIComponent(entity));
+  } else {
+    goToStep(1);
+  }
+}
+
+/* Category-Filter */
+function toggleDocSidebar() {
+  const wrap = document.getElementById('docMainWrap');
+  if (!wrap) return;
+  wrap.classList.toggle('sidebar-open');
+}
+function closeDocSidebar() {
+  const wrap = document.getElementById('docMainWrap');
+  if (wrap) wrap.classList.remove('sidebar-open');
+}
+function isDocMobile() { return window.matchMedia('(max-width:640px)').matches; }
+
+function bindSidebarCategories() {
+  document.querySelectorAll('.sidebar-cat-item[data-cat]').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar-cat-item').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      const cat = el.dataset.cat;
+      document.querySelectorAll('.tpl-card').forEach(c => {
+        c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+      });
+      if (isDocMobile()) closeDocSidebar();
+    });
+  });
+  document.querySelectorAll('.sidebar-cat-item[data-filter]').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar-cat-item').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      const f = el.dataset.filter;
+      if (f === 'favorites') {
+        document.querySelectorAll('.tpl-card').forEach(c => {
+          c.style.display = FAVS.has(c.dataset.tpl) ? '' : 'none';
+        });
+      } else {
+        // Demo: andere Filter zeigen alle
+        document.querySelectorAll('.tpl-card').forEach(c => c.style.display = '');
+      }
+    });
+  });
+}
+
+/* Favoriten — Demo-Seed + Toggle */
+const FAVS = new Set(['mandat_offerte_target', 'assessment_offerte', 'ark_cv']);
+function updateFavCount() {
+  const el = document.getElementById('favCount');
+  if (el) el.textContent = FAVS.size;
+}
+function toggleFav(tplKey, ev) {
+  ev.stopPropagation();
+  if (FAVS.has(tplKey)) FAVS.delete(tplKey); else FAVS.add(tplKey);
+  const star = document.querySelector(`.tpl-card[data-tpl="${tplKey}"] .tpl-fav`);
+  if (star) star.classList.toggle('active', FAVS.has(tplKey));
+  updateFavCount();
+}
+/* Template-spezifische Editor-Sektionen (#4 Improvement) */
+const TEMPLATE_SECTIONS = {
+  'mandat_offerte_target':  [['Briefkopf','auto',true],['Anrede','auto',true],['Leistungsumfang','auto',true],['Honorar-Tabelle','entity',true],['Garantiefrist','auto',true],['Zusatz-Paragraph','manuell',false],['Schlussgrüße','auto',true]],
+  'mandat_offerte_taskforce':[['Briefkopf','auto',true],['Anrede','auto',true],['Leistungsumfang Taskforce','auto',true],['Monats-Honorar','entity',true],['Abschluss-Success','entity',true],['Garantiefrist','auto',true],['Schlussgrüße','auto',true]],
+  'rechnung_mandat_teilzahlung_1_sie':[['Briefkopf','auto',true],['Anrede','auto',true],['Rechnungs-Referenz (Offerte)','entity',true],['Positionen','entity',true],['MwSt-Zeile','auto',true],['Zahlungsbedingungen','auto',true],['Bank-Details','auto',true]],
+  'assessment_offerte':     [['Briefkopf','auto',true],['Anrede','auto',true],['Partner-Hinweis (SCHEELEN)','auto',true],['Credits-Tabelle','entity',true],['Paket-Pauschale','auto',true],['Ablauf & Gültigkeit','auto',true],['Abweichende Bestimmungen','auto',true],['Schlussgrüße','auto',true]],
+  'ark_cv':                 [['Foto + Header','entity',true],['Kurzprofil','entity',true],['Werdegang','entity',true],['Ausbildung','entity',true],['Kompetenzen & Focus','entity',true],['Sprachen','entity',true],['Gehalts-Eckdaten','entity',true],['Arbeitszeugnisse-Anhänge','entity',false]],
+  'abstract':               [['Foto + Header','entity',true],['Kurzprofil','entity',true],['Werdegang (Kurzform)','entity',true],['Kompetenzen','entity',true]],
+  'expose':                 [['Header (anonymisiert)','entity',true],['Kurzprofil','entity',true],['Werdegang (anonymisiert)','entity',true],['Kompetenzen','entity',true],['Gehalts-Eckdaten','entity',false]],
+  'executive_report':       [['Header Kandidat','entity',true],['Zusammenfassung','manuell',true],['Assessment-Ergebnisse','entity',true],['Arkadium-Bewertung','manuell',true],['Pro-Argumente','manuell',true],['Red Flags','manuell',true],['Entwicklungsfelder','manuell',true],['Referenzen','entity',true],['Disclaimer','auto',true]],
+  'referenzauskunft':       [['Briefkopf','auto',true],['Anrede','auto',true],['Kontext (Kandidat + Kunde)','entity',true],['Referenzpunkte','auto',true],['Danksagung','auto',true]],
+  'mandat_report':          [['Briefkopf','auto',true],['Mandat-Übersicht','entity',true],['KPIs (Idents/Calls/Shortlist)','entity',true],['Aktivitäten Zeitraum','entity',true],['Nächste Schritte','manuell',true]],
+  'am_reporting':           [['Header + Zeitraum','entity',true],['Mandat-Übersicht','entity',true],['Umsatz-KPIs','entity',true],['Aktive Pipeline','entity',true],['Placements','entity',true],['Ausblick','manuell',false]],
+  'cm_reporting':           [['Header + Mitarbeiter','entity',true],['Aktivitäten-Stats','entity',true],['Placement-Liste','entity',true],['Mandat-Fortschritt','entity',true],['Feedback-Notizen','manuell',false]],
+  'factsheet_personalgewinnung':[['Account-Header','entity',true],['Markt-Positionierung','entity',true],['Arkadium-Methodik','auto',true],['Referenz-Cases','auto',true],['Kontakt','entity',true]],
+};
+
+// Default-Fallback für Templates ohne explizite Sektionen (verwenden generisches Brief-Pattern)
+const DEFAULT_SECTIONS = [['Briefkopf','auto',true],['Anrede','auto',true],['Hauptteil','auto',true],['Positionen','entity',true],['Zusatz-Paragraph','manuell',false],['Schlussgrüße','auto',true],['Anhänge','entity',false]];
+
+function applyZoom(v) {
+  const scale = parseFloat(v) || 1;
+  document.querySelectorAll('.canvas-a4').forEach(c => {
+    c.style.transform = 'scale(' + scale + ')';
+    c.style.marginBottom = (scale < 1) ? (-(1 - scale) * 180) + 'mm' : '';
+  });
+}
+
+function renderEditorSections(key) {
+  const sections = TEMPLATE_SECTIONS[key] || DEFAULT_SECTIONS;
+  const wrap = document.getElementById('editorSectionsWrap');
+  if (!wrap) return;
+  wrap.innerHTML = sections.map(([label, src, on]) => `
+    <div class="es-item">
+      <span class="es-grip">⋮⋮</span>
+      <label class="es-check"><input type="checkbox"${on ? ' checked' : ''}></label>
+      <span class="es-label">${label}</span>
+      <span class="es-src">${src}</span>
+    </div>
+  `).join('');
+}
+
+function fireGenerate() {
+  if (!currentTemplate) return;
+  const m = getTplMeta(currentTemplate);
+  const docId = 'DOC-2026-' + String(400 + Math.floor(Math.random()*99)).padStart(4,'0');
+  const now = new Date();
+  const ts = String(now.getDate()).padStart(2,'0') + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + now.getFullYear() + ' · ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const deliveryRadio = document.querySelector('input[name="delivery"]:checked');
+  const delivery = deliveryRadio ? deliveryRadio.value : 'save_only';
+  const emailSec = document.getElementById('genEmailSection');
+  if (emailSec) emailSec.style.display = (delivery === 'save_and_email') ? '' : 'none';
+
+  document.getElementById('genSuccessSub').textContent = m.display + ' · ' + (currentEntity || '—');
+  document.getElementById('genDocId').textContent = docId;
+  document.getElementById('genTplName').textContent = m.display;
+  document.getElementById('genEntityName').textContent = currentEntity || '—';
+  document.getElementById('genFolder').textContent = m.folder;
+  document.getElementById('genTimestamp').textContent = ts;
+  document.getElementById('genEntityShort').textContent = (currentEntity || '—').split('·')[0].trim() || 'Entity';
+  document.getElementById('genHistLabel').textContent = m.label;
+  document.getElementById('genHistEntityLabel').textContent = currentEntity || '—';
+  const emailSubjectInput = document.querySelector('[data-step="5"] input[type="text"]');
+  if (emailSubjectInput) document.getElementById('genEmailSubject').textContent = emailSubjectInput.value || '—';
+
+  // Wire "Zum Entity"-Buttons (Mockup-Demo: zurück in Lister)
+  const entityLower = (currentEntity || '').toLowerCase();
+  let entityHref = 'crm.html';
+  if (entityLower.includes('mandat')) entityHref = 'mandates.html';
+  else if (entityLower.includes('assessment')) entityHref = 'assessments.html';
+  else if (entityLower.includes('kandidat')) entityHref = 'candidates.html';
+  else if (entityLower.includes('account')) entityHref = 'accounts.html';
+  else if (entityLower.includes('prozess')) entityHref = 'processes.html';
+  const a1 = document.getElementById('genGoEntity');
+  const a2 = document.getElementById('genFootEntity');
+  if (a1) a1.onclick = () => { closeDrawer('gen-success'); window.location.href = entityHref; };
+  if (a2) a2.onclick = () => { closeDrawer('gen-success'); window.location.href = entityHref; };
+
+  openDrawer('gen-success');
+}
+
+function injectFavStars() {
+  document.querySelectorAll('.tpl-card[data-tpl]').forEach(c => {
+    if (c.classList.contains('soon')) return;
+    if (c.querySelector('.tpl-fav')) return;
+    const key = c.dataset.tpl;
+    const star = document.createElement('span');
+    star.className = 'tpl-fav' + (FAVS.has(key) ? ' active' : '');
+    star.textContent = '★';
+    star.title = 'Als Favorit markieren';
+    star.setAttribute('onclick', `toggleFav('${key}', event)`);
+    c.appendChild(star);
+  });
+  updateFavCount();
+}
+
+/* Template-Search */
+function bindSearch() {
+  const input = document.getElementById('tplSearch');
+  if (!input) return;
+  input.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('.tpl-card').forEach(c => {
+      const name = c.querySelector('.tpl-name')?.textContent.toLowerCase() || '';
+      const meta = c.querySelector('.tpl-meta')?.textContent.toLowerCase() || '';
+      const cat  = (c.dataset.cat || '').toLowerCase();
+      const tpl  = (c.dataset.tpl || '').toLowerCase();
+      const hit  = [name, meta, cat, tpl].some(t => t.includes(q));
+      c.style.display = hit ? '' : 'none';
+    });
+  });
+}
+
+/* Hotkeys */
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea, select')) return;
+  if (e.key === 'Escape') {
+    const openDrw = document.querySelector('.drawer.open');
+    if (openDrw) { closeDrawer(); return; }
+    return;
+  }
+  if (e.key === 'ArrowRight' && currentStep < 5) goToStep(currentStep + 1);
+  if (e.key === 'ArrowLeft' && currentStep > 1) goToStep(currentStep - 1);
+});
+
+/* Canvas-Content für 5 Seed-Templates (Phase 2) */
+const CANVAS_CONTENT = {
+  'mandat_offerte_target': `
+    <div style="display:flex;justify-content:space-between;margin-bottom:10mm">
+      <div style="font-family:'Libre Baskerville',serif;font-size:18pt;color:var(--ark-navy)">ARKADIUM</div>
+      <div style="text-align:right;font-size:9pt;color:#666">
+        Arkadium AG<br>Seefeldstrasse 69, 8008 Zürich<br>www.arkadium.ch · +41 44 123 45 67
+      </div>
+    </div>
+    <p style="font-size:9pt;color:#666;margin-bottom:8mm">Zürich, <span class="ph">04.04.2026</span></p>
+    <div style="margin-bottom:12mm;font-size:10pt">
+      <strong><span class="ph">Bauherr Muster AG</span></strong><br>
+      <span class="ph">Hans Müller</span><br>
+      <span class="ph">Industriestrasse 12</span><br>
+      <span class="ph">8050 Zürich</span>
+    </div>
+    <h1>Offerte Mandat Target · <span class="ph">CFO-Suche</span></h1>
+    <p style="margin-bottom:6mm">Sehr geehrter <span class="ph">Herr Müller</span>,</p>
+    <p>wir freuen uns, Ihnen unser Angebot für die Suche und Besetzung der Position <strong><span class="ph">Chief Financial Officer</span></strong> bei der <span class="ph">Bauherr Muster AG</span> zu unterbreiten.</p>
+    <h2>1. Leistungsumfang</h2>
+    <p>Das Mandat umfasst die eigenverantwortliche Suche, Identifikation und Evaluation qualifizierter Kandidat:innen inklusive:</p>
+    <ul style="margin:3mm 0"><li>Research &amp; Marktanalyse</li><li>Direktansprache</li><li>Evaluationsgespräche</li><li>Shortlist (mind. <span class="ph">5</span> Kandidat:innen)</li><li>Begleitung bis zur Vertragsunterzeichnung</li></ul>
+    <h2>2. Honorar</h2>
+    <p>Das Gesamthonorar beträgt <strong class="ph">CHF 75'000</strong> netto, zahlbar in drei Teilzahlungen:</p>
+    <table style="width:100%;border-collapse:collapse;margin:4mm 0;font-size:10pt">
+      <tr style="background:#f2f2f2"><th style="padding:3mm;text-align:left">Stage</th><th style="padding:3mm;text-align:right">CHF netto</th></tr>
+      <tr><td style="padding:3mm">Stage 1 — Kickoff + Stellenbriefing</td><td style="padding:3mm;text-align:right"><span class="ph">25'000</span></td></tr>
+      <tr><td style="padding:3mm">Stage 2 — Shortlist-Präsentation</td><td style="padding:3mm;text-align:right"><span class="ph">25'000</span></td></tr>
+      <tr><td style="padding:3mm">Stage 3 — Placement</td><td style="padding:3mm;text-align:right"><span class="ph">25'000</span></td></tr>
+    </table>
+    <h2>3. Garantiefrist</h2>
+    <p>Wir gewähren eine Garantiefrist von <strong>3 Monaten</strong> ab Stellenantritt. Scheidet die platzierte Person innerhalb dieser Frist aus, führen wir die Suche kostenlos fort.</p>
+    <p style="margin-top:10mm">Wir freuen uns auf die Zusammenarbeit.</p>
+    <p style="margin-top:8mm">Mit freundlichen Grüßen<br><br><span class="ph">Peter Wiederkehr</span><br>Arkadium AG</p>
+  `,
+  'rechnung_mandat_teilzahlung_1_sie': `
+    <div style="display:flex;justify-content:space-between;margin-bottom:10mm">
+      <div style="font-family:'Libre Baskerville',serif;font-size:16pt;color:var(--ark-navy)">ARKADIUM</div>
+      <div style="text-align:right;font-size:9pt;color:#666">Rechnung · <strong><span class="ph">RE-2026-0118</span></strong><br>Zürich, <span class="ph">12.04.2026</span></div>
+    </div>
+    <div style="margin-bottom:12mm;font-size:10pt">
+      <strong><span class="ph">Bauherr Muster AG</span></strong><br>
+      <span class="ph">Finance · Tobias Meyer</span><br>
+      <span class="ph">Industriestrasse 12</span><br>
+      <span class="ph">8050 Zürich</span>
+    </div>
+    <h1>Rechnung Mandat · 1. Teilzahlung</h1>
+    <p>Sehr geehrter <span class="ph">Herr Meyer</span>,</p>
+    <p>vielen Dank für Ihren Auftrag. Gemäß unserer Offerte vom <span class="ph">04.04.2026</span> stellen wir Ihnen die 1. Teilzahlung für das Mandat <strong><span class="ph">CFO-Suche</span></strong> in Rechnung:</p>
+    <table style="width:100%;border-collapse:collapse;margin:6mm 0;font-size:10pt">
+      <tr style="background:#f2f2f2"><th style="padding:3mm;text-align:left">Position</th><th style="padding:3mm;text-align:right">CHF</th></tr>
+      <tr><td style="padding:3mm">Stage 1 — Kickoff + Stellenbriefing · Mandat <span class="ph">CFO-Suche</span></td><td style="padding:3mm;text-align:right"><span class="ph">25'000.00</span></td></tr>
+      <tr><td style="padding:3mm">MwSt 8.1%</td><td style="padding:3mm;text-align:right"><span class="ph">2'025.00</span></td></tr>
+      <tr style="font-weight:700;background:#f2f2f2"><td style="padding:3mm">Total brutto</td><td style="padding:3mm;text-align:right"><span class="ph">27'025.00</span></td></tr>
+    </table>
+    <h2>Zahlungsbedingungen</h2>
+    <p>Zahlbar innert <strong><span class="ph">30 Tagen</span></strong> auf IBAN <strong>CH00 0000 0000 0000 0000 0</strong> lautend auf Arkadium AG. Bitte geben Sie als Referenz <strong><span class="ph">RE-2026-0118</span></strong> an.</p>
+    <p style="margin-top:8mm">Mit freundlichen Grüßen<br><br>Arkadium AG · Finance</p>
+  `,
+  'assessment_offerte': `
+    <div style="display:flex;justify-content:space-between;margin-bottom:10mm">
+      <div style="font-family:'Libre Baskerville',serif;font-size:16pt;color:var(--ark-navy)">ARKADIUM</div>
+      <div style="text-align:right;font-size:9pt;color:#666">Offerte Diagnostik &amp; Assessment<br>Zürich, <span class="ph">01.03.2026</span></div>
+    </div>
+    <div style="margin-bottom:12mm;font-size:10pt">
+      <strong><span class="ph">Bauherr Muster AG</span></strong><br>
+      <span class="ph">Hans Müller · CEO</span><br>
+      <span class="ph">Industriestrasse 12</span><br>
+      <span class="ph">8050 Zürich</span>
+    </div>
+    <h1>Offerte Diagnostik &amp; Assessment</h1>
+    <p>Sehr geehrter <span class="ph">Herr Müller</span>,</p>
+    <p>wir freuen uns, Ihnen unser Offerte für die Diagnostik- und Assessment-Leistung zu unterbreiten. Durchgeführt in Kooperation mit unserem Partner <strong>SCHEELEN®</strong>.</p>
+    <h2>1. Umfang</h2>
+    <table style="width:100%;border-collapse:collapse;margin:4mm 0;font-size:10pt">
+      <tr style="background:#f2f2f2"><th style="padding:3mm;text-align:left">Typ</th><th style="padding:3mm;text-align:right">Credits</th></tr>
+      <tr><td style="padding:3mm">MDI (Management-Dimensions-Inventory)</td><td style="padding:3mm;text-align:right"><span class="ph">2</span></td></tr>
+      <tr><td style="padding:3mm">Relief</td><td style="padding:3mm;text-align:right"><span class="ph">1</span></td></tr>
+      <tr><td style="padding:3mm">EQ Test</td><td style="padding:3mm;text-align:right"><span class="ph">1</span></td></tr>
+      <tr><td style="padding:3mm">ASSESS 5.0</td><td style="padding:3mm;text-align:right"><span class="ph">1</span></td></tr>
+      <tr style="background:#f2f2f2;font-weight:700"><td style="padding:3mm">Paket-Pauschale netto</td><td style="padding:3mm;text-align:right"><span class="ph">CHF 28'000</span></td></tr>
+    </table>
+    <h2>2. Ablauf</h2>
+    <p>Nach Beauftragung erhalten Sie Credits, die Sie flexibel auf Kandidat:innen zuweisen können. Die Credits verfallen nicht. Jeder Test wird durch SCHEELEN durchgeführt, inklusive ausführlichem Detail-Report.</p>
+    <h2>3. Abweichende Bestimmungen</h2>
+    <p>Spesen werden separat nach Aufwand verrechnet.</p>
+    <p style="margin-top:8mm">Mit freundlichen Grüßen<br><br><span class="ph">Peter Wiederkehr</span><br>Arkadium AG</p>
+  `,
+  'ark_cv': `
+    <div style="display:flex;gap:10mm;margin-bottom:8mm">
+      <div style="width:30mm;height:38mm;background:#e0e0e0;display:flex;align-items:center;justify-content:center;color:#999;font-size:9pt">FOTO</div>
+      <div style="flex:1">
+        <h1 style="margin:0;font-size:22pt;color:var(--ark-navy)"><span class="ph">Tobias</span> <span class="ph">Furrer</span></h1>
+        <p style="margin:3mm 0 0;font-size:12pt;color:#666"><span class="ph">Chief Financial Officer</span> · <span class="ph">Implenia AG</span></p>
+        <p style="margin:2mm 0 0;font-size:10pt;color:#666">
+          <span class="ph">47</span> Jahre · <span class="ph">Zollikon ZH</span> · <span class="ph">Schweiz</span>
+        </p>
+        <p style="margin:2mm 0 0;font-size:9pt;color:#888">
+          ✉ <span class="ph">tobias.furrer@gmail.com</span> · 📞 <span class="ph">+41 79 123 45 67</span>
+        </p>
+      </div>
+    </div>
+    <h2>Kurzprofil</h2>
+    <p><span class="ph">Erfahrener CFO mit 15+ Jahren Führungserfahrung in der Bauindustrie. Nachweislicher Track-Record bei IPO-Vorbereitung und M&amp;A-Transaktionen. Starke Zahlenorientierung mit strategischem Weitblick.</span></p>
+    <h2>Werdegang</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:10pt">
+      <tr><td style="padding:2mm;width:30mm;color:#666"><span class="ph">2020 – heute</span></td>
+          <td style="padding:2mm"><strong><span class="ph">Chief Financial Officer</span></strong><br><span class="ph">Implenia AG</span></td></tr>
+      <tr><td style="padding:2mm;width:30mm;color:#666"><span class="ph">2015 – 2020</span></td>
+          <td style="padding:2mm"><strong><span class="ph">Head of Finance</span></strong><br><span class="ph">Losinger Marazzi AG</span></td></tr>
+      <tr><td style="padding:2mm;width:30mm;color:#666"><span class="ph">2010 – 2015</span></td>
+          <td style="padding:2mm"><strong><span class="ph">Senior Controller</span></strong><br><span class="ph">PwC Schweiz</span></td></tr>
+    </table>
+    <h2>Ausbildung</h2>
+    <p><span class="ph">MSc Finance, Universität Zürich (2005). CFA Charterholder (2008). Executive MBA, IMD Lausanne (2018).</span></p>
+    <h2>Kompetenzen &amp; Focus</h2>
+    <p><span class="ph">Financial Controlling · IFRS/OR · IPO-Preparation · M&amp;A · Bauwirtschaft · Board-Reporting · Team-Führung (12 FTE)</span></p>
+    <h2>Gehalts-Eckdaten</h2>
+    <p>Aktueller TC: <strong class="ph">CHF 280'000</strong> · Gewünscht: <strong class="ph">CHF 320'000</strong></p>
+  `,
+  'executive_report': `
+    <div style="display:flex;justify-content:space-between;margin-bottom:10mm">
+      <div style="font-family:'Libre Baskerville',serif;font-size:16pt;color:var(--ark-navy)">ARKADIUM · Executive Report</div>
+      <div style="text-align:right;font-size:9pt;color:#666"><span class="ph">14.04.2026</span><br>Vertraulich</div>
+    </div>
+    <h1><span class="ph">Tobias Furrer</span></h1>
+    <p class="muted"><span class="ph">Chief Financial Officer</span> · Assessment-Order <span class="ph">ORD-2026-042</span> · Für Mandat <span class="ph">CFO-Suche · Bauherr Muster AG</span></p>
+    <h2>1. Zusammenfassung</h2>
+    <p><span class="ph">Tobias Furrer zeigt ein ausgeprägtes Profil als Führungspersönlichkeit mit hoher analytischer Kompetenz und ausgeprägtem Durchsetzungsvermögen. Die Assessment-Ergebnisse bestätigen die Eignung für die CFO-Rolle bei Bauherr Muster AG mit einer klaren Empfehlung „Proceed to Offer".</span></p>
+    <h2>2. Assessment-Ergebnisse</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:10pt;margin:4mm 0">
+      <tr style="background:#f2f2f2"><th style="padding:3mm;text-align:left">Typ</th><th style="padding:3mm">Durchgeführt</th><th style="padding:3mm">Kernaussage</th></tr>
+      <tr><td style="padding:3mm">MDI</td><td style="padding:3mm"><span class="ph">04.04.2026</span></td><td style="padding:3mm"><span class="ph">„Impactful Leader" mit hoher Realisierer-Ausprägung. Ausgeprägter Gestaltungswille.</span></td></tr>
+      <tr><td style="padding:3mm">Relief</td><td style="padding:3mm"><span class="ph">offen</span></td><td style="padding:3mm"><span class="ph">Geplant 20.04.2026 (N. Berger).</span></td></tr>
+      <tr><td style="padding:3mm">EQ Test</td><td style="padding:3mm"><span class="ph">offen</span></td><td style="padding:3mm"><span class="ph">Nach Placement als Entwicklungs-Tool geplant.</span></td></tr>
+    </table>
+    <div class="page-break">Seite 1 / 2</div>
+    <h2>3. Arkadium-Bewertung</h2>
+    <p><strong>Empfehlung:</strong> <span class="ph">Proceed to Offer — Grade A, Top-3-Kandidat aus Shortlist.</span></p>
+    <p><strong>Pro-Argumente:</strong> <span class="ph">15+ Jahre Bauindustrie-Erfahrung, IPO-Track-Record bei Losinger, Schweiz-Affinität (Zollikon), hohes MDI-Realisierungs-Scoring, AGB-konforme Referenzen.</span></p>
+    <p><strong>Red Flags:</strong> <span class="ph">Gehaltsforderung CHF 320'000 liegt am oberen Ende des Budget-Korridors. Verhandlungsspielraum via Performance-Bonus prüfen.</span></p>
+    <p><strong>Entwicklungsfelder:</strong> <span class="ph">Delegations-Kompetenz (MDI zeigt operative Nähe, könnte in CFO-Rolle an Grenzen stossen). Coaching-Empfehlung erstes Halbjahr.</span></p>
+    <h2>4. Referenzen</h2>
+    <p><span class="ph">2 Referenzauskünfte eingeholt (Hans Gruber/ex-CEO Losinger, Maria Keller/Board-Member Implenia). Beide einheitlich positiv. Empfehlung ohne Einschränkung.</span></p>
+    <p class="muted" style="margin-top:10mm;font-size:8pt">Diese Zusammenfassung ergänzt — ersetzt nicht — die Detail-Reports von SCHEELEN. Arkadium-interne Inputs sind mit Absender gekennzeichnet.</p>
+  `,
+};
+
+function renderCanvas() {
+  const c1 = document.getElementById('canvasA4');
+  const c2 = document.getElementById('canvasA4Preview');
+  const content = CANVAS_CONTENT[currentTemplate];
+  if (!content) return;
+  if (c1) c1.innerHTML = content;
+  if (c2) c2.innerHTML = content;
+}
+
+/* Override goToStep um renderCanvas bei Step 3/4 auszulösen */
+const _origGoToStep = goToStep;
+goToStep = function(n) {
+  _origGoToStep(n);
+  if ((n === 3 || n === 4) && currentTemplate) renderCanvas();
+};
+
+/* Init (Script am Ende, DOM bereit) */
+function initAll() {
+  bindSidebarCategories();
+  bindSearch();
+  injectFavStars();
+  initFromUrl();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAll);
+} else {
+  initAll();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Reminders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+/* ===== REMINDERS VOLLANSICHT — Scope Styles ===== */
+
+/* View-Toggle (Liste ↔ Kalender) */
+.view-seg { display:inline-flex; border:1px solid var(--border-strong); border-radius:3px; overflow:hidden; background:var(--surface); }
+.view-seg button { padding:6px 14px; font-size:12px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-mid); font-family:inherit; border-right:1px solid var(--border); display:inline-flex; align-items:center; gap:6px; }
+.view-seg button:last-child { border-right:none; }
+.view-seg button:hover { background:var(--bg); color:var(--text); }
+.view-seg button.active { background:var(--accent); color:#fff; font-weight:600; }
+
+.view-pane { display:none; }
+.view-pane.active { display:block; }
+
+/* Scope-Switcher (Dropdown-Pseudo) */
+.scope-switch { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--border); border-radius:3px; background:var(--surface); font-size:12px; cursor:pointer; color:var(--text-mid); }
+.scope-switch:hover { border-color:var(--accent-mid); color:var(--accent); }
+.scope-switch .caret { font-size:10px; color:var(--text-light); }
+.scope-switch strong { color:var(--text); font-weight:600; }
+
+/* Saved-Views-Chips */
+.sv-bar { display:flex; gap:8px; padding:10px 24px 6px; overflow-x:auto; align-items:center; border-bottom:1px solid var(--border); background:var(--surface); }
+.sv-chip { flex-shrink:0; padding:6px 14px; border:1px solid var(--border); border-radius:16px; font-size:11.5px; color:var(--text-mid); cursor:pointer; background:var(--surface); white-space:nowrap; transition:0.15s; }
+.sv-chip:hover { border-color:var(--accent-mid); color:var(--accent); }
+.sv-chip.active { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:600; }
+.sv-chip-new { border-style:dashed; color:var(--text-light); }
+.sv-chip-new:hover { border-style:solid; color:var(--accent); }
+
+/* KPI-Strip cols-6 (override editorial.css cols-5 default) */
+.kpi-strip.cols-6 { grid-template-columns:repeat(6,1fr); }
+@media (max-width:1280px) { .kpi-strip.cols-6 { grid-template-columns:repeat(3,1fr); } }
+
+/* Filter-Bar: zweite Zeile, zusätzliche Filter */
+.filter-bar.reminders-filter { flex-wrap:wrap; gap:6px; }
+.filter-bar.reminders-filter select { flex:0 0 auto; min-width:120px; }
+.filter-bar.reminders-filter .date-range { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--text-mid); }
+.filter-bar.reminders-filter .date-range input[type="date"] { padding:4px 6px; font-size:11px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); font-family:inherit; }
+
+.filter-tag-chips { display:flex; gap:6px; flex-wrap:wrap; padding:4px 24px 10px; font-size:11px; }
+.filter-tag { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:var(--accent-soft); color:var(--accent); border-radius:3px; font-weight:500; }
+.filter-tag .rm { cursor:pointer; opacity:0.6; }
+.filter-tag .rm:hover { opacity:1; }
+
+/* Status-Chip-Tabs */
+.chip-group { display:inline-flex; gap:4px; padding:8px 24px; background:var(--surface); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.chip-tab { padding:5px 12px; border:1px solid var(--border); border-radius:14px; font-size:11.5px; color:var(--text-mid); cursor:pointer; background:var(--surface); display:inline-flex; align-items:center; gap:6px; transition:0.15s; }
+.chip-tab:hover { border-color:var(--accent-mid); color:var(--accent); }
+.chip-tab.active { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+.chip-tab .count { font-size:10.5px; opacity:0.85; }
+
+/* Reminder-Section-Groups */
+.rem-section { padding:14px 24px 4px; }
+.rem-section-head { display:flex; align-items:center; gap:10px; padding:8px 14px; margin-bottom:8px; border-left:3px solid var(--border-strong); background:var(--bg); border-radius:0 3px 3px 0; }
+.rem-section-head h3 { margin:0; font-size:13px; font-weight:600; font-family:inherit; color:var(--text); }
+.rem-section-head .count { font-size:11px; color:var(--text-light); background:var(--surface); padding:1px 8px; border-radius:10px; font-weight:500; }
+.rem-section[data-rem-group="overdue"] .rem-section-head { border-left-color:var(--red); }
+.rem-section[data-rem-group="overdue"] .rem-section-head h3 { color:var(--red); }
+.rem-section[data-rem-group="today"] .rem-section-head { border-left-color:var(--amber); }
+
+/* Reminder-Row (DataTable) */
+.rem-table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.rem-table tr { cursor:pointer; transition:background 0.1s; border-bottom:1px solid var(--border); }
+.rem-table tr:last-child { border-bottom:none; }
+.rem-table tr:hover { background:var(--bg); }
+.rem-table td { padding:10px 12px; font-size:12.5px; vertical-align:middle; }
+.rem-table tr[data-rem="overdue"] { border-left:3px solid var(--red); }
+.rem-table tr[data-rem="today"] { border-left:3px solid var(--amber); }
+.rem-table tr[data-rem="done"] td { color:var(--text-light); }
+.rem-table tr[data-rem="done"] td .rem-title { text-decoration:line-through; color:var(--text-light); font-weight:400; }
+.rem-table .rem-check { width:32px; text-align:center; }
+.rem-table .rem-title { font-weight:600; color:var(--text); }
+.rem-table .rem-sub { font-size:11px; color:var(--text-light); margin-top:2px; line-height:1.35; }
+.rem-table .rem-due { font-size:11.5px; color:var(--text-mid); white-space:nowrap; }
+.rem-table .rem-due.overdue { color:var(--red); font-weight:600; }
+.rem-table .rem-due.today { color:var(--amber); font-weight:600; }
+.rem-table .rem-actions { text-align:right; white-space:nowrap; }
+.rem-table .rem-actions .btn { padding:4px 10px; font-size:11px; }
+.rem-table .rem-actions .btn-snooze { padding:4px 6px; font-size:11px; margin-left:2px; }
+
+/* Priority-Dots */
+.pr-dot { display:inline-block; width:9px; height:9px; border-radius:50%; flex-shrink:0; vertical-align:middle; margin-right:4px; }
+.pr-dot.urgent { background:var(--red); }
+.pr-dot.high { background:transparent; border:2px solid var(--red); width:7px; height:7px; }
+.pr-dot.medium { background:var(--amber); }
+.pr-dot.low { background:transparent; border:2px solid var(--text-light); width:7px; height:7px; }
+
+/* Typ-Chips */
+.rt-chip { display:inline-block; font-size:10.5px; padding:2px 8px; border-radius:2px; font-weight:600; letter-spacing:0.2px; white-space:nowrap; }
+.rt-chip.coaching { background:var(--blue-soft); color:var(--blue); }
+.rt-chip.debriefing { background:var(--purple-soft); color:var(--purple); }
+.rt-chip.briefing { background:var(--gold-soft); color:var(--gold); }
+.rt-chip.schutzfrist { background:var(--amber-soft); color:var(--amber); }
+.rt-chip.onboarding { background:var(--green-soft); color:var(--green); }
+.rt-chip.checkin { background:var(--accent-soft); color:var(--accent); }
+.rt-chip.garantie { background:var(--amber-soft); color:var(--amber); }
+.rt-chip.interview-date { background:var(--red-soft); color:var(--red); }
+.rt-chip.refresh { background:var(--blue-soft); color:var(--blue); }
+.rt-chip.followup { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+.rt-chip.custom { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+
+/* Auto-Badge */
+.auto-badge { display:inline-block; font-size:9.5px; padding:1px 6px; background:var(--purple-soft); color:var(--purple); border-radius:2px; font-weight:600; letter-spacing:0.3px; margin-left:4px; cursor:help; }
+
+/* Entity-Badges (reuse linked-entity aus email-kalender) */
+.ent-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:3px; font-size:10.5px; font-weight:500; cursor:pointer; text-decoration:none; border:1px solid transparent; white-space:nowrap; }
+.ent-badge:hover { border-color:currentColor; }
+.ent-badge.kandidat { background:var(--blue-soft); color:var(--blue); }
+.ent-badge.account { background:var(--accent-soft); color:var(--accent); }
+.ent-badge.mandat { background:var(--gold-soft); color:var(--gold); }
+.ent-badge.job { background:var(--amber-soft); color:var(--amber); }
+.ent-badge.prozess { background:var(--green-soft); color:var(--green); }
+
+/* Actor-Chip (2-Buchstaben-Kürzel) */
+.actor-chip { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; font-size:10px; font-weight:700; background:var(--accent-soft); color:var(--accent); letter-spacing:0.3px; }
+.actor-chip.jv { background:var(--purple-soft); color:var(--purple); }
+.actor-chip.lr { background:var(--gold-soft); color:var(--gold); }
+.actor-chip.mf { background:var(--green-soft); color:var(--green); }
+.actor-chip.bo { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+
+/* Erledigt-Section (collapsible) */
+.section-head.collapsed + .section-body { display:none; }
+.section-head { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; background:var(--bg); border-radius:3px; margin:14px 24px 8px; }
+.section-head h3 { margin:0; font-size:12.5px; font-weight:600; color:var(--text-mid); }
+.section-head .caret { display:inline-block; transition:transform 0.15s; color:var(--text-light); font-size:11px; }
+.section-head.collapsed .caret { transform:rotate(-90deg); }
+.section-body { padding:0 24px; }
+
+/* ===== KALENDER MODE ===== */
+.cal-wrap { padding:0 24px 24px; }
+.cal-toolbar { display:flex; align-items:center; gap:10px; padding:12px 0 14px; border-bottom:1px solid var(--border); margin-bottom:14px; flex-wrap:wrap; }
+.cal-toolbar .nav-btn { padding:4px 10px; border:1px solid var(--border); border-radius:3px; background:var(--surface); cursor:pointer; font-size:13px; color:var(--text-mid); }
+.cal-toolbar .nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+.cal-toolbar .cal-title { font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); font-weight:700; letter-spacing:-0.01em; margin:0 8px; }
+.cal-toolbar .sub-seg { display:inline-flex; border:1px solid var(--border-strong); border-radius:3px; overflow:hidden; }
+.cal-toolbar .sub-seg button { padding:4px 12px; font-size:11.5px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-mid); font-family:inherit; border-right:1px solid var(--border); }
+.cal-toolbar .sub-seg button:last-child { border-right:none; }
+.cal-toolbar .sub-seg button.active { background:var(--accent); color:#fff; }
+
+.cal-month { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.cal-dow { background:var(--bg); padding:6px 8px; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+.cal-cell { background:var(--surface); min-height:110px; padding:6px 8px; display:flex; flex-direction:column; gap:3px; position:relative; }
+.cal-cell.other { background:var(--bg); }
+.cal-cell.other .cal-daynum { color:var(--text-light); }
+.cal-cell.today { background:var(--amber-soft); }
+.cal-cell.today .cal-daynum { color:var(--amber); font-weight:700; }
+.cal-daynum { font-size:11px; color:var(--text-mid); font-weight:600; margin-bottom:2px; }
+.cal-chip { font-size:10px; padding:2px 6px; border-radius:2px; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500; }
+.cal-chip.overdue { background:var(--red-soft); color:var(--red); }
+.cal-chip.coaching { background:var(--blue-soft); color:var(--blue); }
+.cal-chip.debriefing { background:var(--purple-soft); color:var(--purple); }
+.cal-chip.onboarding { background:var(--green-soft); color:var(--green); }
+.cal-chip.checkin { background:var(--accent-soft); color:var(--accent); }
+.cal-chip.garantie { background:var(--amber-soft); color:var(--amber); }
+.cal-chip.schutzfrist { background:var(--amber-soft); color:var(--amber); }
+.cal-chip.refresh { background:var(--blue-soft); color:var(--blue); }
+.cal-more { font-size:10px; color:var(--text-light); cursor:pointer; padding:1px 6px; }
+.cal-more:hover { color:var(--accent); }
+
+/* Wochen-Raster (7 Spalten, Tag = Spalte, Reminders vertikal gestackt) */
+.cal-week { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:3px; overflow:hidden; min-height:540px; }
+.cal-week-col { background:var(--surface); display:flex; flex-direction:column; min-height:540px; }
+.cal-week-col.today { background:var(--amber-soft); }
+.cal-week-head { padding:10px 8px 6px; border-bottom:1px solid var(--border); background:var(--bg); text-align:center; }
+.cal-week-head.today { background:var(--amber-soft); }
+.cal-week-dow { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+.cal-week-num { font-family:'Libre Baskerville',serif; font-size:20px; color:var(--text); font-weight:700; margin-top:2px; }
+.cal-week-col.today .cal-week-num { color:var(--amber); }
+.cal-week-body { flex:1; padding:6px; display:flex; flex-direction:column; gap:4px; }
+
+.cal-week-chip { padding:6px 8px; border-radius:3px; cursor:pointer; font-size:11px; line-height:1.35; border-left:3px solid transparent; background:var(--surface); box-shadow:var(--shadow-sm); transition:all 0.15s; }
+.cal-week-chip:hover { transform:translateY(-1px); box-shadow:var(--shadow); }
+.cal-week-chip.overdue { border-left-color:var(--red); background:var(--red-soft); color:var(--red); }
+.cal-week-chip.coaching { border-left-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-week-chip.debriefing { border-left-color:var(--purple); background:var(--purple-soft); color:var(--purple); }
+.cal-week-chip.onboarding { border-left-color:var(--green); background:var(--green-soft); color:var(--green); }
+.cal-week-chip.checkin { border-left-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+.cal-week-chip.garantie { border-left-color:var(--amber); background:var(--amber-soft); color:var(--amber); }
+.cal-week-chip.schutzfrist { border-left-color:var(--amber); background:var(--amber-soft); color:var(--amber); }
+.cal-week-chip.refresh { border-left-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-week-chip.followup { border-left-color:var(--text-mid); background:var(--bg); color:var(--text-mid); }
+.cal-week-chip-time { font-size:10px; font-weight:600; opacity:0.85; }
+.cal-week-chip-title { font-weight:600; margin-top:2px; }
+.cal-week-chip-sub { font-size:10px; opacity:0.7; margin-top:1px; }
+
+/* Kalender-Sub-Pane Umschaltung */
+.cal-sub-pane { display:none; }
+.cal-sub-pane.active { display:grid; }
+
+/* Drag-to-Reschedule */
+.cal-chip[draggable="true"], .cal-week-chip[draggable="true"] { cursor:grab; }
+.cal-chip[draggable="true"]:active, .cal-week-chip[draggable="true"]:active { cursor:grabbing; }
+.cal-chip.dragging, .cal-week-chip.dragging { opacity:0.4; }
+.cal-cell.drop-target, .cal-week-col.drop-target { outline:2px dashed var(--accent); outline-offset:-4px; background:var(--accent-soft); }
+
+/* Drawer-spezifisch: Reminder-Detail Tabs */
+.dwr-tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); padding:0 20px; margin-top:10px; }
+.dwr-tab { padding:8px 14px; font-size:12px; color:var(--text-mid); cursor:pointer; border-bottom:2px solid transparent; font-weight:500; }
+.dwr-tab:hover { color:var(--accent); }
+.dwr-tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+.dwr-tab-panel { display:none; padding:16px 20px; }
+.dwr-tab-panel.active { display:block; }
+
+/* Kalender-Empty-State */
+.cal-empty { padding:60px 40px; text-align:center; color:var(--text-light); font-size:13px; background:var(--surface); border:1px solid var(--border); border-radius:3px; }
+
+/* Toast */
+.toast-host { position:fixed; bottom:20px; right:20px; z-index:1000; display:flex; flex-direction:column; gap:8px; }
+.toast { padding:10px 16px; background:var(--green-soft); color:var(--green); border-left:3px solid var(--green); border-radius:3px; font-size:12.5px; box-shadow:var(--shadow); min-width:240px; display:flex; align-items:center; gap:10px; }
+
+/* Snooze-Dropdown (Popover-Pseudo) */
+.snooze-pop { position:absolute; top:100%; right:0; margin-top:4px; background:var(--surface); border:1px solid var(--border); border-radius:3px; box-shadow:var(--shadow); padding:4px 0; min-width:140px; z-index:50; display:none; }
+.snooze-pop.open { display:block; }
+.snooze-pop button { display:block; width:100%; text-align:left; padding:6px 14px; font-size:12px; border:none; background:transparent; cursor:pointer; color:var(--text-mid); font-family:inherit; }
+.snooze-pop button:hover { background:var(--bg); color:var(--accent); }
+.snooze-wrap { position:relative; display:inline-block; }
+
+/* ===== MOBILE / TABLET ===== */
+@media (max-width:960px) and (min-width:641px) {
+  /* Tablet: KPI cols-6 → 3 */
+  .kpi-strip.cols-6 { grid-template-columns:repeat(3,1fr); }
+  .cal-month { gap:0; }
+  .cal-cell { min-height:80px; padding:4px 6px; }
+  .cal-chip { font-size:9px; padding:1px 4px; }
+}
+
+@media (max-width:640px) {
+  /* KPI 2-col (aus editorial.css geerbt, Override für cols-6) */
+  .kpi-strip.cols-6 { grid-template-columns:repeat(2,1fr); }
+
+  /* Scope-Switcher + Banner-CTAs stacken */
+  .page-banner > div { gap:8px !important; }
+  .scope-switch { font-size:11px; padding:4px 8px; }
+
+  /* Saved-Views-Chips schon scrollable via sv-bar overflow-x */
+
+  /* View-Toggle + Filter-Bar Zeile */
+  .view-seg { font-size:11px; }
+  .view-seg button { padding:4px 10px; font-size:11px; }
+
+  /* Status-Chip-Tabs kompakter */
+  .chip-group { padding:6px 10px; }
+  .chip-tab { font-size:10.5px; padding:3px 8px; }
+
+  /* Reminder-Row: flexibel, Actions auf neue Zeile */
+  .rem-table { font-size:11.5px; }
+  .rem-table td { padding:8px 6px; }
+  .rem-table .rem-due { font-size:10.5px; white-space:normal; }
+  .rem-table .rem-actions { flex-basis:100%; margin-left:0; justify-content:flex-end; padding-top:4px; border-top:1px dashed var(--border); margin-top:6px; }
+
+  /* Kalender-Modus: Monatsraster zu eng → horizontal scroll oder auf Liste fallback */
+  .cal-wrap { padding:0 12px 12px; }
+  .cal-month {
+    /* Horizontal-Scroll-Container */
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    display:block; white-space:nowrap;
+    grid-template-columns:none !important;
+  }
+  .cal-month .cal-dow,
+  .cal-month .cal-cell {
+    display:inline-block; width:60px; min-height:70px; vertical-align:top;
+    white-space:normal; padding:4px 4px;
+  }
+  .cal-chip { font-size:9px; padding:1px 3px; }
+
+  /* Wochen-Raster: 7 Spalten enger */
+  .cal-week { grid-template-columns:repeat(7,1fr); min-height:320px; }
+  .cal-week-col { min-height:320px; }
+  .cal-week-num { font-size:16px; }
+  .cal-week-chip { font-size:10px; padding:4px 5px; }
+  .cal-week-chip-time { font-size:9px; }
+
+  /* Toolbar */
+  .cal-toolbar { flex-wrap:wrap; gap:6px; }
+  .cal-toolbar .cal-title { font-size:15px; }
+  .cal-toolbar .nav-btn { padding:3px 8px; font-size:12px; }
+
+  /* Drawer-Tabs scrollbar */
+  .dwr-tabs { overflow-x:auto; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; }
+  .dwr-tab { flex-shrink:0; font-size:11px; padding:6px 10px; }
+
+  /* Snooze-Popover zentriert */
+  .snooze-pop { right:auto; left:0; min-width:120px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="crm.html">Home</a><span class="sep">/</span>
+    <span class="current">Reminders</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- PAGE BANNER -->
+<div class="page-banner" style="padding:18px 24px 14px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:22px;color:var(--accent);font-weight:700;letter-spacing:-0.01em">🔔 Reminders</h1>
+    <span class="muted" id="bannerMeta">8 offen · <span style="color:var(--red);font-weight:600">1 überfällig</span> · 1 heute · 3 diese Woche · 12 erledigt (30 d)</span>
+    <span class="spacer" style="flex:1"></span>
+    <!-- Scope-Switcher (nur Admin/HoD sichtbar, hier zur Demo gezeigt) -->
+    <div class="scope-switch" onclick="toggleScope()" id="scopeSwitch" title="Nur für Admin/Head of sichtbar">
+      <span>Scope:</span><strong id="scopeLabel">Eigene</strong><span class="caret">▾</span>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openDrawer('remNewDrawer')">+ Reminder</button>
+  </div>
+</div>
+
+<!-- KPI-STRIP -->
+<div style="padding:14px 24px 0">
+  <div class="kpi-strip cols-6">
+    <div class="kpi-card" onclick="filterStatus('all')">
+      <div class="kpi-label">Offen</div>
+      <div class="kpi-value">8</div>
+      <div class="kpi-sub muted">alle offenen Reminders</div>
+    </div>
+    <div class="kpi-card red" onclick="filterStatus('overdue')">
+      <div class="kpi-label">Überfällig</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub muted">sofortiges Handeln</div>
+    </div>
+    <div class="kpi-card" onclick="filterStatus('today')">
+      <div class="kpi-label">Heute</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub muted">fällig am 17.04.2026</div>
+    </div>
+    <div class="kpi-card" onclick="filterStatus('week')">
+      <div class="kpi-label">Diese Woche</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub muted">bis 23.04.2026</div>
+    </div>
+    <div class="kpi-card" onclick="filterStatus('later')">
+      <div class="kpi-label">Später</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub muted">ab 24.04.2026</div>
+    </div>
+    <div class="kpi-card gold" onclick="filterStatus('done')">
+      <div class="kpi-label">Erledigt (30 d)</div>
+      <div class="kpi-value">12</div>
+      <div class="kpi-sub muted">seit 18.03.2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED-VIEWS-CHIPS -->
+<div class="sv-bar" style="margin-top:14px">
+  <span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-weight:600;margin-right:4px">Ansichten</span>
+  <div class="sv-chip active" onclick="applySavedView(this,'mein-tag')">Mein Tag</div>
+  <div class="sv-chip" onclick="applySavedView(this,'coaching-debriefing')">Interview-Coaching + Debriefing</div>
+  <div class="sv-chip" onclick="applySavedView(this,'post-placement')">Post-Placement-Check-Ins</div>
+  <div class="sv-chip" onclick="applySavedView(this,'schutzfrist')">Schutzfrist-Tracking</div>
+  <div class="sv-chip sv-chip-new" onclick="openNewView()">+ Neue Ansicht</div>
+</div>
+
+<!-- VIEW-TOGGLE + FILTER-BAR -->
+<div style="padding:12px 24px 0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <div class="view-seg">
+    <button class="active" data-view="list" onclick="switchView('list')"><span>📋</span><span>Liste</span></button>
+    <button data-view="cal" onclick="switchView('cal')"><span>📅</span><span>Kalender</span></button>
+  </div>
+  <div style="flex:1"></div>
+  <div style="font-size:11px;color:var(--text-light)">Tastatur: <strong>N</strong> Neu · <strong>E</strong> Erledigen · <strong>S</strong> Snooze · <strong>V</strong> View wechseln</div>
+</div>
+
+<div class="filter-bar reminders-filter" style="padding:10px 24px">
+  <input type="search" placeholder="🔍 Suche in Titel, Beschreibung, Entity …" style="flex:1 1 240px;min-width:200px">
+  <select>
+    <option>Alle Typen</option>
+    <option>Interview-Coaching</option>
+    <option>Debriefing</option>
+    <option>Briefing</option>
+    <option>Schutzfrist</option>
+    <option>Onboarding</option>
+    <option>Check-In</option>
+    <option>Garantie</option>
+    <option>Interview-Datum</option>
+    <option>Kandidaten-Refresh</option>
+    <option>Follow-up</option>
+    <option>Custom</option>
+  </select>
+  <select>
+    <option>Alle Zuständigen</option>
+    <option>Eigene (PW)</option>
+    <option>JV</option>
+    <option>LR</option>
+    <option>MF</option>
+    <option>Backoffice</option>
+  </select>
+  <select>
+    <option>Alle Quellen</option>
+    <option>Manuell erstellt</option>
+    <option>Auto (System-Trigger)</option>
+    <option>Aus Prozess</option>
+    <option>Aus Jobbasket</option>
+    <option>Aus Schutzfrist</option>
+  </select>
+  <select>
+    <option>Alle Entity-Typen</option>
+    <option>Kandidat</option>
+    <option>Account</option>
+    <option>Mandat</option>
+    <option>Job</option>
+    <option>Prozess</option>
+  </select>
+  <span class="date-range">
+    Von <input type="date">
+    bis <input type="date">
+  </span>
+  <select>
+    <option>Alle Prioritäten</option>
+    <option>Urgent</option>
+    <option>High</option>
+    <option>Medium</option>
+    <option>Low</option>
+  </select>
+  <select>
+    <option>Alle Wiederholungen</option>
+    <option>Einmalig</option>
+    <option>Täglich</option>
+    <option>Wöchentlich</option>
+    <option>Monatlich</option>
+  </select>
+  <label style="font-size:11px;color:var(--text-mid);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;background:var(--surface);cursor:pointer">
+    <input type="checkbox"> nur Auto-generiert
+  </label>
+</div>
+
+<!-- Aktive Filter-Tags -->
+<div class="filter-tag-chips">
+  <span class="filter-tag">Scope: Eigene <span class="rm">✕</span></span>
+</div>
+
+<!-- ============================= LISTE MODUS ============================= -->
+<div class="view-pane active" id="listView">
+
+  <!-- Status-Chip-Tabs -->
+  <div class="chip-group">
+    <div class="chip-tab active" onclick="filterStatus('all', this)">Alle offenen <span class="count">8</span></div>
+    <div class="chip-tab" onclick="filterStatus('overdue', this)"><span class="pr-dot urgent"></span>Überfällig <span class="count">1</span></div>
+    <div class="chip-tab" onclick="filterStatus('today', this)">Heute <span class="count">1</span></div>
+    <div class="chip-tab" onclick="filterStatus('week', this)">Diese Woche <span class="count">3</span></div>
+    <div class="chip-tab" onclick="filterStatus('later', this)">Später <span class="count">3</span></div>
+    <div class="chip-tab" onclick="filterStatus('done', this)">Erledigt <span class="count">12</span></div>
+  </div>
+
+  <!-- ÜBERFÄLLIG -->
+  <div class="rem-section" data-rem-group="overdue">
+    <div class="rem-section-head">
+      <h3>⚠ Überfällig</h3>
+      <span class="count">1</span>
+    </div>
+    <table class="rem-table">
+      <tbody>
+        <tr data-rem="overdue" onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot high"></span><span class="rem-title">Debriefing 1st Interview · Tobias Furrer</span> <span class="rt-chip debriefing">Debriefing</span> <span class="ent-badge kandidat">👤 T. Furrer</span> <span class="ent-badge prozess">🔄 Muster AG · CFO</span></div>
+            <div class="rem-sub">Interview war 08.04. — Feedback-Call mit Kandidat noch offen · 2nd-Runden-Einladung hängt davon ab</div>
+          </td>
+          <td class="rem-due overdue">6 d überfällig<div class="rem-sub">11.04.2026 · 17:00</div></td>
+          <td><span class="actor-chip jv">JV</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)" title="Snooze">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1h')">+1 Stunde</button>
+                <button onclick="event.stopPropagation();snooze(this,'1d')">+1 Tag</button>
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+                <button onclick="event.stopPropagation();snooze(this,'custom')">Custom …</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HEUTE -->
+  <div class="rem-section" data-rem-group="today">
+    <div class="rem-section-head">
+      <h3>Heute · 17.04.2026</h3>
+      <span class="count">1</span>
+    </div>
+    <table class="rem-table">
+      <tbody>
+        <tr data-rem="today" onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot medium"></span><span class="rem-title">Coaching-Call vor 2nd Interview · T. Furrer</span> <span class="rt-chip coaching">Interview-Coaching</span> <span class="auto-badge" title="Auto-generiert · 2 Tage vor Interview-Termin">⚙ Auto</span> <span class="ent-badge kandidat">👤 T. Furrer</span> <span class="ent-badge prozess">🔄 Muster AG · CFO</span></div>
+            <div class="rem-sub">Vorbereitung VR-Termin 22.04. — Teilnehmer, Agenda, Fallstricke, Gehaltsrange bestätigen</div>
+          </td>
+          <td class="rem-due today">heute · 17:00<div class="rem-sub">17.04.2026</div></td>
+          <td><span class="actor-chip jv">JV</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1h')">+1 Stunde</button>
+                <button onclick="event.stopPropagation();snooze(this,'1d')">+1 Tag</button>
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+                <button onclick="event.stopPropagation();snooze(this,'custom')">Custom …</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DIESE WOCHE -->
+  <div class="rem-section">
+    <div class="rem-section-head">
+      <h3>Diese Woche · bis 23.04.2026</h3>
+      <span class="count">3</span>
+    </div>
+    <table class="rem-table">
+      <tbody>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot medium"></span><span class="rem-title">Referenzen freigeben lassen</span> <span class="rt-chip followup">Follow-up</span> <span class="ent-badge kandidat">👤 T. Furrer</span></div>
+            <div class="rem-sub">Kandidat muss 2 Referenzgeber freischalten vor 2nd Interview</div>
+          </td>
+          <td class="rem-due">morgen · 18.04.<div class="rem-sub">in 1 d</div></td>
+          <td><span class="actor-chip jv">JV</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1d')">+1 Tag</button>
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot high"></span><span class="rem-title">Schutzfrist Info-Request · Volare Group</span> <span class="rt-chip schutzfrist">Schutzfrist</span> <span class="auto-badge" title="Auto-generiert · täglich bei offener Info-Anfrage">⚙ Auto</span> <span class="ent-badge account">🏢 Volare Group</span></div>
+            <div class="rem-sub">10-Tage-Fenster endet 20.04. · Status bei Kunde bestätigen, sonst Auto-Extension auf 16 Mt</div>
+          </td>
+          <td class="rem-due">20.04.<div class="rem-sub">in 3 d</div></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1d')">+1 Tag</button>
+                <button onclick="event.stopPropagation();snooze(this,'custom')">Custom …</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot low"></span><span class="rem-title">Kandidaten-Refresh · CV + LinkedIn-Stand prüfen</span> <span class="rt-chip refresh">Kandidaten-Refresh</span> <span class="ent-badge kandidat">👤 Anna Meier</span></div>
+            <div class="rem-sub">Letzter Refresh vor 6 Monaten · Kontaktdaten + aktueller Werdegang</div>
+          </td>
+          <td class="rem-due">23.04.<div class="rem-sub">in 6 d</div></td>
+          <td><span class="actor-chip jv">JV</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+                <button onclick="event.stopPropagation();snooze(this,'custom')">Custom …</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SPÄTER -->
+  <div class="rem-section">
+    <div class="rem-section-head">
+      <h3>Später</h3>
+      <span class="count">3</span>
+    </div>
+    <table class="rem-table">
+      <tbody>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot medium"></span><span class="rem-title">Onboarding-Call · Tobias Furrer</span> <span class="rt-chip onboarding">Onboarding</span> <span class="auto-badge" title="Auto-generiert · 7 Tage vor Arbeitsantritt">⚙ Auto</span> <span class="ent-badge kandidat">👤 T. Furrer</span></div>
+            <div class="rem-sub">7 Tage vor Arbeitsantritt (geplant 01.07.2026) — Erwartungen, 1. Arbeitswoche, erster Kontakt Hiring-Manager</div>
+          </td>
+          <td class="rem-due">24.06.2026<div class="rem-sub">in 68 d</div></td>
+          <td><span class="actor-chip lr">LR</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+                <button onclick="event.stopPropagation();snooze(this,'custom')">Custom …</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot medium"></span><span class="rem-title">1-Monats-Check · Julian Egger</span> <span class="rt-chip checkin">Check-In</span> <span class="auto-badge" title="Auto-generiert · 1 Monat nach Placement">⚙ Auto</span> <span class="ent-badge kandidat">👤 J. Egger</span> <span class="ent-badge account">🏢 PL Hochbau</span></div>
+            <div class="rem-sub">Start 01.06.2026 · Zufriedenheit, Integration, erste Erfolge · Aktivität „1-Mt-Check-In" erfassen</div>
+          </td>
+          <td class="rem-due">01.07.2026<div class="rem-sub">in 75 d</div></td>
+          <td><span class="actor-chip lr">LR</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+        <tr onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" onclick="event.stopPropagation()"></td>
+          <td>
+            <div><span class="pr-dot high"></span><span class="rem-title">Garantiefrist-Ende · Julian Egger</span> <span class="rt-chip garantie">Garantie</span> <span class="auto-badge" title="Auto-generiert · Ende Garantiefrist">⚙ Auto</span> <span class="ent-badge kandidat">👤 J. Egger</span> <span class="ent-badge mandat">📋 PL Hochbau · Target</span></div>
+            <div class="rem-sub">Arbeitsantritt 01.06.2026 · 3 Mt Garantie läuft ab · Prozess schliessen, Honorar final</div>
+          </td>
+          <td class="rem-due">01.09.2026<div class="rem-sub">in 137 d</div></td>
+          <td><span class="actor-chip bo">BO</span></td>
+          <td class="rem-actions">
+            <button class="btn btn-sm" onclick="event.stopPropagation();completeReminder(this)">Erledigen</button>
+            <span class="snooze-wrap">
+              <button class="btn btn-sm btn-snooze" onclick="event.stopPropagation();toggleSnooze(this)">⏰ ▾</button>
+              <div class="snooze-pop">
+                <button onclick="event.stopPropagation();snooze(this,'1w')">+1 Woche</button>
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ERLEDIGT (collapsed) -->
+  <div class="section-head collapsed" onclick="toggleSection(this)">
+    <span class="caret">▾</span>
+    <h3>Erledigt (letzte 30 Tage)</h3>
+    <span class="count" style="font-size:11px;color:var(--text-light);background:var(--surface);padding:1px 8px;border-radius:10px;font-weight:500">12</span>
+    <span class="spacer" style="flex:1"></span>
+    <span style="font-size:11px;color:var(--text-light)">älter anzeigen ▾</span>
+  </div>
+  <div class="section-body">
+    <table class="rem-table" style="margin-bottom:14px">
+      <tbody>
+        <tr data-rem="done" onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" checked disabled></td>
+          <td>
+            <div><span class="rem-title">Briefing-Termin Vorbereitung</span> <span class="rt-chip followup">Follow-up</span></div>
+            <div class="rem-sub">erledigt von JV</div>
+          </td>
+          <td class="rem-due">erledigt 13.04.<div class="rem-sub">vor 4 d</div></td>
+          <td><span class="actor-chip jv">JV</span></td>
+          <td class="rem-actions"><span class="muted" style="font-size:11px">✓</span></td>
+        </tr>
+        <tr data-rem="done" onclick="openDrawer('remDetailDrawer',0)">
+          <td class="rem-check"><input type="checkbox" checked disabled></td>
+          <td>
+            <div><span class="rem-title">ASSESS 5.0 Report mit Kandidat besprechen</span> <span class="rt-chip followup">Follow-up</span></div>
+            <div class="rem-sub">erledigt von PW</div>
+          </td>
+          <td class="rem-due">erledigt 05.04.<div class="rem-sub">vor 12 d</div></td>
+          <td><span class="actor-chip">PW</span></td>
+          <td class="rem-actions"><span class="muted" style="font-size:11px">✓</span></td>
+        </tr>
+        <tr class="muted" style="cursor:default">
+          <td colspan="5" style="text-align:center;font-size:11px;padding:12px">+ 10 weitere · <a href="#" style="color:var(--accent)">alle anzeigen</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Info-Banner unten -->
+  <div style="font-size:11px;color:var(--text-mid);margin:0 24px 24px;padding:10px 14px;background:var(--bg);border-radius:3px;line-height:1.55">
+    Reminders werden manuell angelegt oder automatisch durch System-Trigger (Interview-Coaching vor Termin, Debriefing nach Interview, 30/90/365-d-Check-Ins nach Placement, Garantiefrist-Ende, Kandidaten-Refresh, Schutzfrist-Info-Request). Auto-Reminder tragen das Badge <span class="auto-badge">⚙ Auto</span>. Überfällige Reminders erzeugen nach 48 h eine Eskalations-Notification an den Head of. Auto-Regeln verwaltet Admin unter <!-- ark-lint-skip:begin reason=admin-route-ref --><code style="background:var(--surface);padding:1px 4px;border-radius:2px;font-size:11px">/admin/reminder-rules</code><!-- ark-lint-skip:end -->.
+  </div>
+
+</div><!-- /listView -->
+
+<!-- ============================= KALENDER MODUS ============================= -->
+<div class="view-pane" id="calView">
+<div class="cal-wrap">
+
+  <div class="cal-toolbar">
+    <button class="nav-btn" onclick="calNav(-1)">‹</button>
+    <button class="nav-btn" onclick="calNav(1)">›</button>
+    <h2 class="cal-title" id="calTitle">April 2026</h2>
+    <button class="nav-btn" onclick="jumpToToday()">Heute</button>
+    <span class="spacer" style="flex:1"></span>
+    <div class="sub-seg">
+      <button class="active" onclick="switchCalSub('month',this)">Monat</button>
+      <button onclick="switchCalSub('week',this)">Woche</button>
+    </div>
+  </div>
+
+  <!-- MONATSRASTER -->
+  <div class="cal-sub-pane active cal-month" id="calMonth">
+    <div class="cal-dow">Mo</div><div class="cal-dow">Di</div><div class="cal-dow">Mi</div><div class="cal-dow">Do</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div><div class="cal-dow">So</div>
+
+    <div class="cal-cell other" data-day="2026-03-30"><span class="cal-daynum">30</span></div>
+    <div class="cal-cell other" data-day="2026-03-31"><span class="cal-daynum">31</span></div>
+    <div class="cal-cell" data-day="2026-04-01"><span class="cal-daynum">1</span></div>
+    <div class="cal-cell" data-day="2026-04-02"><span class="cal-daynum">2</span></div>
+    <div class="cal-cell" data-day="2026-04-03"><span class="cal-daynum">3</span></div>
+    <div class="cal-cell" data-day="2026-04-04"><span class="cal-daynum">4</span></div>
+    <div class="cal-cell" data-day="2026-04-05"><span class="cal-daynum">5</span></div>
+
+    <div class="cal-cell" data-day="2026-04-06"><span class="cal-daynum">6</span></div>
+    <div class="cal-cell" data-day="2026-04-07"><span class="cal-daynum">7</span></div>
+    <div class="cal-cell" data-day="2026-04-08"><span class="cal-daynum">8</span></div>
+    <div class="cal-cell" data-day="2026-04-09"><span class="cal-daynum">9</span></div>
+    <div class="cal-cell" data-day="2026-04-10"><span class="cal-daynum">10</span></div>
+    <div class="cal-cell" data-day="2026-04-11"><span class="cal-daynum">11</span></div>
+    <div class="cal-cell" data-day="2026-04-12"><span class="cal-daynum">12</span></div>
+
+    <div class="cal-cell" data-day="2026-04-13"><span class="cal-daynum">13</span><div class="cal-chip" draggable="true" data-rem-id="r001" onclick="openDrawer('remDetailDrawer')">✓ Briefing-Termin</div></div>
+    <div class="cal-cell" data-day="2026-04-14"><span class="cal-daynum">14</span></div>
+    <div class="cal-cell" data-day="2026-04-15"><span class="cal-daynum">15</span></div>
+    <div class="cal-cell" data-day="2026-04-16"><span class="cal-daynum">16</span></div>
+    <div class="cal-cell today" data-day="2026-04-17">
+      <span class="cal-daynum">17</span>
+      <div class="cal-chip overdue" draggable="true" data-rem-id="r002" onclick="openDrawer('remDetailDrawer')" title="Überfällig — Debriefing 1st Interview">⚠ Debriefing T. Furrer</div>
+      <div class="cal-chip coaching" draggable="true" data-rem-id="r003" onclick="openDrawer('remDetailDrawer')">🧑‍💼 Coaching 17:00</div>
+    </div>
+    <div class="cal-cell" data-day="2026-04-18"><span class="cal-daynum">18</span><div class="cal-chip followup" draggable="true" data-rem-id="r004" style="background:var(--bg);color:var(--text-mid);border:1px solid var(--border)">📝 Referenzen</div></div>
+    <div class="cal-cell" data-day="2026-04-19"><span class="cal-daynum">19</span></div>
+
+    <div class="cal-cell" data-day="2026-04-20"><span class="cal-daynum">20</span><div class="cal-chip schutzfrist" draggable="true" data-rem-id="r005" onclick="openDrawer('remDetailDrawer')">🛡 Schutzfrist Volare</div></div>
+    <div class="cal-cell" data-day="2026-04-21"><span class="cal-daynum">21</span></div>
+    <div class="cal-cell" data-day="2026-04-22"><span class="cal-daynum">22</span></div>
+    <div class="cal-cell" data-day="2026-04-23"><span class="cal-daynum">23</span><div class="cal-chip refresh" draggable="true" data-rem-id="r006" onclick="openDrawer('remDetailDrawer')">🔄 Refresh A. Meier</div></div>
+    <div class="cal-cell" data-day="2026-04-24"><span class="cal-daynum">24</span></div>
+    <div class="cal-cell" data-day="2026-04-25"><span class="cal-daynum">25</span></div>
+    <div class="cal-cell" data-day="2026-04-26"><span class="cal-daynum">26</span></div>
+
+    <div class="cal-cell" data-day="2026-04-27"><span class="cal-daynum">27</span></div>
+    <div class="cal-cell" data-day="2026-04-28"><span class="cal-daynum">28</span></div>
+    <div class="cal-cell" data-day="2026-04-29"><span class="cal-daynum">29</span></div>
+    <div class="cal-cell" data-day="2026-04-30"><span class="cal-daynum">30</span></div>
+    <div class="cal-cell other" data-day="2026-05-01"><span class="cal-daynum">1</span></div>
+    <div class="cal-cell other" data-day="2026-05-02"><span class="cal-daynum">2</span></div>
+    <div class="cal-cell other" data-day="2026-05-03"><span class="cal-daynum">3</span></div>
+  </div>
+
+  <!-- WOCHENRASTER (Woche 13.–19.04.2026) -->
+  <div class="cal-sub-pane cal-week" id="calWeek">
+    <div class="cal-week-col" data-day="2026-04-13">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">Mo</div>
+        <div class="cal-week-num">13</div>
+      </div>
+      <div class="cal-week-body">
+        <div class="cal-week-chip followup" draggable="true" data-rem-id="r001" onclick="openDrawer('remDetailDrawer')">
+          <div class="cal-week-chip-time">ganztägig</div>
+          <div class="cal-week-chip-title">Briefing-Termin</div>
+          <div class="cal-week-chip-sub">✓ erledigt</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cal-week-col" data-day="2026-04-14">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">Di</div>
+        <div class="cal-week-num">14</div>
+      </div>
+      <div class="cal-week-body"></div>
+    </div>
+
+    <div class="cal-week-col" data-day="2026-04-15">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">Mi</div>
+        <div class="cal-week-num">15</div>
+      </div>
+      <div class="cal-week-body"></div>
+    </div>
+
+    <div class="cal-week-col" data-day="2026-04-16">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">Do</div>
+        <div class="cal-week-num">16</div>
+      </div>
+      <div class="cal-week-body"></div>
+    </div>
+
+    <div class="cal-week-col today" data-day="2026-04-17">
+      <div class="cal-week-head today">
+        <div class="cal-week-dow">Fr · heute</div>
+        <div class="cal-week-num">17</div>
+      </div>
+      <div class="cal-week-body">
+        <div class="cal-week-chip overdue" draggable="true" data-rem-id="r002" onclick="openDrawer('remDetailDrawer')">
+          <div class="cal-week-chip-time">⚠ 6 d überfällig · 17:00</div>
+          <div class="cal-week-chip-title">Debriefing · T. Furrer</div>
+          <div class="cal-week-chip-sub">Feedback-Call noch offen</div>
+        </div>
+        <div class="cal-week-chip coaching" draggable="true" data-rem-id="r003" onclick="openDrawer('remDetailDrawer')">
+          <div class="cal-week-chip-time">17:00</div>
+          <div class="cal-week-chip-title">Coaching · T. Furrer</div>
+          <div class="cal-week-chip-sub">Vorbereitung 2nd Interview 22.04.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cal-week-col" data-day="2026-04-18">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">Sa</div>
+        <div class="cal-week-num">18</div>
+      </div>
+      <div class="cal-week-body">
+        <div class="cal-week-chip followup" draggable="true" data-rem-id="r004" onclick="openDrawer('remDetailDrawer')">
+          <div class="cal-week-chip-time">ganztägig</div>
+          <div class="cal-week-chip-title">Referenzen freigeben</div>
+          <div class="cal-week-chip-sub">Kandidat: 2 Referenzgeber</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cal-week-col" data-day="2026-04-19">
+      <div class="cal-week-head">
+        <div class="cal-week-dow">So</div>
+        <div class="cal-week-num">19</div>
+      </div>
+      <div class="cal-week-body"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;padding:12px 16px;background:var(--bg);border-radius:3px;font-size:11px;color:var(--text-mid);line-height:1.55">
+    <strong>Kalender-Ansicht:</strong> zeigt alle Reminders als Chips pro Fälligkeits-Tag. Drag-to-Reschedule: Chip auf anderen Tag ziehen → `PATCH /reminders/:id` (Optimistic). Farbe = Typ. Click auf Chip öffnet Detail-Drawer. Outlook-Sync ist <strong>nicht</strong> Teil dieser Maske — Termine mit externen Teilnehmern bleiben in <a href="email-kalender.html" style="color:var(--accent)">Email &amp; Kalender</a>.
+  </div>
+
+</div>
+</div><!-- /calView -->
+
+<!-- ============================= DRAWERS ============================= -->
+
+<!-- Drawer-Backdrop -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+
+<!-- REMINDER-DETAIL-DRAWER -->
+<div class="drawer" id="remDetailDrawer">
+  <div class="drawer-head">
+    <div>
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-light);font-weight:600">Reminder</div>
+      <h2 contenteditable="true" spellcheck="false" style="margin:4px 0 0;font-size:16px;font-weight:600;color:var(--text);outline:none;border-bottom:1px dashed transparent;padding:2px 0" onfocus="this.style.borderBottomColor='var(--accent-mid)'" onblur="this.style.borderBottomColor='transparent'">Debriefing 1st Interview · Tobias Furrer</h2>
+      <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
+        <span class="rt-chip debriefing">Debriefing</span>
+        <span style="font-size:11px;color:var(--red);font-weight:600">⚠ 6 d überfällig</span>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('remDetailDrawer')">✕</button>
+  </div>
+
+  <div class="dwr-tabs">
+    <div class="dwr-tab active" onclick="drawerTab('remDetailDrawer',0)">Übersicht</div>
+    <div class="dwr-tab" onclick="drawerTab('remDetailDrawer',1)">Historie</div>
+    <div class="dwr-tab" onclick="drawerTab('remDetailDrawer',2)">Verknüpfungen</div>
+    <div class="dwr-tab" onclick="drawerTab('remDetailDrawer',3)">Wiederholung</div>
+    <div class="dwr-tab" onclick="drawerTab('remDetailDrawer',4)">Push</div>
+  </div>
+
+  <!-- TAB 0: Übersicht -->
+  <div class="dwr-tab-panel active">
+    <div class="drawer-section">
+      <h4>Beschreibung</h4>
+      <textarea rows="3" style="width:100%;padding:8px 10px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit;resize:vertical">Interview war 08.04. — Feedback-Call mit Kandidat noch offen · 2nd-Runden-Einladung hängt davon ab</textarea>
+    </div>
+
+    <div class="drawer-section" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div>
+        <h4>Fälligkeits-Datum</h4>
+        <input type="date" value="2026-04-11" style="width:100%;padding:6px 8px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+      </div>
+      <div>
+        <h4>Uhrzeit</h4>
+        <input type="time" value="17:00" style="width:100%;padding:6px 8px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+      </div>
+      <div>
+        <h4>Priorität</h4>
+        <select style="width:100%">
+          <option>Urgent</option>
+          <option selected>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <div>
+        <h4>Typ</h4>
+        <select style="width:100%">
+          <option selected>Debriefing</option>
+          <option>Follow-up</option>
+          <option>Custom</option>
+        </select>
+      </div>
+      <div>
+        <h4>Zuständig</h4>
+        <select style="width:100%">
+          <option selected>JV — Jonas</option>
+          <option>PW — Peter</option>
+          <option>LR — Lea</option>
+        </select>
+      </div>
+      <div>
+        <h4>Quelle</h4>
+        <div style="padding:6px 8px;font-size:12.5px;color:var(--text-mid);background:var(--bg);border:1px solid var(--border);border-radius:3px">Manuell · angelegt von JV</div>
+      </div>
+    </div>
+
+    <div class="drawer-section muted" style="font-size:11px;color:var(--text-light);padding-top:14px;border-top:1px dashed var(--border)">
+      Erstellt: 08.04.2026 16:42 · JV<br>
+      Letzte Änderung: 10.04.2026 09:15 · JV
+    </div>
+  </div>
+
+  <!-- TAB 1: Historie -->
+  <div class="dwr-tab-panel">
+    <div class="drawer-section">
+      <h4>Event-Historie</h4>
+      <div class="list-item"><div class="name">Angelegt <span class="muted" style="font-size:10px">· 08.04.2026 16:42</span></div><div class="meta">von JV · Manuell angelegt nach 1st Interview</div></div>
+      <div class="list-item"><div class="name">Verschoben <span class="muted" style="font-size:10px">· 10.04.2026 09:15</span></div><div class="meta">+1 Tag (von 10.04. auf 11.04.)</div></div>
+      <div class="list-item"><div class="name">Überfällig-Eskalation <span class="muted" style="font-size:10px">· 13.04.2026 09:00</span></div><div class="meta">48-h-Eskalation · Notification an Head of (Peter)</div></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Verknüpfungen -->
+  <div class="dwr-tab-panel">
+    <div class="drawer-section">
+      <h4>Verknüpfte Entitäten</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="ent-badge kandidat">👤 T. Furrer</span>
+          <span class="muted" style="font-size:11px">Kandidat</span>
+          <span class="spacer" style="flex:1"></span>
+          <button class="btn btn-sm">Öffnen</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="ent-badge prozess">🔄 Muster AG · CFO</span>
+          <span class="muted" style="font-size:11px">Prozess · Stage 1st→2nd</span>
+          <span class="spacer" style="flex:1"></span>
+          <button class="btn btn-sm">Öffnen</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>+ Verknüpfung hinzufügen</h4>
+      <select style="width:100%">
+        <option>Entity-Typ auswählen …</option>
+        <option>Kandidat</option>
+        <option>Account</option>
+        <option>Mandat</option>
+        <option>Job</option>
+        <option>Prozess</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TAB 3: Wiederholung -->
+  <div class="dwr-tab-panel">
+    <div class="drawer-section">
+      <h4>Wiederholungs-Pattern</h4>
+      <select style="width:100%">
+        <option selected>Einmalig (keine Wiederholung)</option>
+        <option>Täglich</option>
+        <option>Wöchentlich</option>
+        <option>Monatlich</option>
+      </select>
+    </div>
+    <div class="drawer-section muted" style="font-size:11.5px;color:var(--text-mid)">
+      Bei aktivierter Wiederholung wird nach Erledigen automatisch ein neuer Reminder mit dem nächsten Fälligkeits-Datum angelegt.
+    </div>
+  </div>
+
+  <!-- TAB 4: Push -->
+  <div class="dwr-tab-panel">
+    <div class="drawer-section">
+      <h4>Erinnerungs-Push</h4>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;margin-bottom:10px">
+        <input type="checkbox" checked> Push-Benachrichtigung senden
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <h4>Zeit vor Fälligkeit</h4>
+          <select style="width:100%">
+            <option>15 Minuten</option>
+            <option selected>30 Minuten</option>
+            <option>1 Stunde</option>
+            <option>2 Stunden</option>
+            <option>1 Tag</option>
+          </select>
+        </div>
+        <div>
+          <h4>Kanäle</h4>
+          <label style="display:block;font-size:12px;margin-bottom:4px"><input type="checkbox" checked> In-App</label>
+          <label style="display:block;font-size:12px;margin-bottom:4px"><input type="checkbox" checked> Email</label>
+          <label style="display:block;font-size:12px"><input type="checkbox"> Desktop-Push</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('remDetailDrawer')">Abbrechen</button>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn btn-sm" onclick="alert('Reassign-Select öffnen')">👥 Reassign</button>
+    <span class="snooze-wrap">
+      <button class="btn btn-sm" onclick="toggleSnooze(this)">⏰ Snooze ▾</button>
+      <div class="snooze-pop">
+        <button onclick="snooze(this,'1h')">+1 Stunde</button>
+        <button onclick="snooze(this,'1d')">+1 Tag</button>
+        <button onclick="snooze(this,'1w')">+1 Woche</button>
+        <button onclick="snooze(this,'custom')">Custom …</button>
+      </div>
+    </span>
+    <button class="btn btn-sm btn-primary" onclick="completeFromDrawer()">✓ Erledigen</button>
+  </div>
+</div>
+
+<!-- NEUER-REMINDER-DRAWER -->
+<div class="drawer" id="remNewDrawer">
+  <div class="drawer-head">
+    <div>
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-light);font-weight:600">Neu</div>
+      <h2 style="margin:4px 0 0;font-size:16px;font-weight:600;color:var(--text)">Neuer Reminder</h2>
+      <div class="muted" style="font-size:11.5px;margin-top:4px">Manuell oder aus Vorlage · verknüpft mit Entity (optional)</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('remNewDrawer')">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <h4>Vorlage (optional)</h4>
+      <select style="width:100%" onchange="applyTemplate(this)">
+        <option value="">— Eigene Eingabe —</option>
+        <option value="rt_01">Onboarding-Call · 7 Tage vor Arbeitsantritt</option>
+        <option value="rt_02">1-Monats-Check · 1 Monat nach Placement</option>
+        <option value="rt_03">2-Monats-Check · 2 Monate nach Placement</option>
+        <option value="rt_04">3-Monats-Check · Ende Garantiefrist</option>
+        <option value="rt_05">Garantiefrist-Ende · Prozess schliessen</option>
+        <option value="rt_06">Interview-Coaching · 2 Tage vor Termin</option>
+        <option value="rt_07">Interview-Debriefing · Abend nach Termin</option>
+        <option value="rt_08">Interview-Datum fehlt</option>
+        <option value="rt_09">Briefing mit Kandidat fehlt</option>
+        <option value="rt_10">Schutzfrist Info-Request · täglich bei offener Anfrage</option>
+      </select>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Titel <span style="color:var(--red)">*</span></h4>
+      <input type="text" placeholder="z.B. Coaching-Call vor 2nd Interview" style="width:100%;padding:8px 10px;font-size:13px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+    </div>
+
+    <div class="drawer-section">
+      <h4>Beschreibung</h4>
+      <textarea rows="3" placeholder="Details, Agenda, Kontext …" style="width:100%;padding:8px 10px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit;resize:vertical"></textarea>
+    </div>
+
+    <div class="drawer-section" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div>
+        <h4>Fälligkeit <span style="color:var(--red)">*</span></h4>
+        <input type="date" style="width:100%;padding:6px 8px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+      </div>
+      <div>
+        <h4>Uhrzeit</h4>
+        <input type="time" style="width:100%;padding:6px 8px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+      </div>
+      <div>
+        <h4>Priorität</h4>
+        <select style="width:100%">
+          <option>Urgent</option>
+          <option>High</option>
+          <option selected>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+      <div>
+        <h4>Wiederholung</h4>
+        <select style="width:100%">
+          <option selected>Einmalig</option>
+          <option>Täglich</option>
+          <option>Wöchentlich</option>
+          <option>Monatlich</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Entity-Link (optional)</h4>
+      <div style="display:flex;gap:8px">
+        <select style="flex:0 0 140px">
+          <option>— keiner —</option>
+          <option>Kandidat</option>
+          <option>Account</option>
+          <option>Mandat</option>
+          <option>Job</option>
+          <option>Prozess</option>
+        </select>
+        <input type="text" placeholder="🔍 Autocomplete — Name/ID suchen" style="flex:1;padding:6px 8px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-family:inherit">
+      </div>
+      <div class="muted" style="font-size:10.5px;margin-top:6px">Verknüpfung erscheint als Badge in Listen- und Detail-Ansicht · mehrere Verknüpfungen via Detail-Drawer Tab „Verknüpfungen"</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Zuständig <span style="color:var(--red)">*</span></h4>
+      <select style="width:100%">
+        <option selected>PW — Peter (ich)</option>
+        <option>JV — Jonas</option>
+        <option>LR — Lea</option>
+        <option>MF — Manuel</option>
+        <option>Backoffice</option>
+      </select>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Erinnerungs-Push</h4>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px">
+        <input type="checkbox"> Push-Benachrichtigung 30 Minuten vor Fälligkeit (In-App + Email)
+      </label>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('remNewDrawer')">Abbrechen</button>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn btn-sm btn-primary" onclick="saveReminder()">💾 Reminder anlegen</button>
+  </div>
+</div>
+
+<!-- Toast-Host -->
+<div class="toast-host" id="toastHost"></div>
+
+<script src="_shared/layout.js"></script>
+<script>
+// View-Toggle
+function switchView(mode) {
+  document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.view-seg button').forEach(b => b.classList.remove('active'));
+  document.getElementById(mode === 'list' ? 'listView' : 'calView').classList.add('active');
+  document.querySelector(`.view-seg button[data-view="${mode}"]`).classList.add('active');
+}
+
+// Status-Filter (Chip-Tabs und KPI-Click teilen sich diese)
+function filterStatus(which, btn) {
+  if (btn) {
+    document.querySelectorAll('.chip-group .chip-tab').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  // Filter-Logik: hier nur Demo — in echter Implementierung Sections ein-/ausblenden
+  console.log('filter:', which);
+}
+
+// Saved-Views
+function applySavedView(chip, key) {
+  document.querySelectorAll('.sv-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  toast(`Ansicht „${chip.textContent}" angewendet`);
+}
+function openNewView() {
+  alert('Neue Ansicht — Modal für Namen-Eingabe (ausnahmsweise Modal, kurze 1-Feld-Eingabe)');
+}
+
+// Scope-Switcher
+function toggleScope() {
+  const lbl = document.getElementById('scopeLabel');
+  const current = lbl.textContent;
+  const next = current === 'Eigene' ? 'Team' : current === 'Team' ? 'Alle' : 'Eigene';
+  lbl.textContent = next;
+  toast(`Scope → ${next}`);
+}
+
+// Complete / Snooze (Optimistic Demo)
+function completeReminder(btn) {
+  const row = btn.closest('tr');
+  row.style.transition = 'opacity 0.3s';
+  row.style.opacity = '0.3';
+  toast('✓ Erledigt · Undo');
+  setTimeout(() => row.remove(), 400);
+}
+function completeFromDrawer() {
+  closeDrawer('remDetailDrawer');
+  toast('✓ Reminder erledigt');
+}
+
+function toggleSnooze(btn) {
+  const pop = btn.nextElementSibling;
+  // alle anderen schliessen
+  document.querySelectorAll('.snooze-pop.open').forEach(p => { if (p !== pop) p.classList.remove('open'); });
+  pop.classList.toggle('open');
+  // outside-click
+  setTimeout(() => {
+    const off = (e) => { if (!pop.contains(e.target) && e.target !== btn) { pop.classList.remove('open'); document.removeEventListener('click', off); } };
+    document.addEventListener('click', off);
+  }, 0);
+}
+function snooze(btn, delta) {
+  const pop = btn.closest('.snooze-pop');
+  pop.classList.remove('open');
+  const labels = { '1h':'+1 Stunde', '1d':'+1 Tag', '1w':'+1 Woche', 'custom':'Custom' };
+  toast(`⏰ Verschoben (${labels[delta]}) · Undo`);
+}
+
+// Template-Apply
+function applyTemplate(sel) {
+  const map = {
+    rt_01: 'Onboarding-Call · {candidate_name}',
+    rt_02: '1-Monats-Check · {candidate_name}',
+    rt_03: '2-Monats-Check · {candidate_name}',
+    rt_04: '3-Monats-Check (Garantie-Ende) · {candidate_name}',
+    rt_05: 'Garantiefrist endet — Prozess schliessen',
+    rt_06: 'Coaching-Call vor Interview · {candidate_name}',
+    rt_07: 'Debriefing nach Interview',
+    rt_08: 'Interview-Datum fehlt · {Prozess}',
+    rt_09: 'Briefing für {candidate_name} fehlt',
+    rt_10: 'Schutzfrist Info-Request · noch {days} Tage',
+  };
+  const titleInput = sel.closest('.drawer-body').querySelector('input[type="text"]');
+  if (map[sel.value]) titleInput.value = map[sel.value];
+}
+
+function saveReminder() {
+  closeDrawer('remNewDrawer');
+  toast('✓ Reminder angelegt');
+}
+
+// Drawer-Tab-Switch
+function drawerTab(drawerId, idx) {
+  const drawer = document.getElementById(drawerId);
+  drawer.querySelectorAll('.dwr-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+  drawer.querySelectorAll('.dwr-tab-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+}
+
+// Kalender-Nav (Stub)
+function calNav(dir) { toast(dir > 0 ? 'Nächster Monat' : 'Vorheriger Monat'); }
+
+function switchCalSub(mode, btn) {
+  document.querySelectorAll('.cal-toolbar .sub-seg button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cal-sub-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(mode === 'month' ? 'calMonth' : 'calWeek').classList.add('active');
+  const title = document.getElementById('calTitle');
+  if (title) title.textContent = mode === 'month' ? 'April 2026' : 'Woche 13.–19.04.2026';
+}
+
+function jumpToToday() { toast('Springe zu heute'); }
+
+// ===== Drag-to-Reschedule =====
+let dragOrigin = null;
+
+document.addEventListener('dragstart', (e) => {
+  const chip = e.target.closest('.cal-chip[draggable="true"], .cal-week-chip[draggable="true"]');
+  if (!chip) return;
+  dragOrigin = { chip, remId: chip.dataset.remId, originDay: chip.closest('[data-day]').dataset.day };
+  chip.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', chip.dataset.remId || '');
+});
+
+document.addEventListener('dragend', (e) => {
+  const chip = e.target.closest('.cal-chip, .cal-week-chip');
+  if (chip) chip.classList.remove('dragging');
+  document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+  dragOrigin = null;
+});
+
+document.addEventListener('dragover', (e) => {
+  if (!dragOrigin) return;
+  const target = e.target.closest('.cal-cell[data-day], .cal-week-col[data-day]');
+  if (!target) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.drop-target').forEach(el => {
+    if (el !== target) el.classList.remove('drop-target');
+  });
+  target.classList.add('drop-target');
+});
+
+document.addEventListener('dragleave', (e) => {
+  const target = e.target.closest('.cal-cell[data-day], .cal-week-col[data-day]');
+  if (target && !target.contains(e.relatedTarget)) target.classList.remove('drop-target');
+});
+
+document.addEventListener('drop', (e) => {
+  if (!dragOrigin) return;
+  const target = e.target.closest('.cal-cell[data-day], .cal-week-col[data-day]');
+  if (!target) return;
+  e.preventDefault();
+  target.classList.remove('drop-target');
+
+  const newDay = target.dataset.day;
+  const { chip, originDay, remId } = dragOrigin;
+
+  if (newDay === originDay) { dragOrigin = null; return; }
+
+  // Chip in Ziel-Container verschieben (für Monat: Cell; für Woche: cal-week-body)
+  const destContainer = target.classList.contains('cal-week-col')
+    ? target.querySelector('.cal-week-body')
+    : target;
+  destContainer.appendChild(chip);
+
+  // Vergangenheits-Warn
+  const today = '2026-04-17';
+  const isPast = newDay < today;
+  const msg = isPast
+    ? `⏰ Verschoben auf ${formatDate(newDay)} (Vergangenheit!) · Undo`
+    : `⏰ Verschoben auf ${formatDate(newDay)} · Undo`;
+  toast(msg);
+
+  // Simulierter PATCH: in echter App hier fetch('/api/v1/reminders/'+remId, {method:'PATCH', body:...})
+  console.log('PATCH /api/v1/reminders/' + remId, { due_date: newDay });
+
+  dragOrigin = null;
+});
+
+function formatDate(iso) {
+  const [y,m,d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+// Toast-Helfer
+function toast(msg) {
+  const host = document.getElementById('toastHost');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span>${msg}</span>`;
+  host.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity 0.3s'; setTimeout(() => t.remove(), 350); }, 2600);
+}
+
+// Keyboard-Shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+  if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openDrawer('remNewDrawer'); }
+  if (e.key === 'v' || e.key === 'V') { e.preventDefault(); const active = document.querySelector('.view-seg button.active').dataset.view; switchView(active === 'list' ? 'cal' : 'list'); }
+});
+
+// ===== TOUCH: Swipe-to-Complete auf Reminder-Rows =====
+(function initSwipe() {
+  let startX = 0, startY = 0, startEl = null, dx = 0;
+  const THRESHOLD_X = 80;
+  const THRESHOLD_Y = 40;
+  const FULL_SWIPE = 160;
+
+  document.addEventListener('touchstart', (e) => {
+    const row = e.target.closest('.rem-table tr[data-rem]');
+    if (!row || row.dataset.rem === 'done') return;
+    startEl = row;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dx = 0;
+    row.style.transition = 'none';
+  }, { passive:true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!startEl) return;
+    dx = e.touches[0].clientX - startX;
+    const dy = Math.abs(e.touches[0].clientY - startY);
+    if (dy > THRESHOLD_Y) {
+      startEl.style.transform = '';
+      startEl = null;
+      return;
+    }
+    if (dx < 0) {
+      startEl.style.transform = `translateX(${dx}px)`;
+      startEl.style.background = dx < -THRESHOLD_X ? 'var(--green-soft)' : '';
+    }
+  }, { passive:true });
+
+  document.addEventListener('touchend', () => {
+    if (!startEl) return;
+    startEl.style.transition = 'transform 0.25s ease, background 0.25s ease';
+    if (dx < -THRESHOLD_X) {
+      startEl.style.transform = `translateX(-${FULL_SWIPE}px)`;
+      startEl.style.opacity = '0.3';
+      const btn = startEl.querySelector('.rem-actions .btn:not(.btn-snooze)');
+      if (btn) completeReminder(btn);
+      toast('✓ Erledigt (Swipe)');
+    } else {
+      startEl.style.transform = '';
+      startEl.style.background = '';
+    }
+    startEl = null;
+    dx = 0;
+  });
+})();
+
+function closeAllDrawers() {
+  document.querySelectorAll('.drawer.open').forEach(d => d.classList.remove('open'));
+  document.getElementById('drawerBackdrop').classList.remove('open');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Dokumente (Kandidat)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{--gold:#dcb479;--teal:#196774;--gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold30:rgba(220,180,121,.30);--teal15:rgba(25,103,116,.15);--teal30:rgba(25,103,116,.30);--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;--brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);--t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;--green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--blue:#60a5fa;--purple:#a78bfa}
+
+.subtabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c);padding:0 20px;overflow-x:auto}
+.subtab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;font-weight:500}
+.subtab:hover{color:var(--t2)}.subtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.content{padding:16px 20px;max-width:1100px;}
+/* Upload zone */
+.upload-zone{border:2px dashed var(--brd);border-radius:14px;padding:32px;text-align:center;margin-bottom:16px;transition:all .2s;cursor:pointer;position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--gold30);background:rgba(220,180,121,.03)}
+.upload-zone.drag-over{border-color:var(--gold);background:rgba(220,180,121,.06)}
+.uz-icon{font-size:28px;margin-bottom:8px;opacity:.5}
+.uz-title{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.uz-hint{font-size:10px;color:var(--tm)}
+.uz-hint b{color:var(--gold)}
+.uz-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+/* Label filters */
+.label-filters{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.lf{padding:4px 10px;border-radius:6px;font-size:9px;font-weight:600;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;white-space:nowrap}
+.lf:hover{border-color:var(--gold30);color:var(--t2)}.lf.active{background:var(--gold08);border-color:var(--gold30);color:var(--gold)}
+.lf-cnt{font-weight:700;margin-left:2px}
+/* Summary */
+.doc-summary{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.ds-card{padding:8px 12px;background:var(--bg-e);border-radius:8px;border:.5px solid var(--brd-s);display:flex;align-items:center;gap:8px}
+.ds-value{font-size:16px;font-weight:700}.ds-label{font-size:9px;color:var(--t3);line-height:1.3}
+/* Doc list */
+.doc-list{display:flex;flex-direction:column;gap:6px}
+.doc-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-e);border-radius:10px;border:.5px solid var(--brd-s);transition:.2s;cursor:pointer}
+.doc-card:hover{border-color:var(--brd);box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.doc-icon{width:42px;height:54px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;position:relative}
+.doc-icon-pdf{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.12)}
+.doc-icon-docx{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.12)}
+.doc-icon-img{background:rgba(93,202,165,.08);border:1px solid rgba(93,202,165,.12)}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:10px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.doc-label{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;flex-shrink:0}
+.dl-cv{background:rgba(93,202,165,.08);color:var(--green);border:.5px solid rgba(93,202,165,.15)}
+.dl-arkcv{background:var(--gold08);color:var(--gold);border:.5px solid var(--gold30)}
+.dl-diplom{background:rgba(96,165,250,.08);color:var(--blue);border:.5px solid rgba(96,165,250,.15)}
+.dl-zeugnis{background:rgba(139,92,246,.08);color:var(--purple);border:.5px solid rgba(139,92,246,.15)}
+.dl-expose{background:var(--teal15);color:#5bb8c9;border:.5px solid var(--teal30)}
+.dl-abstract{background:rgba(245,158,11,.08);color:var(--amber);border:.5px solid rgba(245,158,11,.15)}
+.dl-assess{background:rgba(139,92,246,.06);color:var(--purple);border:.5px solid rgba(139,92,246,.12)}
+.dl-other{background:rgba(128,124,116,.06);color:var(--t3);border:.5px solid rgba(128,124,116,.12)}
+/* Pipeline status */
+.doc-pipeline{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.dp-step{width:8px;height:8px;border-radius:2px;transition:.2s}
+.dp-done{background:var(--green)}.dp-active{background:var(--gold);animation:pulse-dp 1.5s infinite}.dp-pending{background:#3a3a35}.dp-error{background:var(--red)}
+@keyframes pulse-dp{0%,100%{opacity:1}50%{opacity:.5}}
+.dp-label{font-size:9px;color:var(--t3);margin-left:4px;white-space:nowrap}
+/* Status badge */
+.doc-status{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;flex-shrink:0}
+.dst-ready{background:rgba(93,202,165,.08);color:var(--green)}.dst-processing{background:rgba(220,180,121,.08);color:var(--gold)}
+.dst-error{background:rgba(239,68,68,.08);color:var(--red)}.dst-quarantine{background:rgba(239,68,68,.06);color:var(--red)}
+/* Doc actions (on hover) */
+.doc-actions{display:flex;gap:4px;flex-shrink:0;opacity:0;transition:.15s}
+.doc-card:hover .doc-actions{opacity:1}
+.doc-act{width:28px;height:28px;border-radius:6px;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s}
+.doc-act:hover{border-color:var(--gold30);color:var(--gold);background:var(--gold08)}
+/* Version badge */
+.doc-ver{font-size:8px;color:var(--tm);padding:1px 5px;border-radius:3px;background:var(--bg-p)}
+/* ===== DRAWER ===== */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;backdrop-filter:blur(2px)}.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;right:-600px;width:540px;height:100vh;background:var(--bg-c);border-left:1px solid var(--brd);z-index:110;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.4)}.drawer.open{right:0}
+.drawer-head{padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.drawer-close{width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.15s}.drawer-close:hover{background:var(--bg-hv);color:var(--t1)}
+.drawer-title{font-size:14px;font-weight:600;color:var(--t1);flex:1}
+.drawer-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);flex-shrink:0}
+.drawer-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;font-weight:500;transition:.15s}.drawer-tab:hover{color:var(--t2)}.drawer-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.drawer-body{flex:1;overflow-y:auto;padding:16px 20px}
+/* Drawer: Details */
+.dov-row{display:flex;gap:8px;margin-bottom:8px}.dov-label{font-size:10px;color:var(--t3);width:110px;flex-shrink:0;text-align:right;padding-top:2px}.dov-value{font-size:12px;color:var(--t1);flex:1}
+.dov-section{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--brd-s)}
+/* Preview */
+.preview-area{background:var(--bg-p);border-radius:10px;border:1px solid var(--brd-s);min-height:300px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.preview-placeholder{text-align:center;color:var(--tm)}
+.preview-placeholder-icon{font-size:48px;margin-bottom:8px;opacity:.3}
+.preview-placeholder-text{font-size:11px}
+.preview-toolbar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--bg-e);border-radius:8px;margin-top:8px}
+.pv-btn{padding:5px 10px;border-radius:5px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:4px}
+.pv-btn:hover{border-color:var(--gold30);color:var(--gold)}
+.pv-page{font-size:10px;color:var(--t2);margin:0 auto}
+/* Page editor */
+.page-editor-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.page-editor-title{font-size:11px;font-weight:600;color:var(--t2)}
+.page-editor-hint{font-size:9px;color:var(--tm)}
+.page-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;min-height:100px}
+.page-thumb{width:100px;height:136px;border-radius:8px;background:var(--bg-p);border:1.5px solid var(--brd-s);position:relative;cursor:grab;transition:transform .15s,border-color .15s,box-shadow .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none}
+.page-thumb:hover{border-color:var(--brd);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.page-thumb.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(220,180,121,.15)}
+.page-thumb.dragging{opacity:.3;transform:scale(.9)}
+.page-thumb.drag-target{border-color:var(--gold);border-style:dashed}
+.page-thumb-content{flex:1;display:flex;align-items:center;justify-content:center;width:100%;position:relative}
+.page-thumb-mock{width:70px;height:90px;background:var(--bg-e);border-radius:4px;display:flex;flex-direction:column;gap:3px;padding:8px 6px;overflow:hidden}
+.ptm-line{height:2px;border-radius:1px;background:rgba(255,255,255,.06)}
+.ptm-line.title{width:60%;height:3px;background:rgba(220,180,121,.15);margin-bottom:2px}
+.page-thumb-num{font-size:9px;font-weight:700;color:var(--t3);padding:4px 0 2px;text-align:center;border-top:1px solid var(--brd-s);width:100%;background:var(--bg-e)}
+.page-thumb-badge{position:absolute;top:4px;right:4px;font-size:7px;padding:1px 4px;border-radius:3px;font-weight:600}
+.ptb-rotated{background:rgba(220,180,121,.1);color:var(--gold)}
+/* Page thumb rotation visual */
+.page-thumb[data-rot="90"] .page-thumb-mock{transform:rotate(90deg);width:70px;height:70px}
+.page-thumb[data-rot="180"] .page-thumb-mock{transform:rotate(180deg)}
+.page-thumb[data-rot="270"] .page-thumb-mock{transform:rotate(270deg);width:70px;height:70px}
+/* Page actions toolbar */
+.page-actions{display:flex;gap:4px;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);opacity:0;transition:.15s;z-index:5}
+.page-thumb:hover .page-actions{opacity:1}
+.pa-btn{width:24px;height:24px;border-radius:5px;border:none;background:rgba(0,0,0,.7);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:.15s;backdrop-filter:blur(4px)}
+.pa-btn:hover{background:rgba(0,0,0,.9);color:var(--gold)}
+.pa-btn.pa-delete:hover{color:var(--red)}
+/* Selected page preview */
+.selected-preview{background:var(--bg-p);border-radius:10px;border:1px solid var(--brd-s);padding:16px;margin-top:8px;display:none;min-height:200px}
+.selected-preview.show{display:block}
+.sp-mock{width:100%;max-width:400px;min-height:200px;background:var(--bg-e);border-radius:6px;margin:0 auto;display:flex;flex-direction:column;gap:5px;padding:20px;position:relative}
+.sp-mock .ptm-line{height:3px}
+.sp-mock .ptm-line.title{height:5px;width:50%;margin-bottom:6px}
+/* Pipeline detail */
+.pipeline-detail{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.pd-step{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:6px}
+.pd-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.pd-dot-done{background:var(--green)}.pd-dot-active{background:var(--gold)}.pd-dot-pending{background:#3a3a35}.pd-dot-error{background:var(--red)}
+.pd-name{font-size:11px;color:var(--t1);flex:1}.pd-time{font-size:9px;color:var(--t3)}
+/* Version history */
+.ver-list{display:flex;flex-direction:column;gap:6px}
+.ver-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--bg-e);border:.5px solid var(--brd-s);cursor:pointer;transition:.15s}
+.ver-item:hover{border-color:var(--brd);background:var(--bg-hv)}
+.ver-item.current{border-color:var(--gold30)}
+.ver-num{font-size:12px;font-weight:700;color:var(--gold);width:24px;text-align:center}
+.ver-info{flex:1}.ver-name{font-size:11px;color:var(--t1);font-weight:500}.ver-meta{font-size:9px;color:var(--t3)}
+.ver-badge{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600;background:var(--gold08);color:var(--gold)}
+/* KB */
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin-top:12px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+.tb-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.tb-btn:hover{border-color:var(--gold30);color:var(--t2)}.tb-btn.primary{background:var(--gold15);border-color:var(--gold30);color:var(--gold)}
+/* Gate-1 checklist */
+.gate1-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--bg-e);border-radius:10px;border:.5px solid var(--brd-s);margin-bottom:12px;flex-wrap:wrap}
+.gate1-title{font-size:10px;font-weight:600;color:var(--t2);margin-right:4px;white-space:nowrap}
+.gate1-item{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.g1-ok{background:rgba(93,202,165,.06);color:var(--green);border:.5px solid rgba(93,202,165,.1)}
+.g1-processing{background:rgba(220,180,121,.06);color:var(--gold);border:.5px solid rgba(220,180,121,.1)}
+.g1-missing{background:rgba(239,68,68,.06);color:var(--red);border:.5px solid rgba(239,68,68,.1);cursor:pointer}
+.g1-missing:hover{background:rgba(239,68,68,.1)}
+.gate1-status{font-size:9px;margin-left:auto;font-weight:600;padding:3px 10px;border-radius:5px}
+.g1s-ok{background:rgba(93,202,165,.08);color:var(--green)}.g1s-blocked{background:rgba(239,68,68,.06);color:var(--red)}
+/* Search + sort bar */
+.doc-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.doc-search{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--bg-e);border-radius:8px;border:1.5px solid var(--brd-s);flex:1;transition:border-color .2s}
+.doc-search:focus-within{border-color:var(--gold30);box-shadow:0 0 0 3px rgba(220,180,121,.06)}
+.doc-search-icon{font-size:12px;color:var(--tm);flex-shrink:0}
+.doc-search-input{flex:1;background:none;border:none;outline:none;color:var(--t1);font-size:12px;font-family:inherit}.doc-search-input::placeholder{color:var(--tm)}
+.doc-search-clear{width:18px;height:18px;border-radius:4px;display:none;align-items:center;justify-content:center;font-size:9px;color:var(--tm);cursor:pointer;border:none;background:none}.doc-search-clear:hover{color:var(--t1)}
+.doc-sort{position:relative}
+.doc-sort-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;white-space:nowrap}
+.doc-sort-btn:hover{border-color:var(--gold30);color:var(--t2)}
+.doc-sort-menu{position:absolute;top:100%;right:0;margin-top:4px;background:var(--bg-c);border:1px solid var(--brd);border-radius:8px;padding:4px;min-width:160px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.doc-sort-menu.open{display:block}
+.doc-sort-opt{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:5px;font-size:11px;color:var(--t2);cursor:pointer;transition:.1s;border:none;background:none;width:100%;text-align:left}
+.doc-sort-opt:hover{background:var(--bg-hv);color:var(--t1)}
+.doc-sort-opt.active{color:var(--gold)}
+.doc-sort-opt .sort-check{width:14px;color:var(--gold);font-weight:700}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab active">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+<div class="content">
+<!-- Upload zone -->
+<div class="upload-zone" id="uploadZone" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');simulateUpload()">
+  <div class="uz-icon">📎</div>
+  <div class="uz-title">Dokumente hochladen</div>
+  <div class="uz-hint">Drag & Drop oder <b>klicken</b> · PDF, DOCX, JPG, PNG · Max <b>20 MB</b></div>
+  <input type="file" class="uz-input" multiple accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" onchange="simulateUpload()">
+</div>
+<!-- Gate-1 Checkliste -->
+<div class="gate1-bar" id="gate1Bar"></div>
+<!-- Summary -->
+<div class="doc-summary" id="docSummary"></div>
+<!-- Label filters -->
+<div class="label-filters" id="labelFilters"></div>
+<!-- Search + Sort -->
+<div class="doc-toolbar">
+  <div class="doc-search">
+    <span class="doc-search-icon">🔍</span>
+    <input type="text" class="doc-search-input" id="docSearch" placeholder="Dokument suchen…" oninput="applyDocFilters()" autocomplete="off">
+    <button class="doc-search-clear" id="docSearchClear" onclick="document.getElementById('docSearch').value='';applyDocFilters();this.style.display='none'">✕</button>
+  </div>
+  <div class="doc-sort">
+    <button class="doc-sort-btn" onclick="document.getElementById('docSortMenu').classList.toggle('open')">↕ Sortieren</button>
+    <div class="doc-sort-menu" id="docSortMenu">
+      <button class="doc-sort-opt active" onclick="sortDocs('date')"><span class="sort-check">✓</span>Datum ↓ (neueste zuerst)</button>
+      <button class="doc-sort-opt" onclick="sortDocs('name')"><span class="sort-check"> </span>Name A–Z</button>
+      <button class="doc-sort-opt" onclick="sortDocs('size')"><span class="sort-check"> </span>Grösse ↓</button>
+      <button class="doc-sort-opt" onclick="sortDocs('status')"><span class="sort-check"> </span>Status (offen zuerst)</button>
+    </div>
+  </div>
+</div>
+<!-- Doc list -->
+<div class="doc-list" id="docList"></div>
+<div class="kb-bar">
+  <span class="kb-hint-item"><span class="kb-key">↑</span><span class="kb-key">↓</span> Navigation</span>
+  <span class="kb-hint-item"><span class="kb-key">Enter</span> Preview öffnen</span>
+  <span class="kb-hint-item"><span class="kb-key">S</span> Suche</span>
+  <span class="kb-hint-item"><span class="kb-key">U</span> Upload</span>
+  <span class="kb-hint-item"><span class="kb-key">Esc</span> Schliessen</span>
+</div>
+</div>
+<!-- Drawer -->
+<div class="drawer-overlay" id="dOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">✕</button><div class="drawer-title" id="dTitle"></div></div>
+  <div class="drawer-tabs" id="dTabs"></div>
+  <div class="drawer-body" id="dBody"></div>
+</div>
+<script>
+const PIPELINE_STEPS=['hochgeladen','scannt','OCR / Parsing','Entities','AI Suggestions','Embedding','bereit'];
+const LABELS=['Original CV','ARK CV','Abstract','Exposé','Arbeitszeugnis','Diplom','Zertifikat','Assessment-Dokument','Mandatsofferte unterschrieben','Mandat Report','Sonstiges'];
+const LABEL_CLS={'Original CV':'dl-cv','ARK CV':'dl-arkcv','Abstract':'dl-abstract','Exposé':'dl-expose','Arbeitszeugnis':'dl-zeugnis','Diplom':'dl-diplom','Zertifikat':'dl-diplom','Assessment-Dokument':'dl-assess','Mandatsofferte unterschrieben':'dl-other','Mandat Report':'dl-other','Sonstiges':'dl-other'};
+const ICON_MAP={pdf:'📄',docx:'📝',jpg:'🖼',png:'🖼'};
+const ICON_CLS={pdf:'doc-icon-pdf',docx:'doc-icon-docx',jpg:'doc-icon-img',png:'doc-icon-img'};
+
+const DOCS=[
+  {id:1,name:'CV_MaxMuster_2026.pdf',label:'Original CV',type:'pdf',size:'2.4 MB',
+   uploaded:'27.03.2026',by:'MM',pipeline:7,status:'bereit',pages:4,
+   versions:[{v:2,date:'27.03.2026',by:'MM',note:'Aktualisierte Version'},{v:1,date:'15.02.2026',by:'MM',note:'Erstversion'}]},
+
+  {id:2,name:'ARK_CV_MaxMuster.pdf',label:'ARK CV',type:'pdf',size:'1.8 MB',
+   uploaded:'29.03.2026',by:'PW',pipeline:7,status:'bereit',pages:3,
+   versions:[{v:1,date:'29.03.2026',by:'PW',note:'Generiert aus Dok.-Generator'}]},
+
+  {id:3,name:'Diplom_BSc_Bauingenieurwesen.pdf',label:'Diplom',type:'pdf',size:'890 KB',
+   uploaded:'27.03.2026',by:'MM',pipeline:7,status:'bereit',pages:1,
+   versions:[{v:1,date:'27.03.2026',by:'MM',note:'Hochgeladen'}]},
+
+  {id:4,name:'Zeugnis_Marti_AG.pdf',label:'Arbeitszeugnis',type:'pdf',size:'1.1 MB',
+   uploaded:'27.03.2026',by:'MM',pipeline:5,status:'processing',pipelineLabel:'AI Suggestions',pages:2,
+   versions:[{v:1,date:'27.03.2026',by:'MM',note:'Hochgeladen'}]},
+
+  {id:5,name:'Zeugnis_Implenia.pdf',label:'Arbeitszeugnis',type:'pdf',size:'980 KB',
+   uploaded:'27.03.2026',by:'MM',pipeline:3,status:'processing',pipelineLabel:'OCR / Parsing',pages:2,
+   versions:[{v:1,date:'27.03.2026',by:'MM',note:'Hochgeladen'}]},
+
+  {id:6,name:'DISC_Scheelen_MaxMuster.pdf',label:'Assessment-Dokument',type:'pdf',size:'3.2 MB',
+   uploaded:'26.03.2026',by:'SN',pipeline:7,status:'bereit',pages:12,
+   versions:[{v:1,date:'26.03.2026',by:'SN',note:'Scheelen-Import'}]}
+];
+
+// Summary
+function buildSummary(){
+  const total=DOCS.length;const ready=DOCS.filter(d=>d.status==='bereit').length;
+  const processing=DOCS.filter(d=>d.status==='processing').length;
+  const totalSize=DOCS.reduce((s,d)=>{const n=parseFloat(d.size);return s+(d.size.includes('MB')?n:n/1000)},0);
+  document.getElementById('docSummary').innerHTML=`
+    <div class="ds-card"><div class="ds-value" style="color:var(--t1)">${total}</div><div class="ds-label">Dokumente<br>gesamt</div></div>
+    <div class="ds-card"><div class="ds-value" style="color:var(--green)">${ready}</div><div class="ds-label">Bereit<br>verarbeitet</div></div>
+    ${processing?`<div class="ds-card"><div class="ds-value" style="color:var(--gold)">${processing}</div><div class="ds-label">In<br>Verarbeitung</div></div>`:''}
+    <div class="ds-card"><div class="ds-value" style="color:var(--t2)">${totalSize.toFixed(1)}</div><div class="ds-label">MB<br>gesamt</div></div>`;
+}
+buildSummary();
+
+// Label filters
+function buildFilters(){
+  const counts={};DOCS.forEach(d=>{counts[d.label]=(counts[d.label]||0)+1});
+  const el=document.getElementById('labelFilters');
+  let h=`<button class="lf active" data-l="all" onclick="setFilter('all',this)">Alle<span class="lf-cnt">${DOCS.length}</span></button>`;
+  LABELS.forEach(l=>{if(counts[l])h+=`<button class="lf" data-l="${l}" onclick="setFilter('${l}',this)">${l}<span class="lf-cnt">${counts[l]}</span></button>`});
+  el.innerHTML=h;
+}
+buildFilters();
+
+// Gate-1 checklist
+function buildGate1(){
+  const gate1Docs=[
+    {label:'Original CV',key:'Original CV',required:true},
+    {label:'Diplom',key:'Diplom',required:true},
+    {label:'Arbeitszeugnis',key:'Arbeitszeugnis',required:true},
+    {label:'Schriftl. GO',key:null,required:true,external:true} // Not a doc — comes from Jobbasket
+  ];
+  const el=document.getElementById('gate1Bar');
+  let allOk=true;
+  let h=`<span class="gate1-title">◆ Gate 1 — Dokumente:</span>`;
+  gate1Docs.forEach(g=>{
+    if(g.external){
+      // Simulated: Schriftl. GO not yet received
+      h+=`<span class="gate1-item g1-missing" onclick="alert('→ Navigiert zum Jobbasket-Tab')">✗ ${g.label}</span>`;
+      allOk=false;
+    }else{
+      const doc=DOCS.find(d=>d.label===g.key);
+      if(doc&&doc.status==='bereit'){
+        h+=`<span class="gate1-item g1-ok">✓ ${g.label}</span>`;
+      }else if(doc&&doc.status==='processing'){
+        h+=`<span class="gate1-item g1-processing">⏳ ${g.label}</span>`;
+        allOk=false;
+      }else{
+        h+=`<span class="gate1-item g1-missing" onclick="document.querySelector('.uz-input')?.click()">✗ ${g.label}</span>`;
+        allOk=false;
+      }
+    }
+  });
+  h+=`<span class="gate1-status ${allOk?'g1s-ok':'g1s-blocked'}">${allOk?'✓ Gate 1 bestanden':'⚠ Gate 1 blockiert'}</span>`;
+  el.innerHTML=h;
+}
+buildGate1();
+
+// Search + sort
+let currentSort='date';
+function applyDocFilters(){
+  const q=(document.getElementById('docSearch').value||'').toLowerCase().trim();
+  const clearBtn=document.getElementById('docSearchClear');
+  clearBtn.style.display=q?'flex':'none';
+  let filtered=activeLabel==='all'?[...DOCS]:DOCS.filter(d=>d.label===activeLabel);
+  if(q)filtered=filtered.filter(d=>d.name.toLowerCase().includes(q)||d.label.toLowerCase().includes(q)||(d.by||'').toLowerCase().includes(q));
+  applySortTo(filtered);
+  renderDocs(filtered);
+}
+function sortDocs(by){
+  currentSort=by;
+  document.querySelectorAll('.doc-sort-opt').forEach(o=>{
+    const isActive=o.getAttribute('onclick').includes("'"+by+"'");
+    o.classList.toggle('active',isActive);
+    o.querySelector('.sort-check').textContent=isActive?'✓':' ';
+  });
+  document.getElementById('docSortMenu').classList.remove('open');
+  applyDocFilters();
+}
+function applySortTo(arr){
+  arr.sort((a,b)=>{
+    if(currentSort==='date'){
+      const da=a.uploaded.split('.').reverse().join(''),db=b.uploaded.split('.').reverse().join('');
+      return db.localeCompare(da);
+    }
+    if(currentSort==='name')return a.name.localeCompare(b.name);
+    if(currentSort==='size'){
+      const sa=parseFloat(a.size)*(a.size.includes('MB')?1000:1);
+      const sb=parseFloat(b.size)*(b.size.includes('MB')?1000:1);
+      return sb-sa;
+    }
+    if(currentSort==='status'){
+      const order={processing:0,bereit:1,error:2};
+      return (order[a.status]||9)-(order[b.status]||9);
+    }
+    return 0;
+  });
+}
+window.applyDocFilters=applyDocFilters;window.sortDocs=sortDocs;
+// Close sort menu on outside click
+document.addEventListener('click',e=>{if(!e.target.closest('.doc-sort'))document.getElementById('docSortMenu')?.classList.remove('open')});
+
+// Pipeline rendering
+function pipeHTML(doc){
+  let h='<div class="doc-pipeline">';
+  for(let i=0;i<PIPELINE_STEPS.length;i++){
+    const done=i<doc.pipeline;const active=i===doc.pipeline-1&&doc.status==='processing';
+    const cls=done?'dp-done':active?'dp-active':'dp-pending';
+    h+=`<div class="dp-step ${cls}"></div>`;
+  }
+  if(doc.status==='bereit')h+=`<span class="dp-label" style="color:var(--green)">✓ Bereit</span>`;
+  else if(doc.pipelineLabel)h+=`<span class="dp-label" style="color:var(--gold)">${doc.pipelineLabel}…</span>`;
+  h+='</div>';return h;
+}
+
+// Render docs
+function renderDocs(docs){
+  const list=document.getElementById('docList');list.innerHTML='';
+  docs.forEach((d,idx)=>{
+    const lc=LABEL_CLS[d.label]||'dl-other';
+    const ic=ICON_CLS[d.type]||'doc-icon-pdf';
+    const icon=ICON_MAP[d.type]||'📄';
+    const stCls=d.status==='bereit'?'dst-ready':d.status==='processing'?'dst-processing':'dst-error';
+    const stLabel=d.status==='bereit'?'✓ Bereit':d.status==='processing'?'⏳ Verarbeitung':'⚠ Fehler';
+    const div=document.createElement('div');div.className='doc-card';div.dataset.idx=idx;
+    div.onclick=()=>openDrawer(idx);
+    div.innerHTML=`
+      <div class="doc-icon ${ic}">${icon}</div>
+      <div class="doc-info">
+        <div class="doc-name">${d.name}</div>
+        <div class="doc-meta">
+          <span class="doc-label ${lc}">${d.label}</span>
+          <span>${d.size}</span>
+          <span>${d.pages} Seite${d.pages>1?'n':''}</span>
+          <span>${d.uploaded} · ${d.by}</span>
+          ${d.versions.length>1?`<span class="doc-ver">v${d.versions[0].v}</span>`:''}
+        </div>
+      </div>
+      ${pipeHTML(d)}
+      <span class="doc-status ${stCls}">${stLabel}</span>
+      <div class="doc-actions">
+        <button class="doc-act" title="Herunterladen" onclick="event.stopPropagation()">↓</button>
+        <button class="doc-act" title="Reparse" onclick="event.stopPropagation();alert('Reparse gestartet')">🔄</button>
+        <button class="doc-act" title="Löschen" onclick="event.stopPropagation()">🗑</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+let activeLabel='all',filteredDocs=[...DOCS];
+function setFilter(l,el){
+  activeLabel=l;document.querySelectorAll('.lf').forEach(f=>f.classList.remove('active'));
+  el.classList.add('active');
+  applyDocFilters();
+}
+renderDocs(DOCS);
+
+function simulateUpload(){
+  const zone=document.getElementById('uploadZone');
+  zone.innerHTML=`<div class="uz-icon">✓</div><div class="uz-title" style="color:var(--green)">Datei wird hochgeladen…</div><div class="uz-hint">Verarbeitung startet automatisch</div>`;
+  setTimeout(()=>{zone.innerHTML=`<div class="uz-icon">📎</div><div class="uz-title">Dokumente hochladen</div><div class="uz-hint">Drag & Drop oder <b>klicken</b> · PDF, DOCX, JPG, PNG · Max <b>20 MB</b></div><input type="file" class="uz-input" multiple accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" onchange="simulateUpload()">`},2000);
+}
+window.simulateUpload=simulateUpload;window.setFilter=setFilter;
+
+// ===== DRAWER =====
+let currentDoc=null;
+function getVisibleDocs(){
+  const q=(document.getElementById('docSearch').value||'').toLowerCase().trim();
+  let filtered=activeLabel==='all'?[...DOCS]:DOCS.filter(d=>d.label===activeLabel);
+  if(q)filtered=filtered.filter(d=>d.name.toLowerCase().includes(q)||d.label.toLowerCase().includes(q)||(d.by||'').toLowerCase().includes(q));
+  applySortTo(filtered);
+  return filtered;
+}
+function openDrawer(idx){
+  const docs=getVisibleDocs();
+  const d=docs[idx];if(!d)return;currentDoc=d;selectedPage=null;
+  document.getElementById('dTitle').textContent=d.name;
+  const tabs=[{id:'preview',label:'Preview'},{id:'details',label:'Details'},{id:'pipeline',label:'Pipeline'},{id:'versions',label:'Versionen ('+d.versions.length+')'}];
+  document.getElementById('dTabs').innerHTML=tabs.map((t,i)=>`<div class="drawer-tab${i===0?' active':''}" onclick="switchTab('${t.id}',this)">${t.label}</div>`).join('');
+  renderTab('preview',d);
+  document.getElementById('dOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){document.getElementById('dOverlay').classList.remove('open');document.getElementById('drawer').classList.remove('open');currentDoc=null}
+function switchTab(id,el){document.querySelectorAll('.drawer-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTab(id,currentDoc)}
+
+// Page state per document (simulated)
+const PAGE_STATE={};
+DOCS.forEach(d=>{
+  PAGE_STATE[d.id]=[];
+  for(let i=0;i<d.pages;i++){PAGE_STATE[d.id].push({num:i+1,rot:0,deleted:false})}
+});
+let selectedPage=null,dragPageIdx=null;
+
+function renderTab(id,d){
+  const body=document.getElementById('dBody');
+  if(id==='preview'){
+    const pages=PAGE_STATE[d.id].filter(p=>!p.deleted);
+    let h=`<div class="page-editor-head"><div class="page-editor-title">Seiten-Editor · ${pages.length} Seite${pages.length!==1?'n':''}</div><div class="page-editor-hint">Drag & Drop zum Sortieren · Klick zum Auswählen</div></div>`;
+    // Thumbnail grid
+    h+=`<div class="page-grid" id="pageGrid">`;
+    pages.forEach((p,i)=>{
+      const rotBadge=p.rot>0?`<span class="page-thumb-badge ptb-rotated">${p.rot}°</span>`:'';
+      // Generate mock content lines (different per page for variety)
+      const seed=p.num;
+      let mockLines='<div class="ptm-line title"></div>';
+      for(let l=0;l<6+seed%3;l++){
+        const w=40+((seed*7+l*13)%40);
+        mockLines+=`<div class="ptm-line" style="width:${w}%"></div>`;
+      }
+      h+=`<div class="page-thumb${selectedPage===i?' selected':''}" data-page-idx="${i}" data-rot="${p.rot}"
+        draggable="true" onclick="selectPage(${d.id},${i})" 
+        ondragstart="pageDragStart(event,${i})" ondragover="pageDragOver(event,${i})" 
+        ondragleave="pageDragLeave(event)" ondragend="pageDragEnd(event)" ondrop="pageDrop(event,${d.id},${i})">
+        ${rotBadge}
+        <div class="page-thumb-content"><div class="page-thumb-mock">${mockLines}</div></div>
+        <div class="page-actions">
+          <button class="pa-btn" title="90° drehen" onclick="event.stopPropagation();rotatePage(${d.id},${i})">↻</button>
+          <button class="pa-btn pa-delete" title="Seite entfernen" onclick="event.stopPropagation();deletePage(${d.id},${i})">✕</button>
+        </div>
+        <div class="page-thumb-num">Seite ${p.num}</div>
+      </div>`;
+    });
+    // Add page button
+    h+=`<div class="page-thumb" style="border-style:dashed;cursor:pointer;opacity:.5" onclick="addPage(${d.id})">
+      <div class="page-thumb-content"><div style="font-size:24px;color:var(--tm)">+</div></div>
+      <div class="page-thumb-num" style="font-size:8px">Hinzufügen</div>
+    </div>`;
+    h+=`</div>`;
+    // Selected page large preview
+    if(selectedPage!==null&&pages[selectedPage]){
+      const sp=pages[selectedPage];
+      let mockBig='<div class="ptm-line title"></div>';
+      for(let l=0;l<12+sp.num%4;l++){const w=30+((sp.num*7+l*11)%55);mockBig+=`<div class="ptm-line" style="width:${w}%"></div>`}
+      h+=`<div class="selected-preview show">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:600;color:var(--t2)">Seite ${sp.num}${sp.rot>0?' · Gedreht '+sp.rot+'°':''}</span>
+          <div style="display:flex;gap:4px">
+            <button class="pv-btn" onclick="rotatePage(${d.id},${selectedPage})">↻ Drehen</button>
+            <button class="pv-btn" onclick="deletePage(${d.id},${selectedPage})">🗑 Entfernen</button>
+          </div>
+        </div>
+        <div class="sp-mock" style="transform:rotate(${sp.rot}deg)">${mockBig}</div>
+      </div>`;
+    }
+    // Bottom toolbar
+    h+=`<div class="preview-toolbar" style="margin-top:10px">
+      <button class="pv-btn" onclick="undoPages(${d.id})">↶ Rückgängig</button>
+      <div style="flex:1"></div>
+      <span style="font-size:9px;color:var(--tm)">Änderungen werden automatisch als neue Version gespeichert</span>
+      <div style="flex:1"></div>
+      <button class="pv-btn" style="border-color:var(--gold30);color:var(--gold)">↓ Download</button>
+    </div>`;
+    body.innerHTML=h;
+  }
+  else if(id==='details'){
+    const lc=LABEL_CLS[d.label]||'dl-other';
+    let h=`<div class="dov-section">Dokument</div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Dateiname</div><div class="dov-value">${d.name}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Label</div><div class="dov-value"><span class="doc-label ${lc}">${d.label}</span></div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Typ</div><div class="dov-value">${d.type.toUpperCase()}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Grösse</div><div class="dov-value">${d.size}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Seiten</div><div class="dov-value">${d.pages}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Hochgeladen</div><div class="dov-value">${d.uploaded}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Hochgeladen von</div><div class="dov-value">${d.by}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Status</div><div class="dov-value">${d.status==='bereit'?'<span style="color:var(--green)">✓ Bereit</span>':'<span style="color:var(--gold)">⏳ Verarbeitung</span>'}</div></div>`;
+    h+=`<div class="dov-row"><div class="dov-label">Version</div><div class="dov-value">v${d.versions[0].v}</div></div>`;
+    h+=`<div class="dov-section" style="margin-top:20px">Label ändern</div>`;
+    h+=`<div style="display:flex;flex-wrap:wrap;gap:4px">`;
+    LABELS.forEach(l=>{
+      const active=l===d.label;
+      h+=`<button style="padding:4px 10px;border-radius:5px;font-size:9px;font-weight:600;border:1px solid ${active?'var(--gold30)':'var(--brd)'};background:${active?'var(--gold08)':'transparent'};color:${active?'var(--gold)':'var(--t3)'};cursor:pointer;transition:.15s" onclick="this.parentElement.querySelectorAll('button').forEach(b=>{b.style.borderColor='var(--brd)';b.style.background='transparent';b.style.color='var(--t3)'});this.style.borderColor='var(--gold30)';this.style.background='var(--gold08)';this.style.color='var(--gold)'">${l}</button>`;
+    });
+    h+=`</div>`;
+    h+=`<div class="dov-section" style="margin-top:20px">Aktionen</div>`;
+    h+=`<div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="tb-btn" onclick="alert('Reparse gestartet')">🔄 Reparse</button>
+      <button class="tb-btn" onclick="alert('Download startet')">↓ Download</button>
+      <button class="tb-btn" style="border-color:rgba(239,68,68,.2);color:var(--red)" onclick="alert('Löschen-Dialog')">🗑 Löschen</button>
+    </div>`;
+    body.innerHTML=h;
+  }
+  else if(id==='pipeline'){
+    let h=`<div style="font-size:11px;color:var(--t2);margin-bottom:12px">Verarbeitungs-Pipeline — ${d.status==='bereit'?'alle Stufen abgeschlossen':'in Verarbeitung'}</div>`;
+    h+=`<div class="pipeline-detail">`;
+    PIPELINE_STEPS.forEach((step,i)=>{
+      const done=i<d.pipeline;const active=i===d.pipeline-1&&d.status==='processing';const pending=i>=d.pipeline;
+      const cls=done?'pd-dot-done':active?'pd-dot-active':'pd-dot-pending';
+      const time=done?'✓ Abgeschlossen':active?'⏳ Läuft…':'Ausstehend';
+      h+=`<div class="pd-step" style="background:${done?'rgba(93,202,165,.04)':active?'rgba(220,180,121,.04)':'transparent'};border-radius:6px">
+        <div class="pd-dot ${cls}"></div>
+        <div class="pd-name" style="color:${done?'var(--green)':active?'var(--gold)':'var(--tm)'}">${step}</div>
+        <div class="pd-time">${time}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+    if(d.status==='processing')h+=`<div style="margin-top:12px;padding:8px 12px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.08);border-radius:8px;font-size:10px;color:var(--gold)">⏳ Verarbeitung läuft — wird automatisch aktualisiert.</div>`;
+    body.innerHTML=h;
+  }
+  else if(id==='versions'){
+    let h=`<div class="ver-list">`;
+    d.versions.forEach((v,i)=>{
+      h+=`<div class="ver-item${i===0?' current':''}">
+        <div class="ver-num">v${v.v}</div>
+        <div class="ver-info"><div class="ver-name">${v.note}</div><div class="ver-meta">${v.date} · ${v.by}</div></div>
+        ${i===0?'<span class="ver-badge">Aktuell</span>':'<button class="tb-btn" style="font-size:9px;padding:3px 8px" onclick="event.stopPropagation()">Wiederherstellen</button>'}
+      </div>`;
+    });
+    h+=`</div>`;
+    body.innerHTML=h;
+  }
+}
+window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.switchTab=switchTab;
+
+// ===== PAGE EDITOR FUNCTIONS =====
+function selectPage(docId,idx){
+  selectedPage=selectedPage===idx?null:idx;
+  renderTab('preview',currentDoc);
+}
+function rotatePage(docId,idx){
+  const pages=PAGE_STATE[docId].filter(p=>!p.deleted);
+  if(!pages[idx])return;
+  pages[idx].rot=(pages[idx].rot+90)%360;
+  renderTab('preview',currentDoc);
+}
+function deletePage(docId,idx){
+  const pages=PAGE_STATE[docId].filter(p=>!p.deleted);
+  if(pages.length<=1){alert('Mindestens eine Seite muss erhalten bleiben.');return}
+  if(!pages[idx])return;
+  // Find the actual page in the full array and mark deleted
+  const actualPage=pages[idx];
+  const realIdx=PAGE_STATE[docId].indexOf(actualPage);
+  PAGE_STATE[docId][realIdx].deleted=true;
+  if(selectedPage===idx)selectedPage=null;
+  else if(selectedPage>idx)selectedPage--;
+  renderTab('preview',currentDoc);
+}
+function addPage(docId){
+  const maxNum=Math.max(...PAGE_STATE[docId].map(p=>p.num),0);
+  PAGE_STATE[docId].push({num:maxNum+1,rot:0,deleted:false});
+  renderTab('preview',currentDoc);
+}
+function undoPages(docId){
+  // Reset all pages to original
+  PAGE_STATE[docId].forEach(p=>{p.rot=0;p.deleted=false});
+  // Re-sort by original number
+  PAGE_STATE[docId].sort((a,b)=>a.num-b.num);
+  selectedPage=null;
+  renderTab('preview',currentDoc);
+}
+// Drag & drop for page reordering
+function pageDragStart(e,idx){
+  dragPageIdx=idx;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',idx);
+}
+function pageDragOver(e,idx){
+  e.preventDefault();e.dataTransfer.dropEffect='move';
+  if(dragPageIdx!==idx)e.currentTarget.classList.add('drag-target');
+}
+function pageDragLeave(e){e.currentTarget.classList.remove('drag-target')}
+function pageDragEnd(e){
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.page-thumb').forEach(t=>t.classList.remove('drag-target'));
+}
+function pageDrop(e,docId,targetIdx){
+  e.preventDefault();e.currentTarget.classList.remove('drag-target');
+  if(dragPageIdx===null||dragPageIdx===targetIdx)return;
+  const pages=PAGE_STATE[docId].filter(p=>!p.deleted);
+  // Swap in the actual array
+  const dragPage=pages[dragPageIdx];
+  const targetPage=pages[targetIdx];
+  const realDragIdx=PAGE_STATE[docId].indexOf(dragPage);
+  const realTargetIdx=PAGE_STATE[docId].indexOf(targetPage);
+  // Remove and insert
+  PAGE_STATE[docId].splice(realDragIdx,1);
+  const newTargetIdx=PAGE_STATE[docId].indexOf(targetPage);
+  PAGE_STATE[docId].splice(newTargetIdx+(dragPageIdx<targetIdx?1:0),0,dragPage);
+  selectedPage=null;dragPageIdx=null;
+  renderTab('preview',currentDoc);
+}
+window.selectPage=selectPage;window.rotatePage=rotatePage;window.deletePage=deletePage;
+window.addPage=addPage;window.undoPages=undoPages;
+window.pageDragStart=pageDragStart;window.pageDragOver=pageDragOver;
+window.pageDragLeave=pageDragLeave;window.pageDragEnd=pageDragEnd;window.pageDrop=pageDrop;
+
+// Keyboard
+let ki=-1;
+document.addEventListener('keydown',e=>{
+  const t=document.activeElement?.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(document.getElementById('drawer').classList.contains('open')){if(e.key==='Escape')closeDrawer();return}
+  const cards=[...document.querySelectorAll('.doc-card')];
+  if(e.key==='ArrowDown'){e.preventDefault();ki=Math.min(ki+1,cards.length-1);cards.forEach(c=>{c.style.outline=''});if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='ArrowUp'){e.preventDefault();ki=Math.max(ki-1,0);cards.forEach(c=>{c.style.outline=''});if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='Enter'&&ki>=0){e.preventDefault();openDrawer(ki)}
+  else if(e.key==='u'||e.key==='U'){e.preventDefault();document.querySelector('.uz-input')?.click()}
+  else if(e.key==='s'||e.key==='S'){e.preventDefault();document.getElementById('docSearch')?.focus()}
+  else if(e.key==='Escape'){cards.forEach(c=>{c.style.outline=''});ki=-1}
+});
+</script>
+</body></html>

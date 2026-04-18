@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Werdegang Tab v1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{
+  --gold:#dcb479;--teal:#196774;--dark:#262626;
+  --gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold20:rgba(220,180,121,.20);--gold30:rgba(220,180,121,.30);--gold40:rgba(220,180,121,.40);
+  --teal08:rgba(25,103,116,.08);--teal15:rgba(25,103,116,.15);--teal20:rgba(25,103,116,.20);--teal30:rgba(25,103,116,.30);
+  --bg-h:#232321;--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;
+  --brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);
+  --t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;
+  --green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--orange:#f97316;
+}
+
+/* === TOPBAR (reused) === */
+
+.topbar-l .sep{color:var(--tm)}.topbar-l .cur{color:var(--t1);font-weight:500}
+
+/* === HEADER (compact reuse) === */
+
+.cl:hover{background:var(--gold08)}
+
+.bdg.wh 
+
+.bdg.lc 
+
+.ab 
+.ab 
+@media(max-width:1100px){.ab }
+
+/* === WERDEGANG CONTENT === */
+.wg-area{padding:24px 32px;max-width:1100px}
+
+/* Top bar */
+.wg-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.wg-topbar-left{display:flex;align-items:center;gap:12px}
+.wg-topbar-title{font-size:16px;font-weight:500}
+.wg-topbar-count{font-size:12px;color:var(--t3)}
+.wg-topbar-right{display:flex;align-items:center;gap:8px}
+.wg-filter{display:flex;gap:4px}
+.wg-filter-btn{padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;border:none;transition:.15s;background:var(--bg-e);color:var(--t3)}
+.wg-filter-btn:hover{color:var(--t1)}.wg-filter-btn.active{background:var(--gold15);color:var(--gold);font-weight:500}
+.wg-add{padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1.5px solid var(--gold40);color:var(--gold);display:inline-flex;align-items:center;gap:4px;transition:.15s}
+.wg-add:hover{background:var(--gold15);border-color:var(--gold)}
+
+/* AI banner */
+.wg-ai{display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(10,102,194,.06);border:1px solid rgba(10,102,194,.15);border-radius:10px;margin-bottom:20px;font-size:12px;color:#60a5fa}
+.wg-ai-icon{width:28px;height:28px;border-radius:6px;background:rgba(10,102,194,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wg-ai-icon svg{width:16px;height:16px}
+
+/* === TIMELINE === */
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:var(--brd)}
+
+/* Timeline entry */
+.tl-entry{position:relative;margin-bottom:24px}
+.tl-entry:last-child{margin-bottom:0}
+
+/* Timeline dot */
+.tl-dot{position:absolute;left:-40px;top:18px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-p)}
+.tl-dot.job{background:var(--teal)}
+.tl-dot.edu{background:var(--green)}
+.tl-dot.gap{background:var(--tm)}
+.tl-dot.current{background:var(--green);box-shadow:0 0 0 4px rgba(93,202,165,.2)}
+
+/* Timeline connector for current */
+.tl-entry.current .tl-dot::after{content:'';position:absolute;top:-10px;left:3px;width:2px;height:8px;background:var(--green)}
+
+/* Entry card */
+.tl-card{background:var(--bg-c);border:.5px solid var(--brd);border-radius:12px;overflow:hidden;transition:.15s}
+.tl-card:hover{border-color:var(--gold30)}
+.tl-card.current{border-left:3px solid var(--green)}
+.tl-card.edu-type{border-left:3px solid var(--green)}
+.tl-card.gap-type{border-left:3px solid var(--tm)}
+
+/* Card header */
+.tl-head{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;cursor:pointer}
+.tl-logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.tl-logo.linked{background:var(--teal15);color:var(--teal);border:.5px solid var(--teal30)}
+.tl-logo.unlinked{background:var(--bg-e);color:var(--t3);border:.5px solid var(--brd-s)}
+.tl-logo.edu{background:rgba(93,202,165,.1);color:var(--green);border:.5px solid rgba(93,202,165,.25)}
+.tl-logo.gap{background:var(--bg-e);color:var(--tm);border:.5px solid var(--brd-s);font-size:18px}
+.tl-logo.sbb{background:#e60000;color:#fff}.tl-logo.impl{background:#003366;color:#fff}
+
+.tl-info{flex:1;min-width:0}
+.tl-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.tl-employer{font-size:13px;color:var(--t2);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.tl-employer a{color:var(--teal);text-decoration:none}.tl-employer a:hover{text-decoration:underline}
+.tl-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tl-meta-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t3)}
+.tl-meta-item svg{width:12px;height:12px}
+
+.tl-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.tl-duration{font-size:12px;color:var(--t2);font-weight:500}
+.tl-dates{font-size:11px;color:var(--t3)}
+.tl-current-badge{font-size:9px;padding:2px 8px;border-radius:999px;background:rgba(93,202,165,.15);color:var(--green);font-weight:600;letter-spacing:.3px}
+.tl-ai-badge{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(10,102,194,.1);color:#60a5fa;font-weight:500}
+
+/* Tags row */
+.tl-tags{display:flex;flex-wrap:wrap;gap:4px;padding:0 20px 12px}
+.tl-tag{font-size:10px;padding:3px 8px;border-radius:5px}
+.tl-tag.fn{background:var(--gold08);color:var(--gold);border:.5px solid var(--gold20)}
+.tl-tag.fc{background:var(--teal08);color:var(--teal);border:.5px solid var(--teal20)}
+.tl-tag
+.tl-tag.sp{background:rgba(93,202,165,.08);color:var(--green);border:.5px solid rgba(93,202,165,.2)}
+.tl-tag.rg{background:var(--bg-e);color:var(--t3);border:.5px solid var(--brd-s)}
+
+/* Description */
+.tl-desc{padding:0 20px 14px;font-size:12px;color:var(--t2);line-height:1.6}
+
+/* Expandable projects */
+.tl-projects{border-top:1px solid var(--brd);padding:12px 20px}
+.tl-projects-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:8px}
+.tl-projects-title{font-size:11px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+.tl-projects-toggle{font-size:14px;color:var(--t3);transition:transform .2s}
+.tl-projects.collapsed .tl-projects-toggle{transform:rotate(-90deg)}
+.tl-projects.collapsed .tl-projects-list{display:none}
+
+.tl-project{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-e);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.15s;border:.5px solid var(--brd-s)}
+.tl-project:hover{background:var(--bg-hv);border-color:var(--brd)}
+.tl-project-icon{width:32px;height:32px;border-radius:6px;background:var(--teal08);display:flex;align-items:center;justify-content:center;color:var(--teal);flex-shrink:0;font-size:12px}
+.tl-project-info{flex:1;min-width:0}
+.tl-project-name{font-size:12px;font-weight:500;color:var(--t1)}
+.tl-project-meta{font-size:10px;color:var(--t3);margin-top:1px}
+.tl-project-highlight{font-size:9px;padding:2px 6px;border-radius:999px;background:var(--gold15);color:var(--gold);font-weight:500}
+.tl-project-ref{font-size:9px;padding:2px 6px;border-radius:999px;background:var(--teal15);color:var(--teal);font-weight:500}
+.tl-project-arrow{color:var(--tm);font-size:14px}
+
+/* Year markers */
+.tl-year{position:relative;margin-bottom:16px;padding-left:0}
+.tl-year-label{position:absolute;left:-40px;font-size:11px;color:var(--tm);font-weight:600;letter-spacing:.5px;transform:translateX(-100%) translateX(-12px);white-space:nowrap}
+
+/* Section headers */
+.tl-section-header{position:relative;margin-bottom:16px;padding-left:0}
+.tl-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);display:flex;align-items:center;gap:10px}
+.tl-section-title::after{content:'';flex:1;height:1px;background:var(--brd)}
+.tl-section-title .tl-sec-icon{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.tl-section-title .tl-sec-icon.job{background:var(--teal15);color:var(--teal)}
+.tl-section-title .tl-sec-icon.edu{background:rgba(93,202,165,.12);color:var(--green)}
+
+/* Zugang / Abgang pills */
+.tl-motion{display:flex;gap:8px;flex-wrap:wrap;padding:0 20px 12px}
+.tl-motion-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:11px}
+.tl-motion-pill.zugang{background:rgba(93,202,165,.08);color:var(--green);border:.5px solid rgba(93,202,165,.2)}
+.tl-motion-pill.abgang{background:rgba(245,158,11,.06);color:var(--amber);border:.5px solid rgba(245,158,11,.15)}
+.tl-motion-pill svg{width:12px;height:12px}
+
+/* Gap entry special */
+.tl-gap-note{font-size:11px;color:var(--tm);font-style:italic;padding:0 20px 12px}
+
+/* Education specific */
+.tl-edu-grade{font-size:11px;color:var(--green);font-weight:500;padding:0 20px 12px}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab active">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab">Reminders</div></div>
+
+<!-- === WERDEGANG CONTENT === -->
+<div class="wg-area">
+
+  <!-- Top bar -->
+  <div class="wg-topbar">
+    <div class="wg-topbar-left">
+      <span class="wg-topbar-title">Werdegang</span>
+      <span class="wg-topbar-count">5 Stationen · 3 Projekte</span>
+    </div>
+    <div class="wg-topbar-right">
+      <div class="wg-filter">
+        <button class="wg-filter-btn active">Alle</button>
+        <button class="wg-filter-btn">Jobs</button>
+        <button class="wg-filter-btn">Ausbildung</button>
+      </div>
+      <button class="wg-add"><span style="font-size:14px;font-weight:300;line-height:1">+</span> Station hinzufügen</button>
+    </div>
+  </div>
+
+  <!-- AI LinkedIn banner -->
+  <div class="wg-ai">
+    <div class="wg-ai-icon"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="4" fill="#0a66c2"/><path d="M6.5 8.5v5M6.5 6v.01M9 13.5v-3c0-1 .5-1.5 1.3-1.5s1.2.5 1.2 1.5v3" stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none"/><circle cx="6.5" cy="6" r=".01" stroke="#fff" stroke-width="1.3"/></svg></div>
+    3 Stationen aus LinkedIn importiert · Letzte Synchronisation: 25.03.2026
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <!-- SECTION: Beruf -->
+    <div class="tl-section-header">
+      <div class="tl-section-title"><span class="tl-sec-icon job">●</span> Beruf</div>
+    </div>
+
+    <!-- === STATION 1: Current job === -->
+    <div class="tl-entry current">
+      <div class="tl-dot current"></div>
+      <div class="tl-card current">
+        <div class="tl-head" onclick="this.parentElement.querySelector('.tl-projects')?.classList.toggle('collapsed')">
+          <div class="tl-logo impl">IM</div>
+          <div class="tl-info">
+            <div class="tl-title">Gesamtbauleiter Spezialtiefbau</div>
+            <div class="tl-employer"><a href="#">Implenia AG</a> <span style="font-size:10px;color:var(--tm)">· verknüpft</span></div>
+            <div class="tl-meta">
+              <div class="tl-meta-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5a4.5 4.5 0 014.5 4.5c0 3.5-4.5 8.5-4.5 8.5S3.5 9.5 3.5 6A4.5 4.5 0 018 1.5z"/><circle cx="8" cy="6" r="1.5"/></svg> Zürich</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-current-badge">AKTUELL</div>
+            <div class="tl-duration">3 Jahre 4 Monate</div>
+            <div class="tl-dates">Jan 2023 – heute</div>
+          </div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag fn">Bauleiter</span>
+          <span class="tl-tag fc">Spezialtiefbau</span>
+          <span class="tl-tag cl">Tiefbau</span>
+          <span class="tl-tag rg">ZH</span>
+        </div>
+        <div class="tl-motion">
+          <div class="tl-motion-pill zugang"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M7 3l3 3-3 3"/></svg> Zugang: Headhunt</div>
+        </div>
+        <div class="tl-desc">Verantwortlich für Grossprojekte im Bereich Spezialtiefbau und Tunnelbau. Führung eines Teams von 25+ MA inkl. Sub-Unternehmer. P&L-Verantwortung für Projektvolumen >200 Mio. CHF.</div>
+
+        <!-- Projects -->
+        <div class="tl-projects" id="proj1">
+          <div class="tl-projects-header" onclick="document.getElementById('proj1').classList.toggle('collapsed')">
+            <div class="tl-projects-title"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/></svg> 2 Projekte</div>
+            <span class="tl-projects-toggle">▾</span>
+          </div>
+          <div class="tl-projects-list">
+            <div class="tl-project">
+              <div class="tl-project-icon">SBB</div>
+              <div class="tl-project-info">
+                <div class="tl-project-name">Tunnel Weinberg (SBB)</div>
+                <div class="tl-project-meta">CHF 320 Mio. · 2023–heute · 45 MA</div>
+              </div>
+              <span class="tl-project-highlight">CV</span>
+              <span class="tl-project-ref">Referenz</span>
+              <span class="tl-project-arrow">›</span>
+            </div>
+            <div class="tl-project">
+              <div class="tl-project-icon" style="background:var(--gold08);color:var(--gold)">LW</div>
+              <div class="tl-project-info">
+                <div class="tl-project-name">Brücke Limmat Werdinsel</div>
+                <div class="tl-project-meta">CHF 45 Mio. · 2023–heute · 12 MA</div>
+              </div>
+              <span class="tl-project-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === STATION 2: Previous job === -->
+    <div class="tl-entry">
+      <div class="tl-dot job"></div>
+      <div class="tl-card">
+        <div class="tl-head" onclick="this.parentElement.querySelector('.tl-projects')?.classList.toggle('collapsed')">
+          <div class="tl-logo linked">MS</div>
+          <div class="tl-info">
+            <div class="tl-title">Oberbauleiter <span class="tl-ai-badge">LinkedIn</span></div>
+            <div class="tl-employer"><a href="#">Marti AG</a> <span style="font-size:10px;color:var(--tm)">· verknüpft</span></div>
+            <div class="tl-meta">
+              <div class="tl-meta-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5a4.5 4.5 0 014.5 4.5c0 3.5-4.5 8.5-4.5 8.5S3.5 9.5 3.5 6A4.5 4.5 0 018 1.5z"/><circle cx="8" cy="6" r="1.5"/></svg> Bern</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-duration">5 Jahre 2 Monate</div>
+            <div class="tl-dates">Nov 2017 – Dez 2022</div>
+          </div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag fn">Oberbauleiter</span>
+          <span class="tl-tag fc">Tunnelbau</span>
+          <span class="tl-tag cl">Tiefbau</span>
+          <span class="tl-tag rg">BE</span>
+        </div>
+        <div class="tl-motion">
+          <div class="tl-motion-pill abgang"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6H2M5 3L2 6l3 3"/></svg> Abgang: Karriereschritt</div>
+        </div>
+        <div class="tl-desc">Leitung von Tunnelbauprojekten im Raum Bern. Verantwortung für Qualität, Kosten und Termine. Enge Zusammenarbeit mit ASTRA und kantonalen Behörden.</div>
+
+        <div class="tl-projects" id="proj2">
+          <div class="tl-projects-header" onclick="document.getElementById('proj2').classList.toggle('collapsed')">
+            <div class="tl-projects-title"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/></svg> 1 Projekt</div>
+            <span class="tl-projects-toggle">▾</span>
+          </div>
+          <div class="tl-projects-list">
+            <div class="tl-project">
+              <div class="tl-project-icon" style="background:#1a4d8f;color:#fff;font-size:9px">BAS</div>
+              <div class="tl-project-info">
+                <div class="tl-project-name">Einhausung Schwamendingen (ASTRA)</div>
+                <div class="tl-project-meta">CHF 180 Mio. · 2020–2022 · 30 MA</div>
+              </div>
+              <span class="tl-project-highlight">CV</span>
+              <span class="tl-project-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === STATION 3: Earlier job === -->
+    <div class="tl-entry">
+      <div class="tl-dot job"></div>
+      <div class="tl-card">
+        <div class="tl-head">
+          <div class="tl-logo linked">BG</div>
+          <div class="tl-info">
+            <div class="tl-title">Bauführer <span class="tl-ai-badge">LinkedIn</span></div>
+            <div class="tl-employer"><a href="#">Brun AG</a> <span style="font-size:10px;color:var(--tm)">· verknüpft</span></div>
+            <div class="tl-meta">
+              <div class="tl-meta-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5a4.5 4.5 0 014.5 4.5c0 3.5-4.5 8.5-4.5 8.5S3.5 9.5 3.5 6A4.5 4.5 0 018 1.5z"/><circle cx="8" cy="6" r="1.5"/></svg> Luzern</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-duration">3 Jahre 8 Monate</div>
+            <div class="tl-dates">Mär 2014 – Okt 2017</div>
+          </div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag fn">Bauführer</span>
+          <span class="tl-tag fc">Strassenbau</span>
+          <span class="tl-tag cl">Infrastrukturbau</span>
+          <span class="tl-tag rg">LU</span>
+        </div>
+        <div class="tl-motion">
+          <div class="tl-motion-pill abgang"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6H2M5 3L2 6l3 3"/></svg> Abgang: Besseres Angebot</div>
+        </div>
+        <div class="tl-desc">Baustellenführung für Strassenbauprojekte. Verantwortung für 8–12 Mitarbeitende. Kalkulation, AVOR und Nachtragsmanagement.</div>
+      </div>
+    </div>
+
+    <!-- === STATION 4: Gap === -->
+    <div class="tl-entry">
+      <div class="tl-dot gap"></div>
+      <div class="tl-card gap-type">
+        <div class="tl-head">
+          <div class="tl-logo gap">⋯</div>
+          <div class="tl-info">
+            <div class="tl-title" style="color:var(--t3)">Weltreise / Sabbatical</div>
+            <div class="tl-meta">
+              <div class="tl-meta-item" style="color:var(--tm)">Persönliche Auszeit nach Studienabschluss</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-duration" style="color:var(--tm)">6 Monate</div>
+            <div class="tl-dates">Sep 2013 – Feb 2014</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Aus-/ Weiterbildung -->
+    <div class="tl-section-header" style="margin-top:8px">
+      <div class="tl-section-title"><span class="tl-sec-icon edu">●</span> Aus- / Weiterbildung</div>
+    </div>
+
+    <!-- === STATION 5: Education === -->
+    <div class="tl-entry">
+      <div class="tl-dot edu"></div>
+      <div class="tl-card edu-type">
+        <div class="tl-head">
+          <div class="tl-logo edu">🎓</div>
+          <div class="tl-info">
+            <div class="tl-title">Dipl. Bauingenieur FH</div>
+            <div class="tl-employer">ZHAW — Zürcher Hochschule für Angewandte Wissenschaften</div>
+            <div class="tl-meta">
+              <div class="tl-meta-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5a4.5 4.5 0 014.5 4.5c0 3.5-4.5 8.5-4.5 8.5S3.5 9.5 3.5 6A4.5 4.5 0 018 1.5z"/><circle cx="8" cy="6" r="1.5"/></svg> Winterthur</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-duration">3 Jahre</div>
+            <div class="tl-dates">Sep 2010 – Aug 2013</div>
+          </div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag sp">Bauingenieurwesen</span>
+          <span class="tl-tag sp">Bachelor of Science FH</span>
+        </div>
+        <div class="tl-edu-grade">Abschluss: Note 5.4 / 6.0</div>
+      </div>
+    </div>
+
+    <!-- === STATION 6: Earlier education === -->
+    <div class="tl-entry">
+      <div class="tl-dot edu"></div>
+      <div class="tl-card edu-type">
+        <div class="tl-head">
+          <div class="tl-logo edu">🎓</div>
+          <div class="tl-info">
+            <div class="tl-title">Lehre Maurer EFZ</div>
+            <div class="tl-employer">Walo Bertschinger AG / Gewerbeschule Zürich</div>
+            <div class="tl-meta">
+              <div class="tl-meta-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5a4.5 4.5 0 014.5 4.5c0 3.5-4.5 8.5-4.5 8.5S3.5 9.5 3.5 6A4.5 4.5 0 018 1.5z"/><circle cx="8" cy="6" r="1.5"/></svg> Zürich</div>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-duration">3 Jahre</div>
+            <div class="tl-dates">Aug 2007 – Jul 2010</div>
+          </div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag sp">EFZ Maurer</span>
+          <span class="tl-tag sp">Berufslehre</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+</div>
+
+</body>
+</html>

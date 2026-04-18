@@ -1,0 +1,236 @@
+
+=== 1. KANDIDAT UEBERSICHT v8 ===
+Hauptsektionen:
+  - Sidebar: Kandidaten-Liste (mit Chips: Active, Status-Badges)
+  - Tabs-Navigation: Ueberblick, Briefing, Werdegang, Assessment, Jobbasket, Prozesse, History, Dokumente, Dok-Generator, Reminders
+  - Hauptbereich: Personalien (Vorname, Nachname, Geschlecht, GebDatum, Nationalitaet)
+  - Profilvollstaendigkeit (Gauge/Progress)
+  - Briefing-Eckdaten (Sal, Position, LTI, Bewerbungen)
+  - Verfuegbarkeit (Datum, Kanal)
+  - Kontaktdaten (Email, Phone, Adresse)
+  - Sparte (TBau-Pill, Status-Badge)
+
+Features: Card-Grid | Filter-Chips | Progress-Gauge | Sidebar-Nav | Topbar-Search | Bearbeiten-Button
+
+=== 2. KANDIDAT BRIEFING v3 ===
+Hauptsektionen:
+  - Quick-Jump Sidebar (rechts): Komplettheits-Checker mit Dots (full/partial/empty)
+  - AI-Banner: "AI hat 12 Felder geprueft" mit Call-to-Action
+  - Verpflichtungs-Warnung (optional red banner)
+  - Main-Content: Gehalt (LTI/STI/Target/Schmerzgrenze), CHF-Felder
+  - Kartenfelder: "Aktuell", "Speichern", "synced", "Ziel", LTI-Berechnung
+  - Version-Nav (history chip selector)
+
+Features: AI-Banner | Quick-Jump-Sidebar | Progress-Dots | Color-Chips (Versions) | Alert-Banner | Nested-Cards
+
+=== 3. KANDIDAT WERDEGANG v2 ===
+Hauptsektionen:
+  - Filter-Buttons: Alle, Jobs, Ausbildung, IM-Kategorien
+  - Timeline-Layout: Vertikal mit Line und Dots
+  - Entries: Bauleiter, Spezialtiefbau (mit Daten, Ort, Company, Status-Tags)
+  - AI-Banner: "Station hinzufuegen" / "Beruf kategorisieren"
+  - Card pro Timeline-Entry mit Metadaten (Dauer, Position, Company, Referenzen)
+
+Features: Timeline | Filter-Chips | AI-Banner | Card-Entries | Status-Tags | Drag-Handle | CV-Link
+
+=== 4. KANDIDAT JOBBASKET v2 ===
+Hauptsektionen:
+  - Spider-Chart (Radar): IMP (89), Gehalt (95), Funktion (92), Ort (100), DISC (72), Einzelmandat (80), MAR (?)
+  - Gate-Boxes: Vorgeschlagene Jobs, AI-Match (mit Prozentanzeige)
+  - Job-Items mit Rejections-Modal
+  - Job-Preview-Popup
+  - Gate2 Options (Checkboxes)
+
+Features: Spider-Chart/Radar | Modal-Popup | Gauge-Scores | Job-Preview | Gate-System | Rejection-Tracking
+
+=== 5. KANDIDAT PROZESSE v2 ===
+Hauptsektionen:
+  - Pipeline-State (Offer, Enter, L, K stages)
+  - Prozess-Datum-Felder
+  - Debrief-Popup
+  - Pipe-Chips: "Einzelmandat", "Rejected", Status-Label
+  - Cards mit KB-Card-Grip (Drag-Handle)
+  - Process-Sum-Value (aggregierte Metriken)
+
+Features: Process-Pipeline | Date-Modal | Debrief-Popup | Drag-Cards | Pipe-Chips | Status-Tracker
+
+=== 6. KANDIDAT HISTORY v2 ===
+Hauptsektionen:
+  - Timeline: Entries mit Timestamps, Events, Attachments
+  - Reminder-Meta: Dauer, Kategorie, User-Tag
+  - Search/Filter
+  - Attachment-List: File-Type-Icons, Versioning
+  - Drawer mit Close-Button
+  - History-Toolbar
+
+Features: Timeline | Search-Filter | Attachments | File-Icons | Drawer | Reminders-Integration
+
+=== 7. KANDIDAT DOKUMENTE v2 ===
+Hauptsektionen:
+  - Doc-List: Sortierbare Liste (Sort-Checkboxes)
+  - Doc-Name, Doc-Status-Period
+  - Version-Items (Versioning-Selector)
+  - Gate1-Status (Status-Badge)
+  - Drawer mit File-Download
+  - Doc-Type-Icons (Gate-Status colors)
+
+Features: Doc-List | Versioning | Sort-Control | File-Icons | Drawer | Status-Badges
+
+=== 8. KANDIDAT DOK-GENERATOR v2 ===
+Hauptsektionen:
+  - CV-Preview (ARK CV Header mit Logo)
+  - Zoom-Control (Buttons +/-)
+  - Document-Timeline: ARK CRM Dok-Generator (Kandidat)
+  - Generate-View: Doc-Name, Doc-Project, Doc-ST-Period, Doc-Badge
+  - Badge-Labels: TC-Badge
+
+Features: Document-Preview | Zoom-Control | Logo-Box | Doc-Details | Timeline
+
+=== 9. KANDIDAT REMINDERS v2 ===
+Hauptsektionen:
+  - Reminder-Groups: Nach Prioritaet (Alle, Mittel, Hoch, Tief)
+  - Reminder-Items: Checkbox, Status-Dot (done?), Meta (Date, User)
+  - Filter-Buttons: Alle, Mittel, Hoch, Tief, Uberfaellig, Heute, Bald
+  - New-Reminder-Input (klein)
+  - Snooze-Buttons pro Item
+  - Rem-Edit-Button
+
+Features: Grouped-List | Priority-Chips | Checkboxes | Snooze-Buttons | Edit-Inline | Status-Dots
+
+=== 10. KANDIDAT AI-ANALYSE v2 ===
+(alias Scheelen & Human Needs v1)
+Hauptsektionen:
+  - Fit-Gauges: Employee-Nr, SR-Card (mit Scores)
+  - Cross-Card: Vergleich-Dimensionen
+  - Scheelen-Layout mit Ver-Arrow (Versioning)
+  - Fit-Gauge-Val: Numerische Scores
+  - SR-Col: Score-Renderer
+
+Features: Fit-Gauges | Cross-Card | Scheelen-Dimensionen | Score-Cards | Ver-Arrow (Versioning)
+
+=== 11. KANDIDAT ASSESSMENT GESAMTUEBERBLICK v2 ===
+Hauptsektionen:
+  - Status-Items: Status-Dot, Status-Label, Gauge-Label
+  - AI-Col-T: AI Score Columns
+  - Opp-Label, Mini-Bar-Fill (Progress)
+  - A-Card-Empty-Text (Placeholder)
+  - Ark-Tabs2: Alternative Tabs-Variante
+  - Assessment-Matrix mit Status-Spalten
+
+Features: Status-Grid | Assessment-Cards | AI-Scores | Mini-Progress-Bars | Empty-States
+
+=== 12. KANDIDAT SCHEELEN 6 HM v2 ===
+Hauptsektionen:
+  - Scheelen-Layout mit Drawer-Integration
+  - Opp-Row-Big, Opp-Bar-R-Big (Opportunity-Visualisierung)
+  - Opp-Fill-R-Big (Fuelle-Anzeige)
+  - Opp-Center-Line-Big (Center-Linie)
+  - DISC-Detail-Track (Detaillierte DISC-Tracks)
+  - Ark-Tabs2, Ver-Arrow (Versioning)
+
+Features: Opportunity-Visualization | DISC-Details | Drawer-Modal | Large-Gauges | Ver-Tracking
+
+=== 13. KANDIDAT TEAMRAD v2 ===
+Hauptsektionen:
+  - Comparison-Grid: Comp-Row, Bo-Name, Bo-Ampel (3-Stufen-Ampel: rot/gelb/gruen)
+  - Equipment-Grid: Eq-Name, Eq-Bar-Wrap
+  - Quad-Grid: Quad-Count, Quad-Labels
+  - Gap-Sum-Nr: Luecken-Summen
+  - Comp-Meta: Metadaten (Pct, Count)
+  - TM-Avatar: Team-Mitglied-Bilder
+
+Features: Comparison-Radar | Multi-Grid | Traffic-Light-Status | Team-Avatars | Equipment-Tracking
+
+=== 14. KANDIDAT VERGLEICH v2 ===
+Hauptsektionen:
+  - Scheelen-Layout mit FC-Avatar (Kandidat-Fotos)
+  - Gauge-Scores: FC-Gauge (Kandidaten-Gauge), Dimensionen
+  - Comparison-Table mit Dim-Leg-Avatar (Dimensionen)
+  - CS-B, CS-Role (Comparison-Styling)
+  - Toolbar: Filter/Sort-Optionen
+  - Inner-Card, Ov-Leg-Avatar (Overlay-Elemente)
+
+Features: Comparison-Table | Candidate-Avatars | Gauges | Filter-Toolbar | Dimension-Legend
+
+
+
+=== CROSS-FILE FUNCTIONALITY MATRIX ===
+
+** COMMON ACROSS ALL 14 FILES **
+- Top Navigation: Tabs (Ueberblick, Briefing, Werdegang, Assessment, Jobbasket, Prozesse, History, Dokumente, Dok-Generator, Reminders)
+- Topbar: Candidate-Selector (MM/PW), Status-Badge (Active), Sparte (Tiefbau, etc.), Profilvollstaendigkeit-Indicator
+- Sidebar: Candidate-List with Chips and Badges
+- Search-Bar: Ctrl+K trigger
+
+** BUTTONS & ACTIONS (ACROSS FILES) **
+1. Ueberblick: Bearbeiten (pencil), Speichern-Button (auto-sync)
+2. Briefing: "Prufen & Bestaetigen" (AI action), "Speichern"
+3. Werdegang: "Station hinzufuegen" (pill-button), Filter-Buttons (Alle, Jobs, Ausbildung)
+4. JobBasket: "Vorgeschlagene Jobs", Rejection-Modals, Job-Preview-Popup
+5. Prozesse: Date-Input-Modals, "Debrief" Popup, Drag-Reorder
+6. History: Search-Clear, Attachment-Download, "Drawer oeffnen"
+7. Dokumente: Sort-Checkboxes, Doc-Download, Version-Selector
+8. Dok-Generator: Zoom+/-, Document-Generate, Preview-Zoom
+9. Reminders: Snooze-Btn, Edit-Inline, New-Reminder, Priority-Filter
+10. AI-Analyse: Dimension-Cards, Score-Details
+11. Assessment: Status-Filter, AI-Score-View
+12. Scheelen HM: Opportunity-Details, DISC-Breakdown
+13. Teamrad: Comparison-Filter, Equipment-Selector, Ampel-Legend
+14. Vergleich: Candidate-Compare, Gauge-Filter, Dimension-Toggle
+
+** SPECIAL WIDGETS BY TYPE **
+
+CHARTS & VISUALIZATION:
+  - Spider/Radar Charts: JobBasket (IMP/Gehalt/Funktion), Teamrad (Comp-Radar), Vergleich (Gauges)
+  - Fit-Gauges: AI-Analyse, Assessment, Scheelen (Large Opportunity-Bars)
+  - Mini-Progress-Bars: Assessment, across cards
+  - Traffic-Light (3-state Ampel): Teamrad (Comp-Status), Scheelen
+
+MODALS & DRAWERS:
+  - Job-Preview-Popup: JobBasket
+  - Rejection-Modal: JobBasket (mit Feedback-Textfeld)
+  - Date-Input-Modal: Prozesse, History
+  - Debrief-Popup: Prozesse
+  - Drawer-Full-Height: History, Dokumente, Scheelen
+
+TIMELINES:
+  - Vertical Timeline: Werdegang (Career-History), History (Event-Log)
+  - Timeline-Entry: Card-based, with metadata (Dates, Company, Position, Tags)
+  - Timeline-Dots: full/partial/empty status (Briefing Quick-Jump)
+
+BADGES & STATUS INDICATORS:
+  - Sparte-Pill: Gold-background, text (Tiefbau, etc.)
+  - Status-Badges: Active, Inactive, colors
+  - File-Type-Icons: Dokumente (PDF, Word, etc. colors)
+  - Gate-Status-Colors: Dokumente, Prozesse
+  - Priority-Dots: Reminders (red/amber/green)
+  - AI-Status-Dot: Versioning indicators
+
+FORM ELEMENTS:
+  - Checkbox: Sort (Dokumente), Reminders, Gate2-Options (JobBasket)
+  - Color-Chips: Version-selectors (Briefing history)
+  - Filter-Buttons: Werdegang (Jobs/Ausbildung), Reminders (Priority), Status-Filters
+  - Radio-Buttons: Assessment, Scheelen
+  - Text-Input: Reminders (new reminder), inline-edit fields
+
+LISTS & GRIDS:
+  - Doc-List: Sortierbar (Dokumente)
+  - Reminder-List: Gruppiert nach Priority, mit Checkboxes
+  - Comparison-Grid: Teamrad (multi-row), Vergleich (columns)
+  - Job-Items: JobBasket (mit Match-Score)
+  - Candidate-List: Sidebar (scrollable, with avatars)
+
+TYPOGRAPHY & LAYOUT CLASSES (EXTRACTED):
+  - .ct = Card-Title
+  - .fl = Field-Label (10px, uppercase, gray)
+  - .fv = Field-Value (13px, auto-link-color)
+  - .sb = Sidebar (320px fixed, border, radius 14px)
+  - .sb-title = Section-Title (gold/teal/neu colored bars)
+  - .timeline = Vertical line + entries
+  - .tl-entry = Timeline-Entry-Card
+  - .qj = Quick-Jump-Sidebar (right, sticky)
+  - .briefing-layout = Main flex container (briefing-main + qj)
+  - .wg-filter-btn = Filter-Button (with active state)
+  - .ai-banner = Callout-Box (amber, rounded, icon+text)
+  - .verpflichtung-banner = Alert-Box (red, optional)
+

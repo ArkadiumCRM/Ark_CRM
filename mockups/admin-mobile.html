@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Admin Mobile-Viewport-Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+<style>
+  /* === Showcase-Page-Layout === */
+  .showcase-head { padding:24px 32px; background:var(--surface); border-bottom:1px solid var(--border); }
+  .showcase-head h1 { font-family:'Libre Baskerville',serif; font-size:24px; color:var(--accent); margin:0 0 6px; }
+  .showcase-body { padding:32px; background:var(--bg); min-height:calc(100vh - 180px); display:flex; flex-wrap:wrap; gap:32px; justify-content:center; align-items:flex-start; }
+
+  /* === Device-Frames === */
+  .device { background:#1a1a1a; border-radius:32px; padding:8px; box-shadow:0 12px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+  .device-label { color:#fff; font-size:11px; margin-bottom:6px; letter-spacing:0.5px; text-transform:uppercase; }
+  .device-screen { background:var(--surface); border-radius:24px; overflow-y:auto; overflow-x:hidden; position:relative; width:375px; height:812px; }
+  .device-notch { background:#1a1a1a; width:120px; height:20px; border-radius:0 0 12px 12px; position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:10; }
+
+  /* Annotations beside devices */
+  .annotations { width:340px; color:var(--text); font-size:12px; line-height:1.6; }
+  .annotations h3 { font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); margin:0 0 8px; }
+  .annotations .anno-item { padding:8px 12px; background:var(--surface); border-left:3px solid var(--accent); border-radius:2px; margin-bottom:8px; font-size:12px; }
+  .annotations .anno-item .lbl { font-size:10.5px; color:var(--text-light); letter-spacing:0.3px; text-transform:uppercase; font-weight:600; margin-bottom:2px; }
+  .annotations .anno-item.warn { border-left-color:var(--amber); }
+  .annotations .anno-item.warn .lbl { color:var(--amber); }
+  .annotations .anno-item.danger { border-left-color:var(--red); }
+  .annotations .anno-item.danger .lbl { color:var(--red); }
+
+  /* === MOBILE ADMIN MOCKUP === */
+  .m-admin { font-size:13px; padding:0; background:var(--bg); min-height:100%; }
+
+  /* Mobile Top-Bar */
+  .m-topbar { padding:32px 14px 10px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .m-topbar .m-burger { background:transparent; border:none; font-size:20px; cursor:pointer; color:var(--text-mid); padding:4px 8px; }
+  .m-topbar .m-title { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); flex:1; }
+  .m-topbar .m-title-icon { margin-right:5px; }
+
+  /* Admin-Warn-Banner kompakt */
+  .m-warn { padding:8px 14px; background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-bottom:2px solid var(--amber); font-size:11px; color:var(--text-mid); display:flex; align-items:center; gap:8px; }
+  .m-warn strong { color:var(--amber); font-family:'Libre Baskerville',serif; font-size:11.5px; }
+
+  /* KPI-Strip 2-cols */
+  .m-kpi-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; padding:10px 14px; }
+  .m-kpi { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:10px; text-align:left; position:relative; overflow:hidden; cursor:pointer; }
+  .m-kpi::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent); }
+  .m-kpi.green::after { background:var(--green); }
+  .m-kpi.amber::after { background:var(--amber); }
+  .m-kpi.red::after { background:var(--red); }
+  .m-kpi .lbl { font-size:9.5px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px; display:flex; align-items:center; gap:5px; }
+  .m-kpi .val { font-family:'Libre Baskerville',serif; font-size:18px; font-weight:700; color:var(--accent); line-height:1; }
+  .m-kpi.green .val { color:var(--green); }
+  .m-kpi.amber .val { color:var(--amber); }
+  .m-kpi.red .val { color:var(--red); }
+  .m-kpi .sub { font-size:9px; color:var(--text-light); margin-top:3px; line-height:1.3; }
+  .h-dot { display:inline-block; width:7px; height:7px; border-radius:50%; }
+  .h-dot.ok { background:var(--green); }
+  .h-dot.warn { background:var(--amber); }
+  .h-dot.err { background:var(--red); }
+
+  /* Tab-Dropdown statt horizontal Tabs */
+  .m-tab-select { padding:10px 14px; background:var(--surface); border-bottom:1px solid var(--border); }
+  .m-tab-select select { width:100%; padding:9px 10px; border:1px solid var(--border); border-radius:4px; background:var(--bg); font-family:inherit; font-size:13px; color:var(--text); font-weight:600; }
+
+  /* Tab-Content */
+  .m-content { padding:14px; }
+  .m-content h2 { font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); margin:4px 0 10px; }
+
+  /* Sec-Group kompakt */
+  .m-sec-group { margin-bottom:16px; }
+  .m-sec-head { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:var(--bg); border-left:3px solid var(--accent); border-radius:0 3px 3px 0; margin-bottom:6px; font-size:12px; }
+  .m-sec-head strong { color:var(--text); }
+  .m-sec-head .cnt { font-size:10px; color:var(--text-light); background:var(--surface); padding:1px 7px; border-radius:10px; }
+
+  /* Flag-Row Mobile (vertikal stacked) */
+  .m-flag { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:10px; margin-bottom:6px; }
+  .m-flag-key { font-weight:600; font-size:12px; color:var(--text); }
+  .m-flag-key code { font-family:monospace; font-size:10px; color:var(--text-light); font-weight:400; display:block; margin-top:2px; }
+  .m-flag-desc { font-size:10.5px; color:var(--text-light); margin-top:4px; line-height:1.4; }
+  .m-flag-foot { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; }
+  .m-flag-val { font-family:'Libre Baskerville',serif; font-size:14px; font-weight:700; color:var(--accent); }
+  .m-flag-edit { padding:5px 11px; font-size:11px; border:1px solid var(--border); background:var(--surface); border-radius:3px; color:var(--text-mid); cursor:pointer; font-family:inherit; }
+  .m-flag-edit.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* Toggle Mobile */
+  .m-toggle { position:relative; display:inline-block; width:38px; height:22px; }
+  .m-toggle input { opacity:0; width:0; height:0; }
+  .m-toggle .slider { position:absolute; inset:0; background:var(--border-strong); border-radius:22px; cursor:pointer; transition:0.15s; }
+  .m-toggle .slider::before { content:''; position:absolute; height:16px; width:16px; left:3px; top:3px; background:#fff; border-radius:50%; transition:0.15s; }
+  .m-toggle input:checked + .slider { background:var(--accent); }
+  .m-toggle input:checked + .slider::before { transform:translateX(16px); }
+
+  /* Status-Badge Mobile */
+  .m-badge { display:inline-block; font-size:9.5px; padding:2px 7px; border-radius:2px; font-weight:600; letter-spacing:0.3px; text-transform:uppercase; }
+  .m-badge.ok { background:var(--green-soft); color:var(--green); }
+  .m-badge.warn { background:var(--amber-soft); color:var(--amber); }
+  .m-badge.err { background:var(--red-soft); color:var(--red); }
+  .m-badge.off { background:var(--bg); color:var(--text-light); border:1px solid var(--border); }
+  .m-badge.info { background:var(--blue-soft); color:var(--blue); }
+  .m-badge.purple { background:var(--purple-soft); color:var(--purple); }
+
+  /* Mobile Drawer = Bottom-Sheet */
+  .m-sheet-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.45); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+  .m-sheet-backdrop.open { opacity:1; pointer-events:auto; }
+  .m-sheet { position:absolute; left:0; right:0; bottom:0; background:var(--surface); border-radius:14px 14px 0 0; box-shadow:0 -4px 20px rgba(0,0,0,0.2); transform:translateY(100%); transition:transform 0.25s; z-index:91; max-height:80%; overflow-y:auto; }
+  .m-sheet.open { transform:translateY(0); }
+  .m-sheet-handle { width:40px; height:4px; background:var(--border-strong); border-radius:2px; margin:8px auto 0; }
+  .m-sheet-head { padding:12px 16px 8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .m-sheet-head .ic { width:36px; height:36px; background:var(--accent-soft); color:var(--accent); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .m-sheet-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); }
+  .m-sheet-head .sub { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+  .m-sheet-body { padding:14px 16px; }
+  .m-sheet-body .field { margin-bottom:12px; }
+  .m-sheet-body .field label { display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .m-sheet-body .field input, .m-sheet-body .field textarea, .m-sheet-body .field select { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:4px; background:var(--bg); font-size:13px; font-family:inherit; color:var(--text); box-sizing:border-box; }
+  .m-sheet-body .field textarea { min-height:80px; resize:vertical; }
+  .m-sheet-foot { padding:10px 14px; border-top:1px solid var(--border); display:flex; gap:8px; background:var(--surface); }
+  .m-sheet-foot button { flex:1; padding:10px; border:none; border-radius:4px; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+  .m-sheet-foot button.cancel { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+  .m-sheet-foot button.primary { background:var(--accent); color:#fff; }
+
+  /* Disabled-Hinweis für nicht mobile-friendly Tabs */
+  .m-disabled-card { background:color-mix(in srgb,var(--amber) 6%,var(--surface)); border:1px dashed var(--amber); border-radius:4px; padding:14px; text-align:center; color:var(--text-mid); font-size:12px; line-height:1.5; }
+  .m-disabled-card strong { color:var(--amber); display:block; font-family:'Libre Baskerville',serif; font-size:13px; margin-bottom:4px; }
+  .m-disabled-card .ic { font-size:24px; margin-bottom:6px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="admin.html">Admin</a><span class="sep">/</span>
+    <span class="current">Mobile-Viewport-Demo</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="showcase-head">
+  <h1>Admin · Mobile-Viewport-Demo</h1>
+  <div class="muted" style="font-size:13px">Admin-Vollansicht ist <strong>Read-Mostly</strong> auf Mobile (Monitoring, Quick-Toggles, Audit-Lookup). CRUD-Heavy-Tabs (Rule-Builder, Template-Editor) zeigen Hinweis „Bitte Desktop nutzen" mit Deep-Link-Button.</div>
+</div>
+
+<div class="showcase-body">
+
+  <!-- Mobile Frame · Tab 1 Feature-Flags -->
+  <div class="device">
+    <div class="device-label">iPhone 14 · 375 × 812 · Tab 1</div>
+    <div class="device-screen">
+      <div class="device-notch"></div>
+      <div class="m-admin">
+
+        <!-- Top-Bar -->
+        <div class="m-topbar">
+          <button class="m-burger" aria-label="Menü">☰</button>
+          <div class="m-title"><span class="m-title-icon">🔧</span>Admin</div>
+          <button class="m-burger" aria-label="Refresh">↻</button>
+        </div>
+
+        <!-- Admin-Warn -->
+        <div class="m-warn">
+          <span style="font-size:14px">⚠</span>
+          <div><strong>Admin-Bereich</strong> · Änderungen revisionspflichtig</div>
+        </div>
+
+        <!-- KPI-Strip 2-cols compact -->
+        <div class="m-kpi-grid">
+          <div class="m-kpi green">
+            <div class="lbl"><span class="h-dot ok"></span>Events heute</div>
+            <div class="val">4 812</div>
+            <div class="sub">0 Dead-Letter</div>
+          </div>
+          <div class="m-kpi amber">
+            <div class="lbl"><span class="h-dot warn"></span>Saga-Failures (7d)</div>
+            <div class="val">2</div>
+            <div class="sub">beide kompensiert</div>
+          </div>
+          <div class="m-kpi amber">
+            <div class="lbl"><span class="h-dot warn"></span>Scraper-Alerts</div>
+            <div class="val">3</div>
+            <div class="sub">Selektor-Drift</div>
+          </div>
+          <div class="m-kpi green">
+            <div class="lbl"><span class="h-dot ok"></span>OAuth-Tokens</div>
+            <div class="val">14/14</div>
+            <div class="sub">aktiv</div>
+          </div>
+        </div>
+
+        <!-- Tab-Dropdown statt horizontal -->
+        <div class="m-tab-select">
+          <select onchange="switchMobileTab(this.value)">
+            <option value="1">1 · Feature-Flags</option>
+            <option value="2">2 · Automation-Regeln · Desktop empfohlen</option>
+            <option value="3">3 · Reminder-Templates · Desktop empfohlen</option>
+            <option value="4">4 · Email · Desktop empfohlen</option>
+            <option value="5">5 · Telefonie 3CX</option>
+            <option value="6">6 · Scraper · Desktop empfohlen</option>
+            <option value="7">7 · Notifications · Desktop empfohlen</option>
+            <option value="8">8 · Dashboard-Templates · Desktop empfohlen</option>
+            <option value="9">9 · Debug</option>
+            <option value="10">10 · Audit &amp; Retention</option>
+          </select>
+        </div>
+
+        <!-- Tab 1 Content -->
+        <div class="m-content">
+          <h2>Feature-Flags &amp; Settings</h2>
+
+          <!-- Sec-Group Ghosting -->
+          <div class="m-sec-group">
+            <div class="m-sec-head"><strong>⏰ Ghosting &amp; Stale</strong><span class="cnt">5 Keys</span></div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">Ghosting-Frist (Tage)
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>ghosting_frist_tage</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Nach N Tagen ohne Antwort wird Prozess auf „Ghosting" geflaggt</div>
+              <div class="m-flag-foot">
+                <span class="m-flag-val">14 <span style="font-size:10px;color:var(--text-light)">Tage</span></span>
+                <button class="m-flag-edit primary" onclick="openSheet()">Ändern</button>
+              </div>
+            </div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">Stale-Prozess-Schwelle
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>stale_prozess_tage</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Tage ohne Activity bis Pipeline stale markiert</div>
+              <div class="m-flag-foot">
+                <span class="m-flag-val">21 <span style="font-size:10px;color:var(--text-light)">Tage</span></span>
+                <button class="m-flag-edit">Ändern</button>
+              </div>
+            </div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">Schutzfrist-Warnung Vorlauf
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>schutzfrist_warn_vorlauf_tage</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Banner X Tage vor Schutzfrist-Ablauf</div>
+              <div class="m-flag-foot">
+                <span class="m-flag-val">30 <span style="font-size:10px;color:var(--text-light)">Tage</span></span>
+                <button class="m-flag-edit">Ändern</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sec-Group Feature-Toggles -->
+          <div class="m-sec-group">
+            <div class="m-sec-head"><strong>🧪 Feature-Previews</strong><span class="cnt">6 Toggles</span></div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">AI-Briefing-Pipeline
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>feature_ai_briefing</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Call-Transcription → LLM-Summary → Auto-Fill</div>
+              <div class="m-flag-foot">
+                <span class="m-badge info">Beta</span>
+                <label class="m-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+              </div>
+            </div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">Matching-Engine v2
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>feature_matching_v2</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Vektor-basiertes Matching</div>
+              <div class="m-flag-foot">
+                <span class="m-badge ok">Stable</span>
+                <label class="m-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+              </div>
+            </div>
+
+            <div class="m-flag">
+              <div class="m-flag-key">HR-Tool (Phase 2)
+                <!-- ark-lint-skip:begin reason=admin-config-key --><code>feature_hr_tool</code><!-- ark-lint-skip:end -->
+              </div>
+              <div class="m-flag-desc">Locked · Phase 2 Feature-License erforderlich</div>
+              <div class="m-flag-foot">
+                <span class="m-badge off">Phase 2</span>
+                <label class="m-toggle"><input type="checkbox" disabled><span class="slider"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom-Sheet (Drawer-Mobile) -->
+        <div class="m-sheet-backdrop" id="sheetBd" onclick="closeSheet()"></div>
+        <div class="m-sheet" id="sheet">
+          <div class="m-sheet-handle"></div>
+          <div class="m-sheet-head">
+            <div class="ic">⚙</div>
+            <div>
+              <h3>Ghosting-Frist (Tage)</h3>
+              <div class="sub">Tenant · Audit-pflichtig</div>
+            </div>
+          </div>
+          <div class="m-sheet-body">
+            <div class="field">
+              <label>Aktueller Wert</label>
+              <input type="number" value="14" min="1" max="90">
+            </div>
+            <div class="field">
+              <label>Begründung (Pflicht)</label>
+              <textarea placeholder="z.B. Anpassung nach Q1-Retro"></textarea>
+            </div>
+          </div>
+          <div class="m-sheet-foot">
+            <button class="cancel" onclick="closeSheet()">Abbrechen</button>
+            <button class="primary">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Annotations · Tab 1 -->
+  <div class="annotations">
+    <h3>📱 Mobile Tab 1 · Feature-Flags</h3>
+    <div class="anno-item">
+      <div class="lbl">Top-Bar</div>
+      Burger (Sidebar) · Titel mit Tab-Icon · Refresh-Button. Höhe 52 px + Safe-Area-Top.
+    </div>
+    <div class="anno-item">
+      <div class="lbl">Admin-Warn (kompakt)</div>
+      Banner gekürzt — keine ganze RBAC-Erklärung, nur „Audit-pflichtig"-Hint.
+    </div>
+    <div class="anno-item">
+      <div class="lbl">KPI-Strip 2 × 2</div>
+      6 Cards von Desktop reduziert auf 4 (wichtigste). Weitere 2 (3CX-SLA, Automation-Runs) per Scroll oder Read-Only-Sektion „Mehr".
+    </div>
+    <div class="anno-item">
+      <div class="lbl">Tab-Wechsel via Dropdown</div>
+      Horizontaler 10-Tab-Bar passt nicht auf Mobile. Native Select mit Hinweis „· Desktop empfohlen" für CRUD-Tabs.
+    </div>
+    <div class="anno-item">
+      <div class="lbl">Flag-Row vertikal</div>
+      Desktop-Grid `1fr 160px 120px 80px` → Mobile vertikal stacked: Key+Desc oben, Value+Action unten in einer Zeile.
+    </div>
+    <div class="anno-item warn">
+      <div class="lbl">Drawer = Bottom-Sheet</div>
+      Statt Side-Drawer (540 px) zieht Mobile-Drawer von unten hoch. Drag-Handle oben. Max 80 % Höhe, scrollbar.
+    </div>
+  </div>
+
+  <!-- Mobile Frame · Tab 2 (Disabled-Hinweis) -->
+  <div class="device">
+    <div class="device-label">iPhone 14 · Tab 2 · Builder-Tab</div>
+    <div class="device-screen">
+      <div class="device-notch"></div>
+      <div class="m-admin">
+        <div class="m-topbar">
+          <button class="m-burger">☰</button>
+          <div class="m-title"><span class="m-title-icon">🔧</span>Admin</div>
+          <button class="m-burger">↻</button>
+        </div>
+        <div class="m-warn">
+          <span style="font-size:14px">⚠</span>
+          <div><strong>Admin-Bereich</strong> · Änderungen revisionspflichtig</div>
+        </div>
+
+        <div class="m-tab-select">
+          <select>
+            <option value="2" selected>2 · Automation-Regeln · Desktop empfohlen</option>
+            <option value="1">1 · Feature-Flags</option>
+            <option value="9">9 · Debug</option>
+          </select>
+        </div>
+
+        <div class="m-content">
+          <h2>Automation-Regeln</h2>
+
+          <!-- Disabled-Hinweis -->
+          <div class="m-disabled-card">
+            <div class="ic">🖥</div>
+            <strong>Bitte Desktop nutzen</strong>
+            Der Rule-Builder mit Trigger · Bedingungen · Action-Chain ist für Mobile nicht praktikabel. Read-Only-Liste der Regeln ist verfügbar.
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+              <button class="m-flag-edit" style="width:100%;padding:9px">📋 Read-Only-Liste anzeigen</button>
+              <button class="m-flag-edit primary" style="width:100%;padding:9px">📧 Link an mein Outlook senden</button>
+            </div>
+          </div>
+
+          <h2 style="margin-top:18px;font-size:13px">Live-Status (Read-Only)</h2>
+
+          <div class="m-flag">
+            <div class="m-flag-key">Auto-Reminder bei Interview-Bestätigung</div>
+            <div class="m-flag-desc">Trigger: <!-- ark-lint-skip:begin reason=admin-event-type --><code>interview_scheduled</code><!-- ark-lint-skip:end --> · 23 Runs (24h) · 0 Fehler</div>
+            <div class="m-flag-foot">
+              <span class="m-badge ok">Aktiv</span>
+              <button class="m-flag-edit">Pause</button>
+            </div>
+          </div>
+
+          <div class="m-flag">
+            <div class="m-flag-key">Ghosting-Flag nach 14 d</div>
+            <div class="m-flag-desc">Trigger: <!-- ark-lint-skip:begin reason=admin-event-type --><code>prozess_no_activity_14d</code><!-- ark-lint-skip:end --> · 12 Runs · 0 Fehler</div>
+            <div class="m-flag-foot">
+              <span class="m-badge ok">Aktiv</span>
+              <button class="m-flag-edit">Pause</button>
+            </div>
+          </div>
+
+          <div class="m-flag">
+            <div class="m-flag-key">Scraper-Pool Circuit-Breaker</div>
+            <div class="m-flag-desc">xing.com · HALF-OPEN seit 12:40 · Cooldown läuft</div>
+            <div class="m-flag-foot">
+              <span class="m-badge warn">HALF-OPEN</span>
+              <button class="m-flag-edit primary">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Annotations · Tab 2 -->
+  <div class="annotations">
+    <h3>📱 Mobile Tab 2 · Builder-Tab</h3>
+    <div class="anno-item warn">
+      <div class="lbl">Disabled-Hinweis</div>
+      Tabs mit komplexen Buildern (Rule-Builder, Template-Editor mit Body/Vars, Matrix-Editor) zeigen explizite Empfehlung „Desktop nutzen" mit:
+      <br>· Read-Only-Listen-View Button
+      <br>· Deep-Link an Outlook für Desktop-Bearbeitung später
+    </div>
+    <div class="anno-item">
+      <div class="lbl">Read-Only-Live-Status</div>
+      Auch ohne CRUD: Pause/Activate Toggles, Manual-CB-Reset bleiben verfügbar (Quick-Actions, mobile-tauglich).
+    </div>
+    <div class="anno-item danger">
+      <div class="lbl">CRITICAL Aktionen</div>
+      Manual-CB-Reset zeigt Confirm-Sheet mit explizitem Warnhinweis (analog Desktop). Keine Bulk-Actions auf Mobile.
+    </div>
+    <div class="anno-item">
+      <div class="lbl">Tabs · Mobile-Modi</div>
+      <strong>Voll mobile:</strong> 1 Feature-Flags, 5 Telefonie, 9 Debug (Live-Status), 10 Audit (Read-Only).
+      <br><strong>Read-Only Mobile:</strong> 2 Automation, 6 Scraper, 7 Notifications.
+      <br><strong>Desktop-Only:</strong> 3 Reminder-Templates, 4 Email-Templates, 8 Dashboard-Templates (zu CRUD-heavy).
+    </div>
+  </div>
+
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+function openSheet() {
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('sheetBd').classList.add('open');
+}
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('sheetBd').classList.remove('open');
+}
+function switchMobileTab(n) {
+  // Demo-Stub: in echtem Mobile-Admin würde hier die Tab-View wechseln
+  console.log('Tab gewechselt zu', n);
+}
+</script>
+</body>
+</html>

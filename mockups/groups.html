@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Firmengruppe · Muster Holding AG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared/editorial.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="#">Firmengruppen</a><span class="sep">/</span>
+    <span class="current">🏛 Muster Holding AG</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- Scraper-Vorschlag-Banner (konditional · nur wenn suggested_by_scraper = true · hier als Feature-Demo sichtbar) -->
+<div id="scraperBanner" style="background:var(--amber-soft);border-left:3px solid var(--amber);padding:10px 16px;margin:12px 32px 0;font-size:12.5px;display:flex;align-items:center;gap:10px;border-radius:3px">
+  <span style="font-size:18px">🤖</span>
+  <div style="flex:1">
+    <strong>Scraper-Vorschlag · UID-Match</strong>: Potenzielle Konzernstruktur identifiziert (CHE-123.456.789 ↔ CHE-987.654.321 beide unter Holding „Muster-Gruppe"). Admin-Bestätigung erforderlich.
+  </div>
+  <button class="btn btn-sm btn-primary">✓ Bestätigen</button>
+  <button class="btn btn-sm">✕ Ablehnen</button>
+  <button class="btn btn-icon" style="margin-left:4px" onclick="document.getElementById('scraperBanner').style.display='none'" title="Vorerst ausblenden">✕</button>
+</div>
+
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="entity-logo" style="background:var(--gold-soft);color:var(--gold);font-size:22px">🏛</div>
+    <div class="banner-title">
+      <h1 style="display:inline">Muster Holding AG</h1>
+      <span class="chip chip-gold" style="margin-left:10px;vertical-align:middle">🏛 Holding</span>
+      <span class="chip chip-gold" style="margin-left:4px;vertical-align:middle">Klasse A (aggregiert)</span>
+      <div class="banner-meta">
+        <span>Gruppen-Manager <strong>PW</strong></span>
+        <span class="dot"></span><span>Sitz Zürich · CHE-123.456.789</span>
+        <span class="dot"></span><span><a href="#">muster-holding.ch</a></span>
+        <span class="dot"></span><span>gegründet 1978 (Holding 2012)</span>
+      </div>
+      <div class="banner-actions" style="margin-top:12px">
+        <button class="btn btn-sm">📞 Anrufen</button>
+        <button class="btn btn-sm">✉ Email</button>
+        <button class="btn btn-sm btn-primary">📄 Gruppen-Report</button>
+        <button class="btn btn-sm">+ Gesellschaft hinzufügen</button>
+        <button class="btn btn-sm">+ Gruppen-Mandat</button>
+        <button class="btn btn-sm" onclick="openReminderNew()">🔔 Reminder</button>
+      </div>
+    </div>
+    <div class="banner-chips" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">
+        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Status</label>
+        <select class="status-dropdown" onchange="onGroupStatusChange(this.value)" style="padding:4px 10px;font-weight:600;color:var(--accent);border:1px solid var(--border);background:var(--surface);cursor:pointer">
+          <option value="aktiv" selected>● Aktiv</option>
+          <option value="in_review">⏸ In Review</option>
+          <option value="archiviert">✕ Archiviert</option>
+          <option value="merger">🔗 Merger / Restrukturierung</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="chip chip-green">Rahmenvertrag aktiv bis 31.12.2028</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <a href="#" class="chip" style="text-decoration:none">🛡 1 Gruppen-Schutzfrist</a>
+        <a href="#" class="chip" style="text-decoration:none">6 offene Mandate</a>
+      </div>
+      <div class="muted" style="font-size:10.5px">bestätigt durch PW · 12.03.2024</div>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPSHOT-BAR (Operative Gruppen-Metriken, 6 Slots, sticky über Tabbar) -->
+<div class="snapshot-bar" style="position:sticky;top:0;z-index:50">
+  <div class="snapshot-item">
+    <span class="lbl">🏢 Gesellschaften</span>
+    <span class="val">2</span>
+    <span class="delta">BM AG · MI AG</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">👥 Mitarbeitende</span>
+    <span class="val">505</span>
+    <span class="delta up">+24 vs. 2024</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">💰 Umsatz 2025</span>
+    <span class="val">CHF 340 M</span>
+    <span class="delta">Konsolidiert</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">⚙ Aktive Prozesse</span>
+    <span class="val">8</span>
+    <span class="delta">über 2 Gesellschaften</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🏆 Placements YTD</span>
+    <span class="val">12</span>
+    <span class="delta up">Q1 stark</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">💰 Arkadium-Umsatz YTD</span>
+    <span class="val">CHF 380k</span>
+    <span class="delta">68 % vom Total</span>
+  </div>
+</div>
+
+<nav class="tabbar" style="position:sticky;top:64px;z-index:49">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Übersicht</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Kultur (Gruppen-Analyse)</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Kontakte</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Mandate &amp; Prozesse</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Dokumente</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>History</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Reminders</div>
+</nav>
+
+<div class="content">
+
+<!-- TAB 1 · ÜBERSICHT -->
+<div id="tab-1" class="tab-panel active">
+  <!-- Arkadium-Relation-KPIs (Business-Beziehung, nicht Firmografik — die steht in der Snapshot-Bar) -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Umsatz Arkadium YTD</div><div class="kpi-value">CHF 380k</div><div class="kpi-sub muted">+31 % vs. Vorjahr</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placements total</div><div class="kpi-value">12</div><div class="kpi-sub muted">4 in letzten 12 Mt</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Ø Time-to-Hire</div><div class="kpi-value">14 W</div><div class="kpi-sub muted">gruppenweit</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Conversion CV → Placement</div><div class="kpi-value">48 %</div><div class="kpi-sub muted">vs. 28 % Benchmark</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Penetration</div><div class="kpi-value">78 / 100</div><div class="kpi-sub muted">Marktanteil hoch</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Gruppen-Stammdaten</div><a href="#" class="card-link">Bearbeiten</a></div>
+      <dl class="field-grid">
+        <dt>Gruppenname</dt><dd>Muster Holding AG</dd>
+        <dt>Legal Name</dt><dd>Muster Holding Aktiengesellschaft</dd>
+        <dt>Website</dt><dd><a href="#">muster-holding.ch</a></dd>
+        <dt>UID (Holding)</dt><dd>CHE-123.456.789</dd>
+        <dt>Sitz</dt><dd>Zürich · ZH</dd>
+        <dt>Gegründet</dt><dd>1978 (Holding seit 2012)</dd>
+        <dt>Gruppen-Manager</dt><dd><span class="actor-chip">PW</span></dd>
+        <dt>Primärer Group-Lead</dt><dd><a href="#">Dr. Thomas Muster</a> · VR-Präsident Holding</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Rahmenvertrag &amp; Konditionen</div><a href="#" class="card-link">→ Dokument</a></div>
+      <dl class="field-grid">
+        <dt>Vertrag</dt><dd><a href="#">Muster-Rahmen 2025–2028</a> · gültig bis 31.12.2028</dd>
+        <dt>Honorar-Staffel</dt><dd>Sonder-Konditionen: <strong>-2 %</strong> über Standard</dd>
+        <dt>Zahlungsfrist</dt><dd>45 Tage</dd>
+        <dt>Schutzfrist-Scope</dt><dd>🏛 <strong>Gruppen-weit</strong></dd>
+        <dt>Garantie</dt><dd>3 Monate auf alle Placements</dd>
+        <dt>Exklusivität</dt><dd>Bevorzugter Partner Executive Search</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none"><div class="card-title">Gesellschaften in dieser Gruppe</div><button class="btn btn-sm">+ Gesellschaft hinzufügen</button></div>
+    <table class="data-table">
+      <thead><tr><th>Gesellschaft</th><th>Rolle</th><th>Class</th><th>Standort</th><th>MA</th><th>Umsatz</th><th>AM</th><th>Offene Mandate</th><th>Placements YTD</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer">
+          <td><strong>Bauherr Muster AG</strong><div class="muted" style="font-size:11px">Operative Bau-Einheit</div></td>
+          <td>HQ</td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td>Zürich</td>
+          <td>420</td>
+          <td>CHF 280 M</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>5</td>
+          <td style="color:var(--gold);font-weight:600">3</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Muster Immobilien AG</strong><div class="muted" style="font-size:11px">Immobilien-Tochter</div></td>
+          <td>Tochter 100 %</td>
+          <td><span class="chip">B</span></td>
+          <td>Zug</td>
+          <td>85</td>
+          <td>CHF 60 M</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>1</td>
+          <td style="color:var(--gold);font-weight:600">1</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Aggregierte Verteilung</div></div>
+      <div style="font-size:11px;color:var(--text-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Sparten über alle Gesellschaften</div>
+      <div class="kpi-progress" style="margin-bottom:14px">
+        <div class="row"><span class="lbl">ING (Engineering)</span><div class="bar"><div class="bar-fill accent" style="width:60%"></div></div><span class="val">60 %</span></div>
+        <div class="row"><span class="lbl">REM (Real Estate)</span><div class="bar"><div class="bar-fill green" style="width:25%"></div></div><span class="val">25 %</span></div>
+        <div class="row"><span class="lbl">ARC (Architecture)</span><div class="bar"><div class="bar-fill amber" style="width:15%"></div></div><span class="val">15 %</span></div>
+      </div>
+      <dl class="field-grid">
+        <dt>Customer-Class</dt><dd><span class="chip chip-gold">1× A</span> <span class="chip">1× B</span></dd>
+        <dt>Temperatur</dt><dd>2× 🔥 Hot</dd>
+        <dt>Ø Penetration-Score</dt><dd><strong>78 / 100</strong> · Marktanteil hoch</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Zugehörigkeits-Metadaten</div></div>
+      <dl class="field-grid">
+        <dt>Erstellt am</dt><dd>12.03.2024 · PW</dd>
+        <dt>Scraper-Vorschlag?</dt><dd class="muted">— manuell angelegt</dd>
+        <dt>Bestätigt durch AM</dt><dd>PW · 12.03.2024</dd>
+        <dt>Strategie-Notiz</dt><dd class="muted">Key-Account Rahmenvertrag 3 J, Pilotphase DACH-Expansion 2027</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2 · KULTUR -->
+<div id="tab-2" class="tab-panel">
+  <div class="card">
+    <div class="card-head"><div class="card-title">Kultur-Analyse Holding-Ebene</div><a href="#" class="card-link">AI-Draft neu generieren</a></div>
+    <p class="muted" style="font-size:12px">6 Score-Dimensionen analog Account-Tab 2, aggregiert auf Holding-Ebene (nicht Durchschnitt der Gesellschaften, sondern eigene Analyse aus Konzern-Quellen).</p>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">1 · Vision · Mission · Purpose</div></div>
+      <p style="font-size:13px;line-height:1.65;color:var(--text-mid);margin:0">Traditionsreiche Schweizer Bau- und Immobiliengruppe mit starker regionaler Verwurzelung. Purpose: „Hochwertige, langlebige Bauwerke für Generationen schaffen." Konzern-Werte: Handwerk, Integrität, Nachhaltigkeit.</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">2 · Führung &amp; Strategie</div></div>
+      <p style="font-size:13px;line-height:1.65;color:var(--text-mid);margin:0">Familienunternehmen in 3. Generation · Dezentrale Führung der Töchter · Zentrale Holding-Strategie: Diversifikation Bau ↔ Immobilien, ESG-Transformation bis 2030.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">3 · Kulturprofil · 6 Dimensionen</div></div>
+    <dl class="field-grid">
+      <dt>Hierarchie ↔ Flach</dt><dd>Moderat hierarchisch (3. Gen. Familienunternehmen)</dd>
+      <dt>Entscheidungs-Tempo</dt><dd>Bedacht · Konsens-orientiert</dd>
+      <dt>Innovation</dt><dd>Pragmatisch · ESG-/Digitalisierungs-Transformation im Gang</dd>
+      <dt>Wertschätzung</dt><dd>Hoch · lange Betriebszugehörigkeiten typisch</dd>
+      <dt>Kommunikation</dt><dd>Direkt · Schwiizerdütsch intern · DE/EN formal</dd>
+      <dt>Work-Life</dt><dd>Traditionell eher Office-zentriert · moderate Flexibilität</dd>
+    </dl>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">4 · Kulturfit-Score Holding</div></div>
+    <div style="font-family:'Libre Baskerville',serif;font-size:42px;font-weight:700;color:var(--accent);text-align:center;padding:20px">82 / 100</div>
+    <p class="muted" style="font-size:12px;text-align:center;margin:0">Stabile, konservative Führungskultur · passt zu reiferen Kandidaten mit Langfrist-Mindset</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">5 · Quellen &amp; Vertrauen</div></div>
+    <dl class="field-grid">
+      <dt>Holdings-Website</dt><dd><a href="#">muster-holding.ch/about</a> · Stand 14.04.2026 · <span class="chip chip-green">high confidence</span></dd>
+      <dt>Geschäftsberichte</dt><dd>GB 2023 · GB 2024 · GB 2025 (gerade publiziert) · <span class="chip chip-green">high confidence</span></dd>
+      <dt>Aggregierte News</dt><dd>12 News-Artikel (2024–2026) über Handelszeitung, NZZ, Baublatt · <span class="chip chip-accent">medium confidence</span></dd>
+      <dt>Gesellschafts-Kultur-Scores</dt><dd>2× Account-Analysen (Bauherr Muster AG · Muster Immobilien AG) als Referenz</dd>
+      <dt>Manuelle Notizen AM</dt><dd>Notizen aus 3 Update-Calls mit Dr. Thomas Muster (VR-Präsident Holding) · <span class="chip chip-gold">confirmed</span></dd>
+      <dt>Letzte Generierung</dt><dd>15.03.2026 · v2 · durch Admin</dd>
+    </dl>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none"><div class="card-title">6 · Gesellschafts-Kultur-Vergleich</div></div>
+    <table class="data-table">
+      <thead><tr><th>Gesellschaft</th><th>Hierarchie</th><th>Tempo</th><th>Innovation</th><th>Wertschätzung</th><th>Kommunikation</th><th>Work-Life</th><th class="right">Fit</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Bauherr Muster AG</strong></td><td>mod.</td><td>bedacht</td><td>pragmatisch</td><td>hoch</td><td>direkt</td><td>trad.</td><td class="right"><strong style="color:var(--accent)">82</strong></td></tr>
+        <tr><td><strong>Muster Immobilien AG</strong></td><td>flach</td><td>dynamisch</td><td>agil</td><td>hoch</td><td>offen</td><td>flex.</td><td class="right"><strong style="color:var(--accent)">78</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 3 · KONTAKTE -->
+<div id="tab-3" class="tab-panel">
+
+  <div class="hint-banner">
+    <strong>Grundprinzip:</strong> Jeder Kontakt muss auch als Kandidat erfasst sein. Personen-Stammdaten werden beim Kandidaten gepflegt — hier nur Gruppen-/Account-spezifische Beziehungsdaten. Gruppen-Ansicht ist <strong>read-only aggregiert</strong> über alle Gesellschaften.
+  </div>
+
+  <div class="filter-bar">
+    <input placeholder="Suche Name, Position, Gesellschaft …" style="flex:1">
+    <select><option>Alle Gesellschaften</option><option>Bauherr Muster AG</option><option>Muster Immobilien AG</option></select>
+    <select><option>Alle Org-Funktionen</option><option>VR / Board</option><option>Executive</option><option>HR</option><option>Einkauf</option><option>Assistenz</option></select>
+    <select><option>Alle Status</option><option>Aktiv</option><option>Inactive</option><option>Left Company</option></select>
+  </div>
+
+  <!-- Sektion 1: Gruppen-weite Entscheider (VR-Board + Executive, sortiert nach Funktion) -->
+  <div class="section-head" onclick="toggleSection(this)">
+    <span class="caret">▾</span>
+    <h3>🏛 Gruppen-weite Entscheider (VR-Board + Executive)</h3>
+    <span class="count">5</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Gesellschaft</th>
+            <th>Org-Funktion</th>
+            <th>Telefon</th>
+            <th>E-Mail</th>
+            <th>Letzter Kontakt</th>
+            <th>Status</th>
+            <th class="right">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="org-pill vr_board" title="VR / Board">V</span>
+              <strong>Dr. Thomas Muster</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>VR-Präsident Holding <div class="muted" style="font-size:11px">Verwaltungsrat</div></td>
+            <td><a href="#">Holding</a> <div class="muted" style="font-size:11px">beide Gesellschaften</div></td>
+            <td><span class="org-pill vr_board" style="margin:0">V</span> VR-Board</td>
+            <td>+41 44 266 12 00</td>
+            <td>thomas.muster@muster-holding.ch</td>
+            <td>vor 3 Tagen <div class="muted" style="font-size:11px">🤝 Meeting</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn" title="Anrufen">📞</button><button class="row-icon-btn" title="E-Mail">✉</button><button class="row-icon-btn" title="Verlauf ansehen" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" title="Details" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill vr_board" title="VR / Board">V</span>
+              <strong>Peter Keller</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>VR-Mitglied <div class="muted" style="font-size:11px">Verwaltungsrat</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill vr_board" style="margin:0">V</span> VR-Board</td>
+            <td>—</td>
+            <td>peter.keller@muster-bauherr.ch</td>
+            <td>vor 6 Wochen <div class="muted" style="font-size:11px">✉ E-Mail</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill executive" title="Executive">E</span>
+              <strong>Hans Müller</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>CEO <div class="muted" style="font-size:11px">Geschäftsleitung</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill executive" style="margin:0">E</span> Executive</td>
+            <td>+41 44 123 45 67</td>
+            <td>h.mueller@muster-bauherr.ch</td>
+            <td>vor 4 Tagen <div class="muted" style="font-size:11px">📞 Call 42 min</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill executive" title="Executive">E</span>
+              <strong>Regina Weber</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>COO <div class="muted" style="font-size:11px">Operations</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill executive" style="margin:0">E</span> Executive</td>
+            <td>+41 44 123 45 68</td>
+            <td>r.weber@muster-bauherr.ch</td>
+            <td>vor 1 Monat <div class="muted" style="font-size:11px">📞 Call</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill executive" title="Executive">E</span>
+              <strong>Claudia Widmer</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>CEO <div class="muted" style="font-size:11px">Geschäftsleitung</div></td>
+            <td><a href="#">Muster Immobilien AG</a></td>
+            <td><span class="org-pill executive" style="margin:0">E</span> Executive</td>
+            <td>+41 41 761 22 00</td>
+            <td>claudia.widmer@muster-immo.ch</td>
+            <td>vor 2 Wochen <div class="muted" style="font-size:11px">🤝 Meeting</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sektion 2: Alle weiteren Kontakte der Gruppe -->
+  <div class="section-head" onclick="toggleSection(this)">
+    <span class="caret">▾</span>
+    <h3>Weitere Kontakte (HR · Einkauf · Assistenz · …)</h3>
+    <span class="count">14</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Gesellschaft</th>
+            <th>Org-Funktion</th>
+            <th>Telefon</th>
+            <th>E-Mail</th>
+            <th>Letzter Kontakt</th>
+            <th>Status</th>
+            <th class="right">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="org-pill hr" title="HR">H</span>
+              <strong>Eva Studer</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>HR-Leitung <div class="muted" style="font-size:11px">Human Resources</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill hr" style="margin:0">H</span> HR</td>
+            <td>+41 44 123 45 70</td>
+            <td>e.studer@muster-bauherr.ch</td>
+            <td>vor 2 Wochen <div class="muted" style="font-size:11px">✉ E-Mail</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill einkauf" title="Einkauf">K</span>
+              <strong>Thomas Bachmann</strong>
+              <span class="dnc-badge" style="margin-left:6px">DNC</span>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>Leiter Einkauf <div class="muted" style="font-size:11px">Procurement</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill einkauf" style="margin:0">K</span> Einkauf</td>
+            <td class="muted">— DNC —</td>
+            <td class="muted">— DNC —</td>
+            <td>vor 8 Monaten</td>
+            <td><span class="chip chip-amber">Do not contact</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn" style="opacity:0.4" title="DNC">📞</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill assistenz" title="Assistenz">A</span>
+              <strong>Sandra Meier</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>Assistenz CEO <div class="muted" style="font-size:11px">CEO-Office</div></td>
+            <td><a href="accounts.html">Bauherr Muster AG</a></td>
+            <td><span class="org-pill assistenz" style="margin:0">A</span> Assistenz</td>
+            <td>+41 44 123 45 65</td>
+            <td>s.meier@muster-bauherr.ch</td>
+            <td>vor 4 Tagen <div class="muted" style="font-size:11px">✉ E-Mail</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="org-pill hr" title="HR">H</span>
+              <strong>Roland Frei</strong>
+              <div class="muted" style="font-size:11px">→ Kandidatenprofil</div>
+            </td>
+            <td>HR-Business-Partner <div class="muted" style="font-size:11px">Human Resources</div></td>
+            <td><a href="#">Muster Immobilien AG</a></td>
+            <td><span class="org-pill hr" style="margin:0">H</span> HR</td>
+            <td>+41 41 761 22 15</td>
+            <td>r.frei@muster-immo.ch</td>
+            <td>vor 5 Wochen <div class="muted" style="font-size:11px">📞 Call</div></td>
+            <td><span class="chip chip-green">Aktiv</span></td>
+            <td class="right"><div class="row-actions"><button class="row-icon-btn">📞</button><button class="row-icon-btn">✉</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 1)">🕒</button><button class="row-icon-btn" onclick="openDrawer('contactDrawer', 0)">›</button></div></td>
+          </tr>
+          <tr><td class="muted" colspan="9" style="text-align:center">+ 10 weitere Kontakte · <button class="btn btn-sm">↓ Mehr laden</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Legende Org-Funktionen (parity mit accounts.html) -->
+  <div class="muted" style="font-size:11px;margin-top:16px;padding:10px 14px;background:var(--bg);border-radius:3px;display:flex;gap:14px;flex-wrap:wrap">
+    <span><span class="org-pill vr_board">V</span> VR-Board</span>
+    <span><span class="org-pill executive">E</span> Executive</span>
+    <span><span class="org-pill hr">H</span> HR</span>
+    <span><span class="org-pill einkauf">K</span> Einkauf</span>
+    <span><span class="org-pill assistenz">A</span> Assistenz</span>
+    <span style="margin-left:12px;padding-left:12px;border-left:1px solid var(--border)"><span class="dnc-badge">DNC</span> Do not contact</span>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:8px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Kontakt-Pflege erfolgt auf <strong>Account-Ebene</strong>. Klick auf Aktion „›" öffnet Kontakt-Detail-Drawer (Stammdaten · Kommunikation · Prozesse · Notizen). Kein Anlegen direkt auf Gruppen-Ebene.
+  </div>
+</div>
+
+<!-- TAB 4 · MANDATE & PROZESSE -->
+<div id="tab-4" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Offene Mandate</div><div class="kpi-value">6</div><div class="kpi-sub muted">0 gruppenübergreifend</div></div>
+    <div class="kpi-card"><div class="kpi-label">Aktive Prozesse</div><div class="kpi-value">8</div><div class="kpi-sub muted">über beide Gesellschaften</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placements 2026</div><div class="kpi-value">4</div><div class="kpi-sub muted">gruppenweit</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø TTF</div><div class="kpi-value">14 W</div><div class="kpi-sub muted">14 Wochen</div></div>
+  </div>
+
+  <!-- Filter-Bar (spec §8.5) -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Mandaten, Prozessen, Kandidaten …" style="flex:1 1 260px;min-width:220px">
+    <select>
+      <option>Alle Gesellschaften</option>
+      <option>Bauherr Muster AG</option>
+      <option>Muster Immobilien AG</option>
+      <option>Gruppenübergreifend (Taskforce)</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>Aktiv</option>
+      <option>Abgeschlossen</option>
+      <option>Abgebrochen</option>
+    </select>
+    <select>
+      <option>Alle Typen</option>
+      <option>🎯 Target</option>
+      <option>⚡ Taskforce</option>
+      <option>⏱ Time</option>
+    </select>
+    <select>
+      <option>Letzte 12 Monate</option>
+      <option>Letzte 6 Monate</option>
+      <option>2026</option>
+      <option>2025</option>
+      <option>Alle</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Gruppenübergreifende Mandate (Taskforce)</div><button class="btn btn-sm btn-primary">+ Gruppen-Mandat</button></div>
+    <table class="data-table" style="margin-top:6px">
+      <thead><tr><th>Mandat</th><th>Typ</th><th>Beteiligte Gesellschaften</th><th>Status</th><th>Owner AM</th><th>KPI</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer"><td><a href="#"><strong>Taskforce PL Hochbau</strong></a></td><td><span class="chip chip-accent">⚡ Taskforce</span></td><td><span class="chip chip-gold" style="margin-right:3px">Bauherr Muster AG · führend</span><span class="chip">Muster Immobilien AG</span></td><td><span class="chip chip-green">Aktiv</span></td><td><span class="actor-chip">MF</span></td><td>2 / 3 besetzt</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+      </tbody>
+    </table>
+    <div class="muted" style="font-size:11px;margin-top:8px">Nur Taskforce-Typ kann gruppenübergreifend sein (Mandat → mehrere Gesellschaften).</div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none"><div class="card-title">Account-spezifische Mandate</div></div>
+    <table class="data-table">
+      <thead><tr><th>Gesellschaft</th><th>Mandat</th><th>Typ</th><th>Status</th><th>Owner AM</th><th>KPI</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer"><td>Bauherr Muster AG</td><td><a href="mandates.html"><strong>CFO-Suche</strong></a></td><td><span class="chip chip-accent">🎯 Target</span></td><td><span class="chip chip-green">Aktiv</span></td><td><span class="actor-chip">PW</span></td><td>5/6 Shortlist</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr style="cursor:pointer"><td>Bauherr Muster AG</td><td><a href="#"><strong>PL Hochbau Taskforce</strong></a></td><td><span class="chip chip-accent">⚡ Taskforce</span></td><td><span class="chip chip-green">Aktiv</span></td><td><span class="actor-chip">MF</span></td><td>2/3 besetzt</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr style="cursor:pointer"><td>Bauherr Muster AG</td><td><a href="#"><strong>Bauleiter Tiefbau</strong></a></td><td><span class="chip chip-accent">🎯 Target</span></td><td><span class="chip chip-green">Aktiv</span></td><td><span class="actor-chip">MF</span></td><td>1/3 Shortlist</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr style="cursor:pointer"><td>Muster Immobilien AG</td><td><a href="#"><strong>CFO Muster Immobilien</strong></a></td><td><span class="chip chip-accent">🎯 Target</span></td><td><span class="chip chip-green">Aktiv</span></td><td><span class="actor-chip">PW</span></td><td>Stage VII Assessment</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none"><div class="card-title">Aktive Prozesse gruppenweit</div></div>
+    <table class="data-table">
+      <thead><tr><th>Kandidat</th><th>Gesellschaft</th><th>Mandat</th><th>Stage</th><th>CM</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer"><td><strong>Tobias Furrer</strong></td><td>Bauherr Muster AG</td><td><a href="mandates.html">CFO-Suche</a></td><td><span class="chip chip-accent">V · 2nd</span></td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr style="cursor:pointer"><td><strong>Stefan Keller</strong></td><td>Muster Immobilien AG</td><td><a href="#">CFO Muster Immobilien</a></td><td><span class="chip chip-accent">VII · Assessment</span></td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr style="cursor:pointer"><td><strong>Peter Stadler</strong></td><td>Bauherr Muster AG</td><td><a href="#">PL Hochbau</a></td><td><span class="chip chip-accent">III · TI</span></td><td><span class="actor-chip">LR</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        <tr><td class="muted" colspan="6" style="text-align:center">+ 5 weitere</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 5 · DOKUMENTE (Group-Profile Kategorien) -->
+<div id="tab-5" class="tab-panel">
+
+  <!-- KPI-Leiste -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value">11</div><div class="kpi-sub muted">alle Kategorien Gruppen-Ebene</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Rahmenvertrag</div><div class="kpi-value">1</div><div class="kpi-sub muted">aktiv bis 31.12.2028</div></div>
+    <div class="kpi-card"><div class="kpi-label">Master-NDA</div><div class="kpi-value">2</div><div class="kpi-sub muted">beide unterschrieben</div></div>
+    <div class="kpi-card"><div class="kpi-label">Geschäftsberichte</div><div class="kpi-value">3</div><div class="kpi-sub muted">2023 · 2024 · 2025</div></div>
+    <div class="kpi-card"><div class="kpi-label">Zuletzt hochgeladen</div><div class="kpi-value" style="font-size:14px;padding-top:8px">14.04.2026</div><div class="kpi-sub muted">von PW</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Dateinamen, Tags, Gültigkeitsbereich …" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Alle Jahre</option>
+      <option>2026</option><option>2025</option><option>2024</option><option>älter</option>
+    </select>
+    <select>
+      <option>Alle Gültigkeitsbereiche</option>
+      <option>Nur ganze Gruppe</option>
+      <option>Nur Subset (Gesellschaften)</option>
+    </select>
+    <select>
+      <option>Alle Urheber</option>
+      <option>PW</option><option>JV</option><option>MF</option>
+      <option>Admin</option>
+      <option>— Upload extern —</option>
+    </select>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active" onclick="switchDocView(this,'list')">Liste</div>
+      <div class="chip-tab" onclick="switchDocView(this,'grid')">Kacheln</div>
+    </div>
+    <button class="btn btn-sm btn-primary" onclick="openDrawer('uploadDrawer',0)">+ Upload</button>
+  </div>
+
+  <!-- Kategorie-Chips (Group-Profile) -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterDocCat(this,'all')">Alle <span class="count">11</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'rahmenvertrag')">Rahmenvertrag <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'master-nda')">Master-NDA <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'konzern-agb')">Konzern-AGB <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'gruppen-praesentation')">Gruppen-Präsentationen <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'holdings-geschaeftsbericht')">Holdings-Geschäftsberichte <span class="count">3</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'sonstiges')">Sonstiges <span class="count">2</span></div>
+    </div>
+  </div>
+
+  <!-- MODUS 1: LISTE (default) -->
+  <div id="doc-view-list" style="display:block">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:44px"></th>
+            <th>Name</th>
+            <th>Kategorie</th>
+            <th>Gültigkeitsbereich</th>
+            <th>Erstellt</th>
+            <th>Urheber</th>
+            <th class="right">Grösse</th>
+            <th class="right">›</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr data-cat="rahmenvertrag" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Rahmenvertrag Muster-Gruppe 2025–2028</strong><div class="muted" style="font-size:11px">Sonder-Konditionen −2 % · Gültig 01.01.2025 bis 31.12.2028</div></td>
+            <td><span class="chip chip-gold">Rahmenvertrag</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>12.12.2024</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">512 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="master-nda" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Master-NDA Muster Holding AG</strong><div class="muted" style="font-size:11px">Gegenseitige Geheimhaltung, unbefristet</div></td>
+            <td><span class="chip chip-accent">Master-NDA</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>10.12.2024</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">186 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="master-nda" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>NDA Muster Immobilien AG · M&amp;A-Projekt</strong><div class="muted" style="font-weight:400;font-size:11px">Spezifisch für DACH-Expansion-Opportunity</div></td>
+            <td><span class="chip chip-accent">Master-NDA</span></td>
+            <td>Subset: Muster Immobilien AG</td>
+            <td>05.03.2026</td>
+            <td><span class="actor-chip">Upload · MF</span></td>
+            <td class="right">142 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="konzern-agb" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Konzern-AGB Muster-Gruppe</strong><div class="muted" style="font-size:11px">Abweichend vom Standard Arkadium-AGB · gilt für alle Mandate der Gruppe</div></td>
+            <td><span class="chip chip-accent">Konzern-AGB</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>12.12.2024</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">280 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="gruppen-praesentation" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Strategie-Präsentation Muster-Gruppe 2026–2030</strong><div class="muted" style="font-size:11px">Konzern-Strategie, ESG-Transformation, DACH-Expansion</div></td>
+            <td><span class="chip chip-accent">Gruppen-Präsentation</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>28.01.2026</td>
+            <td><span class="actor-chip">Upload · Admin</span></td>
+            <td class="right">8.4 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="gruppen-praesentation" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Kick-off Meeting Deck · Rahmenvertrag-Partner</strong></td>
+            <td><span class="chip chip-accent">Gruppen-Präsentation</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>20.12.2024</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">2.1 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="holdings-geschaeftsbericht" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Geschäftsbericht 2025 Muster Holding AG</strong><div class="muted" style="font-size:11px">Konsolidiert · 340 Mio. Umsatz · 505 MA</div></td>
+            <td><span class="chip">Geschäftsbericht</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>14.04.2026</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">12 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="holdings-geschaeftsbericht" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Geschäftsbericht 2024 Muster Holding AG</strong></td>
+            <td><span class="chip">Geschäftsbericht</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>12.03.2025</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">10 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="holdings-geschaeftsbericht" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Geschäftsbericht 2023 Muster Holding AG</strong></td>
+            <td><span class="chip">Geschäftsbericht</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>08.04.2024</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">9.2 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-xlsx">XLSX</span></td>
+            <td><strong>Gruppen-KPI-Dashboard Q1 2026</strong><div class="muted" style="font-size:11px">Aggregiert · alle Gesellschaften</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>05.04.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">520 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Gruppen-Organigramm 2026</strong><div class="muted" style="font-size:11px">Holding → Gesellschaften, Ownership-Struktur</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>🏛 Ganze Gruppe</td>
+            <td>15.01.2026</td>
+            <td><span class="actor-chip">Admin</span></td>
+            <td class="right">340 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODUS 2: KACHELN -->
+  <div id="doc-view-grid" style="display:none">
+    <div class="file-grid">
+      <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">PDF</div><div class="file-name">Rahmenvertrag 2025–2028</div><div class="file-meta">12.12.2024 · 512 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--accent-soft);color:var(--accent)">PDF</div><div class="file-name">Master-NDA</div><div class="file-meta">10.12.2024 · 186 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--accent-soft);color:var(--accent)">PDF</div><div class="file-name">Konzern-AGB</div><div class="file-meta">12.12.2024 · 280 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Strategie 2026–2030</div><div class="file-meta">28.01.2026 · 8.4 MB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">GB 2025</div><div class="file-meta">14.04.2026 · 12 MB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">GB 2024</div><div class="file-meta">12.03.2025 · 10 MB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">GB 2023</div><div class="file-meta">08.04.2024 · 9.2 MB</div></div>
+      <div class="file-card"><div class="file-icon">XLSX</div><div class="file-name">Gruppen-KPI Q1 2026</div><div class="file-meta">05.04.2026 · 520 KB</div></div>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Gruppen-Dokumente: gruppenweite Rahmenverträge, Master-NDAs, Konzern-AGB, Strategie-Präsentationen, Holdings-Geschäftsberichte. <strong>Gültigkeitsbereich</strong>: „🏛 Ganze Gruppe" (Default) oder „Subset" (nur ausgewählte Gesellschaften). Account-spezifische Dokumente (Offerten, Rechnungen, Stellenbriefings) leben auf Account-Ebene — hier nicht dupliziert.
+  </div>
+
+</div>
+
+<!-- TAB 6 · HISTORY -->
+<div id="tab-6" class="tab-panel">
+
+  <!-- Filter-Bar · Mix-Strategie Gruppen-Events + Account-Events -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suchen in History (Detail, Akteur, Gesellschaft)" style="flex:1 1 260px;min-width:220px">
+    <select>
+      <option>Alle Scopes</option>
+      <option>🏛 Nur Gruppen-Events</option>
+      <option>🏢 Nur Gesellschafts-Events (aggregiert)</option>
+    </select>
+    <select>
+      <option>Alle Gesellschaften</option>
+      <option>Bauherr Muster AG</option>
+      <option>Muster Immobilien AG</option>
+    </select>
+    <select>
+      <option>Alle Kategorien (18)</option>
+      <optgroup label="User-Aktionen">
+        <option>Kontaktberührung</option>
+        <option>Erreicht</option>
+        <option>Emailverkehr</option>
+        <option>Messaging</option>
+        <option>Interviewprozess</option>
+        <option>Placementprozess</option>
+        <option>Refresh Kandidatenpflege</option>
+        <option>Mandatsakquise</option>
+        <option>Erfolgsbasis</option>
+        <option>Assessment</option>
+      </optgroup>
+      <optgroup label="System &amp; Automation (NEU v1.4)">
+        <option>System / Meta</option>
+        <option>Kalender &amp; Planung</option>
+        <option>Dokumenten-Pipeline</option>
+        <option>Garantie &amp; Schutzfrist</option>
+        <option>Scraper &amp; Intelligence</option>
+        <option>Pipeline-Transitions</option>
+        <option>Saga-Events</option>
+        <option>AI &amp; LLM</option>
+      </optgroup>
+    </select>
+    <select>
+      <option>Alle Akteure</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option>
+      <option>Admin</option>
+      <option>— System (automatisch) —</option>
+    </select>
+    <select>
+      <option>Letzte 30 Tage</option>
+      <option>Letzte 90 Tage</option>
+      <option>Letzte 12 Monate</option>
+      <option>Alle</option>
+      <option>Benutzerdefiniert …</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <!-- Kategorie-Chip-Legende -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">62</span></div>
+      <div class="chip-tab"><span style="color:var(--gold)">🏛</span> Gruppen-Events <span class="count">11</span></div>
+      <div class="chip-tab">Interviewprozess <span class="count">18</span></div>
+      <div class="chip-tab">Placementprozess <span class="count">9</span></div>
+      <div class="chip-tab">Emailverkehr <span class="count">12</span></div>
+      <div class="chip-tab">Erreicht <span class="count">6</span></div>
+      <div class="chip-tab">Mandatsakquise <span class="count">4</span></div>
+      <div class="chip-tab">System <span class="count">2</span></div>
+    </div>
+  </div>
+
+  <!-- Timeline · Mix Gruppen-Events (🏛) + Account-Events (aggregiert) -->
+  <div class="card" style="padding:24px 28px">
+    <div class="hist-timeline">
+
+      <!-- HEUTE -->
+      <div class="hist-day">
+        <div class="hist-day-head">Heute · 14.04.2026</div>
+
+        <!-- DEMO pending-Row (v1.3) — zeigt Klassifizierungs-Tab im Drawer -->
+        <div class="hist-row hist-pending" data-cls="pending" data-ai-suggest="#22 Emailverkehr - Allgemeine Kommunikation|74" style="border-left:3px solid #fbbf24;padding-left:10px;background:color-mix(in srgb, #fbbf24 4%, transparent)">
+          <div class="hist-time">07:58</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>E-Mail erhalten · Gruppen-Kommunikation</strong> <span class="muted" style="font-weight:400">— ⏳ noch nicht klassifiziert</span></div>
+            <div class="hist-sub">Outlook-Auto-Import (Konzern-Mutter an Tochter). AI-Vorschlag: „Allgemeine Kommunikation" mit 74 % Konfidenz. Click öffnet Klassifizierungs-Drawer.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Gruppe · aktuell</a> · <a href="#">Kontakt · Mutter-AG</a> · <span class="chip" style="background:#fef3c7;color:#92400e;margin-left:4px">⏳ pending Klassifizierung</span></div>
+          </div>
+        </div>
+
+        <div class="hist-row" style="border-left:2px solid var(--gold);padding-left:10px">
+          <div class="hist-time">16:02</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">🏛 Gruppe</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Geschäftsbericht 2025 hochgeladen</strong></div>
+            <div class="hist-sub">Holdings-Geschäftsbericht 12 MB, gültig ganze Gruppe. Ereignis-Typ: Gruppen-Dokument hochgeladen. AI-Kultur-Update vorgeschlagen (Tab 2).</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Tab 5 Dokumente</a> · <a href="#">Tab 2 Kultur-Update</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">14:22</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Update-Call · Hans Müller (CEO Bauherr Muster AG)</strong> <span class="muted" style="font-weight:400">— 42 min</span></div>
+            <div class="hist-sub">CFO-Mandat Update: M. Gerber hat eher Schweiz-Affinität, S. Keller zu international. Prio auf Gerber + Furrer fokussieren. Transkript &amp; AI-Summary verfügbar.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a> · <a href="accounts.html">Bauherr Muster AG</a> · <a href="mandates.html">Mandat · CFO-Suche</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">09:45</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>E-Mail erhalten · Eva Studer (HR-L)</strong></div>
+            <div class="hist-sub">Rückmeldung zu CV T. Furrer: 1st Interview bestätigt für 08.04 14:00 vor Ort.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kontakt · E. Studer</a> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTERN -->
+      <div class="hist-day">
+        <div class="hist-day-head">Gestern · 13.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">16:08</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>2nd Interview geplant · T. Furrer</strong></div>
+            <div class="hist-sub">Termin 22.04 09:00 · Teilnehmer: Hans Müller, Eva Studer, Peter Keller (VR).</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess · Stage V</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">11:30</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-kontakt">Kontaktberührung</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Anrufversuch · Hans Müller (CEO)</strong> <span class="muted" style="font-weight:400">— nicht erreicht</span></div>
+            <div class="hist-sub">Voicemail hinterlassen. Rückruf erwartet.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">12.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">10:15</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>✓ Placement · Julian Egger als Projektleiter Hochbau</strong></div>
+            <div class="hist-sub">Mandat Taskforce „PL Hochbau" · Position #2 von 3 · Start 01.06.2026 · TC CHF 138'000 · Honorar-Staffel 21 %.</div>
+            <div class="hist-meta"><span class="actor">LR</span> · <a href="#">Kandidat · J. Egger</a> · <a href="#">Mandat · PL Hochbau</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">08.04.2026</div>
+
+        <div class="hist-row hist-warn">
+          <div class="hist-time">09:12</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Schutzfrist · Claim-Fall eröffnet — Tobias Sommer</strong></div>
+            <div class="hist-sub">AM hat Scraper-Fund bestätigt und Claim-Workflow gestartet (Ursprung: Mandat „Ehem. CFO-Mandat 2025", Schutzfrist bis 15.10.2026). → Bearbeitung in Tab 9.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · Activity-Type #64 Schutzfrist Status-Änderung · <a href="#">Schutzfrist · T. Sommer</a> · <a href="#">Tab 9</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">14:05</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>1st Interview durchgeführt · T. Furrer</strong></div>
+            <div class="hist-sub">Teams-Call 70 min mit H. Müller &amp; E. Studer. Feedback positiv (Rating 4/5), weiter zu 2nd mit VR.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">04.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">16:42</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-assessment">Assessment</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>ASSESS 5.0 · T. Furrer · Report erhalten</strong></div>
+            <div class="hist-sub">Report via Order ORD-2026-042 · 1 ASSESS-Credit eingelöst · Standard-Profil „Executive Leader".</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Order ORD-2026-042</a> · <a href="#">Kandidat · T. Furrer</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">02.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">11:18</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>CV Sent · Tobias Furrer an Eva Studer (HR-L)</strong></div>
+            <div class="hist-sub">ARK-CV v3 + Exposé als PDF · Vorstellungs-Typ = Dossier per E-Mail · Schutzfrist bis 02.04.2027 aktiviert.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Mandat · CFO-Suche</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">15.03.2026</div>
+
+        <div class="hist-row hist-ok">
+          <div class="hist-time">15:30</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>✓ Neues Mandat gewonnen · BIM-Manager (Target) · Bauherr Muster AG</strong></div>
+            <div class="hist-sub">Target-Mandat · Honorar-Gesamt CHF 66'000 · Stage-1-Rechnung über CHF 22'000 wird generiert.</div>
+            <div class="hist-meta"><span class="actor">MF</span> · <a href="accounts.html">Bauherr Muster AG</a> · <a href="#">Mandat · BIM-Manager</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row" style="border-left:2px solid var(--gold);padding-left:10px">
+          <div class="hist-time">09:40</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">🏛 Gruppe</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Gruppen-Kultur-Analyse generiert · v2</strong></div>
+            <div class="hist-sub">AI-Hybrid durch Admin · Quellen: Holding-Web + Geschäftsbericht 2024 + aggregierte Gesellschafts-Scores. Ereignis-Typ: Gruppen-Kultur generiert. Fit-Score Holding 82/100.</div>
+            <div class="hist-meta"><span class="actor">Admin</span> · <a href="#">Tab 2 Kultur</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01.03. · Gruppen-Event -->
+      <div class="hist-day">
+        <div class="hist-day-head">01.03.2026</div>
+
+        <div class="hist-row" style="border-left:2px solid var(--gold);padding-left:10px">
+          <div class="hist-time">10:15</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">🏛 Gruppe</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Gruppen-Mandat erstellt · Taskforce „PL Hochbau"</strong></div>
+            <div class="hist-sub">Erstes gruppenübergreifendes Mandat. Beteiligte Gesellschaften: Bauherr Muster AG (führend) + Muster Immobilien AG. Ereignis-Typ: Gruppen-Mandat erstellt. 3 Positionen, Monatsfee CHF 12'000 + Success CHF 8'000/Platzierung.</div>
+            <div class="hist-meta"><span class="actor">MF</span> · <a href="#">Mandat · PL Hochbau Taskforce</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10.02. · Gruppen-Event -->
+      <div class="hist-day">
+        <div class="hist-day-head">10.02.2026</div>
+
+        <div class="hist-row hist-ok" style="border-left:2px solid var(--gold);padding-left:10px">
+          <div class="hist-time">14:00</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">🏛 Gruppe</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Rahmenvertrag verlängert bis 31.12.2028</strong></div>
+            <div class="hist-sub">Vertragserweiterung signiert. Sonder-Konditionen bleiben: −2 % Staffel · 45 d Zahlungsziel · Gruppen-weite Schutzfrist · 3 Mt Garantie. Ereignis-Typ: Rahmenvertrag verlängert.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Tab 5 · Rahmenvertrag 2025–2028</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">12.03.2026</div>
+
+        <div class="hist-row hist-system">
+          <div class="hist-time">09:00</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Schutzfrist · Auto-verlängert auf 16 Mt — Stefan Keller</strong></div>
+            <div class="hist-sub">Info-Request nach 10 Tagen unbeantwortet → automatische Extension von 12 auf 16 Monate.</div>
+            <div class="hist-meta"><span class="actor actor-system">automation</span><span class="src-badge src-batch">nightly-batch</span> · Activity-Type #83 Schutzfrist - Auf 16 Mt verlängert · <a href="#">Schutzfrist · S. Keller</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">01.03.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">10:00</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-assessment">Assessment</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Assessment-Order ORD-2026-042 signiert</strong></div>
+            <div class="hist-sub">10× ASSESS 5.0 + 5× EQ-Profil · CHF 28'000 netto · gültig 24 Monate bis 01.03.2028.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Order ORD-2026-042</a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-sm">↓ Weitere laden (79 von 87)</button>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    History-Einträge gemäss Activity-Types §14 v1.4 (117 Typen in 18 Kategorien). Mix-Strategie: Gruppen-Level-Events + signifikante Account-Events aggregiert. System-Events (🤖) stammen aus Integrationen, Sagas, Scheduled-Jobs und AI-Pipelines. Akteur-Kürzel = Arkadium-Mitarbeiter (2 Buchstaben).
+  </div>
+
+</div>
+
+<!-- TAB 7 · REMINDERS -->
+<div id="tab-7" class="tab-panel">
+
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Offen</div><div class="kpi-value">6</div><div class="kpi-sub muted">alle offenen Reminders</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Überfällig</div><div class="kpi-value">1</div><div class="kpi-sub muted">sofortiges Handeln</div></div>
+    <div class="kpi-card"><div class="kpi-label">Heute</div><div class="kpi-value">1</div><div class="kpi-sub muted">fällig am 16.04.2026</div></div>
+    <div class="kpi-card"><div class="kpi-label">Diese Woche</div><div class="kpi-value">2</div><div class="kpi-sub muted">bis 20.04.2026</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Erledigt (30 d)</div><div class="kpi-value">9</div><div class="kpi-sub muted">seit 16.03.2026</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Reminder-Titel, Kontext, Gesellschaft …" style="flex:1 1 260px;min-width:220px">
+    <select>
+      <option>Alle Typen</option>
+      <option>Rahmenvertrag-Review</option>
+      <option>Jahres-Report</option>
+      <option>Gruppen-Mandats-Opportunity</option>
+      <option>Scraper-Group-Match</option>
+      <option>Kultur-Update</option>
+      <option>Follow-up</option>
+      <option>Custom</option>
+    </select>
+    <select>
+      <option>Alle Zuständigen</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option>
+      <option>Admin</option>
+    </select>
+    <select>
+      <option>Alle Gesellschaften</option>
+      <option>Muster Holding AG</option>
+      <option>Muster Baubetrieb AG</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="openReminderNew()">+ Reminder</button>
+  </div>
+
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterRemStatus(this,'all')">Alle offenen <span class="count">6</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'overdue')"><span style="color:var(--red)">●</span> Überfällig <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'today')">Heute <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'week')">Diese Woche <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'later')">Später <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'done')">Erledigt <span class="count">9</span></div>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="overdue">
+    <div class="rem-section-head" style="border-left:3px solid var(--red)">
+      <h3 style="color:var(--red)">⚠ Überfällig</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0;border-left:3px solid var(--red)">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="overdue" style="cursor:pointer" onclick="openDrawer('reminderDrawer',0)">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Rahmenvertrag-Review Muster Holding</strong><div class="muted" style="font-size:11px">Jährliche Konditions-Überprüfung seit 01.04 offen</div></td>
+            <td><span class="chip chip-accent">Rahmenvertrag-Review</span></td>
+            <td style="color:var(--red);font-weight:600">16 d überfällig</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="today">
+    <div class="rem-section-head">
+      <h3>Heute · 16.04.2026</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="today" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Gruppen-Jahres-Report Q2 finalisieren</strong><div class="muted" style="font-size:11px">PDF mit aggregierten KPIs, Mandaten, Placements, Kulturübersicht</div></td>
+            <td><span class="chip chip-accent">Jahres-Report</span></td>
+            <td>15:00 Uhr</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="week">
+    <div class="rem-section-head">
+      <h3>Diese Woche · bis 20.04.2026</h3>
+      <span class="count">2</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Scraper-Group-Match prüfen · 3 Job-Wechsel</strong><div class="muted" style="font-size:11px">Gruppen-Schutzfrist-Verletzungen aus Scraper-Run 14.04 bestätigen</div></td>
+            <td><span class="chip chip-accent">Scraper-Group-Match</span></td>
+            <td>18.04.2026 · in 2 d</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Gruppen-Mandats-Opportunity · Taskforce PL Hochbau 2. Los</strong><div class="muted" style="font-weight:400;font-size:11px">Follow-up mit CEO Holding nach erfolgreicher Phase 1</div></td>
+            <td><span class="chip chip-accent">Gruppen-Mandats-Opportunity</span></td>
+            <td>20.04.2026 · in 4 d</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="later">
+    <div class="rem-section-head">
+      <h3>Später</h3>
+      <span class="count">2</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Kultur-Update Gruppen-Analyse</strong><div class="muted" style="font-size:11px">Geschäftsbericht 2025 gerade publiziert — AI-Analyse aktualisieren</div></td>
+            <td><span class="chip chip-accent">Kultur-Update</span></td>
+            <td>30.04.2026</td>
+            <td><span class="actor-chip">Admin</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Rahmenvertrag-Verlängerung Q3</strong><div class="muted" style="font-size:11px">Vorbereitung Neuverhandlung, Staffel-Review</div></td>
+            <td><span class="chip chip-accent">Rahmenvertrag-Review</span></td>
+            <td>15.06.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-head collapsed" onclick="toggleSection(this)" style="margin-top:18px">
+    <span class="caret">▾</span>
+    <h3>Erledigt (letzte 30 Tage)</h3>
+    <span class="count">9</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Gesellschaft hinzufügen · Muster Baubetrieb AG bestätigen</s></td><td><span class="chip">Follow-up</span></td><td class="muted">erledigt 10.04</td><td><span class="actor-chip">PW</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Gruppen-Report Q1 2026</s></td><td><span class="chip">Jahres-Report</span></td><td class="muted">erledigt 05.04</td><td><span class="actor-chip">PW</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td class="muted" colspan="6" style="text-align:center">+ 7 weitere</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Reminders auf Gruppen-Ebene: Rahmenvertrag-Reviews, Jahres-Reports, Mandats-Opportunities über mehrere Gesellschaften, Scraper-Group-Match-Folgeprüfungen, Kultur-Update nach Geschäftsbericht-Publikation. Auch im globalen Dashboard sichtbar.
+  </div>
+
+</div>
+
+</div>
+
+<div class="kb-bar">
+  <span><kbd>1</kbd>–<kbd>7</kbd> Tabs</span>
+  <span><kbd>T</kbd> Theme</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd></span>
+</div>
+
+<!-- DRAWER BACKDROP -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- ============= UPLOAD-DRAWER (Group-Profile Kategorien) ============= -->
+<div class="drawer" id="uploadDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">↑</div>
+    <div class="info">
+      <h2>Dokument hochladen</h2>
+      <div class="sub">Gruppen-weit oder für Subset der Gesellschaften</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('uploadDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <form id="uploadForm" onsubmit="return doUpload(event)">
+      <div class="drawer-section">
+        <h4>Datei</h4>
+        <div id="uploadDropzone" onclick="document.getElementById('uploadFile').click()" style="border:2px dashed var(--border);border-radius:4px;padding:28px;text-align:center;cursor:pointer;background:var(--bg);transition:all 0.15s" ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-soft)'" ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'" ondrop="handleDrop(event)">
+          <div style="font-size:32px;color:var(--text-light);margin-bottom:8px">📄</div>
+          <div style="font-size:13px;font-weight:600" id="uploadFileName">Datei hierher ziehen oder klicken</div>
+          <div class="muted" style="font-size:11px;margin-top:4px" id="uploadFileMeta">PDF, DOCX, XLSX, JPG, PNG · max. 20 MB</div>
+        </div>
+        <input type="file" id="uploadFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" style="display:none" onchange="onUploadFile(this)">
+      </div>
+      <div class="drawer-section">
+        <h4>Metadaten</h4>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+          <label>Kategorie <span style="color:var(--red)">*</span></label>
+          <select id="uploadCat" required>
+            <option value="">— wählen —</option>
+            <option value="rahmenvertrag">Rahmenvertrag</option>
+            <option value="master-nda">Master-NDA</option>
+            <option value="konzern-agb">Konzern-AGB</option>
+            <option value="gruppen-praesentation">Gruppen-Präsentation</option>
+            <option value="holdings-geschaeftsbericht">Holdings-Geschäftsbericht</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+          <label>Titel</label>
+          <input type="text" id="uploadTitle" placeholder="(leer = Dateiname übernehmen)">
+          <label>Notiz</label>
+          <textarea id="uploadNote" rows="2" style="resize:vertical" placeholder="Kurz-Hinweis (optional)"></textarea>
+          <label>Gültigkeitsbereich</label>
+          <select id="uploadScope">
+            <option value="group">Ganze Gruppe (Default)</option>
+            <option value="subset">Nur ausgewählte Gesellschaften …</option>
+          </select>
+          <label>Urheber</label>
+          <div style="font-size:13px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text-mid)">
+            <span id="uploadAuthor" data-value="Upload · PW">Upload · PW</span>
+            <span class="muted" style="font-size:11px;margin-left:6px">(aktueller User · automatisch)</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="drawer-foot">
+    <button type="button" class="btn btn-sm" onclick="closeDrawer('uploadDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button type="button" class="btn btn-sm btn-primary" onclick="doUpload(event)">↑ Hochladen</button>
+  </div>
+</div>
+
+<!-- ============= HISTORY-DRAWER (kontextabhängige Tabs) ============= -->
+<div class="drawer drawer-wide" id="historyDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" id="histDrawIcon">💬</div>
+    <div class="info">
+      <h2 id="histDrawTitle">Event-Detail</h2>
+      <div class="sub" id="histDrawSub">—</div>
+      <div style="margin-top:6px" id="histDrawChips"></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('historyDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs" id="histDrawTabs"></div>
+  <div class="drawer-body" id="histDrawBodyWrap"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('historyDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✎ Bearbeiten</button>
+    <button class="btn btn-sm btn-primary">🔗 Zur Quell-Entity</button>
+  </div>
+</div>
+
+<!-- ============= REMINDER-DRAWER ============= -->
+<div class="drawer" id="reminderDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⏰</div>
+    <div class="info">
+      <h2 id="remDrawTitle">Neuer Reminder</h2>
+      <div class="sub" id="remDrawSub">Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)</div>
+      <div style="margin-top:6px" id="remDrawChips"><span class="chip chip-accent">neu</span></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('reminderDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Reminder</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+        <label>Titel <span style="color:var(--red)">*</span></label>
+        <input type="text" id="remTitle" placeholder="z.B. Rahmenvertrag-Review Q3">
+        <label>Typ <span style="color:var(--red)">*</span></label>
+        <select id="remType">
+          <option>Rahmenvertrag-Review</option>
+          <option>Jahres-Report</option>
+          <option>Gruppen-Mandats-Opportunity</option>
+          <option>Scraper-Group-Match</option>
+          <option>Kultur-Update</option>
+          <option>Follow-up</option>
+          <option>Custom</option>
+        </select>
+        <label>Fällig am <span style="color:var(--red)">*</span></label>
+        <input type="datetime-local" id="remDue">
+        <label>Zuständig <span style="color:var(--red)">*</span></label>
+        <select id="remOwner">
+          <option selected>PW</option>
+          <option>JV</option><option>LR</option><option>MF</option>
+          <option>Admin</option>
+        </select>
+        <label>Kontext</label>
+        <textarea id="remContext" rows="3" style="resize:vertical" placeholder="Hintergrund, Personen, Agenda"></textarea>
+        <label>Verknüpfung</label>
+        <select id="remLink">
+          <option value="">Gruppen-Level (keine Verknüpfung)</option>
+          <option>Gesellschaft · Muster Holding AG</option>
+          <option>Gesellschaft · Muster Baubetrieb AG</option>
+          <option>Gruppen-Mandat · Taskforce PL Hochbau</option>
+          <option>Rahmenvertrag 2026</option>
+        </select>
+        <label>Wiederholen</label>
+        <select id="remRecur">
+          <option value="none">Einmalig</option>
+          <option value="quarterly">Quartalsweise</option>
+          <option value="yearly" selected>Jährlich</option>
+        </select>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Benachrichtigung</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;font-size:13px">
+        <label>Vorlaufzeit</label>
+        <select id="remLead">
+          <option value="0">Zum Fälligkeitstermin</option>
+          <option value="1d">1 Tag vorher</option>
+          <option value="3d" selected>3 Tage vorher</option>
+          <option value="1w">1 Woche vorher</option>
+          <option value="1m">1 Monat vorher</option>
+        </select>
+        <label>Eskalation</label>
+        <div class="muted" style="font-size:12px">3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Admin</div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('reminderDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="saveReminder(event)">💾 Reminder anlegen</button>
+  </div>
+</div>
+
+<!-- ============= CONTACT-DRAWER (drawer-wide, 4 Tabs) · Parity mit accounts.html ============= -->
+<div class="drawer drawer-wide" id="contactDrawer">
+  <div class="drawer-head">
+    <div class="avatar">HM</div>
+    <div class="info">
+      <h2>Hans Müller</h2>
+      <div class="sub">CEO · Geschäftsleitung · Bauherr Muster AG</div>
+      <div style="margin-top:6px;display:flex;gap:4px;align-items:center">
+        <span class="org-pill executive" title="Executive">E</span>
+        <a href="#" style="font-size:11px;margin-left:6px">→ Kandidatenprofil</a>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('contactDrawer')">✕</button>
+  </div>
+
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="drawerTab('contactDrawer', 0)">Stammdaten</div>
+    <div class="drawer-tab" onclick="drawerTab('contactDrawer', 1)">Kommunikation</div>
+    <div class="drawer-tab" onclick="drawerTab('contactDrawer', 2)">Prozesse</div>
+    <div class="drawer-tab" onclick="drawerTab('contactDrawer', 3)">Notizen</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- PANE 1: Stammdaten -->
+    <div class="drawer-pane" style="display:block">
+      <div class="drawer-section">
+        <h4>Personen-Stammdaten <span class="muted" style="text-transform:none;font-size:10.5px;letter-spacing:0">read-only · beim Kandidaten pflegen</span></h4>
+        <dl class="field-grid">
+          <dt>Name</dt><dd>Hans Müller</dd>
+          <dt>E-Mail</dt><dd>h.mueller@muster-bauherr.ch</dd>
+          <dt>Telefon direkt</dt><dd>+41 44 123 45 67</dd>
+          <dt>Mobile</dt><dd>+41 79 123 45 67</dd>
+          <dt>LinkedIn</dt><dd><a href="#">linkedin.com/in/hans-mueller</a></dd>
+          <dt>Geburtstag</dt><dd>14.03.1968</dd>
+        </dl>
+      </div>
+
+      <div class="drawer-section">
+        <h4>Account-Beziehung (bearbeitbar auf Account-Ebene)</h4>
+        <dl class="field-grid">
+          <dt>Gesellschaft</dt><dd><a href="accounts.html">Bauherr Muster AG</a> <span class="muted" style="font-size:11px">· Teil der Muster Holding</span></dd>
+          <dt>Position</dt><dd>CEO</dd>
+          <dt>Department</dt><dd>Geschäftsleitung</dd>
+          <dt>Standort</dt><dd>Zürich (HQ)</dd>
+          <dt>Org-Funktion</dt><dd><span class="org-pill executive">E</span> Executive <span class="muted" style="font-size:11px">· CEO · Geschäftsleitung</span></dd>
+          <dt>Relationship Score</dt><dd><strong style="font-family:'Libre Baskerville',serif;color:var(--accent)">8</strong> / 10</dd>
+          <dt>Kommunikations-Präferenz</dt><dd>Telefon vor E-Mail · keine Teams-Calls</dd>
+          <dt>Beste Kontaktzeit</dt><dd>Montag–Donnerstag · 07:30–09:00</dd>
+          <dt>Status</dt><dd><span class="chip chip-green">Aktiv</span></dd>
+          <dt>Do not contact</dt><dd class="muted">Nein</dd>
+        </dl>
+      </div>
+
+      <div class="drawer-section">
+        <h4>Onboarding-Notizen</h4>
+        <p style="font-size:12.5px;color:var(--text-mid);line-height:1.6">
+          Sohn des VR-Präsidenten Dr. U. Gerber. Seit 2015 im Unternehmen, CEO seit 2020. Grosses Interesse an Nachfolge-Themen. Bevorzugt kurze, direkte Gespräche. Ablehnung von „Corporate-Sprache" — bei ihm wird geduzt nach kurzer Anwärm-Phase.
+        </p>
+      </div>
+    </div>
+
+    <!-- PANE 2: Kommunikation -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Verlauf bei Bauherr Muster AG <span class="muted" style="text-transform:none;font-size:10.5px;letter-spacing:0">· 24 Einträge</span></h4>
+        <div class="comm-filter">
+          <span class="chip chip-muted active" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">Alle</span>
+          <span class="chip chip-muted" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">📞 Calls</span>
+          <span class="chip chip-muted" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">✉ E-Mails</span>
+          <span class="chip chip-muted" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">🤝 Meetings</span>
+          <span class="chip chip-muted" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">💼 LinkedIn</span>
+        </div>
+
+        <div class="comm-item call">
+          <div class="icon">📞</div>
+          <div class="body">
+            <div class="date">14.04.2026 · 14:22 · PW</div>
+            <div class="subj">Call — CFO-Mandat Update · 42 min</div>
+            <div class="snippet">Besprochen: M. Gerber hat eher Schweiz-Affinität, Keller zu international. H.M. bittet um nächste 2 Profile bis Ende April. Hinweis: VR-Sitzung 12.05.</div>
+          </div>
+        </div>
+
+        <div class="comm-item email">
+          <div class="icon">✉</div>
+          <div class="body">
+            <div class="date">02.04.2026 · 09:15 · PW</div>
+            <div class="subj">E-Mail Out — CV Sent T. Furrer (CFO)</div>
+            <div class="snippet">Exposé + CV als PDF versendet. Antwort 04.04.: „Interessantes Profil, bitte Termin für Erstgespräch vereinbaren."</div>
+          </div>
+        </div>
+
+        <div class="comm-item email">
+          <div class="icon">✉</div>
+          <div class="body">
+            <div class="date">28.03.2026 · 16:44 · H. Müller</div>
+            <div class="subj">E-Mail In — „Rückfrage zu Mandat-Fortschritt"</div>
+            <div class="snippet">H.M.: „Wo stehen wir mit den Profilen? Habe die letzte Unterlage noch nicht gesehen." — beantwortet am 28.03. mit Status-Update.</div>
+          </div>
+        </div>
+
+        <div class="comm-item meeting">
+          <div class="icon">🤝</div>
+          <div class="body">
+            <div class="date">12.03.2026 · 10:00 · 90 min</div>
+            <div class="subj">Meeting vor Ort — CFO-Stellenbriefing</div>
+            <div class="snippet">Teilnehmer: H. Müller + A. Keller + PW. Position CFO definiert (TC CHF 260k), Anforderungen, Kultur-Fit diskutiert.</div>
+          </div>
+        </div>
+
+        <div class="comm-item linkedin">
+          <div class="icon">💼</div>
+          <div class="body">
+            <div class="date">18.01.2026</div>
+            <div class="subj">LinkedIn — Post geliked + kommentiert</div>
+            <div class="snippet">„Wir bauen die nächste Generation an Verwaltungsgebäuden für die Stadt Zug…" — PW Kommentar „Spannendes Projekt, freue mich auf die Umsetzung".</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:14px">
+          <button class="btn btn-sm">19 ältere Einträge laden</button>
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <h4>Kennzahlen</h4>
+        <dl class="field-grid">
+          <dt>Total Interaktionen</dt><dd>24 (in 24 Monaten)</dd>
+          <dt>Calls / E-Mails / Meetings</dt><dd>9 / 11 / 4</dd>
+          <dt>Ø Antwortzeit auf E-Mail</dt><dd>4.2 Stunden</dd>
+          <dt>Initialisierung</dt><dd>62 % durch Arkadium · 38 % durch ihn</dd>
+          <dt>Sentiment-Trend</dt><dd><span class="chip chip-green">Positiv</span></dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- PANE 3: Prozesse -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Prozesse an denen H. Müller beteiligt war</h4>
+        <div class="comm-item">
+          <div class="icon" style="background:var(--green-soft);color:var(--green)">✓</div>
+          <div class="body">
+            <div class="date">aktuell · CFO-Mandat · Bauherr Muster AG</div>
+            <div class="subj">T. Furrer · Stage Offer</div>
+            <div class="snippet">Stellenbriefing durchgeführt 10.04., nächstes Interview 15.04.</div>
+          </div>
+        </div>
+        <div class="comm-item">
+          <div class="icon" style="background:var(--gold-soft);color:var(--gold)">✓</div>
+          <div class="body">
+            <div class="date">aktuell · Taskforce PL Hochbau · <strong style="color:var(--gold)">🏛 Gruppen-Mandat</strong></div>
+            <div class="subj">J. Egger · Placed</div>
+            <div class="snippet">Onboarding 01.06.2026. Taskforce führt Bauherr Muster AG, Muster Immobilien AG als 2. Gesellschaft.</div>
+          </div>
+        </div>
+        <div class="comm-item">
+          <div class="icon" style="background:var(--accent-soft);color:var(--accent)">✓</div>
+          <div class="body">
+            <div class="date">06.2025 · Leiter HR · Bauherr Muster AG</div>
+            <div class="subj">P. Schmid · Placed</div>
+            <div class="snippet">Final-Interview bei H. Müller.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 4: Notizen -->
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Interne Notizen</h4>
+        <p style="font-size:12.5px;line-height:1.6;color:var(--text-mid)">Persönlichkeit: sehr direkt, keine Smalltalks bevorzugt. Entscheidet schnell aber konsultiert VR-Präsident (Vater) bei grossen Themen. Digitale Tools wie Teams lehnt er ab — lieber Telefon oder vor Ort.</p>
+        <button class="btn btn-sm mt-16">+ Notiz hinzufügen</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm">📞 Anrufen</button>
+    <button class="btn btn-sm">✉ E-Mail</button>
+    <button class="btn btn-sm" onclick="openReminderNew()">🔔 Reminder</button>
+    <button class="btn btn-sm btn-primary">Bearbeiten (→ Account)</button>
+  </div>
+</div>
+
+<script src="_shared/layout.js"></script>
+<script>
+/* ============================================================
+   Parity mit accounts/candidates/mandates: Upload · History · Reminder
+   ============================================================ */
+
+/* Status-Dropdown */
+function onGroupStatusChange(val) {
+  const labels = {
+    aktiv:'● Aktiv',
+    in_review:'⏸ In Review',
+    archiviert:'✕ Archiviert',
+    merger:'🔗 Merger / Restrukturierung'
+  };
+  if (!confirm('Gruppen-Status auf „' + labels[val] + '" ändern? History-Event status_changed wird erzeugt.')) return;
+}
+
+/* HIST-Drawer */
+const HIST_CHAN_MAP = {
+  'cat-erreicht':   { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-kontakt':    { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-interview':  { kanal:'Phone',  label:'Phone',  icon:'👔' },
+  'cat-placement':  { kanal:'Phone',  label:'Phone',  icon:'🏆' },
+  'cat-mandat':     { kanal:'Phone',  label:'Phone',  icon:'📋' },
+  'cat-assessment': { kanal:'System', label:'System', icon:'📊' },
+  'cat-email':      { kanal:'Email',  label:'Email',  icon:'✉' },
+  'cat-system':     { kanal:'System', label:'System', icon:'⚙' },
+};
+let HIST_CURRENT = null;
+
+function openHistDrawer(rowEl) {
+  const cat = rowEl.querySelector('.hist-cat-chip');
+  const catText = cat ? cat.textContent.trim() : '—';
+  const catCls = cat ? (Array.from(cat.classList).find(c => HIST_CHAN_MAP.hasOwnProperty(c)) || '') : '';
+  const chan = HIST_CHAN_MAP[catCls] || { kanal:'System', label:'System', icon:'💬' };
+  const time = rowEl.querySelector('.hist-time')?.textContent.trim() || '—';
+  const titleRaw = rowEl.querySelector('.hist-title')?.textContent || '—';
+  const titleClean = titleRaw.replace(/—\s*(\d+\s*min|nicht erreicht).*/,'').trim();
+  const durMatch = titleRaw.match(/—\s*(\d+\s*min|nicht erreicht)/);
+  const durationRaw = durMatch ? durMatch[1] : '';
+  const isNE = /nicht erreicht/i.test(titleRaw);
+  const isBriefingCall = /briefing/i.test(titleClean) && chan.kanal === 'Phone';
+  const isSystemAuto = chan.kanal === 'System';
+  const isAnswered = chan.kanal === 'Phone' && !isNE && !isSystemAuto;
+  const sub = rowEl.querySelector('.hist-sub')?.textContent.trim() || '';
+  const meta = rowEl.querySelector('.hist-meta');
+  const actor = meta?.querySelector('.actor')?.textContent.trim() || '—';
+  const dayHead = rowEl.closest('.hist-day')?.querySelector('.hist-day-head')?.textContent.trim() || '';
+  const dateOnly = dayHead.replace(/^.*·\s*/, '');
+  const links = meta ? Array.from(meta.querySelectorAll('a')).map(a => a.textContent.trim()) : [];
+  const isWarn = rowEl.classList.contains('hist-warn');
+  const isOk = rowEl.classList.contains('hist-ok');
+
+  // v1.3: pending-Erkennung
+  const isPending = rowEl.classList.contains('hist-pending') || rowEl.getAttribute('data-cls') === 'pending';
+  const aiSuggestion = rowEl.getAttribute('data-ai-suggest') || '';
+
+  HIST_CURRENT = { title:titleClean, cat:catText, catCls, chan, date:dateOnly, time, actor, duration:durationRaw, isNE, isAnswered, isBriefingCall, isSystemAuto, body:sub, links, sentiment:isWarn?'negative':(isOk?'positive':''), cls: isPending ? 'pending' : 'confirmed', aiSuggestion };
+
+  document.getElementById('histDrawIcon').textContent = chan.icon;
+  document.getElementById('histDrawTitle').textContent = titleClean;
+  document.getElementById('histDrawSub').textContent = dateOnly + ' · ' + time + ' · ' + chan.label;
+  const chipsWrap = document.getElementById('histDrawChips');
+  let chips = `<span class="hist-cat-chip ${catCls}">${catText}</span>`;
+  chips += ` <span class="chip" style="margin-left:4px">${actor}</span>`;
+  if (isPending) {
+    chips += ` <span class="chip" style="margin-left:4px;background:#fef3c7;color:#92400e">⏳ pending Klassifizierung</span>`;
+    if (aiSuggestion) {
+      const [sugName, sugConf] = aiSuggestion.split('|');
+      chips += ` <span class="chip" style="margin-left:4px;background:#ede9fe;color:#6d28d9">AI: ${escapeHtml(sugName)} · ${sugConf}%</span>`;
+    }
+  } else {
+    chips += ` <span class="chip chip-green" style="margin-left:4px">✓ Bestätigt</span>`;
+  }
+  if (isSystemAuto) chips += ` <span class="chip" style="margin-left:4px">⚡ Auto</span>`;
+  chipsWrap.innerHTML = chips;
+
+  const tabs = [{ id:'overview', label:'Übersicht' }];
+  if (chan.kanal === 'Email') tabs.push({ id:'email', label:'Email-Thread' });
+  if (isAnswered) tabs.push({ id:'transcript', label:'Transkript' });
+  if (isAnswered && !isBriefingCall) tabs.push({ id:'ai', label:'AI-Summary' });
+  if (isAnswered && isBriefingCall) tabs.push({ id:'briefing', label:'AI → Briefing' });
+  if (isPending) tabs.push({ id:'classify', label:'🏷 Klassifizierung' });  // NEU v1.3
+  tabs.push({ id:'history', label:'📜 Verlauf' });  // NEU v1.3 — immer
+  tabs.push({ id:'reminders', label:'Reminders' });
+
+  const tabsEl = document.getElementById('histDrawTabs');
+  tabsEl.innerHTML = tabs.map((t,i) => `<div class="drawer-tab${i===0?' active':''}" onclick="histSwitchTab('${t.id}', this)">${t.label}</div>`).join('');
+  histRenderPane(tabs[0].id);
+  openDrawer('historyDrawer');
+}
+
+function histSwitchTab(id, el) {
+  el.parentElement.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  histRenderPane(id);
+}
+
+function histRenderPane(id) {
+  const e = HIST_CURRENT; if (!e) return;
+  const wrap = document.getElementById('histDrawBodyWrap');
+  if (id === 'overview') {
+    let h = `<div class="drawer-section"><h4>Details</h4><dl class="field-grid">`;
+    h += `<dt>Kategorie</dt><dd>${escapeHtml(e.cat)}</dd>`;
+    h += `<dt>Activity-Type</dt><dd>${escapeHtml(e.title)}</dd>`;
+    h += `<dt>Kanal</dt><dd>${escapeHtml(e.chan.label)}</dd>`;
+    h += `<dt>Datum &amp; Uhrzeit</dt><dd>${escapeHtml(e.date)} · ${escapeHtml(e.time)} Uhr</dd>`;
+    h += `<dt>Erfasst von</dt><dd>${escapeHtml(e.actor)}</dd>`;
+    if (e.duration) h += `<dt>Dauer</dt><dd>${escapeHtml(e.duration)}</dd>`;
+    h += `<dt>Status</dt><dd>✓ Bestätigt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Notizen</h4><div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div></div>`;
+    if (e.links.length) h += `<div class="drawer-section"><h4>Verknüpfungen</h4>${e.links.map(l => `<div class="list-item"><div class="name">🔗 ${escapeHtml(l)}</div><span class="chip">›</span></div>`).join('')}</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'email') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Email-Thread</h4><div style="border:1px solid var(--border);border-radius:3px;padding:14px;background:var(--surface)"><div style="font-size:11px;color:var(--text-light);margin-bottom:6px">↙ Eingehend · ${escapeHtml(e.date+' '+e.time)}</div><div style="font-size:13px;font-weight:600;margin:8px 0;padding-bottom:6px;border-bottom:1px solid var(--border)">${escapeHtml(e.title)}</div><div style="font-size:12.5px;line-height:1.6;color:var(--text-mid)">${escapeHtml(e.body)}</div></div><div class="flex gap-8" style="margin-top:10px"><button class="btn btn-sm btn-primary">↩ Antworten</button><button class="btn btn-sm">↪ Weiterleiten</button></div></div>`;
+    return;
+  }
+  if (id === 'transcript') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Transkript</h4><pre style="font-size:12px;line-height:1.7;background:var(--bg);border-radius:3px;padding:14px;white-space:pre-wrap;font-family:'Courier New',monospace;color:var(--text-mid);max-height:340px;overflow-y:auto">[00:00] ${escapeHtml(e.actor)}: Grüezi, danke für die Zeit.\n[02:15] …\n[05:30] ${escapeHtml(e.actor)}: ${escapeHtml(e.body.slice(0,80))}</pre><div class="muted" style="font-size:11px;margin-top:8px">Automatisch transkribiert · editierbar</div></div>`;
+    return;
+  }
+  if (id === 'ai') {
+    // v1.3: list-item + field-grid Pattern
+    let h = `<div class="drawer-section"><h4>KI-Kurzzusammenfassung</h4>`;
+    h += `<div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Action-Items</h4>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Nächsten Termin mit ${escapeHtml(e.actor)} vorbereiten <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">Fälligkeit typischerweise innert 48 h</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Gruppen-Strategie aktualisieren <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">basierend auf besprochenen Inhalten</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Follow-up-Email verfassen <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">aus Gespräch extrahiert</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Signale</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Sentiment</dt><dd>${e.sentiment === 'positive' ? '😊 Positiv' : e.sentiment === 'negative' ? '😟 Negativ' : '😐 Neutral'}</dd>`;
+    h += `<dt>Gruppen-Kohärenz</dt><dd>Stabil</dd>`;
+    h += `<dt>Beziehungs-Temperatur</dt><dd>Warm</dd>`;
+    h += `<dt>Red-Flags</dt><dd class="muted">Keine kritischen Flags erkannt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Erkannte Schlagwörter</h4>`;
+    h += `<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px">`;
+    h += `<span class="chip">Gruppen-Mitglied</span><span class="chip">Struktur</span><span class="chip">Mandate</span><span class="chip">Nächste Schritte</span>`;
+    h += `</div></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'classify') {
+    // v1.3 NEU: Klassifizierungs-Tab
+    let h = `<div class="drawer-section"><h4>AI-Vorschläge (Top 3)</h4>`;
+    const [sugName, sugConf] = (e.aiSuggestion || '|').split('|');
+    if (sugName) {
+      h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" checked style="margin-right:6px"><strong>${escapeHtml(sugName)}</strong> <span class="muted">· ${sugConf || '—'} %</span><div class="meta">Haupt-Vorschlag · automatisch erkannt</div></label></div>`;
+    }
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#50 Erreicht - Mandatsbesprechung</strong> <span class="muted">· 6 %</span><div class="meta">Strategische Mandats-Besprechung</div></label></div>`;
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#22 Emailverkehr - Allgemeine Kommunikation</strong> <span class="muted">· 2 %</span><div class="meta">Generische Kommunikation</div></label></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Manuell wählen</h4>`;
+    h += `<div style="display:flex;gap:8px;margin-bottom:8px">`;
+    h += `<input type="search" placeholder="🔍 Activity-Type suchen …" style="flex:1">`;
+    h += `<select><option>Alle Kategorien (18)</option><option>Kontaktberührung</option><option>Erreicht</option><option>Emailverkehr</option><option>Messaging</option><option>Interviewprozess</option><option>Placementprozess</option><option>Refresh Kandidatenpflege</option><option>Mandatsakquise</option><option>Erfolgsbasis</option><option>Assessment</option><option>System / Meta</option><option>Kalender &amp; Planung</option><option>Dokumenten-Pipeline</option><option>Garantie &amp; Schutzfrist</option><option>Scraper &amp; Intelligence</option><option>Pipeline-Transitions</option><option>Saga-Events</option><option>AI &amp; LLM</option></select>`;
+    h += `</div>`;
+    h += `<div class="muted" style="font-size:11px">117 Activity-Types verfügbar · Katalog v1.4 · Favoriten zuerst</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Verknüpfungen bestätigen</h4>`;
+    if (e.links.length) {
+      e.links.forEach(l => {
+        h += `<div class="list-item"><div class="name"><label><input type="checkbox" checked style="margin-right:6px"> ${escapeHtml(l)}</label></div><div class="meta">auto-erkannt</div></div>`;
+      });
+    } else {
+      h += `<div class="muted" style="font-size:12px">Keine Auto-Erkennung — manuell zuordnen.</div>`;
+    }
+    h += `<div class="list-item"><div class="name"><label><input type="checkbox" style="margin-right:6px"> Weitere Verknüpfung</label> <select style="float:right;font-size:11px"><option>— wählen —</option><option>Gruppe · aktuell</option><option>Mitglied-Account</option></select></div><div class="meta">optional</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section">`;
+    h += `<div class="flex gap-8"><button class="btn btn-sm btn-primary">✓ AI-Vorschlag akzeptieren &amp; klassifizieren</button>`;
+    h += `<button class="btn btn-sm">❌ Verwerfen (kein Log-Eintrag)</button></div>`;
+    h += `</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'history') {
+    // v1.3 NEU: Verlauf-Tab
+    let h = `<div class="drawer-section"><h4>Frühere Interaktionen <span class="muted" style="font-size:11px">(Demo · 4 Einträge)</span></h4>`;
+    h += `<div class="hist-timeline" style="margin-top:8px">`;
+    h += `<div class="hist-row"><div class="hist-time">10.04.2026 14:20</div><div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div><div class="hist-body"><div class="hist-title"><strong>Update Call · 42 min</strong></div><div class="hist-sub">Gruppen-Strategie &amp; Mandats-Pipeline</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">03.04.2026 09:15</div><div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div><div class="hist-body"><div class="hist-title"><strong>E-Mail versendet · Gruppen-Bericht</strong></div><div class="hist-sub">Quartals-Übersicht aller Mandate</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">27.03.2026 11:00</div><div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div><div class="hist-body"><div class="hist-title"><strong>Gruppen-Update · 60 min</strong></div><div class="hist-sub">Strategie-Meeting · neue Tochtergesellschaft</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">15.03.2026 16:30</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>✓ Gruppe angelegt</strong></div><div class="hist-sub">Neue Unternehmensgruppe intake</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `</div>`;
+    h += `<button class="btn btn-sm" style="margin-top:10px">→ Komplette Gruppen-History</button>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Interaktions-Rhythmus</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Frequenz</dt><dd>1.2 Interaktionen / Woche</dd>`;
+    h += `<dt>Kanal-Mix</dt><dd>46 % Phone · 46 % Email · 8 % System</dd>`;
+    h += `<dt>Ø Antwort-Latenz</dt><dd>~7 h (werktags)</dd>`;
+    h += `</dl></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'briefing') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>AI → Briefing-Maske</h4><div style="padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:3px;font-size:13px;line-height:1.65"><strong>Briefing-Call erkannt.</strong> Extrahierte Informationen gehen in die Briefing-Maske.</div></div>`;
+    return;
+  }
+  if (id === 'reminders') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Verknüpfte Reminders</h4><div class="muted" style="font-size:12px">Aus diesem Event abgeleitete Reminders.</div></div>`;
+    return;
+  }
+}
+
+/* Reminder · Neu-Handler */
+function openReminderNew() {
+  const title = document.getElementById('remTitle');
+  const ctx = document.getElementById('remContext');
+  const due = document.getElementById('remDue');
+  if (title) title.value = '';
+  if (ctx) ctx.value = '';
+  if (due) {
+    const d = new Date(); d.setDate(d.getDate()+1); d.setHours(10,0,0,0);
+    const pad = n => String(n).padStart(2,'0');
+    due.value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  const dt = document.getElementById('remDrawTitle');
+  const ds = document.getElementById('remDrawSub');
+  const dc = document.getElementById('remDrawChips');
+  if (dt) dt.textContent = 'Neuer Reminder';
+  if (ds) ds.textContent = 'Gruppen-weiter Reminder (Rahmenvertrag, Report, Scraper-Match, etc.)';
+  if (dc) dc.innerHTML = '<span class="chip chip-accent">neu</span>';
+  openDrawer('reminderDrawer', 0);
+}
+
+function saveReminder(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const title = document.getElementById('remTitle').value.trim();
+  const type = document.getElementById('remType').value;
+  const due = document.getElementById('remDue').value;
+  const owner = document.getElementById('remOwner').value;
+  const ctx = document.getElementById('remContext').value.trim();
+  const link = document.getElementById('remLink').value;
+  if (!title) { alert('Titel ist Pflicht.'); return false; }
+  if (!due) { alert('Fälligkeit muss gesetzt sein.'); return false; }
+  const dueDate = new Date(due);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dayDiff = Math.round((dueDate - now) / 86400000);
+  let group, dueLabel;
+  if (dayDiff < 0) { group = 'overdue'; dueLabel = `${-dayDiff} d überfällig`; }
+  else if (dayDiff === 0) { group = 'today'; dueLabel = dueDate.toTimeString().slice(0,5) + ' Uhr'; }
+  else if (dayDiff <= 6) { group = 'week'; dueLabel = formatDate(dueDate) + (dayDiff===1?' · morgen':' · in '+dayDiff+' d'); }
+  else { group = 'later'; dueLabel = formatDate(dueDate); }
+  const sec = document.querySelector('#tab-7 .rem-section[data-rem-group="'+group+'"] tbody');
+  if (!sec) { alert('Sektion '+group+' nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-rem', group);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td style="width:36px"><input type="checkbox"></td><td><strong>${escapeHtml(title)}</strong>${ctx?`<div class="muted" style="font-size:11px">${escapeHtml(ctx)}</div>`:''}${link?`<div class="muted" style="font-size:11px">→ ${escapeHtml(link)}</div>`:''}</td><td><span class="chip chip-accent">${escapeHtml(type)}</span></td><td${group==='overdue'?' style="color:var(--red);font-weight:600"':''}>${dueLabel}</td><td><span class="actor-chip">${escapeHtml(owner)}</span></td><td class="right"><button class="btn btn-sm">Erledigen</button></td>`;
+  sec.insertBefore(tr, sec.firstChild);
+  setTimeout(() => { tr.style.transition = 'background 0.6s'; tr.style.background = ''; }, 1500);
+  closeDrawer('reminderDrawer');
+  return false;
+}
+
+function formatDate(d) { return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }
+
+/* Upload */
+function onUploadFile(input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  document.getElementById('uploadFileName').textContent = f.name;
+  document.getElementById('uploadFileMeta').textContent = prettySize(f.size) + ' · ' + (f.type || 'unbekannter Typ');
+}
+function handleDrop(ev) {
+  ev.preventDefault();
+  ev.target.style.borderColor = 'var(--border)';
+  ev.target.style.background = 'var(--bg)';
+  const f = ev.dataTransfer.files && ev.dataTransfer.files[0]; if (!f) return;
+  const input = document.getElementById('uploadFile');
+  const dt = new DataTransfer(); dt.items.add(f); input.files = dt.files;
+  onUploadFile(input);
+}
+function prettySize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+function extOf(name) { const m = (name||'').match(/\.([a-z0-9]+)$/i); return m ? m[1].toLowerCase() : ''; }
+function fileTypeLabel(ext) {
+  if (['pdf'].includes(ext)) return { label:'PDF', cls:'ft-pdf' };
+  if (['doc','docx'].includes(ext)) return { label:'DOCX', cls:'ft-docx' };
+  if (['xls','xlsx'].includes(ext)) return { label:'XLSX', cls:'ft-xlsx' };
+  if (['jpg','jpeg','png','gif'].includes(ext)) return { label:'IMG', cls:'ft-img' };
+  return { label:(ext||'FILE').toUpperCase(), cls:'' };
+}
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function doUpload(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const fileInput = document.getElementById('uploadFile');
+  const file = fileInput.files && fileInput.files[0];
+  const catKey = document.getElementById('uploadCat').value;
+  if (!catKey) { alert('Bitte Kategorie wählen.'); return false; }
+  if (!file) { alert('Bitte Datei auswählen.'); return false; }
+  const authorEl = document.getElementById('uploadAuthor');
+  const author = authorEl.dataset.value || authorEl.textContent.trim();
+  const title = (document.getElementById('uploadTitle').value || file.name.replace(/\.[^.]+$/, '')).trim();
+  const note = document.getElementById('uploadNote').value.trim();
+  const scope = document.getElementById('uploadScope').value;
+  const scopeLabel = scope === 'group' ? 'Ganze Gruppe' : 'Subset';
+  const ft = fileTypeLabel(extOf(file.name));
+  const today = new Date();
+  const dmy = String(today.getDate()).padStart(2,'0')+'.'+String(today.getMonth()+1).padStart(2,'0')+'.'+today.getFullYear();
+  const catLabels = { 'rahmenvertrag':'Rahmenvertrag', 'master-nda':'Master-NDA', 'konzern-agb':'Konzern-AGB', 'gruppen-praesentation':'Gruppen-Präsentation', 'holdings-geschaeftsbericht':'Holdings-Geschäftsbericht', 'sonstiges':'Sonstiges' };
+  const tbody = document.querySelector('#tab-5 .data-table tbody');
+  if (!tbody) { alert('Dokumente-Tabelle nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-cat', catKey);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td><span class="file-type ${ft.cls}">${ft.label}</span></td><td><strong>${escapeHtml(title)}</strong>${note?`<div class="muted" style="font-size:11px">${escapeHtml(note)}</div>`:''}</td><td><span class="chip chip-accent">${escapeHtml(catLabels[catKey]||catKey)}</span></td><td>${escapeHtml(scopeLabel)}</td><td>${dmy}</td><td><span class="actor-chip">${escapeHtml(author)}</span></td><td class="right">${prettySize(file.size)}</td><td class="right"><button class="row-icon-btn">›</button></td>`;
+  tbody.insertBefore(tr, tbody.firstChild);
+  setTimeout(() => { tr.style.transition='background 0.6s'; tr.style.background=''; }, 1500);
+  document.getElementById('uploadForm').reset();
+  document.getElementById('uploadFileName').textContent = 'Datei hierher ziehen oder klicken';
+  document.getElementById('uploadFileMeta').textContent = 'PDF, DOCX, XLSX, JPG, PNG · max. 20 MB';
+  closeDrawer('uploadDrawer');
+  return false;
+}
+
+/* Hist-Row Klicks wiring */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#tab-6 .hist-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', e => {
+      if (e.target.tagName === 'A') return;
+      openHistDrawer(row);
+    });
+  });
+});
+</script>
+</body>
+</html>

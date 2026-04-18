@@ -1,0 +1,464 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Mandate" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: CFO-Suche
+    - generic [ref=e16]:
+      - generic [ref=e17]: ⌘K
+      - button "☀" [ref=e18] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]: 🎯
+    - generic [ref=e22]:
+      - heading "CFO-Suche Bauherr Muster AG" [level=1] [ref=e23]
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - text: Owner AM
+          - strong [ref=e26]: PW
+        - generic [ref=e28]:
+          - text: Lead Research
+          - strong [ref=e29]: LR
+        - generic [ref=e31]: Kickoff 14.01.2026
+        - generic [ref=e33]: Zielplatzierung Q2/2026
+      - generic [ref=e34]:
+        - button "📞 Anrufen" [ref=e35] [cursor=pointer]
+        - button "✉ Email" [ref=e36] [cursor=pointer]
+        - button "📄 Mandat-Report" [ref=e37] [cursor=pointer]
+        - button "🔔 Reminder" [ref=e38] [cursor=pointer]
+        - button "⚡ Option buchen" [ref=e39] [cursor=pointer]
+        - button "🛑 Mandat kündigen" [ref=e40] [cursor=pointer]
+        - button "⋯ Mehr" [ref=e41] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: 🎯 Target
+        - button "Aktiv ▾" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]: Stage 2/3
+        - generic [ref=e48]: Exklusiv (läuft mit Mandat)
+        - generic [ref=e49]: 🛡 3 Mt Garantie
+      - generic [ref=e51]: Briefing v3 · Stellenbriefing signiert 14.01.2026
+  - generic [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]: 📊 Idents
+      - generic [ref=e55]: 38 / 50
+      - generic [ref=e56]: 76 %
+    - generic [ref=e59]:
+      - generic [ref=e60]: 📞 Calls
+      - generic [ref=e61]: 24 / 30
+      - generic [ref=e62]: 80 %
+    - generic [ref=e65]:
+      - generic [ref=e66]: 📋 Shortlist
+      - generic [ref=e67]: 5 / 6
+      - generic [ref=e68]: 83 % · CV Sent
+    - generic [ref=e71]:
+      - generic [ref=e72]: 💰 Pauschale
+      - generic [ref=e73]: CHF 75'000
+      - generic [ref=e74]: Stage 2 läuft
+    - generic [ref=e75]:
+      - generic [ref=e76]: ⏱ Time-to-Fill
+      - generic [ref=e77]: Woche 13 / 20
+      - generic [ref=e78]: im Plan
+    - generic [ref=e81]:
+      - generic [ref=e82]: 🏆 Placements
+      - generic [ref=e83]: 0 / 1
+      - generic [ref=e84]: Target · 1 Slot
+  - navigation [ref=e85]:
+    - generic [ref=e86] [cursor=pointer]: 1Übersicht
+    - generic [ref=e87] [cursor=pointer]: 2Longlist
+    - generic [ref=e88] [cursor=pointer]: 3Prozesse
+    - generic [ref=e89] [cursor=pointer]: 4Billing
+    - generic [ref=e90] [cursor=pointer]: 5History
+    - generic [ref=e91] [cursor=pointer]: 6Dokumente
+    - generic [ref=e92] [cursor=pointer]: 7Reminders
+  - generic [ref=e93]:
+    - text: ▾ ▾ ▾ ▾ ▾
+    - generic [ref=e496]:
+      - generic [ref=e497]:
+        - generic [ref=e498]:
+          - generic [ref=e499]: Longlist Total
+          - generic [ref=e500]: "38"
+          - generic [ref=e501]: von 50 Ziel · 76 %
+        - generic [ref=e502]:
+          - generic [ref=e503]: Calls geführt
+          - generic [ref=e504]: "24"
+          - generic [ref=e505]: von 30 · 80 %
+        - generic [ref=e506]:
+          - generic [ref=e507]: Erreicht-Ratio
+          - generic [ref=e508]: 62 %
+          - generic [ref=e509]: 15 erreicht / 24 Calls
+        - generic [ref=e510]:
+          - generic [ref=e511]: Shortlist (CV IN +)
+          - generic [ref=e512]: "5"
+          - generic [ref=e513]: Ziel 6 · Stage 5–8
+        - generic [ref=e514]:
+          - generic [ref=e515]: NoGo / Dropped
+          - generic [ref=e516]: "4"
+          - generic [ref=e517]: nicht mehr verfolgt
+      - generic [ref=e518]:
+        - searchbox "🔍 Suche in Name, Funktion, Arbeitgeber …" [ref=e519]
+        - combobox [ref=e520] [cursor=pointer]:
+          - 'option "Priorität: alle" [selected]'
+          - option "Hoch"
+          - option "Normal"
+          - option "Niedrig"
+        - combobox [ref=e521] [cursor=pointer]:
+          - 'option "Validated: alle" [selected]'
+          - option "Ja"
+          - option "Nein"
+        - combobox [ref=e522] [cursor=pointer]:
+          - 'option "NoGo: alle" [selected]'
+          - option "Ja"
+          - option "Nein"
+        - combobox [ref=e523] [cursor=pointer]:
+          - 'option "Letzter Kontakt: alle" [selected]'
+          - option "< 7 Tage"
+          - option "7–30 Tage"
+          - option "> 30 Tage"
+          - option "Nie"
+        - generic [ref=e524]:
+          - checkbox "🛡 Schutzfrist aktiv" [ref=e525]
+          - text: 🛡 Schutzfrist aktiv
+        - generic [ref=e526]:
+          - generic [ref=e527] [cursor=pointer]: Kanban
+          - generic [ref=e528] [cursor=pointer]: Liste
+        - button "📞 Nächsten anrufen (12)" [ref=e529] [cursor=pointer]
+        - button "+ Kandidat" [ref=e530] [cursor=pointer]
+      - generic [ref=e531]:
+        - generic [ref=e532]:
+          - generic [ref=e533]:
+            - generic [ref=e534]:
+              - generic [ref=e535]: 1 · Research
+              - generic [ref=e536]: "14"
+            - generic [ref=e537] [cursor=pointer]:
+              - strong [ref=e539]: Andreas Wyss
+              - generic [ref=e541]: Leiter Finanzen · Implenia AG
+              - generic [ref=e542]: identifiziert 12.04 · LR
+            - generic [ref=e543] [cursor=pointer]:
+              - strong [ref=e545]: Markus Gerber
+              - generic [ref=e547]: Head of Finance · HRS Real Estate
+              - generic [ref=e548]: ⭐ Hoch · 10.04 · LR
+            - generic [ref=e549] [cursor=pointer]:
+              - strong [ref=e551]: Claudia Zehnder
+              - generic [ref=e553]: CFO · Halter AG
+              - generic [ref=e554]: ⭐ Hoch · 09.04 · LR
+            - generic [ref=e555] [cursor=pointer]: + 11 weitere
+          - generic [ref=e556]:
+            - generic [ref=e557]:
+              - generic [ref=e558]: 2 · Nicht erreicht
+              - generic [ref=e559]: "6"
+            - generic [ref=e560] [cursor=pointer]:
+              - strong [ref=e562]: Peter Hofer
+              - generic [ref=e564]: Finanzleiter · Steiner AG
+              - generic [ref=e565]: 3× versucht · LR
+            - generic [ref=e566] [cursor=pointer]:
+              - strong [ref=e568]: Sabine Meyer
+              - generic [ref=e570]: Leiterin Controlling · Marti AG
+              - generic [ref=e571]: 2× versucht
+            - generic [ref=e572] [cursor=pointer]: + 4 weitere
+          - generic [ref=e573]:
+            - generic [ref=e574]:
+              - generic [ref=e575]: 3 · NIC
+              - generic [ref=e576]: "3"
+            - generic [ref=e577] [cursor=pointer]:
+              - strong [ref=e579]: Roland Graf
+              - generic [ref=e580]: CFO · Priora
+              - generic [ref=e581]: „aktuell kein Wechsel" · 05.04
+            - generic [ref=e582] [cursor=pointer]: + 2 weitere
+          - generic [ref=e583]:
+            - generic [ref=e584]:
+              - generic [ref=e585]: 4 · CV Expected
+              - generic [ref=e586]: "3"
+            - generic [ref=e587] [cursor=pointer]:
+              - strong [ref=e589]: Nina Brunner
+              - generic [ref=e591]: Head of Finance · Losinger Marazzi
+              - generic [ref=e592]: CV erwartet bis 16.04
+            - generic [ref=e593] [cursor=pointer]: + 2 weitere
+          - generic [ref=e594]:
+            - generic [ref=e595]:
+              - generic [ref=e596]: 🔒 5 · CV IN
+              - generic [ref=e597]: "2"
+            - generic [ref=e598] [cursor=pointer]:
+              - strong [ref=e600]: Andrea Koller
+              - generic [ref=e602]: CFO · Eberhard Bau
+              - generic [ref=e603]: ✓ Validated · 🛡 Schutz 02.04.2027
+            - generic [ref=e604] [cursor=pointer]:
+              - strong [ref=e606]: Martin Stucki
+              - generic [ref=e608]: Finanzleiter · ERNE AG
+              - generic [ref=e609]: ✓ Validated
+          - generic [ref=e610]:
+            - generic [ref=e611]:
+              - generic [ref=e612]: 🔒 6 · Briefing
+              - generic [ref=e613]: "2"
+            - generic [ref=e614] [cursor=pointer]:
+              - strong [ref=e616]: Peter Stadler
+              - generic [ref=e618]: Head of Finance · Steiner Investment
+              - generic [ref=e619]: Briefing 08.04 · ⭐ Hoch
+            - generic [ref=e620] [cursor=pointer]:
+              - strong [ref=e622]: Nadine Berger
+              - generic [ref=e624]: CFO · Preinvest Group
+              - generic [ref=e625]: Briefing 05.04
+          - generic [ref=e626]:
+            - generic [ref=e627]:
+              - generic [ref=e628]: 🔒 7 · GO mündlich
+              - generic [ref=e629]: "1"
+            - generic [ref=e630] [cursor=pointer]:
+              - strong [ref=e632]: Tobias Furrer
+              - generic [ref=e634]: Finanzleiter · Züblin AG
+              - generic [ref=e635]: GO mündlich 20.03 · ⭐ Hoch
+          - generic [ref=e636]:
+            - generic [ref=e637]:
+              - generic [ref=e638]: 🔒 8 · GO schriftlich
+              - generic [ref=e639]: "1"
+            - generic [ref=e640] [cursor=pointer]:
+              - strong [ref=e642]: Tobias Furrer
+              - generic [ref=e643]: → in Prozess (Stage V · 2nd)
+              - generic [ref=e644]: GO schriftlich 25.03
+          - generic [ref=e645]:
+            - generic [ref=e646]:
+              - generic [ref=e647]: 9 · Dropped
+              - generic [ref=e648]: "3"
+            - generic [ref=e649] [cursor=pointer]:
+              - strong [ref=e651]: Lars Furrer
+              - generic [ref=e652]: Controller · Hiag
+              - generic [ref=e653]: zu junior · 02.04
+            - generic [ref=e654] [cursor=pointer]: + 2 weitere
+          - generic [ref=e655]:
+            - generic [ref=e656]:
+              - generic [ref=e657]: 10 · Ghosted
+              - generic [ref=e658]: "1"
+            - generic [ref=e659] [cursor=pointer]:
+              - strong [ref=e661]: Thomas Wirz
+              - generic [ref=e662]: CFO · Swiss Prime Site
+              - generic [ref=e663]: Auto nach Frist · 28.03
+        - generic [ref=e664]: "🔒 = Locked Stages (ab CV IN): nur durch Automationen änderbar. Drag & Drop nur zwischen Stages 1–4 + 9/10 möglich."
+      - generic [ref=e665]: Longlist-Stages gemäss Research-Flow. Ab Stage 5 (CV IN) werden Änderungen nur durch Automationen (Kandidaten-History → Longlist-Sync) ausgelöst. Kandidaten in Stage 7/8 können via „→ Prozess eröffnen" in die Placement-Pipeline (Tab 3) übernommen werden.
+  - generic [ref=e333]:
+    - generic [ref=e334]: 1–7 Tabs
+    - generic [ref=e335]: O Option buchen
+    - generic [ref=e336]: K Kündigen
+    - generic [ref=e337]: T Theme
+    - generic [ref=e338]: ⌘K Command Palette
+  - generic [ref=e339]:
+    - generic [ref=e340]:
+      - generic [ref=e341]: ⚡
+      - generic [ref=e342]:
+        - heading "Optionale Stage buchen" [level=2] [ref=e343]
+        - generic [ref=e344]: Zusatz-Leistung zum Mandat · erzeugt separaten Auftrag + Rechnung
+      - button "✕" [ref=e345] [cursor=pointer]
+    - generic [ref=e346]:
+      - generic [ref=e347]:
+        - heading "Stage wählen" [level=4] [ref=e348]
+        - generic [ref=e349]:
+          - generic [ref=e350] [cursor=pointer]:
+            - radio "VI · Mehr Idents +25 zusätzliche Identifikationen · CHF 3'500" [ref=e351]
+            - generic [ref=e352]:
+              - strong [ref=e353]: VI · Mehr Idents
+              - text: +25 zusätzliche Identifikationen · CHF 3'500
+          - generic [ref=e354] [cursor=pointer]:
+            - radio "VII · Mehr Dossiers +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800" [ref=e355]
+            - generic [ref=e356]:
+              - strong [ref=e357]: VII · Mehr Dossiers
+              - text: +3 zusätzliche ausgearbeitete Dossiers · CHF 2'800
+          - generic [ref=e358] [cursor=pointer]:
+            - radio "VIII · Marketing-Massnahmen bereits gebucht LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500" [disabled] [ref=e359]
+            - generic [ref=e360]:
+              - strong [ref=e361]: VIII · Marketing-Massnahmen
+              - generic [ref=e362]: bereits gebucht
+              - text: LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500
+          - generic [ref=e363] [cursor=pointer]:
+            - radio "IX · Assessment ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat" [ref=e364]
+            - generic [ref=e365]:
+              - strong [ref=e366]: IX · Assessment
+              - text: ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat
+          - generic [ref=e367] [cursor=pointer]:
+            - radio "X · Fakultative Garantie +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat" [ref=e368]
+            - generic [ref=e369]:
+              - strong [ref=e370]: X · Fakultative Garantie
+              - text: +1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat
+      - generic [ref=e371]:
+        - heading "Anmerkung / Begründung" [level=4] [ref=e372]
+        - textbox "Kurze Begründung (intern, audit-trail)…" [ref=e373]
+    - generic [ref=e374]:
+      - button "Abbrechen" [ref=e375] [cursor=pointer]
+      - button "⚡ Option buchen & Rechnung erstellen" [ref=e377] [cursor=pointer]
+  - generic [ref=e378]:
+    - generic [ref=e379]:
+      - generic [ref=e380]: 🛑
+      - generic [ref=e381]:
+        - heading "Mandat kündigen" [level=2] [ref=e382]
+        - generic [ref=e383]: CFO-Suche · Bauherr Muster AG
+      - button "✕" [ref=e384] [cursor=pointer]
+    - generic [ref=e385]:
+      - generic [ref=e386]:
+        - heading "Kündigung durch" [level=4] [ref=e387]
+        - generic [ref=e388]:
+          - generic [ref=e389]:
+            - radio "Kunde kündigt (häufigster Fall)" [checked] [ref=e390]
+            - text: Kunde kündigt (häufigster Fall)
+          - generic [ref=e391]:
+            - radio "Arkadium kündigt (Exit-Option Arkadium)" [ref=e392]
+            - text: Arkadium kündigt (Exit-Option Arkadium)
+          - generic [ref=e393]:
+            - radio "Einvernehmlich" [ref=e394]
+            - text: Einvernehmlich
+      - generic [ref=e395]:
+        - heading "Grund *" [level=4] [ref=e396]
+        - combobox [ref=e397] [cursor=pointer]:
+          - option "— wählen —" [selected]
+          - option "Position intern besetzt"
+          - option "Position anderweitig besetzt (Mitbewerber)"
+          - option "Strategie-Change Kunde"
+          - option "Unzufriedenheit mit Arkadium"
+          - option "Budget gestrichen"
+          - option "Sonstiges (freitext)"
+        - textbox "Details / freitext (audit-relevant) …" [ref=e398]
+      - generic [ref=e399]:
+        - heading "Billing-Konsequenz (80 %-Regel)" [level=4] [ref=e400]
+        - generic [ref=e401]:
+          - text: Mandat befindet sich in
+          - strong [ref=e402]: Stage 2 von 3
+          - text: . Bei Kundenkündigung wird die noch offene Pauschale (Stage 3) zu
+          - strong [ref=e403]: 80 %
+          - text: in Rechnung gestellt, sofern Arkadium die Shortlist geliefert hat.
+          - strong [ref=e404]: "Kündigungs-Rechnung (Vorschau):"
+          - text: "Stage 3 offen: CHF 25'000 × 80 % ="
+          - strong [ref=e405]: CHF 20'000 netto
+          - text: + MwSt 8.1 % = CHF 1'620 → Total CHF 21'620 brutto
+      - generic [ref=e406]:
+        - heading "Kündigungs-Datum" [level=4] [ref=e407]
+        - textbox [ref=e408]: 2026-04-14
+    - generic [ref=e409]:
+      - button "Abbrechen" [ref=e410] [cursor=pointer]
+      - button "🛑 Mandat kündigen & Rechnung erstellen" [ref=e412] [cursor=pointer]
+  - generic [ref=e413]:
+    - generic [ref=e414]:
+      - generic [ref=e415]: ↑
+      - generic [ref=e416]:
+        - heading "Dokument hochladen" [level=2] [ref=e417]
+        - generic [ref=e418]: Kategorie wählen, Datei auswählen, optional verknüpfen
+      - button "✕" [ref=e419] [cursor=pointer]
+    - generic [ref=e421]:
+      - generic [ref=e422]:
+        - heading "Datei" [level=4] [ref=e423]
+        - generic [ref=e424] [cursor=pointer]:
+          - generic [ref=e425]: 📄
+          - generic [ref=e426]: Datei hierher ziehen oder klicken
+          - generic [ref=e427]: PDF, DOCX, XLSX, JPG, PNG · max. 20 MB
+      - generic [ref=e428]:
+        - heading "Metadaten" [level=4] [ref=e429]
+        - generic [ref=e430]:
+          - generic [ref=e431]: Kategorie *
+          - combobox [ref=e432] [cursor=pointer]:
+            - option "— wählen —" [selected]
+            - option "Offerte / Vertrag"
+            - option "Rechnung"
+            - option "Stellenbriefing"
+            - option "Assessment"
+            - option "Scraper-Beleg"
+            - option "Sonstiges"
+          - generic [ref=e433]: Titel
+          - textbox "(leer = Dateiname übernehmen)" [ref=e434]
+          - generic [ref=e435]: Notiz
+          - textbox "Kurz-Hinweis (optional)" [ref=e436]
+          - generic [ref=e437]: Verknüpfung
+          - combobox [ref=e438] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Billing Stage II"
+          - generic [ref=e439]: Urheber
+          - generic [ref=e440]: Upload · PW (aktueller User · automatisch)
+    - generic [ref=e441]:
+      - button "Abbrechen" [ref=e442] [cursor=pointer]
+      - button "↑ Hochladen" [ref=e444] [cursor=pointer]
+  - generic [ref=e445]:
+    - generic [ref=e446]:
+      - generic [ref=e447]: 💬
+      - generic [ref=e448]:
+        - heading "Event-Detail" [level=2] [ref=e449]
+        - generic [ref=e450]: —
+      - button "✕" [ref=e451] [cursor=pointer]
+    - generic [ref=e454]:
+      - button "Schliessen" [ref=e455] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e456] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e457] [cursor=pointer]
+  - generic [ref=e458]:
+    - generic [ref=e459]:
+      - generic [ref=e460]: ⏰
+      - generic [ref=e461]:
+        - heading "Neuer Reminder" [level=2] [ref=e462]
+        - generic [ref=e463]: Erstelle einen Termin-, Follow-up- oder System-Reminder
+        - generic [ref=e465]: neu
+      - button "✕" [ref=e466] [cursor=pointer]
+    - generic [ref=e467]:
+      - generic [ref=e468]:
+        - heading "Reminder" [level=4] [ref=e469]
+        - generic [ref=e470]:
+          - generic [ref=e471]: Titel *
+          - textbox "z.B. Stage-Deadline VI prüfen" [ref=e472]
+          - generic [ref=e473]: Typ *
+          - combobox [ref=e474] [cursor=pointer]:
+            - option "Mandat-Review" [selected]
+            - option "Stage-Deadline"
+            - option "Kandidat-Nachfassen"
+            - option "Abschluss-Rechnung"
+            - option "Debriefing"
+            - option "Follow-up"
+            - option "Schutzfrist"
+            - option "Garantie"
+            - option "Custom"
+          - generic [ref=e475]: Fällig am *
+          - textbox [ref=e476]
+          - generic [ref=e477]: Zuständig *
+          - combobox [ref=e478] [cursor=pointer]:
+            - option "PW" [selected]
+            - option "JV"
+            - option "LR"
+            - option "MF"
+            - option "NP"
+            - option "NS"
+            - option "Backoffice"
+          - generic [ref=e479]: Kontext
+          - textbox "Hintergrund, Personen, Agenda" [ref=e480]
+          - generic [ref=e481]: Verknüpfung
+          - combobox [ref=e482] [cursor=pointer]:
+            - option "Mandat-Level (keine Verknüpfung)" [selected]
+            - option "Stage II Longlist"
+            - option "Stage III CV Sent"
+            - option "Stage IV 1st Interview"
+            - option "Prozess · Nadine Berger"
+            - option "Billing Stage II"
+          - generic [ref=e483]: Wiederholen
+          - combobox [ref=e484] [cursor=pointer]:
+            - option "Einmalig" [selected]
+            - option "Wöchentlich"
+            - option "Monatlich"
+            - option "Quartalsweise"
+      - generic [ref=e485]:
+        - heading "Benachrichtigung" [level=4] [ref=e486]
+        - generic [ref=e487]:
+          - generic [ref=e488]: Vorlaufzeit
+          - combobox [ref=e489] [cursor=pointer]:
+            - option "Zum Fälligkeitstermin"
+            - option "1 h vorher"
+            - option "1 Tag vorher"
+            - option "3 Tage vorher" [selected]
+            - option "1 Woche vorher"
+          - generic [ref=e490]: Eskalation
+          - generic [ref=e491]: 3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead
+    - generic [ref=e492]:
+      - button "Abbrechen" [ref=e493] [cursor=pointer]
+      - button "💾 Reminder anlegen" [ref=e495] [cursor=pointer]

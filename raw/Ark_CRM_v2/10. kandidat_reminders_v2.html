@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK CRM – Reminders (Kandidat)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1e1e1c;color:#e8e4dc;min-height:100vh}
+:root{--gold:#dcb479;--teal:#196774;--gold08:rgba(220,180,121,.08);--gold15:rgba(220,180,121,.15);--gold30:rgba(220,180,121,.30);--teal15:rgba(25,103,116,.15);--teal30:rgba(25,103,116,.30);--bg-p:#1e1e1c;--bg-c:#2c2c28;--bg-e:#343430;--bg-hv:#3a3a35;--brd:rgba(220,180,121,.10);--brd-s:rgba(255,255,255,.06);--t1:#e8e4dc;--t2:#b5b0a8;--t3:#9a968e;--tm:#726e66;--green:#5DCAA5;--red:#ef4444;--amber:#f59e0b;--blue:#60a5fa;--purple:#a78bfa}
+
+.subtabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c);padding:0 20px;overflow-x:auto}
+.subtab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;font-weight:500}
+.subtab:hover{color:var(--t2)}.subtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.content{padding:16px 20px;max-width:900px;}
+/* Summary cards */
+.rem-summary{display:flex;gap:8px;margin-bottom:14px}
+.rs-card{flex:1;padding:10px 14px;background:var(--bg-e);border-radius:10px;border:.5px solid var(--brd-s);cursor:pointer;transition:.2s}
+.rs-card:hover{border-color:var(--brd)}.rs-card.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(220,180,121,.08)}
+.rs-value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.rs-label{font-size:9px;color:var(--t3);margin-top:2px}
+/* Filter tabs */
+.rem-filters{display:flex;gap:4px;margin-bottom:14px;align-items:center}
+.rf-tab{padding:5px 14px;border-radius:6px;font-size:10px;font-weight:600;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.rf-tab:hover{border-color:var(--gold30);color:var(--t2)}.rf-tab.active{background:var(--gold08);border-color:var(--gold30);color:var(--gold)}
+.rf-cnt{font-weight:700;margin-left:3px;font-size:11px}
+.rf-spacer{flex:1}
+.tb-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s}
+.tb-btn:hover{border-color:var(--gold30);color:var(--t2)}.tb-btn.primary{background:var(--gold15);border-color:var(--gold30);color:var(--gold)}
+/* Reminder list */
+.rem-list{display:flex;flex-direction:column;gap:6px}
+.rem-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--bg-e);border-radius:10px;border:.5px solid var(--brd-s);transition:.2s;position:relative}
+.rem-card:hover{border-color:var(--brd);box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.rem-card.overdue{border-left:3px solid var(--red)}
+.rem-card.today{border-left:3px solid var(--amber)}
+.rem-card.upcoming{border-left:3px solid var(--blue)}
+.rem-card.done{opacity:.4;border-left:3px solid var(--green)}
+.rem-card.done .rem-text{text-decoration:line-through}
+/* Check */
+.rem-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--brd);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:.2s;flex-shrink:0;margin-top:2px}
+.rem-check:hover{border-color:var(--green);color:var(--green)}.rem-check.checked{background:rgba(93,202,165,.12);border-color:var(--green);color:var(--green)}
+/* Body */
+.rem-body{flex:1;min-width:0}
+.rem-text{font-size:13px;color:var(--t1);line-height:1.5;margin-bottom:4px}
+.rem-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--t3)}
+.rem-date{display:flex;align-items:center;gap:3px}
+.rem-date-overdue{color:var(--red);font-weight:600}
+.rem-date-today{color:var(--amber);font-weight:600}
+.rem-date-upcoming{color:var(--blue)}
+/* Priority */
+.rem-prio{font-size:8px;padding:2px 8px;border-radius:4px;font-weight:600;flex-shrink:0}
+.rp-high{background:rgba(239,68,68,.08);color:var(--red);border:.5px solid rgba(239,68,68,.12)}
+.rp-medium{background:rgba(245,158,11,.08);color:var(--amber);border:.5px solid rgba(245,158,11,.12)}
+.rp-low{background:rgba(128,124,116,.06);color:var(--t3);border:.5px solid rgba(128,124,116,.12)}
+/* Source badge */
+.rem-source{font-size:8px;padding:2px 7px;border-radius:3px;font-weight:600}
+.rs-auto{background:rgba(139,92,246,.08);color:var(--purple);border:.5px solid rgba(139,92,246,.12)}
+.rs-manual{background:rgba(96,165,250,.08);color:var(--blue);border:.5px solid rgba(96,165,250,.12)}
+/* Entity link */
+.rem-link{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;cursor:pointer;transition:.15s}
+.rl-proc{background:var(--teal15);border:.5px solid var(--teal30);color:#5bb8c9}.rl-proc:hover{background:rgba(25,103,116,.25)}
+.rl-job{background:var(--gold08);border:.5px solid var(--gold30);color:var(--gold)}.rl-job:hover{background:rgba(220,180,121,.15)}
+.rl-hist{background:rgba(93,202,165,.06);border:.5px solid rgba(93,202,165,.1);color:var(--green)}.rl-hist:hover{background:rgba(93,202,165,.12)}
+/* Snooze */
+.rem-actions{display:flex;gap:3px;flex-shrink:0;align-items:flex-start}
+.snooze-btn{padding:4px 8px;border-radius:5px;font-size:9px;font-weight:500;border:1px solid var(--brd);background:transparent;color:var(--t3);cursor:pointer;transition:.15s;white-space:nowrap}
+.snooze-btn:hover{border-color:var(--gold30);color:var(--gold);background:var(--gold08)}
+.rem-edit{width:24px;height:24px;border-radius:5px;border:1px solid var(--brd);background:transparent;color:var(--tm);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:.15s;opacity:0}
+.rem-card:hover .rem-edit{opacity:1}.rem-edit:hover{border-color:var(--gold30);color:var(--gold)}
+/* New reminder form */
+.new-rem{background:var(--bg-e);border-radius:12px;border:.5px solid var(--brd-s);padding:16px;margin-top:14px;display:none}
+.new-rem.open{display:block}
+.nr-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.nr-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.nr-input{flex:1;padding:8px 12px;border-radius:8px;background:var(--bg-p);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none}
+.nr-input:focus{border-color:var(--gold30)}
+.nr-input-sm{width:140px;padding:8px 12px;border-radius:8px;background:var(--bg-p);border:1px solid var(--brd-s);color:var(--t1);font-size:12px;font-family:inherit;outline:none}
+.nr-select{padding:8px 12px;border-radius:8px;background:var(--bg-p);border:1px solid var(--brd-s);color:var(--t1);font-size:11px;font-family:inherit;outline:none;cursor:pointer}
+.nr-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.nr-btn{padding:8px 20px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:.15s}
+.nr-cancel{background:transparent;border:1px solid var(--brd);color:var(--t3)}.nr-cancel:hover{border-color:var(--gold30);color:var(--t2)}
+.nr-save{background:var(--gold15);border:1px solid var(--gold30);color:var(--gold)}.nr-save:hover{background:var(--gold30)}
+/* Empty */
+.rem-empty{text-align:center;padding:40px;display:none}
+.rem-empty-icon{font-size:32px;margin-bottom:8px;opacity:.3}
+.rem-empty-text{font-size:13px;color:var(--t3)}
+/* Status group headers */
+.rem-group{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:6px 0 4px;margin-top:12px;display:flex;align-items:center;gap:6px}
+.rem-group:first-child{margin-top:0}
+.rem-group-dot{width:8px;height:8px;border-radius:50%}
+.rem-group-line{flex:1;height:1px;background:var(--brd-s)}
+/* Snooze toast */
+.snooze-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg-c);border:1px solid var(--gold30);border-radius:10px;padding:10px 20px;font-size:12px;color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:200;transition:transform .3s ease,opacity .3s;opacity:0;pointer-events:none}
+.snooze-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* KB */
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin-top:12px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+/* === ARK STANDARD HEADER v1.0 === */
+.ark-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28)}.ark-topbar-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t3)}.ark-topbar-left a{color:var(--t3);text-decoration:none}.ark-topbar-left a:hover{color:var(--gold)}.ark-topbar-left .sep{color:var(--tm)}.ark-topbar-left .cur{color:var(--t1);font-weight:500}.ark-topbar-right{display:flex;align-items:center;gap:16px}.ark-search{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:12px;color:var(--t3);cursor:pointer}.ark-search:hover{border-color:rgba(220,180,121,.3)}.ark-search kbd{font-size:10px;padding:1px 5px;border-radius:3px;background:var(--bg-p,#1e1e1c);border:.5px solid var(--brd);font-family:monospace;color:var(--tm)}.ark-user{width:32px;height:32px;border-radius:8px;background:var(--teal);color:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ark-header{background:var(--bg-c,#2c2c28);padding:20px 32px 0;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gold),var(--teal),transparent 60%) 1}.ark-hdr{display:flex;align-items:flex-start;gap:24px;margin-bottom:14px}.ark-av-w{position:relative;flex-shrink:0}.ark-av-r{width:120px;height:120px;border-radius:50%;padding:3px;background:conic-gradient(var(--green,#5DCAA5) 0deg,var(--green,#5DCAA5) 360deg);display:flex;align-items:center;justify-content:center}.ark-av-i{width:100%;height:100%;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#E1F5EE;letter-spacing:2px;border:3px solid var(--bg-c,#2c2c28)}.ark-av-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:9px;padding:2px 10px;border-radius:999px;background:var(--green,#5DCAA5);color:#fff;font-weight:600;white-space:nowrap}.ark-av-u{position:absolute;bottom:14px;right:2px;width:28px;height:28px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-c,#2c2c28);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#262626;font-weight:700}
+.ark-nfo{flex:1;min-width:0;padding-top:4px}.ark-nr{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap}.ark-nm{font-size:22px;font-weight:600;color:var(--t1)}.ark-gr{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;font-size:14px;font-weight:700;background:rgba(93,202,165,.15);color:var(--green,#5DCAA5);border:1.5px solid rgba(93,202,165,.4)}.ark-ct{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;font-size:12px;color:var(--t2,#b5b0a8)}.ark-ct a{color:#0a66c2;text-decoration:none}.ark-ct a:hover{text-decoration:underline}.ark-lc{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t3)}.ark-sp{font-size:10px;font-weight:700;color:#E1F5EE;background:var(--teal);padding:2px 8px;border-radius:4px;letter-spacing:.5px}.ark-bd{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.ark-b{font-size:10px;font-weight:600;padding:3px 10px;border-radius:5px}.ark-bs{background:rgba(93,202,165,.12);color:var(--green,#5DCAA5);border:1px solid rgba(93,202,165,.25)}.ark-bt{background:rgba(239,68,68,.1);color:var(--red,#ef4444);border:1px solid rgba(239,68,68,.2)}.ark-bw{background:rgba(220,180,121,.08);color:var(--gold);border:1px solid rgba(220,180,121,.3)}.ark-br{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15)}.ark-pg{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ark-pl{font-size:10px;color:var(--t3)}.ark-pt{width:160px;height:3px;background:var(--bg-e,#343430);border-radius:2px;overflow:hidden}.ark-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--gold))}.ark-pp{font-size:10px;color:var(--gold);font-weight:500}.ark-qa{display:flex;gap:6px;flex-wrap:wrap}.ark-qb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;background:transparent;border:1px solid rgba(220,180,121,.3);color:var(--gold);transition:.15s}.ark-qb:hover{background:rgba(220,180,121,.15)}
+.ark-tabs{display:flex;gap:0;border-bottom:1px solid var(--brd);background:var(--bg-c,#2c2c28);padding:0 20px;overflow-x:auto}.ark-tab{padding:10px 16px;font-size:11px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab:hover{color:var(--t2,#b5b0a8)}.ark-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.ark-tabs2{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.06);background:var(--bg-e,#343430);padding:0 20px;overflow-x:auto}.ark-tab2{padding:8px 14px;font-size:10px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}.ark-tab2:hover{color:var(--t2,#b5b0a8)}.ark-tab2.active{color:#a78bfa;border-bottom-color:#a78bfa}.ark-tab2.disabled{color:var(--tm);cursor:default;opacity:.5}
+.kb-bar{display:flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(220,180,121,.04);border:.5px solid rgba(220,180,121,.06);border-radius:8px;margin:12px 20px;flex-wrap:wrap}
+.kb-hint-item{font-size:9px;color:var(--tm);display:flex;align-items:center;gap:4px}
+.kb-key{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--bg-e,#343430);border:.5px solid var(--brd);font-size:8px;font-weight:600;color:var(--t3)}
+
+</style>
+</head>
+<body>
+<div class="ark-topbar"><div class="ark-topbar-left"><a href="#">Kandidaten</a><span class="sep">/</span><span class="cur">Max Muster</span></div><div class="ark-topbar-right"><div class="ark-search">🔍 Suche... <kbd>Ctrl+K</kbd></div><div class="ark-user">PW</div></div></div>
+<div class="ark-header"><div class="ark-hdr">
+<div class="ark-av-w"><div class="ark-av-r"><div class="ark-av-i">MM</div></div><div class="ark-av-s">Active</div><div class="ark-av-u">+</div></div>
+<div class="ark-nfo"><div class="ark-nr"><span class="ark-nm">Max Muster</span><div class="ark-gr">A</div></div>
+<div class="ark-ct"><span>✉ max.muster@example.com</span><span>📞 +41 79 123 45 67</span><a href="#">🔗 LinkedIn</a></div>
+<div class="ark-lc"><span>📍 Zürich</span><span class="ark-sp">ING</span><span style="font-size:11px;color:var(--teal)">Tiefbau</span></div>
+<div class="ark-bd"><span class="ark-b ark-bs">Active Sourcing</span><span class="ark-b ark-bt">🔥 Hot</span><span class="ark-b ark-bw">WM 7/8</span><span class="ark-b ark-br">📞 Nachmittag 14–17</span></div>
+<div class="ark-pg"><span class="ark-pl">Profilvollständigkeit</span><div class="ark-pt"><div class="ark-pf" style="width:72%"></div></div><span class="ark-pp">72%</span></div>
+<div class="ark-qa"><button class="ark-qb">📞 Anrufen</button><button class="ark-qb">✉ Email</button><button class="ark-qb">🔄 Stage</button><button class="ark-qb">🔔 Reminder</button></div>
+</div></div></div>
+<div class="ark-tabs"><div class="ark-tab">Übersicht</div><div class="ark-tab">Briefing</div><div class="ark-tab">Werdegang</div><div class="ark-tab">Assessment</div><div class="ark-tab">Jobbasket</div><div class="ark-tab">Prozesse</div><div class="ark-tab">History</div><div class="ark-tab">Dokumente</div><div class="ark-tab">Dok.-Generator</div><div class="ark-tab active">Reminders</div></div>
+<div class="content">
+<!-- Summary -->
+<div class="rem-summary" id="remSummary"></div>
+<!-- Filters -->
+<div class="rem-filters">
+  <button class="rf-tab active" data-f="all" onclick="setFilter('all',this)">Alle<span class="rf-cnt" id="cntAll"></span></button>
+  <button class="rf-tab" data-f="overdue" onclick="setFilter('overdue',this)">🔴 Überfällig<span class="rf-cnt" id="cntOverdue"></span></button>
+  <button class="rf-tab" data-f="today" onclick="setFilter('today',this)">🟡 Heute<span class="rf-cnt" id="cntToday"></span></button>
+  <button class="rf-tab" data-f="upcoming" onclick="setFilter('upcoming',this)">🔵 Bald<span class="rf-cnt" id="cntUpcoming"></span></button>
+  <button class="rf-tab" data-f="done" onclick="setFilter('done',this)">✓ Erledigt<span class="rf-cnt" id="cntDone"></span></button>
+  <span class="rf-spacer"></span>
+  <button class="tb-btn primary" onclick="toggleNewForm()">+ Neuer Reminder</button>
+</div>
+<!-- New reminder form (opens above list) -->
+<div class="new-rem" id="newRemForm">
+  <div class="nr-title">🔔 Neuer Reminder</div>
+  <div class="nr-row"><input type="text" class="nr-input" id="nrText" placeholder="Was soll erinnert werden?"></div>
+  <div class="nr-row">
+    <input type="date" class="nr-input-sm" id="nrDate">
+    <input type="time" class="nr-input-sm" id="nrTime" value="09:00" style="width:100px">
+    <select class="nr-select" id="nrPrio"><option value="medium">Mittel</option><option value="high">Hoch</option><option value="low">Tief</option></select>
+  </div>
+  <div class="nr-row">
+    <select class="nr-select" id="nrLink" style="flex:1">
+      <option value="">Keine Verknüpfung</option>
+      <option value="proc:Implenia">🔄 Prozess Implenia AG</option>
+      <option value="proc:Brun">🔄 Prozess Brun AG</option>
+      <option value="proc:Losinger">🔄 Prozess Losinger Marazzi</option>
+      <option value="job:BIM">💼 Projektleiter BIM Tiefbau</option>
+    </select>
+  </div>
+  <div class="nr-actions">
+    <button class="nr-btn nr-cancel" onclick="toggleNewForm()">Abbrechen</button>
+    <button class="nr-btn nr-save" onclick="addReminder()">Reminder erstellen</button>
+  </div>
+</div>
+<!-- List -->
+<div class="rem-list" id="remList"></div>
+<div class="rem-empty" id="remEmpty"><div class="rem-empty-icon">🔔</div><div class="rem-empty-text">Keine Reminders in dieser Ansicht.</div></div>
+<div class="kb-bar">
+  <span class="kb-hint-item"><span class="kb-key">↑</span><span class="kb-key">↓</span> Navigation</span>
+  <span class="kb-hint-item"><span class="kb-key">Space</span> Erledigen</span>
+  <span class="kb-hint-item"><span class="kb-key">N</span> Neuer Reminder</span>
+  <span class="kb-hint-item"><span class="kb-key">1</span>–<span class="kb-key">5</span> Filter</span>
+  <span class="kb-hint-item"><span class="kb-key">Esc</span> Zurücksetzen</span>
+</div>
+</div>
+<div class="snooze-toast" id="snoozeToast"></div>
+<script>
+const TODAY='31.03.2026';
+function parseDateDE(s){const p=s.split('.');return new Date(+p[2],+p[1]-1,+p[0])}
+function formatDateDE(d){return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
+const NOW=parseDateDE(TODAY);
+
+const REMINDERS=[
+  // Overdue
+  {id:1,text:'CV-Eingang prüfen — Kandidat hat Zusendung versprochen',
+   date:'28.03.2026',time:'09:00',prio:'high',source:'manual',done:false,by:'PW',
+   link:{type:'hist',label:'History: CV expected'}},
+
+  {id:2,text:'Briefing ohne Follow-up seit 7 Tagen',
+   date:'25.03.2026',time:'09:00',prio:'high',source:'auto',done:false,by:'System',
+   link:null},
+
+  // Today
+  {id:3,text:'Debriefing nach 1st Interview bei Losinger Marazzi',
+   date:'31.03.2026',time:'16:00',prio:'high',source:'auto',done:false,by:'System',
+   link:{type:'proc',label:'Prozess Losinger Marazzi'}},
+
+  {id:4,text:'Schriftliche GOs nachfassen — 5 Positionen offen',
+   date:'31.03.2026',time:'10:00',prio:'medium',source:'manual',done:false,by:'PW',
+   link:{type:'hist',label:'History: GOs versendet'}},
+
+  // Upcoming
+  {id:5,text:'Offer-Vorbereitung mit AM SP besprechen — Brun AG',
+   date:'02.04.2026',time:'09:00',prio:'high',source:'manual',done:false,by:'JV',
+   link:{type:'proc',label:'Prozess Brun AG'}},
+
+  {id:6,text:'Coaching vor 2nd Interview bei Kümmerle Bau',
+   date:'03.04.2026',time:'14:00',prio:'medium',source:'auto',done:false,by:'System',
+   link:{type:'proc',label:'Prozess Kümmerle Bau'}},
+
+  {id:7,text:'Kandidat auf Stale prüfen — Implenia Prozess >14 Tage ohne Update',
+   date:'05.04.2026',time:'09:00',prio:'low',source:'auto',done:false,by:'System',
+   link:{type:'proc',label:'Prozess Implenia AG'}},
+
+  {id:8,text:'Post-Placement Check-in (30 Tage) — falls Placement erfolgt',
+   date:'30.04.2026',time:'09:00',prio:'low',source:'auto',done:false,by:'System',
+   link:null},
+
+  // Done
+  {id:9,text:'Briefing-Termin vorbereiten',
+   date:'27.03.2026',time:'09:00',prio:'medium',source:'manual',done:true,by:'PW',
+   completedAt:'27.03.2026',link:null},
+
+  {id:10,text:'Assessment-Link an Kandidat senden',
+   date:'24.03.2026',time:'09:00',prio:'medium',source:'auto',done:true,by:'System',
+   completedAt:'24.03.2026',link:{type:'hist',label:'History: Assessment Link'}}
+];
+
+function getStatus(r){
+  if(r.done)return 'done';
+  const d=parseDateDE(r.date);
+  if(d<NOW)return 'overdue';
+  if(d.toDateString()===NOW.toDateString())return 'today';
+  return 'upcoming';
+}
+
+function buildSummary(){
+  const open=REMINDERS.filter(r=>!r.done);
+  const overdue=REMINDERS.filter(r=>getStatus(r)==='overdue');
+  const today=REMINDERS.filter(r=>getStatus(r)==='today');
+  const upcoming=REMINDERS.filter(r=>getStatus(r)==='upcoming');
+  document.getElementById('remSummary').innerHTML=`
+    <div class="rs-card"><div class="rs-value" style="color:var(--t1)">${open.length}</div><div class="rs-label">Offen gesamt</div></div>
+    <div class="rs-card"><div class="rs-value" style="color:var(--red)">${overdue.length}</div><div class="rs-label">Überfällig</div></div>
+    <div class="rs-card"><div class="rs-value" style="color:var(--amber)">${today.length}</div><div class="rs-label">Heute</div></div>
+    <div class="rs-card"><div class="rs-value" style="color:var(--blue)">${upcoming.length}</div><div class="rs-label">Bald</div></div>`;
+  document.getElementById('cntAll').textContent=REMINDERS.length;
+  document.getElementById('cntOverdue').textContent=overdue.length;
+  document.getElementById('cntToday').textContent=today.length;
+  document.getElementById('cntUpcoming').textContent=upcoming.length;
+  document.getElementById('cntDone').textContent=REMINDERS.filter(r=>r.done).length;
+}
+
+function relativeDate(dateStr){
+  const d=parseDateDE(dateStr);const diff=Math.round((d-NOW)/86400000);
+  if(diff<-1)return `vor ${Math.abs(diff)} Tagen`;
+  if(diff===-1)return 'Gestern';if(diff===0)return 'Heute';if(diff===1)return 'Morgen';
+  if(diff<=7)return `in ${diff} Tagen`;if(diff<=14)return 'in ~2 Wochen';
+  return `in ${Math.round(diff/7)} Wochen`;
+}
+
+function renderList(items){
+  const list=document.getElementById('remList');
+  const empty=document.getElementById('remEmpty');
+  list.innerHTML='';
+  if(!items.length){empty.style.display='block';list.style.display='none';return}
+  empty.style.display='none';list.style.display='flex';
+
+  // Group by status in "all" view
+  const grouped=activeFilter==='all';
+  const statusOrder=['overdue','today','upcoming'];
+  const statusLabels={overdue:'🔴 Überfällig',today:'🟡 Heute',upcoming:'🔵 Bald',done:'✓ Erledigt'};
+  const statusColors={overdue:'var(--red)',today:'var(--amber)',upcoming:'var(--blue)',done:'var(--green)'};
+  let lastGroup='';
+
+  // Sort: overdue first, then today, then upcoming by date
+  const sorted=[...items].sort((a,b)=>{
+    const sa=statusOrder.indexOf(getStatus(a)),sb=statusOrder.indexOf(getStatus(b));
+    if(sa!==sb)return sa-sb;
+    // Within group: high prio first, then by date
+    const po={high:0,medium:1,low:2};
+    if(po[a.prio]!==po[b.prio])return po[a.prio]-po[b.prio];
+    return parseDateDE(a.date)-parseDateDE(b.date);
+  });
+
+  sorted.forEach((r,idx)=>{
+    const status=getStatus(r);
+    // Group header
+    if(grouped&&status!==lastGroup){
+      lastGroup=status;
+      const cnt=sorted.filter(x=>getStatus(x)===status).length;
+      list.innerHTML+=`<div class="rem-group"><div class="rem-group-dot" style="background:${statusColors[status]}"></div><span style="color:${statusColors[status]}">${statusLabels[status]}</span><span style="font-weight:400;color:var(--tm)">${cnt}</span><div class="rem-group-line"></div></div>`;
+    }
+
+    const prioCls=r.prio==='high'?'rp-high':r.prio==='medium'?'rp-medium':'rp-low';
+    const prioLabel=r.prio==='high'?'Hoch':r.prio==='medium'?'Mittel':'Tief';
+    const srcCls=r.source==='auto'?'rs-auto':'rs-manual';
+    const srcLabel=r.source==='auto'?'⚡ Auto':'✎ Manuell';
+    const dateCls=status==='overdue'?'rem-date-overdue':status==='today'?'rem-date-today':'rem-date-upcoming';
+    const rel=relativeDate(r.date);
+    let dateLabel=`${rel} · ${r.date} ${r.time}`;
+    if(status==='overdue'){const diff=Math.floor((NOW-parseDateDE(r.date))/86400000);dateLabel=`⚠ ${diff} Tag${diff>1?'e':''} überfällig · ${r.date}`}
+    else if(status==='today')dateLabel=`⏰ Heute ${r.time}`;
+    else if(status==='done')dateLabel=`✓ Erledigt am ${r.completedAt||r.date}`;
+    else dateLabel=`📅 ${rel} · ${r.date} ${r.time}`;
+
+    let linkHTML='';
+    if(r.link){
+      const lc=r.link.type==='proc'?'rl-proc':r.link.type==='job'?'rl-job':'rl-hist';
+      const li=r.link.type==='proc'?'🔄':r.link.type==='job'?'💼':'📋';
+      linkHTML=`<span class="rem-link ${lc}">${li} ${r.link.label}</span>`;
+    }
+    let snoozeHTML='';
+    if(!r.done){
+      snoozeHTML=`<div class="rem-actions">
+        <button class="snooze-btn" onclick="event.stopPropagation();snooze(${r.id},1)" title="+1 Stunde">+1h</button>
+        <button class="snooze-btn" onclick="event.stopPropagation();snooze(${r.id},24)" title="+1 Tag">+1d</button>
+        <button class="snooze-btn" onclick="event.stopPropagation();snooze(${r.id},168)" title="+1 Woche">+1w</button>
+        <button class="rem-edit" onclick="event.stopPropagation();alert('Edit-Dialog')" title="Bearbeiten">✏</button>
+      </div>`;
+    }
+    const div=document.createElement('div');
+    div.className=`rem-card ${status}`;div.dataset.idx=idx;div.dataset.id=r.id;
+    div.innerHTML=`
+      <button class="rem-check${r.done?' checked':''}" onclick="event.stopPropagation();toggleComplete(${r.id},this)">${r.done?'✓':''}</button>
+      <div class="rem-body">
+        <div class="rem-text">${r.text}</div>
+        <div class="rem-meta">
+          <span class="rem-date ${dateCls}">${dateLabel}</span>
+          <span class="rem-prio ${prioCls}">${prioLabel}</span>
+          <span class="rem-source ${srcCls}">${srcLabel}</span>
+          ${linkHTML}
+          <span style="color:var(--tm)">· ${r.by}</span>
+        </div>
+      </div>
+      ${snoozeHTML}`;
+    list.appendChild(div);
+  });
+}
+
+let activeFilter='all';
+function getFiltered(){
+  if(activeFilter==='all')return REMINDERS.filter(r=>!r.done);
+  if(activeFilter==='done')return REMINDERS.filter(r=>r.done);
+  return REMINDERS.filter(r=>getStatus(r)===activeFilter);
+}
+function setFilter(f,el){
+  activeFilter=f;
+  document.querySelectorAll('.rf-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderList(getFiltered());
+}
+
+function toggleComplete(id,btn){
+  const r=REMINDERS.find(x=>x.id===id);if(!r)return;
+  r.done=!r.done;
+  if(r.done){r.completedAt=TODAY;showToast('✓ Reminder erledigt')}
+  else showToast('↩ Reminder wieder geöffnet');
+  buildSummary();renderList(getFiltered());
+}
+
+function snooze(id,hours){
+  const r=REMINDERS.find(x=>x.id===id);if(!r)return;
+  const d=parseDateDE(r.date);
+  d.setHours(d.getHours()+hours);
+  r.date=formatDateDE(d);
+  if(hours<24){
+    const h=parseInt(r.time.split(':')[0])+hours;
+    r.time=String(h%24).padStart(2,'0')+':'+r.time.split(':')[1];
+  }
+  // Toast
+  const label=hours===1?'+1 Stunde':hours===24?'+1 Tag':'+1 Woche';
+  showToast(`⏰ Verschoben: ${label} → ${r.date} ${r.time}`);
+  buildSummary();renderList(getFiltered());
+}
+
+function showToast(msg){
+  const t=document.getElementById('snoozeToast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function toggleNewForm(){
+  const form=document.getElementById('newRemForm');
+  form.classList.toggle('open');
+  if(form.classList.contains('open')){
+    document.getElementById('nrText').focus();
+    // Default date: tomorrow
+    const tmrw=new Date(NOW);tmrw.setDate(tmrw.getDate()+1);
+    document.getElementById('nrDate').value=tmrw.toISOString().split('T')[0];
+  }
+}
+
+let remIdCounter=20;
+function addReminder(){
+  const text=document.getElementById('nrText').value.trim();
+  if(!text){document.getElementById('nrText').focus();return}
+  const dateVal=document.getElementById('nrDate').value;
+  const time=document.getElementById('nrTime').value||'09:00';
+  const prio=document.getElementById('nrPrio').value;
+  const linkVal=document.getElementById('nrLink').value;
+  const dateStr=dateVal?formatDateDE(new Date(dateVal)):TODAY;
+  let link=null;
+  if(linkVal){
+    const [type,label]=linkVal.split(':');
+    link={type:type==='proc'?'proc':'job',label:type==='proc'?'Prozess '+label:label};
+  }
+  REMINDERS.push({id:++remIdCounter,text,date:dateStr,time,prio,source:'manual',done:false,by:'PW',link});
+  document.getElementById('nrText').value='';
+  document.getElementById('newRemForm').classList.remove('open');
+  showToast('🔔 Reminder erstellt: '+dateStr+' '+time);
+  buildSummary();renderList(getFiltered());
+}
+
+buildSummary();renderList(getFiltered());
+window.setFilter=setFilter;window.toggleComplete=toggleComplete;window.snooze=snooze;
+window.toggleNewForm=toggleNewForm;window.addReminder=addReminder;
+
+// Keyboard
+let ki=-1;
+document.addEventListener('keydown',e=>{
+  const t=document.activeElement?.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(document.getElementById('newRemForm').classList.contains('open')){if(e.key==='Escape')toggleNewForm();return}
+  const cards=[...document.querySelectorAll('.rem-card')];
+  if(e.key==='ArrowDown'){e.preventDefault();ki=Math.min(ki+1,cards.length-1);cards.forEach(c=>c.style.outline='');if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key==='ArrowUp'){e.preventDefault();ki=Math.max(ki-1,0);cards.forEach(c=>c.style.outline='');if(cards[ki]){cards[ki].style.outline='1px solid rgba(220,180,121,.3)';cards[ki].scrollIntoView({behavior:'smooth',block:'nearest'})}}
+  else if(e.key===' '&&ki>=0){e.preventDefault();const id=+cards[ki].dataset.id;if(id)toggleComplete(id,null)}
+  else if(e.key==='n'||e.key==='N'){e.preventDefault();toggleNewForm()}
+  else if(e.key==='1'){e.preventDefault();setFilter('all',document.querySelector('[data-f=all]'))}
+  else if(e.key==='2'){e.preventDefault();setFilter('overdue',document.querySelector('[data-f=overdue]'))}
+  else if(e.key==='3'){e.preventDefault();setFilter('today',document.querySelector('[data-f=today]'))}
+  else if(e.key==='4'){e.preventDefault();setFilter('upcoming',document.querySelector('[data-f=upcoming]'))}
+  else if(e.key==='5'){e.preventDefault();setFilter('done',document.querySelector('[data-f=done]'))}
+  else if(e.key==='Escape'){cards.forEach(c=>c.style.outline='');ki=-1}
+});
+</script>
+</body></html>
