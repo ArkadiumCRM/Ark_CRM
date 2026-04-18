@@ -222,8 +222,90 @@
   .profil-pop-item .ic { font-size:14px; width:18px; text-align:center; }
   .profil-pop-item .right { margin-left:auto; font-size:10px; color:var(--text-light); }
   .profil-pop-sep { height:1px; background:var(--border); margin:4px 0; }
+  .profil-pop-cat {
+    padding:6px 14px 2px; font-size:9.5px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--text-light); font-weight:600;
+  }
   .profil-pop-item.danger { color:var(--red); }
   .profil-pop-item.danger:hover { background:var(--red-soft); }
+
+  /* Profile / Team / Shortcuts Drawer */
+  .pp-drawer {
+    position:fixed; top:0; right:-560px; width:540px; max-width:92vw;
+    height:100vh; background:var(--surface); box-shadow:var(--shadow-lg);
+    z-index:500; transition:right 0.25s ease; overflow-y:auto;
+    border-left:1px solid var(--border);
+  }
+  .pp-drawer.open { right:0; }
+  .pp-drawer-backdrop {
+    position:fixed; inset:0; background:rgba(0,0,0,0.4);
+    z-index:490; opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .pp-drawer-backdrop.open { opacity:1; pointer-events:auto; }
+  .pp-drawer-head {
+    padding:18px 24px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:12px; position:sticky; top:0;
+    background:var(--surface); z-index:1;
+  }
+  .pp-drawer-head h2 {
+    font-family:'Libre Baskerville',serif; font-size:18px;
+    color:var(--accent); margin:0; flex:1;
+  }
+  .pp-drawer-close {
+    background:transparent; border:none; cursor:pointer; font-size:20px;
+    color:var(--text-light); padding:4px 10px; border-radius:3px;
+  }
+  .pp-drawer-close:hover { background:var(--bg); color:var(--accent); }
+  .pp-drawer-body { padding:20px 24px; }
+  .pp-section { margin-bottom:24px; }
+  .pp-section h3 {
+    font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--text-light); font-weight:600; margin:0 0 10px;
+    padding-bottom:6px; border-bottom:1px solid var(--border);
+  }
+  .pp-field-grid {
+    display:grid; grid-template-columns:140px 1fr; gap:8px 14px;
+    font-size:12.5px;
+  }
+  .pp-field-grid dt { color:var(--text-light); font-weight:500; }
+  .pp-field-grid dd { color:var(--text); margin:0; }
+  .pp-kbd-list { display:flex; flex-direction:column; gap:2px; }
+  .pp-kbd-row {
+    display:grid; grid-template-columns:120px 1fr; gap:14px;
+    padding:6px 10px; border-radius:3px; align-items:center;
+    font-size:12.5px;
+  }
+  .pp-kbd-row:hover { background:var(--bg); }
+  .pp-kbd-row .keys {
+    display:flex; gap:4px; align-items:center; flex-wrap:wrap;
+  }
+  .pp-kbd-row kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:2px 7px; font-family:monospace; font-size:11px; color:var(--text);
+    min-width:22px; text-align:center;
+  }
+  .pp-team-row {
+    display:grid; grid-template-columns:40px 1fr auto; gap:12px;
+    padding:10px 12px; border-radius:3px; align-items:center;
+    border-bottom:1px solid var(--border); font-size:12.5px;
+  }
+  .pp-team-row:last-child { border-bottom:none; }
+  .pp-team-row:hover { background:var(--bg); }
+  .pp-team-avatar {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex;
+    align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:13px;
+  }
+  .pp-team-info .name { font-weight:600; color:var(--text); }
+  .pp-team-info .meta { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+  .pp-badge {
+    padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600;
+    letter-spacing:0.3px;
+  }
+  .pp-badge.online { background:var(--green-soft,#d1fae5); color:var(--green,#065f46); }
+  .pp-badge.offline { background:var(--bg); color:var(--text-light); }
+  .pp-badge.ferien { background:var(--amber-soft,#fef3c7); color:var(--amber,#92400e); }
 
   /* === MAIN IFRAME === */
   .main-frame {
@@ -324,15 +406,12 @@
           <div class="email">peter.wiederkehr@arkadium.ch</div>
         </div>
       </div>
-      <div class="profil-pop-item" onclick="alert('Mein Profil — Phase 1')"><span class="ic">👤</span>Mein Profil</div>
-      <div class="profil-pop-item" onclick="alert('Notifikationen — Opt-In/Out')"><span class="ic">🔔</span>Notifikationen<span class="right">3 Kanäle</span></div>
-      <div class="profil-pop-item" onclick="alert('Email-Signatur Opt-In · CodeTwo')"><span class="ic">✍</span>Email-Signatur<span class="right">CodeTwo</span></div>
+      <div class="profil-pop-cat">Team &amp; Mitarbeiter</div>
+      <div class="profil-pop-item" onclick="openMeinProfil()"><span class="ic">👤</span>Mein Profil</div>
+      <div class="profil-pop-item" onclick="openTeamUebersicht()"><span class="ic">👥</span>Team-Übersicht</div>
       <div class="profil-pop-sep"></div>
-      <div class="profil-pop-item" onclick="toggleTheme();closeProfilPop()"><span class="ic">☀</span>Theme wechseln<span class="right">Hell/Dunkel</span></div>
-      <div class="profil-pop-item" onclick="alert('Keyboard-Shortcuts ·  ?  drücken')"><span class="ic">⌨</span>Keyboard-Shortcuts<span class="right">?</span></div>
-      <div class="profil-pop-sep"></div>
-      <div class="profil-pop-item" onclick="alert('Team-Übersicht öffnet — Phase 1: ⌘K-Search nutzen, Phase 2: HR-Tool')"><span class="ic">👥</span>Team-Übersicht<span class="right">⌘K</span></div>
-      <div class="profil-pop-item" onclick="alert('Hilfe / Support')"><span class="ic">❔</span>Hilfe &amp; Support</div>
+      <div class="profil-pop-cat">Tools</div>
+      <div class="profil-pop-item" onclick="openKeyboardShortcuts()"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
       <div class="profil-pop-sep"></div>
       <div class="profil-pop-item danger" onclick="alert('Abmelden')"><span class="ic">⏻</span>Abmelden</div>
     </div>
@@ -348,6 +427,180 @@
 
 <!-- MAIN IFRAME -->
 <iframe id="mainFrame" class="main-frame" src="Vollansichten/dashboard.html"></iframe>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Mein Profil -->
+<div class="pp-drawer-backdrop" id="ppBackdrop" onclick="closePpDrawer()"></div>
+<div class="pp-drawer" id="ppDrawerProfil">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">👤</span>
+    <h2>Mein Profil</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Stammdaten</h3>
+      <dl class="pp-field-grid">
+        <dt>Avatar-Kürzel</dt><dd><span class="pp-team-avatar" style="width:26px;height:26px;font-size:11px;display:inline-flex">PW</span> PW</dd>
+        <dt>Name</dt><dd>Peter Wiederkehr</dd>
+        <dt>Email (SSO)</dt><dd>peter.wiederkehr@arkadium.ch</dd>
+        <dt>Funktion</dt><dd>Senior Partner · AM</dd>
+        <dt>Telefon (3CX)</dt><dd>+41 44 123 45 67 · DW 101</dd>
+        <dt>Tenant</dt><dd>Arkadium AG (Haupt-Tenant)</dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Verfügbarkeit</h3>
+      <dl class="pp-field-grid">
+        <dt>Status</dt><dd><span class="pp-badge online">● Online</span></dd>
+        <dt>Out-of-Office</dt><dd>Nicht aktiv · <a href="#" style="color:var(--accent)">Abwesenheit eintragen</a></dd>
+        <dt>Vertretung</dt><dd>— <span class="muted" style="color:var(--text-light);font-size:11px">(keine hinterlegt)</span></dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Meine Ownerschaften</h3>
+      <dl class="pp-field-grid">
+        <dt>Accounts</dt><dd><strong>42</strong> als AM · <a href="#" style="color:var(--accent)">Liste</a></dd>
+        <dt>Mandate</dt><dd><strong>14</strong> offen · 6 Target · 4 Taskforce · 2 Time · 2 Placement-Follow</dd>
+        <dt>Prozesse</dt><dd><strong>47</strong> aktiv · über 31 Kandidaten</dd>
+        <dt>Placements YTD</dt><dd><strong>18</strong> · CHF 1.2 M Honorar-YTD</dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Session</h3>
+      <dl class="pp-field-grid">
+        <dt>Letzter Login</dt><dd>Heute 08:12 · Windows 11 · Chrome 143</dd>
+        <dt>Aktive Sessions</dt><dd>2 (Desktop · iPhone) · <a href="#" style="color:var(--accent)">Alle beenden</a></dd>
+        <dt>MFA</dt><dd>Aktiv via Microsoft Authenticator</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Team-Übersicht -->
+<div class="pp-drawer" id="ppDrawerTeam">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">👥</span>
+    <h2>Team-Übersicht</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Arkadium-Team · 7 aktiv</h3>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">PW</div>
+        <div class="pp-team-info">
+          <div class="name">Peter Wiederkehr</div>
+          <div class="meta">Senior Partner · AM · peter.wiederkehr@arkadium.ch · DW 101</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">JV</div>
+        <div class="pp-team-info">
+          <div class="name">Jonas Vogel</div>
+          <div class="meta">CM · jonas.vogel@arkadium.ch · DW 102</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">LR</div>
+        <div class="pp-team-info">
+          <div class="name">Lena Richter</div>
+          <div class="meta">Lead Researcher · lena.richter@arkadium.ch · DW 103</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">MF</div>
+        <div class="pp-team-info">
+          <div class="name">Marco Frei</div>
+          <div class="meta">Researcher · marco.frei@arkadium.ch · DW 104</div>
+        </div>
+        <span class="pp-badge ferien">🌴 Ferien bis 25.04.</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">NP</div>
+        <div class="pp-team-info">
+          <div class="name">Nora Pfister</div>
+          <div class="meta">CM · nora.pfister@arkadium.ch · DW 105</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">NS</div>
+        <div class="pp-team-info">
+          <div class="name">Nils Stadler</div>
+          <div class="meta">Hunter · nils.stadler@arkadium.ch · DW 106</div>
+        </div>
+        <span class="pp-badge offline">Offline</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">BT</div>
+        <div class="pp-team-info">
+          <div class="name">Bianca Trüb</div>
+          <div class="meta">Assistenz / Admin · bianca.truebe@arkadium.ch · DW 100</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Ownership-Verteilung</h3>
+      <dl class="pp-field-grid">
+        <dt>Accounts</dt><dd>PW 42 · JV 31 · LR 25 · MF 18 · NP 8 · NS — · BT —</dd>
+        <dt>Offene Mandate</dt><dd>PW 14 · JV 9 · LR 6 · MF 4 · NP 3</dd>
+        <dt>Placements YTD</dt><dd>PW 18 · JV 12 · LR 8 · MF 5 · NP 2</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Keyboard-Shortcuts -->
+<div class="pp-drawer" id="ppDrawerKbd">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">⌨</span>
+    <h2>Keyboard-Shortcuts</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Global</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd><kbd>K</kbd></span><span>Command-Palette / Globale Suche</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Esc</kbd></span><span>Drawer / Dropdown schliessen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd><kbd>/</kbd></span><span>Sidebar pin/entpinnen</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Detail-Masken (Kandidat · Account · Mandat · …)</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Tab wechseln (1–10)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>E</kbd></span><span>Edit-Mode aktivieren</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>S</kbd></span><span>Save</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>+</kbd></span><span>Neuer Eintrag (kontext-abhängig)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>F</kbd></span><span>Filter-Panel öffnen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>G</kbd></span><span>Dokument generieren</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Listen &amp; Tabellen</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>↑</kbd><kbd>↓</kbd></span><span>Zeile auf / ab</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Enter</kbd></span><span>Zeile öffnen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Shift</kbd>+Click</span><span>Bulk-Select-Range</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd>+Click</span><span>Einzelne zu Selection hinzufügen</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Spezial (kontext-abhängig)</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>M</kbd></span><span>Neues Mandat (in Account-Maske)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>A</kbd></span><span>Neues Assessment (in Account Tab 8)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>I</kbd></span><span>Info-Request (in Schutzfrist-Row)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>V</kbd></span><span>Versions-Dropdown (in Kandidat Tab 4)</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // Theme sync between parent and iframe
@@ -424,6 +677,22 @@ document.querySelectorAll('.sb-item').forEach(el => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
   });
 });
+
+// === PROFIL-POP-DRAWER ===
+function openPpDrawer(id) {
+  closePpDrawer();
+  document.getElementById(id)?.classList.add('open');
+  document.getElementById('ppBackdrop').classList.add('open');
+  closeProfilPop();
+}
+function closePpDrawer() {
+  document.querySelectorAll('.pp-drawer').forEach(d => d.classList.remove('open'));
+  document.getElementById('ppBackdrop')?.classList.remove('open');
+}
+function openMeinProfil()       { openPpDrawer('ppDrawerProfil'); }
+function openTeamUebersicht()   { openPpDrawer('ppDrawerTeam'); }
+function openKeyboardShortcuts() { openPpDrawer('ppDrawerKbd'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePpDrawer(); });
 
 // === SIDEBAR EXPAND-PIN (Desktop + Tablet) ===
 function toggleSidebarExpand() {
