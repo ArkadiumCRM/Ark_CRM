@@ -220,11 +220,22 @@ fact_mandate_option (
 
 Leerzustand: *"Noch keine Optionalen Stages gebucht. [+ Option buchen]"*
 
-Mit Einträgen: Tabelle
-| Option | Beschreibung | Preis | Status | Auftrag | Rechnung |
-|--------|-------------|-------|--------|---------|----------|
-| VI Mehr Idents | +10 Idents | CHF 2'500 | ✅ Geliefert | 📄 Auftrag.pdf | 📄 RG-001 |
-| IX Assessment | 1 Position | CHF 5'000 | ⏳ In progress | 📄 Auftrag.pdf | — |
+Mit Einträgen: Tabelle mit Chevron-Spalte für Inline-Expand (v0.3).
+
+| ▸ | Option | Beschreibung | Preis | Status | Auftrag | Rechnung |
+|---|--------|-------------|-------|--------|---------|----------|
+| ▸ | VI Mehr Idents | +10 Idents | CHF 2'500 | ✅ Geliefert | 📄 Auftrag.pdf | 📄 RG-001 |
+| ▾ | IX Assessment | 3 Credits | CHF 14'500 | ⏳ In progress | 📄 Auftrag.pdf | 📄 RG-002 |
+|   | *→ Inline-Expand (v0.3): 2× MDI · 1× ASSESS 5.0 · Kandidaten: [Avatar] Max Muster (Completed 12.04.) · [Avatar] Anna Beispiel (Scheduled 20.04.) · [Avatar] Tom Test (Scheduled 25.04.) · [→ Auftrag AS-2026-042 öffnen]* ||||||
+
+**Inline-Expand-Verhalten (v0.3):**
+- Klick auf Chevron ▸ in erster Spalte → Row klappt auf, Chevron → ▾
+- Expand-Inhalt read-only (keine Edits inline). Für Edits → "Details"-Icon in Aktionen-Spalte öffnet Drawer (Drawer-Default-Regel OK: Inline-Expand = Read, Drawer = CRUD).
+- Option IX Expand zeigt:
+  - Credits-Summe + Typ-Breakdown (aus `fact_assessment_order_credits`)
+  - Kandidat-Chips mit Avatar/Name/Einzelstatus (Scheduled/Completed aus `fact_candidate_assessment_version`)
+  - Link "→ Auftrag AS-2026-XXX öffnen" routet zu `/assessments/[id]`
+- Option VI/VII/VIII/X Expand: simplere Info (extension_value, Kanäle, Garantie-Monate — siehe Schema §6b Tabelle).
 
 ### Option-Buchen-Flow (Header Quick-Action oder Tabellen-Button)
 
@@ -852,7 +863,28 @@ Beide Einträge haben identisches `expires_at`. Scraper-Match prüft beide Scope
 **Tab 2 Longlist:**
 - Nur Kandidaten mit **bestehendem** `fact_candidate_presentation`-Eintrag bekommen Badge 🛡 mit Hover-Tooltip "Schutzfrist aktiv bis DD.MM.YYYY"
 - Bei Kündigung: **keine Auto-Erstellung** für Stage-5+-Kandidaten ohne explizite Vorstellung (Entscheidung 2026-04-14 #14)
-- Manuelle Vorstellungs-Markierung bleibt via "📋 Als vorgestellt markieren" im Card-Menu (zur Korrektur)
+- Manuelle Vorstellungs-Markierung via "📋 Als vorgestellt markieren" im Card-Menu (zur Korrektur oder Nacherfassung)
+
+**Vorstellungs-Markierung UX-Pattern (v0.3, Drawer-Default-Regel):**
+
+Trigger: Card-Menu (3-Punkt-Icon oben rechts auf Kanban-Card ab Stage 5+) → Menüpunkt "📋 Als vorgestellt markieren" öffnet **Drawer 540px** (Drawer-Default-Regel CLAUDE.md — kein Modal).
+
+Drawer-Felder:
+
+| Feld | Typ | Pflicht | Default |
+|------|-----|---------|---------|
+| Vorstellungs-Typ | Dropdown (`email_dossier` · `verbal_call` · `verbal_meeting` · `cv_versand_jobbasket` · `other`) | ja | — |
+| Vorstellungs-Datum | `<input type="datetime-local">` (Kalender-Picker + Tastatur-Eingabe per Datum-Eingabe-Regel) | ja | now |
+| Kanal (bei `verbal_*`) | Chip-Select (Call · Teams · In-Person · Telefon) | nur bei verbal | — |
+| Kontaktperson Kunde | Autocomplete aus `dim_accounts.contacts` (beim Mandat hinterlegte Kontakte first) | nein | Hauptansprechpartner |
+| Notiz | Textarea | nein | — |
+| Dokument anhängen | Upload (PDF/Email-EML) | nein | — |
+
+Save-Button schreibt `fact_candidate_presentation`-Eintrag + History-Event `candidate_presented_<type>`. Nach Save: Drawer schliesst, Badge 🛡 erscheint auf Card.
+
+Korrektur/Rückgängig: Card-Menu → "🛡 Vorstellung bearbeiten" öffnet Drawer im Edit-Modus mit Soft-Delete-Option (Audit-Trail).
+
+**Alternative "Als vorgestellt markieren" auch in Header-Bulk-Action:** Multi-Select von Cards → Bulk-Button "📋 Als vorgestellt markieren" öffnet Drawer mit Multi-Checkbox-Liste der ausgewählten Kandidaten + gemeinsamen Vorstellungs-Feldern. (Anwendung: gesammelte Dossier-Sendung an Kunde mit 3 Kandidaten gleichzeitig.)
 
 **Tab 5 History:**
 - Filter "Vorstellungs-Events" zeigt alle `candidate_presented_*`

@@ -1,10 +1,17 @@
-# ARK CRM — Account-Detailmaske Schema v0.2
+# ARK CRM — Account-Detailmaske Schema v0.3
 
-**Stand:** 14.04.2026
-**Status:** Konsistenz-Update nach Audit 2026-04-14
+**Stand:** 18.04.2026
+**Status:** Tab-8-Sync zu Interactions v0.3 (autorefine Run 2 · 2026-04-18)
 **Quellen:** ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md, ARK_DATABASE_SCHEMA_v1_3.md, ARK_FRONTEND_FREEZE_v1_10.md (Section 4d.2), ARK_KANDIDATENMASKE_SCHEMA_v1_3.md (Style-Referenz), ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md (Konsistenz)
 **Vorrang:** Bei Widerspruch gilt: Stammdaten > dieses Schema > Frontend Freeze > Mockups
 **Begleitdokument:** `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` (Verhalten, Flows, Events)
+**Hinweis:** Dateiname noch `_v0_2.md` — Rename auf `_v0_3.md` als Follow-up offen (vgl. nachbearbeitung.md).
+
+**Änderungen v0.2 → v0.3 (2026-04-18, via autorefine):**
+- **Tab 8 Assessments — Credits-Übersicht-Banner** ergänzt (§12.1, §12.3): zweite KPI-Banner-Zeile mit typisiertem Breakdown (MDI/Relief/ASSESS/DISC), Total-Zeile mit Gesamtpreis. Source: `fact_assessment_order_credits` aggregiert über `order.account_id`.
+- **Tab 8 Spalten** (§12.2): neue Spalte **Credits-Mix**; Status-Wert `invoiced` entfernt (Rechnungs-State lebt auf `fact_assessment_billing`, nicht auf `fact_assessment_order` — vgl. Memory `feedback_assessment_order_status.md`).
+- **Tab 8 Filter** (§12.1): Chip "Typ (Multi-Select)" ergänzt neben Mandatsbezogen/Eigenständig/Status-Chips.
+- **Neuer konditionaler Tab Projekte (§19)**: analog zum Firmengruppe-Pattern, sichtbar wenn Account als Bauherr oder via `fact_project_company_participations` mit Projekten verknüpft ist. Filter-Chips (Rolle/Status/Zeitraum) + Aggregations-Tabelle + Header-Quick-Action "🏗 Projekt verknüpfen". Details TEIL 14 Interactions v0.3.
 
 **Änderungen v0.1 → v0.2:**
 - RBAC-Rolle `Founder` → `Admin` (global, per Entscheidung 2026-04-14)
@@ -166,7 +173,7 @@ Slot 6 zeigt "—" wenn keine Kultur-Analyse vorliegt. Klick auf Slot 5 → wech
 ### 4.6 Tab-Bar (13 Tabs + 1 konditional)
 
 ```
-Übersicht · Profil&Kultur · Kontakte · Standorte · Organisation · Jobs · Mandate · Assessments · Schutzfristen · Prozesse · History · Dokumente · Reminders  [· Firmengruppe]
+Übersicht · Profil&Kultur · Kontakte · Standorte · Organisation · Jobs · Mandate · Assessments · Schutzfristen · Prozesse · History · Dokumente · Reminders  [· Firmengruppe]  [· Projekte]
 ```
 
 Aktiver Tab mit Gold-Underline. Keyboard: `1`–`9` springt zu Tab 1–9, `0` zu Tab 10, höhere Tabs per Klick.
@@ -396,13 +403,17 @@ Gekündigte Mandate haben `🛑` Icon + Tooltip mit terminated_by + terminated_r
 
 ---
 
-## 12. TAB 8 — ASSESSMENTS (NEU v0.1)
+## 12. TAB 8 — ASSESSMENTS (NEU v0.1, erweitert v0.3)
 
 Alle Assessment-Aufträge dieses Accounts — mandatsbezogen (via Option IX) und mandatsunabhängig.
 
 ### 12.1 Layout
 
-Tabelle + optional Filter-Chips (Alle / Mandatsbezogen / Eigenständig / In Progress / Completed).
+**Kopfbereich:** Zwei KPI-Banner nebeneinander (Teamrad-Abdeckung + Credits-Übersicht, siehe §12.3).
+
+**Filter-Chips unter den Bannern (v0.3):** Alle / Mandatsbezogen / Eigenständig / In Progress / Completed / **Typ (Multi-Select über `dim_assessment_types`)**.
+
+**Tabelle:** Alle Assessment-Aufträge dieses Accounts (Spalten siehe §12.2).
 
 ### 12.2 Spalten
 
@@ -411,19 +422,35 @@ Tabelle + optional Filter-Chips (Alle / Mandatsbezogen / Eigenständig / In Prog
 | Assessment-Name / Auftrag-ID | `fact_assessment_order.id` → Link `/assessments/[id]` |
 | Kandidat(en) | Multi via `fact_assessment_order.candidate_id` (+ ggf. Multi-Person) |
 | Package | `package_type` (Diagnostik / Full / Executive Summary) |
+| **Credits-Mix (v0.3)** | `fact_assessment_order_credits` grouped by type (z.B. "1× MDI · 1× Relief · 1× ASSESS 5.0") |
 | Mandat (wenn vorhanden) | FK Link oder "Eigenständig" |
-| Status | offered / ordered / scheduled / completed / invoiced |
+| Status | offered / ordered / scheduled / completed (Rechnungs-State auf `fact_assessment_billing`, nicht hier) |
 | Preis | `price_chf` |
 | Partner | SCHEELEN / intern |
 | Bestellt am | `ordered_at` |
 | Aktionen | Drawer / Vollansicht |
 
-### 12.3 Teamrad-Integration
+### 12.3 KPI-Banner (v0.3)
 
-**KPI-Banner oben:**
-> *"Teamrad-Abdeckung: 12 von 47 Mitarbeitenden haben ein Assessment. [→ Teamrad ansehen]"*
+Zweizeilige KPI-Reihe im Tab-Kopf:
+
+**Zeile 1 — Teamrad-Abdeckung:**
+> *"📊 Teamrad-Abdeckung: 12 von 47 Mitarbeitenden haben ein Assessment. [→ Teamrad ansehen]"*
 
 Link → Tab 5 Subtab Teamrad.
+
+**Zeile 2 — Credits-Übersicht (v0.3):**
+
+Aggregation über alle Assessment-Aufträge dieses Accounts (Source: `fact_assessment_order_credits` WHERE `order.account_id = this.id`). Typ-Breakdown pro `dim_assessment_types`-Eintrag (MDI / Relief / ASSESS 5.0 / DISC / …) mit Progress-Bar verbraucht/offen. Total-Zeile: Gesamt-Credits · Gesamtpreis CHF · verbraucht · offen.
+
+Beispiel (Mockup-Text):
+
+```
+🎯 Credits: MDI 3/4 · Relief 2/2 · ASSESS 5.0 1/3 · DISC 0/1
+   Total: 10 Credits (CHF 24'500) · 6 verbraucht · 4 offen
+```
+
+Layout-Details (Bar-Rendering, Text-Varianten, Empty-State) siehe Interactions v0.3 TEIL 8b.
 
 ### 12.4 Empty-State
 
@@ -553,6 +580,43 @@ Analog Kandidat-Reminders. Account-spezifische Verknüpfungen (zusätzlich Manda
 - Aggregierte KPIs (Mandate gruppenweit, Umsatz, etc.)
 
 Detail: siehe Firmengruppen-Detailmaske Schema (zu erstellen).
+
+---
+
+## 19. KONDITIONALER TAB — PROJEKTE (neu v0.3)
+
+**Nur sichtbar wenn** `EXISTS(fact_projects WHERE bauherr_account_id = this.id) OR EXISTS(fact_project_company_participations WHERE account_id = this.id)`.
+
+### 19.1 Inhalt
+
+Aggregations-Tabelle aller Projekte, in denen der Account beteiligt ist — als Bauherr ODER via `fact_project_company_participations` (Architekt/TU/Spezialist/…).
+
+### 19.2 Filter-Chips
+
+- Rolle: Alle / Bauherr / Architekt / TU / Spezialist / Planer / Weitere (aus `dim_project_roles`)
+- Status: Alle / Akquise / Ausführung / Abgeschlossen / Eingefroren
+- Zeitraum: Alle / Aktuell (ongoing) / Letzte 12M / Historisch
+
+### 19.3 Tabelle — Spalten
+
+| Spalte | Source |
+|--------|--------|
+| Projekt-Name | `fact_projects.project_name` → Link `/projects/[id]` |
+| Bauherr (wenn nicht this.account) | `fact_projects.bauherr_account_id → dim_accounts.name` — bei Eigen-Bauherrschaft: Gold-Badge "Bauherr (wir)" |
+| Rolle | abgeleitet (bauherr bei `bauherr_account_id = this.id`, sonst `fact_project_company_participations.role`) |
+| Status | `fact_projects.status` — Badge |
+| Zeitraum | `project_start` – `project_end` |
+| Arkadium-Placements | Count aus `fact_placements.project_id` — Chip mit #Anzahl |
+| BKP-Gewerk (optional) | `fact_project_company_participations.bkp_gewerk` (nur bei Nicht-Bauherr-Rollen) |
+| Aktionen | Row-Click = Drawer |
+
+### 19.4 Header Quick-Action
+
+"🏗 Projekt verknüpfen" (Drawer 540px, nur sichtbar wenn Tab sichtbar oder via "+ Beteiligung" im Tab-Body).
+
+Detail siehe Interactions v0.3 TEIL 14.
+
+Analog Firmengruppe: Tab ist **read-mostly** — Aggregation, nicht primäres Projekt-Editing. Edits am Projekt über Projekt-Detailseite.
 
 ---
 

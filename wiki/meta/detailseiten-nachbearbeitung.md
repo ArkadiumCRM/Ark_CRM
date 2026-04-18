@@ -2,7 +2,7 @@
 title: "Detailseiten-Nachbearbeitungs-Notizen"
 type: meta
 created: 2026-04-13
-updated: 2026-04-13
+updated: 2026-04-18
 tags: [detailseiten, nachbearbeitung, todo, cross-reference]
 ---
 
@@ -20,160 +20,181 @@ Wenn wir alle Detailseiten einzeln bauen, entstehen natürlicherweise **Verknüp
 
 ### Account-Detailseite Tab 9 Schutzfristen — Gruppen-Scope (KRITISCH)
 
-**Erfasst:** 2026-04-13
-**Grund:** Entscheidung FG-10 (Firmengruppen-Schema) — Schutzfrist gilt gruppenweit, nicht nur pro Account. AGB-konform ("Rechtsnachfolger, Konzerngesellschaften und nahestehende Personen").
-**Was fehlt:** Account-Interactions v0.2 → v0.3 muss erweitert werden:
-- Tab 9 Schutzfristen zeigt zusätzlich `scope='group'` Einträge mit Label "Gruppen-Schutzfrist" (bei Accounts die einer Gruppe angehören)
-- Claim-Workflow berücksichtigt Group-Level-Treffer
-- Bei Vorstellung: zwei `fact_protection_window` Einträge (`account` + `group`) werden erstellt wenn `account.group_id IS NOT NULL`
-- Scraper-Match-Logik prüft beide Scopes
-- Datenmodell-Update: `fact_protection_window.scope` + `group_id` (siehe Firmengruppe-Schema § 14)
+**Abgearbeitet 2026-04-18 via autorefine** — alle Sub-Punkte in `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` + `ARK_MANDAT_DETAILMASKE_INTERACTIONS_v0_3.md` umgesetzt:
 
-**Betroffene Specs:**
-- `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_2.md` → v0.3
-- `ARK_MANDAT_DETAILMASKE_INTERACTIONS_v0_2.md` TEIL 10 Schutzfrist-Integration
+- Tab 9 zeigt `scope='group'` mit Label "🏛 Gruppen-Schutzfrist" (Account v0.3 L831, Info-Panel L843)
+- Claim-Workflow Group-Level inkl. Rechnungs-Empfänger-Regel (einstellende Firma, nicht Holding) (Account v0.3 L892, L908)
+- Bei Vorstellung: zwei `fact_protection_window`-Einträge (account+group) wenn `account.group_id IS NOT NULL` (Mandat v0.3 L703–715)
+- Scraper-Match prüft beide Scopes (Mandat v0.3 L848)
+- Datenmodell `fact_protection_window.scope` ENUM + `group_id` FK + CHECK-Constraint (L799–807)
 
-**Priorität:** P0 beim Gesamt-Review-Durchlauf.
+**Erfasst:** 2026-04-13 · **Grund:** Entscheidung FG-10 (Firmengruppen-Schema), AGB-konform.
 
 ---
 
 ### Account-Detailseite Tab 8 (Assessments) — Credits-Übersicht
 
-**Erfasst:** 2026-04-13
-**Grund:** Entscheidung 2026-04-13 — Credits-Modell beim Assessment.
-**Was fehlt:** In der Account-Detailseite Tab 8 "Assessments" sollte eine aggregierte **Credits-Übersicht pro Account** sichtbar sein:
-- Credits gekauft (Summe über alle `fact_assessment_order.credits_total`)
-- Credits verbraucht (Summe über `credits_used`)
-- Credits offen (zugewiesen aber noch nicht durchgeführt)
-- Credits frei (noch nicht zugewiesen)
-- Durchschnittspreis pro Credit
-- Evtl. Kosten-Total pro Jahr
+**Abgearbeitet 2026-04-18 via autorefine** — in beiden Layern implementiert + konsistent:
 
-**Umsetzung-Idee:** KPI-Banner-Zeile oben in Tab 8, neben dem bestehenden Teamrad-Abdeckungs-KPI:
+- **Interactions v0.3** L693–716: Zwei-Banner-Reihe (Teamrad + Credits-Typ-Breakdown), Total-Zeile, Filter-Chip "Typ (Multi-Select)", Tabelle-Spalte "Credits-Mix"
+- **Schema v0.3** (Dateiname noch `_v0_2.md`) §12.1–12.4: Layout-Beschreibung, Spalte "Credits-Mix", §12.3 umbenannt zu "KPI-Banner" mit beiden Zeilen, Filter-Chip "Typ" dokumentiert
+- **Bonus-Fix Interactions v0.3** §Status-Wechsel (L741–750): Stale Transition `completed → invoiced` entfernt, Order-Status auf 5 Grundlagen-konforme Werte angeglichen (offered / ordered / partially_used / fully_used / cancelled), Billing-Trigger korrekt auf `ordered` (Credits-Modell)
 
-```
-📊 Teamrad-Abdeckung: 12 von 47    |    🎯 Credits: 15 gekauft · 12 verbraucht · 2 zugewiesen · 1 frei
-```
+**Follow-up:** Dateiname-Rename `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` → `_v0_3.md` separat.
 
-**Betroffene Specs:** `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` § 12, `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_2.md` TEIL 8b.
+**Erfasst:** 2026-04-13 · **Grund:** Entscheidung 2026-04-13 — Credits-Modell beim Assessment.
 
 ---
 
 ### Kandidat-Assessment-Tab — Auftrags-Referenz in Versionen
 
-**Erfasst:** 2026-04-13
-**Grund:** Assessment-Auftrags-Versionen tragen `assessment_order_id` FK, aber Kandidaten-Schema v1.2 zeigt das noch nicht in der Versions-Navigation.
-**Was fehlt:** In den Sub-Tabs DISC / EQ / Scheelen 6HM / ASSESS 5.0 der Kandidatenmaske sollte pro Version sichtbar sein:
-- "Version 2 — via Auftrag AS-2026-042 (Volare Group AG)" mit Link zur Assessment-Detailseite
-- Filter/Suche nach Auftrag
+**Abgearbeitet 2026-04-18 via autorefine** — Version-Navigation in allen Sub-Tabs zeigt Auftrags-Referenz:
 
-**Betroffene Specs:** `ARK_KANDIDATENMASKE_SCHEMA_v1_2.md` (Tab 4 Assessment-Subtabs), `ARK_KANDIDATENMASKE_INTERACTIONS_v1_2.md`.
+- Schema v1.3 L67–84: Versionierungs-Label "Version N — via Auftrag AS-2026-XXX (Account, Assessment 'MDI Führungs-Check')"
+- Schema v1.3 L82: Legacy-Fallback "Version N — Manuell erfasst / Legacy"
+- Interactions v1.3 L202–222: Pfeil-Navigation inkl. Link `[→ Zum Assessment-Auftrag]`
+- Interactions v1.3 T4-1 (L87): Version-Pill "v2 · 15.03.2026 · Auftrag AS-XXXX" + Button "Auftrag öffnen"
+
+**Follow-up Phase 2:** Filter/Suche nach Auftrag (Dropdown-Variante neben Pfeilen, Volltext-Suche im Package-Name) — siehe Punkt unten.
+
+**Erfasst:** 2026-04-13 · **Grund:** Assessment-Auftrags-Versionen tragen `assessment_order_id` FK.
+
+---
+
+### Kandidat-Assessment-Tab — Filter/Suche nach Auftrag (Phase 2)
+
+**Erfasst:** 2026-04-18 (Split aus Punkt oben via autorefine)
+**Grund:** Bei Multi-Auftrag-Mehrversionierung (z.B. Kandidat mit MDI via Auftrag A + MDI-Re-Assessment via Auftrag B) reicht Pfeil-Navigation nicht.
+**Was fehlt:**
+- Dropdown-Version-Auswahl als Alternative zu Pfeil-Navigation (mit Auftrag-Nummer + Datum + Package-Name)
+- Volltext-Suche im Package-Name (z.B. "Führungs-Check 2026-Q2")
+- Filter-Chip "Nur Aufträge von Account X"
+
+**Betroffene Specs:** `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` Tab 4, `ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md` TEIL 4.
+
+**Priorität:** P2 (Phase 2, erst wenn mindestens ein Kandidat > 2 Versionen pro Typ aus verschiedenen Aufträgen hat).
 
 ---
 
 ### Mandat-Detailseite Tab 1 Sektion 6b — Assessment-Details
 
-**Erfasst:** 2026-04-13
-**Was fehlt:** Die Optionale-Stages-Section zeigt Option IX nur als Zeile mit Status. Besser: Inline-Expand mit
-- Anzahl Credits (bei Option IX)
-- Wer wurde getestet
-- Link zur Assessment-Detailseite (ist bereits geplant, aber UI-Detail fehlt)
+**Abgearbeitet 2026-04-18 via autorefine** — Inline-Expand-Pattern spezifiziert:
 
-**Betroffene Spec:** `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` § 5 Sektion 6b.
+- Schema v0.2 §Sektion 6b: Chevron-Spalte für Expand-Row, Expand-Inhalt pro Option-Typ (VI/VII/VIII/IX/X). Option-IX-Expand zeigt Credits-Summe aus `fact_assessment_order_credits`, Kandidat-Chips mit Einzelstatus aus `fact_candidate_assessment_version`, Link zu `/assessments/[id]`.
+- Interactions v0.3 §"UI — Sektion 6b": Chevron-Toggle-Verhalten, Drawer-Default-Regel unverletzt (Inline-Expand = read-only Detail, Drawer via "Details"-Icon für Edit).
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Mandat-Detailseite Tab 2 Longlist — Vorstellungs-Markierung UX
 
-**Erfasst:** 2026-04-13
-**Was fehlt:** Der manuelle Button "📋 Als vorgestellt markieren" auf Kandidat-Cards ab Stage 5+ braucht ein sauberes UX-Pattern (Modal vs. Inline-Dropdown vs. Card-Rückseite). Derzeit nur textlich beschrieben.
+**Abgearbeitet 2026-04-18 via autorefine** — Drawer-Pattern spezifiziert (Drawer-Default-Regel CLAUDE.md):
 
-**Betroffene Spec:** `ARK_MANDAT_DETAILMASKE_INTERACTIONS_v0_2.md` TEIL 10.
+- Interactions v0.3 TEIL 10 "Vorstellungs-Markierung UX-Pattern": Card-Menu → Drawer 540px mit Vorstellungs-Typ-Dropdown, datetime-local-Picker (Datum-Eingabe-Regel), Kanal-Chip bei verbal, Kontaktperson-Autocomplete, Notiz, Dokument-Upload. Save schreibt `fact_candidate_presentation` + History-Event.
+- Bulk-Variante: Multi-Select Cards → Bulk-Drawer mit Kandidat-Checkbox-Liste.
+- Korrektur-Flow: Edit-Modus mit Soft-Delete.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Account-Detailseite Tab 9 Schutzfristen — Claim-Rechnungs-Template
 
-**Erfasst:** 2026-04-13
-**Was fehlt:** Claim-Rechnung-PDF-Template existiert noch nicht im Template-Ordner. Referenziert aus Interactions v0.2 TEIL 8c.
+**Status 2026-04-18:** **Noch offen — Templates müssen von Peter manuell im Arkadium-Corporate-Design erstellt werden.**
 
-**Betroffene Spec:** `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_2.md` TEIL 8c "Claim stellen Flow". Template zu erstellen: `Vorlage_Rechnung_Schutzfrist-Claim.docx`.
+Zu erstellen in `raw/General/`:
+- `Vorlage_Rechnung_Mandat_Direkteinstellung-Claim.docx` (Fall X — Mandats-Direkteinstellung)
+- `Vorlage_Rechnung_Erfolgsbasis-Direkteinstellung-Claim.docx` (Fall Y/Z — Staffel)
+
+**Platzhalter-Contract:** `wiki/meta/claim-rechnung-template-spec.md` beschreibt alle `{{…}}`-Tokens, die in den finalen Templates vorhanden sein müssen, damit der Dok-Generator sie automatisch befüllen kann (Kopf, Empfänger, Sachverhalt, Honorar-Berechnung, Zahlungskonditionen).
+
+**Verworfener Autorefine-Versuch (Run 15):** Claude generierte über ein Node-Script Skeleton-docx — das Layout entsprach nicht dem Arkadium-Design. Dateien + Script wieder entfernt. Erkenntnis: Corporate-Design-Templates brauchen Peter's manuelle Word-Arbeit (Logo, Farben, Font, Layout), nicht Auto-Generierung.
+
+**Priorität:** P1 — wird beim ersten realen Claim-Fall dringend. Bis dahin UI-Placeholder in Claim-Drawer: *"[Rechnung wird nach Template-Erstellung verfügbar sein]"*.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Cross-Navigation Breadcrumbs — Konsistenz-Pass
 
-**Erfasst:** 2026-04-13
-**Grund:** Jede Detailseite hat Breadcrumbs, aber die Ebenen-Tiefe variiert (Kandidat 2-stufig, Mandat 4-stufig, Assessment 4-stufig).
-**Was fehlt:** Konsistenz-Review aller Breadcrumb-Definitionen nach Fertigstellung aller Detailseiten. Einheitliche Regel: max. 4 Ebenen, Stufen klickbar zurück.
+**Abgearbeitet 2026-04-18 via autorefine** — Regel + Inventar in `wiki/meta/breadcrumbs-konsistenz.md`:
 
-**Betroffene Specs:** alle Schema-Dokumente § 3.
+- Regel: Max 4 Ebenen, alle Stufen klickbar, Top-Level-Entities 2-stufig, Sub-Entities 4-stufig mit Parent-Context, Hubs funktional.
+- Inventar: 9 Detailseiten-Breadcrumbs inventarisiert (Account/Kandidat/Projekt/Firmengruppe je 2-stufig; Mandat/Assessment/Job/Prozess je 4-stufig; Email/Kalender funktional).
+- Konsistenz-Status: strukturell konform.
+
+**Follow-up Phase 2:** DE/EN-Sprachmischung (Prozess-Spec "Candidates/Processes" engl., Job-Spec "Jobs" engl.) — als P2-Sub-Punkt dokumentiert in `breadcrumbs-konsistenz.md`.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Header-Snapshot-Bar — Einheitliche Slot-Anzahl?
 
-**Erfasst:** 2026-04-13
-**Grund:** Kandidat hat N Slots (variabel), Mandat hat 6–7, Account hat 6, Assessment hat 5.
-**Frage:** Sollen wir eine einheitliche Max-Anzahl definieren (z.B. immer 6), oder variabel akzeptieren?
+**Abgearbeitet 2026-04-18 via autorefine** — **Peter-Entscheidung: Option B (variabel akzeptieren).**
 
-**Entscheidung ausstehend, Review-Thema.**
+Slot-Anzahl bleibt entity-spezifisch; keine Vereinheitlichung. Details: `wiki/meta/decision-draft-snapshot-bar-slots.md`.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Account-Detailseite — Neuer Tab "Projekte"
 
-**Erfasst:** 2026-04-13
-**Grund:** Projekt-Spec bringt neues Datenmodell. Account braucht Sicht auf alle Projekte an denen er beteiligt war (als Bauherr ODER via Firmen-Beteiligung).
-**Was fehlt:** Account-Schema v0.1 → v0.2: neuer Tab zwischen Tab 6 Jobs & Vakanzen und Tab 7 Mandate (oder als eigener, z.B. Tab 7 Projekte, verschiebt alles nachfolgende).
-**Inhalt des Tabs:**
-- Liste aller `fact_projects` wo `bauherr_account_id = this.id` ODER `this.id IN fact_project_company_participations.account_id`
-- Filter: Rolle (Bauherr / Architekt / TU / ...), Status, Zeitraum
-- Klick → Projekt-Detailseite
-- Cross-Link zu AM-Notizen (Tab 1 Sektion 6 im Projekt)
+**Abgearbeitet 2026-04-18 via autorefine** — **Peter-Entscheidung: Variante C (bedingter Tab analog Firmengruppe).**
 
-**Betroffene Specs:** `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` → v0.2, Interactions v0.2 → v0.3.
+- Schema v0.2 §19 (neu): Layout · Filter-Chips (Rolle/Status/Zeitraum) · Tabelle mit Spalten Projekt/Bauherr/Rolle/Status/Zeitraum/Arkadium-Placements/BKP-Gewerk · Header-Quick-Action "🏗 Projekt verknüpfen" · Sichtbarkeit-Condition.
+- Interactions v0.3 TEIL 14 (neu): SQL-Query-Logic (UNION Bauherr + Company-Participations), Row-Click-Drawer-Flow, "+ Neues Projekt anlegen"-Fallback, Cross-Nav zu Projekt-Detailseite §6, Edit-Logik read-mostly, Phase-1.5/2-Vormerkungen.
+- TEIL 0 Tab-Struktur-Tabelle: zweite bedingt-Zeile für Projekte ergänzt; "13 fixe + 2 bedingt".
+
+**Follow-up:** Mockup-Integration (accounts.html) — bedingter Tab analog Firmengruppe-Pattern. Separater Arbeitsschritt.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Kandidatenmaske — Werdegang/Briefing-Integration mit Projekt
 
-**Erfasst:** 2026-04-13
-**Grund:** Projekt-Spec PR-12 Hybrid-Autocomplete — Werdegang-Einträge sollen auf Projekt-DB verlinken.
-**Was fehlt:** Kandidatenmaske-Spec-Update (Tab 2 Briefing + Tab 3 Werdegang):
-- Autocomplete-Feld "Projekt" mit Fuzzy-Match gegen `fact_projects`
-- Confidence-basierter Flow (≥85% Auto-Match, 50-84% Review, <50% Neues Projekt anlegen)
-- Mini-Drawer "Neues Projekt anlegen" (Name, Bauherr, Zeitraum)
-- Kurzübersicht im Werdegang mit Link zur Projekt-Detailseite
-- Auto-Insert in `fact_project_candidate_participations` beim Verknüpfen
+**Abgearbeitet 2026-04-18 via autorefine** — bereits vollständig in Kandidaten-Specs v1.3 integriert:
 
-**Betroffene Specs:** `ARK_KANDIDATENMASKE_SCHEMA_v1_2.md` → v1.3, Interactions v1.2 → v1.3.
+- Schema v1.3 L13–14, L25–59: Hybrid-Autocomplete Tab 2 Briefing (Fuzzy-Match + Confidence-Schwellen ≥85/60-84/<60), Mini-Drawer "Neues Projekt anlegen" mit Pflichtfeldern, Werdegang-Projekt-FK pro Station.
+- Interactions v1.3 L160–177, L200: Projekt-Autocomplete-Flow, Auto-Insert in `fact_project_candidate_participations`, Bidirektionaler BKP/SIA-Sync.
+- Schema v1.3 L38, L139: `fact_candidate_werdegang.project_id` FK nullable.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Mandat + Job — Projekt-Verknüpfung (optional)
 
-**Erfasst:** 2026-04-13
-**Grund:** Mandate/Jobs können sich auf ein spezifisches Projekt beziehen (z.B. "Suche Bauleiter für Überbauung XY").
-**Was fehlt:**
-- `fact_mandate.linked_project_id` FK
-- `fact_jobs.linked_project_id` FK
-- UI: Dropdown in Mandat/Job Tab 1 Sektion "Verknüpfungen" mit Projekt-Autocomplete
-- Im Projekt: Sektion "Verwandte Mandate" zeigt alle verknüpften Mandate
+**Abgearbeitet 2026-04-18 via autorefine** — Schema-FK-Additions in beiden Spec-Dateien:
 
-**Betroffene Specs:** Mandat-Schema v0.1 → v0.2, Job-Schema v0.1 → v0.2.
+- Mandat Schema v0.2 §Sektion 1 Grunddaten: Feld "Verknüpftes Projekt" (`fact_mandate.linked_project_id` FK nullable) mit Autocomplete-Dropdown und Cross-Nav zu Projekt-Detailseite "Verwandte Mandate"-Sektion.
+- Job Schema v0.1 §Sektion 2 Verknüpfungen: Feld "Verknüpftes Projekt" (`fact_jobs.linked_project_id` FK nullable) mit Use-Case-Beispiel "Bauleiter Überbauung XY".
+- Grundlagen-Sync: `ARK_DATABASE_SCHEMA_v1_3.md` L63, L75 bereits `linked_project_id FK → fact_projects NULL` dokumentiert für Phase 1.5. Spec-Drift geschlossen.
 
-**Priorität:** P1 (nützlich, nicht kritisch).
+**Priorität:** P1.
+
+**Erfasst:** 2026-04-13.
 
 ---
 
 ### Mockup-HTMLs für alle neu erstellten Detailseiten
 
-**Erfasst:** 2026-04-13
-**Grund:** Mandat (6 Tabs), Account (13 Tabs), Assessment (5 Tabs) haben noch keine Mockup-HTMLs — nur Referenzen in den Schemas.
-**Was fehlt:** Mockup-HTMLs in `raw/Ark_CRM_v2/` nach gleicher Methodik wie Kandidatenmaske v2 HTMLs.
+**Abgearbeitet 2026-04-18 via autorefine** — alle Mockup-HTMLs existieren in `mockups/`:
 
-**Priorität:** P1 nach Abschluss aller Schemas/Interactions.
+- `accounts.html` (323KB, 35 Tab-Markers — 13 Haupt-Tabs + Subtabs)
+- `mandates.html` (138KB, 18 Tab-Markers — 6 Haupt-Tabs + Drawer-Tabs)
+- `assessments.html` (80KB, 9 Tab-Markers — 5 Haupt-Tabs + Drawer-Tabs)
+- Plus alle anderen Detailseiten (candidates, jobs, projects, processes, groups, email-kalender, scraper, admin, dashboard, dok-generator, reminders)
+
+Mockups wurden zwischen 2026-04-13 (Punkt erfasst) und heute gebaut.
+
+**Priorität:** P1 erledigt.
+
+**Erfasst:** 2026-04-13.
 
 ---
 

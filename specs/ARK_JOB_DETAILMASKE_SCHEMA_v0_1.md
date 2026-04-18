@@ -167,6 +167,7 @@ Canonical: `.snapshot-bar` + `.snapshot-item` (lbl/val/delta) — siehe `wiki/co
 | Account | Link-Chip (read-only, Parent-Entity) |
 | Mandat | Link-Chip (nullable) |
 | Zugehörige Stellenplan-Position | Link-Chip zu Account Tab 5 (konditional, `fact_account_org_positions.linked_job_id`) |
+| **Verknüpftes Projekt** (optional, v0.2) | Autocomplete-Dropdown aus `fact_projects` (Fuzzy-Match, `fact_jobs.linked_project_id` FK nullable). Typischer Use-Case: Suche "Bauleiter Überbauung XY" — Job verknüpft zum Projekt. Projekt-Detailseite zeigt Job in "Verwandte Stellen"-Sektion. |
 | Owner AM | aus `account.owner` (read-only) |
 
 #### Sektion 3 — Stellenbeschreibung

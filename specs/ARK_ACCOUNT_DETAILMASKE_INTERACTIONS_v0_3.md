@@ -53,8 +53,9 @@
 | 12 | Dokumente | fact_documents |
 | 13 | Reminders | fact_reminders |
 | (bedingt) | Firmengruppe | Nur sichtbar wenn `account_group_id IS NOT NULL` |
+| (bedingt) | Projekte | Nur sichtbar wenn `EXISTS(fact_projects WHERE bauherr_account_id = this.id) OR EXISTS(fact_project_company_participations WHERE account_id = this.id)` |
 
-13 fixe Tabs + 1 bedingt.
+13 fixe Tabs + 2 bedingt.
 
 ### Design-Konsistenz
 
@@ -738,16 +739,18 @@ Trigger: Header Quick-Action "🧭 Assessment beauftragen" oder Button "+ Neues 
    - Bei Mandatsbezug: `fact_mandate_option` mit `option_type = 'IX_assessment'` + `assessment_order_id` FK
    - Billing-Rechnungszeile (`billing_type = 'full'`, sofort bei `ordered` fällig — siehe Assessment-Interactions v0.2)
 
-### Status-Wechsel
+### Status-Wechsel (Order-Level)
+
+Order-Status kennt kein `invoiced` (siehe Assessment-Schema v0.3 + Database §14.3). Rechnungs-Bezahl-State lebt auf `fact_assessment_billing.status`.
 
 | Von | Nach | Trigger |
 |-----|------|---------|
 | offered | ordered | Unterschriebene Offerte hochgeladen |
-| ordered | scheduled | Termin mit Kandidat gesetzt |
-| scheduled | completed | Executive Summary ausgeliefert (Upload) |
-| completed | invoiced | Rechnung erstellt |
+| ordered | partially_used | Erster Credit verbraucht (Kandidat-Assessment durchgeführt) |
+| partially_used | fully_used | Letzter Credit verbraucht |
+| ordered / partially_used / fully_used | cancelled | Auftrag storniert |
 
-Bei `completed`: Auto-Trigger → `fact_assessment_billing.status = 'pending'` Rechnung fällig.
+Billing-Trigger: Rechnung fällig **sofort bei `ordered`** (Credits-Modell, nicht erst bei `completed`). Auto-Insert `fact_assessment_billing` mit `status='pending'`. Billing-Status-Flow (pending → invoiced → paid → overdue) ist unabhängig vom Order-Status.
 
 ### Click-Verhalten
 
@@ -1111,6 +1114,107 @@ Analog Kandidat Tab 10 (Reminders). Gleiche Mechanik, account-spezifische Verkn�
 - Gruppen-weiter No-Hunt-Status (propagiert auf alle Mitglieder)
 - Gruppen-AGB (einmal bestätigen für alle)
 - Cross-Account Reporting (Umsatz, Marge, Pipeline pro Gruppe)
+
+---
+
+## TEIL 14: BEDINGTER TAB — PROJEKTE (neu v0.3)
+
+**Sichtbarkeit:** Nur wenn
+```sql
+EXISTS(SELECT 1 FROM fact_projects WHERE bauherr_account_id = this.id)
+OR EXISTS(SELECT 1 FROM fact_project_company_participations WHERE account_id = this.id)
+```
+
+Tab bleibt ausgeblendet, solange der Account nicht mit mindestens einem Projekt verknüpft ist — analog zum Firmengruppe-Pattern (TEIL 13).
+
+### Query-Logic
+
+```sql
+SELECT
+  p.id AS project_id,
+  p.project_name,
+  p.status,
+  p.project_start, p.project_end,
+  CASE
+    WHEN p.bauherr_account_id = :account_id THEN 'bauherr'
+    ELSE fppc.role
+  END AS role,
+  (SELECT COUNT(*) FROM fact_placements pl WHERE pl.project_id = p.id) AS arkadium_placements
+FROM fact_projects p
+LEFT JOIN fact_project_company_participations fppc
+  ON fppc.project_id = p.id AND fppc.account_id = :account_id
+WHERE p.bauherr_account_id = :account_id
+   OR fppc.account_id = :account_id
+GROUP BY p.id
+ORDER BY p.project_start DESC;
+```
+
+### Layout
+
+**Filter-Chips oben:**
+- Rolle: Alle / Bauherr / Architekt / TU / Spezialist / Planer / Weitere (aus `dim_project_roles`)
+- Status: Alle / Akquise / Ausführung / Abgeschlossen / Eingefroren
+- Zeitraum: Alle / Aktuell (ongoing) / Letzte 12M / Historisch
+
+**Tabelle:**
+
+| Spalte | Source |
+|--------|--------|
+| Projekt-Name | `fact_projects.project_name` → Link `/projects/[id]` |
+| Bauherr (wenn nicht this.account) | `fact_projects.bauherr_account_id → dim_accounts.name` — bei Eigen-Bauherrschaft: "—" / Gold-Badge "Bauherr (wir)" |
+| Rolle | aus Query `role` (bauherr / architect / tu / spezialist / …) |
+| Status | `fact_projects.status` — Badge |
+| Zeitraum | `project_start` – `project_end` (beide optional) |
+| Arkadium-Placements | Count aus `fact_placements.project_id` — Chip mit #Anzahl |
+| BKP-Gewerk (optional) | `fact_project_company_participations.bkp_gewerk` (nur bei Nicht-Bauherr-Rollen) |
+| Aktionen | Klick-Row = Drawer / "→ Projekt öffnen" |
+
+**Empty-State:** nicht vorgesehen (Tab ist bedingt — taucht erst auf wenn Projekte verknüpft sind).
+
+### Header Quick-Action
+
+In Account-Header-Toolbar zusätzliche Quick-Action (nur wenn Tab sichtbar):
+
+**"🏗 Projekt verknüpfen":** Öffnet Drawer 540px
+- Projekt-Autocomplete-Feld (Fuzzy-Match `fact_projects.project_name`, Confidence-Schwellen wie Kandidaten-Werdegang: ≥85% Auto / 60–84% Review / <60% "Neues Projekt anlegen")
+- Rolle-Dropdown (aus `dim_project_roles`)
+- BKP-Gewerk (Multi-Select, optional)
+- SIA-Phase (Multi-Select, optional)
+- Kommentar (Textarea)
+- Save → Insert in `fact_project_company_participations` mit `account_id = this.id`
+- Event `account_project_linked` in `fact_history` am Account + Projekt
+
+**"+ Neues Projekt anlegen" (in Autocomplete-Fallback):**
+- Mini-Drawer: Name (Pflicht), Bauherr-Autocomplete (optional), Standort, Zeitraum (grob von/bis Jahr)
+- Auto-Insert in `fact_projects` mit `source='account_tab'`, `source_ref_id=account.id`
+- Im Anschluss direkt Rolle/BKP/SIA-Drawer für `fact_project_company_participations`
+
+### Row-Click
+
+Klick auf Tabellen-Zeile öffnet **540px Drawer** mit Projekt-Übersicht:
+- Header: Projekt-Name + Bauherr + Status-Badge
+- Arkadium-Beteiligungen: Placements-Liste (Name/Rolle/Platzierungsdatum)
+- Rolle/BKP/SIA-Info aus `fact_project_company_participations`
+- Button "→ Zur Projekt-Detailseite" öffnet `/projects/[id]`
+- Button "✎ Beteiligung bearbeiten" (ändert Rolle/BKP/SIA)
+- Button "✕ Beteiligung entfernen" (Soft-Delete mit Audit-Trail)
+
+### Cross-Navigation
+
+- **Projekt-Detailseite §6 (Beteiligte Firmen):** Account erscheint mit Rolle + BKP/SIA-Info. Klick zurück auf Account-Name öffnet Account-Detailseite Tab 1.
+- **AM-Notizen zum Projekt:** Account-Kommentar auf `fact_project_company_participations.am_notes` → sichtbar in Projekt-Detailseite §6 Sub-Sektion "AM-Notizen pro Firma".
+
+### Edit-Logik
+
+- Tab ist **read-mostly** — Aggregation von Beteiligungen.
+- Edits der einzelnen Beteiligung (Rolle/BKP/SIA) erfolgen über den Row-Drawer, nicht inline.
+- Edits am Projekt selbst (Name, Bauherr, Status) nur über Projekt-Detailseite.
+
+### Phase 1.5/2 vorgemerkt
+
+- Projekt-Preise/Umsatz pro Account-Beteiligung (z.B. Referenz-Projekte mit Volumen)
+- Automatische Projekt-Zuordnung beim Placement (wenn Kandidat auf Projekt vermittelt wird)
+- Cross-Account-Projekt-Analytics (Wer baut mit wem?)
 
 ---
 

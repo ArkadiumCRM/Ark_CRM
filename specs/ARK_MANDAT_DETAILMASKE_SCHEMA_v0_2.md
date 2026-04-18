@@ -211,6 +211,7 @@ Zweispaltiges Grid (2-col), auf Mobile 1-col.
 | `mandate_type` | Enum-Badge | `fact_mandate.mandate_type` | Read-only nach Erstellung |
 | Account | Link-Chip | `fact_mandate.account_id → dim_accounts.name` | Read-only |
 | Job(s) | Multi-Link-Chips | `fact_mandate_jobs.job_id` | Taskforce: mehrere |
+| **Verknüpftes Projekt** (optional, v0.3) | Autocomplete-Dropdown aus `fact_projects` (Fuzzy-Match wie Kandidat-Werdegang) | `fact_mandate.linked_project_id` FK nullable | Wenn gesetzt: Snapshot-Bar zeigt Projekt-Chip; Projekt-Detailseite zeigt Mandat in "Verwandte Mandate"-Sektion |
 | `kickoff_date` | Date | `fact_mandate.kickoff_date` | ≤ heute |
 | `target_placement_date` | Date | `fact_mandate.target_placement_date` | optional, ≥ kickoff |
 
@@ -287,15 +288,27 @@ Zweispaltiges Grid (2-col), auf Mobile 1-col.
 | Garantieleistung | Read-only Text "Ersatzbesetzung" | Konstante |
 | Garantie-Ablaufdatum | Date (read-only, berechnet aus placement_date) | Compute |
 
-#### Sektion 6b — Optionale Stages (neu v0.2)
+#### Sektion 6b — Optionale Stages (neu v0.2, erweitert v0.3)
 
 Liste aller gebuchten `fact_mandate_option`-Einträge. Empty: *"Noch keine Optionalen Stages gebucht. [⚡ Option buchen]"*
 
-| Option | Beschreibung | Preis | Status | Auftrag | Rechnung |
-|--------|-------------|-------|--------|---------|----------|
-| (dynamisch aus fact_mandate_option) | … | CHF | Badge | 📄-Link | 📄-Link |
+| ▸ | Option | Beschreibung | Preis | Status | Auftrag | Rechnung |
+|---|--------|-------------|-------|--------|---------|----------|
+| Chevron | (dynamisch aus fact_mandate_option) | … | CHF | Badge | 📄-Link | 📄-Link |
 
-Klick auf Zeile → Detail-Drawer.
+**Inline-Expand (v0.3):** Klick auf Chevron ▸ klappt Detail-Row unterhalb aus (Drawer-Default-Regel unverletzt — read-only Detail, keine Edits).
+
+Expand-Inhalt je nach Option-Typ:
+
+| Typ | Expand-Inhalt |
+|-----|--------------|
+| **VI Mehr Idents** | `extension_value` ("+10 Idents") · neuer `target_idents`-Wert |
+| **VII Mehr Dossiers** | `extension_value` · neuer `target_dossiers`-Wert |
+| **VIII Marketing** | Kanal-Chip-Liste (jobs.ch, LinkedIn, …) · Laufzeit |
+| **IX Assessment** | **Credits-Anzahl** (aggregiert aus `fact_assessment_order_credits WHERE order_id = fact_mandate_option.assessment_order_id`, gruppiert nach Typ) · **getestete Kandidaten** (Avatar + Name + Einzelstatus Scheduled/Completed aus `fact_candidate_assessment_version`) · Link "→ Assessment-Auftrag AS-2026-XXX öffnen" routet zu `/assessments/[id]` |
+| **X Garantie-Extension** | `extension_value` (Monate) · neuer `garantie_months`-Wert · neues Ablaufdatum |
+
+**Detail-Drawer** (separater Trigger): Über Icon "Details" in der Aktionen-Spalte (oder Doppelklick auf Zeile) — für Edit/Audit-Trail/Vollansicht.
 
 #### Sektion 7 — Marktanalyse
 
