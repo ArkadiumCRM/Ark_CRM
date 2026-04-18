@@ -485,60 +485,73 @@ body { padding-bottom:34px }
   </div>
 </header>
 
-<!-- ═══════════════ SNAPSHOT-BAR ═══════════════ -->
-<div class="snapshot-bar">
-  <div class="snap-slot" onclick="switchTab('runs')">
-    <div class="snap-label">✅ Runs 24h</div>
-    <div class="snap-value ok" id="snap-runs">47</div>
-    <div class="snap-sub">Ø 3.4s · 95% Erfolg</div>
+<!-- SCRAPER-WARN-BANNER (analog .admin-warn) -->
+<div style="background:color-mix(in srgb, var(--scraper) 8%, var(--surface)); border-bottom:2px solid var(--scraper); padding:10px 28px; font-size:12px; display:flex; align-items:center; gap:12px;">
+  <span style="font-size:18px">🕸</span>
+  <div>
+    <strong style="color:var(--scraper); font-family:'Libre Baskerville',serif; font-size:13px; letter-spacing:0.3px;">Scraper-Bereich</strong>
+    <span style="color:var(--text-mid); margin-left:8px">Automatische Marktbeobachtung · 7 Quellen-Typen · Live-Monitoring via WebSocket. Review-Queue Pflicht für Scraper-Findings (Needs-AM Klassifizierung).</span>
   </div>
-  <div class="snap-slot" onclick="switchTab('alerts')">
-    <div class="snap-label">🔴 Fehler 24h</div>
-    <div class="snap-value crit" id="snap-errors">3</div>
-    <div class="snap-sub">1 Auth · 2 Timeout</div>
-  </div>
-  <div class="snap-slot" onclick="switchTab('review-queue')">
-    <div class="snap-label">📋 Review pending</div>
-    <div class="snap-value scraper" id="snap-review">18</div>
-    <div class="snap-sub">5 Needs-AM · 13 Standard</div>
-  </div>
-  <div class="snap-slot" onclick="switchTab('review-queue')">
-    <div class="snap-label">🆕 Findings 24h</div>
-    <div class="snap-value scraper" id="snap-findings">12</div>
-    <div class="snap-sub">7 Vakanz · 3 Kontakt · 2 Wechsel</div>
-  </div>
-  <div class="snap-slot" onclick="switchTab('runs')">
-    <div class="snap-label">⏱ Next Run</div>
-    <div class="snap-value">4 min</div>
-    <div class="snap-sub">Volare Group · Team-Page</div>
-  </div>
-  <div class="snap-slot" onclick="switchTab('alerts')">
-    <div class="snap-label">🚨 Aktive Alerts</div>
-    <div class="snap-value warn" id="snap-alerts">2</div>
-    <div class="snap-sub">1 Critical · 1 Warning</div>
-  </div>
-  <div class="snap-live" title="Live-Updates via WebSocket aktiv"><span class="dot"></span>LIVE</div>
+  <span style="flex:1"></span>
+  <span title="Live-Updates via WebSocket aktiv" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--green);font-weight:600"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--green)"></span>LIVE</span>
 </div>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
-<div class="scraper-head">
-  <h1>🕸 Scraper Control Center</h1>
-  <span class="subtitle">Automatische Marktbeobachtung · 7 Quellen-Typen · 18 offene Findings</span>
-  <div class="quick-actions">
+<!-- PAGE BANNER -->
+<div class="page-banner" style="padding:18px 28px 14px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:22px;color:var(--scraper);font-weight:700;letter-spacing:-0.01em">🕸 Scraper Control Center</h1>
+    <span class="muted">18 offene Findings · 47 Runs 24h · Ø 3.4s · nächster Run in 4 min</span>
+    <span style="flex:1"></span>
     <button class="btn btn-sm btn-scraper" onclick="openBulkRunDrawer()">▶ Jetzt scrapen (Bulk)</button>
     <button class="btn btn-sm" onclick="generateReport()">📊 Report</button>
   </div>
 </div>
 
-<!-- ═══════════════ TAB-BAR ═══════════════ -->
-<div class="scraper-tabs">
-  <div class="scr-tab" data-tab="dashboard" onclick="switchTab('dashboard')"><span class="kbd">1</span>Dashboard</div>
-  <div class="scr-tab active" data-tab="review-queue" onclick="switchTab('review-queue')"><span class="kbd">2</span>Review-Queue<span class="count-badge" id="tab-badge-review">18</span></div>
-  <div class="scr-tab" data-tab="runs" onclick="switchTab('runs')"><span class="kbd">3</span>Runs</div>
-  <div class="scr-tab" data-tab="configs" onclick="switchTab('configs')"><span class="kbd">4</span>Configs</div>
-  <div class="scr-tab" data-tab="alerts" onclick="switchTab('alerts')"><span class="kbd">5</span>Alerts &amp; Fehler<span class="count-badge crit" id="tab-badge-alerts">2</span></div>
-  <div class="scr-tab" data-tab="history" onclick="switchTab('history')"><span class="kbd">6</span>History</div>
+<!-- KPI-STRIP (harmonisiert mit admin.html: 6 Cards à 1/6 Breite) -->
+<div style="padding:14px 28px 0">
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:0">
+    <div class="kpi k-green" onclick="switchTab('runs')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot ok"></span>Runs 24h</div>
+      <div class="kpi-val" id="snap-runs">47</div>
+      <div class="kpi-sub muted">Ø 3.4s · 95 % Erfolg</div>
+    </div>
+    <div class="kpi k-red" onclick="switchTab('alerts')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot warn"></span>Fehler 24h</div>
+      <div class="kpi-val" id="snap-errors">3</div>
+      <div class="kpi-sub muted">1 Auth · 2 Timeout</div>
+    </div>
+    <div class="kpi k-purple" onclick="switchTab('review-queue')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot ok"></span>Review pending</div>
+      <div class="kpi-val" id="snap-review">18</div>
+      <div class="kpi-sub muted">5 Needs-AM · 13 Standard</div>
+    </div>
+    <div class="kpi k-purple" onclick="switchTab('review-queue')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot ok"></span>Findings 24h</div>
+      <div class="kpi-val" id="snap-findings">12</div>
+      <div class="kpi-sub muted">7 Vakanz · 3 Kontakt · 2 Wechsel</div>
+    </div>
+    <div class="kpi k-blue" onclick="switchTab('runs')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot ok"></span>Next Run</div>
+      <div class="kpi-val">4 min</div>
+      <div class="kpi-sub muted">Volare Group · Team-Page</div>
+    </div>
+    <div class="kpi k-amber" onclick="switchTab('alerts')" style="cursor:pointer">
+      <div class="kpi-label"><span class="h-dot warn"></span>Aktive Alerts</div>
+      <div class="kpi-val" id="snap-alerts">2</div>
+      <div class="kpi-sub muted">1 Critical · 1 Warning</div>
+    </div>
+  </div>
 </div>
+
+<!-- TAB-BAR (harmonisiert mit admin.html: .tabbar + .tab + .num) -->
+<nav class="tabbar" style="position:sticky;top:0;z-index:49;margin-top:14px">
+  <div class="tab" data-tab="dashboard" onclick="switchTab('dashboard')"><span class="num">1</span>Dashboard</div>
+  <div class="tab active" data-tab="review-queue" onclick="switchTab('review-queue')"><span class="num">2</span>Review-Queue<span class="count-badge" id="tab-badge-review" style="margin-left:6px">18</span></div>
+  <div class="tab" data-tab="runs" onclick="switchTab('runs')"><span class="num">3</span>Runs</div>
+  <div class="tab" data-tab="configs" onclick="switchTab('configs')"><span class="num">4</span>Configs</div>
+  <div class="tab" data-tab="alerts" onclick="switchTab('alerts')"><span class="num">5</span>Alerts &amp; Fehler<span class="count-badge crit" id="tab-badge-alerts" style="margin-left:6px">2</span></div>
+  <div class="tab" data-tab="history" onclick="switchTab('history')"><span class="num">6</span>History</div>
+</nav>
 
 <!-- ═══════════════ TAB 1: DASHBOARD ═══════════════ -->
 <div class="tab-pane" id="pane-dashboard">
