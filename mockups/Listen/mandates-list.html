@@ -61,9 +61,9 @@
     <table class="data-table">
       <thead><tr><th>Mandat</th><th>Account</th><th>Typ</th><th>Status</th><th>AM</th><th>Honorar</th><th>Fortschritt</th><th>Kickoff</th><th>Ziel</th><th class="right">›</th></tr></thead>
       <tbody>
-        <tr style="cursor:pointer" onclick="location.href='mandates.html'">
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/mandates.html'">
           <td><strong>CFO-Suche</strong></td>
-          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><a href="../Vollansichten/accounts.html">Bauherr Muster AG</a></td>
           <td><span class="chip chip-accent">🎯 Target</span></td>
           <td><span class="chip chip-green">Aktiv</span></td>
           <td><span class="actor-chip">PW</span></td>
@@ -75,7 +75,7 @@
         </tr>
         <tr style="cursor:pointer">
           <td><strong>PL Hochbau Taskforce</strong></td>
-          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><a href="../Vollansichten/accounts.html">Bauherr Muster AG</a></td>
           <td><span class="chip chip-accent">⚡ Taskforce</span></td>
           <td><span class="chip chip-green">Aktiv</span></td>
           <td><span class="actor-chip">MF</span></td>
@@ -87,7 +87,7 @@
         </tr>
         <tr style="cursor:pointer">
           <td><strong>Bauleiter Tiefbau</strong></td>
-          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><a href="../Vollansichten/accounts.html">Bauherr Muster AG</a></td>
           <td><span class="chip chip-accent">🎯 Target</span></td>
           <td><span class="chip chip-green">Aktiv</span></td>
           <td><span class="actor-chip">MF</span></td>
@@ -156,7 +156,7 @@
 /* Auto-wire: jeder Row-Klick → Mandat-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'mandates.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/mandates.html');
   });
 });
 </script>

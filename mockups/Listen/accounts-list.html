@@ -107,7 +107,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 5%, var(--surface));border-left:3px solid var(--red)" onclick="location.href='accounts.html'">
+        <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 5%, var(--surface));border-left:3px solid var(--red)" onclick="location.href='../Vollansichten/accounts.html'">
           <td><strong>Bauherr Muster AG</strong> <span class="chip chip-red" style="font-size:9px;margin-left:4px">⚠ 1 Claim</span><div class="muted" style="font-size:11px">🏛 Muster Holding Gruppe</div></td>
           <td><span class="chip chip-accent">ING</span></td>
           <td><span class="chip chip-gold">A</span></td>
@@ -120,7 +120,7 @@
           <td>vor 2 h · E. Studer</td>
           <td class="right"><button class="row-icon-btn">›</button></td>
         </tr>
-        <tr style="cursor:pointer" onclick="location.href='accounts.html'">
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/accounts.html'">
           <td><strong>Muster Immobilien AG</strong><div class="muted" style="font-size:11px">🏛 Muster Holding Gruppe</div></td>
           <td><span class="chip chip-accent">REM</span></td>
           <td><span class="chip">B</span></td>
@@ -252,7 +252,7 @@
 /* Auto-wire: jeder Row-Klick → Account-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'accounts.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/accounts.html');
   });
 });
 </script>

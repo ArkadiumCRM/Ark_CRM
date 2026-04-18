@@ -39,7 +39,7 @@
     <table class="data-table">
       <thead><tr><th>Gruppe</th><th>Accounts</th><th>Gesamt-MA</th><th>Manager</th><th>Rahmenvertrag</th><th>Offene Mandate</th><th>Placements YTD</th><th>Arkadium YTD</th><th class="right">›</th></tr></thead>
       <tbody>
-        <tr style="cursor:pointer" onclick="location.href='groups.html'">
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/groups.html'">
           <td><strong>🏛 Muster Holding AG</strong><div class="muted" style="font-size:11px">Bauherr Muster AG · Muster Immobilien AG</div></td>
           <td>2</td>
           <td>505</td>
@@ -93,7 +93,7 @@
 /* Auto-wire: jeder Row-Klick → Firmengruppen-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'groups.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/groups.html');
   });
 });
 </script>

@@ -71,7 +71,7 @@
     <table class="data-table">
       <thead><tr><th></th><th>Kandidat</th><th>Funktion · Arbeitgeber</th><th>Sparte</th><th>Stage</th><th>Grade</th><th>Standort</th><th>CM</th><th>Ø Match (aktiv)</th><th>Letzter Kontakt</th><th class="right">›</th></tr></thead>
       <tbody>
-        <tr style="cursor:pointer" onclick="location.href='candidates.html'">
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/candidates.html'">
           <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%;border:2px solid var(--gold)">TF</div></td>
           <td><strong>Tobias Furrer</strong> <span class="chip chip-red" style="font-size:9px;margin-left:4px">🔥</span><div class="muted" style="font-size:11px">47 J. · Zollikon</div></td>
           <td>Gesamtbauleiter Spezialtiefbau · <strong>Implenia AG</strong></td>
@@ -173,7 +173,7 @@
 /* Auto-wire: jeder Row-Klick → Kandidaten-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'candidates.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/candidates.html');
   });
 });
 </script>

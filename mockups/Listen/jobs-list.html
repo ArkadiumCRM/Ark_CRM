@@ -53,11 +53,11 @@
     <table class="data-table">
       <thead><tr><th>Job</th><th>Account</th><th>Sparte</th><th>Mandat</th><th>Standort</th><th>Gehalt</th><th>Matches ≥70</th><th>Im Basket</th><th>Offen seit</th><th>AM</th><th class="right">›</th></tr></thead>
       <tbody>
-        <tr style="cursor:pointer" onclick="location.href='jobs.html'">
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/jobs.html'">
           <td><strong>CFO / Finanzleitung</strong> <span class="chip" style="font-size:9px">🔒</span></td>
-          <td><a href="accounts.html">Bauherr Muster AG</a></td>
+          <td><a href="../Vollansichten/accounts.html">Bauherr Muster AG</a></td>
           <td><span class="chip chip-accent">ING</span></td>
-          <td><a href="mandates.html">🎯 CFO-Suche</a></td>
+          <td><a href="../Vollansichten/mandates.html">🎯 CFO-Suche</a></td>
           <td>Zürich · 80–100 %</td>
           <td>CHF 220–270k</td>
           <td>124</td>
@@ -141,7 +141,7 @@
 /* Auto-wire: jeder Row-Klick → Job-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'jobs.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/jobs.html');
   });
 });
 </script>
