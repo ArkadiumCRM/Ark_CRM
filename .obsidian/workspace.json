@@ -1,0 +1,221 @@
+{
+  "main": {
+    "id": "4c2389c266495314",
+    "type": "split",
+    "children": [
+      {
+        "id": "3bfc03bef3bb845c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6e9761d2d71af142",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph-Ansicht"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8c482365705a1cee",
+    "type": "split",
+    "children": [
+      {
+        "id": "5163e0006ada0f7d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7159ea9ba0edad2c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Dateiexplorer"
+            }
+          },
+          {
+            "id": "2c59a88884390304",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Suchen"
+            }
+          },
+          {
+            "id": "48fa60dfae2336ec",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Lesezeichen"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e2dc5b99d4a11f27",
+    "type": "split",
+    "children": [
+      {
+        "id": "bc75c8eecb3a68f1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "36567425df9acd31",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rückverweise"
+            }
+          },
+          {
+            "id": "cb8054d9226610cc",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Ausgehende Links"
+            }
+          },
+          {
+            "id": "c49c031eaa89b8f0",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "aa372e2e95ac374a",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Alle Eigenschaften"
+            }
+          },
+          {
+            "id": "c4b0e509842f044f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Gliederung"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Schnellauswahl öffnen": false,
+      "graph:Graph-Ansicht öffnen": false,
+      "canvas:Neuen Canvas erstellen": false,
+      "daily-notes:Heutige Notiz öffnen": false,
+      "templates:Vorlage einfügen": false,
+      "command-palette:Befehlspalette öffnen": false,
+      "bases:Neue Base erstellen": false
+    }
+  },
+  "active": "6e9761d2d71af142",
+  "lastOpenFiles": [
+    "wiki/concepts/admin-system.md",
+    "wiki/entities/kandidat.md",
+    "wiki/entities/mandat.md.tmp.26244.1776028034908",
+    "wiki/analyses/mandat-lifecycle-gaps.md",
+    "mandat-lifecycle-gaps.md",
+    "wiki/concepts/diagnostik-assessment.md",
+    "wiki/concepts/diagnostik-assessment.md.tmp.26244.1776027966133",
+    "wiki/concepts/optionale-stages.md",
+    "wiki/concepts/direkteinstellung-schutzfrist.md",
+    "raw/Ark_CRM_v2/Ideen CRM.pdf",
+    "raw/Ark_CRM_v2/Ark_CV_PL_Arkadium_Arkadium.pdf",
+    "wiki/analyses/namenskonventionen.md",
+    "wiki/analyses/ungereimtheiten-report.md",
+    "wiki/concepts/erfolgsbasis.md",
+    "wiki/concepts/briefing.md",
+    "wiki/concepts/matching.md",
+    "wiki/sources/agb-arkadium.md",
+    "wiki/concepts/kontakt-kandidat-regel.md",
+    "wiki/concepts/projekt-datenmodell.md",
+    "wiki/concepts/interaction-patterns.md",
+    "wiki/concepts/temperatur-modell.md",
+    "wiki/sources/dokument-templates.md",
+    "wiki/sources/mandatsablauf-leitfaden.md",
+    "wiki/sources/ideen-crm.md",
+    "wiki/sources/projektguideline.md",
+    "wiki/sources/bkp-codes-stammdaten.md",
+    "wiki/sources/stammdaten-export.md",
+    "wiki/sources/account-interactions.md",
+    "wiki/sources/kandidatenmaske-interactions.md",
+    "wiki/sources/kandidatenmaske-schema.md",
+    "Unbenannt.canvas",
+    "raw/Ark_CRM_v2/preview.webp",
+    "raw/Ark_CRM_v2/Arkadium_AGB_FEB_2023.pdf",
+    "raw/Ark_CRM_v2/Ark_Anschreiben_Abstract_Peter_Wiederkehr.pdf",
+    "raw/Ark_CRM_v2/Leitfaden Mandatsablauf Executive Search.pdf",
+    "raw/Ark_CRM_v2/msoD072.tmp",
+    "raw/Ark_CRM_v2/~$itfaden Mandatsablauf Executive Search.docx",
+    "raw/Ark_CRM_v2/Vision Ark_App.pdf",
+    "raw/Ark_CRM_v2/Bild.jpg"
+  ]
+}

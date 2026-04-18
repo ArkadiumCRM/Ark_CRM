@@ -274,6 +274,27 @@ Neues Anthropic-Labs-Produkt für Design → Claude-Code-Handoff. Nutzen für Ph
 
 **Wann NICHT:** Detail-Refinement — Mockup-Baseline-Konsistenz geht vor Design-Flair. Claude Design ist fürs grobe Skelett, nicht die Feinarbeit.
 
+## Kritisch-Op-Self-Check-Regel (2026-04-18)
+
+Peter hat global `bypassPermissions` aktiviert. Claude Code fragt nicht mehr nach. Damit liegt die Verantwortung beim Assistant: **vor** destruktiven/irreversiblen Ops immer kurz in Chat fragen, auch wenn kein Prompt kommt.
+
+**Immer selbst fragen vor:**
+- Löschen von Files/Ordnern (auch `git rm`, `mv` auf andere Disk)
+- Force-Push, Hard-Reset, Branch-Deletion, `checkout -- <file>` bei Uncommitted Changes
+- DB-Migrations mit `DROP`/`TRUNCATE`/`ALTER DROP COLUMN`
+- Massen-Rename/Massen-Replace über > 10 Files
+- Install/Uninstall von global-installed Packages (npm -g, pip -g)
+- Neue kostenpflichtige Services aktivieren (API-Keys, Marketplace-Subscriptions)
+- Push zu Remote (erst-Push auch wenn Origin definiert)
+- Edits an `C:\Users\PeterWiederkehr\.claude\settings.json` oder Hook-Files
+- Edits an Grundlagen-MDs (`Grundlagen MD/ARK_*.md`) — Single-Source-of-Truth
+- Backup-Rotation / Löschen alter Backups in `backups/`
+
+**Nicht fragen bei** (einfach tun): Mockup/Spec/Wiki-Edits, neue Skill-Files, neue Commands, Lint-Runs, Drift-Scans, Migrations-Dry-Run (ohne Apply), git status/log/diff, Bash read-only Ops.
+
+**Format der Rückfrage:** kurz + klar. Eine Zeile Aktion, eine Zeile Begründung/Risiko, Frage am Ende.
+Beispiel: "Will `git reset --hard HEAD~3` machen — verwirft 3 Commits inkl. aktuelle Mockup-Edits in candidates.html. OK oder lieber soft-reset?"
+
 ## Guiding Principles
 
 1. **Sources are immutable.** Never modify anything in `/raw/`.

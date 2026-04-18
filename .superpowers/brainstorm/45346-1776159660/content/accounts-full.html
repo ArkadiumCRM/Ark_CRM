@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Account · Bauherr Muster AG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="editorial.css">
+<style>
+  /* Page-specific */
+  .spider {
+    aspect-ratio:1; width:100%; max-width:340px; margin:0 auto; display:block;
+  }
+  .org-tree { font-size:13px; list-style:none; padding-left:0; }
+  .org-tree ul { list-style:none; padding-left:24px; border-left:1px dashed var(--border-strong); margin-left:8px; }
+  .org-tree li { padding:6px 0; position:relative; }
+  .org-node { display:flex; gap:10px; align-items:center; }
+  .org-badge {
+    display:inline-block; width:28px; height:28px; border-radius:3px;
+    background:var(--accent-soft); color:var(--accent); font-size:11px;
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+  }
+  .org-role { font-size:11.5px; color:var(--text-light); }
+  .loc-card {
+    background:var(--surface); padding:16px; border-radius:4px; box-shadow:var(--shadow-sm);
+  }
+  .loc-card .title { font-weight:600; margin-bottom:4px; }
+  .file-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+  .file-card {
+    background:var(--surface); padding:14px; border-radius:4px; box-shadow:var(--shadow-sm);
+    cursor:pointer;
+  }
+  .file-card:hover { box-shadow:var(--shadow); }
+  .file-icon {
+    width:42px; height:52px; background:var(--accent-soft); color:var(--accent);
+    border-radius:3px; display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:10px; margin-bottom:8px;
+  }
+  .file-name { font-size:12.5px; font-weight:500; line-height:1.35; }
+  .file-meta { font-size:11px; color:var(--text-light); margin-top:4px; }
+
+  .credits-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
+  .credit-chip {
+    background:var(--surface); padding:12px 14px; border-radius:4px; box-shadow:var(--shadow-sm);
+    display:flex; align-items:center; gap:12px;
+  }
+  .credit-chip .typ { font-size:11px; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; }
+  .credit-chip .num { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; color:var(--accent); }
+  .credit-chip .used { font-size:11px; color:var(--text-mid); }
+
+  .kanban-col { min-width:180px; }
+  .kanban-col h4 {
+    font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light);
+    padding:8px 4px; font-weight:600;
+  }
+  .kanban-card {
+    background:var(--surface); padding:10px 12px; border-radius:3px;
+    box-shadow:var(--shadow-sm); margin-bottom:8px; font-size:12.5px;
+  }
+  .kanban-card .name { font-weight:500; }
+  .kanban-card .sub { color:var(--text-light); font-size:11px; margin-top:2px; }
+
+  .hist-filter {
+    display:flex; flex-direction:column; gap:4px; padding:12px; background:var(--surface);
+    border-radius:4px; box-shadow:var(--shadow-sm); font-size:12.5px;
+  }
+  .hist-filter label { display:flex; align-items:center; gap:6px; padding:4px 0; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="#">Accounts</a><span class="sep">/</span>
+    <span class="current">Bauherr Muster AG</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="banner-title">
+      <h1>Bauherr Muster AG</h1>
+      <div class="banner-meta">
+        <span>AM <strong>Peter Wiederkehr</strong></span>
+        <span class="dot"></span><span>CHE-123.456.789</span>
+        <span class="dot"></span><span>~420 MA</span>
+        <span class="dot"></span><span>Zürich</span>
+        <span class="dot"></span><span>Letzter Kontakt vor 4 Tagen</span>
+      </div>
+    </div>
+    <div class="banner-chips">
+      <span class="chip chip-red">● Hot</span>
+      <span class="chip chip-green">Aktiv</span>
+      <span class="chip chip-amber">🛡 3 Schutzfristen</span>
+      <span class="chip chip-muted">Gruppe: Muster Holding</span>
+    </div>
+  </div>
+  <div class="banner-actions">
+    <button class="btn btn-primary">+ Neues Mandat</button>
+    <button class="btn">+ Kontakt</button>
+    <button class="btn">+ Assessment</button>
+    <button class="btn">✉ Email</button>
+    <button class="btn">📞 Call</button>
+    <button class="btn">⋯ Mehr</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabbar">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Übersicht</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Profil & Kultur</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Kontakte</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Standorte</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Organisation</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>Jobs & Vakanzen</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Mandate</div>
+  <div class="tab" data-tab="8" onclick="switchTab(8)"><span class="num">8</span>Assessments</div>
+  <div class="tab" data-tab="9" onclick="switchTab(9)"><span class="num">9</span>Schutzfristen</div>
+  <div class="tab" data-tab="10" onclick="switchTab(10)"><span class="num">0</span>Prozesse</div>
+  <div class="tab" data-tab="11" onclick="switchTab(11)">History</div>
+  <div class="tab" data-tab="12" onclick="switchTab(12)">Dokumente</div>
+  <div class="tab" data-tab="13" onclick="switchTab(13)">Reminders</div>
+</nav>
+
+<div class="content">
+
+<!-- TAB 1 · ÜBERSICHT -->
+<div id="tab-1" class="tab-panel active">
+  <div class="grid-3 mb-24">
+    <div class="kpi k-accent"><div class="kpi-val">5</div><div class="kpi-label">Aktive Mandate</div><div class="kpi-sub">+2 dieses Jahr</div></div>
+    <div class="kpi k-gold"><div class="kpi-val">12</div><div class="kpi-label">Assessments 12 Mt</div><div class="kpi-sub">8× MDI · 3× Relief · 1× Outmatch</div></div>
+    <div class="kpi k-green"><div class="kpi-val">CHF 340k</div><div class="kpi-label">Umsatz YTD</div><div class="kpi-sub">+28% vs. Vorjahr</div></div>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Stammdaten</div><a href="#" class="card-link">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Firmenname</dt><dd>Bauherr Muster AG</dd>
+          <dt>UID</dt><dd>CHE-123.456.789</dd>
+          <dt>Rechtsform</dt><dd>Aktiengesellschaft</dd>
+          <dt>Gründungsjahr</dt><dd>1987</dd>
+          <dt>Mitarbeitende</dt><dd>~420</dd>
+          <dt>Hauptsitz</dt><dd>Zürich, CH</dd>
+          <dt>Website</dt><dd><a href="#">muster-bauherr.ch</a></dd>
+          <dt>Branche</dt><dd>Hochbau · Infrastruktur</dd>
+          <dt>Firmengruppe</dt><dd>Muster Holding <span class="muted">(2 Accounts)</span></dd>
+        </dl>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Aktive Mandate</div><a href="#" class="card-link" onclick="switchTab(7)">Alle 5 →</a></div>
+        <div class="row"><span class="temp-dot"></span><div><div class="title">Geschäftsleitung · CFO</div><div class="sub">Target · seit 12.01.2026</div></div><span class="chip chip-accent">Stage 2 / 3</span><span class="muted">12 / 15 idents</span><span class="muted">›</span></div>
+        <div class="row"><span class="temp-dot warm"></span><div><div class="title">Projektleiter Hochbau (3×)</div><div class="sub">Taskforce · seit 03.2026</div></div><span class="chip chip-green">Aktiv</span><span class="muted">2 / 3 besetzt</span><span class="muted">›</span></div>
+        <div class="row"><span class="temp-dot cold"></span><div><div class="title">Bauleiter Tiefbau</div><div class="sub">Target · seit 28.02.2026</div></div><span class="chip chip-accent">Stage 1 / 3</span><span class="muted">4 / 15 idents</span><span class="muted">›</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Kultur-Tags</div><a href="#" class="card-link" onclick="switchTab(2)">Details →</a></div>
+        <div class="tag-cloud">
+          <span class="tag">Bauhandwerk</span><span class="tag">Familiär</span><span class="tag">Langfristig</span>
+          <span class="tag">Hands-on</span><span class="tag">Hierarchisch</span><span class="tag">Tradition</span>
+          <span class="tag">Schweiz-Fokus</span><span class="tag">Qualität > Tempo</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Schutzfristen (3)</div><a href="#" class="card-link" onclick="switchTab(9)">Tab 9 →</a></div>
+        <div class="list-item"><div class="name">🛡 M. Gerber <span class="muted" style="font-weight:400;font-size:11.5px">bis 12.01.2027</span></div><div class="meta">Vorstellung P.W. · 12 Mt · Account-Scope 🏢</div></div>
+        <div class="list-item"><div class="name">🛡 S. Keller <span class="muted" style="font-weight:400;font-size:11.5px">bis 03.04.2027</span></div><div class="meta">Vorstellung · 16 Mt · Gruppen-Scope 🏛</div></div>
+        <div class="list-item"><div class="name">🛡 R. Bühler <span class="muted" style="font-weight:400;font-size:11.5px">bis 28.05.2027</span></div><div class="meta">Vorstellung · 12 Mt · Account-Scope 🏢</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Nächste Aktionen</div></div>
+        <div class="todo"><span class="check"></span><span>Debriefing CFO-Interview</span><span class="due soon">morgen</span></div>
+        <div class="todo"><span class="check"></span><span>Info-Request Schutzfrist M.G.</span><span class="due">in 3 Tagen</span></div>
+        <div class="todo"><span class="check"></span><span>Quartals-Check Muster Holding</span><span class="due">in 2 Wochen</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2 · PROFIL & KULTUR -->
+<div id="tab-2" class="tab-panel">
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Kultur-Dimensionen</div><a href="#" class="card-link">Bearbeiten</a></div>
+        <svg class="spider" viewBox="0 0 200 200">
+          <g fill="none" stroke="var(--border)" stroke-width="1">
+            <polygon points="100,30 160,65 160,135 100,170 40,135 40,65"/>
+            <polygon points="100,50 143,75 143,125 100,150 57,125 57,75"/>
+            <polygon points="100,70 126,85 126,115 100,130 74,115 74,85"/>
+          </g>
+          <g stroke="var(--border)" stroke-width="1">
+            <line x1="100" y1="30" x2="100" y2="170"/>
+            <line x1="40" y1="65" x2="160" y2="135"/>
+            <line x1="40" y1="135" x2="160" y2="65"/>
+          </g>
+          <polygon points="100,42 149,71 152,128 100,155 51,128 48,72"
+                   fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+          <g font-size="9" fill="var(--text-mid)" text-anchor="middle" font-family="DM Sans">
+            <text x="100" y="22">Tradition</text>
+            <text x="170" y="62">Qualität</text>
+            <text x="170" y="145">Hierarchie</text>
+            <text x="100" y="186">Familiär</text>
+            <text x="30" y="145">Hands-on</text>
+            <text x="30" y="62">CH-Fokus</text>
+          </g>
+        </svg>
+        <p class="muted" style="text-align:center;font-size:11.5px;margin-top:8px">6 Dimensionen · AI-generiert aus Interviews & Scraper-Signalen</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Wertschöpfung & Charakter</div></div>
+        <p style="font-size:13px;line-height:1.7;color:var(--text-mid)">
+          Familiengeführtes Bauunternehmen in 3. Generation. Fokussiert auf grosse Hochbau-Projekte im Raum Zürich/Zug, insbesondere Verwaltungsbauten, Schulhaus-Neubauten und grosse Wohnüberbauungen. Langjährige Kundenbeziehungen, konservative Preispolitik, starke eigene Ausführung (kaum Subunternehmer). Kultur betont Handwerk, Zuverlässigkeit, "Schweizer Qualität". Entscheidungen werden traditionell hierarchisch und langsam getroffen — Mandate brauchen im Schnitt 2-3 Gespräche bis zum Abschluss.
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Meilensteine</div></div>
+        <div class="timeline">
+          <div class="timeline-item ok">
+            <div class="date">12.2025</div>
+            <div class="ev">CFO-Mandat gewonnen</div>
+            <div class="detail">Exklusivmandat nach 3-Gespräch-Prozess mit VR-Präsident.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="date">08.2025</div>
+            <div class="ev">Taskforce abgeschlossen</div>
+            <div class="detail">3 × Projektleiter in 5 Monaten besetzt. Gesamtumsatz CHF 180k.</div>
+          </div>
+          <div class="timeline-item warn">
+            <div class="date">03.2025</div>
+            <div class="ev">Kultur-Interview</div>
+            <div class="detail">2h Gespräch mit CEO + HR-Leitung. Wesentliche Kultur-Dimensionen erfasst.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="date">2024</div>
+            <div class="ev">Erstkontakt</div>
+            <div class="detail">Empfehlung durch bestehenden Kunden Meier Bau AG.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Branche & Markt</div></div>
+        <dl class="field-grid">
+          <dt>Cluster</dt><dd>Hochbau</dd>
+          <dt>Sparten</dt><dd>Verwaltungsbauten, Wohnbau, Schulhäuser</dd>
+          <dt>BKP-Fokus</dt><dd>211, 221, 222, 271</dd>
+          <dt>Umsatz</dt><dd>~CHF 280 Mio./Jahr</dd>
+          <dt>Marktanteil</dt><dd>Top 10 Zürich</dd>
+          <dt>Konkurrenz</dt><dd>Meier Bau, Implenia, HRS</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3 · KONTAKTE -->
+<div id="tab-3" class="tab-panel">
+  <div class="filter-bar">
+    <input placeholder="Suche Name, Rolle..." style="flex:1">
+    <select><option>Alle Rollen</option><option>Entscheider</option><option>Influencer</option><option>Gatekeeper</option></select>
+    <select><option>Alle Ebenen</option><option>C-Level</option><option>Leitung</option><option>Fachkraft</option></select>
+    <button class="btn btn-primary btn-sm">+ Kontakt</button>
+  </div>
+  <div class="card" style="padding:0">
+    <table class="data-table">
+      <thead><tr><th></th><th>Name</th><th>Rolle</th><th>Ebene</th><th>Letzter Kontakt</th><th>Kanal</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>👑</td><td><strong>H. Müller</strong><div class="muted" style="font-size:11px">CEO</div></td><td><span class="chip chip-red">Entscheider</span></td><td>C-Level</td><td>vor 4 Tagen</td><td>📞 Call 42min</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>A. Keller</strong><div class="muted" style="font-size:11px">CFO (ausscheidend)</div></td><td><span class="chip chip-amber">Influencer</span></td><td>C-Level</td><td>vor 1 Woche</td><td>✉ Email</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>P. Schmid</strong><div class="muted" style="font-size:11px">HR-Leitung</div></td><td><span class="chip chip-accent">Gatekeeper</span></td><td>Leitung</td><td>vor 2 Wochen</td><td>✉ Email</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>R. Weber</strong><div class="muted" style="font-size:11px">COO</div></td><td><span class="chip chip-red">Entscheider</span></td><td>C-Level</td><td>vor 1 Monat</td><td>📞 Call</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>M. Huber</strong><div class="muted" style="font-size:11px">Leiter Projektierung</div></td><td><span class="chip chip-amber">Influencer</span></td><td>Leitung</td><td>vor 3 Wochen</td><td>✉ Email</td><td class="muted">›</td></tr>
+        <tr><td>👑</td><td><strong>Dr. U. Gerber</strong><div class="muted" style="font-size:11px">VR-Präsident</div></td><td><span class="chip chip-red">Entscheider</span></td><td>Board</td><td>vor 2 Monaten</td><td>🤝 Meeting</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>S. Meier</strong><div class="muted" style="font-size:11px">Assistenz CEO</div></td><td><span class="chip chip-accent">Gatekeeper</span></td><td>Fachkraft</td><td>vor 4 Tagen</td><td>✉ Email</td><td class="muted">›</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 4 · STANDORTE -->
+<div id="tab-4" class="tab-panel">
+  <div class="grid-2">
+    <div class="card" style="height:340px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-soft),var(--surface));color:var(--accent);font-family:'Libre Baskerville',serif;font-size:14px">🗺 Karten-Ansicht (Placeholder)</div>
+    <div>
+      <div class="card-head" style="background:var(--surface);padding:14px 16px;border-radius:4px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+        <div class="card-title">4 Standorte</div>
+        <button class="btn btn-sm btn-primary">+ Standort</button>
+      </div>
+      <div class="loc-card mb-8">
+        <div style="display:flex;justify-content:space-between"><div class="title">Zürich <span class="chip chip-gold" style="margin-left:6px">Hauptsitz</span></div><div class="muted">~280 MA</div></div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Industriestrasse 42, 8005 Zürich · Bau-Ausführung + Administration</div>
+      </div>
+      <div class="loc-card mb-8">
+        <div style="display:flex;justify-content:space-between"><div class="title">Zug</div><div class="muted">~80 MA</div></div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Baarerstrasse 115, 6300 Zug · Projektierung + Planung</div>
+      </div>
+      <div class="loc-card mb-8">
+        <div style="display:flex;justify-content:space-between"><div class="title">Winterthur</div><div class="muted">~40 MA</div></div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Technopark 8, 8400 Winterthur · Baustellen-Büro Regional Nord</div>
+      </div>
+      <div class="loc-card">
+        <div style="display:flex;justify-content:space-between"><div class="title">Chur</div><div class="muted">~20 MA</div></div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Quaderstrasse 5, 7000 Chur · Filiale Graubünden</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5 · ORGANISATION -->
+<div id="tab-5" class="tab-panel">
+  <div class="card">
+    <div class="card-head"><div class="card-title">Organisationsstruktur</div><a href="#" class="card-link">Exportieren</a></div>
+    <ul class="org-tree">
+      <li>
+        <div class="org-node"><div class="org-badge" style="background:var(--gold-soft);color:var(--gold)">VR</div><div><strong>Dr. U. Gerber</strong> <span class="org-role">VR-Präsident</span></div></div>
+        <ul>
+          <li>
+            <div class="org-node"><div class="org-badge">GL</div><div><strong>H. Müller</strong> <span class="org-role">CEO</span></div></div>
+            <ul>
+              <li>
+                <div class="org-node"><div class="org-badge">F</div><div><strong>A. Keller</strong> <span class="org-role" style="color:var(--amber)">CFO (ausscheidend 06.2026)</span></div></div>
+                <ul>
+                  <li><div class="org-node"><div class="org-badge">B</div><div>Buchhaltung <span class="org-role">12 MA</span></div></div></li>
+                  <li><div class="org-node"><div class="org-badge">C</div><div>Controlling <span class="org-role">8 MA</span></div></div></li>
+                </ul>
+              </li>
+              <li>
+                <div class="org-node"><div class="org-badge">O</div><div><strong>R. Weber</strong> <span class="org-role">COO</span></div></div>
+                <ul>
+                  <li><div class="org-node"><div class="org-badge">P</div><div><strong>M. Huber</strong> <span class="org-role">Leitung Projektierung · 45 MA</span></div></div></li>
+                  <li><div class="org-node"><div class="org-badge">B</div><div>Bauleitung <span class="org-role">120 MA</span></div></div></li>
+                  <li><div class="org-node"><div class="org-badge">A</div><div>Ausführung <span class="org-role">180 MA</span></div></div></li>
+                </ul>
+              </li>
+              <li><div class="org-node"><div class="org-badge">H</div><div><strong>P. Schmid</strong> <span class="org-role">HR-Leitung · 6 MA</span></div></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- TAB 6 · JOBS & VAKANZEN -->
+<div id="tab-6" class="tab-panel">
+  <div class="filter-bar">
+    <strong style="color:var(--amber)">⚠ 2 neue Scraper-Vorschläge</strong> <span class="muted" style="font-size:12px">· gefunden 2026-04-14</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Alle anzeigen</button>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Aktive Jobs (5)</div><button class="btn btn-sm btn-primary">+ Job</button></div>
+      <div class="row"><span class="temp-dot"></span><div><div class="title">CFO</div><div class="sub">via Mandat #1472 · TC CHF 260k</div></div><span class="chip chip-green">Aktiv</span><span class="muted">4 Prozesse</span><span class="muted">›</span></div>
+      <div class="row"><span class="temp-dot warm"></span><div><div class="title">Projektleiter Hochbau</div><div class="sub">via Taskforce · TC CHF 140k</div></div><span class="chip chip-green">Aktiv</span><span class="muted">6 Prozesse</span><span class="muted">›</span></div>
+      <div class="row"><span class="temp-dot cold"></span><div><div class="title">Bauleiter Tiefbau</div><div class="sub">via Mandat · TC CHF 130k</div></div><span class="chip chip-green">Aktiv</span><span class="muted">3 Prozesse</span><span class="muted">›</span></div>
+      <div class="row"><span class="temp-dot cold"></span><div><div class="title">BIM-Manager</div><div class="sub">Scraper · TC CHF 120k (geschätzt)</div></div><span class="chip chip-amber">Review</span><span class="muted">Conf 78%</span><span class="muted">›</span></div>
+      <div class="row"><span class="temp-dot cold"></span><div><div class="title">Projektierungs-Leitung</div><div class="sub">Scraper · TC CHF 160k</div></div><span class="chip chip-amber">Review</span><span class="muted">Conf 66%</span><span class="muted">›</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Top Matching-Kandidaten</div><a href="#" class="card-link">Matching →</a></div>
+      <div class="row"><span style="font-family:'Libre Baskerville',serif;font-size:17px;color:var(--accent);font-weight:700">94</span><div><div class="title">T. Furrer</div><div class="sub">Match CFO · Hot · Bauhandwerk 12J</div></div><span class="chip chip-red">● Hot</span><span class="muted">›</span></div>
+      <div class="row"><span style="font-family:'Libre Baskerville',serif;font-size:17px;color:var(--accent);font-weight:700">89</span><div><div class="title">M. Stucki</div><div class="sub">Match CFO · Warm · MBA Finance</div></div><span class="chip chip-amber">● Warm</span><span class="muted">›</span></div>
+      <div class="row"><span style="font-family:'Libre Baskerville',serif;font-size:17px;color:var(--gold);font-weight:700">82</span><div><div class="title">J. Brunner</div><div class="sub">Match Projektleiter · Warm</div></div><span class="chip chip-amber">● Warm</span><span class="muted">›</span></div>
+      <div class="row"><span style="font-family:'Libre Baskerville',serif;font-size:17px;color:var(--gold);font-weight:700">78</span><div><div class="title">L. Rüegg</div><div class="sub">Match Bauleiter · Cold</div></div><span class="chip chip-blue">● Cold</span><span class="muted">›</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 7 · MANDATE -->
+<div id="tab-7" class="tab-panel">
+  <div class="filter-bar">
+    <select><option>Alle Mandate</option><option>Aktiv</option><option>Abgeschlossen</option><option>Abgebrochen</option></select>
+    <select><option>Alle Typen</option><option>Target</option><option>Taskforce</option><option>Time</option></select>
+    <span class="spacer"></span>
+    <span class="muted" style="font-size:12px">Gesamt-Umsatz: <strong style="color:var(--text);font-family:'Libre Baskerville',serif">CHF 640k</strong></span>
+    <button class="btn btn-primary btn-sm">+ Mandat</button>
+  </div>
+  <div class="card" style="padding:0">
+    <table class="data-table">
+      <thead><tr><th>Position</th><th>Typ</th><th>Start</th><th>Status</th><th>Stage</th><th>Billing</th><th>AM</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><strong>CFO</strong></td><td>Target</td><td>12.01.2026</td><td><span class="chip chip-green">Aktiv</span></td><td>2 / 3</td><td>CHF 45k / 120k</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td><strong>Projektleiter Hochbau (3×)</strong></td><td>Taskforce</td><td>03.2026</td><td><span class="chip chip-green">Aktiv</span></td><td>2 / 3 besetzt</td><td>CHF 120k / 180k</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td><strong>Bauleiter Tiefbau</strong></td><td>Target</td><td>28.02.2026</td><td><span class="chip chip-green">Aktiv</span></td><td>1 / 3</td><td>CHF 0 / 90k</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td><strong>BIM-Manager</strong></td><td>Target</td><td>15.03.2026</td><td><span class="chip chip-green">Aktiv</span></td><td>1 / 3</td><td>CHF 22k / 66k</td><td>M.F.</td><td class="muted">›</td></tr>
+        <tr><td><strong>Projektierungs-Leitung</strong></td><td>Target</td><td>01.04.2026</td><td><span class="chip chip-green">Aktiv</span></td><td>1 / 3</td><td>CHF 0 / 110k</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td><strong>Leiter HR</strong></td><td>Target</td><td>06.2025</td><td><span class="chip chip-accent">Abgeschlossen</span></td><td>3 / 3 ✓</td><td>CHF 85k / 85k</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td><strong>Controller</strong></td><td>Target</td><td>11.2024</td><td><span class="chip chip-red">Abgebrochen</span></td><td>Stage 2</td><td>CHF 48k / 60k</td><td>P.W.</td><td class="muted">›</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 8 · ASSESSMENTS -->
+<div id="tab-8" class="tab-panel">
+  <div class="card mb-16">
+    <div class="card-head"><div class="card-title">Credit-Bestand (typisiert)</div><button class="btn btn-sm btn-primary">+ Order</button></div>
+    <div class="credits-grid">
+      <div class="credit-chip"><div><div class="typ">MDI</div><div class="num">3</div></div><div class="used">von 10<br><span class="muted">eingelöst</span></div></div>
+      <div class="credit-chip"><div><div class="typ">Relief</div><div class="num">2</div></div><div class="used">von 5</div></div>
+      <div class="credit-chip"><div><div class="typ">Outmatch</div><div class="num">4</div></div><div class="used">von 5</div></div>
+      <div class="credit-chip"><div><div class="typ">DISC</div><div class="num">0</div></div><div class="used">von 0</div></div>
+      <div class="credit-chip"><div><div class="typ">EQ-i 2.0</div><div class="num">1</div></div><div class="used">von 2</div></div>
+      <div class="credit-chip"><div><div class="typ">Scheelen 6HM</div><div class="num">0</div></div><div class="used">von 0</div></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Offene Orders</div></div>
+      <div class="row"><div><div class="title">ORD-2026-042</div><div class="sub">10× MDI + 5× Relief · 05.01.2026</div></div><span class="chip chip-green">Signiert</span><span class="muted">5 / 15 eingelöst</span><span class="muted">›</span></div>
+      <div class="row"><div><div class="title">ORD-2026-089</div><div class="sub">5× Outmatch + 2× EQ-i · 18.03.2026</div></div><span class="chip chip-amber">Billing pending</span><span class="muted">5 / 7 eingelöst</span><span class="muted">›</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Letzte Runs</div></div>
+      <div class="row"><div><div class="title">MDI · T. Furrer</div><div class="sub">Completed 04.04.2026</div></div><span class="chip chip-green">✓ Report</span><span class="muted">›</span></div>
+      <div class="row"><div><div class="title">Outmatch · M. Stucki</div><div class="sub">Scheduled 22.04.2026</div></div><span class="chip chip-amber">Scheduled</span><span class="muted">›</span></div>
+      <div class="row"><div><div class="title">Relief · J. Brunner</div><div class="sub">Assigned 12.04.2026</div></div><span class="chip chip-accent">Assigned</span><span class="muted">›</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 9 · SCHUTZFRISTEN -->
+<div id="tab-9" class="tab-panel">
+  <div class="filter-bar">
+    <select><option>Alle</option><option>Aktiv</option><option>Abgelaufen</option><option>Claimed</option></select>
+    <select><option>Alle Scopes</option><option>Account</option><option>Gruppe</option></select>
+    <span class="spacer"></span>
+    <span class="chip chip-green">3 aktiv</span><span class="chip chip-muted">7 abgelaufen</span>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Aktive Schutzfristen (3)</div></div>
+      <div class="list-item">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="name">🛡 M. Gerber <span class="chip chip-accent" style="margin-left:4px">Account-Scope 🏢</span></div>
+            <div class="meta">Vorstellung durch P.W. am 12.01.2026 im Rahmen Mandat CFO. 12 Monate Standard.</div>
+          </div>
+          <div class="right">
+            <div style="font-family:'Libre Baskerville',serif;color:var(--green);font-weight:700">bis 12.01.2027</div>
+            <div class="muted" style="font-size:11px">272 Tage</div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="name">🛡 S. Keller <span class="chip chip-gold" style="margin-left:4px">Gruppen-Scope 🏛</span></div>
+            <div class="meta">Vorstellung 03.12.2025. Info-Request gesendet → 16 Monate erweitert.</div>
+          </div>
+          <div class="right">
+            <div style="font-family:'Libre Baskerville',serif;color:var(--green);font-weight:700">bis 03.04.2027</div>
+            <div class="muted" style="font-size:11px">354 Tage</div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="name">🛡 R. Bühler <span class="chip chip-accent" style="margin-left:4px">Account-Scope 🏢</span></div>
+            <div class="meta">Vorstellung 28.05.2025. Standard 12 Monate.</div>
+          </div>
+          <div class="right">
+            <div style="font-family:'Libre Baskerville',serif;color:var(--amber);font-weight:700">bis 28.05.2027</div>
+            <div class="muted" style="font-size:11px">409 Tage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Schutzfrist-Verletzung?</div></div>
+      <p class="muted" style="font-size:13px;margin-bottom:12px">Scraper prüft wöchentlich, ob ein geschützter Kandidat beim Account/Gruppe auf einer neuen Stelle auftaucht. Bei Match: Claim-Workflow.</p>
+      <div class="list-item" style="background:var(--red-soft);border-radius:3px;padding:12px">
+        <div class="name" style="color:var(--red)">⚠ Mögliche Verletzung: T. Sommer</div>
+        <div class="meta">Gefunden auf LinkedIn als "Head of Finance" seit 03.2026 — war 10.2025 vorgestellt.</div>
+        <div style="margin-top:10px"><button class="btn btn-sm btn-primary">Claim prüfen</button> <button class="btn btn-sm">Verwerfen</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 10 · PROZESSE -->
+<div id="tab-10" class="tab-panel">
+  <div class="filter-bar">
+    <select><option>Alle Mandate</option><option>CFO-Mandat</option><option>Projektleiter-Taskforce</option></select>
+    <select><option>Alle Stages</option><option>Open</option><option>Stale</option><option>Placed</option></select>
+    <span class="spacer"></span>
+    <span class="chip chip-green">14 Open</span><span class="chip chip-amber">2 Stale</span><span class="chip chip-accent">3 Placed</span>
+  </div>
+  <div class="flex gap-16" style="overflow-x:auto">
+    <div class="kanban-col"><h4>Identified (5)</h4>
+      <div class="kanban-card"><div class="name">T. Furrer</div><div class="sub">CFO-Mandat · Hot</div></div>
+      <div class="kanban-card"><div class="name">M. Stucki</div><div class="sub">CFO · Warm</div></div>
+      <div class="kanban-card"><div class="name">J. Brunner</div><div class="sub">Projektleiter</div></div>
+      <div class="kanban-card"><div class="name">L. Rüegg</div><div class="sub">Bauleiter</div></div>
+      <div class="kanban-card"><div class="name">+ 1</div></div>
+    </div>
+    <div class="kanban-col"><h4>CV Sent (4)</h4>
+      <div class="kanban-card"><div class="name">T. Furrer</div><div class="sub">CFO · seit 02.04</div></div>
+      <div class="kanban-card"><div class="name">+ 3</div></div>
+    </div>
+    <div class="kanban-col"><h4>Briefing (2)</h4>
+      <div class="kanban-card"><div class="name">M. Stucki</div><div class="sub">CFO · 10.04</div></div>
+      <div class="kanban-card"><div class="name">+ 1</div></div>
+    </div>
+    <div class="kanban-col"><h4>Interview (3)</h4>
+      <div class="kanban-card"><div class="name">T. Furrer</div><div class="sub">📅 15.04 10:00</div></div>
+      <div class="kanban-card"><div class="name">+ 2</div></div>
+    </div>
+    <div class="kanban-col"><h4>Angebot (2)</h4>
+      <div class="kanban-card"><div class="name">T. Furrer</div><div class="sub">💰 CHF 245k</div></div>
+      <div class="kanban-card"><div class="name">+ 1</div></div>
+    </div>
+    <div class="kanban-col"><h4>Placement (3)</h4>
+      <div class="kanban-card" style="background:var(--green-soft)"><div class="name" style="color:var(--green)">✓ PL Hochbau #1</div><div class="sub">Start 01.05</div></div>
+      <div class="kanban-card" style="background:var(--green-soft)"><div class="name" style="color:var(--green)">✓ PL Hochbau #2</div><div class="sub">Start 01.06</div></div>
+      <div class="kanban-card" style="background:var(--green-soft)"><div class="name" style="color:var(--green)">✓ HR-Leitung</div><div class="sub">06.2025</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 11 · HISTORY -->
+<div id="tab-11" class="tab-panel">
+  <div class="grid-2" style="grid-template-columns:220px 1fr">
+    <div>
+      <div class="hist-filter">
+        <strong style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light)">Filter</strong>
+        <label><input type="checkbox" checked> Vorstellungen</label>
+        <label><input type="checkbox" checked> Assessments</label>
+        <label><input type="checkbox" checked> Mandate</label>
+        <label><input type="checkbox" checked> Schutzfristen</label>
+        <label><input type="checkbox" checked> Kommunikation</label>
+        <label><input type="checkbox"> System-Events</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item"><div class="date">14.04.2026 · 14:22</div><div class="ev">📞 Call mit H. Müller — 42 min</div><div class="detail">CFO-Mandat Update: M. Gerber hat eher Schweiz-Affinität, Keller ist zu international. Besprochen.</div></div>
+        <div class="timeline-item ok"><div class="date">12.04.2026</div><div class="ev">Placement J. Egger als Projektleiter Hochbau</div><div class="detail">Mandat Taskforce · Position #2 von 3. Start 01.06.2026, TC CHF 138k.</div></div>
+        <div class="timeline-item warn"><div class="date">08.04.2026</div><div class="ev">🛡 Mögliche Schutzfrist-Verletzung T. Sommer</div><div class="detail">Scraper-Alert: LinkedIn-Titel "Head of Finance" — war 10.2025 vorgestellt.</div></div>
+        <div class="timeline-item"><div class="date">04.04.2026</div><div class="ev">MDI-Assessment T. Furrer abgeschlossen</div><div class="detail">Report übertragen via Order ORD-2026-042. 1 MDI-Credit eingelöst.</div></div>
+        <div class="timeline-item"><div class="date">02.04.2026</div><div class="ev">✉ CV Sent — T. Furrer an H. Müller (CFO-Position)</div><div class="detail">Exposé + CV als PDF. Briefing für 10.04 terminiert.</div></div>
+        <div class="timeline-item ok"><div class="date">15.03.2026</div><div class="ev">Neues Mandat: BIM-Manager gewonnen</div><div class="detail">Target-Mandat, Honorar-Gesamt CHF 66k, AM M. Furter.</div></div>
+        <div class="timeline-item"><div class="date">12.03.2026</div><div class="ev">🛡 Schutzfrist S. Keller auf 16 Mt verlängert</div><div class="detail">Info-Request beantwortet — 4 Monate Extension gewährt.</div></div>
+        <div class="timeline-item"><div class="date">01.03.2026</div><div class="ev">Assessment-Order ORD-2026-042 signiert</div><div class="detail">10× MDI + 5× Relief · CHF 28k. Gültig 24 Monate.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 12 · DOKUMENTE -->
+<div id="tab-12" class="tab-panel">
+  <div class="filter-bar">
+    <input placeholder="Suche Dateiname..." style="flex:1">
+    <select><option>Alle Typen</option><option>Rechnungen</option><option>Offerten</option><option>Reports</option><option>Verträge</option></select>
+    <button class="btn btn-sm btn-primary">+ Upload</button>
+  </div>
+  <div class="file-grid">
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Rechnung CFO-Mandat Stage 2</div><div class="file-meta">12.04.2026 · 84 KB</div></div>
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Assessment-Report MDI T. Furrer</div><div class="file-meta">04.04.2026 · 2.4 MB</div></div>
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Offerte Taskforce 3 Projektleiter</div><div class="file-meta">12.02.2026 · 156 KB</div></div>
+    <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">DOCX</div><div class="file-name">Vertrag Taskforce</div><div class="file-meta">28.02.2026 · 78 KB</div></div>
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Exposé T. Furrer (CFO)</div><div class="file-meta">02.04.2026 · 1.2 MB</div></div>
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Assessment-Order ORD-2026-042</div><div class="file-meta">05.01.2026 · 92 KB</div></div>
+    <div class="file-card"><div class="file-icon" style="background:var(--green-soft);color:var(--green)">XLSX</div><div class="file-name">KPI-Report Q1 2026</div><div class="file-meta">02.04.2026 · 44 KB</div></div>
+    <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Kultur-Interview 2025</div><div class="file-meta">03.2025 · 580 KB</div></div>
+  </div>
+</div>
+
+<!-- TAB 13 · REMINDERS -->
+<div id="tab-13" class="tab-panel">
+  <div class="filter-bar">
+    <select><option>Alle</option><option>Aktiv</option><option>Erledigt</option><option>Überfällig</option></select>
+    <select><option>Alle Typen</option><option>Follow-up</option><option>Schutzfrist</option><option>Onboarding</option><option>Garantie</option></select>
+    <button class="btn btn-sm btn-primary">+ Reminder</button>
+  </div>
+  <div class="card" style="padding:0">
+    <table class="data-table">
+      <thead><tr><th></th><th>Reminder</th><th>Typ</th><th>Fällig</th><th>Zuständig</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip chip-red">!</span></td><td><strong>Debriefing CFO-Interview</strong><div class="muted" style="font-size:11px">T. Furrer × H. Müller</div></td><td>Debriefing</td><td><span style="color:var(--amber);font-weight:500">morgen</span></td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>Info-Request Schutzfrist M. Gerber</strong><div class="muted" style="font-size:11px">Account-Scope Bauherr Muster</div></td><td>Schutzfrist</td><td>in 3 Tagen</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>Onboarding-Call J. Egger</strong><div class="muted" style="font-size:11px">7 Tage vor Arbeitsantritt (01.06)</div></td><td>Onboarding</td><td>25.05.2026</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>30-Tage Check-In M. Brunner</strong></td><td>Check-In</td><td>01.05.2026</td><td>M.F.</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>Quartals-Check Muster Holding</strong></td><td>Follow-up</td><td>in 2 Wochen</td><td>P.W.</td><td class="muted">›</td></tr>
+        <tr><td></td><td><strong>Garantiefrist-Ende Leiter HR</strong></td><td>Garantie</td><td>09.2026</td><td>Backoffice</td><td class="muted">›</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- KB BAR -->
+<div class="kb-bar">
+  <span><kbd>1</kbd>–<kbd>0</kbd> Tabs</span>
+  <span><kbd>N</kbd> Mandat</span>
+  <span><kbd>K</kbd> Kontakt</span>
+  <span><kbd>A</kbd> Assessment</span>
+  <span><kbd>E</kbd> Email</span>
+  <span><kbd>T</kbd> Theme</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd> Command Palette</span>
+</div>
+
+<script src="layout.js"></script>
+</body>
+</html>

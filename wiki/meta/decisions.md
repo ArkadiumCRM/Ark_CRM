@@ -26,6 +26,44 @@ Bei jeder User-Entscheidung von Tragweite (neue Regel, Architektur-Wahl, Scope-C
 
 ---
 
+## [2026-04-18] Harness-Evolution v2: Cross-Provider-MCPs, Routines, Autoresearch, Karpathy
+
+- **Kontext:** Peter wollte Setup grundlegend überdenken. Skills/MCPs/Hooks/Routines/Lints waren vorhanden aber ausbaufähig. Karpathy-Principles, Claude Design, Cross-Provider-Integration (Codex/Perplexity/DeepSeek), Autoresearch, OpenClaw/Hermes standen zur Diskussion.
+- **Entscheidung:** 
+  1. **Karpathy-Skill** lokal unter `.claude/skills/karpathy/` (4 Principles: Think-Before-Coding, Simplicity-First, Surgical-Changes, Goal-Driven-Execution).
+  2. **Claude Design** (Anthropic Labs, launched 18.04.2026) als Phase-2-Mockup-Werkzeug → Handoff-Bundle zu Claude Code. Browser-only, kein Desktop.
+  3. **Cross-Provider-MCPs**: Codex (OpenAI inkl. o3), Perplexity (Web-Research+Citations), DeepSeek (günstiges Reasoning). Setup-Guide: `wiki/meta/mcp-setup-guide.md`. Peter installt manuell im Terminal nach Key-Beschaffung.
+  4. **OpenClaw + Hermes verworfen** — Konkurrenz-Frameworks zu Claude Code, kein Integrations-Nutzen.
+  5. **3 Cloud-Routines** (laufen unabhängig von Peter's Laptop):
+     - `ark-weekly-drift` (Mo 09:00 CEST) — Drift-Scan → `drift-log.md`
+     - `ark-weekly-po-agenda` (Mi 09:00 CEST) — Agenda → `po-review-agenda-YYYY-MM-DD.md`
+     - `ark-daily-digest-staleness` (Di-So 08:00 CEST) — STALE.md-Flags
+     Kontrolle: https://claude.ai/code/scheduled
+  6. **`ark-autorefine` Skill** — Karpathy-Autoresearch-Pattern adaptiert für Phase-1-Cleanup. Human-in-Loop MVP (kein Auto-Apply ohne Peter-OK). `.claude/skills/ark-autorefine/`.
+  7. **Bypass-Permissions global** in `~/.claude/settings.json` mit Hard-Deny-Guards (rm -rf, git force, DROP TABLE, etc.). Assistant self-checks kritische Ops in Chat.
+  8. **Caveman-Lite** als Default in `%APPDATA%/caveman/config.json`.
+  9. **2 neue Slash-Commands**: `/ark-po-review`, `/ark-phase2-plan`.
+  10. **Git-Repo etabliert**: https://github.com/ArkadiumCRM/Ark_CRM (private). Audio/Video in `raw/` per .gitignore excluded (> 100MB limit).
+  
+- **Alternativen verworfen:**
+  - LangChain / OpenClaw / Hermes als Parallel-Framework (Konkurrenten zu Claude Code).
+  - Codex als Komplett-Ersatz für Claude (zweite LLM-Billing ohne klaren Mehrwert ausser Cross-Review).
+  - Autoresearch vollautonom overnight (ARK braucht semantic Validator, nicht nur Lint-Count → Human-in-Loop).
+  - Hermes für spezifische Subtasks (redundant, alles was Hermes kann hat Claude Code).
+  - Phase-2-Code-Start jetzt (Peter will zuerst Phase-1-Cleanup + ERP-Module als Specs/Mockups).
+  
+- **Konsequenz:**
+  - Peter bedient Setup-Alltag via 4 Oberflächen: Claude Code (default), Claude Desktop (brainstorm), Claude Design (neue Mockups), Obsidian (Wiki-Browse).
+  - Cross-Provider-Nutzung wird im Chat transparent angekündigt ("Ich lass Codex das Refactor reviewen...").
+  - Routines produzieren 3 Artefakte/Woche die Peter Montag/Mittwoch reviewt.
+  - Autorefine-Loop kann ab sofort via "autorefine nächster Punkt" gestartet werden.
+  
+- **Revisit:** 
+  - Permission-Bypass: nach 2-4 Wochen prüfen ob Self-Check-Regel zuverlässig greift. Bei Regelbruch → zurück zu `defaultMode: auto` mit Classifier.
+  - Routines: nach 4 Runs prüfen ob Signal-zu-Noise stimmt. Sonst Anpassung der Prompts.
+  - Codex/Perplexity/DeepSeek: nach 1 Monat ROI-Check (wirklich bessere Outputs vs Kosten?).
+  - Autorefine v2 (Auto-Apply für SAFE-Categories): erst nach 20+ erfolgreich-iterierten Zyklen manuell.
+
 ## [2026-04-17] Grundlagen-Digests + Auto-Lint-Hooks etabliert
 
 - **Kontext:** SessionStart-Hook sprengte Inline-Limit (200k Token) → Grundlagen nie im Context. User musste Stages/Flows/Business-Logik wiederholt erklären.

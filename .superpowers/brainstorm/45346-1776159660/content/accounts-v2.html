@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Account · Bauherr Muster AG (Hybrid)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* === Editorial Hybrid Tokens === */
+  [data-theme="light"] {
+    --bg:#F4F5F7; --surface:#FFFFFF; --surface-elev:#FFFFFF;
+    --border:#E2E5EA; --border-strong:#C8CDD6;
+    --text:#1A1F2E; --text-mid:#4A5568; --text-light:#8A95A8;
+    --accent:#1A3A5C; --accent-mid:#2D5F8A; --accent-soft:#E8F0F8;
+    --gold:#B8860B; --gold-soft:#FDF6E3;
+    --green:#1A6B4A; --green-soft:#E8F5EF;
+    --red:#C0392B; --red-soft:#FDF0EE;
+    --amber:#D97706; --amber-soft:#FEF3E2;
+    --blue:#2D5F8A; --blue-soft:#E8F0F8;
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+    --shadow:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+    --header-bg:#1A3A5C; --header-text:#FFFFFF; --header-text-dim:rgba(255,255,255,0.6);
+  }
+  [data-theme="dark"] {
+    --bg:#0E1116; --surface:#161B22; --surface-elev:#1D242D;
+    --border:#2A3340; --border-strong:#3A4454;
+    --text:#E6EDF3; --text-mid:#B6C0CC; --text-light:#8A95A8;
+    --accent:#7CB5E8; --accent-mid:#5F9BD1; --accent-soft:rgba(124,181,232,0.12);
+    --gold:#D4A84B; --gold-soft:rgba(212,168,75,0.12);
+    --green:#3FB950; --green-soft:rgba(63,185,80,0.12);
+    --red:#F85149; --red-soft:rgba(248,81,73,0.12);
+    --amber:#D29922; --amber-soft:rgba(210,153,34,0.12);
+    --blue:#58A6FF; --blue-soft:rgba(88,166,255,0.12);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.3);
+    --shadow:0 4px 12px rgba(0,0,0,0.4);
+    --header-bg:#0A1929; --header-text:#F0F4F8; --header-text-dim:rgba(240,244,248,0.55);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'DM Sans', system-ui, sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh;
+    font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .serif { font-family:'Libre Baskerville', Georgia, serif; }
+
+  /* === HEADER BAR === */
+  .header {
+    background:var(--header-bg); padding:0 32px;
+    display:flex; align-items:stretch; justify-content:space-between;
+    position:sticky; top:0; z-index:100; box-shadow:var(--shadow);
+  }
+  .header-brand { display:flex; align-items:center; gap:12px; padding:14px 0; }
+  .logo-mark {
+    width:32px; height:32px; background:var(--gold); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville', serif; font-weight:700; font-size:16px;
+  }
+  .brand-text { color:var(--header-text); }
+  .brand-text .brand-name {
+    font-family:'Libre Baskerville', serif; font-weight:700;
+    font-size:15px; letter-spacing:0.4px;
+  }
+  .brand-text .brand-sub {
+    font-size:9px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--header-text-dim); margin-top:1px;
+  }
+  .breadcrumb {
+    display:flex; align-items:center; gap:6px; padding:0 24px;
+    color:var(--header-text-dim); font-size:12px;
+  }
+  .breadcrumb a { color:var(--header-text-dim); text-decoration:none; }
+  .breadcrumb a:hover { color:var(--header-text); }
+  .breadcrumb .current { color:var(--header-text); font-weight:500; }
+  .breadcrumb .sep { opacity:0.4; }
+
+  .header-right { display:flex; align-items:center; gap:12px; padding:14px 0; }
+  .cmd-hint {
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15);
+    padding:4px 10px; font-family:monospace; font-size:11px;
+    color:var(--header-text-dim); border-radius:3px;
+  }
+  .theme-toggle {
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    color:var(--header-text); width:30px; height:30px; border-radius:4px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+  .theme-toggle:hover { background:rgba(255,255,255,0.15); }
+
+  /* === PAGE BANNER === */
+  .page-banner {
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:26px 32px 20px;
+  }
+  .banner-top {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:24px; margin-bottom:16px;
+  }
+  .banner-title h1 {
+    font-family:'Libre Baskerville', serif; font-weight:700;
+    font-size:26px; color:var(--accent); letter-spacing:-0.01em;
+    line-height:1.15; margin-bottom:6px;
+  }
+  .banner-meta {
+    display:flex; gap:14px; align-items:center;
+    color:var(--text-light); font-size:12.5px;
+  }
+  .banner-meta strong { color:var(--text-mid); font-weight:500; }
+  .banner-meta .dot { width:3px; height:3px; border-radius:50%; background:var(--text-light); }
+
+  .banner-chips { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .chip {
+    padding:4px 11px; font-size:11px; font-weight:500;
+    border-radius:4px; letter-spacing:0.2px;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .chip-accent { background:var(--accent-soft); color:var(--accent); }
+  .chip-gold { background:var(--gold-soft); color:var(--gold); }
+  .chip-green { background:var(--green-soft); color:var(--green); }
+  .chip-red { background:var(--red-soft); color:var(--red); }
+  .chip-amber { background:var(--amber-soft); color:var(--amber); }
+  .chip-muted { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+
+  .banner-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .btn {
+    padding:8px 14px; border-radius:4px; font-size:12.5px; font-weight:500;
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--text);
+    cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    font-family:inherit;
+  }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary {
+    background:var(--accent); color:#fff; border-color:var(--accent);
+  }
+  .btn-primary:hover { background:var(--accent-mid); border-color:var(--accent-mid); color:#fff; }
+
+  /* === TABS === */
+  .tabbar {
+    display:flex; background:var(--surface); padding:0 32px; gap:4px;
+    border-bottom:1px solid var(--border); overflow-x:auto; position:sticky; top:60px; z-index:50;
+  }
+  .tab {
+    padding:12px 14px; font-size:12.5px; color:var(--text-light); cursor:pointer;
+    border-bottom:2px solid transparent; user-select:none; white-space:nowrap;
+    font-weight:500; transition:all 0.15s;
+  }
+  .tab:hover { color:var(--text); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--gold); }
+  .tab .num {
+    color:var(--text-light); font-family:monospace; font-size:10px;
+    margin-right:5px; font-weight:400;
+  }
+  .tab.active .num { color:var(--gold); }
+
+  /* === CONTENT === */
+  .content { padding:24px 32px 60px; }
+  .grid-2 { display:grid; grid-template-columns:2fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+
+  /* === KPI CARDS === */
+  .kpi {
+    background:var(--surface); padding:18px 20px; position:relative;
+    box-shadow:var(--shadow-sm); border-radius:4px; overflow:hidden;
+  }
+  .kpi::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:var(--accent);
+  }
+  .kpi.k-gold::after { background:var(--gold); }
+  .kpi.k-green::after { background:var(--green); }
+  .kpi.k-blue::after { background:var(--blue); }
+  .kpi.k-amber::after { background:var(--amber); }
+  .kpi-val {
+    font-family:'Libre Baskerville', serif; font-size:30px; font-weight:700;
+    color:var(--accent); line-height:1.1; letter-spacing:-0.01em;
+  }
+  .k-gold .kpi-val { color:var(--gold); }
+  .k-green .kpi-val { color:var(--green); }
+  .k-blue .kpi-val { color:var(--blue); }
+  .k-amber .kpi-val { color:var(--amber); }
+  .kpi-label {
+    font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--text-light); margin-top:4px; font-weight:500;
+  }
+  .kpi-sub {
+    font-size:12px; color:var(--text-mid); margin-top:6px;
+  }
+
+  /* === CARDS === */
+  .card {
+    background:var(--surface); padding:20px; box-shadow:var(--shadow-sm);
+    border-radius:4px; margin-bottom:16px;
+  }
+  .card-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border);
+  }
+  .card-title {
+    font-family:'Libre Baskerville', serif; font-size:15px; color:var(--accent);
+    font-weight:700; letter-spacing:0.2px;
+  }
+  .card-link {
+    color:var(--accent-mid); font-size:12px; text-decoration:none; font-weight:500;
+  }
+  .card-link:hover { color:var(--accent); }
+
+  .field-grid { display:grid; grid-template-columns:max-content 1fr; gap:8px 20px; font-size:13px; }
+  .field-grid dt { color:var(--text-light); font-weight:400; }
+  .field-grid dd { color:var(--text); }
+  .field-grid dd a { color:var(--accent-mid); text-decoration:none; }
+
+  /* === Mandate-Row === */
+  .mandate-row {
+    display:grid; grid-template-columns:auto 1fr auto auto auto; gap:14px; align-items:center;
+    padding:12px 0; border-bottom:1px solid var(--border); font-size:13px;
+  }
+  .mandate-row:last-child { border-bottom:none; padding-bottom:0; }
+  .mandate-row .title { font-weight:500; color:var(--text); }
+  .mandate-row .sub { color:var(--text-light); font-size:11.5px; margin-top:1px; }
+  .temp-dot { width:8px; height:8px; border-radius:50%; background:var(--red); }
+  .temp-dot.warm { background:var(--amber); }
+  .temp-dot.cold { background:var(--blue); }
+
+  /* === Kultur-Tags === */
+  .tag-cloud { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag {
+    padding:4px 10px; border-radius:3px; font-size:11.5px;
+    background:var(--bg); color:var(--text-mid); border:1px solid var(--border);
+    font-weight:500;
+  }
+
+  /* === Schutzfrist-Liste === */
+  .pw-item { padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .pw-item:last-child { border-bottom:none; padding-bottom:0; }
+  .pw-item .name { font-weight:500; }
+  .pw-item .meta { color:var(--text-light); font-size:11.5px; margin-top:2px; }
+
+  /* === Aktionen === */
+  .todo { padding:6px 0; font-size:13px; display:flex; gap:8px; align-items:center; }
+  .todo .check { width:14px; height:14px; border:1.5px solid var(--border-strong); border-radius:2px; }
+  .todo .due { color:var(--text-light); font-size:11px; margin-left:auto; }
+  .todo .due.soon { color:var(--amber); font-weight:500; }
+
+  /* === Keyboard bar === */
+  .kb-bar {
+    position:fixed; bottom:0; left:0; right:0; background:var(--surface);
+    border-top:1px solid var(--border); padding:7px 32px; font-size:11px;
+    color:var(--text-light); display:flex; gap:18px; z-index:40;
+    box-shadow:0 -1px 0 rgba(0,0,0,0.02);
+  }
+  .kb-bar kbd {
+    background:var(--bg); border:1px solid var(--border-strong); border-radius:2px;
+    padding:1px 6px; font-family:monospace; font-size:10px; color:var(--text-mid);
+  }
+
+  .placeholder-tab { padding:60px 24px; text-align:center; color:var(--text-light); }
+  .placeholder-tab h3 {
+    font-family:'Libre Baskerville', serif; font-size:18px; color:var(--accent);
+    margin-bottom:8px;
+  }
+  .placeholder-tab p { font-size:13px; max-width:440px; margin:0 auto; line-height:1.55; }
+
+  [hidden] { display:none !important; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(4px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .tab-panel.active { animation:fadeUp 0.3s ease; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="#">Accounts</a>
+    <span class="sep">/</span>
+    <span class="current">Bauherr Muster AG</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="banner-title">
+      <h1>Bauherr Muster AG</h1>
+      <div class="banner-meta">
+        <span>AM <strong>Peter Wiederkehr</strong></span>
+        <span class="dot"></span>
+        <span>CHE-123.456.789</span>
+        <span class="dot"></span>
+        <span>~420 MA</span>
+        <span class="dot"></span>
+        <span>Zürich</span>
+        <span class="dot"></span>
+        <span>Letzter Kontakt vor 4 Tagen</span>
+      </div>
+    </div>
+    <div class="banner-chips">
+      <span class="chip chip-red">● Hot</span>
+      <span class="chip chip-green">Aktiv</span>
+      <span class="chip chip-amber">🛡 3 Schutzfristen</span>
+      <span class="chip chip-muted">Gruppe: Muster Holding</span>
+    </div>
+  </div>
+  <div class="banner-actions">
+    <button class="btn btn-primary">+ Neues Mandat</button>
+    <button class="btn">+ Kontakt</button>
+    <button class="btn">+ Assessment</button>
+    <button class="btn">✉ Email</button>
+    <button class="btn">📞 Call</button>
+    <button class="btn">⋯ Mehr</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabbar">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Übersicht</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Profil & Kultur</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Kontakte</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Standorte</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Organisation</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>Jobs & Vakanzen</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Mandate</div>
+  <div class="tab" data-tab="8" onclick="switchTab(8)"><span class="num">8</span>Assessments</div>
+  <div class="tab" data-tab="9" onclick="switchTab(9)"><span class="num">9</span>Schutzfristen</div>
+  <div class="tab" data-tab="10" onclick="switchTab(10)"><span class="num">0</span>Prozesse</div>
+  <div class="tab" data-tab="11" onclick="switchTab(11)">History</div>
+  <div class="tab" data-tab="12" onclick="switchTab(12)">Dokumente</div>
+  <div class="tab" data-tab="13" onclick="switchTab(13)">Reminders</div>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div id="tab-1" class="tab-panel active">
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="kpi k-accent">
+        <div class="kpi-val">5</div>
+        <div class="kpi-label">Aktive Mandate</div>
+        <div class="kpi-sub">+2 dieses Jahr</div>
+      </div>
+      <div class="kpi k-gold">
+        <div class="kpi-val">12</div>
+        <div class="kpi-label">Assessments (12 Mt)</div>
+        <div class="kpi-sub">8× MDI · 3× Relief · 1× Outmatch</div>
+      </div>
+      <div class="kpi k-green">
+        <div class="kpi-val">CHF 340k</div>
+        <div class="kpi-label">Umsatz YTD</div>
+        <div class="kpi-sub">+28% vs. Vorjahr</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Stammdaten</div>
+            <a href="#" class="card-link">Bearbeiten</a>
+          </div>
+          <dl class="field-grid">
+            <dt>Firmenname</dt><dd>Bauherr Muster AG</dd>
+            <dt>UID</dt><dd>CHE-123.456.789</dd>
+            <dt>Rechtsform</dt><dd>Aktiengesellschaft</dd>
+            <dt>Gründungsjahr</dt><dd>1987</dd>
+            <dt>Mitarbeitende</dt><dd>~420</dd>
+            <dt>Hauptsitz</dt><dd>Zürich, CH</dd>
+            <dt>Website</dt><dd><a href="#">muster-bauherr.ch</a></dd>
+            <dt>Branche</dt><dd>Hochbau · Infrastruktur</dd>
+            <dt>Firmengruppe</dt><dd>Muster Holding (2 Accounts)</dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Aktive Mandate</div>
+            <a href="#" class="card-link">Alle 5 →</a>
+          </div>
+          <div>
+            <div class="mandate-row">
+              <span class="temp-dot"></span>
+              <div>
+                <div class="title">Geschäftsleitung · CFO</div>
+                <div class="sub">Target · seit 12.01.2026</div>
+              </div>
+              <span class="chip chip-accent">Stage 2 / 3</span>
+              <span style="color:var(--text-light);font-size:12px">12 / 15 idents</span>
+              <span style="color:var(--text-light)">›</span>
+            </div>
+            <div class="mandate-row">
+              <span class="temp-dot warm"></span>
+              <div>
+                <div class="title">Projektleiter Hochbau (3×)</div>
+                <div class="sub">Taskforce · seit 03.2026</div>
+              </div>
+              <span class="chip chip-green">Aktiv</span>
+              <span style="color:var(--text-light);font-size:12px">2 / 3 besetzt</span>
+              <span style="color:var(--text-light)">›</span>
+            </div>
+            <div class="mandate-row">
+              <span class="temp-dot cold"></span>
+              <div>
+                <div class="title">Bauleiter Tiefbau</div>
+                <div class="sub">Target · seit 28.02.2026</div>
+              </div>
+              <span class="chip chip-accent">Stage 1 / 3</span>
+              <span style="color:var(--text-light);font-size:12px">4 / 15 idents</span>
+              <span style="color:var(--text-light)">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Kultur-Tags</div>
+            <a href="#" class="card-link">Details →</a>
+          </div>
+          <div class="tag-cloud">
+            <span class="tag">Bauhandwerk</span>
+            <span class="tag">Familiär</span>
+            <span class="tag">Langfristig</span>
+            <span class="tag">Hands-on</span>
+            <span class="tag">Hierarchisch</span>
+            <span class="tag">Tradition</span>
+            <span class="tag">Schweiz-Fokus</span>
+            <span class="tag">Qualität > Tempo</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Schutzfristen (3)</div>
+            <a href="#" class="card-link">Tab 9 →</a>
+          </div>
+          <div>
+            <div class="pw-item">
+              <div class="name">🛡 M. Gerber <span style="color:var(--text-light);font-weight:400;font-size:11.5px;">bis 12.01.2027</span></div>
+              <div class="meta">Vorstellung P.W. · 12 Mt · Account-Scope</div>
+            </div>
+            <div class="pw-item">
+              <div class="name">🛡 S. Keller <span style="color:var(--text-light);font-weight:400;font-size:11.5px;">bis 03.04.2027</span></div>
+              <div class="meta">Vorstellung · 16 Mt · Gruppen-Scope 🏛</div>
+            </div>
+            <div class="pw-item">
+              <div class="name">🛡 R. Bühler <span style="color:var(--text-light);font-weight:400;font-size:11.5px;">bis 28.05.2027</span></div>
+              <div class="meta">Vorstellung · 12 Mt · Account-Scope</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Nächste Aktionen</div>
+          </div>
+          <div>
+            <div class="todo"><span class="check"></span><span>Debriefing CFO-Interview</span><span class="due soon">morgen</span></div>
+            <div class="todo"><span class="check"></span><span>Info-Request Schutzfrist M.G.</span><span class="due">in 3 Tagen</span></div>
+            <div class="todo"><span class="check"></span><span>Quartals-Check Muster Holding</span><span class="due">in 2 Wochen</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-2" class="tab-panel placeholder-tab" hidden>
+    <h3>Profil & Kultur</h3>
+    <p>Kultur-Dimensionen (Spider-Chart), Werte, Wertschöpfung, Unternehmenscharakter. Content-Mockup im nächsten Iterations-Schritt.</p>
+  </div>
+  <div id="tab-3" class="tab-panel placeholder-tab" hidden><h3>Kontakte</h3><p>Kontakt-Liste mit Rollen, Org-Ebene, letzter Kontakt.</p></div>
+  <div id="tab-4" class="tab-panel placeholder-tab" hidden><h3>Standorte</h3><p>Karten-Ansicht + Liste der Standorte.</p></div>
+  <div id="tab-5" class="tab-panel placeholder-tab" hidden><h3>Organisation</h3><p>Organigramm-Tree, Departments, Reporting.</p></div>
+  <div id="tab-6" class="tab-panel placeholder-tab" hidden><h3>Jobs & Vakanzen</h3><p>Offene Positionen, Scraper-Vorschläge, Matching.</p></div>
+  <div id="tab-7" class="tab-panel placeholder-tab" hidden><h3>Mandate</h3><p>Voll-Liste aktiv + historisch, Billing-Übersicht.</p></div>
+  <div id="tab-8" class="tab-panel placeholder-tab" hidden><h3>Assessments</h3><p>Typisierte Credits-Übersicht, Report-Archiv.</p></div>
+  <div id="tab-9" class="tab-panel placeholder-tab" hidden><h3>Schutzfristen</h3><p>Alle Fenster, Scope-Badges 🏢/🏛, Claim-Flow.</p></div>
+  <div id="tab-10" class="tab-panel placeholder-tab" hidden><h3>Prozesse</h3><p>Filter pro Mandat + Stage.</p></div>
+  <div id="tab-11" class="tab-panel placeholder-tab" hidden><h3>History</h3><p>Event-Timeline, Activity-Type-Filter.</p></div>
+  <div id="tab-12" class="tab-panel placeholder-tab" hidden><h3>Dokumente</h3><p>Rechnungen, Offerten, Reports, Verträge.</p></div>
+  <div id="tab-13" class="tab-panel placeholder-tab" hidden><h3>Reminders</h3><p>Aktive Reminder, Fälligkeit, Zuständigkeit.</p></div>
+
+</div>
+
+<!-- KB BAR -->
+<div class="kb-bar">
+  <span><kbd>1</kbd>–<kbd>0</kbd> Tabs</span>
+  <span><kbd>N</kbd> Mandat</span>
+  <span><kbd>K</kbd> Kontakt</span>
+  <span><kbd>A</kbd> Assessment</span>
+  <span><kbd>E</kbd> Email</span>
+  <span><kbd>T</kbd> Theme</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd> Command Palette</span>
+</div>
+
+<script>
+  function switchTab(n) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-tab="${n}"]`).classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = true; p.classList.remove('active'); });
+    const panel = document.getElementById('tab-'+n);
+    panel.hidden = false; panel.classList.add('active');
+  }
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    document.getElementById('themeBtn').textContent = next === 'dark' ? '☾' : '☀';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.target.matches('input,textarea')) return;
+    if (e.key >= '1' && e.key <= '9') switchTab(parseInt(e.key));
+    else if (e.key === '0') switchTab(10);
+    else if (e.key === 't' || e.key === 'T') toggleTheme();
+  });
+</script>
+</body>
+</html>

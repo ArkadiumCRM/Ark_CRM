@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>ARK CRM — Email & Kalender · Layout-Varianten</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F4F5F7; --surface:#FFFFFF; --surface-elev:#FFFFFF;
+  --border:#E2E5EA; --border-strong:#C8CDD6; --border-soft:#EDEFF3;
+  --text:#1A1F2E; --text-mid:#4A5568; --text-light:#8A95A8;
+  --accent:#1A3A5C; --accent-mid:#2D5F8A; --accent-soft:#E8F0F8;
+  --gold:#B8860B; --gold-soft:#FDF6E3;
+  --green:#1A6B4A; --green-soft:#E8F5EF;
+  --red:#C0392B; --red-soft:#FDF0EE;
+  --amber:#D97706; --amber-soft:#FEF3E2;
+  --blue:#2D5F8A; --blue-soft:#E8F0F8;
+  --purple:#6B4A8A; --purple-soft:#F0E8F5;
+  --header-bg:#1A3A5C; --header-text:#FFFFFF; --header-text-dim:rgba(255,255,255,0.6);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text);
+  font-size:13px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.serif { font-family:'Libre Baskerville',Georgia,serif; }
+
+/* VARIANT SWITCHER (top bar) */
+.variant-switcher {
+  position:sticky; top:0; z-index:200;
+  background:#0A1929; color:#fff; padding:10px 20px;
+  display:flex; align-items:center; gap:12px; box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+.vs-title { font-family:'Libre Baskerville',serif; font-size:14px; font-weight:700; margin-right:16px; }
+.vs-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+  color:rgba(255,255,255,0.75); padding:7px 14px; cursor:pointer; font-size:12px;
+  font-family:'DM Sans',sans-serif; font-weight:500; border-radius:3px;
+  transition:0.15s;
+}
+.vs-btn:hover { background:rgba(255,255,255,0.16); color:#fff; }
+.vs-btn.active { background:#B8860B; border-color:#B8860B; color:#fff; font-weight:600; }
+.vs-hint { margin-left:auto; font-size:11px; color:rgba(255,255,255,0.5); }
+.vs-select-btn {
+  background:transparent; border:1px solid rgba(255,255,255,0.4); color:#fff;
+  padding:7px 14px; border-radius:3px; cursor:pointer; font-size:12px; font-weight:500;
+}
+.vs-select-btn:hover { background:rgba(255,255,255,0.15); }
+.vs-select-btn.selected { background:#1A6B4A; border-color:#1A6B4A; }
+
+/* ARK HEADER */
+.header {
+  background:var(--header-bg); padding:0 28px;
+  display:flex; align-items:stretch; justify-content:space-between;
+}
+.header-brand { display:flex; align-items:center; gap:10px; padding:12px 0; }
+.logo-mark {
+  width:28px; height:28px; background:var(--gold); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px;
+}
+.brand-name { font-family:'Libre Baskerville',serif; font-weight:700; font-size:13px; letter-spacing:0.4px; color:#fff; }
+.brand-sub { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--header-text-dim); margin-top:1px; }
+.breadcrumb { display:flex; align-items:center; gap:6px; padding:0 22px; color:var(--header-text-dim); font-size:11px; }
+.breadcrumb a { color:var(--header-text-dim); text-decoration:none; }
+.breadcrumb .current { color:#fff; font-weight:500; }
+.breadcrumb .sep { opacity:0.4; }
+.header-right { display:flex; align-items:center; gap:10px; padding:12px 0; color:var(--header-text-dim); font-size:11px; }
+
+/* LAYOUT ROOT */
+.layout-root { display:none; }
+.layout-root.active { display:block; }
+
+/* SIDEBAR (left CRM nav — scaled down) */
+.main-wrap { display:grid; grid-template-columns:200px 1fr; min-height:calc(100vh - 95px); }
+.sb {
+  background:var(--surface); border-right:1px solid var(--border); padding:12px 0;
+  font-size:12px;
+}
+.sb-section { font-size:9px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); padding:10px 14px 6px; font-weight:600; }
+.sb-item {
+  display:flex; align-items:center; gap:8px; padding:6px 14px; color:var(--text-mid);
+  cursor:pointer; border-left:2px solid transparent;
+}
+.sb-item:hover { background:var(--bg); color:var(--text); }
+.sb-item.active { background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+.sb-icon { width:16px; text-align:center; }
+.sb-label { flex:1; }
+.sb-badge { font-size:10px; background:var(--border-soft); padding:1px 6px; border-radius:8px; color:var(--text-light); }
+.sb-badge.red { background:var(--red); color:#fff; }
+
+/* PAGE BANNER */
+.page-banner { background:var(--surface); border-bottom:1px solid var(--border); padding:18px 24px 14px; }
+.banner-row { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+.banner-title { font-family:'Libre Baskerville',serif; font-size:22px; color:var(--accent); font-weight:700; letter-spacing:-0.01em; margin:0; }
+.banner-meta { color:var(--text-light); font-size:12px; }
+.spacer { flex:1; }
+.btn { padding:6px 12px; border-radius:3px; font-size:12px; font-weight:500; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); cursor:pointer; }
+.btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent-mid); }
+
+/* SEGMENTED CONTROL (Variant A) */
+.seg { display:inline-flex; border:1px solid var(--border-strong); border-radius:3px; overflow:hidden; }
+.seg-btn { padding:6px 14px; font-size:12px; cursor:pointer; border:none; background:var(--surface); color:var(--text-mid); border-right:1px solid var(--border); }
+.seg-btn:last-child { border-right:none; }
+.seg-btn.active { background:var(--accent); color:#fff; font-weight:600; }
+
+/* TAB NAV (Variant B) */
+.tab-nav {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  display:flex; gap:0; padding:0 24px;
+}
+.tab { padding:12px 18px; font-size:13px; cursor:pointer; color:var(--text-mid); border-bottom:2px solid transparent; font-weight:500; display:flex; align-items:center; gap:6px; }
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+.tab-badge { background:var(--red); color:#fff; font-size:10px; padding:1px 6px; border-radius:8px; }
+
+/* CONTENT AREAS */
+.content { padding:16px 24px; }
+
+/* 3-PANE EMAIL LAYOUT */
+.email-3pane { display:grid; grid-template-columns:220px 340px 1fr; height:calc(100vh - 230px); background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.ep-folders { border-right:1px solid var(--border); padding:12px 0; background:var(--bg); overflow-y:auto; }
+.ep-folder-head { font-size:9px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); padding:10px 14px 4px; font-weight:600; }
+.ep-folder { display:flex; align-items:center; gap:8px; padding:6px 14px; font-size:12px; cursor:pointer; color:var(--text-mid); }
+.ep-folder:hover { background:var(--surface); }
+.ep-folder.active { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+.ep-folder-count { margin-left:auto; font-size:10px; color:var(--text-light); }
+
+.ep-list { border-right:1px solid var(--border); overflow-y:auto; }
+.ep-list-head { padding:10px 14px; font-size:11px; color:var(--text-light); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; }
+.ep-mail { padding:10px 14px; border-bottom:1px solid var(--border-soft); cursor:pointer; }
+.ep-mail:hover { background:var(--bg); }
+.ep-mail.active { background:var(--accent-soft); border-left:3px solid var(--accent); padding-left:11px; }
+.ep-mail.unread { font-weight:600; }
+.ep-mail-top { display:flex; justify-content:space-between; font-size:12px; margin-bottom:2px; }
+.ep-mail-from { font-weight:600; color:var(--text); }
+.ep-mail-time { font-size:11px; color:var(--text-light); font-weight:400; }
+.ep-mail-sub { font-size:12px; color:var(--text); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ep-mail-prev { font-size:11px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ep-mail-chip { display:inline-block; font-size:9px; padding:1px 5px; border-radius:2px; margin-top:3px; font-weight:600; }
+.chip-kandidat { background:var(--blue-soft); color:var(--blue); }
+.chip-mandat { background:var(--gold-soft); color:var(--gold); }
+.chip-unbekannt { background:var(--amber-soft); color:var(--amber); }
+
+.ep-reader { overflow-y:auto; padding:18px 22px; background:var(--surface); }
+.ep-rdr-sub { font-family:'Libre Baskerville',serif; font-size:17px; color:var(--accent); font-weight:700; margin-bottom:8px; }
+.ep-rdr-from { font-size:12px; color:var(--text-mid); margin-bottom:4px; }
+.ep-rdr-meta { font-size:11px; color:var(--text-light); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); display:flex; gap:12px; }
+.ep-rdr-body { font-size:13px; line-height:1.6; color:var(--text); margin-bottom:20px; }
+.ep-rdr-actions { display:flex; gap:8px; padding-top:12px; border-top:1px solid var(--border); }
+.linked-entity { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; background:var(--accent-soft); color:var(--accent); border-radius:3px; font-size:11px; font-weight:500; margin-right:8px; }
+
+/* CALENDAR LAYOUT */
+.cal-wrap { display:grid; grid-template-columns:200px 1fr; height:calc(100vh - 230px); background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.cal-side { border-right:1px solid var(--border); padding:14px; background:var(--bg); overflow-y:auto; }
+.mini-cal { margin-bottom:16px; }
+.mc-head { display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; margin-bottom:6px; }
+.mc-nav { color:var(--text-light); cursor:pointer; padding:0 4px; }
+.mc-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; font-size:10px; text-align:center; }
+.mc-dow { color:var(--text-light); padding:3px 0; font-weight:600; }
+.mc-day { padding:4px 0; color:var(--text-mid); cursor:pointer; border-radius:2px; }
+.mc-day:hover { background:var(--accent-soft); }
+.mc-day.today { background:var(--accent); color:#fff; font-weight:700; }
+.mc-day.has-ev { font-weight:600; color:var(--accent); }
+.mc-day.other { color:var(--border-strong); }
+
+.cal-filters { font-size:11px; }
+.cal-filter-head { font-size:9px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); margin-bottom:6px; font-weight:600; }
+.cal-filter-item { display:flex; align-items:center; gap:6px; padding:3px 0; font-size:11px; }
+.cal-dot { width:8px; height:8px; border-radius:50%; }
+.cal-dot.coaching { background:var(--blue); }
+.cal-dot.debriefing { background:var(--purple); }
+.cal-dot.mandat { background:var(--gold); }
+.cal-dot.team { background:var(--green); }
+.cal-dot.extern { background:var(--red); }
+
+.cal-main { overflow:auto; background:var(--surface); }
+.cal-toolbar { padding:10px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+.cal-month { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); font-weight:700; }
+.cal-week-grid { display:grid; grid-template-columns:50px repeat(7,1fr); border-top:1px solid var(--border); }
+.cal-week-head { position:sticky; top:0; background:var(--surface); z-index:5; padding:8px 4px; border-bottom:1px solid var(--border); border-right:1px solid var(--border-soft); font-size:10px; text-align:center; color:var(--text-light); font-weight:600; }
+.cal-week-head.today { background:var(--accent-soft); color:var(--accent); }
+.cal-dow-num { font-family:'Libre Baskerville',serif; font-size:16px; color:var(--text); display:block; margin-top:2px; }
+.cal-week-head.today .cal-dow-num { color:var(--accent); }
+.cal-time { font-size:10px; color:var(--text-light); padding:6px 4px; text-align:right; border-right:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
+.cal-slot { border-right:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); position:relative; min-height:28px; }
+.cal-event {
+  position:absolute; left:3px; right:3px; padding:3px 6px; border-radius:2px;
+  font-size:10px; font-weight:500; overflow:hidden; cursor:pointer;
+  border-left:3px solid; background:var(--surface); z-index:2;
+  box-shadow:0 1px 2px rgba(0,0,0,0.08);
+}
+.cal-event.coaching { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+.cal-event.debriefing { border-color:var(--purple); background:var(--purple-soft); color:var(--purple); }
+.cal-event.mandat { border-color:var(--gold); background:var(--gold-soft); color:var(--gold); }
+.cal-event.team { border-color:var(--green); background:var(--green-soft); color:var(--green); }
+.cal-event.extern { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.cal-event-title { font-weight:600; }
+.cal-event-time { font-size:9px; opacity:0.75; }
+
+/* VARIANT B — Tab bar */
+.tabbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; display:flex; gap:0; }
+
+/* VARIANT C — Mini-cal in sidebar */
+.c3-wrap { display:grid; grid-template-columns:240px 320px 1fr; height:calc(100vh - 190px); background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+.c3-left { border-right:1px solid var(--border); background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; }
+.c3-folders-block { padding:12px 0; }
+.c3-cal-block { padding:12px; border-top:1px solid var(--border); background:var(--surface); }
+.c3-today-block { padding:10px 12px; border-top:1px solid var(--border); background:var(--surface); flex:1; }
+.c3-today-head { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); margin-bottom:8px; font-weight:600; }
+.c3-today-item { padding:6px 0; border-bottom:1px solid var(--border-soft); font-size:11px; display:flex; gap:8px; }
+.c3-today-time { font-family:'Libre Baskerville',serif; font-weight:700; color:var(--accent); width:36px; font-size:11px; }
+.c3-today-txt { flex:1; }
+.c3-today-name { font-weight:600; font-size:11px; }
+.c3-today-meta { font-size:10px; color:var(--text-light); }
+
+/* VARIANT C agenda mode */
+.c3-agenda { display:grid; grid-template-columns:1fr 280px; height:calc(100vh - 190px); }
+</style>
+</head>
+<body>
+
+<!-- VARIANT SWITCHER -->
+<div class="variant-switcher">
+  <div class="vs-title">📬 Email & Kalender — Layout-Varianten</div>
+  <button class="vs-btn active" data-variant="A" onclick="switchVariant('A')">A · Segment-Toggle</button>
+  <button class="vs-btn" data-variant="B" onclick="switchVariant('B')">B · Tab-Navigation</button>
+  <button class="vs-btn" data-variant="C" onclick="switchVariant('C')">C · 3-Pane Outlook</button>
+  <span class="vs-hint">Click für Preview · unten Select-Button für Entscheidung</span>
+  <button class="vs-select-btn" id="selectBtn" onclick="selectCurrent()">✓ Diese wählen</button>
+</div>
+
+<!-- =============== VARIANT A — Segmented Toggle =============== -->
+<div class="layout-root active" data-variant="A">
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div><div class="brand-name">ARKADIUM</div><div class="brand-sub">CRM · Operations</div></div>
+  </div>
+  <div class="breadcrumb"><a href="#">Home</a><span class="sep">/</span><a href="#">Operations</a><span class="sep">/</span><span class="current">Email & Kalender</span></div>
+  <div class="header-right"><span>⌘K</span><span>☀</span></div>
+</header>
+
+<div class="main-wrap">
+  <aside class="sb">
+    <div class="sb-section">Übersicht</div>
+    <div class="sb-item"><span class="sb-icon">◈</span><span class="sb-label">Dashboard</span></div>
+    <div class="sb-section">Entities</div>
+    <div class="sb-item"><span class="sb-icon">👤</span><span class="sb-label">Kandidaten</span></div>
+    <div class="sb-item"><span class="sb-icon">🏢</span><span class="sb-label">Accounts</span></div>
+    <div class="sb-item"><span class="sb-icon">💼</span><span class="sb-label">Jobs</span></div>
+    <div class="sb-section">Workflow</div>
+    <div class="sb-item"><span class="sb-icon">🎯</span><span class="sb-label">Mandate</span></div>
+    <div class="sb-item"><span class="sb-icon">→</span><span class="sb-label">Prozesse</span></div>
+    <div class="sb-section">Operations</div>
+    <div class="sb-item active"><span class="sb-icon">✉</span><span class="sb-label">Email & Kalender</span><span class="sb-badge red">7</span></div>
+    <div class="sb-item"><span class="sb-icon">🔔</span><span class="sb-label">Reminders</span></div>
+    <div class="sb-item"><span class="sb-icon">🤖</span><span class="sb-label">Scraper</span></div>
+  </aside>
+
+  <div>
+    <!-- PAGE BANNER mit Segmented Toggle -->
+    <div class="page-banner">
+      <div class="banner-row">
+        <h1 class="banner-title">📬 Email & Kalender</h1>
+        <span class="banner-meta">7 ungelesen · 4 Termine heute · 3 Drafts offen</span>
+        <span class="spacer"></span>
+        <div class="seg">
+          <button class="seg-btn active" onclick="switchAMode('email')">✉ Email</button>
+          <button class="seg-btn" onclick="switchAMode('cal')">📅 Kalender</button>
+        </div>
+        <button class="btn btn-primary">+ Neue Email</button>
+      </div>
+    </div>
+
+    <!-- EMAIL MODE -->
+    <div class="content a-email-mode">
+      <div class="email-3pane">
+        <!-- Folders -->
+        <div class="ep-folders">
+          <div class="ep-folder-head">Posteingang</div>
+          <div class="ep-folder active"><span>📥</span><span>Inbox</span><span class="ep-folder-count">7</span></div>
+          <div class="ep-folder"><span>🏷</span><span>Klassifiziert</span><span class="ep-folder-count">124</span></div>
+          <div class="ep-folder"><span>❓</span><span>Unbekannt</span><span class="ep-folder-count">3</span></div>
+          <div class="ep-folder-head">Arbeit</div>
+          <div class="ep-folder"><span>📝</span><span>Drafts</span><span class="ep-folder-count">3</span></div>
+          <div class="ep-folder"><span>📤</span><span>Gesendet</span></div>
+          <div class="ep-folder"><span>🗄</span><span>Archiv</span></div>
+          <div class="ep-folder-head">Konten</div>
+          <div class="ep-folder"><span>🔗</span><span>Shared (Phase 1)</span></div>
+          <div class="ep-folder"><span>⚙</span><span>Templates</span></div>
+        </div>
+        <!-- List -->
+        <div class="ep-list">
+          <div class="ep-list-head"><span>Inbox · Neueste oben</span><span>⌕ Filter</span></div>
+          <div class="ep-mail unread active">
+            <div class="ep-mail-top"><span class="ep-mail-from">H. Müller · Muster AG</span><span class="ep-mail-time">09:42</span></div>
+            <div class="ep-mail-sub">Re: Kandidatenvorstellung J. Keller — Feedback nach 2nd</div>
+            <div class="ep-mail-prev">Peter, vielen Dank für die Unterlagen. Wir würden gerne in die 3rd Runde...</div>
+            <span class="ep-mail-chip chip-mandat">Mandat · Muster AG</span>
+          </div>
+          <div class="ep-mail unread">
+            <div class="ep-mail-top"><span class="ep-mail-from">T. Furrer</span><span class="ep-mail-time">08:15</span></div>
+            <div class="ep-mail-sub">Coaching-Vorbereitung morgen — Unterlagen</div>
+            <div class="ep-mail-prev">Hi Peter, anbei die Firmenpräsentation die Halter AG mir geschickt hat...</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat · T. Furrer</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">LinkedIn Recruiter</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">3 neue InMails zu Ihrer Suche "CFO Bau Zürich"</div>
+            <div class="ep-mail-prev">Sandra V. hat auf Ihre Nachricht geantwortet...</div>
+            <span class="ep-mail-chip chip-unbekannt">Unbekannt</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">Halter AG · S. Weber</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Mandats-Briefing Position CFO — Rücksprache</div>
+            <div class="ep-mail-prev">Peter, folgende Punkte sind uns seit dem Pitch noch eingefallen...</div>
+            <span class="ep-mail-chip chip-mandat">Mandat · Halter AG</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">J. Keller (Kandidat)</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Terminbestätigung 3rd Interview 22.04.</div>
+            <div class="ep-mail-prev">Hallo Peter, Termin passt mir. Ich habe Muster AG direkt bestätigt.</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat · J. Keller</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">M. Bachmann · Prelead</span><span class="ep-mail-time">Di</span></div>
+            <div class="ep-mail-sub">Re: Mündliche GOs — Halter-Mandat</div>
+            <div class="ep-mail-prev">Peter, wir haben die Prelead-Liste gesichtet. Freigabe für folgende...</div>
+            <span class="ep-mail-chip chip-mandat">Template-Auto</span>
+          </div>
+        </div>
+        <!-- Reader -->
+        <div class="ep-reader">
+          <div class="ep-rdr-sub">Re: Kandidatenvorstellung J. Keller — Feedback nach 2nd</div>
+          <div class="ep-rdr-from">Von <strong>Hans Müller</strong> &lt;h.mueller@muster.ch&gt;</div>
+          <div class="ep-rdr-from">An <strong>Peter Wiederkehr</strong> &lt;pw@arkadium.ch&gt;</div>
+          <div class="ep-rdr-meta">
+            <span>📅 Heute, 09:42</span>
+            <span>📎 2 Anhänge</span>
+            <span class="linked-entity">🎯 Mandat · Muster AG CFO</span>
+            <span class="linked-entity">👤 J. Keller</span>
+          </div>
+          <div class="ep-rdr-body">
+            <p>Peter,</p>
+            <p>vielen Dank für die Kandidatenunterlagen zu Herrn Keller. Die 2nd-Runde gestern verlief sehr positiv. Wir würden ihn gerne zur 3rd-Runde einladen, idealerweise nächste Woche.</p>
+            <p>Zwei Punkte aus der Diskussion:</p>
+            <p>1. Lohnband: Wir sind bei 220-240k · Bonus 20%. Bitte prüfen ob das zu seinen Vorstellungen passt.<br>2. Startdatum: Frühestens 01.07. aufgrund seiner Kündigungsfrist, ist das realistisch?</p>
+            <p>Könnten wir das morgen kurz telefonisch besprechen?</p>
+            <p>Beste Grüsse<br>Hans</p>
+          </div>
+          <div class="ep-rdr-actions">
+            <button class="btn btn-primary">↵ Antworten</button>
+            <button class="btn">📝 Mit Template</button>
+            <button class="btn">→ Als Activity erfassen</button>
+            <button class="btn">📅 Meeting vereinbaren</button>
+            <button class="btn">⋯</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KALENDER MODE (hidden in A default) -->
+    <div class="content a-cal-mode" style="display:none">
+      <div class="cal-wrap">
+        <div class="cal-side">
+          <div class="mini-cal">
+            <div class="mc-head"><span class="mc-nav">‹</span><span class="serif">April 2026</span><span class="mc-nav">›</span></div>
+            <div class="mc-grid">
+              <span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">F</span><span class="mc-dow">S</span><span class="mc-dow">S</span>
+              <span class="mc-day other">30</span><span class="mc-day other">31</span><span class="mc-day">1</span><span class="mc-day">2</span><span class="mc-day">3</span><span class="mc-day">4</span><span class="mc-day">5</span>
+              <span class="mc-day">6</span><span class="mc-day has-ev">7</span><span class="mc-day">8</span><span class="mc-day has-ev">9</span><span class="mc-day">10</span><span class="mc-day">11</span><span class="mc-day">12</span>
+              <span class="mc-day has-ev">13</span><span class="mc-day">14</span><span class="mc-day">15</span><span class="mc-day has-ev">16</span><span class="mc-day today">17</span><span class="mc-day">18</span><span class="mc-day">19</span>
+              <span class="mc-day">20</span><span class="mc-day has-ev">21</span><span class="mc-day">22</span><span class="mc-day">23</span><span class="mc-day">24</span><span class="mc-day">25</span><span class="mc-day">26</span>
+              <span class="mc-day">27</span><span class="mc-day">28</span><span class="mc-day">29</span><span class="mc-day">30</span><span class="mc-day other">1</span><span class="mc-day other">2</span><span class="mc-day other">3</span>
+            </div>
+          </div>
+          <div class="cal-filters">
+            <div class="cal-filter-head">Aktivitäts-Typ</div>
+            <div class="cal-filter-item"><span class="cal-dot coaching"></span><span>Coaching</span></div>
+            <div class="cal-filter-item"><span class="cal-dot debriefing"></span><span>Debriefing</span></div>
+            <div class="cal-filter-item"><span class="cal-dot mandat"></span><span>Mandats-Akquise</span></div>
+            <div class="cal-filter-item"><span class="cal-dot team"></span><span>Team-intern</span></div>
+            <div class="cal-filter-item"><span class="cal-dot extern"></span><span>Extern / Kunde</span></div>
+            <div class="cal-filter-head" style="margin-top:14px">Mitarbeiter</div>
+            <div class="cal-filter-item"><input type="checkbox" checked><span>PW · Peter</span></div>
+            <div class="cal-filter-item"><input type="checkbox"><span>JV · Jonas</span></div>
+            <div class="cal-filter-item"><input type="checkbox"><span>LR · Lea</span></div>
+          </div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-toolbar">
+            <button class="btn">‹</button>
+            <button class="btn">Heute</button>
+            <button class="btn">›</button>
+            <span class="cal-month">KW 16 · 13.–19. April 2026</span>
+            <span class="spacer"></span>
+            <div class="seg"><button class="seg-btn">Tag</button><button class="seg-btn active">Woche</button><button class="seg-btn">Monat</button></div>
+            <button class="btn btn-primary" style="margin-left:10px">+ Neuer Termin</button>
+          </div>
+          <div class="cal-week-grid">
+            <div class="cal-week-head"></div>
+            <div class="cal-week-head">Mo<span class="cal-dow-num">13</span></div>
+            <div class="cal-week-head">Di<span class="cal-dow-num">14</span></div>
+            <div class="cal-week-head">Mi<span class="cal-dow-num">15</span></div>
+            <div class="cal-week-head">Do<span class="cal-dow-num">16</span></div>
+            <div class="cal-week-head today">Fr<span class="cal-dow-num">17</span></div>
+            <div class="cal-week-head">Sa<span class="cal-dow-num">18</span></div>
+            <div class="cal-week-head">So<span class="cal-dow-num">19</span></div>
+
+            <div class="cal-time">08:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:30px;height:30px"><div class="cal-event-time">08:30-09:00</div><div class="cal-event-title">Coach · S. Fischer</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">09:00</div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-time">09:00-10:00</div><div class="cal-event-title">Mandats-Pitch Halter AG</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-time">09:30-10:00</div><div class="cal-event-title">Debr. Keller 2nd</div></div></div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:30px;height:30px"><div class="cal-event-time">09:30-10:00</div><div class="cal-event-title">Coach · T. Furrer</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">10:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">11:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:0;height:88px"><div class="cal-event-time">11:00-12:30</div><div class="cal-event-title">Update Müller · Muster</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:0;height:28px"><div class="cal-event-time">11:00-11:30</div><div class="cal-event-title">Team-Standup</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">12:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">13:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">14:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-title">Debr. Halter</div></div></div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-time">14:00-15:00</div><div class="cal-event-title">Pitch Meier AG</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:30px;height:58px"><div class="cal-event-time">14:30-15:30</div><div class="cal-event-title">Referenz-Auskunft Keller</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">15:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">16:00</div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:0;height:30px"><div class="cal-event-title">Coach · Bachmann</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:30px;height:28px"><div class="cal-event-title">Weekly AM</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+
+            <div class="cal-time">17:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- =============== VARIANT B — Tab Navigation =============== -->
+<div class="layout-root" data-variant="B">
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div><div class="brand-name">ARKADIUM</div><div class="brand-sub">CRM · Operations</div></div>
+  </div>
+  <div class="breadcrumb"><a href="#">Home</a><span class="sep">/</span><a href="#">Operations</a><span class="sep">/</span><span class="current">Email & Kalender</span></div>
+  <div class="header-right"><span>⌘K</span><span>☀</span></div>
+</header>
+
+<div class="main-wrap">
+  <aside class="sb">
+    <div class="sb-section">Übersicht</div>
+    <div class="sb-item"><span class="sb-icon">◈</span><span class="sb-label">Dashboard</span></div>
+    <div class="sb-section">Entities</div>
+    <div class="sb-item"><span class="sb-icon">👤</span><span class="sb-label">Kandidaten</span></div>
+    <div class="sb-item"><span class="sb-icon">🏢</span><span class="sb-label">Accounts</span></div>
+    <div class="sb-item"><span class="sb-icon">💼</span><span class="sb-label">Jobs</span></div>
+    <div class="sb-section">Workflow</div>
+    <div class="sb-item"><span class="sb-icon">🎯</span><span class="sb-label">Mandate</span></div>
+    <div class="sb-item"><span class="sb-icon">→</span><span class="sb-label">Prozesse</span></div>
+    <div class="sb-section">Operations</div>
+    <div class="sb-item active"><span class="sb-icon">✉</span><span class="sb-label">Email & Kalender</span><span class="sb-badge red">7</span></div>
+    <div class="sb-item"><span class="sb-icon">🔔</span><span class="sb-label">Reminders</span></div>
+    <div class="sb-item"><span class="sb-icon">🤖</span><span class="sb-label">Scraper</span></div>
+  </aside>
+
+  <div>
+    <!-- PAGE BANNER -->
+    <div class="page-banner">
+      <div class="banner-row">
+        <h1 class="banner-title">📬 Email & Kalender</h1>
+        <span class="banner-meta">7 ungelesen · 4 Termine heute · 3 Drafts · 38 Templates · 2 Konten</span>
+        <span class="spacer"></span>
+        <button class="btn">+ Neuer Termin</button>
+        <button class="btn btn-primary">+ Neue Email</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabbar">
+      <div class="tab active" onclick="switchBTab(event,'inbox')">📥 Posteingang <span class="tab-badge">7</span></div>
+      <div class="tab" onclick="switchBTab(event,'drafts')">📝 Entwürfe <span class="tab-badge" style="background:var(--amber)">3</span></div>
+      <div class="tab" onclick="switchBTab(event,'sent')">📤 Gesendet</div>
+      <div class="tab" onclick="switchBTab(event,'cal')">📅 Kalender</div>
+      <div class="tab" onclick="switchBTab(event,'tpl')">📋 Templates</div>
+      <div class="tab" onclick="switchBTab(event,'acc')">⚙ Konten & Sync</div>
+    </div>
+
+    <!-- TAB: Posteingang -->
+    <div class="content b-tab b-inbox">
+      <div class="email-3pane">
+        <div class="ep-folders">
+          <div class="ep-folder-head">Filter</div>
+          <div class="ep-folder active"><span>📥</span><span>Alle</span><span class="ep-folder-count">7</span></div>
+          <div class="ep-folder"><span>🏷</span><span>Kandidat</span><span class="ep-folder-count">3</span></div>
+          <div class="ep-folder"><span>🎯</span><span>Mandat/Account</span><span class="ep-folder-count">3</span></div>
+          <div class="ep-folder"><span>❓</span><span>Unbekannt</span><span class="ep-folder-count">1</span></div>
+          <div class="ep-folder-head">Aktion nötig</div>
+          <div class="ep-folder"><span>⚠</span><span>Zuordnen</span><span class="ep-folder-count">3</span></div>
+          <div class="ep-folder"><span>↵</span><span>Antwort offen</span><span class="ep-folder-count">5</span></div>
+        </div>
+        <div class="ep-list">
+          <div class="ep-list-head"><span>Posteingang · Alle</span><span>⌕</span></div>
+          <div class="ep-mail unread active">
+            <div class="ep-mail-top"><span class="ep-mail-from">H. Müller · Muster AG</span><span class="ep-mail-time">09:42</span></div>
+            <div class="ep-mail-sub">Re: Feedback nach 2nd — J. Keller</div>
+            <div class="ep-mail-prev">Vielen Dank für die Unterlagen...</div>
+            <span class="ep-mail-chip chip-mandat">Mandat · Muster AG</span>
+          </div>
+          <div class="ep-mail unread">
+            <div class="ep-mail-top"><span class="ep-mail-from">T. Furrer</span><span class="ep-mail-time">08:15</span></div>
+            <div class="ep-mail-sub">Coaching-Vorbereitung morgen</div>
+            <div class="ep-mail-prev">Anbei die Firmenpräsentation...</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">LinkedIn Recruiter</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">3 neue InMails — CFO Bau Zürich</div>
+            <span class="ep-mail-chip chip-unbekannt">Unbekannt</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">Halter AG · S. Weber</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Mandats-Briefing CFO — Rücksprache</div>
+            <span class="ep-mail-chip chip-mandat">Mandat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">J. Keller</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Terminbestätigung 3rd Interview 22.04.</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">M. Bachmann</span><span class="ep-mail-time">Di</span></div>
+            <div class="ep-mail-sub">Re: Mündliche GOs — Halter-Mandat</div>
+            <span class="ep-mail-chip chip-mandat">Template-Auto</span>
+          </div>
+        </div>
+        <div class="ep-reader">
+          <div class="ep-rdr-sub">Re: Feedback nach 2nd — J. Keller</div>
+          <div class="ep-rdr-from">Von <strong>Hans Müller</strong> · Muster AG</div>
+          <div class="ep-rdr-meta">
+            <span>📅 Heute, 09:42</span>
+            <span class="linked-entity">🎯 Mandat Muster · CFO</span>
+            <span class="linked-entity">👤 J. Keller</span>
+          </div>
+          <div class="ep-rdr-body">
+            <p>Peter, vielen Dank für die Unterlagen zu Herrn Keller. Die 2nd-Runde verlief positiv. Wir würden ihn gerne zur 3rd-Runde einladen, nächste Woche.</p>
+            <p>Zwei Punkte: Lohnband 220–240k · Bonus 20%. Startdatum frühestens 01.07.</p>
+            <p>Telefonat morgen?</p>
+          </div>
+          <div class="ep-rdr-actions">
+            <button class="btn btn-primary">↵ Antworten</button>
+            <button class="btn">📝 Template</button>
+            <button class="btn">→ Activity</button>
+            <button class="btn">📅 Meeting</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Kalender -->
+    <div class="content b-tab b-cal" style="display:none">
+      <div class="cal-wrap">
+        <div class="cal-side">
+          <div class="mini-cal">
+            <div class="mc-head"><span class="mc-nav">‹</span><span class="serif">April 2026</span><span class="mc-nav">›</span></div>
+            <div class="mc-grid">
+              <span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">F</span><span class="mc-dow">S</span><span class="mc-dow">S</span>
+              <span class="mc-day other">30</span><span class="mc-day other">31</span><span class="mc-day">1</span><span class="mc-day">2</span><span class="mc-day">3</span><span class="mc-day">4</span><span class="mc-day">5</span>
+              <span class="mc-day">6</span><span class="mc-day has-ev">7</span><span class="mc-day">8</span><span class="mc-day has-ev">9</span><span class="mc-day">10</span><span class="mc-day">11</span><span class="mc-day">12</span>
+              <span class="mc-day has-ev">13</span><span class="mc-day">14</span><span class="mc-day">15</span><span class="mc-day has-ev">16</span><span class="mc-day today">17</span><span class="mc-day">18</span><span class="mc-day">19</span>
+              <span class="mc-day">20</span><span class="mc-day has-ev">21</span><span class="mc-day">22</span><span class="mc-day">23</span><span class="mc-day">24</span><span class="mc-day">25</span><span class="mc-day">26</span>
+              <span class="mc-day">27</span><span class="mc-day">28</span><span class="mc-day">29</span><span class="mc-day">30</span><span class="mc-day other">1</span><span class="mc-day other">2</span><span class="mc-day other">3</span>
+            </div>
+          </div>
+          <div class="cal-filters">
+            <div class="cal-filter-head">Aktivitäts-Typ</div>
+            <div class="cal-filter-item"><span class="cal-dot coaching"></span><span>Coaching</span></div>
+            <div class="cal-filter-item"><span class="cal-dot debriefing"></span><span>Debriefing</span></div>
+            <div class="cal-filter-item"><span class="cal-dot mandat"></span><span>Mandats-Akquise</span></div>
+            <div class="cal-filter-item"><span class="cal-dot team"></span><span>Team-intern</span></div>
+            <div class="cal-filter-item"><span class="cal-dot extern"></span><span>Extern / Kunde</span></div>
+          </div>
+        </div>
+        <div class="cal-main">
+          <div class="cal-toolbar">
+            <button class="btn">‹</button><button class="btn">Heute</button><button class="btn">›</button>
+            <span class="cal-month">KW 16 · 13.–19. April 2026</span>
+            <span class="spacer"></span>
+            <div class="seg"><button class="seg-btn">Tag</button><button class="seg-btn active">Woche</button><button class="seg-btn">Monat</button></div>
+          </div>
+          <div class="cal-week-grid">
+            <div class="cal-week-head"></div>
+            <div class="cal-week-head">Mo<span class="cal-dow-num">13</span></div>
+            <div class="cal-week-head">Di<span class="cal-dow-num">14</span></div>
+            <div class="cal-week-head">Mi<span class="cal-dow-num">15</span></div>
+            <div class="cal-week-head">Do<span class="cal-dow-num">16</span></div>
+            <div class="cal-week-head today">Fr<span class="cal-dow-num">17</span></div>
+            <div class="cal-week-head">Sa<span class="cal-dow-num">18</span></div>
+            <div class="cal-week-head">So<span class="cal-dow-num">19</span></div>
+            <div class="cal-time">09:00</div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-time">09:00-10:00</div><div class="cal-event-title">Pitch Halter</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-title">Debr. Keller</div></div></div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:30px;height:30px"><div class="cal-event-title">Coach · Furrer</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">10:00</div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">11:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:0;height:88px"><div class="cal-event-time">11:00-12:30</div><div class="cal-event-title">Update Müller</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:0;height:28px"><div class="cal-event-title">Standup</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">12:00</div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">14:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-title">Debr. Halter</div></div></div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-title">Pitch Meier</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:30px;height:58px"><div class="cal-event-title">Referenz</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">16:00</div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:0;height:30px"><div class="cal-event-title">Coach Bachmann</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:30px;height:28px"><div class="cal-event-title">Weekly AM</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Templates / Drafts / Sent / Konten — Platzhalter -->
+    <div class="content b-tab b-drafts" style="display:none"><div style="padding:40px;text-align:center;color:var(--text-light)"><span class="serif" style="font-size:18px;color:var(--accent)">📝 Entwürfe</span><br><br>3 Drafts als Tabelle mit Bearbeiten/Senden/Verwerfen.<br>Compose-Drawer 540px wenn Draft geklickt.</div></div>
+    <div class="content b-tab b-sent" style="display:none"><div style="padding:40px;text-align:center;color:var(--text-light)"><span class="serif" style="font-size:18px;color:var(--accent)">📤 Gesendet</span><br><br>Versandte Emails mit Thread-Ansicht, Activity-Link, Delivery-Status.</div></div>
+    <div class="content b-tab b-tpl" style="display:none"><div style="padding:40px;text-align:center;color:var(--text-light)"><span class="serif" style="font-size:18px;color:var(--accent)">📋 Templates</span><br><br>38 Standard-Templates als Karten-Grid. Admin-CRUD via Drawer. 4 mit Automation-Trigger farblich markiert.</div></div>
+    <div class="content b-tab b-acc" style="display:none"><div style="padding:40px;text-align:center;color:var(--text-light)"><span class="serif" style="font-size:18px;color:var(--accent)">⚙ Konten & Sync</span><br><br>MS Graph OAuth-Status · Token-Health · Sync-Log · Kalender-Verbindung.<br>Phase 1 Shared Mailbox · Phase 2 User-Tokens.</div></div>
+  </div>
+</div>
+
+</div>
+
+<!-- =============== VARIANT C — 3-Pane Outlook Native =============== -->
+<div class="layout-root" data-variant="C">
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div><div class="brand-name">ARKADIUM</div><div class="brand-sub">CRM · Operations</div></div>
+  </div>
+  <div class="breadcrumb"><a href="#">Home</a><span class="sep">/</span><a href="#">Operations</a><span class="sep">/</span><span class="current">Email & Kalender</span></div>
+  <div class="header-right"><span>⌘K</span><span>☀</span></div>
+</header>
+
+<div class="main-wrap">
+  <aside class="sb">
+    <div class="sb-section">Übersicht</div>
+    <div class="sb-item"><span class="sb-icon">◈</span><span class="sb-label">Dashboard</span></div>
+    <div class="sb-section">Entities</div>
+    <div class="sb-item"><span class="sb-icon">👤</span><span class="sb-label">Kandidaten</span></div>
+    <div class="sb-item"><span class="sb-icon">🏢</span><span class="sb-label">Accounts</span></div>
+    <div class="sb-section">Operations</div>
+    <div class="sb-item active"><span class="sb-icon">✉</span><span class="sb-label">Email & Kalender</span><span class="sb-badge red">7</span></div>
+    <div class="sb-item"><span class="sb-icon">🔔</span><span class="sb-label">Reminders</span></div>
+    <div class="sb-item"><span class="sb-icon">🤖</span><span class="sb-label">Scraper</span></div>
+  </aside>
+
+  <div>
+    <!-- kompakterer Banner -->
+    <div class="page-banner" style="padding:12px 24px">
+      <div class="banner-row">
+        <h1 class="banner-title" style="font-size:20px">📬 Email & Kalender</h1>
+        <span class="banner-meta">7 ungelesen · 4 Termine heute</span>
+        <span class="spacer"></span>
+        <div class="seg">
+          <button class="seg-btn active" onclick="switchCMode('mail')">✉ Mails</button>
+          <button class="seg-btn" onclick="switchCMode('agenda')">📅 Agenda</button>
+        </div>
+        <button class="btn btn-primary" style="margin-left:10px">+ Neu</button>
+      </div>
+    </div>
+
+    <!-- MAIL MODE -->
+    <div class="c-mail-mode">
+      <div class="c3-wrap">
+        <!-- Left: folders + mini-cal + today -->
+        <div class="c3-left">
+          <div class="c3-folders-block">
+            <div class="ep-folder-head">Posteingang</div>
+            <div class="ep-folder active"><span>📥</span><span>Inbox</span><span class="ep-folder-count">7</span></div>
+            <div class="ep-folder"><span>📝</span><span>Drafts</span><span class="ep-folder-count">3</span></div>
+            <div class="ep-folder"><span>📤</span><span>Sent</span></div>
+            <div class="ep-folder"><span>📋</span><span>Templates</span></div>
+            <div class="ep-folder"><span>⚙</span><span>Konten</span></div>
+          </div>
+          <div class="c3-cal-block">
+            <div class="mini-cal">
+              <div class="mc-head"><span class="mc-nav">‹</span><span class="serif" style="font-size:13px">Apr 2026</span><span class="mc-nav">›</span></div>
+              <div class="mc-grid">
+                <span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">M</span><span class="mc-dow">D</span><span class="mc-dow">F</span><span class="mc-dow">S</span><span class="mc-dow">S</span>
+                <span class="mc-day other">30</span><span class="mc-day other">31</span><span class="mc-day">1</span><span class="mc-day">2</span><span class="mc-day">3</span><span class="mc-day">4</span><span class="mc-day">5</span>
+                <span class="mc-day">6</span><span class="mc-day has-ev">7</span><span class="mc-day">8</span><span class="mc-day has-ev">9</span><span class="mc-day">10</span><span class="mc-day">11</span><span class="mc-day">12</span>
+                <span class="mc-day has-ev">13</span><span class="mc-day">14</span><span class="mc-day">15</span><span class="mc-day has-ev">16</span><span class="mc-day today">17</span><span class="mc-day">18</span><span class="mc-day">19</span>
+                <span class="mc-day">20</span><span class="mc-day has-ev">21</span><span class="mc-day">22</span><span class="mc-day">23</span><span class="mc-day">24</span><span class="mc-day">25</span><span class="mc-day">26</span>
+                <span class="mc-day">27</span><span class="mc-day">28</span><span class="mc-day">29</span><span class="mc-day">30</span><span class="mc-day other">1</span><span class="mc-day other">2</span><span class="mc-day other">3</span>
+              </div>
+            </div>
+          </div>
+          <div class="c3-today-block">
+            <div class="c3-today-head">Heute · Fr 17.04.</div>
+            <div class="c3-today-item"><div class="c3-today-time">09:30</div><div class="c3-today-txt"><div class="c3-today-name">Coach T. Furrer</div><div class="c3-today-meta">30m · Teams · pre-2nd</div></div></div>
+            <div class="c3-today-item"><div class="c3-today-time">11:00</div><div class="c3-today-txt"><div class="c3-today-name">Update Müller AG</div><div class="c3-today-meta">45m · Sparring</div></div></div>
+            <div class="c3-today-item"><div class="c3-today-time">14:30</div><div class="c3-today-txt"><div class="c3-today-name">Pitch Halter AG</div><div class="c3-today-meta">60m · Neukunde</div></div></div>
+            <div class="c3-today-item"><div class="c3-today-time">16:00</div><div class="c3-today-txt"><div class="c3-today-name">Weekly AM</div><div class="c3-today-meta">15m · Team</div></div></div>
+          </div>
+        </div>
+        <!-- Middle: mail list -->
+        <div class="ep-list">
+          <div class="ep-list-head"><span>Inbox</span><span>⌕</span></div>
+          <div class="ep-mail unread active">
+            <div class="ep-mail-top"><span class="ep-mail-from">H. Müller</span><span class="ep-mail-time">09:42</span></div>
+            <div class="ep-mail-sub">Re: Feedback nach 2nd — Keller</div>
+            <div class="ep-mail-prev">Vielen Dank für die Unterlagen. Die 2nd-Runde...</div>
+            <span class="ep-mail-chip chip-mandat">Muster AG</span>
+          </div>
+          <div class="ep-mail unread">
+            <div class="ep-mail-top"><span class="ep-mail-from">T. Furrer</span><span class="ep-mail-time">08:15</span></div>
+            <div class="ep-mail-sub">Coaching-Vorb. morgen</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">LinkedIn</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">3 InMails · CFO Bau</div>
+            <span class="ep-mail-chip chip-unbekannt">Unbekannt</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">S. Weber · Halter</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Mandats-Briefing CFO</div>
+            <span class="ep-mail-chip chip-mandat">Mandat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">J. Keller</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub">Termin 3rd bestätigt</div>
+            <span class="ep-mail-chip chip-kandidat">Kandidat</span>
+          </div>
+          <div class="ep-mail">
+            <div class="ep-mail-top"><span class="ep-mail-from">M. Bachmann</span><span class="ep-mail-time">Di</span></div>
+            <div class="ep-mail-sub">Re: Mündliche GOs</div>
+            <span class="ep-mail-chip chip-mandat">Auto</span>
+          </div>
+        </div>
+        <!-- Right: reader -->
+        <div class="ep-reader">
+          <div class="ep-rdr-sub">Re: Feedback nach 2nd — J. Keller</div>
+          <div class="ep-rdr-from">Von <strong>Hans Müller</strong> · Muster AG</div>
+          <div class="ep-rdr-meta">
+            <span>📅 09:42</span>
+            <span class="linked-entity">🎯 Muster CFO</span>
+            <span class="linked-entity">👤 Keller</span>
+          </div>
+          <div class="ep-rdr-body">
+            <p>Peter, die 2nd-Runde verlief positiv. 3rd-Runde nächste Woche?</p>
+            <p>Lohnband 220-240k · Bonus 20%. Startdatum 01.07. realistisch?</p>
+            <p>Telefonat morgen?</p>
+          </div>
+          <div class="ep-rdr-actions">
+            <button class="btn btn-primary">↵ Antw.</button>
+            <button class="btn">📝 Template</button>
+            <button class="btn">→ Activity</button>
+            <button class="btn">📅 Meeting</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA MODE (Kalender mit Mail-Sidebar rechts) -->
+    <div class="c-agenda-mode" style="display:none">
+      <div class="c3-agenda" style="background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow:hidden">
+        <div class="cal-main" style="border-right:1px solid var(--border)">
+          <div class="cal-toolbar">
+            <button class="btn">‹</button><button class="btn">Heute</button><button class="btn">›</button>
+            <span class="cal-month">KW 16 · 13.–19. April</span>
+            <span class="spacer"></span>
+            <div class="seg"><button class="seg-btn">Tag</button><button class="seg-btn active">Woche</button><button class="seg-btn">Monat</button></div>
+          </div>
+          <div class="cal-week-grid">
+            <div class="cal-week-head"></div>
+            <div class="cal-week-head">Mo<span class="cal-dow-num">13</span></div>
+            <div class="cal-week-head">Di<span class="cal-dow-num">14</span></div>
+            <div class="cal-week-head">Mi<span class="cal-dow-num">15</span></div>
+            <div class="cal-week-head">Do<span class="cal-dow-num">16</span></div>
+            <div class="cal-week-head today">Fr<span class="cal-dow-num">17</span></div>
+            <div class="cal-week-head">Sa<span class="cal-dow-num">18</span></div>
+            <div class="cal-week-head">So<span class="cal-dow-num">19</span></div>
+            <div class="cal-time">09:00</div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-title">Pitch Halter</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-title">Debr. Keller</div></div></div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:30px;height:30px"><div class="cal-event-title">Coach · Furrer</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">11:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:0;height:88px"><div class="cal-event-title">Update Müller</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:0;height:28px"><div class="cal-event-title">Standup</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">14:00</div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event debriefing" style="top:30px;height:30px"><div class="cal-event-title">Debr. Halter</div></div></div>
+            <div class="cal-slot"><div class="cal-event mandat" style="top:0;height:58px"><div class="cal-event-title">Pitch Meier</div></div></div>
+            <div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event extern" style="top:30px;height:58px"><div class="cal-event-title">Referenz</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-time">16:00</div>
+            <div class="cal-slot"><div class="cal-event coaching" style="top:0;height:30px"><div class="cal-event-title">Coach Bachmann</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div>
+            <div class="cal-slot"><div class="cal-event team" style="top:30px;height:28px"><div class="cal-event-title">Weekly AM</div></div></div>
+            <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+          </div>
+        </div>
+        <!-- Mail Sidebar -->
+        <div style="padding:12px 14px; overflow-y:auto; background:var(--bg)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-light);margin-bottom:8px;font-weight:600">Aktuelle Mails (7)</div>
+          <div class="ep-mail unread" style="padding:8px 0;border-bottom:1px solid var(--border-soft)">
+            <div class="ep-mail-top"><span class="ep-mail-from">H. Müller</span><span class="ep-mail-time">09:42</span></div>
+            <div class="ep-mail-sub" style="font-size:11px">Re: Feedback Keller</div>
+          </div>
+          <div class="ep-mail unread" style="padding:8px 0;border-bottom:1px solid var(--border-soft)">
+            <div class="ep-mail-top"><span class="ep-mail-from">T. Furrer</span><span class="ep-mail-time">08:15</span></div>
+            <div class="ep-mail-sub" style="font-size:11px">Coach-Vorb.</div>
+          </div>
+          <div class="ep-mail" style="padding:8px 0;border-bottom:1px solid var(--border-soft)">
+            <div class="ep-mail-top"><span class="ep-mail-from">S. Weber</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub" style="font-size:11px">Halter Briefing</div>
+          </div>
+          <div class="ep-mail" style="padding:8px 0;border-bottom:1px solid var(--border-soft)">
+            <div class="ep-mail-top"><span class="ep-mail-from">J. Keller</span><span class="ep-mail-time">Gestern</span></div>
+            <div class="ep-mail-sub" style="font-size:11px">Termin bestätigt</div>
+          </div>
+          <div style="text-align:center;padding:10px;color:var(--accent);font-size:11px;cursor:pointer">→ Alle anzeigen</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function switchVariant(v) {
+  document.querySelectorAll('.vs-btn').forEach(b => b.classList.toggle('active', b.dataset.variant === v));
+  document.querySelectorAll('.layout-root').forEach(l => l.classList.toggle('active', l.dataset.variant === v));
+  window.currentVariant = v;
+  const btn = document.getElementById('selectBtn');
+  btn.classList.remove('selected');
+  btn.textContent = '✓ Diese wählen';
+}
+function switchAMode(m) {
+  document.querySelectorAll('[data-variant="A"] .seg-btn').forEach((b,i) => {
+    if (i < 2) b.classList.toggle('active', (m === 'email' && i === 0) || (m === 'cal' && i === 1));
+  });
+  document.querySelector('.a-email-mode').style.display = m === 'email' ? 'block' : 'none';
+  document.querySelector('.a-cal-mode').style.display = m === 'cal' ? 'block' : 'none';
+}
+function switchBTab(e, t) {
+  const container = e.target.closest('[data-variant="B"]');
+  container.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  e.target.closest('.tab').classList.add('active');
+  container.querySelectorAll('.b-tab').forEach(x => x.style.display = 'none');
+  const map = {inbox:'.b-inbox', drafts:'.b-drafts', sent:'.b-sent', cal:'.b-cal', tpl:'.b-tpl', acc:'.b-acc'};
+  container.querySelector(map[t]).style.display = 'block';
+}
+function switchCMode(m) {
+  const container = document.querySelector('[data-variant="C"]');
+  container.querySelectorAll('.seg-btn').forEach((b,i) => b.classList.toggle('active', (m === 'mail' && i === 0) || (m === 'agenda' && i === 1)));
+  container.querySelector('.c-mail-mode').style.display = m === 'mail' ? 'block' : 'none';
+  container.querySelector('.c-agenda-mode').style.display = m === 'agenda' ? 'block' : 'none';
+}
+function selectCurrent() {
+  const v = window.currentVariant || 'A';
+  const btn = document.getElementById('selectBtn');
+  btn.classList.add('selected');
+  btn.textContent = '✓ Variante ' + v + ' gewählt';
+  if (window.brainstorm_select) window.brainstorm_select(v, 'Variante ' + v);
+  else if (window.parent && window.parent.postMessage) {
+    window.parent.postMessage({type:'select', choice:v.toLowerCase(), text:'Variante ' + v}, '*');
+  }
+}
+window.currentVariant = 'A';
+</script>
+
+</body>
+</html>

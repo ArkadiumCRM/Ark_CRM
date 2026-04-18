@@ -1,0 +1,560 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e9]: Dashboard
+    - generic [ref=e10]:
+      - generic [ref=e11]: ⌘K
+      - button "☀" [ref=e12] [cursor=pointer]
+  - generic [ref=e13]:
+    - heading "Dashboard" [level=1] [ref=e14]
+    - generic [ref=e15]: Willkommen, Peter · 15.04.2026 · Dienstag
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: Umsatz YTD
+        - generic [ref=e20]: CHF 1.2 M
+        - generic [ref=e21]: +18 % vs. 2025
+      - generic [ref=e22]:
+        - generic [ref=e23]: Placements YTD
+        - generic [ref=e24]: "18"
+        - generic [ref=e25]: Ziel 32 (56 %)
+      - generic [ref=e26]:
+        - generic [ref=e27]: Offene Mandate
+        - generic [ref=e28]: "14"
+        - generic [ref=e29]: 8 Target · 4 Taskforce · 2 Time
+      - generic [ref=e30]:
+        - generic [ref=e31]: Aktive Prozesse
+        - generic [ref=e32]: "47"
+        - generic [ref=e33]: über 31 Kandidaten
+      - generic [ref=e34]:
+        - generic [ref=e35]: Blocker
+        - generic [ref=e36]: "3"
+        - generic [ref=e37]: 1 Claim · 2 stale
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: Heute · 15.04.2026
+          - link "→ Kalender" [ref=e42] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e43]:
+          - generic [ref=e45]: 09:30
+          - generic [ref=e46]:
+            - strong [ref=e47]: Coaching-Call Tobias Furrer
+            - text: vor 2nd Interview
+          - generic [ref=e48]: 30 min · Teams · CM JV
+          - generic [ref=e49]: Hoch
+        - generic [ref=e50]:
+          - generic [ref=e52]: 11:00
+          - generic [ref=e53]:
+            - strong [ref=e54]: Update-Call Hans Müller
+            - text: (Bauherr Muster AG)
+          - generic [ref=e55]: 45 min · wöchentliches Mandats-Sparring
+          - generic [ref=e56]: Normal
+        - generic [ref=e57]:
+          - generic [ref=e59]: 14:30
+          - strong [ref=e61]: Mandats-Pitch Halter AG
+          - generic [ref=e62]: 60 min · Neuakquise · GL-Meeting
+          - generic [ref=e63]: Neukunde
+        - generic [ref=e64]:
+          - generic [ref=e66]: 16:00
+          - strong [ref=e68]: Team-Standup
+          - generic [ref=e69]: 15 min · ING & BT Team
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: Pipeline-Snapshot
+          - link "→ Prozesse" [ref=e73] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: Stage V–VIII
+            - generic [ref=e77]: "18"
+            - generic [ref=e78]: Late-Stage
+          - generic [ref=e79]:
+            - generic [ref=e80]: Offer offen
+            - generic [ref=e81]: "4"
+            - generic [ref=e82]: kurz vor Placement
+          - generic [ref=e83]:
+            - generic [ref=e84]: Stale
+            - generic [ref=e85]: "3"
+            - generic [ref=e86]: "> 14 d"
+        - generic [ref=e87]:
+          - strong [ref=e88]: "Erwartete Placements Q2/2026:"
+          - text: 6–8 · Pipeline-Wert CHF 920k (Prognose 68 % Confidence)
+      - generic [ref=e89]:
+        - generic [ref=e91]: Mein Fokus diese Woche
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - text: 🎯
+            - strong [ref=e94]: CFO-Suche abschliessen
+          - generic [ref=e95]: Bauherr Muster AG · Offer bis Fr erwartet
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - text: ⚡
+            - strong [ref=e98]: PL Hochbau Taskforce Position 3/3
+          - generic [ref=e99]: letzter Kandidat Scoring · Assessment-Report ausstehend
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - text: 📋
+            - strong [ref=e102]: Neues Mandat Halter AG
+          - generic [ref=e103]: Pitch heute 14:30 · Unterlagen bereit
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - text: 🛡
+            - strong [ref=e106]: Claim-Fall Tobias Sommer
+          - generic [ref=e107]: Bauherr Muster AG · Fall Y klassifiziert · Rechnung erstellen
+      - generic [ref=e108]:
+        - generic [ref=e109]:
+          - generic [ref=e110]: Team · Workload
+          - link "→ Team" [ref=e111] [cursor=pointer]:
+            - /url: "#"
+        - table [ref=e112]:
+          - rowgroup [ref=e113]:
+            - row "MA Offene Mandate Aktive Prozesse Ø Last" [ref=e114]:
+              - columnheader "MA" [ref=e115]
+              - columnheader "Offene Mandate" [ref=e116]
+              - columnheader "Aktive Prozesse" [ref=e117]
+              - columnheader "Ø Last" [ref=e118]
+          - rowgroup [ref=e119]:
+            - row "PW Peter Wiederkehr 6 12 hoch" [ref=e120]:
+              - cell "PW Peter Wiederkehr" [ref=e121]:
+                - generic [ref=e122]: PW
+                - text: Peter Wiederkehr
+              - cell "6" [ref=e123]
+              - cell "12" [ref=e124]
+              - cell "hoch" [ref=e125]
+            - row "JV Jana Vogt — 14 gut" [ref=e126]:
+              - cell "JV Jana Vogt" [ref=e127]:
+                - generic [ref=e128]: JV
+                - text: Jana Vogt
+              - cell "—" [ref=e129]
+              - cell "14" [ref=e130]
+              - cell "gut" [ref=e131]
+            - row "LR Laura Roth — 8 gut" [ref=e132]:
+              - cell "LR Laura Roth" [ref=e133]:
+                - generic [ref=e134]: LR
+                - text: Laura Roth
+              - cell "—" [ref=e135]
+              - cell "8" [ref=e136]
+              - cell "gut" [ref=e137]
+            - row "MF Marco Frei 4 9 gut" [ref=e138]:
+              - cell "MF Marco Frei" [ref=e139]:
+                - generic [ref=e140]: MF
+                - text: Marco Frei
+              - cell "4" [ref=e141]
+              - cell "9" [ref=e142]
+              - cell "gut" [ref=e143]
+            - row "NP Nina Patek 2 4 leicht" [ref=e144]:
+              - cell "NP Nina Patek" [ref=e145]:
+                - generic [ref=e146]: NP
+                - text: Nina Patek
+              - cell "2" [ref=e147]
+              - cell "4" [ref=e148]
+              - cell "leicht" [ref=e149]
+    - generic [ref=e150]:
+      - generic [ref=e151]:
+        - generic [ref=e152]: 📞 Unklassifizierte Anrufe 7 pending
+        - generic [ref=e153]:
+          - combobox [ref=e154] [cursor=pointer]:
+            - option "Alle Akteure" [selected]
+            - option "Meine"
+            - option "PW"
+            - option "JV"
+            - option "LR"
+          - combobox [ref=e155] [cursor=pointer]:
+            - option "Heute" [selected]
+            - option "Letzte 24 h"
+            - option "Diese Woche"
+          - link "→ Alle" [ref=e156] [cursor=pointer]:
+            - /url: "#"
+      - generic [ref=e157]: 3CX-Auto-Import ohne Template-Match · AI-Vorschlag verfügbar · Bulk-Accept möglich
+      - table [ref=e158]:
+        - rowgroup [ref=e159]:
+          - row "Zeit Caller Dauer AI-Vorschlag · Activity-Type Akteur Aktion" [ref=e160]:
+            - columnheader [ref=e161]:
+              - checkbox [ref=e162]
+            - columnheader "Zeit" [ref=e163]
+            - columnheader "Caller" [ref=e164]
+            - columnheader "Dauer" [ref=e165]
+            - columnheader "AI-Vorschlag · Activity-Type" [ref=e166]
+            - columnheader "Akteur" [ref=e167]
+            - columnheader "Aktion" [ref=e168]
+        - rowgroup [ref=e169]:
+          - 'row "10:47 Hans Müller (Bauherr Muster AG · CEO) +41 44 555 12 34 · outbound · 3CX 8:32 min #15 Erreicht - Update Call 92 % PW ✓ Annehmen ⋯" [ref=e170] [cursor=pointer]':
+            - cell [ref=e171]:
+              - checkbox [ref=e172]
+            - cell "10:47" [ref=e173]
+            - cell "Hans Müller (Bauherr Muster AG · CEO) +41 44 555 12 34 · outbound · 3CX" [ref=e174]:
+              - strong [ref=e175]: Hans Müller
+              - text: (Bauherr Muster AG · CEO)
+              - text: +41 44 555 12 34 · outbound · 3CX
+            - cell "8:32 min" [ref=e176]
+            - cell "#15 Erreicht - Update Call 92 %" [ref=e177]:
+              - generic [ref=e178]: "#15 Erreicht - Update Call"
+              - text: 92 %
+            - cell "PW" [ref=e179]:
+              - generic [ref=e180]: PW
+            - cell "✓ Annehmen ⋯" [ref=e181]:
+              - button "✓ Annehmen" [ref=e182]
+              - button "⋯" [ref=e183]
+          - 'row "10:12 Tobias Furrer (Kandidat · CFO-Prozess) +41 78 234 56 78 · inbound · 3CX 4:18 min #38 Erreicht - Coaching 2nd Interview 87 % JV ✓ Annehmen ⋯" [ref=e184] [cursor=pointer]':
+            - cell [ref=e185]:
+              - checkbox [ref=e186]
+            - cell "10:12" [ref=e187]
+            - cell "Tobias Furrer (Kandidat · CFO-Prozess) +41 78 234 56 78 · inbound · 3CX" [ref=e188]:
+              - strong [ref=e189]: Tobias Furrer
+              - text: (Kandidat · CFO-Prozess)
+              - text: +41 78 234 56 78 · inbound · 3CX
+            - cell "4:18 min" [ref=e190]
+            - cell "#38 Erreicht - Coaching 2nd Interview 87 %" [ref=e191]:
+              - generic [ref=e192]: "#38 Erreicht - Coaching 2nd Interview"
+              - text: 87 %
+            - cell "JV" [ref=e193]:
+              - generic [ref=e194]: JV
+            - cell "✓ Annehmen ⋯" [ref=e195]:
+              - button "✓ Annehmen" [ref=e196]
+              - button "⋯" [ref=e197]
+          - 'row "09:58 +41 41 123 45 67 (unbekannter Caller) inbound · 3CX · keine Kontakt-Zuordnung 0:48 min #118 Kommunikation - Eingehender Anruf (unklassifiziert) — 👤 Zuordnen ⋯" [ref=e198] [cursor=pointer]':
+            - cell [ref=e199]:
+              - checkbox [ref=e200]
+            - cell "09:58" [ref=e201]
+            - cell "+41 41 123 45 67 (unbekannter Caller) inbound · 3CX · keine Kontakt-Zuordnung" [ref=e202]:
+              - strong [ref=e203]: +41 41 123 45 67
+              - text: (unbekannter Caller)
+              - text: inbound · 3CX · keine Kontakt-Zuordnung
+            - cell "0:48 min" [ref=e204]
+            - cell "#118 Kommunikation - Eingehender Anruf (unklassifiziert)" [ref=e205]:
+              - generic [ref=e206]: "#118 Kommunikation - Eingehender Anruf (unklassifiziert)"
+            - cell "—" [ref=e207]
+            - cell "👤 Zuordnen ⋯" [ref=e208]:
+              - button "👤 Zuordnen" [ref=e209]
+              - button "⋯" [ref=e210]
+          - 'row "09:15 Eva Studer (Bauherr Muster AG · HR-L) 📭 Voicemail · 0:42 s · Transkript verfügbar 0:42 s #15 Erreicht - Update Call 89 % · Transkript-basiert PW ✓ Annehmen ⋯" [ref=e211] [cursor=pointer]':
+            - cell [ref=e212]:
+              - checkbox [ref=e213]
+            - cell "09:15" [ref=e214]
+            - cell "Eva Studer (Bauherr Muster AG · HR-L) 📭 Voicemail · 0:42 s · Transkript verfügbar" [ref=e215]:
+              - strong [ref=e216]: Eva Studer
+              - text: (Bauherr Muster AG · HR-L)
+              - text: 📭 Voicemail · 0:42 s · Transkript verfügbar
+            - cell "0:42 s" [ref=e217]
+            - cell "#15 Erreicht - Update Call 89 % · Transkript-basiert" [ref=e218]:
+              - generic [ref=e219]: "#15 Erreicht - Update Call"
+              - text: 89 % · Transkript-basiert
+            - cell "PW" [ref=e220]:
+              - generic [ref=e221]: PW
+            - cell "✓ Annehmen ⋯" [ref=e222]:
+              - button "✓ Annehmen" [ref=e223]
+              - button "⋯" [ref=e224]
+          - 'row "Gestern 16:42 Marco Gerber (Kandidat · Pilatus-CFO-Prozess) 🔔 Verpasst · keine Voicemail · Rückruf fällig — #119 Kommunikation - Anruf verpasst JV 📞 Rückruf ⋯" [ref=e225] [cursor=pointer]':
+            - cell [ref=e226]:
+              - checkbox [ref=e227]
+            - cell "Gestern 16:42" [ref=e228]
+            - cell "Marco Gerber (Kandidat · Pilatus-CFO-Prozess) 🔔 Verpasst · keine Voicemail · Rückruf fällig" [ref=e229]:
+              - strong [ref=e230]: Marco Gerber
+              - text: (Kandidat · Pilatus-CFO-Prozess)
+              - text: 🔔 Verpasst · keine Voicemail · Rückruf fällig
+            - cell "—" [ref=e231]
+            - cell "#119 Kommunikation - Anruf verpasst" [ref=e232]:
+              - generic [ref=e233]: "#119 Kommunikation - Anruf verpasst"
+            - cell "JV" [ref=e234]:
+              - generic [ref=e235]: JV
+            - cell "📞 Rückruf ⋯" [ref=e236]:
+              - button "📞 Rückruf" [ref=e237]
+              - button "⋯" [ref=e238]
+      - generic [ref=e239]:
+        - generic [ref=e240]:
+          - button "✓ 5 ausgewählte annehmen" [ref=e241] [cursor=pointer]
+          - button "⚡ Alle AI-Vorschläge mit ≥ 90 % automatisch akzeptieren" [ref=e242] [cursor=pointer]
+        - generic [ref=e243]: "Ø Klassifizierungs-Dauer: 38 s · AI-Treffgenauigkeit letzte 7 d: 89 %"
+    - generic [ref=e244]:
+      - generic [ref=e245]:
+        - generic [ref=e246]: ✉️ Unklassifizierte Emails 4 pending
+        - generic [ref=e247]:
+          - combobox [ref=e248] [cursor=pointer]:
+            - option "Alle Akteure" [selected]
+            - option "Meine"
+            - option "PW"
+            - option "JV"
+            - option "LR"
+          - combobox [ref=e249] [cursor=pointer]:
+            - option "Heute" [selected]
+            - option "Letzte 24 h"
+            - option "Diese Woche"
+          - link "→ Alle" [ref=e250] [cursor=pointer]:
+            - /url: "#"
+      - generic [ref=e251]: Outlook/Gmail-Auto-Import ohne Template-Match · AI-Vorschlag verfügbar · Bulk-Accept möglich
+      - table [ref=e252]:
+        - rowgroup [ref=e253]:
+          - row "Zeit Absender · Betreff Thread AI-Vorschlag · Activity-Type Akteur Aktion" [ref=e254]:
+            - columnheader [ref=e255]:
+              - checkbox [ref=e256]
+            - columnheader "Zeit" [ref=e257]
+            - columnheader "Absender · Betreff" [ref=e258]
+            - columnheader "Thread" [ref=e259]
+            - columnheader "AI-Vorschlag · Activity-Type" [ref=e260]
+            - columnheader "Akteur" [ref=e261]
+            - columnheader "Aktion" [ref=e262]
+        - rowgroup [ref=e263]:
+          - 'row "11:03 Eva Studer (Bauherr Muster AG · HR-L) Re: Shortlist CFO-Suche — Freigabe 3 Nachrichten #29 Emailverkehr - Schriftliche GOs 94 % PW ✓ Annehmen ⋯" [ref=e264] [cursor=pointer]':
+            - cell [ref=e265]:
+              - checkbox [ref=e266]
+            - cell "11:03" [ref=e267]
+            - 'cell "Eva Studer (Bauherr Muster AG · HR-L) Re: Shortlist CFO-Suche — Freigabe" [ref=e268]':
+              - strong [ref=e269]: Eva Studer
+              - text: (Bauherr Muster AG · HR-L)
+              - text: "Re: Shortlist CFO-Suche — Freigabe"
+            - cell "3 Nachrichten" [ref=e270]
+            - cell "#29 Emailverkehr - Schriftliche GOs 94 %" [ref=e271]:
+              - generic [ref=e272]: "#29 Emailverkehr - Schriftliche GOs"
+              - text: 94 %
+            - cell "PW" [ref=e273]:
+              - generic [ref=e274]: PW
+            - cell "✓ Annehmen ⋯" [ref=e275]:
+              - button "✓ Annehmen" [ref=e276]
+              - button "⋯" [ref=e277]
+          - 'row "10:21 john.smith@external.com (unbekannter Absender) Anfrage bezüglich offener CFO-Position — Initiativbewerbung? 1 Nachricht #120 Kommunikation - Eingehende Email (unklassifiziert) — 👤 Zuordnen ⋯" [ref=e278] [cursor=pointer]':
+            - cell [ref=e279]:
+              - checkbox [ref=e280]
+            - cell "10:21" [ref=e281]
+            - cell "john.smith@external.com (unbekannter Absender) Anfrage bezüglich offener CFO-Position — Initiativbewerbung?" [ref=e282]:
+              - strong [ref=e283]: john.smith@external.com
+              - text: (unbekannter Absender)
+              - text: Anfrage bezüglich offener CFO-Position — Initiativbewerbung?
+            - cell "1 Nachricht" [ref=e284]
+            - cell "#120 Kommunikation - Eingehende Email (unklassifiziert)" [ref=e285]:
+              - generic [ref=e286]: "#120 Kommunikation - Eingehende Email (unklassifiziert)"
+            - cell "—" [ref=e287]
+            - cell "👤 Zuordnen ⋯" [ref=e288]:
+              - button "👤 Zuordnen" [ref=e289]
+              - button "⋯" [ref=e290]
+          - 'row "09:48 Mail Delivery Subsystem (mailer-daemon@outlook.com) Undeliverable: t.sommer@alt-firma.ch — Mailbox not found Bounce #103 Emailverkehr - Bounce auto integration ✏️ Adresse prüfen ⋯" [ref=e291] [cursor=pointer]':
+            - cell [ref=e292]:
+              - checkbox [ref=e293]
+            - cell "09:48" [ref=e294]
+            - 'cell "Mail Delivery Subsystem (mailer-daemon@outlook.com) Undeliverable: t.sommer@alt-firma.ch — Mailbox not found" [ref=e295]':
+              - strong [ref=e296]: Mail Delivery Subsystem
+              - text: (mailer-daemon@outlook.com)
+              - text: "Undeliverable: t.sommer@alt-firma.ch — Mailbox not found"
+            - cell "Bounce" [ref=e297]
+            - cell "#103 Emailverkehr - Bounce auto" [ref=e298]:
+              - generic [ref=e299]: "#103 Emailverkehr - Bounce"
+              - text: auto
+            - cell "integration" [ref=e300]:
+              - generic [ref=e301]: integration
+            - cell "✏️ Adresse prüfen ⋯" [ref=e302]:
+              - button "✏️ Adresse prüfen" [ref=e303]
+              - button "⋯" [ref=e304]
+          - 'row "09:15 Tobias Furrer (Kandidat) Re: Termin-Vorschlag 2nd Interview — Bestätigung 5 Nachrichten #22 Emailverkehr - Allgemeine Kommunikation 78 % JV ✓ Annehmen ⋯" [ref=e305] [cursor=pointer]':
+            - cell [ref=e306]:
+              - checkbox [ref=e307]
+            - cell "09:15" [ref=e308]
+            - 'cell "Tobias Furrer (Kandidat) Re: Termin-Vorschlag 2nd Interview — Bestätigung" [ref=e309]':
+              - strong [ref=e310]: Tobias Furrer
+              - text: (Kandidat)
+              - text: "Re: Termin-Vorschlag 2nd Interview — Bestätigung"
+            - cell "5 Nachrichten" [ref=e311]
+            - cell "#22 Emailverkehr - Allgemeine Kommunikation 78 %" [ref=e312]:
+              - generic [ref=e313]: "#22 Emailverkehr - Allgemeine Kommunikation"
+              - text: 78 %
+            - cell "JV" [ref=e314]:
+              - generic [ref=e315]: JV
+            - cell "✓ Annehmen ⋯" [ref=e316]:
+              - button "✓ Annehmen" [ref=e317]
+              - button "⋯" [ref=e318]
+          - 'row "Gestern 17:02 Hans Müller (Bauherr Muster AG · CEO) AGB Erfolgsbasis — hiermit bestätigt 2 Nachrichten #54 Erfolgsbasis - AGB bestätigt 96 % PW ✓ Annehmen ⋯" [ref=e319] [cursor=pointer]':
+            - cell [ref=e320]:
+              - checkbox [ref=e321]
+            - cell "Gestern 17:02" [ref=e322]
+            - cell "Hans Müller (Bauherr Muster AG · CEO) AGB Erfolgsbasis — hiermit bestätigt" [ref=e323]:
+              - strong [ref=e324]: Hans Müller
+              - text: (Bauherr Muster AG · CEO)
+              - text: AGB Erfolgsbasis — hiermit bestätigt
+            - cell "2 Nachrichten" [ref=e325]
+            - cell "#54 Erfolgsbasis - AGB bestätigt 96 %" [ref=e326]:
+              - generic [ref=e327]: "#54 Erfolgsbasis - AGB bestätigt"
+              - text: 96 %
+            - cell "PW" [ref=e328]:
+              - generic [ref=e329]: PW
+            - cell "✓ Annehmen ⋯" [ref=e330]:
+              - button "✓ Annehmen" [ref=e331]
+              - button "⋯" [ref=e332]
+      - generic [ref=e333]:
+        - generic [ref=e334]:
+          - button "✓ 4 ausgewählte annehmen" [ref=e335] [cursor=pointer]
+          - button "⚡ Alle AI-Vorschläge mit ≥ 90 % automatisch akzeptieren" [ref=e336] [cursor=pointer]
+        - generic [ref=e337]: "Ø Klassifizierungs-Dauer: 24 s · AI-Treffgenauigkeit letzte 7 d: 92 %"
+    - generic [ref=e338]:
+      - generic [ref=e340]: Team-Aktivität (letzte 24 h)
+      - generic [ref=e341]:
+        - generic [ref=e342]:
+          - generic [ref=e343]: 09:45
+          - generic [ref=e345]: Emailverkehr
+          - generic [ref=e346]:
+            - strong [ref=e348]: JV · E-Mail erhalten · Eva Studer
+            - generic [ref=e349]: Bestätigung 2nd Interview Tobias Furrer · 22.04 09:00
+        - generic [ref=e350]:
+          - generic [ref=e351]: 08:30
+          - generic [ref=e353]: Interviewprozess
+          - generic [ref=e354]:
+            - strong [ref=e356]: LR · TI durchgeführt · Peter Stadler
+            - generic [ref=e357]: PL Hochbau Taskforce · 45 min · passt
+        - generic [ref=e358]:
+          - generic [ref=e359]: gestern 17:20
+          - generic [ref=e361]: Placementprozess
+          - generic [ref=e362]:
+            - strong [ref=e364]: MF · CV Sent · Reto Weber
+            - generic [ref=e365]: an HR Bauherr Muster AG · Schutzfrist aktiviert
+        - generic [ref=e366]:
+          - generic [ref=e367]: gestern 16:00
+          - generic [ref=e369]: System
+          - generic [ref=e370]:
+            - strong [ref=e372]: SYS · Claim-Fall eröffnet
+            - generic [ref=e373]: Tobias Sommer · Bauherr Muster AG · durch PW bestätigt
+  - generic [ref=e374]:
+    - generic [ref=e375]:
+      - generic [ref=e376]: 📞
+      - generic [ref=e377]:
+        - heading "Call-Detail · Hans Müller" [level=2] [ref=e378]
+        - generic [ref=e379]: Bauherr Muster AG · CEO · 17.04.2026 10:47 · outbound · 8:32 min
+        - generic [ref=e380]:
+          - generic [ref=e381]: PW
+          - generic [ref=e382]: "AI-Vorschlag #15 Erreicht - Update Call · 92 %"
+          - generic [ref=e383]: pending Klassifizierung
+      - button "✕" [ref=e384] [cursor=pointer]
+    - generic [ref=e385]:
+      - generic [ref=e386] [cursor=pointer]: Übersicht
+      - generic [ref=e387] [cursor=pointer]: 📄 Transkript
+      - generic [ref=e388] [cursor=pointer]: 💡 AI-Summary
+      - generic [ref=e389] [cursor=pointer]: 🏷 Klassifizierung
+      - generic [ref=e390] [cursor=pointer]: 📜 Verlauf
+    - generic [ref=e392]:
+      - generic [ref=e393]:
+        - heading "Details" [level=4] [ref=e394]
+        - generic [ref=e395]:
+          - term [ref=e396]: Activity-Type
+          - definition [ref=e397]: "#15 Erreicht - Update Call (AI-Vorschlag · 92 %)"
+          - term [ref=e398]: Kategorie
+          - definition [ref=e399]: Erreicht
+          - term [ref=e400]: Kanal
+          - definition [ref=e401]: Phone
+          - term [ref=e402]: Richtung
+          - definition [ref=e403]: ↗ Ausgehend
+          - term [ref=e404]: Datum & Uhrzeit
+          - definition [ref=e405]: 17.04.2026 · 10:47 Uhr
+          - term [ref=e406]: Dauer
+          - definition [ref=e407]: 8 min 32 s
+          - term [ref=e408]: Erfasst von
+          - definition [ref=e409]:
+            - generic [ref=e410]: PW
+            - text: Peter Wiederkehr
+          - term [ref=e411]: Quelle
+          - definition [ref=e412]: "3CX · Call-ID #CL-2026-9871"
+          - term [ref=e413]: Kontakt
+          - definition [ref=e414]: Hans Müller · CEO · Bauherr Muster AG
+          - term [ref=e415]: Rufnummer
+          - definition [ref=e416]: +41 44 555 12 34
+          - term [ref=e417]: Status
+          - definition [ref=e418]:
+            - generic [ref=e419]: pending Klassifizierung
+      - generic [ref=e420]:
+        - heading "KI-Begründung" [level=4] [ref=e421]
+        - generic [ref=e422]: Transkript enthält Update-Kontext („Stand CFO-Suche", „Shortlist 3 Kandidaten", „Prio Gerber/Furrer"), Gesprächsdauer > 5 min, bekannter Client-Kontakt, outbound-gerichtet.
+        - generic [ref=e423]:
+          - button "✓ Vorschlag annehmen" [ref=e424] [cursor=pointer]
+          - button "🔄 Anderen Type wählen" [ref=e425] [cursor=pointer]
+      - generic [ref=e426]:
+        - heading "Verknüpfungen" [level=4] [ref=e427]
+        - generic [ref=e428]:
+          - generic [ref=e429]: 🔗 Mandat · CFO-Suche
+          - generic [ref=e430]: Target · Stage 2 von 3 · auto-erkannt
+        - generic [ref=e431]:
+          - generic [ref=e432]: 🔗 Kontakt · Hans Müller
+          - generic [ref=e433]: CEO · 14 vorherige Interaktionen · auto-erkannt
+        - generic [ref=e434]:
+          - generic [ref=e435]: 🔗 Account · Bauherr Muster AG
+          - generic [ref=e436]: Key-Client · 3 offene Mandate · auto-erkannt
+      - generic [ref=e437]:
+        - heading "Notiz" [level=4] [ref=e438]
+        - textbox "Ergänzende Notiz zum Call (optional) …" [ref=e439]
+    - generic [ref=e440]:
+      - button "Schliessen" [ref=e441] [cursor=pointer]
+      - button "✎ Notiz hinzufügen" [ref=e442] [cursor=pointer]
+      - button "❌ Verwerfen" [ref=e443] [cursor=pointer]
+      - button "✓ AI-Vorschlag akzeptieren" [ref=e444] [cursor=pointer]
+  - generic [ref=e445]:
+    - generic [ref=e446]:
+      - generic [ref=e447]: ✉️
+      - generic [ref=e448]:
+        - heading "Email-Detail · Shortlist CFO-Suche" [level=2] [ref=e449]
+        - generic [ref=e450]: Eva Studer (Bauherr Muster AG) · 17.04.2026 11:03 · inbound · 3 Nachrichten
+        - generic [ref=e451]:
+          - generic [ref=e452]: PW
+          - generic [ref=e453]: "AI-Vorschlag #29 Emailverkehr - Schriftliche GOs · 94 %"
+          - generic [ref=e454]: pending Klassifizierung
+      - button "✕" [ref=e455] [cursor=pointer]
+    - generic [ref=e456]:
+      - generic [ref=e457] [cursor=pointer]: Übersicht
+      - generic [ref=e458] [cursor=pointer]: 📄 Email-Thread
+      - generic [ref=e459] [cursor=pointer]: 💡 AI-Summary
+      - generic [ref=e460] [cursor=pointer]: 🏷 Klassifizierung
+      - generic [ref=e461] [cursor=pointer]: 📜 Verlauf
+    - generic [ref=e463]:
+      - generic [ref=e464]:
+        - heading "Details" [level=4] [ref=e465]
+        - generic [ref=e466]:
+          - term [ref=e467]: Activity-Type
+          - definition [ref=e468]: "#29 Emailverkehr - Schriftliche GOs (AI-Vorschlag · 94 %)"
+          - term [ref=e469]: Kategorie
+          - definition [ref=e470]: Emailverkehr
+          - term [ref=e471]: Kanal
+          - definition [ref=e472]: Email · Outlook
+          - term [ref=e473]: Richtung
+          - definition [ref=e474]: ↙ Eingehend
+          - term [ref=e475]: Datum & Uhrzeit
+          - definition [ref=e476]: 17.04.2026 · 11:03 Uhr
+          - term [ref=e477]: Thread
+          - definition [ref=e478]: 3 Nachrichten · gestartet 15.04.2026
+          - term [ref=e479]: Erfasst von
+          - definition [ref=e480]:
+            - generic [ref=e481]: PW
+            - text: Peter Wiederkehr
+          - term [ref=e482]: Quelle
+          - definition [ref=e483]: Outlook · Message-ID <abc123@muster-ag.ch>
+          - term [ref=e484]: Absender
+          - definition [ref=e485]: Eva Studer · HR-L · eva.studer@muster-ag.ch
+          - term [ref=e486]: Betreff
+          - definition [ref=e487]: "Re: Shortlist CFO-Suche — Freigabe"
+          - term [ref=e488]: Anhänge
+          - definition [ref=e489]: 1 Datei · „Feedback-Matrix-CFO.xlsx" · 48 KB
+          - term [ref=e490]: Status
+          - definition [ref=e491]:
+            - generic [ref=e492]: pending Klassifizierung
+      - generic [ref=e493]:
+        - heading "KI-Begründung" [level=4] [ref=e494]
+        - generic [ref=e495]: Email enthält explizite GO-Bestätigung („Shortlist zu allen drei Kandidaten freigegeben"), stammt von bekanntem Client-HR-Kontakt, Thread-Kontext = CFO-Suche-Shortlist, Template-Match auf „Schriftliche GO"-Pattern.
+        - generic [ref=e496]:
+          - button "✓ Vorschlag annehmen" [ref=e497] [cursor=pointer]
+          - button "🔄 Anderen Type wählen" [ref=e498] [cursor=pointer]
+      - generic [ref=e499]:
+        - heading "Verknüpfungen" [level=4] [ref=e500]
+        - generic [ref=e501]:
+          - generic [ref=e502]: 🔗 Mandat · CFO-Suche
+          - generic [ref=e503]: Target · Stage 2 von 3 · auto-erkannt
+        - generic [ref=e504]:
+          - generic [ref=e505]: 🔗 Kontakt · Eva Studer
+          - generic [ref=e506]: HR-L · 9 vorherige Interaktionen · auto-erkannt
+        - generic [ref=e507]:
+          - generic [ref=e508]: 🔗 Account · Bauherr Muster AG
+          - generic [ref=e509]: Key-Client · auto-erkannt
+      - generic [ref=e510]:
+        - heading "Notiz" [level=4] [ref=e511]
+        - textbox "Ergänzende Notiz zur Email (optional) …" [ref=e512]
+    - generic [ref=e513]:
+      - button "Schliessen" [ref=e514] [cursor=pointer]
+      - button "↩ Antworten" [ref=e515] [cursor=pointer]
+      - button "❌ Verwerfen" [ref=e516] [cursor=pointer]
+      - button "✓ AI-Vorschlag akzeptieren" [ref=e517] [cursor=pointer]

@@ -1,0 +1,557 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: A
+      - generic [ref=e5]:
+        - generic [ref=e6]: ARKADIUM
+        - generic [ref=e7]: CRM · Executive Search
+    - generic [ref=e8]:
+      - link "Accounts" [ref=e9] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e10]: /
+      - link "Bauherr Muster AG" [ref=e11] [cursor=pointer]:
+        - /url: accounts.html
+      - generic [ref=e12]: /
+      - link "Assessment-Orders" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e14]: /
+      - generic [ref=e15]: ORD-2026-042
+      - generic [ref=e16]:
+        - text: "aus Mandat:"
+        - link "CFO-Suche" [ref=e17] [cursor=pointer]:
+          - /url: mandates.html
+        - text: · Option IX
+    - generic [ref=e18]:
+      - generic [ref=e19]: ⌘K
+      - button "☀" [ref=e20] [cursor=pointer]
+  - generic [ref=e22]:
+    - generic [ref=e23]: 🧭
+    - generic [ref=e24]:
+      - heading "ORD-2026-042 Bauherr Muster AG" [level=1] [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - text: Partner
+          - strong [ref=e28]: SCHEELEN
+        - generic [ref=e30]: Ordered 01.03.2026 · PW
+        - generic [ref=e32]:
+          - text: Package
+          - strong [ref=e33]: gemischt (3 Typen)
+      - generic [ref=e34]:
+        - button "📞 Anrufen" [ref=e35] [cursor=pointer]
+        - button "✉ Email" [ref=e36] [cursor=pointer]
+        - button "📄 Offerte ansehen" [ref=e37] [cursor=pointer]
+        - button "📤 Report übertragen" [ref=e38] [cursor=pointer]
+        - button "➕ Credit zuweisen (2 frei)" [ref=e39] [cursor=pointer]:
+          - text: ➕ Credit zuweisen
+          - generic [ref=e40]: (2 frei)
+    - generic [ref=e41]:
+      - button "Ordered ▾ ▾" [ref=e44] [cursor=pointer]
+      - generic [ref=e45]:
+        - generic [ref=e46]: 15 Credits total
+        - generic [ref=e47]: 1 eingelöst · 4 aktiv · 10 frei
+  - generic [ref=e48]:
+    - generic [ref=e49]:
+      - generic [ref=e50]: 💰 Preis
+      - generic [ref=e51]: CHF 28'000
+    - generic [ref=e52]:
+      - generic [ref=e53]: 🎯 Credits-Mix
+      - generic [ref=e54]: 2 MDI · 1 Relief · 1 ASSESS · 1 EQ
+    - generic [ref=e55]:
+      - generic [ref=e56]: ✅ Verbraucht
+      - generic [ref=e57]: "1"
+    - generic [ref=e58]:
+      - generic [ref=e59]: ⏳ Ausstehend
+      - generic [ref=e60]: "4"
+    - generic [ref=e61]:
+      - generic [ref=e62]: 📦 Package
+      - generic [ref=e63]: gemischt
+    - generic [ref=e64]:
+      - generic [ref=e65]: 🤝 Partner
+      - generic [ref=e66]: SCHEELEN
+    - generic [ref=e67]:
+      - generic [ref=e68]: 📅 Bestellt
+      - generic [ref=e69]: 01.03.2026
+  - generic [ref=e70]:
+    - generic [ref=e71]:
+      - generic [ref=e72]: Credit-Verbrauch pro Typ
+      - generic [ref=e73]:
+        - generic [ref=e74]: verbraucht
+        - generic [ref=e76]: zugewiesen
+        - generic [ref=e78]: frei
+    - generic [ref=e80]:
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - strong [ref=e83]: MDI
+          - generic [ref=e84]: 2 Credits
+        - generic [ref=e88]: 1 verbraucht · 1 assigned
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - strong [ref=e91]: Relief
+          - generic [ref=e92]: 1 Credit
+        - generic [ref=e95]: 1 scheduled
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - strong [ref=e98]: ASSESS 5.0
+          - generic [ref=e99]: 1 Credit
+        - generic [ref=e101]: 1 frei
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - strong [ref=e104]: EQ Test
+          - generic [ref=e105]: 1 Credit
+        - generic [ref=e107]: 1 frei
+  - navigation [ref=e108]:
+    - generic [ref=e109] [cursor=pointer]: 1Übersicht
+    - generic [ref=e110] [cursor=pointer]: 2Durchführungen
+    - generic [ref=e111] [cursor=pointer]: 3Billing
+    - generic [ref=e112] [cursor=pointer]: 4Dokumente
+    - generic [ref=e113] [cursor=pointer]: 5History
+  - generic [ref=e114]:
+    - generic [ref=e115]:
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - generic [ref=e118]: Credits total
+          - generic [ref=e119]: "15"
+          - generic [ref=e120]: 3 Typen
+        - generic [ref=e121]:
+          - generic [ref=e122]: Eingelöst
+          - generic [ref=e123]: "1"
+          - generic [ref=e124]: 1 ASSESS 5.0
+        - generic [ref=e125]:
+          - generic [ref=e126]: Aktiv (zugewiesen/geplant)
+          - generic [ref=e127]: "4"
+          - generic [ref=e128]: in Bearbeitung
+        - generic [ref=e129]:
+          - generic [ref=e130]: Frei
+          - generic [ref=e131]: "10"
+          - generic [ref=e132]: noch zuweisbar
+        - generic [ref=e133]:
+          - generic [ref=e134]: Gesamtpreis
+          - generic [ref=e135]: CHF 28'000
+          - generic [ref=e136]: netto · bezahlt
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - generic [ref=e140]: Auftrag
+          - generic [ref=e141]:
+            - term [ref=e142]: Auftrags-ID
+            - definition [ref=e143]: ORD-2026-042
+            - term [ref=e144]: Account
+            - definition [ref=e145]:
+              - link "Bauherr Muster AG" [ref=e146] [cursor=pointer]:
+                - /url: accounts.html
+            - term [ref=e147]: Mandat
+            - definition [ref=e148]: — nicht verknüpft (standalone)
+            - term [ref=e149]: Package
+            - definition [ref=e150]: Gemischt (3 Typen)
+            - term [ref=e151]: Partner
+            - definition [ref=e152]: SCHEELEN
+            - term [ref=e153]: Ordered am
+            - definition [ref=e154]: 01.03.2026
+            - term [ref=e155]: Erstellt von
+            - definition [ref=e156]:
+              - generic [ref=e157]: PW
+        - generic [ref=e158]:
+          - generic [ref=e160]: Pauschalpreis
+          - generic [ref=e161]:
+            - term [ref=e162]: Preis netto
+            - definition [ref=e163]:
+              - strong [ref=e164]: CHF 28'000
+            - term [ref=e165]: MwSt 8.1 %
+            - definition [ref=e166]: CHF 2'268
+            - term [ref=e167]: Total brutto
+            - definition [ref=e168]:
+              - strong [ref=e169]: CHF 30'268
+            - term [ref=e170]: Preis / Credit (Ø)
+            - definition [ref=e171]: CHF 1'867
+            - term [ref=e172]: Spesen
+            - definition [ref=e173]: separat nach Aufwand
+            - term [ref=e174]: Status Rechnung
+            - definition [ref=e175]:
+              - generic [ref=e176]: ✓ Bezahlt
+              - text: · RE-2026-0081 · 15.03.2026
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]: Credits (typisiert)
+            - text: 🔒 Gekaufte Mengen nach Ordered nicht mehr editierbar (Admin-Override verfügbar)
+          - button "+ Weiteren Typ hinzufügen" [disabled] [ref=e181] [cursor=pointer]
+        - table [ref=e182]:
+          - rowgroup [ref=e183]:
+            - row "Typ Partner Gekauft Verbraucht Zugewiesen Frei Einzelpreis Aktion" [ref=e184]:
+              - columnheader "Typ" [ref=e185]
+              - columnheader "Partner" [ref=e186]
+              - columnheader "Gekauft" [ref=e187]
+              - columnheader "Verbraucht" [ref=e188]
+              - columnheader "Zugewiesen" [ref=e189]
+              - columnheader "Frei" [ref=e190]
+              - columnheader "Einzelpreis" [ref=e191]
+              - columnheader "Aktion" [ref=e192]
+          - rowgroup [ref=e193]:
+            - row "MDI SCHEELEN 2 1 1 0 CHF 2'500 alle vergeben" [ref=e194]:
+              - cell "MDI" [ref=e195]:
+                - strong [ref=e196]: MDI
+              - cell "SCHEELEN" [ref=e197]
+              - cell "2" [ref=e198]
+              - cell "1" [ref=e199]
+              - cell "1" [ref=e200]
+              - cell "0" [ref=e201]
+              - cell "CHF 2'500" [ref=e202]
+              - cell "alle vergeben" [ref=e203]
+            - row "Relief SCHEELEN 1 0 1 0 CHF 1'800 alle vergeben" [ref=e204]:
+              - cell "Relief" [ref=e205]:
+                - strong [ref=e206]: Relief
+              - cell "SCHEELEN" [ref=e207]
+              - cell "1" [ref=e208]
+              - cell "0" [ref=e209]
+              - cell "1" [ref=e210]
+              - cell "0" [ref=e211]
+              - cell "CHF 1'800" [ref=e212]
+              - cell "alle vergeben" [ref=e213]
+            - row "ASSESS 5.0 SCHEELEN 1 0 0 1 CHF 3'200 + Zuweisen" [ref=e214]:
+              - cell "ASSESS 5.0" [ref=e215]:
+                - strong [ref=e216]: ASSESS 5.0
+              - cell "SCHEELEN" [ref=e217]
+              - cell "1" [ref=e218]
+              - cell "0" [ref=e219]
+              - cell "0" [ref=e220]
+              - cell "1" [ref=e221]
+              - cell "CHF 3'200" [ref=e222]
+              - cell "+ Zuweisen" [ref=e223]:
+                - button "+ Zuweisen" [ref=e224] [cursor=pointer]
+            - row "EQ Test SCHEELEN 1 0 0 1 CHF 2'000 + Zuweisen" [ref=e225]:
+              - cell "EQ Test" [ref=e226]:
+                - strong [ref=e227]: EQ Test
+              - cell "SCHEELEN" [ref=e228]
+              - cell "1" [ref=e229]
+              - cell "0" [ref=e230]
+              - cell "0" [ref=e231]
+              - cell "1" [ref=e232]
+              - cell "CHF 2'000" [ref=e233]
+              - cell "+ Zuweisen" [ref=e234]:
+                - button "+ Zuweisen" [ref=e235] [cursor=pointer]
+          - rowgroup [ref=e236]:
+            - row "Total — 5 1 2 2 CHF 28'000 Pauschale" [ref=e237]:
+              - cell "Total" [ref=e238]:
+                - strong [ref=e239]: Total
+              - cell "—" [ref=e240]
+              - cell "5" [ref=e241]:
+                - strong [ref=e242]: "5"
+              - cell "1" [ref=e243]
+              - cell "2" [ref=e244]
+              - cell "2" [ref=e245]:
+                - strong [ref=e246]: "2"
+              - cell "CHF 28'000" [ref=e247]:
+                - strong [ref=e248]: CHF 28'000
+              - cell "Pauschale" [ref=e249]
+      - generic [ref=e250]:
+        - generic [ref=e252]: Status & Abschluss
+        - generic [ref=e253]:
+          - term [ref=e254]: Order-Status
+          - definition [ref=e255]:
+            - generic [ref=e256]: Ordered
+            - text: seit 01.03.2026
+          - term [ref=e257]: Credits-Fälligkeit
+          - definition [ref=e258]:
+            - textbox [ref=e259]
+            - text: optional, leer = kein Verfall
+          - term [ref=e260]: Notizen
+          - definition [ref=e261]:
+            - textbox "Auftragsnotizen, interne Hinweise …" [ref=e262]: Mandats-bezogenes Paket. Option IX aus CFO-Mandat, Budget aus Taskforce-Fee finanziert. Schwerpunkt auf Führungsanalyse für Top-3-Kandidaten.
+          - term [ref=e263]: Stornieren
+          - definition [ref=e264]:
+            - button "Auftrag stornieren …" [ref=e265] [cursor=pointer]
+            - text: Kulanz-Refund manuell durch Admin
+      - generic [ref=e266]:
+        - generic [ref=e268]: Verknüpfungen
+        - generic [ref=e269]:
+          - generic [ref=e270]: Mandat
+          - generic [ref=e271]:
+            - strong [ref=e273]:
+              - link "CFO-Suche" [ref=e274] [cursor=pointer]:
+                - /url: mandates.html
+            - generic [ref=e275]: Taskforce · Option IX gebucht · Honorar-Gesamt CHF 95'000
+            - generic [ref=e276]: Option IX
+        - generic [ref=e277]:
+          - generic [ref=e278]: Kandidaten mit Credit (3)
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - strong [ref=e281]:
+                - link "Tobias Furrer" [ref=e282] [cursor=pointer]:
+                  - /url: candidates.html
+              - text: · CFO-Mandat
+            - generic [ref=e283]: MDI · completed 04.04.2026 · Report erhalten
+            - generic [ref=e284]: ✓ completed
+          - generic [ref=e285]:
+            - generic [ref=e286]:
+              - strong [ref=e287]:
+                - link "Martin Stucki" [ref=e288] [cursor=pointer]:
+                  - /url: candidates.html
+              - text: · CFO-Mandat
+            - generic [ref=e289]: MDI · assigned 12.04.2026 · kein Termin
+            - generic [ref=e290]: assigned
+          - generic [ref=e291]:
+            - generic [ref=e292]:
+              - strong [ref=e293]:
+                - link "Nadine Berger" [ref=e294] [cursor=pointer]:
+                  - /url: candidates.html
+              - text: · CFO-Mandat
+            - generic [ref=e295]: Relief · scheduled 20.04.2026 10:00 (SCHEELEN)
+            - generic [ref=e296]: scheduled
+        - generic [ref=e297]:
+          - generic [ref=e298]:
+            - text: Letzte 5 Events
+            - link "Alle in History →" [ref=e299] [cursor=pointer]:
+              - /url: "#"
+          - generic [ref=e300]: 14.04.MDI-Credit zugewiesen · M. Stucki
+          - generic [ref=e301]: 05.04.Relief-Termin gesetzt · N. Berger (20.04.)
+          - generic [ref=e302]: 04.04.Report erhalten · T. Furrer MDI
+          - generic [ref=e303]: 02.04.MDI-Credit zugewiesen · T. Furrer
+          - generic [ref=e304]: 01.03.Order signiert · Offered → Ordered
+    - text: 🤖 🤖
+  - generic [ref=e305]:
+    - generic [ref=e306]: 1–5 Tabs
+    - generic [ref=e307]: Z Credit zuweisen
+    - generic [ref=e308]: R Report übertragen
+    - generic [ref=e309]: G Offerte generieren (Dok-Gen)
+    - generic [ref=e310]: E Edit-Mode (vor Ordered)
+    - generic [ref=e311]: Esc Drawer schliessen
+    - generic [ref=e312]: T Theme
+    - generic [ref=e313]: ⌘K Suche
+  - generic [ref=e314]:
+    - generic [ref=e315]:
+      - generic [ref=e316]: ➕
+      - generic [ref=e317]:
+        - heading "Credit zuweisen" [level=2] [ref=e318]
+        - generic [ref=e319]: ORD-2026-042 · Bauherr Muster AG
+      - button "✕" [ref=e320] [cursor=pointer]
+    - generic [ref=e321]:
+      - generic [ref=e322]:
+        - heading "1. Assessment-Typ wählen *" [level=4] [ref=e323]
+        - combobox [ref=e324] [cursor=pointer]:
+          - option "— Typ wählen —" [selected]
+          - option "ASSESS 5.0 (1 frei)"
+          - option "EQ Test (1 frei)"
+          - option "MDI (alle vergeben)" [disabled]
+          - option "Relief (alle vergeben)" [disabled]
+        - generic [ref=e325]: Typ-Wechsel nach Zuweisung nicht möglich. Bei Bedarf Credit freigeben und neu kaufen.
+      - generic [ref=e326]:
+        - heading "2. Kandidat zuweisen *" [level=4] [ref=e327]
+        - searchbox "🔍 Name suchen oder aus Vorschlägen wählen …" [ref=e328]
+        - generic [ref=e329]:
+          - generic [ref=e330]: Kontakte Bauherr Muster AG
+          - generic [ref=e331] [cursor=pointer]:
+            - strong [ref=e332]: Tobias Furrer
+            - text: · CFO — bereits MDI (completed)
+          - generic [ref=e333] [cursor=pointer]:
+            - strong [ref=e334]: Martin Stucki
+            - text: · Head of Finance — bereits MDI (assigned)
+          - generic [ref=e335]: Weitere Kandidaten
+          - generic [ref=e336] [cursor=pointer]:
+            - strong [ref=e337]: Stefan Keller
+            - text: · CFO · Muster Immobilien
+          - generic [ref=e338] [cursor=pointer]:
+            - strong [ref=e339]: Barbara Lüthi
+            - text: · Head of Controlling · LGT
+        - generic [ref=e340]:
+          - text: Nicht dabei?
+          - link "→ Als Kandidat anlegen" [ref=e341] [cursor=pointer]:
+            - /url: candidates.html
+      - generic [ref=e342]:
+        - heading "3. Termin (optional)" [level=4] [ref=e343]
+        - textbox [ref=e344]
+        - generic [ref=e345]: Kann später gesetzt werden. Ohne Termin → Status „assigned", mit Termin → „scheduled".
+    - generic [ref=e346]:
+      - button "Abbrechen" [ref=e347] [cursor=pointer]
+      - button "Zuweisen" [ref=e349] [cursor=pointer]
+  - generic [ref=e350]:
+    - generic [ref=e351]:
+      - generic [ref=e352]: 🧭
+      - generic [ref=e353]:
+        - heading "Durchführung · MDI" [level=2] [ref=e354]
+        - generic [ref=e355]: Tobias Furrer · Run r-001
+      - button "✕" [ref=e356] [cursor=pointer]
+    - generic [ref=e357]:
+      - generic [ref=e358]:
+        - heading "Kandidat" [level=4] [ref=e359]
+        - generic [ref=e360]:
+          - generic [ref=e361]: TF
+          - generic [ref=e362]:
+            - strong [ref=e364]: Tobias Furrer
+            - generic [ref=e365]: CFO · Bauherr Muster AG · MDI-Version v1
+          - link "→ Kandidat" [ref=e366] [cursor=pointer]:
+            - /url: candidates.html
+      - generic [ref=e367]:
+        - heading "Status-Verlauf" [level=4] [ref=e368]
+        - generic [ref=e369]:
+          - generic [ref=e370]:
+            - text: ✓ assigned
+            - text: 02.04.2026
+          - generic [ref=e372]:
+            - text: ✓ scheduled
+            - text: 03.04.2026
+          - generic [ref=e374]:
+            - text: ● completed
+            - text: 04.04.2026
+      - generic [ref=e375]:
+        - heading "Details" [level=4] [ref=e376]
+        - generic [ref=e377]:
+          - term [ref=e378]: Termin
+          - definition [ref=e379]: 03.04.2026 10:00 (SCHEELEN · Teams)
+          - term [ref=e380]: Durchgeführt am
+          - definition [ref=e381]: 04.04.2026 · SCHEELEN
+          - term [ref=e382]: Notizen
+          - definition [ref=e383]: Standard-MDI-Durchführung. Führungs-Stil „Impactful Leader", hoher Realisierer-Wert.
+          - term [ref=e384]: Report
+          - definition [ref=e385]:
+            - link "📄 Executive Summary" [ref=e386] [cursor=pointer]:
+              - /url: "#"
+            - link "📑 Detail-Report" [ref=e387] [cursor=pointer]:
+              - /url: "#"
+          - term [ref=e388]: Kandidat-Version
+          - definition [ref=e389]:
+            - link "→ MDI v1 am Kandidaten" [ref=e390] [cursor=pointer]:
+              - /url: candidates.html
+      - generic [ref=e391]:
+        - heading "Aktionen" [level=4] [ref=e392]
+        - generic [ref=e393]:
+          - button "Kandidat ersetzen" [disabled] [ref=e394] [cursor=pointer]
+          - button "Termin ändern" [disabled] [ref=e395] [cursor=pointer]
+          - button "Als durchgeführt markieren" [disabled] [ref=e396] [cursor=pointer]
+          - button "Abbrechen & freigeben" [disabled] [ref=e397] [cursor=pointer]
+        - generic [ref=e398]: Run abgeschlossen — alle Aktionen gesperrt. Für offene Runs (assigned/scheduled) sind Actions aktiv.
+    - button "Schliessen" [ref=e400] [cursor=pointer]
+  - generic [ref=e401]:
+    - generic [ref=e402]:
+      - generic [ref=e403]: ⇄
+      - generic [ref=e404]:
+        - heading "Kandidat ersetzen" [level=2] [ref=e405]
+        - generic [ref=e406]: MDI-Credit · Run r-002
+      - button "✕" [ref=e407] [cursor=pointer]
+    - generic [ref=e408]:
+      - generic [ref=e410]:
+        - strong [ref=e411]: ⚠ Person tauschen — Typ bleibt erhalten
+        - generic [ref=e412]:
+          - text: Der
+          - strong [ref=e413]: MDI
+          - text: "-Credit (bisher zugewiesen an"
+          - strong [ref=e414]: Martin Stucki
+          - text: ) wird einem neuen Kandidaten übertragen. Der Typ kann nicht geändert werden.
+      - generic [ref=e415]:
+        - heading "Bisher zugewiesen" [level=4] [ref=e416]
+        - generic [ref=e417]:
+          - generic [ref=e418]:
+            - strong [ref=e419]: Martin Stucki
+            - text: · Head of Finance · Bauherr Muster AG
+          - generic [ref=e420]: "Zugewiesen 12.04.2026 · Status: assigned · kein Termin"
+      - generic [ref=e421]:
+        - heading "Neuer Kandidat *" [level=4] [ref=e422]
+        - searchbox "🔍 Name suchen …" [ref=e423]
+        - generic [ref=e424]:
+          - generic [ref=e425] [cursor=pointer]:
+            - strong [ref=e426]: Stefan Keller
+            - text: · CFO · Muster Immobilien
+          - generic [ref=e427] [cursor=pointer]:
+            - strong [ref=e428]: Barbara Lüthi
+            - text: · Head of Controlling · LGT
+      - generic [ref=e429]:
+        - heading "Grund (optional)" [level=4] [ref=e430]
+        - textbox "z.B. Kandidat abgesprungen, ersetzt durch passenderes Profil …" [ref=e431]
+    - generic [ref=e432]:
+      - button "Abbrechen" [ref=e433] [cursor=pointer]
+      - button "Zuweisung übertragen" [ref=e435] [cursor=pointer]
+  - generic [ref=e436]:
+    - generic [ref=e437]:
+      - generic [ref=e438]: 📤
+      - generic [ref=e439]:
+        - heading "Report übertragen" [level=2] [ref=e440]
+        - generic [ref=e441]: Assessment-Durchführung abschliessen
+      - button "✕" [ref=e442] [cursor=pointer]
+    - generic [ref=e443]:
+      - generic [ref=e444]:
+        - heading "1. Run auswählen *" [level=4] [ref=e445]
+        - combobox [ref=e446] [cursor=pointer]:
+          - option "— Run wählen (nur scheduled / in_progress) —" [selected]
+          - option "Nadine Berger · Relief · scheduled 20.04.2026"
+          - option "Martin Stucki · MDI · assigned 12.04.2026"
+      - generic [ref=e447]:
+        - heading "2. Executive Summary PDF *" [level=4] [ref=e448]
+        - generic [ref=e449] [cursor=pointer]:
+          - generic [ref=e450]: 📄
+          - generic [ref=e451]: PDF hierher ziehen oder klicken
+          - generic [ref=e452]: Pflicht · Max 10 MB
+      - generic [ref=e453]:
+        - heading "3. Detail-Report PDF (optional)" [level=4] [ref=e454]
+        - generic [ref=e455] [cursor=pointer]:
+          - generic [ref=e456]: 📑
+          - generic [ref=e457]: Optional · SCHEELEN-Anhang
+          - generic [ref=e458]: Max 50 MB
+      - generic [ref=e459]:
+        - heading "Nach Upload automatisch" [level=4] [ref=e460]
+        - list [ref=e461]:
+          - listitem [ref=e462]: Run-Status → completed
+          - listitem [ref=e463]: Credit-Zähler für diesen Typ +1
+          - listitem [ref=e464]: Versions-Eintrag am Kandidaten-Assessment-Tab
+          - listitem [ref=e465]: History-Event „Report erhalten"
+          - listitem [ref=e466]: "Wenn letzter Credit: Order-Status → Fully Used"
+    - generic [ref=e467]:
+      - button "Abbrechen" [ref=e468] [cursor=pointer]
+      - button "Upload & Abschliessen" [ref=e470] [cursor=pointer]
+  - generic [ref=e471]:
+    - generic [ref=e472]:
+      - generic [ref=e473]: ⚠
+      - generic [ref=e474]:
+        - heading "Auftrag stornieren" [level=2] [ref=e475]
+        - generic [ref=e476]: ORD-2026-042 · irreversibel
+      - button "✕" [ref=e477] [cursor=pointer]
+    - generic [ref=e478]:
+      - generic [ref=e480]:
+        - strong [ref=e481]: Diese Aktion ist irreversibel.
+        - list [ref=e482]:
+          - listitem [ref=e483]:
+            - text: Alle offenen Runs (
+            - strong [ref=e484]: "2"
+            - text: ) werden auf „cancelled_reassignable" gesetzt
+          - listitem [ref=e485]:
+            - text: Abgeschlossene Runs (
+            - strong [ref=e486]: "1"
+            - text: ) bleiben erhalten
+          - listitem [ref=e487]:
+            - strong [ref=e488]: Kein automatischer Refund
+            - text: des bezahlten Betrags (CHF 30'268). Kulanz-Entscheidung durch Admin manuell.
+          - listitem [ref=e489]: History-Event „Auftrag storniert" wird geloggt
+      - generic [ref=e490]:
+        - heading "Begründung *" [level=4] [ref=e491]
+        - textbox "Pflicht — Begründung für Audit-Log …" [ref=e492]
+      - generic [ref=e494]:
+        - checkbox "Ich bestätige, dass der Kunde über die Nicht-Refund-Regelung informiert wurde." [ref=e495]
+        - text: Ich bestätige, dass der Kunde über die Nicht-Refund-Regelung informiert wurde.
+    - generic [ref=e496]:
+      - button "Abbrechen" [ref=e497] [cursor=pointer]
+      - button "Auftrag endgültig stornieren" [ref=e499] [cursor=pointer]
+  - generic [ref=e500]:
+    - generic [ref=e501]:
+      - generic [ref=e502]: 📊
+      - generic [ref=e503]:
+        - heading "Event-Detail" [level=2] [ref=e504]
+        - generic [ref=e505]: —
+      - button "✕" [ref=e506] [cursor=pointer]
+    - generic [ref=e509]:
+      - button "Schliessen" [ref=e510] [cursor=pointer]
+      - button "✎ Bearbeiten" [ref=e512] [cursor=pointer]
+      - button "🔗 Zur Quell-Entity" [ref=e513] [cursor=pointer]
+  - generic [ref=e514]:
+    - generic [ref=e515]:
+      - generic [ref=e516]: PDF
+      - generic [ref=e517]:
+        - heading "Dokument" [level=2] [ref=e518]
+        - generic [ref=e519]: —
+      - button "✕" [ref=e520] [cursor=pointer]
+    - generic [ref=e521]:
+      - heading "Metadaten" [level=4] [ref=e523]
+      - generic [ref=e524]:
+        - heading "Preview" [level=4] [ref=e525]
+        - generic [ref=e526]: "📄 PDF-Preview (in Produktion: inline PDF.js)"
+        - generic [ref=e527]:
+          - button "↓ Download" [ref=e528] [cursor=pointer]
+          - button "↗ In neuem Tab" [ref=e529] [cursor=pointer]
+          - button "✉ Per E-Mail senden" [ref=e530] [cursor=pointer]
+    - button "Schliessen" [ref=e533] [cursor=pointer]
