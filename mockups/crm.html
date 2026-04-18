@@ -105,14 +105,28 @@
     .sb-item { padding:14px 16px; font-size:14px; }
   }
 
-  /* Tablet-Expand-Toggle (Pin-Knopf) — nur Tablet sichtbar */
+  /* Sidebar-Pin-Knopf (Desktop + Tablet sichtbar) */
   .sb-expand-toggle {
-    display:none;
+    display:flex; align-items:center; justify-content:center;
     position:absolute; top:12px; right:8px; z-index:10;
     background:transparent; border:none; cursor:pointer;
     font-size:14px; color:var(--text-light); padding:4px; border-radius:3px;
+    opacity:0; transition:opacity 0.15s, background 0.15s, color 0.15s;
   }
+  .sidebar:hover .sb-expand-toggle { opacity:1; }
+  .sidebar.expanded .sb-expand-toggle { opacity:1; color:var(--accent); }
   .sb-expand-toggle:hover { background:var(--bg); color:var(--accent); }
+
+  /* Desktop: wenn .expanded, Hover-Collapse überschreiben */
+  @media (min-width:961px) {
+    .sidebar.expanded { width:240px !important; box-shadow:var(--shadow); }
+    body:has(.sidebar.expanded) { grid-template-columns:240px 1fr; }
+    .sidebar.expanded .sb-label,
+    .sidebar.expanded .sb-section,
+    .sidebar.expanded .sb-badge,
+    .sidebar.expanded .sb-user-info,
+    .sidebar.expanded .sb-brand .brand-text { opacity:1; }
+  }
 
   .sb-brand {
     display:flex; align-items:center; gap:10px; padding:16px;
@@ -411,10 +425,27 @@ document.querySelectorAll('.sb-item').forEach(el => {
   });
 });
 
-// === TABLET SIDEBAR EXPAND-PIN ===
+// === SIDEBAR EXPAND-PIN (Desktop + Tablet) ===
 function toggleSidebarExpand() {
-  document.getElementById('sidebar').classList.toggle('expanded');
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('expanded');
+  const btn = sb.querySelector('.sb-expand-toggle');
+  const pinned = sb.classList.contains('expanded');
+  if (btn) {
+    btn.textContent = pinned ? '⇥' : '⇔';
+    btn.setAttribute('title', pinned ? 'Sidebar entpinnen' : 'Sidebar fixieren');
+  }
+  localStorage.setItem('ark-sidebar-pinned', pinned ? '1' : '0');
 }
+// Restore pin-state on load
+(function() {
+  if (localStorage.getItem('ark-sidebar-pinned') === '1') {
+    const sb = document.getElementById('sidebar');
+    sb.classList.add('expanded');
+    const btn = sb.querySelector('.sb-expand-toggle');
+    if (btn) { btn.textContent = '⇥'; btn.setAttribute('title', 'Sidebar entpinnen'); }
+  }
+})();
 function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme');
   applyTheme(cur === 'dark' ? 'light' : 'dark');
