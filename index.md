@@ -124,8 +124,9 @@ updated: 2026-04-17
 - [[websocket-channels]] — Realtime-Channel-Konvention `<entity>:<scope>:<id>`, Event-Payload-Struktur
 - [[audit-log-retention]] — Hot/Archiv/Löschung nach Kategorie, Legal Hold, DSGVO-Hashing
 
-## Analyses (8)
+## Analyses (9)
 
+- [[harmonization-audit-2026-04-19]] — Mockup-Harmonisierungs-Audit · 25 Files gegen Admin/Stammdaten-Pattern · alle strukturell konform · 2 Minor-Drifts (scraper tab-pane + inline toggleTheme) · P1/P2/P3-Roadmap
 - [[sync-report-2026-04-18]] — Post-autorefine Drift-Scan (20 Runs) · 0 unresolved · 0 stale · 0 harte Drift · 2 optionale P3 · 101 Lint-Violations letzte 7d
 - [[sync-report-2026-04-17]] — Drift-Scan nach Admin-Vollansicht-Specs · 9 unresolved Changelog · 2 stale Digests · 10 Sync-Schulden Admin ↔ Grundlagen
 - [[ungereimtheiten-report]] — Systematische Prüfung aller Widersprüche, Entscheidungen, Schema-Deltas, offene Specs

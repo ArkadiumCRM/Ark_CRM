@@ -1,3 +1,29 @@
+## [2026-04-19] create | Mockup-Harmonisierungs-Audit
+
+**Kontext:** Peter-Request — alle 25 Mockup-Files durchgehen und gegen Admin/Stammdaten/Scraper als Referenz-Pattern prüfen. Output als Report vor konkreten Fixes.
+
+**Pages created:**
+- `wiki/analyses/harmonization-audit-2026-04-19.md` — 25-File-Scan mit 4 Pattern-Klassen (Detail-Views · Dashboard-Views · Listen · Tool-Masken)
+- `scripts/autorefine/harmonization-audit.py` (neu) — automatischer Lint-Scanner
+
+**Findings:**
+- **Alle 25 Files strukturell konform** nach Pattern-Klasse
+- **2 Minor-Drifts (scraper.html):**
+  1. Class-Name `.tab-pane` statt canonical `.tab-panel`
+  2. `toggleTheme()` inline-JS statt `_shared/layout.js`-Import
+- Dok-Generator + Email-Kalender korrekt als Tool-Maske-Ausnahme
+- Farbschema Navy-Accent + k-* KPIs konsistent
+
+**Empfehlungen:**
+- P1 · scraper.html 2 Mini-Fixes (~15 min)
+- P2 · KPI-Color-Convention in Baseline §16 kodifizieren
+- P3 · admin-mobile.html aus Listen/ raus (Mobile-Showcase, keine Liste)
+
+**Pages updated:**
+- `index.md` — Analyses 8→9
+
+---
+
 ## [2026-04-18] create | Spec-Mockup-Sync-Report (Post-Autorefine)
 
 **Kontext:** Auslöser `/ark-sync-report` nach autorefine-Session (20 Runs · 11 Nachbearbeitungs-Punkte + 3 Peter-Entscheidungen + 2 Follow-ups + 2 P2 + Lint-Fix Stammdaten-Enums).
