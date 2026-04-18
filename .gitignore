@@ -59,3 +59,4 @@ Unbenannt.canvas
 # Temporary / staging
 *.tmp
 *.bak
+tmp/
