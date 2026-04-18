@@ -476,7 +476,7 @@ Pipeline-Modul-Spec wird separat im `ARK_FRONTEND_FREEZE` behandelt — dieses S
 - `ARK_PROZESS_DETAILMASKE_INTERACTIONS_v0_1.md`
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` — Kreuzreferenz (Placement triggert Mandat-Billing)
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` — Kandidat zeigt aktive Prozesse (Tab 6)
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` — Account zeigt alle Prozesse (Tab 10)
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` — Account zeigt alle Prozesse (Tab 10)
 - [[prozess]], [[jobbasket]], [[honorar-berechnung]], [[erfolgsbasis]]
 - [[direkteinstellung-schutzfrist]] (Rejection öffnet Schutzfrist-Fenster)
 - [[referral-programm]] (Placement triggert Payout-Check)

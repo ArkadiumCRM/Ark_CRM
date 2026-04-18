@@ -13,7 +13,7 @@ tags: [decision, account, projekte, tab-struktur]
 Tab "Projekte" ist sichtbar nur wenn Account als Bauherr (`fact_projects.bauherr_account_id`) oder via `fact_project_company_participations` mit mindestens einem Projekt verknüpft ist. Kein Tab-Renumbering nötig (additiv, zero Cross-Ref-Updates). Macht dann auch logisch Sinn warum Projekte "nach" Reminders erscheint: weil bedingt, nicht fix positioniert.
 
 **Implementiert 2026-04-18 in:**
-- `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` §19 (neue Sektion analog §18 Firmengruppe)
+- `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` §19 (neue Sektion analog §18 Firmengruppe)
 - `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` TEIL 14 (neu, analog TEIL 13 Firmengruppe) + TEIL 0 Tab-Struktur-Tabelle um zweite bedingt-Zeile ergänzt
 - Mockup-Integration (accounts.html): Follow-up — analog Firmengruppe-conditional-tab-Pattern (ausgeblendet per Default, sichtbar wenn EXISTS-Condition erfüllt)
 
@@ -81,5 +81,5 @@ Minimales Risiko, genug logische Nähe zu Operations-Tabs (Prozesse/History/Doku
 - [[detailseiten-nachbearbeitung]]
 - [[autorefine-log]] Run 9
 - `specs/ARK_PROJEKT_DETAILMASKE_SCHEMA_v0_2.md`
-- `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md`
+- `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md`
 - `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` TEIL 0 Tab-Struktur

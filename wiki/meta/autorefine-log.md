@@ -22,6 +22,25 @@ Format:
 
 ---
 
+## [2026-04-18 · Run 17] Follow-up — Mockup accounts.html bedingter Tab Projekte
+
+- **Files:** `mockups/accounts.html`, `wiki/meta/detailseiten-nachbearbeitung.md`
+- **Pattern:** Analog bestehender Tab-14 Firmengruppe (`.tab.conditional`, `data-tab="15"`, Panel `#tab-15`).
+- **Changes:**
+  1. Nav-Bar: zweite `<div class="tab conditional" data-tab="15" onclick="switchTab(15)" title="Konditional — sichtbar wenn Account mit Projekten verknüpft ist…">🏗 Projekte</div>` nach Firmengruppe-Tab.
+  2. Tab-Panel `#tab-15` hinzugefügt mit Info-Banner, KPI-Strip (5 Cards), Filter-Chip-Row (Rolle + Zeitraum), 7-Row-Projekt-Tabelle (Bauherr-3 · Architekt-2 · TU-1 · Spezialist-1 · davon 2 abgeschlossen), Header-Quick-Action "🏗 Projekt verknüpfen", Footer-Note.
+  3. `switchTab(15)` funktioniert ohne JS-Änderung (shared `layout.js` toggled `.active`-Class via `[data-tab]` + `#tab-n`).
+  4. **Lint-Fix:** Footer-Text entfernte DB-Tech-Namen (`fact_projects.bauherr_account_id`, `fact_project_company_participations`) → sprechende User-Begriffe ("als Bauherr / via Projekt-Beteiligung").
+- **Outcome:** kept.
+
+## [2026-04-18 · Run 16] Follow-up — Account-Schema Filename-Rename v0_2 → v0_3
+
+- **Files:** `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` → `_v0_3.md` (git-mv), `scripts/autorefine/rename-account-schema-refs.py` (neu, atomic temp-file-Pattern), 16 Ziel-Files mit aktiven Referenzen.
+- **Ansatz:** Python-Script mit CLAUDE.md-konformem atomic-mv-Pattern (write `.tmp` → `os.replace`). 19 Substitutionen über 16 Files.
+- **Updated:** `.claude/commands/ark-drift-scan.md`, `wiki/sources/account-schema.md`, `wiki/meta/rbac-matrix.md`, `wiki/meta/detailseiten-nachbearbeitung.md`, `wiki/meta/detailseiten-inventar.md`, `wiki/meta/decision-draft-account-tab-projekte.md`, `wiki/meta/breadcrumbs-konsistenz.md`, `wiki/meta/autorefine-log.md`, 7 Spec-Files in `specs/`.
+- **Left untouched (historic):** `log.md`, `wiki/analyses/audit-2026-04-13-komplett.md` — Snapshot-Records des Zeitpunkts.
+- **Outcome:** kept.
+
 ## [2026-04-18 · Run 15 REVERTED] Decision 3 — Claim-Rechnung Skeleton-docx
 
 - **Entscheidung:** Peter wählte initial Option B (Claude generiert Skeleton).
@@ -33,7 +52,7 @@ Format:
 ## [2026-04-18 · Run 14] Decision 2 — Account Projekte als bedingter Tab (Variante C)
 
 - **Entscheidung:** Peter wechselt von A zu C nach Scope-Reality-Check (~100 Substitutionen bei A inkl. Mockup). Variante C ist additiv analog Firmengruppe.
-- **Files:** `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` (TEIL 0 Tab-Struktur zweite bedingt-Zeile, TEIL 14 neu), `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` (§19 neu, Header Tabbar-Text + Changelog-Eintrag), `wiki/meta/decision-draft-account-tab-projekte.md` (Decision finalisiert), `wiki/meta/detailseiten-nachbearbeitung.md`
+- **Files:** `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` (TEIL 0 Tab-Struktur zweite bedingt-Zeile, TEIL 14 neu), `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` (§19 neu, Header Tabbar-Text + Changelog-Eintrag), `wiki/meta/decision-draft-account-tab-projekte.md` (Decision finalisiert), `wiki/meta/detailseiten-nachbearbeitung.md`
 - **Content TEIL 14:** Sichtbarkeit-Condition (EXISTS Bauherr OR Participation), Query-Logic (UNION), Filter-Chips (Rolle/Status/Zeitraum), Tabelle mit 8 Spalten, Header-Quick-Action Drawer-Flow "🏗 Projekt verknüpfen" inkl. Fuzzy-Match-Autocomplete + "+ Neues Projekt anlegen" Fallback, Row-Click-Drawer, Cross-Nav zu Projekt-§6, Edit-Logik read-mostly.
 - **Zero Tab-Renumbering** — additive Änderung, kein Risk.
 - **Follow-up:** Mockup accounts.html — bedingter Tab-Pattern analog Firmengruppe (separater Arbeitsschritt).
@@ -123,7 +142,7 @@ Format:
 ## [2026-04-18 · Run 2] Account-Tab 8 Assessments — Credits-Übersicht
 
 - **Files:**
-  - `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` (bumped to v0.3 content, Dateiname pending rename)
+  - `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` (bumped to v0.3 content, Dateiname pending rename)
   - `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` (Status-Wechsel-Fix)
   - `wiki/meta/detailseiten-nachbearbeitung.md`
 - **Baseline:** Interactions v0.3 hatte Credits-Übersicht-Banner komplett, Schema v0.2 lag hinterher (Drift). Zusätzlich stale `invoiced`-Transition in Interactions L748 (Grundlagen-Konflikt).

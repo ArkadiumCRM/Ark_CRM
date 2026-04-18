@@ -139,7 +139,7 @@ Nur ausfuehren wenn Scope ``specs``, ``mockups`` oder ``all``. Sonst ueberspring
 
 ### Load Specs
 
-@specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md
+@specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md
 
 @specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md
 

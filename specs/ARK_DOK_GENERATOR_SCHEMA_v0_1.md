@@ -542,7 +542,7 @@ Neue Labels (nebst bestehenden):
 
 - `ARK_DOK_GENERATOR_INTERACTIONS_v0_1.md` (Begleitdokument)
 - `ARK_DOK_GENERATOR_MOCKUP_PLAN.md` + `ARK_DOK_GENERATOR_MOCKUP_IMPL_v1.md`
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` + `INTERACTIONS_v0_3.md` (Mandat-Offerten-Gen Deep-Link aus Account)
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` + `INTERACTIONS_v0_3.md` (Mandat-Offerten-Gen Deep-Link aus Account)
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` + `INTERACTIONS_v0_3.md` (Mandat-Report-Gen Deep-Link)
 - `ARK_ASSESSMENT_DETAILMASKE_SCHEMA_v0_3.md` + `INTERACTIONS_v0_3.md` (Assessment-Offerte-Gen Deep-Link)
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` Tab 9 (wird migriert, Redirect-Banner im Mockup)

@@ -222,6 +222,7 @@
   <div class="tab" data-tab="12" onclick="switchTab(12)">Dokumente</div>
   <div class="tab" data-tab="13" onclick="switchTab(13)">Reminders</div>
   <div class="tab conditional" data-tab="14" onclick="switchTab(14)" title="Konditional — sichtbar wenn Account einer Firmengruppe zugeordnet ist">🏛 Firmengruppe</div>
+  <div class="tab conditional" data-tab="15" onclick="switchTab(15)" title="Konditional — sichtbar wenn Account mit Projekten verknüpft ist (als Bauherr oder via Beteiligung)">🏗 Projekte</div>
 </nav>
 
 <div class="content">
@@ -3453,6 +3454,137 @@
 
   <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
     Tab nur sichtbar, wenn Account einer Firmengruppe zugeordnet ist. KPIs werden nachts aus den einzelnen Gesellschaften konsolidiert. Schutzfrist-Scope (Account vs. Gruppe) pro Eintrag manuell setzbar; Default aus Rahmenvertrag. Vollständige Firmengruppe-Vollansicht öffnen via Header-Link.
+  </div>
+
+</div>
+
+<!-- TAB 15 · PROJEKTE (konditional — nur bei Projekt-Beteiligung) -->
+<div id="tab-15" class="tab-panel">
+
+  <!-- Info-Banner -->
+  <div class="hint-banner">
+    🏗 Dieser Account ist an <strong>7 Projekten</strong> beteiligt — davon <strong>3 als Bauherr</strong> und 4 als Architekt/TU/Spezialist. Klick auf Zeile öffnet Drawer; "→ Projekt öffnen" führt zur Projekt-Detailseite.
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Projekte total</div><div class="kpi-value">7</div><div class="kpi-sub muted">5 laufend · 2 abgeschlossen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Als Bauherr</div><div class="kpi-value">3</div><div class="kpi-sub muted">Eigen-Bauherrschaft</div></div>
+    <div class="kpi-card"><div class="kpi-label">Als Architekt/TU</div><div class="kpi-value">4</div><div class="kpi-sub muted">Via Beteiligung</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Arkadium-Placements</div><div class="kpi-value">5</div><div class="kpi-sub muted">auf 4 Projekten</div></div>
+    <div class="kpi-card"><div class="kpi-label">Volumen gesamt</div><div class="kpi-value" style="font-size:22px">CHF 412 M</div><div class="kpi-sub muted">öffentlich berichtet</div></div>
+  </div>
+
+  <!-- Header-Leiste: Filter + Quick-Action -->
+  <div class="card-head" style="margin-top:18px">
+    <div class="card-title">Projekt-Beteiligungen</div>
+    <button class="btn btn-primary btn-sm">🏗 Projekt verknüpfen</button>
+  </div>
+
+  <div class="chip-row" style="margin-bottom:10px">
+    <span class="chip chip-gold">Alle (7)</span>
+    <span class="chip">Bauherr (3)</span>
+    <span class="chip">Architekt (2)</span>
+    <span class="chip">TU (1)</span>
+    <span class="chip">Spezialist (1)</span>
+    <span class="chip-divider">·</span>
+    <span class="chip">Aktuell (5)</span>
+    <span class="chip">Letzte 12 Monate</span>
+    <span class="chip">Abgeschlossen (2)</span>
+  </div>
+
+  <!-- Projekte-Tabelle -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Projekt</th>
+          <th>Bauherr</th>
+          <th>Rolle</th>
+          <th>Status</th>
+          <th>Zeitraum</th>
+          <th>BKP-Gewerk</th>
+          <th class="right">Placements</th>
+          <th class="right">›</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer;background:var(--gold-soft)">
+          <td><strong>Überbauung Kalkbreite Zürich</strong><div class="muted" style="font-size:11px">Wohn- &amp; Geschäftshaus, 120 Einheiten</div></td>
+          <td><span class="chip chip-gold" style="font-size:10px">Bauherr (wir)</span></td>
+          <td>Bauherr</td>
+          <td><span class="chip chip-green">Ausführung</span></td>
+          <td>2024 – 2027</td>
+          <td class="muted">—</td>
+          <td class="right" style="color:var(--gold);font-weight:600">2</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Bahnhof Altstetten West</strong><div class="muted" style="font-size:11px">Büroflächen Erweiterung</div></td>
+          <td><a href="#">SBB Immobilien AG</a></td>
+          <td>Architekt</td>
+          <td><span class="chip chip-green">Ausführung</span></td>
+          <td>2025 – 2028</td>
+          <td><span class="chip" style="font-size:10px">BKP 211</span></td>
+          <td class="right" style="color:var(--gold);font-weight:600">1</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Spital Limmattal Neubau</strong><div class="muted" style="font-size:11px">Bettenhaus + Polikliniken</div></td>
+          <td><a href="#">Spital Limmattal</a></td>
+          <td>TU</td>
+          <td><span class="chip chip-accent">Akquise</span></td>
+          <td>2026 – 2030</td>
+          <td><span class="chip" style="font-size:10px">BKP 2</span></td>
+          <td class="right" style="color:var(--gold);font-weight:600">1</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Wohnüberbauung Obfelden</strong><div class="muted" style="font-size:11px">Mehrfamilienhäuser Phase 2</div></td>
+          <td><span class="chip chip-gold" style="font-size:10px">Bauherr (wir)</span></td>
+          <td>Bauherr</td>
+          <td><span class="chip chip-green">Ausführung</span></td>
+          <td>2025 – 2027</td>
+          <td class="muted">—</td>
+          <td class="right" style="color:var(--gold);font-weight:600">1</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Tram Hardbrücke Umbau</strong><div class="muted" style="font-size:11px">Haltestelle &amp; Unterführung</div></td>
+          <td><a href="#">VBZ Zürich</a></td>
+          <td>Spezialist (Geotechnik)</td>
+          <td><span class="chip chip-green">Ausführung</span></td>
+          <td>2025 – 2026</td>
+          <td><span class="chip" style="font-size:10px">BKP 22</span></td>
+          <td class="right muted">0</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Hotel Greulich Renovation</strong><div class="muted" style="font-size:11px">Gesamtsanierung &amp; Ausbau</div></td>
+          <td><a href="#">Greulich AG</a></td>
+          <td>Architekt</td>
+          <td><span class="chip chip-teal">Abgeschlossen</span></td>
+          <td>2023 – 2024</td>
+          <td><span class="chip" style="font-size:10px">BKP 211</span></td>
+          <td class="right muted">0</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Quartierzentrum Altstetten</strong><div class="muted" style="font-size:11px">Mischnutzung Wohnen/Büro/Retail</div></td>
+          <td><span class="chip chip-gold" style="font-size:10px">Bauherr (wir)</span></td>
+          <td>Bauherr</td>
+          <td><span class="chip chip-teal">Abgeschlossen</span></td>
+          <td>2021 – 2023</td>
+          <td class="muted">—</td>
+          <td class="right muted">0</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Tab nur sichtbar, wenn Account mit mindestens einem Projekt verknüpft ist — entweder als Bauherr oder via Projekt-Beteiligung (Architekt, TU, Spezialist, Planer). Klick auf Projekt-Zeile öffnet Drawer mit Beteiligungs-Details (Rolle, BKP-Gewerk, SIA-Phase, AM-Notizen) und Link zur Projekt-Detailseite. Quick-Action "🏗 Projekt verknüpfen" öffnet Drawer mit Projekt-Autocomplete (Fuzzy-Match) und Fallback "+ Neues Projekt anlegen" für unbekannte Projekte.
   </div>
 
 </div>

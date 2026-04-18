@@ -519,7 +519,7 @@ fact_candidate_matches (neu, falls nicht vorhanden):
 ## 16. RELATED SPECS / WIKI
 
 - `ARK_JOB_DETAILMASKE_INTERACTIONS_v0_1.md`
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` Tab 6 (Jobs & Vakanzen) — Einstiegspunkt
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` Tab 6 (Jobs & Vakanzen) — Einstiegspunkt
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` — Taskforce-Positionen verknüpft
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` Tab 5 (Jobbasket) — operative Verwaltung
 - `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` — Prozesse ab CV-Versand

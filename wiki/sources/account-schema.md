@@ -3,13 +3,13 @@ title: "ARK Account Detailmaske Schema v0.2"
 type: source
 created: 2026-04-13
 updated: 2026-04-17
-sources: ["ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md"]
+sources: ["ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md"]
 tags: [source, account, schema, layout, design, detailseite, snapshot-bar, kpi-bar, org-function]
 ---
 
 # ARK Account Detailmaske Schema v0.2
 
-**Datei:** `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md`
+**Datei:** `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md`
 **Status:** v0.2 = Konsistenz-Update nach Audit 14.04.2026
 **Begleitdokument:** [[account-interactions]] v0.3
 

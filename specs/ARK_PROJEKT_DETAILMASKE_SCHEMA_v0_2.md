@@ -727,7 +727,7 @@ dim_candidates_profile.werdegang (bzw. fact_candidate_werdegang):
 
 - `ARK_PROJEKT_DETAILMASKE_INTERACTIONS_v0_1.md`
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` (Werdegang mit Projekt-Verknüpfung, Phase 1.5 Update)
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` (Account-Projekte-Tab — Phase 1.5 Nachbearbeitung)
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` (Account-Projekte-Tab — Phase 1.5 Nachbearbeitung)
 - `ARK_SCRAPER_MODUL_INTERACTIONS_v0_1.md` (Projekt-Scraper-Source)
 - [[projekt-datenmodell]], [[stammdaten]] (Cluster, Sparten, BKP, SIA)
 - [[detailseiten-guideline]]

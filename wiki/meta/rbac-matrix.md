@@ -3,7 +3,7 @@ title: "RBAC-Matrix"
 type: meta
 created: 2026-04-14
 updated: 2026-04-14
-sources: ["specs/ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md", "specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md", "specs/ARK_KANDIDATENMASKE_SCHEMA_v1_3.md", "ARK_BACKEND_ARCHITECTURE_v2_5.md"]
+sources: ["specs/ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md", "specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md", "specs/ARK_KANDIDATENMASKE_SCHEMA_v1_3.md", "ARK_BACKEND_ARCHITECTURE_v2_5.md"]
 tags: [rbac, berechtigungen, rollen, matrix]
 ---
 

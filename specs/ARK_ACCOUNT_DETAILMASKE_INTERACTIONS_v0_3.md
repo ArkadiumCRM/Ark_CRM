@@ -3,7 +3,7 @@
 **Stand:** 14.04.2026
 **Status:** Review ausstehend
 **Kontext:** Definiert Verhalten, Interaktionslogik, CRUD-Flows, Validierung und Speicher-Strategien für alle Tabs der Account-Detailmaske. Gleicher Methodik-Rahmen wie ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md.
-**Begleitdokument:** `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` (Layout, Felder, Design-Tokens)
+**Begleitdokument:** `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` (Layout, Felder, Design-Tokens)
 **Vorrang:** Stammdaten > dieses Dokument > Schema > Mockups
 **Globale Patterns:** Es gelten alle 11 globalen Patterns aus TEIL 0 der Kandidaten-Interactions v1.2.
 

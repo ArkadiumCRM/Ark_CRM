@@ -488,7 +488,7 @@ fact_group_events (oder fact_history mit scope):
 ## 16. RELATED SPECS / WIKI
 
 - `ARK_FIRMENGRUPPE_DETAILMASKE_INTERACTIONS_v0_1.md`
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` (konditionaler Tab Firmengruppe)
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` (konditionaler Tab Firmengruppe)
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` (gruppenübergreifende Taskforce-Mandate)
 - [[firmengruppe]], [[account]], [[direkteinstellung-schutzfrist]]
 - [[detailseiten-guideline]], [[detailseiten-nachbearbeitung]]

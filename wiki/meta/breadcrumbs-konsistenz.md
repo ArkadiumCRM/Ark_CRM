@@ -22,7 +22,7 @@ Einheitliche Regel für Breadcrumb-Darstellung in allen Detailseiten (autorefine
 
 | Entity | Stufen | Pattern | Rolle | Spec-Ref |
 |--------|--------|---------|-------|----------|
-| Account | 2 | `Accounts / [Name]` | Top-Level | `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` §3 |
+| Account | 2 | `Accounts / [Name]` | Top-Level | `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` §3 |
 | Kandidat | 2 | `Kandidaten / [Name]` | Top-Level | `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` Breadcrumb-Topbar |
 | Projekt | 2 | `Projekte / [Name]` | Top-Level | `ARK_PROJEKT_DETAILMASKE_SCHEMA_v0_2.md` §3 |
 | Firmengruppe | 2 | `Firmengruppen / [Name]` | Top-Level | `ARK_FIRMENGRUPPE_DETAILMASKE_SCHEMA_v0_1.md` §3 |

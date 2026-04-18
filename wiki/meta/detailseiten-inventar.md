@@ -15,7 +15,7 @@ Status aller Detailseiten + Tool-Masken im ARK CRM gemäss [[detailseiten-guidel
 | # | Detailseite | Route | Schema | Interactions | Status |
 |---|-------------|-------|--------|--------------|--------|
 | 1 | **Kandidaten** | `/candidates/[id]` | `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` ✅ | `ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md` ✅ | v1.3 (14.04.2026): Projekt-Autocomplete Briefing, Werdegang-Projekt-FK, Assessment-Versionierung-Nav, Schutzfrist-Awareness, Prozess-Drawer |
-| 2 | **Accounts** | `/accounts/[id]` | `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` ✅ | `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` ✅ | v0.2 (14.04.2026): Schema + Interactions konsolidiert — Tab 8 Assessments (typisierte Credits), Tab 9 Schutzfristen (Gruppen-Scope, AM-Claim) |
+| 2 | **Accounts** | `/accounts/[id]` | `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` ✅ | `ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` ✅ | v0.2 (14.04.2026): Schema + Interactions konsolidiert — Tab 8 Assessments (typisierte Credits), Tab 9 Schutzfristen (Gruppen-Scope, AM-Claim) |
 | 3 | **Firmengruppen** | `/company-groups/[id]` | `ARK_FIRMENGRUPPE_DETAILMASKE_SCHEMA_v0_1.md` ✅ | `ARK_FIRMENGRUPPE_DETAILMASKE_INTERACTIONS_v0_1.md` ✅ | 6 Tabs, gruppenübergreifende Taskforces, Schutzfrist gruppenweit — v0.1 komplett (13.04.2026) |
 | 4 | **Mandate** | `/mandates/[id]` | `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` ✅ | `ARK_MANDAT_DETAILMASKE_INTERACTIONS_v0_3.md` ✅ | v0.2 (14.04.2026): Kündigung AM-alleine (Admin-Gate raus), `is_longlist_locked`, Claim-Fälle X/Y/Z |
 | 5 | **Jobs** | `/jobs/[id]` | `ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md` ✅ | `ARK_JOB_DETAILMASKE_INTERACTIONS_v0_1.md` ✅ | Volle Detailseite mit 6 Tabs (Übersicht/Jobbasket/Matching/Prozesse/Dokumente/History), v0.1 komplett (13.04.2026) |

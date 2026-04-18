@@ -620,7 +620,7 @@ Existierende Detail-Tabellen (DISC, EQ, Scheelen 6HM Details etc.) bekommen `ver
 
 - `ARK_ASSESSMENT_DETAILMASKE_INTERACTIONS_v0_2.md`
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` — Konsistenz-Referenz (Option IX Verknüpfung)
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` + `INTERACTIONS_v0_3.md` TEIL 8b — Assessment-Beauftragungs-Flow am Account
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` + `INTERACTIONS_v0_3.md` TEIL 8b — Assessment-Beauftragungs-Flow am Account
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` — Assessment-Tab im Kandidaten (DISC, EQ, Scheelen 6HM, ASSESS 5.0)
 - `ARK_STAMMDATEN_EXPORT_v1_3.md` (ausstehend) — `dim_assessment_types` Katalog
 - [[audit-entscheidungen-2026-04-14]] — Credits-Typen-Entscheidung

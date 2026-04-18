@@ -386,7 +386,7 @@ notification_dedup_enabled             → false → Duplikat-Notifications mög
 Folgende Detail-Masken-Specs **benötigen KEINEN Version-Bump**, da Timeline-Drawer-Änderungen über zentrale Komponente erbt:
 
 - `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md`
-- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md`
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md`
 - `ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md`
 - `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md`
 - `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md`

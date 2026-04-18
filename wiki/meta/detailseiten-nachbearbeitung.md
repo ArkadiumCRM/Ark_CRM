@@ -37,10 +37,10 @@ Wenn wir alle Detailseiten einzeln bauen, entstehen natürlicherweise **Verknüp
 **Abgearbeitet 2026-04-18 via autorefine** — in beiden Layern implementiert + konsistent:
 
 - **Interactions v0.3** L693–716: Zwei-Banner-Reihe (Teamrad + Credits-Typ-Breakdown), Total-Zeile, Filter-Chip "Typ (Multi-Select)", Tabelle-Spalte "Credits-Mix"
-- **Schema v0.3** (Dateiname noch `_v0_2.md`) §12.1–12.4: Layout-Beschreibung, Spalte "Credits-Mix", §12.3 umbenannt zu "KPI-Banner" mit beiden Zeilen, Filter-Chip "Typ" dokumentiert
+- **Schema v0.3** (`ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md`) §12.1–12.4: Layout-Beschreibung, Spalte "Credits-Mix", §12.3 umbenannt zu "KPI-Banner" mit beiden Zeilen, Filter-Chip "Typ" dokumentiert
 - **Bonus-Fix Interactions v0.3** §Status-Wechsel (L741–750): Stale Transition `completed → invoiced` entfernt, Order-Status auf 5 Grundlagen-konforme Werte angeglichen (offered / ordered / partially_used / fully_used / cancelled), Billing-Trigger korrekt auf `ordered` (Credits-Modell)
 
-**Follow-up:** Dateiname-Rename `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md` → `_v0_3.md` separat.
+**Filename-Rename abgeschlossen 2026-04-18 (autorefine Run 16):** Git-mv v0_2 → v0_3 + 16 aktive Referenzen updated via `scripts/autorefine/rename-account-schema-refs.py`.
 
 **Erfasst:** 2026-04-13 · **Grund:** Entscheidung 2026-04-13 — Credits-Modell beim Assessment.
 
@@ -149,7 +149,7 @@ Slot-Anzahl bleibt entity-spezifisch; keine Vereinheitlichung. Details: `wiki/me
 - Interactions v0.3 TEIL 14 (neu): SQL-Query-Logic (UNION Bauherr + Company-Participations), Row-Click-Drawer-Flow, "+ Neues Projekt anlegen"-Fallback, Cross-Nav zu Projekt-Detailseite §6, Edit-Logik read-mostly, Phase-1.5/2-Vormerkungen.
 - TEIL 0 Tab-Struktur-Tabelle: zweite bedingt-Zeile für Projekte ergänzt; "13 fixe + 2 bedingt".
 
-**Follow-up:** Mockup-Integration (accounts.html) — bedingter Tab analog Firmengruppe-Pattern. Separater Arbeitsschritt.
+**Mockup-Integration abgeschlossen 2026-04-18 (autorefine Run 17):** `mockups/accounts.html` — neuer bedingter Tab `data-tab="15"` "🏗 Projekte" nach Firmengruppe-Tab, Tab-Panel `#tab-15` mit Info-Banner, 5-Card-KPI-Strip (Projekte total / Als Bauherr / Als Architekt-TU / Arkadium-Placements / Volumen gesamt), Filter-Chip-Row (Rolle × Zeitraum), 7-Zeilen-Projekt-Tabelle mit 8 Spalten (Projekt/Bauherr/Rolle/Status/Zeitraum/BKP-Gewerk/Placements/›), Header-Quick-Action "🏗 Projekt verknüpfen".
 
 **Erfasst:** 2026-04-13.
 
