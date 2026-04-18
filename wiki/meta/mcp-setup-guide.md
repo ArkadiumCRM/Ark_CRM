@@ -41,7 +41,7 @@ setx OPENAI_API_KEY "sk-proj-DEIN-KEY"
 
 Dann MCP hinzufügen:
 ```bash
-claude mcp add codex -s user --env OPENAI_API_KEY=$OPENAI_API_KEY -- npx -y @openai/codex-mcp
+claude mcp add codex -s user --env OPENAI_API_KEY=$OPENAI_API_KEY -- npx -y codex-mcp-server
 ```
 
 `-s user` = global verfügbar (alle Projekte), nicht nur ARK.
@@ -74,7 +74,7 @@ setx PERPLEXITY_API_KEY "pplx-DEIN-KEY"
 ```
 
 ```bash
-claude mcp add perplexity -s user --env PERPLEXITY_API_KEY=$PERPLEXITY_API_KEY -- npx -y server-perplexity-ask
+claude mcp add perplexity -s user --env PERPLEXITY_API_KEY=$PERPLEXITY_API_KEY -- npx -y @perplexity-ai/mcp-server
 ```
 
 ### Verify
@@ -108,10 +108,10 @@ setx DEEPSEEK_API_KEY "sk-DEIN-KEY"
 ```
 
 ```bash
-claude mcp add deepseek -s user --env DEEPSEEK_API_KEY=$DEEPSEEK_API_KEY -- npx -y @deepseek/mcp-server
+claude mcp add deepseek -s user --env DEEPSEEK_API_KEY=$DEEPSEEK_API_KEY -- npx -y @arikusi/deepseek-mcp-server
 ```
 
-*(Falls `@deepseek/mcp-server` nicht existiert, community package nutzen — [Liste auf mcp.so](https://mcp.so/?q=deepseek))*
+*(Falls `@arikusi/deepseek-mcp-server` nicht existiert, community package nutzen — [Liste auf mcp.so](https://mcp.so/?q=deepseek))*
 
 ### Verify
 
