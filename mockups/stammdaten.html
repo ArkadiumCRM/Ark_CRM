@@ -3159,6 +3159,39 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
 <script src="_shared/layout.js"></script>
 <script>
+// === Globale Suche ===
+function sdGlobalFilter(q) {
+  const query = (q || '').toLowerCase().trim();
+  const hitsEl = document.getElementById('sdGlobalHits');
+  const scope = document.getElementById('sdScopeFilter')?.value || '';
+  const tabs = document.querySelectorAll('.tab-panel');
+  let total = 0;
+  const perTab = {};
+
+  tabs.forEach(pane => {
+    if (scope && pane.id !== scope) return;
+    let tabHits = 0;
+    pane.querySelectorAll('.cat-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const match = !query || text.includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match && query) tabHits++;
+    });
+    perTab[pane.id] = tabHits;
+    total += tabHits;
+  });
+
+  if (!hitsEl) return;
+  if (!query) { hitsEl.textContent = ''; return; }
+  const parts = Object.entries(perTab).filter(([,n]) => n>0).map(([t,n]) => `${t.replace('t','T')}:${n}`);
+  hitsEl.textContent = total + ' Treffer' + (parts.length ? ' · ' + parts.join(' · ') : '');
+
+  if (total > 0 && !scope) {
+    const best = Object.entries(perTab).sort((a,b) => b[1]-a[1])[0];
+    if (best && best[1] > 0 && typeof switchTab === 'function') switchTab(best[0]);
+  }
+}
+
 // === Tab-Switching ===
 function switchTab(id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
