@@ -57,8 +57,8 @@
 .scr-tab .count-badge.crit { background:var(--sev-critical) }
 
 /* Tab-Panes */
-.tab-pane { display:none;padding:20px 28px }
-.tab-pane.active { display:block }
+.tab-panel { display:none;padding:20px 28px }
+.tab-panel.active { display:block }
 
 /* ───────────────── Tab 2: Review-Queue ───────────────── */
 .rq-toolbar { display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px }
@@ -554,7 +554,7 @@ body { padding-bottom:34px }
 </nav>
 
 <!-- ═══════════════ TAB 1: DASHBOARD ═══════════════ -->
-<div class="tab-pane" id="pane-dashboard">
+<div class="tab-panel" id="pane-dashboard">
   <div class="dash-grid">
 
     <!-- Sektion 1 · System-Gesundheit -->
@@ -602,7 +602,7 @@ body { padding-bottom:34px }
 </div>
 
 <!-- ═══════════════ TAB 2: REVIEW-QUEUE (Kern) ═══════════════ -->
-<div class="tab-pane active" id="pane-review-queue">
+<div class="tab-panel active" id="pane-review-queue">
 
   <div class="rq-toolbar">
     <div class="view-toggle">
@@ -688,7 +688,7 @@ body { padding-bottom:34px }
 </div>
 
 <!-- ═══════════════ TAB 3: RUNS ═══════════════ -->
-<div class="tab-pane" id="pane-runs">
+<div class="tab-panel" id="pane-runs">
 
   <div class="runs-stats">
     <div class="runs-stat-card ok"><div class="val" id="runs-ok">44</div><div class="lbl">Success 24h</div></div>
@@ -734,7 +734,7 @@ body { padding-bottom:34px }
 </div>
 
 <!-- ═══════════════ TAB 4: CONFIGS ═══════════════ -->
-<div class="tab-pane" id="pane-configs">
+<div class="tab-panel" id="pane-configs">
   <div class="configs-grid">
 
     <!-- Scraper-Typen-Registry -->
@@ -859,7 +859,7 @@ body { padding-bottom:34px }
 </div>
 
 <!-- ═══════════════ TAB 5: ALERTS & FEHLER ═══════════════ -->
-<div class="tab-pane" id="pane-alerts">
+<div class="tab-panel" id="pane-alerts">
 
   <div class="alerts-stats">
     <div class="alert-stat crit" onclick="setAlertFilter('severity','critical')"><div class="val" id="al-crit">1</div><div class="lbl">🔴 Critical · pending</div></div>
@@ -935,7 +935,7 @@ body { padding-bottom:34px }
 </div>
 
 <!-- ═══════════════ TAB 6: HISTORY ═══════════════ -->
-<div class="tab-pane" id="pane-history">
+<div class="tab-panel" id="pane-history">
 
   <div class="hist-summary">
     <div class="hist-sum-card"><div class="val" id="hs-runs">47</div><div class="lbl">Run-Events</div></div>
@@ -1299,7 +1299,7 @@ let state = {
 function switchTab(tab) {
   state.activeTab = tab;
   document.querySelectorAll('.scr-tab').forEach(el => el.classList.toggle('active', el.dataset.tab===tab));
-  document.querySelectorAll('.tab-pane').forEach(el => el.classList.toggle('active', el.id==='pane-'+tab));
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.toggle('active', el.id==='pane-'+tab));
 }
 
 /* ───────────────── Filter ───────────────── */
@@ -3014,24 +3014,8 @@ function initAll() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
 else initAll();
 
-/* Theme */
-function applyTheme(t) {
-  document.documentElement.setAttribute('data-theme', t);
-  const btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = t === 'dark' ? '☾' : '☀';
-}
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme') || 'light';
-  const next = cur === 'dark' ? 'light' : 'dark';
-  applyTheme(next);
-  try { localStorage.setItem('ark-theme', next); } catch(e){}
-}
-// Restore on load
-(function(){ try { applyTheme(localStorage.getItem('ark-theme') || 'light'); } catch(e){} })();
-// Cross-frame sync: other window toggles → reflect here
-window.addEventListener('storage', e => {
-  if (e.key === 'ark-theme' && e.newValue) applyTheme(e.newValue);
-});
+/* Theme-Toggle + applyTheme + storage-sync: über _shared/layout.js (siehe nächstes Script-Tag) */
 </script>
+<script src="../_shared/layout.js"></script>
 </body>
 </html>
