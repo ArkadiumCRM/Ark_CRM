@@ -2116,7 +2116,7 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
 <!-- KPI-STRIP (identisch zu admin.html: padding:14px 28px 0, gap:10px, margin-bottom:0) -->
 <div style="padding:14px 28px 0">
-  <div class="kpi-strip cols-4" style="gap:10px;margin-bottom:0">
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:0">
     <div class="kpi">
       <div class="kpi-label"><span class="h-dot ok"></span>Kataloge</div>
       <div class="kpi-val">67</div>
@@ -2126,6 +2126,16 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
       <div class="kpi-label"><span class="h-dot ok"></span>Einträge total</div>
       <div class="kpi-val">5 247</div>
       <div class="kpi-sub muted">dominiert von Geo (3 500) · Skills (1 000) · Workflow (140)</div>
+    </div>
+    <div class="kpi k-green">
+      <div class="kpi-label"><span class="h-dot ok"></span>Aktiv</div>
+      <div class="kpi-val">64</div>
+      <div class="kpi-sub muted">3 inaktiv · 5 gesperrt · 2 extern</div>
+    </div>
+    <div class="kpi k-purple">
+      <div class="kpi-label"><span class="h-dot ok"></span>Letzte 7 Tage</div>
+      <div class="kpi-val">4</div>
+      <div class="kpi-sub muted">Einträge geändert · Top Katalog „Activity-Types"</div>
     </div>
     <div class="kpi k-blue">
       <div class="kpi-label"><span class="h-dot ok"></span>Letztes Update</div>
@@ -2221,13 +2231,6 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
   <!-- ===== TAB 1 · Workflow & Prozess ===== -->
   <div class="tab-panel active" id="t1">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">13</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">140</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">47</span><span class="s-lbl">Aktive Prozesse nutzen diese</span></div>
-      <div class="s"><span class="s-val">12.04.</span><span class="s-lbl">Letztes Update · PW</span></div>
-    </div>
-
     <div class="sd-sec-title">Prozess-Pipeline</div>
     <div class="cat-grid">
 
@@ -2344,13 +2347,6 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
   <!-- ===== TAB 2 · Communication ===== -->
   <div class="tab-panel" id="t2">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">6</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">188</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">4</span><span class="s-lbl">davon nur in Admin editierbar</span></div>
-      <div class="s"><span class="s-val">10.04.</span><span class="s-lbl">Letztes Update · JV</span></div>
-    </div>
-
     <div class="hint-banner">
       <span>ℹ</span>
       <div><strong>Templates werden in Admin gepflegt.</strong>
@@ -2394,92 +2390,10 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
   <!-- ===== TAB 3 · Skills & Berufe ===== -->
   <div class="tab-panel" id="t3">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">4</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">1 002</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">Pagination</span><span class="s-lbl">wg. Grösse aktiv</span></div>
-      <div class="s"><span class="s-val">06.04.</span><span class="s-lbl">Letztes Update · LR</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="openDrill('edv')">
-        <div class="cc-head"><div class="cc-title">EDV / Software</div><div class="cc-count">109<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">11 Kategorien: AVA · BIM/CAD · BIM-Koordination · ERP · Gebäudetechnik · GIS · Grafik · Immobilien-ERP · Office · PM · Visualisierung.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>3 200</strong> Kandidaten</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('functions')">
-        <div class="cc-head"><div class="cc-title">Funktionen</div><div class="cc-count">~190<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">~25 Kategorien mit Hierarchie (Parent → Child). Level-Enum: Junior · Mid · Senior · Executive · C-Suite.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>8 400</strong> Kandidaten</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('education')">
-        <div class="cc-head"><div class="cc-title">Ausbildungen</div><div class="cc-count">503<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">19 Level-Enums von Berufsfachschule bis Doktorat · Felder Architektur · Bauing · Immobilien · Kaufmännisch · Management.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>7 900</strong> Kandidaten</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('focus')">
-        <div class="cc-head"><div class="cc-title">Focus / Spezialisierung</div><div class="cc-count">~200<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">27 Kategorien. Einige bekannte Duplikate (Aliases) dokumentiert. KNX · MSRL · SPS haben Varianten.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>5 800</strong> Kandidaten</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 4 · Branchen, Sparten & Geo ===== -->
   <div class="tab-panel" id="t4">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">7</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">3 633</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">3</span><span class="s-lbl">extern verwaltet (ISO-Standard)</span></div>
-      <div class="s"><span class="s-val">01.04.</span><span class="s-lbl">Letztes Update · SP</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="openDrill('sparten')">
-        <div class="cc-head"><div class="cc-title">Sparten</div><div class="cc-count">5<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">ARC · GT · ING · PUR · REM. Master-Segmentierung für Mitarbeiter-Teams · Cluster · Mandats-Reporting.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>überall</strong></span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('sectors')">
-        <div class="cc-head"><div class="cc-title">Sectors / Branchen</div><div class="cc-count">35<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">6 Kategorien: Bau &amp; Immobilien · Dienstleistungen · Finanzinstitutionen · Gesundheit · Industrie · Öffentlicher Sektor.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>124</strong> Accounts</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('cluster')">
-        <div class="cc-head"><div class="cc-title">Cluster / Subcluster</div><div class="cc-count">~97<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">4 Sparte-Gruppen. Subcluster SC_001–SC_078. HLKS · SIBE · Infrastruktur · Immobilien-Bewirtschaftung …</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>4 100</strong> Kandidaten</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card locked" onclick="openDrill('laender')">
-        <div class="cc-head"><div class="cc-title"><span class="lock">🔒</span>Länder</div><div class="cc-count">~250<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">ISO 3166-Kodes. Extern verwaltet · keine Bearbeitung im CRM.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>extern</strong> (ISO 3166)</span><div class="cc-tags"><span class="cc-tag external">Extern</span><span class="cc-tag locked">Read-Only</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('kantone')">
-        <div class="cc-head"><div class="cc-title">Kantone CH</div><div class="cc-count">26<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">Alle 26 Kantone mit Abkürzung und Hauptort. Pflicht für Schweizer Adressen und Kanton-Filter.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>7 400</strong> Kandidaten-Adressen</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('plz_range')">
-        <div class="cc-head"><div class="cc-title">PLZ-Ranges CH</div><div class="cc-count">~3 200<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">PLZ-Bereiche für Kanton-Mapping, Pendelradius-Berechnung und Geo-Matching.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>geo-matching</strong></span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card locked" onclick="openDrill('sprachen')">
-        <div class="cc-head"><div class="cc-title"><span class="lock">🔒</span>Sprachen</div><div class="cc-count">20<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">ISO 639-Sprachen: Deutsch · Englisch · Französisch · Italienisch · Spanisch · 15 weitere. Extern verwaltet.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>extern</strong> (ISO 639)</span><div class="cc-tags"><span class="cc-tag external">Extern</span><span class="cc-tag locked">Read-Only</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 5 · Mitarbeiter, Rollen & Account ===== -->
   <div class="tab-panel" id="t5">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">8</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">10</span><span class="s-lbl">Mitarbeiter aktiv</span></div>
-      <div class="s"><span class="s-val">8</span><span class="s-lbl">Rollen definiert</span></div>
-      <div class="s"><span class="s-val">28.03.</span><span class="s-lbl">Letztes Update · SP</span></div>
-    </div>
-
     <div class="hint-banner">
       <span>ℹ</span>
       <div><strong>Kurzübersicht Mitarbeiter.</strong>
@@ -2668,184 +2582,14 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
 
   <!-- ===== TAB 6 · Mandat, Honorar & Assessment ===== -->
   <div class="tab-panel" id="t6">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">10</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">114</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">2</span><span class="s-lbl">gesperrt (Honorar-Matrix · Dok-Vorlagen)</span></div>
-      <div class="s"><span class="s-val">12.04.</span><span class="s-lbl">Letztes Update · PW</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card admin-only" onclick="openDrill('honorar')">
-        <div class="cc-head"><div class="cc-title">Honorar-Staffel</div><div class="cc-count">4<span class="u">Stufen</span></div></div>
-        <div class="cc-desc">21 % / 23 % / 25 % / 27 % nach Jahreslohn (AGB §4 „Best Effort"). Matrix-Editor in Admin · AGB-gebunden.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Admin</strong></span><div class="cc-tags"><span class="cc-tag admin">Admin-CRUD</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('time_packages')">
-        <div class="cc-head"><div class="cc-title">Time-Pakete</div><div class="cc-count">3<span class="u">Pakete</span></div></div>
-        <div class="cc-desc">Entry (2 Slots) · Medium (3) · Professional (4). Preise pro Slot/Woche mit Listenpreis.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>3</strong> aktive Time-Mandate</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('sia_phases')">
-        <div class="cc-head"><div class="cc-title">SIA-Phasen</div><div class="cc-count">6 + 12<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">6 Hauptphasen (Strategie → Bewirtschaftung) · 12 Teilphasen. Hierarchisch. Pflicht für ARC/ING-Mandate.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>8</strong> ARC-Mandate</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('mandat_typen')">
-        <div class="cc-head"><div class="cc-title">Mandat-Typen</div><div class="cc-count">3<span class="u">Typen</span></div></div>
-        <div class="cc-desc">Target · Taskforce · Time. Enum · bestimmt Offerte · Billing · Prozess-Flow.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>14</strong> Mandate</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('assessment_types')">
-        <div class="cc-head"><div class="cc-title">Assessment-Typen</div><div class="cc-count">11<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">MDI · Relief · ASSESS 5.0 · DISC · EQ · Scheelen 6HM · Driving Forces · Human Needs · Ikigai · AI · Teamrad.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>5</strong> laufende Assessments</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('eq_dimensions')">
-        <div class="cc-head"><div class="cc-title">EQ-Dimensionen</div><div class="cc-count">5<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">Selbstwahrnehmung · Selbstregulierung · Motivation · Soziale Wahrnehmung · Soziale Regulierung. Scheelen-Modell.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>38</strong> EQ-Assessments</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('motivatoren')">
-        <div class="cc-head"><div class="cc-title">Motivatoren</div><div class="cc-count">12<span class="u">Pole</span></div></div>
-        <div class="cc-desc">6 Kategorien × 2 Pole = 12 Driving Forces. Theoretisch · Ökonomisch · Ästhetisch · Sozial · Individualistisch · Traditionell.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>22</strong> Driving-Forces-Assessments</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('competencies')">
-        <div class="cc-head"><div class="cc-title">Kompetenzen</div><div class="cc-count">26<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">ASSESS-5.0-Kompetenzen · Skala 1–10. Von Ergebnisorientierung bis Diversitätskompetenz.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>15</strong> ASSESS-5.0-Assessments</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('standard_profiles')">
-        <div class="cc-head"><div class="cc-title">Standard-Profile</div><div class="cc-count">11<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">Executive · HR Manager · Personalleiter · Abteilungsleiter · Teamleiter · Specialist · Sales · Leading Leaders / Others / Yourself.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>15</strong> Assessments</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('culture_dimensions')">
-        <div class="cc-head"><div class="cc-title">Kultur-Dimensionen</div><div class="cc-count">6<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">Leistungs · Innovation · Autonomie · Feedback · Hierarchie · Transformation. Low- und High-End-Pole. Kulturfit-Score 0–100.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>12</strong> Accounts mit Kulturprofil</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 7 · Scraper-Konfiguration ===== -->
   <div class="tab-panel" id="t7">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">4</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">18</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">2</span><span class="s-lbl">in Admin verwaltet</span></div>
-      <div class="s"><span class="s-val">08.04.</span><span class="s-lbl">Letztes Update · NS</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="openDrill('scraper_types')">
-        <div class="cc-head"><div class="cc-title">Scraper-Typen</div><div class="cc-count">7<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">Team-Page · Career-Page · Impressum/AGB · LinkedIn Job-Wechsel · Externe Jobboards · PR/Reports · Handelsregister.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>18</strong> aktive Scraper</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('scraper_business_settings')">
-        <div class="cc-head"><div class="cc-title">Scraper-Business-Settings</div><div class="cc-count">4<span class="u">Keys</span></div></div>
-        <div class="cc-desc">Auto-Accept-Schwelle · N-Strike-Disable · Raw-HTML-Retention Success / Error. Operative Knöpfe für Finding-Review und Daten-Aufbewahrung.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Scraper-Kontrollzentrum</strong></span><div class="cc-tags"><span class="cc-tag admin">Scraper Tab 4</span></div></div>
-      </div>
-      <div class="cat-card admin-only" onclick="openDrill('scraper_system_settings')">
-        <div class="cc-head"><div class="cc-title">Scraper-System-Settings</div><div class="cc-count">5<span class="u">Keys</span></div></div>
-        <div class="cc-desc">User-Agent · Request-Timeout · Retry-Policy · Circuit-Breaker · Proxy-Pool. Infrastruktur-Layer, tenant-weit.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Admin</strong></span><div class="cc-tags"><span class="cc-tag admin">Admin Tab 6</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('scraper_temperature')">
-        <div class="cc-head"><div class="cc-title">Temperature-Faktoren</div><div class="cc-count">3<span class="u">Faktoren</span></div></div>
-        <div class="cc-desc">Hot · Warm · Cold. Intervall-Multiplikator pro Account-Temperature. Steuert Scraper-Frequenz nach Kundenaktivität.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Scraper-Kontrollzentrum</strong></span><div class="cc-tags"><span class="cc-tag admin">Scraper Tab 4</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 8 · Matching & AI ===== -->
   <div class="tab-panel" id="t8">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">4</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">29</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">1 240</span><span class="s-lbl">AI-Runs / Monat</span></div>
-      <div class="s"><span class="s-val">09.04.</span><span class="s-lbl">Letztes Update · NS</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="openDrill('matching_weights_jk')">
-        <div class="cc-head"><div class="cc-title">Matching-Gewichte · Job / Kandidat</div><div class="cc-count">8<span class="u">Gewichte</span></div></div>
-        <div class="cc-desc">Sparte · Funktion · Gehalt · Location · Skills · Verfügbarkeit · Erfahrung · Default-Threshold. Σ = 1.0.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>matching-engine</strong></span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('matching_weights_pj')">
-        <div class="cc-head"><div class="cc-title">Matching-Gewichte · Projekt</div><div class="cc-count">6<span class="u">Gewichte</span></div></div>
-        <div class="cc-desc">Cluster · BKP · SIA · Volumen · Location · Recency. Für Projekt-Kandidat-Matching.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>42</strong> aktive Projekte</span><div class="cc-tags"><span class="cc-tag lossless">Lossless</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('prompt_templates')">
-        <div class="cc-head"><div class="cc-title">Prompt-Templates</div><div class="cc-count">7<span class="u">Einträge</span></div></div>
-        <div class="cc-desc">CV-Parsing · Call-Summary · Classification · Seniority · Dossier · Action-Items · Red-Flag-Detection. Anthropic/OpenAI.</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>1 240</strong> AI-Runs / Monat</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card locked" onclick="openDrill('ai_write_policies')">
-        <div class="cc-head"><div class="cc-title"><span class="lock">🔒</span>AI-Write-Policies</div><div class="cc-count">8<span class="u">Regeln</span></div></div>
-        <div class="cc-desc">Vier-Augen-Prinzip. Default <code>suggest_only</code> · <code>review_required</code>. AI-Felder in History <code>auto_allowed</code>.</div>
-        <div class="cc-foot"><span class="used">Audit-pflichtig · <strong>gesperrt</strong></span><div class="cc-tags"><span class="cc-tag locked">Locked</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 9 · Infrastruktur & Limits ===== -->
   <div class="tab-panel" id="t9">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">2</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">8</span><span class="s-lbl">Keys</span></div>
-      <div class="s"><span class="s-val">tenant-weit</span><span class="s-lbl">Scope</span></div>
-      <div class="s"><span class="s-val">10.04.</span><span class="s-lbl">Letztes Update · NS</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card admin-only" onclick="openDrill('scraper_rate_limits')">
-        <div class="cc-head"><div class="cc-title">Rate-Limits &amp; Kontingente</div><div class="cc-count">3<span class="u">Keys</span></div></div>
-        <div class="cc-desc">Scraper-Concurrency · AI-Token-Budget pro Tag · Rate-Limit-Alert-Schwelle. Kontingent-Steuerung auf Tenant-Ebene.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Admin</strong></span><div class="cc-tags"><span class="cc-tag admin">Admin Tab 1</span></div></div>
-      </div>
-      <div class="cat-card admin-only" onclick="openDrill('ghosting_stale_timings')">
-        <div class="cc-head"><div class="cc-title">Ghosting- &amp; Stale-Timings</div><div class="cc-count">5<span class="u">Keys</span></div></div>
-        <div class="cc-desc">Ghosting-Frist · Stale-Prozess · Inactive-Alter · Warmup-Periode · Reminder-Cadence. Tenant-weite Zeit-Schwellen für Automation-Regeln.</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Admin</strong></span><div class="cc-tags"><span class="cc-tag admin">Admin Tab 1</span></div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== TAB 10 · Governance & Naming ===== -->
   <div class="tab-panel" id="t10">
-    <div class="stat-strip">
-      <div class="s"><span class="s-val">4</span><span class="s-lbl">Kataloge</span></div>
-      <div class="s"><span class="s-val">57</span><span class="s-lbl">Einträge</span></div>
-      <div class="s"><span class="s-val">2</span><span class="s-lbl">gesperrt oder extern</span></div>
-      <div class="s"><span class="s-val">02.04.</span><span class="s-lbl">Letztes Update · SP</span></div>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card admin-only" onclick="openDrill('automation_settings')">
-        <div class="cc-head"><div class="cc-title">Automation-Settings</div><div class="cc-count">27<span class="u">Keys</span></div></div>
-        <div class="cc-desc">Ghosting-Frist · Stale-Prozess · Inactive-Alter · Datenschutz-Reset · Temperature-Schwellen · Batch-Hours. Schutzfrist-Parameter siehe Admin → Placement &amp; Honorar (AGB §4).</div>
-        <div class="cc-foot"><span class="used">Verwaltung · <strong>Admin Tab 2</strong></span><div class="cc-tags"><span class="cc-tag admin">Admin-CRUD</span></div></div>
-      </div>
-      <div class="cat-card locked" onclick="openDrill('pii_classification')">
-        <div class="cc-head"><div class="cc-title"><span class="lock">🔒</span>PII-Klassifikation</div><div class="cc-count">21<span class="u">Felder</span></div></div>
-        <div class="cc-desc">DSG-Vorgabe. Level: direct_identifying · highly_sensitive · sensitive_business. Maskiert in Logs &amp; Exports.</div>
-        <div class="cc-foot"><span class="used">DSG-Audit · <strong>extern</strong></span><div class="cc-tags"><span class="cc-tag external">Extern</span><span class="cc-tag locked">Locked</span></div></div>
-      </div>
-      <div class="cat-card" onclick="openDrill('quality_rules')">
-        <div class="cc-head"><div class="cc-title">Qualitätsregeln</div><div class="cc-count">9<span class="u">Regeln</span></div></div>
-        <div class="cc-desc">Email-fehlt · Telefon-fehlt · kein Kontakt 12 Monate · Duplicate · Briefing-Gehalt-fehlt · Prozess-Stale-30-Tage (auto-fix).</div>
-        <div class="cc-foot"><span class="used">Verwendet · <strong>68</strong> offene Quality-Issues</span><div class="cc-tags"><span class="cc-tag lossy">Lossy</span><span class="cc-tag admin">Admin</span></div></div>
-      </div>
-      <div class="cat-card locked" onclick="openDrill('naming_convention')">
-        <div class="cc-head"><div class="cc-title"><span class="lock">🔒</span>Naming-Konvention</div><div class="cc-count">Regelwerk</div></div>
-        <div class="cc-desc">Deutsch für Fachbegriffe (Bauführer · Polier · Deviseur) · Englisch für System-Felder. Umlaute in Anzeigenamen, nie in Feldnamen.</div>
-        <div class="cc-foot"><span class="used">Dokument-Regel · <strong>gesperrt</strong></span><div class="cc-tags"><span class="cc-tag locked">Locked</span></div></div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <!-- =========================================================== -->
