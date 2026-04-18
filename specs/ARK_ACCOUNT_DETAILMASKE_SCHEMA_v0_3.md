@@ -589,12 +589,12 @@ Detail: siehe Firmengruppen-Detailmaske Schema (zu erstellen).
 
 ### 19.1 Inhalt
 
-Aggregations-Tabelle aller Projekte, in denen der Account beteiligt ist — als Bauherr ODER via `fact_project_company_participations` (Architekt/TU/Spezialist/…).
+Aggregations-Tabelle aller Projekte, in denen der Account beteiligt ist — als Bauherr ODER via `fact_project_company_participations` (Architekt / Generalplaner / TU / GU / Fachplaner / …).
 
 ### 19.2 Filter-Chips
 
-- Rolle: Alle / Bauherr / Architekt / TU / Spezialist / Planer / Weitere (aus `dim_project_roles`)
-- Status: Alle / Akquise / Ausführung / Abgeschlossen / Eingefroren
+- Rolle: Alle / Bauherr / Architekt / Generalplaner / TU / GU / Fachplaner / Weitere (aus `fact_project_company_participations.role` Enum, kanonisch laut Projekt-Schema §13 L600)
+- Status: Alle / Planung / Ausschreibung / Ausführung / Abgenommen / Abgeschlossen / Gestoppt (aus `fact_projects.status` Enum, kanonisch laut Projekt-Schema §13 L535)
 - Zeitraum: Alle / Aktuell (ongoing) / Letzte 12M / Historisch
 
 ### 19.3 Tabelle — Spalten

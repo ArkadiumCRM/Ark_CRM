@@ -22,6 +22,19 @@ Format:
 
 ---
 
+## [2026-04-18 · Run 20] Lint-Fix — Stammdaten-Violations Tab Projekte
+
+- **Files:** `mockups/accounts.html` Tab-15, `specs/ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_3.md` §19, `specs/ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md` TEIL 14
+- **Trigger:** `/ark-lint` Run identifizierte 4 Stammdaten-Violations in selbst-erstelltem Projekte-Tab-Content (Run 9/14/17).
+- **Violations:**
+  1. "Akquise" → "Ausschreibung" (Projekt-Status-Enum `ausschreibung`, nicht Account-Status-Akquise-Phase)
+  2. "Spezialist" → "Fachplaner" (Projekt-Rolle-Enum `fachplaner`)
+  3. "Eingefroren" → "Gestoppt" (Projekt-Status-Enum `gestoppt`)
+  4. Filter-Chips unvollständig — komplette Enums ergänzt: Rolle=`bauherr/architekt/generalplaner/tu/gu/fachplaner`, Status=`planung/ausschreibung/ausfuehrung/abgenommen/abgeschlossen/gestoppt`
+- **Grundlagen-Quelle:** `Grundlagen MD/ARK_DATABASE_SCHEMA_v1_3.md` + `specs/ARK_PROJEKT_DETAILMASKE_SCHEMA_v0_2.md:535,600`
+- **Outcome:** kept. Post-Fix-Lint zeigt 0 Projekt-Enum-Violations (Residuals sind Account-Status-Akquise-Phase, anderer Enum).
+- **Learning:** Bei Self-Generated Content immer gegen Grundlagen-Enum cross-checken, nicht auf "klingt sinnvoll" verlassen.
+
 ## [2026-04-18 · Run 19] P2 — Assessment-Auftrag Filter/Suche (Kandidaten-Maske Tab 4)
 
 - **Files:** `specs/ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md` §Assessment-Versionierung-Navigation, `wiki/meta/detailseiten-nachbearbeitung.md`

@@ -1152,8 +1152,8 @@ ORDER BY p.project_start DESC;
 ### Layout
 
 **Filter-Chips oben:**
-- Rolle: Alle / Bauherr / Architekt / TU / Spezialist / Planer / Weitere (aus `dim_project_roles`)
-- Status: Alle / Akquise / Ausführung / Abgeschlossen / Eingefroren
+- Rolle: Alle / Bauherr / Architekt / Generalplaner / TU / GU / Fachplaner / Weitere (aus `fact_project_company_participations.role` Enum)
+- Status: Alle / Planung / Ausschreibung / Ausführung / Abgenommen / Abgeschlossen / Gestoppt (aus `fact_projects.status` Enum)
 - Zeitraum: Alle / Aktuell (ongoing) / Letzte 12M / Historisch
 
 **Tabelle:**
