@@ -1,3 +1,24 @@
+## [2026-04-18] create | Spec-Mockup-Sync-Report (Post-Autorefine)
+
+**Kontext:** Auslöser `/ark-sync-report` nach autorefine-Session (20 Runs · 11 Nachbearbeitungs-Punkte + 3 Peter-Entscheidungen + 2 Follow-ups + 2 P2 + Lint-Fix Stammdaten-Enums).
+
+**Pages created:**
+- `wiki/analyses/sync-report-2026-04-18.md` — Drift-Report über alle 3 Layer (Grundlagen · Specs · Mockups)
+
+**Findings:**
+- Grundlagen-Changelog: 35 resolved, 0 unresolved
+- Digest-Staleness: 0 stale (alle 5 current seit 2026-04-17)
+- Spec ↔ Grundlagen Drift: 0 harte Drift, 2 optionale P3-Follow-ups (Frontend-Freeze Inline-Expand-Pattern, Backend-Architecture Query-Param-Doku)
+- Mockup ↔ Baseline: 0 Drift (post Run 20 Projekt-Enum-Fix)
+- Lint-Violations letzte 7 Tage: ~101 Einträge, Hauptquelle admin.html/admin-mobile.html SNAKE-CASE (Feature-Flags + Automation-Trigger)
+
+**Pages updated:**
+- `index.md` — Analyses 7→8
+
+**Empfehlungen:** Admin-Mockup SNAKE-CASE Cleanup via Baseline §16.3/§16.12 + Reminders rt_*-Keys ersetzen. Claim-Rechnung-Templates bleiben Peter-manuell.
+
+---
+
 ## [2026-04-18] update | Admin-Vollansicht Komplettisierung (P3-Restpunkte)
 
 **Kontext:** Restpunkte aus Sync-Report abgearbeitet (Inventar-Eintrag, Konzept-Doku, Wiederverwendungs-Patterns, Mobile-Edge-Case).
