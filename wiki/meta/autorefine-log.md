@@ -22,6 +22,26 @@ Format:
 
 ---
 
+## [2026-04-18 · Run 19] P2 — Assessment-Auftrag Filter/Suche (Kandidaten-Maske Tab 4)
+
+- **Files:** `specs/ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md` §Assessment-Versionierung-Navigation, `wiki/meta/detailseiten-nachbearbeitung.md`
+- **Baseline:** Pfeil-Navigation existierte, aber Filter/Suche-UX für Multi-Auftrag-Mehrversionierung fehlte.
+- **Changes:**
+  1. Dropdown + Suche-Panel neben Pfeil-Nav (Pill "▼ alle Versionen"): Volltext (Fuzzy order_id/package/account) · Account-Multi-Select · Zeitraum-Chip.
+  2. Multi-Auftrag-Badge im Sub-Tab-Header `[N Versionen · M Aufträge · K Accounts]`, Klick öffnet Dropdown.
+  3. API-Erweiterung (keine neue Endpoint): Query-Params `q`, `account`, `date_from`, `date_to`.
+  4. Keyboard: `V` Dropdown öffnen, Pfeil-Nav bleibt `←`/`→`.
+- **Outcome:** kept. P2 vorgezogen weil Pattern kurz spezifiziert werden konnte.
+
+## [2026-04-18 · Run 18] P2 — Breadcrumb DE/EN-Sprachmix
+
+- **Files:** `specs/ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` §3, `wiki/meta/breadcrumbs-konsistenz.md`, `wiki/meta/detailseiten-nachbearbeitung.md`
+- **Analyse:** Mockup-Baseline §16.10 definiert kanonische Mix-Policy: DE für `Kandidat/Prozess/Mandat/Projekt/Firmengruppe`, international-DE für `Account/Job/Assessment`. Nicht zufällig, sondern bewusste Design-Policy.
+- **Echte Drift:** nur Prozess-Spec-Breadcrumb `Candidates / Max Muster / Processes / P-2026-318` (EN + Candidate-rooted). Mockup `processes.html:164-168` zeigt tatsächlich `Accounts / Bauherr Muster AG / Mandat · CFO-Suche / Tobias Furrer · Stage V · 2nd` (DE + Account-rooted).
+- **Fix:** Prozess-Spec §3 auf kanonisches Account-rooted 4-stufig Pattern umgestellt, Alternative-Pattern für Kandidat-Referrer ergänzt, breadcrumbs-konsistenz.md Inventar-Zeile aktualisiert.
+- **No-Fix:** Job-Spec `Jobs` bleibt (international-DE kanonisch per Baseline §16.10).
+- **Outcome:** kept.
+
 ## [2026-04-18 · Run 17] Follow-up — Mockup accounts.html bedingter Tab Projekte
 
 - **Files:** `mockups/accounts.html`, `wiki/meta/detailseiten-nachbearbeitung.md`

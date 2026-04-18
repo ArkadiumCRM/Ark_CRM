@@ -69,7 +69,7 @@ Erbt aus [[kandidatenmaske-schema]] § 0. Prozess-spezifisch:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│ Breadcrumb: Candidates / Max Muster / Processes / P-2026-318     │
+│ Breadcrumb: Accounts / Bauherr Muster AG / Mandat · CFO-Suche / Tobias Furrer · Stage V · 2nd │
 ├──────────────────────────────────────────────────────────────────┤
 │ HEADER                                                             │
 │ ┌──────────────────────────────────────────────────────────────┐ │
@@ -95,12 +95,19 @@ Erbt aus [[kandidatenmaske-schema]] § 0. Prozess-spezifisch:
 
 ## 3. BREADCRUMB
 
+**Kanonisches Pattern (Mockup-Baseline, Account-rooted, Stand 2026-04-18):**
+
 ```
-Candidates / [Kandidat-Name] / Processes / [Prozess-ID]     🔍  [Avatar]
+Accounts / [Account-Name] / Mandat · [Mandat-Titel] / [Kandidat-Name] · [Stage-Label]     🔍  [Avatar]
 ```
 
-4-stufig. Alternative Einstiegspunkte (je nach Navigation):
-- `Accounts / [Account] / Processes / [Prozess-ID]`
+4-stufig. Account → Mandat → Prozess-Zeile (mit Kandidat + Stage). Alle Stufen klickbar zurück.
+
+**Alternative Pattern (je nach Navigations-Herkunft / Referrer):**
+- Von Kandidatenmaske kommend: `Kandidaten / [Kandidat-Name] / Prozesse / [Prozess-ID]`
+- Von Erfolgsbasis-Prozess (kein Mandat): `Accounts / [Account-Name] / Prozesse / [Prozess-ID]` (3-stufig mit Dummy-Ebene weggelassen)
+
+Dynamisches Rendern aus Referrer. Labels in DE (Kanonisch aus `wiki/meta/mockup-baseline.md` §16.10).
 - `Mandate / [Mandat] / Processes / [Prozess-ID]`
 
 Breadcrumb passt sich **kontextabhängig** an Einstiegsort an (Referrer-basiert).

@@ -63,16 +63,15 @@ Wenn wir alle Detailseiten einzeln bauen, entstehen natürlicherweise **Verknüp
 
 ### Kandidat-Assessment-Tab — Filter/Suche nach Auftrag (Phase 2)
 
-**Erfasst:** 2026-04-18 (Split aus Punkt oben via autorefine)
-**Grund:** Bei Multi-Auftrag-Mehrversionierung (z.B. Kandidat mit MDI via Auftrag A + MDI-Re-Assessment via Auftrag B) reicht Pfeil-Navigation nicht.
-**Was fehlt:**
-- Dropdown-Version-Auswahl als Alternative zu Pfeil-Navigation (mit Auftrag-Nummer + Datum + Package-Name)
-- Volltext-Suche im Package-Name (z.B. "Führungs-Check 2026-Q2")
-- Filter-Chip "Nur Aufträge von Account X"
+**Abgearbeitet 2026-04-18 via autorefine (Run 19)** — Filter/Suche-Pattern in Kandidaten-Interactions v1.3 ergänzt:
 
-**Betroffene Specs:** `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` Tab 4, `ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md` TEIL 4.
+- Dropdown + Suche-Panel neben Pfeil-Nav (Pill "▼ alle Versionen") mit Auftrag-Nummer + Datum + Package-Name + Account-Label
+- 3 Filter-Optionen: Volltext-Suche (Fuzzy auf order_id/package/account), Account-Chip (Multi-Select), Zeitraum-Chip (Alle / Letzte 12 Mt / Jahr / Custom)
+- Multi-Auftrag-Badge im Sub-Tab-Header: `[3 Versionen · 2 Aufträge · 2 Accounts]`
+- Keyboard: `V` öffnet Dropdown, `←`/`→` bleibt Pfeil-Nav
+- Server-seitig: bestehende API um Query-Params `q`, `account`, `date_from`, `date_to` erweitert (keine neue Endpoint)
 
-**Priorität:** P2 (Phase 2, erst wenn mindestens ein Kandidat > 2 Versionen pro Typ aus verschiedenen Aufträgen hat).
+**Erfasst:** 2026-04-18. **Priorität vorgezogen** da Pattern schnell spezifiziert werden konnte.
 
 ---
 
@@ -125,7 +124,7 @@ Zu erstellen in `raw/General/`:
 - Inventar: 9 Detailseiten-Breadcrumbs inventarisiert (Account/Kandidat/Projekt/Firmengruppe je 2-stufig; Mandat/Assessment/Job/Prozess je 4-stufig; Email/Kalender funktional).
 - Konsistenz-Status: strukturell konform.
 
-**Follow-up Phase 2:** DE/EN-Sprachmischung (Prozess-Spec "Candidates/Processes" engl., Job-Spec "Jobs" engl.) — als P2-Sub-Punkt dokumentiert in `breadcrumbs-konsistenz.md`.
+**Follow-up Phase 2 abgearbeitet 2026-04-18 (autorefine Run 18):** DE/EN-Sprachmix analysiert gegen Mockup-Baseline §16.10. Einzige echte Drift war Prozess-Spec-Pattern (Candidate-rooted EN statt Account-rooted DE per Mockup) — gefixt. "Jobs" bleibt (international-DE kanonisch).
 
 **Erfasst:** 2026-04-13.
 

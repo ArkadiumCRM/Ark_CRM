@@ -204,22 +204,63 @@ Save → Update `fact_project_candidate_participations`. Event `candidate_partic
 Pfeil-Navigation in jedem Sub-Tab (DISC, EQ, Scheelen 6HM, ASSESS 5.0, Driving Forces, Human Needs, Ikigai, AI-Analyse, Teamrad):
 
 ```
-API: GET /api/v1/candidates/:id/assessment-versions?type=mdi
+API: GET /api/v1/candidates/:id/assessment-versions?type=mdi&q=&account=&date_from=&date_to=
 Response: [
-  { version_id, version_number, version_date, order_id, order_account_name, executive_summary_doc_id, ... },
+  { version_id, version_number, version_date, order_id, order_account_name, package_name, executive_summary_doc_id, ... },
   ...
 ]
 ```
 
 UI:
 ```
-◀ Version 2 von 3 ▶
+◀ Version 2 von 3 ▶   [▼ alle Versionen · 🔍 Filter]
 via Auftrag AS-2026-042 (Volare Group AG)
 Durchgeführt: 05.03.2026 durch SCHEELEN®
 [→ Zum Assessment-Auftrag]
 ```
 
 Navigation ändert nur `selected_version_id` (Client-State), Tab-Content lädt Daten aus der gewählten Version.
+
+#### Filter/Suche nach Auftrag (v1.3, P2-Erweiterung)
+
+Neben der Pfeil-Navigation gibt es **Dropdown + Suche** für Szenarien mit mehreren Versionen pro Typ aus unterschiedlichen Aufträgen (Multi-Auftrag-Re-Assessment). Trigger: Klick auf Pill "▼ alle Versionen".
+
+**Dropdown-Inhalt (sortiert desc nach `version_date`):**
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ 🔍 [Suche: Auftrag, Package, Account …]                           │
+│ [alle Aufträge ▼]  [letzte 12 Mt ▼]                              │
+├──────────────────────────────────────────────────────────────────┤
+│ ● v3 · 05.03.2026 — AS-2026-042 · Volare Group AG                │
+│     Package: "Führungs-Check 2026-Q1"                              │
+│                                                                    │
+│ ○ v2 · 12.09.2025 — AS-2025-198 · Implenia AG                     │
+│     Package: "Leadership Re-Assessment"                            │
+│                                                                    │
+│ ○ v1 · 04.02.2024 — AS-2024-017 · Volare Group AG                 │
+│     Package: "Hiring-Assessment CFO"                               │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Filter-Optionen:**
+
+| Filter | Typ | Verhalten |
+|--------|-----|-----------|
+| **Volltext-Suche** | Text-Input | Client-seitig auf `order_id` + `order_account_name` + `package_name` (Fuzzy-Match) |
+| **Account-Chip** | Multi-Select-Dropdown | Nur Versionen aus Aufträgen dieses/dieser Account(s). Liste aus `DISTINCT order_account_name` der aktuellen Versions-Liste |
+| **Zeitraum-Chip** | Pill-Dropdown (`Alle` / `Letzte 12 Monate` / `2024` / `2025` / `2026` / `Custom`) | Filtert auf `version_date` |
+
+**Zusätzlich im Header-Bar der Sub-Tab-Seite (neben Pfeil-Nav):**
+- Badge `[3 Versionen · 2 Aufträge · 2 Accounts]` als Kurz-Übersicht der Multi-Auftrag-Konstellation, Klick öffnet Dropdown
+- Bei nur 1 Version/Auftrag: Dropdown ausgeblendet, Badge stattdessen einfache Info `[1 Version]`
+
+**Keyboard-Shortcuts:**
+- `←` / `→`: Pfeil-Nav (bestehend)
+- `V`: öffnet Versions-Dropdown
+- `Esc`: schliesst Dropdown
+
+**Server-seitig:** Query-Params an bestehende API (`q`, `account`, `date_from`, `date_to`) — keine neue Endpoint. Dropdown rendert Result-Liste clientseitig.
 
 ### Schutzfrist-Check im Jobbasket (Tab 5)
 

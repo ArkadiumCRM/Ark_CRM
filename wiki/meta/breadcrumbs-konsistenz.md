@@ -29,26 +29,21 @@ Einheitliche Regel für Breadcrumb-Darstellung in allen Detailseiten (autorefine
 | Mandat | 4 | `Accounts / [A] / Mandate / [M]` | Sub (Account) | `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md` §3 |
 | Assessment | 4 | `Accounts / [A] / Assessments / [ID]` | Sub (Account) | `ARK_ASSESSMENT_DETAILMASKE_SCHEMA_v0_3.md` §3 |
 | Job | 4 | `Accounts / [A] / Jobs / [Titel]` | Sub (Account) | `ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md` §3 |
-| Prozess | 4 | `Kandidaten / [K] / Prozesse / [ID]` | Sub (Kandidat) | `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` §3 — **DE-Umbenennung pending** (siehe unten) |
+| Prozess | 4 | `Accounts / [A] / Mandat · [M] / [K] · [Stage]` (Account-rooted, kanonisch per Mockup) · Alternative bei Kandidat-Referrer: `Kandidaten / [K] / Prozesse / [ID]` | Sub (Mandat ∩ Kandidat) | `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` §3 |
 | Email/Kalender | funktional | `Home / Operations / Email & Kalender` | Hub | `ARK_EMAIL_KALENDER_DETAILMASKE_SCHEMA_v0_1.md` §3 |
 
-## Sub-Punkt (offen): DE/EN-Sprachmischung
+## Sub-Punkt DE/EN-Sprachmischung (abgearbeitet 2026-04-18 via autorefine Run 18)
 
-**Erfasst:** 2026-04-18
+**Ergebnis per Mockup-Baseline §16.10:** Kanonische UI-Labels sind ein Mix aus DE + international-DE:
 
-**Drift:** Zwei Specs zeigen englische Breadcrumb-Labels, alle anderen deutsch:
-- `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` §3: `Candidates / Max Muster / Processes / P-2026-318`
-- `ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md` §3: `Accounts / [Account] / Jobs / [Job-Titel]` — "Accounts" ist grenzwertig (wird in Account-Spec auch englisch genutzt), aber "Jobs" sollte "Stellen" oder "Vakanzen" sein (siehe Mockup-Baseline §16 Kanonische Labels).
+- **Germanisiert:** `Kandidat/Kandidaten`, `Prozess/Prozesse`, `Mandat/Mandate`, `Projekt/Projekte`, `Firmengruppe/Firmengruppen`
+- **International-DE (bleibt):** `Account/Accounts`, `Job/Jobs`, `Assessment/Assessments`
 
-**Fix-Vorschlag (zu Mockup-Baseline-Vocabulary-Punkt):**
-- `Candidates` → `Kandidaten`
-- `Processes` → `Prozesse`
-- `Jobs` → `Stellen` (oder in §16 Baseline hinterlegen, welches kanonisch ist)
-- "Accounts" vs "Kunden": in Mockup-Baseline §16 festlegen.
+**Fix angewendet:**
+- `ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md` §3: EN → DE + Pattern-Korrektur auf Mockup-konformes Account-rooted (Mockup `processes.html:164-168` zeigt `Accounts / Bauherr Muster AG / Mandat · CFO-Suche / Tobias Furrer · Stage V · 2nd` als kanonisch).
+- `ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md` §3: Keine Änderung — "Jobs" ist kanonisch per Mockup-Baseline §16.10 (international-DE Begriff, wie `/jobs/[id]` → "Job-Vollansicht").
 
-**Betroffene Specs:** Prozess-Schema v0.1, Job-Schema v0.1. Fix in nachfolgendem v0.2-Bump.
-
-**Priorität:** P2 (kosmetisch, nicht strukturell).
+**Beobachtung:** Die "Sprachmix" war tatsächlich Design-Policy, nicht Inkonsistenz. Einzige echte Drift war das Prozess-Spec-Pattern (Candidate-rooted EN statt Account-rooted DE per Mockup).
 
 ## Related
 
