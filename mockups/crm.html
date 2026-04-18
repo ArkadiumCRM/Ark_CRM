@@ -374,6 +374,60 @@
     padding:1px 6px; font-family:monospace; font-size:10px; color:var(--text);
   }
 
+  /* KI-Suche (RAG) */
+  .cmd-ai-btn {
+    background:color-mix(in srgb, var(--accent) 88%, #000); color:#fff;
+    border:1px solid var(--accent); border-radius:3px;
+    padding:5px 12px; font-size:11.5px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:inherit; transition:background 0.15s;
+  }
+  .cmd-ai-btn:hover { background:var(--accent); }
+  .cmd-ai-btn:disabled { background:var(--text-light); border-color:var(--text-light); cursor:wait; }
+  .cmd-ai-section {
+    border-top:2px solid var(--accent); background:color-mix(in srgb, var(--accent) 4%, var(--surface));
+    padding:14px 18px; display:none;
+  }
+  .cmd-ai-section.open { display:block; }
+  .cmd-ai-head {
+    display:flex; align-items:center; gap:8px;
+    font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin-bottom:8px;
+  }
+  .cmd-ai-answer {
+    font-size:13px; color:var(--text); line-height:1.6; margin-bottom:10px;
+  }
+  .cmd-ai-answer strong { color:var(--accent); }
+  .cmd-ai-sources {
+    display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;
+  }
+  .cmd-ai-chip {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:3px 10px; border:1px solid var(--border); border-radius:12px;
+    background:var(--surface); font-size:11px; color:var(--text-mid);
+    cursor:pointer; transition:all 0.12s;
+  }
+  .cmd-ai-chip:hover { border-color:var(--accent); color:var(--accent); }
+  .cmd-ai-chip .rel { font-size:9.5px; color:var(--text-light); font-family:monospace; }
+  .cmd-ai-loading {
+    display:flex; align-items:center; gap:10px; color:var(--text-light);
+    font-size:12.5px; padding:6px 0;
+  }
+  .cmd-ai-loading::before {
+    content:''; width:12px; height:12px; border-radius:50%;
+    border:2px solid var(--border); border-top-color:var(--accent);
+    animation:spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .cmd-ai-meta {
+    font-size:10px; color:var(--text-light); margin-top:8px;
+    display:flex; gap:12px;
+  }
+  .cmd-ai-meta kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:1px 5px; font-family:monospace; font-size:9.5px;
+  }
+
   /* === MAIN IFRAME === */
   .main-frame {
     border:none; width:100%; height:100vh; background:var(--bg); display:block;
@@ -504,11 +558,18 @@
     <span class="cmd-palette-hint">Esc</span>
   </div>
   <div class="cmd-palette-body" id="cmdBody"></div>
+  <div class="cmd-ai-section" id="cmdAiSection">
+    <div class="cmd-ai-head">🤖 KI-Antwort <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-light);font-size:10px;margin-left:auto">Local LLM · RAG · DSG-konform</span></div>
+    <div id="cmdAiContent"></div>
+  </div>
   <div class="cmd-palette-foot">
     <span><kbd>↑</kbd><kbd>↓</kbd> Navigieren</span>
     <span><kbd>Enter</kbd> Öffnen</span>
     <span><kbd>Esc</kbd> Schliessen</span>
-    <span style="margin-left:auto"><kbd>⌘</kbd><kbd>K</kbd></span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="cmd-ai-btn" id="cmdAiBtn" onclick="runCmdAiSearch()" title="Mit KI suchen (RAG · Local LLM)">🤖 Mit KI suchen</button>
+      <span><kbd>⌘</kbd><kbd>K</kbd></span>
+    </span>
   </div>
 </div>
 
@@ -916,12 +977,95 @@ function openCmdPalette() {
   cmdFiltered = CMD_ITEMS.slice();
   cmdSelected = 0;
   renderCmdResults();
+  // KI-Bereich reset
+  document.getElementById('cmdAiSection')?.classList.remove('open');
+  document.getElementById('cmdAiContent').innerHTML = '';
   setTimeout(() => inp.focus(), 50);
 }
 
 function closeCmdPalette() {
   document.getElementById('cmdPalette')?.classList.remove('open');
   document.getElementById('cmdBackdrop')?.classList.remove('open');
+}
+
+// === KI-Suche (RAG Demo) ===
+function runCmdAiSearch() {
+  const query = document.getElementById('cmdInput')?.value?.trim() || '';
+  if (!query) { document.getElementById('cmdInput')?.focus(); return; }
+
+  const section = document.getElementById('cmdAiSection');
+  const content = document.getElementById('cmdAiContent');
+  const btn = document.getElementById('cmdAiBtn');
+  section.classList.add('open');
+  content.innerHTML = '<div class="cmd-ai-loading">Embedde Query · durchsuche 8 400 Kandidaten + 124 Accounts · generiere Antwort …</div>';
+  btn.disabled = true;
+  btn.textContent = '⏳ Läuft…';
+  section.scrollIntoView({ block:'end', behavior:'smooth' });
+
+  // Demo-Antwort nach 1.8s Simulation
+  setTimeout(() => {
+    const answer = buildDemoAiAnswer(query);
+    content.innerHTML = answer;
+    btn.disabled = false;
+    btn.textContent = '🤖 Mit KI suchen';
+  }, 1800);
+}
+
+function buildDemoAiAnswer(query) {
+  // Demo-Logik: statische Antwort passend zur häufigsten Query-Kategorie
+  const q = query.toLowerCase();
+  let answer, sources;
+
+  if (q.includes('cfo') || q.includes('finanz') || q.includes('chief financial')) {
+    answer = `Ich habe <strong>3 Kandidaten</strong> gefunden, die zu einem CFO-Profil passen. <strong>Tobias Furrer</strong> hat eine sehr starke Übereinstimmung (Match 92%) — 15 Jahre CFO-Erfahrung bei Schweizer Bauunternehmen, aktuell im Prozess Stage 2nd Interview bei Bauherr Muster AG. <strong>Anna Beispiel</strong> ist eine Alternative (Match 78%) mit Projektleitungs-Background und Controlling-Kompetenz. Drittkandidat ist ein neuer Fund aus dem Scraper vom 14.04., noch nicht kontaktiert.`;
+    sources = [
+      { icon:'👤', label:'Tobias Furrer', sub:'Kandidat', rel:0.92, src:'Vollansichten/candidates.html' },
+      { icon:'👤', label:'Anna Beispiel', sub:'Kandidat', rel:0.78, src:'Vollansichten/candidates.html' },
+      { icon:'🎯', label:'CFO-Suche · Bauherr Muster', sub:'Mandat', rel:0.88, src:'Vollansichten/mandates.html' },
+      { icon:'🏢', label:'Bauherr Muster AG', sub:'Account', rel:0.85, src:'Vollansichten/accounts.html' }
+    ];
+  } else if (q.includes('bauführer') || q.includes('bauleit') || q.includes('tiefbau') || q.includes('hochbau')) {
+    answer = `Es gibt <strong>14 aktive Kandidaten</strong> im Bauführer/Bauleitungs-Segment. <strong>Max Muster</strong> (Bauführer Tiefbau, CHF 130k, Stage TI) passt am besten zum aktuellen Mandat von Volare Group. <strong>3 weitere Idents</strong> aus dem Scraper der letzten 7 Tage sind noch in Review-Queue. Im Jobbasket liegen 6 Kandidaten für Hochbau-Positionen bei Implenia.`;
+    sources = [
+      { icon:'👤', label:'Max Muster', sub:'Kandidat · Tiefbau', rel:0.94, src:'Vollansichten/candidates.html' },
+      { icon:'💼', label:'Bauführer Tiefbau · Volare', sub:'Job', rel:0.91, src:'Vollansichten/jobs.html' },
+      { icon:'🏢', label:'Volare Group AG', sub:'Account', rel:0.82, src:'Vollansichten/accounts.html' },
+      { icon:'🤖', label:'3 Scraper-Findings · BauAG', sub:'Review-Queue', rel:0.70, src:'Vollansichten/scraper.html' }
+    ];
+  } else if (q.includes('stale') || q.includes('überfällig') || q.includes('blocker') || q.includes('offen')) {
+    answer = `Aktuell <strong>3 Blocker</strong> im System: (1) <strong>1 Claim-Fall</strong> offen bei Stefan Keller (Schutzfrist-Verletzung bei Muster Immobilien, 13 Monate nach Vorstellung angestellt). (2) <strong>2 stale Prozesse</strong> ohne Activity > 30 Tage: Peter Stadler (Stage 1st IV seit 32 d, Kunde-Feedback ausstehend) und Laura Meier (Stage TI seit 45 d). (3) <strong>7 pending AGB-Bestätigungen</strong> für CV-Versand (rechtliches Risiko bei Erfolgsbasis-Mandaten).`;
+    sources = [
+      { icon:'⚠', label:'Claim: Stefan Keller × Muster Immobilien', sub:'Schutzfrist', rel:0.96, src:'Vollansichten/accounts.html' },
+      { icon:'→', label:'Prozess Peter Stadler · Stage 1st IV', sub:'stale 32d', rel:0.82, src:'Vollansichten/processes.html' },
+      { icon:'→', label:'Prozess Laura Meier · Stage TI', sub:'stale 45d', rel:0.80, src:'Vollansichten/processes.html' }
+    ];
+  } else {
+    // Generic fallback
+    answer = `Deine Frage "${query}" habe ich gegen <strong>8 400 Kandidaten · 124 Accounts · 14 offene Mandate · 47 aktive Prozesse</strong> analysiert. Die Top-Treffer unten sind nach semantischer Relevanz sortiert. Für präzisere Ergebnisse nenne Funktion (z.B. "CFO"), Branche ("Tiefbau"), Region ("Zürich") oder Einschränkung ("stale > 30d").`;
+    sources = [
+      { icon:'◈', label:'Dashboard', sub:'Gesamtübersicht', rel:0.50, src:'Vollansichten/dashboard.html' },
+      { icon:'👤', label:'Kandidaten-Liste', sub:'8 400 Einträge', rel:0.45, src:'Listen/candidates-list.html' },
+      { icon:'🎯', label:'Mandate-Liste', sub:'14 offen', rel:0.42, src:'Listen/mandates-list.html' }
+    ];
+  }
+
+  const sourcesHtml = sources.map(s =>
+    `<span class="cmd-ai-chip" onclick="closeCmdPalette();document.getElementById('mainFrame').src='${s.src}';window.location.hash='#/${s.src.replace('.html','')}'">
+      ${s.icon} ${s.label}
+      <span class="rel">· ${s.sub} · ${(s.rel*100).toFixed(0)}%</span>
+    </span>`
+  ).join('');
+
+  return `
+    <div class="cmd-ai-answer">${answer}</div>
+    <div style="font-size:10.5px;color:var(--text-light);margin-top:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">Quellen</div>
+    <div class="cmd-ai-sources">${sourcesHtml}</div>
+    <div class="cmd-ai-meta">
+      <span>⏱ 1.8 s</span>
+      <span>🧠 Llama 3.1 8B local</span>
+      <span>📊 4 Quellen aus Top-20 RAG-Hits</span>
+      <span style="margin-left:auto;cursor:pointer" onclick="runCmdAiSearch()"><kbd>↻</kbd> Erneut fragen</span>
+    </div>`;
 }
 
 function renderCmdResults() {
