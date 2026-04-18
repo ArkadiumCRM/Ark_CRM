@@ -307,6 +307,73 @@
   .pp-badge.offline { background:var(--bg); color:var(--text-light); }
   .pp-badge.ferien { background:var(--amber-soft,#fef3c7); color:var(--amber,#92400e); }
 
+  /* === COMMAND PALETTE === */
+  .cmd-palette-backdrop {
+    position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:600; opacity:0; pointer-events:none; transition:opacity 0.15s;
+  }
+  .cmd-palette-backdrop.open { opacity:1; pointer-events:auto; }
+  .cmd-palette {
+    position:fixed; top:80px; left:50%; transform:translateX(-50%) scale(0.96);
+    width:640px; max-width:92vw; max-height:70vh;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; box-shadow:var(--shadow-lg);
+    z-index:601; opacity:0; pointer-events:none;
+    transition:opacity 0.15s, transform 0.15s; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .cmd-palette.open { opacity:1; transform:translateX(-50%) scale(1); pointer-events:auto; }
+  .cmd-palette-input-wrap {
+    display:flex; align-items:center; gap:10px;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+  }
+  .cmd-palette-input-wrap .icon { font-size:18px; color:var(--text-light); }
+  .cmd-palette-input {
+    flex:1; border:none; outline:none; background:transparent;
+    font-family:inherit; font-size:15px; color:var(--text);
+  }
+  .cmd-palette-input::placeholder { color:var(--text-light); }
+  .cmd-palette-hint {
+    font-size:10.5px; color:var(--text-light); font-family:monospace;
+  }
+  .cmd-palette-body {
+    flex:1; overflow-y:auto; padding:6px 0;
+  }
+  .cmd-palette-cat {
+    padding:8px 18px 4px; font-size:9.5px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--text-light); font-weight:600;
+  }
+  .cmd-palette-item {
+    display:flex; align-items:center; gap:12px;
+    padding:8px 18px; cursor:pointer; font-size:13px; color:var(--text);
+    border-left:3px solid transparent;
+  }
+  .cmd-palette-item:hover,
+  .cmd-palette-item.selected {
+    background:var(--accent-soft,color-mix(in srgb,var(--accent) 8%,var(--surface)));
+    border-left-color:var(--accent); color:var(--accent);
+  }
+  .cmd-palette-item .ic {
+    font-size:15px; width:22px; text-align:center; flex-shrink:0;
+  }
+  .cmd-palette-item .label { flex:1; }
+  .cmd-palette-item .sub {
+    font-size:10.5px; color:var(--text-light);
+  }
+  .cmd-palette-item.selected .sub { color:var(--accent); opacity:0.8; }
+  .cmd-palette-empty {
+    padding:24px 18px; text-align:center; color:var(--text-light); font-size:12.5px;
+  }
+  .cmd-palette-foot {
+    border-top:1px solid var(--border); padding:8px 18px;
+    display:flex; gap:14px; font-size:10.5px; color:var(--text-light);
+    flex-wrap:wrap;
+  }
+  .cmd-palette-foot kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:1px 6px; font-family:monospace; font-size:10px; color:var(--text);
+  }
+
   /* === MAIN IFRAME === */
   .main-frame {
     border:none; width:100%; height:100vh; background:var(--bg); display:block;
@@ -427,6 +494,23 @@
 
 <!-- MAIN IFRAME -->
 <iframe id="mainFrame" class="main-frame" src="Vollansichten/dashboard.html"></iframe>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-palette-backdrop" id="cmdBackdrop" onclick="closeCmdPalette()"></div>
+<div class="cmd-palette" id="cmdPalette" role="dialog" aria-label="Command-Palette">
+  <div class="cmd-palette-input-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" class="cmd-palette-input" id="cmdInput" placeholder="Suchen: Kandidaten · Accounts · Mandate · Seiten · Aktionen …" autocomplete="off">
+    <span class="cmd-palette-hint">Esc</span>
+  </div>
+  <div class="cmd-palette-body" id="cmdBody"></div>
+  <div class="cmd-palette-foot">
+    <span><kbd>↑</kbd><kbd>↓</kbd> Navigieren</span>
+    <span><kbd>Enter</kbd> Öffnen</span>
+    <span><kbd>Esc</kbd> Schliessen</span>
+    <span style="margin-left:auto"><kbd>⌘</kbd><kbd>K</kbd></span>
+  </div>
+</div>
 
 <!-- PROFIL-DROPDOWN-DRAWER · Mein Profil -->
 <div class="pp-drawer-backdrop" id="ppBackdrop" onclick="closePpDrawer()"></div>
@@ -780,11 +864,146 @@ document.getElementById('mainFrame').addEventListener('load', function() {
 })();
 
 // Keyboard: Ctrl/Cmd + K
+// === COMMAND PALETTE ===
+const CMD_ITEMS = [
+  // Seiten — System
+  { cat:'Seiten', ic:'◈', label:'Dashboard',           sub:'Übersicht · KPIs · Fokus diese Woche', src:'Vollansichten/dashboard.html' },
+  { cat:'Seiten', ic:'🔧', label:'Admin',               sub:'System-Konfiguration · 10 Bereiche',   src:'Vollansichten/admin.html' },
+  { cat:'Seiten', ic:'📚', label:'Stammdaten',          sub:'67 Kataloge · 5 247 Einträge',         src:'Vollansichten/stammdaten.html' },
+  // Seiten — Entities/Listen
+  { cat:'Seiten', ic:'👤', label:'Kandidaten-Liste',    sub:'8 400 Kandidaten',                     src:'Listen/candidates-list.html' },
+  { cat:'Seiten', ic:'🏢', label:'Accounts-Liste',      sub:'124 Accounts',                         src:'Listen/accounts-list.html' },
+  { cat:'Seiten', ic:'🏛', label:'Firmengruppen',       sub:'18 Gruppen',                           src:'Listen/groups-list.html' },
+  { cat:'Seiten', ic:'💼', label:'Jobs',                sub:'86 offene Stellen',                    src:'Listen/jobs-list.html' },
+  { cat:'Seiten', ic:'🏗', label:'Projekte',            sub:'42 Projekte',                          src:'Listen/projects-list.html' },
+  { cat:'Seiten', ic:'🎯', label:'Mandate',             sub:'14 offene Mandate',                    src:'Listen/mandates-list.html' },
+  { cat:'Seiten', ic:'→', label:'Prozesse',             sub:'47 aktive Prozesse',                   src:'Listen/processes-list.html' },
+  { cat:'Seiten', ic:'🧭', label:'Assessments',         sub:'5 laufende Aufträge',                  src:'Listen/assessments-list.html' },
+  // Seiten — Operations
+  { cat:'Seiten', ic:'📝', label:'Dok-Generator',       sub:'38 Templates',                         src:'Vollansichten/dok-generator.html' },
+  { cat:'Seiten', ic:'✉', label:'Email & Kalender',    sub:'7 ungeklassifiziert',                  src:'Vollansichten/email-kalender.html' },
+  { cat:'Seiten', ic:'🔔', label:'Reminders',           sub:'3 überfällig · 12 offen',              src:'Vollansichten/reminders.html' },
+  { cat:'Seiten', ic:'🤖', label:'Scraper',             sub:'18 Findings · 2 Alerts',               src:'Vollansichten/scraper.html' },
+  // Kandidaten Beispiele
+  { cat:'Kandidaten', ic:'👤', label:'Max Muster',       sub:'Bauführer Tiefbau · CHF 130k · Stage TI', src:'Vollansichten/candidates.html' },
+  { cat:'Kandidaten', ic:'👤', label:'Tobias Furrer',    sub:'CFO · CHF 180k · Stage 2nd Interview',    src:'Vollansichten/candidates.html' },
+  { cat:'Kandidaten', ic:'👤', label:'Anna Beispiel',    sub:'Projektleiterin Hochbau · CHF 145k',      src:'Vollansichten/candidates.html' },
+  // Accounts Beispiele
+  { cat:'Accounts',   ic:'🏢', label:'Volare Group AG',  sub:'A-Kunde · Zürich · 12 Placements YTD',    src:'Vollansichten/accounts.html' },
+  { cat:'Accounts',   ic:'🏢', label:'Bauherr Muster AG', sub:'A-Kunde · Teil Muster Holding',           src:'Vollansichten/accounts.html' },
+  // Mandate Beispiele
+  { cat:'Mandate',    ic:'🎯', label:'CFO-Suche · Bauherr Muster', sub:'Target · Kickoff 15.03. · 5 Prozesse', src:'Vollansichten/mandates.html' },
+  { cat:'Mandate',    ic:'🎯', label:'PL Hochbau Taskforce',        sub:'Taskforce · 3 Positionen offen',       src:'Vollansichten/mandates.html' },
+  // Aktionen
+  { cat:'Aktionen', ic:'➕', label:'Neuen Kandidaten anlegen',  sub:'Drawer öffnen', action:() => alert('Neuer Kandidat — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'➕', label:'Neuen Account anlegen',      sub:'Drawer öffnen', action:() => alert('Neuer Account — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'➕', label:'Neues Mandat starten',       sub:'Drawer öffnen', action:() => alert('Neues Mandat — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'✎', label:'Mein Profil öffnen',          sub:'Drawer',        action:() => openMeinProfil() },
+  { cat:'Aktionen', ic:'👥', label:'Team-Übersicht öffnen',      sub:'Drawer',        action:() => openTeamUebersicht() },
+  { cat:'Aktionen', ic:'⌨', label:'Keyboard-Shortcuts',          sub:'Drawer',        action:() => openKeyboardShortcuts() },
+];
+
+let cmdFiltered = CMD_ITEMS.slice();
+let cmdSelected = 0;
+
+function openCmdPalette() {
+  const p = document.getElementById('cmdPalette');
+  const b = document.getElementById('cmdBackdrop');
+  if (!p) return;
+  p.classList.add('open'); b.classList.add('open');
+  const inp = document.getElementById('cmdInput');
+  inp.value = '';
+  cmdFiltered = CMD_ITEMS.slice();
+  cmdSelected = 0;
+  renderCmdResults();
+  setTimeout(() => inp.focus(), 50);
+}
+
+function closeCmdPalette() {
+  document.getElementById('cmdPalette')?.classList.remove('open');
+  document.getElementById('cmdBackdrop')?.classList.remove('open');
+}
+
+function renderCmdResults() {
+  const body = document.getElementById('cmdBody');
+  if (!body) return;
+  if (cmdFiltered.length === 0) {
+    body.innerHTML = '<div class="cmd-palette-empty">Keine Treffer. Probiere andere Begriffe …</div>';
+    return;
+  }
+  let html = '';
+  let currentCat = '';
+  cmdFiltered.forEach((item, i) => {
+    if (item.cat !== currentCat) {
+      currentCat = item.cat;
+      html += `<div class="cmd-palette-cat">${currentCat}</div>`;
+    }
+    const sel = i === cmdSelected ? ' selected' : '';
+    html += `<div class="cmd-palette-item${sel}" data-idx="${i}" onmouseover="cmdSelected=${i};cmdUpdateSelection()" onclick="cmdRunItem(${i})">
+      <span class="ic">${item.ic}</span>
+      <span class="label">${item.label}</span>
+      <span class="sub">${item.sub}</span>
+    </div>`;
+  });
+  body.innerHTML = html;
+}
+
+function cmdUpdateSelection() {
+  document.querySelectorAll('.cmd-palette-item').forEach((el, i) => {
+    el.classList.toggle('selected', i === cmdSelected);
+  });
+  const sel = document.querySelector('.cmd-palette-item.selected');
+  if (sel) sel.scrollIntoView({ block:'nearest' });
+}
+
+function cmdRunItem(i) {
+  const item = cmdFiltered[i];
+  if (!item) return;
+  closeCmdPalette();
+  if (item.action) { item.action(); return; }
+  if (item.src) {
+    const f = document.getElementById('mainFrame');
+    if (f) f.src = item.src;
+    // Sidebar-Active-Sync
+    document.querySelectorAll('.sb-item').forEach(it => it.classList.toggle('active', it.dataset.src === item.src));
+    window.location.hash = '#/' + item.src.replace('.html','');
+  }
+}
+
+function cmdFilterResults(q) {
+  const query = (q || '').toLowerCase().trim();
+  if (!query) {
+    cmdFiltered = CMD_ITEMS.slice();
+  } else {
+    cmdFiltered = CMD_ITEMS.filter(it =>
+      it.label.toLowerCase().includes(query) ||
+      it.sub.toLowerCase().includes(query) ||
+      it.cat.toLowerCase().includes(query)
+    );
+  }
+  cmdSelected = 0;
+  renderCmdResults();
+}
+
+document.getElementById('cmdInput')?.addEventListener('input', e => cmdFilterResults(e.target.value));
+document.getElementById('cmdInput')?.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdSelected+1, cmdFiltered.length-1); cmdUpdateSelection(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(cmdSelected-1, 0); cmdUpdateSelection(); }
+  else if (e.key === 'Enter') { e.preventDefault(); cmdRunItem(cmdSelected); }
+  else if (e.key === 'Escape') { e.preventDefault(); closeCmdPalette(); }
+});
+
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
     e.preventDefault();
-    alert('Command Palette — Demo (in echter App: globale Suche über alle Entities)');
+    openCmdPalette();
   }
+});
+
+// Cmd-Bar + Mobile-Search-Button + Command-Bar ⌘K-Hint alle öffnen Palette
+document.addEventListener('click', e => {
+  const trg = e.target.closest('.cmd-bar, [data-open-cmd]');
+  if (trg) { e.preventDefault(); openCmdPalette(); }
 });
 
 // === PROFIL-DROPDOWN ===
