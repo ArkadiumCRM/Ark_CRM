@@ -1206,6 +1206,65 @@ Kanonische Labels für `.rt-chip` in `mockups/reminders.html` + Entity-Reminder-
 
 **Saved-Views-Storage:** `dim_mitarbeiter.dashboard_config.reminders.saved_views[]` — in User-UI als „Ansichten" benennen, niemals JSON-Pfad oder Feldname zeigen.
 
+### 16.13 KPI-Color-Convention (neu 2026-04-19 · Harmonisierungs-Audit)
+
+Zwei parallel-gültige KPI-Patterns mit konsistenter Semantik. **Welches Pattern in welcher Maske** gemäss Pattern-Klasse ihrer Datei (siehe `wiki/analyses/harmonization-audit-2026-04-19.md`):
+
+#### Pattern 1 — Entity-Views (canonical aus editorial.css)
+
+Verwendung: Detail-Masken mit Entity-Avatar/Logo (Account · Candidate · Mandate · Job · Project · Process · Assessment · Group).
+
+```html
+<div class="kpi-strip cols-6">
+  <div class="kpi-card"><!-- default: accent navy --></div>
+  <div class="kpi-card gold">...</div>
+  <div class="kpi-card green">...</div>
+  <div class="kpi-card red">...</div>
+  <div class="kpi-card amber">...</div>
+  <div class="kpi-card blue">...</div>
+</div>
+```
+
+Struktur innerhalb: `.kpi-label` · `.kpi-value` · `.kpi-sub`
+
+#### Pattern 2 — System-Views (neu aus Claude-Design-Admin)
+
+Verwendung: System-Tool-Masken ohne Entity-Avatar (Admin · Stammdaten · Scraper).
+
+```html
+<div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px">
+  <div class="kpi"><!-- default: accent navy --></div>
+  <div class="kpi k-gold">...</div>
+  <div class="kpi k-green">...</div>
+  <div class="kpi k-red">...</div>
+  <div class="kpi k-amber">...</div>
+  <div class="kpi k-blue">...</div>
+  <div class="kpi k-purple">...</div>
+</div>
+```
+
+Struktur innerhalb: `.kpi-label` · `.kpi-val` · `.kpi-sub`
+
+#### Semantik · konsistent über beide Patterns
+
+| Color | Semantik | Typische Verwendung |
+|-------|----------|---------------------|
+| **default** (accent navy) | Neutral / Standard-KPI | Kataloge-Count · Einträge-Total · Ø-Werte |
+| **gold / k-gold** | Geld · Umsatz · Erfolg-Monetary | Umsatz YTD · Placements · Honorar-Pipeline |
+| **green / k-green** | Positive Metrik · Aktiv | Aktiv-Count · Ziel erreicht · Ø Time-to-Hire besser Benchmark |
+| **red / k-red** | Fehler · Überfällig · Critical · Blocker | Saga-Failures · Überfällige Reminders · Claim-Cases · Stale > 30d |
+| **amber / k-amber** | Warning · Pending · Stale | Scraper-Alerts · Unklassifizierte Emails · Warn-Schwelle erreicht |
+| **blue / k-blue** | Info · Meta · Zeit-Angabe | Next Run · 3CX-SLA · Letztes Update · OAuth-Refresh-Countdown |
+| **purple / k-purple** | AI · Assessment · Review-Queue | AI-Matching · MDI-Assessment · Scraper-Review · Credits-Pending |
+
+#### Audit-Regel
+
+Bei jedem neuen KPI: Semantik → Color aus Tabelle ableiten. Nicht willkürlich mischen (z.B. `k-gold` für "Aktive Prozesse" ist falsch — das wäre `k-green`).
+
+Bei Umsatz- oder Zählungs-KPIs mit primärer Dringlichkeit: Dringlichkeit gewinnt (z.B. "Placements YTD unter Ziel" → `k-red` statt `k-gold`).
+
+**Exception:** `muted` / `text-light` für inaktive/geringe-Priorität-KPIs (Dashboard-Placeholder).
+
 ---
 
 ## 17. Admin-Vollansicht-Patterns (neu 2026-04-17)
