@@ -2152,6 +2152,7 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
   <div class="tab" data-tab="10" onclick="switchTab(10)"><span class="num">0</span>Audit &amp; Retention</div>
 </nav>
 
+<!-- ark-lint-skip:begin reason=admin-config-ui · Admin-Maske zeigt bewusst DB-Tabellen-/Spalten-Namen, Feature-Flag-Keys, Automation-Trigger-Strings, Saga-Events, Event-Type-Codes. Per CLAUDE.md §DB-Technikdetails-Regel dokumentierte Ausnahme (Admin-/Debug-Ansichten). Umbrella-Wrap statt inline-Wraps für neue Tokens. -->
 <div class="content">
 
 <!-- ============================================================ -->
@@ -4606,6 +4607,8 @@ Beste Grüsse
     <button class="btn btn-sm btn-primary">Speichern</button>
   </div>
 </div>
+
+<!-- ark-lint-skip:end -->
 
 <!-- Toast-Host -->
 <div class="toast-host" id="toastHost"></div>
