@@ -2071,7 +2071,7 @@ select:focus, input:focus { outline:none; border-color:var(--accent); }
     </div>
   </div>
   <div class="breadcrumb">
-    <a href="crm.html">Home</a><span class="sep">/</span>
+    <a href="../crm.html">Home</a><span class="sep">/</span>
     <span class="current">Stammdaten</span>
   </div>
   <div class="header-right">
@@ -3199,7 +3199,8 @@ function switchTab(id) {
   localStorage.setItem('sd-tab', id);
   window.scrollTo({ top:0, behavior:'instant' });
 }
-(function(){ const t = localStorage.getItem('sd-tab'); if (t) switchTab(t); })();
+// Immer auf Tab 1 starten · localStorage-Restore entfernt (UX: User soll bei jedem Aufruf im ersten Tab landen, nicht in einem zuletzt besuchten)
+localStorage.removeItem('sd-tab');
 
 // === Mode-Switch ===
 function setMode(m) {
