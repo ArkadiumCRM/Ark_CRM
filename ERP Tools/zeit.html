@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Zeiterfassung · Lara Roth · KW 17 / 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../mockups/_shared/editorial.css">
+<style>
+  /* Page-specific Zeiterfassung */
+
+  /* Wochen-Timesheet-Grid */
+  .timesheet {
+    width:100%; border-collapse:collapse; font-size:12.5px;
+    background:var(--surface); border-radius:4px; overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .timesheet th, .timesheet td {
+    padding:10px 8px; text-align:center; vertical-align:middle;
+    border-bottom:1px solid var(--border);
+  }
+  .timesheet thead th {
+    background:var(--bg); font-size:10.5px; text-transform:uppercase;
+    letter-spacing:1.2px; color:var(--text-light); font-weight:600;
+  }
+  .timesheet th.weekend, .timesheet td.weekend { background:color-mix(in srgb,var(--border) 25%,var(--bg)); }
+  .timesheet th.today, .timesheet td.today { background:color-mix(in srgb,var(--accent) 8%,var(--surface)); }
+  .timesheet td.row-label {
+    text-align:left; padding-left:14px; font-weight:500;
+  }
+  .timesheet td.row-label .meta {
+    font-size:11px; color:var(--text-light); font-weight:400;
+  }
+  .timesheet td.row-label .cat-chip {
+    display:inline-block; padding:2px 6px; border-radius:2px;
+    font-size:10px; margin-right:6px; font-weight:600;
+  }
+  .cat-chip.mandat { background:var(--accent-soft); color:var(--accent); }
+  .cat-chip.internal { background:var(--gold-soft); color:var(--gold); }
+  .cat-chip.absence { background:color-mix(in srgb,var(--red) 15%,var(--bg)); color:var(--red); }
+  .timesheet .h-cell {
+    font-family:'Libre Baskerville',serif; font-weight:500; color:var(--accent);
+    cursor:pointer; min-width:48px;
+  }
+  .timesheet .h-cell:hover { background:color-mix(in srgb,var(--accent) 6%,var(--bg)); }
+  .timesheet .h-cell.empty { color:var(--text-light); font-weight:400; opacity:0.4; }
+  .timesheet .h-cell.partial { color:var(--amber); font-weight:700; }
+  .timesheet tfoot td {
+    background:var(--bg); font-weight:600; font-family:'Libre Baskerville',serif;
+    font-size:13px; border-top:2px solid var(--accent);
+  }
+  .timesheet tfoot td.row-label { font-family:'DM Sans',sans-serif; font-size:12px; }
+  .timesheet tr.new-row td { background:color-mix(in srgb,var(--accent) 4%,var(--surface)); }
+
+  /* Utilization-Donut */
+  .donut-wrap { display:flex; gap:16px; align-items:center; }
+  .donut { width:80px; height:80px; position:relative; flex-shrink:0; }
+  .donut svg { transform:rotate(-90deg); }
+  .donut .label {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; font-size:11px;
+  }
+  .donut .label .big {
+    font-family:'Libre Baskerville',serif; font-size:18px; font-weight:700;
+    color:var(--accent);
+  }
+
+  /* Mandat-Zeile */
+  .mandat-row {
+    display:flex; align-items:center; gap:12px; padding:10px 12px;
+    background:var(--surface); border-radius:3px; box-shadow:var(--shadow-sm);
+    margin-bottom:6px; font-size:12.5px;
+  }
+  .mandat-row .name { flex:1; font-weight:500; }
+  .mandat-row .hours {
+    font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700;
+    color:var(--accent); min-width:60px; text-align:right;
+  }
+  .mandat-row .billable {
+    font-size:11px; padding:3px 7px; border-radius:2px; text-transform:uppercase;
+    letter-spacing:1px; font-weight:600;
+  }
+  .billable.yes { background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green); }
+  .billable.no  { background:color-mix(in srgb,var(--text-light) 10%,var(--bg)); color:var(--text-light); }
+
+  /* Mobile */
+  @media (max-width:960px) {
+    .timesheet { font-size:11px; }
+    .timesheet th, .timesheet td { padding:6px 4px; }
+  }
+  @media (max-width:640px) {
+    .timesheet-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .timesheet { min-width:700px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">ERP · Zeiterfassung</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="zeit-list.html">Zeiterfassung</a><span class="sep">/</span>
+    <span class="current">Lara Roth · KW 17 / 2026</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- Mockup-Demo-Toggle -->
+<div style="background:color-mix(in srgb,var(--amber) 6%,var(--surface));border-bottom:1px solid var(--border);padding:6px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px">
+  <span>ℹ <strong>Mockup-Demo:</strong> Vertrauensarbeitszeit-Prinzip · Wocheneinträge ohne Stempelpflicht · Erfassung Richtwert für Mandat-Billing &amp; Kapa-Planung</span>
+</div>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="entity-logo">LR</div>
+    <div class="banner-title">
+      <h1>KW 17 / 2026 · 21. – 27. April</h1>
+      <div class="banner-meta">
+        <span>Lara Roth · Senior Consultant</span>
+        <span class="dot"></span><span>100 % Pensum · 40 h Soll</span>
+        <span class="dot"></span><span>Vertrauensarbeitszeit</span>
+        <span class="dot"></span><span>Status: <strong style="color:var(--amber)">in Arbeit</strong></span>
+      </div>
+      <div class="banner-actions" style="margin-top:12px">
+        <button class="btn btn-primary btn-sm" onclick="openDrawer('bookDrawer')">+ Buchung erfassen</button>
+        <button class="btn btn-sm" onclick="openDrawer('weekCloseDrawer')">✓ Woche abschliessen</button>
+        <button class="btn btn-sm">◀ Vorwoche</button>
+        <button class="btn btn-sm">▶ Folgewoche</button>
+        <button class="btn btn-sm">📅 Woche wählen</button>
+        <button class="btn btn-sm">↓ Export PDF</button>
+      </div>
+    </div>
+    <div class="banner-chips" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="chip chip-accent">38.5 h erfasst</span>
+        <span class="chip chip-muted">40.0 h Soll</span>
+        <span class="chip chip-amber">−1.5 h</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="chip chip-green">74 % Billable</span>
+        <span class="chip chip-gold">+24 h Überstunden YTD</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPSHOT BAR -->
+<div class="snapshot-bar" style="position:sticky;top:0;z-index:50">
+  <div class="snapshot-item">
+    <span class="lbl">📊 Ist / Soll KW 17</span>
+    <span class="val">38.5 h</span>
+    <span class="delta">von 40 h · −1.5 h</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">💼 Billable (Mandat)</span>
+    <span class="val">28.5 h</span>
+    <span class="delta up">74 % · Ziel 70 %</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🏢 Overhead intern</span>
+    <span class="val">10.0 h</span>
+    <span class="delta">26 %</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">📋 Aktive Mandate</span>
+    <span class="val">4</span>
+    <span class="delta">2 Target · 1 Taskforce · 1 Time</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">⏰ Überstunden-Saldo</span>
+    <span class="val">+24 h</span>
+    <span class="delta">abgegolten bis 50 h / Jahr</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🎯 Utilization YTD</span>
+    <span class="val">68 %</span>
+    <span class="delta">Team-Ø 71 %</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabbar" style="position:sticky;top:64px;z-index:49">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Woche</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Monat</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Pro Mandat</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Überstunden</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Absenzen (Mirror)</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)">History</div>
+</nav>
+
+<div class="content">
+
+<!-- =========================================================== -->
+<!-- TAB 1 · WOCHE — Timesheet-Grid                               -->
+<!-- =========================================================== -->
+<div id="tab-1" class="tab-panel active">
+  <div class="card" style="padding:0">
+    <div class="timesheet-wrap" style="overflow-x:auto">
+      <table class="timesheet">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding-left:14px;min-width:240px">Buchung</th>
+            <th>Mo 21.</th>
+            <th>Di 22.</th>
+            <th>Mi 23.</th>
+            <th>Do 24.</th>
+            <th class="today">Fr 25.</th>
+            <th class="weekend">Sa 26.</th>
+            <th class="weekend">So 27.</th>
+            <th style="background:var(--accent-soft);color:var(--accent)">Σ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mandat-Zeilen (Billable) -->
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip mandat">Mandat</span>
+              <strong>CFO · Bauherr Muster AG</strong>
+              <div class="meta">Target-Mandat · MAN-2026-014 · AM PW</div>
+            </td>
+            <td class="h-cell">4.0</td>
+            <td class="h-cell">3.5</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell">5.0</td>
+            <td class="h-cell today">2.0</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--accent);font-family:'Libre Baskerville',serif">14.5</td>
+          </tr>
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip mandat">Mandat</span>
+              <strong>BIM-Manager · Implenia</strong>
+              <div class="meta">Taskforce · MAN-2026-008 · CM JV · Cap 80 h</div>
+            </td>
+            <td class="h-cell">2.0</td>
+            <td class="h-cell">4.0</td>
+            <td class="h-cell">3.0</td>
+            <td class="h-cell">1.5</td>
+            <td class="h-cell today empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--accent);font-family:'Libre Baskerville',serif">10.5</td>
+          </tr>
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip mandat">Mandat</span>
+              <strong>Interim Controller · Bauherr Muster</strong>
+              <div class="meta">Time-Mandat · MAN-2026-021 · pure Stundenbasis</div>
+            </td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell">3.5</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell today empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--accent);font-family:'Libre Baskerville',serif">3.5</td>
+          </tr>
+
+          <!-- Intern-Zeilen -->
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip internal">Intern</span>
+              <strong>Research-Pipeline-Pflege</strong>
+              <div class="meta">Nicht billable · Longlist-Maintenance</div>
+            </td>
+            <td class="h-cell">1.5</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell">2.0</td>
+            <td class="h-cell">1.0</td>
+            <td class="h-cell today">2.0</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--gold);font-family:'Libre Baskerville',serif">6.5</td>
+          </tr>
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip internal">Intern</span>
+              <strong>Team-Meeting &amp; 1-on-1s</strong>
+              <div class="meta">Nicht billable · fix Mo 09:00 / Do 14:00</div>
+            </td>
+            <td class="h-cell">1.0</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell">1.5</td>
+            <td class="h-cell today empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--gold);font-family:'Libre Baskerville',serif">2.5</td>
+          </tr>
+          <tr>
+            <td class="row-label">
+              <span class="cat-chip internal">Intern</span>
+              <strong>Schulung · Scheelen Relief</strong>
+              <div class="meta">Nicht billable · durch Budget gedeckt</div>
+            </td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell empty">—</td>
+            <td class="h-cell today">1.0</td>
+            <td class="h-cell weekend empty">—</td>
+            <td class="h-cell weekend empty">—</td>
+            <td style="background:var(--bg);font-weight:700;color:var(--gold);font-family:'Libre Baskerville',serif">1.0</td>
+          </tr>
+
+          <!-- Neue Zeile hinzufügen -->
+          <tr class="new-row">
+            <td colspan="9" style="padding:10px 14px">
+              <button class="btn btn-sm" onclick="openDrawer('bookDrawer')">+ Weitere Buchung</button>
+              <span class="muted" style="font-size:11px;margin-left:10px">Mandat, Interne Kategorie oder Abwesenheit</span>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="row-label"><strong>Tages-Summe</strong></td>
+            <td>8.5</td>
+            <td>7.5</td>
+            <td>8.5</td>
+            <td>9.0</td>
+            <td class="today">5.0</td>
+            <td class="weekend">—</td>
+            <td class="weekend">—</td>
+            <td style="color:var(--accent);font-size:15px">38.5</td>
+          </tr>
+          <tr>
+            <td class="row-label"><span class="muted" style="font-size:11.5px">Soll-Stunden (40 / 5 Tage)</span></td>
+            <td><span class="muted">8.0</span></td>
+            <td><span class="muted">8.0</span></td>
+            <td><span class="muted">8.0</span></td>
+            <td><span class="muted">8.0</span></td>
+            <td class="today"><span class="muted">8.0</span></td>
+            <td class="weekend">—</td>
+            <td class="weekend">—</td>
+            <td><span class="muted">40.0</span></td>
+          </tr>
+          <tr>
+            <td class="row-label"><span style="font-size:11.5px">Delta</span></td>
+            <td style="color:var(--green);font-size:12px">+0.5</td>
+            <td style="color:var(--red);font-size:12px">−0.5</td>
+            <td style="color:var(--green);font-size:12px">+0.5</td>
+            <td style="color:var(--green);font-size:12px">+1.0</td>
+            <td class="today" style="color:var(--red);font-size:12px">−3.0</td>
+            <td class="weekend">—</td>
+            <td class="weekend">—</td>
+            <td style="color:var(--red);font-size:13px">−1.5</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick-Actions + Saldo -->
+  <div class="grid-2" style="margin-top:18px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Aufteilung diese Woche</div></div>
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--border)" stroke-width="10"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--accent)" stroke-width="10"
+                    stroke-dasharray="148.8 201" stroke-linecap="butt"/>
+          </svg>
+          <div class="label"><span class="big">74 %</span><span class="muted">Billable</span></div>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--border)">
+            <span><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:2px;margin-right:6px"></span>Mandate (Billable)</span>
+            <strong>28.5 h · 74 %</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--border)">
+            <span><span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:2px;margin-right:6px"></span>Intern (Overhead)</span>
+            <strong>10.0 h · 26 %</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0">
+            <span><span style="display:inline-block;width:10px;height:10px;background:var(--red);border-radius:2px;margin-right:6px"></span>Absenzen</span>
+            <strong>0 h · 0 %</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">Wochen-Abschluss</div></div>
+      <dl class="field-grid">
+        <dt>Erfasst</dt><dd><strong>38.5 h</strong> von 40 h Soll</dd>
+        <dt>Delta</dt><dd style="color:var(--red)"><strong>−1.5 h</strong> · unter Soll</dd>
+        <dt>Status</dt><dd><span class="chip chip-amber">⏳ in Arbeit</span></dd>
+        <dt>Abschluss-Frist</dt><dd>Montag 28.04. · 09:00</dd>
+        <dt>Vorgesetzter-Review</dt><dd>PW · nicht genehmigungspflichtig</dd>
+      </dl>
+      <div style="margin-top:10px;padding:10px 12px;background:color-mix(in srgb,var(--accent) 6%,var(--bg));border-radius:3px;font-size:12px;line-height:1.5">
+        ℹ Bei Vertrauensarbeitszeit kein Approval erforderlich. Wochen-Abschluss signalisiert „Woche komplett erfasst" und sperrt rückwirkende Edits (Edit-Rechte nur HR / Admin).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 2 · MONAT                                                -->
+<!-- =========================================================== -->
+<div id="tab-2" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">April 2026 IST</div><div class="kpi-value">142 h</div><div class="kpi-sub muted">von 160 h Soll (20 AT)</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Billable</div><div class="kpi-value">102 h</div><div class="kpi-sub muted">72 % · Ziel 70 %</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Intern</div><div class="kpi-value">36 h</div><div class="kpi-sub muted">25 %</div></div>
+    <div class="kpi-card"><div class="kpi-label">Abwesenheit</div><div class="kpi-value">4 h</div><div class="kpi-sub muted">½ Krank-Tag 10.04.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Wochen-Übersicht April 2026</div></div>
+    <table class="data-table">
+      <thead><tr><th>KW</th><th>Zeitraum</th><th>Soll</th><th>Ist</th><th>Delta</th><th>Billable</th><th>Intern</th><th>Absenzen</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer">
+          <td>14</td><td>30.03. – 05.04.</td><td>40.0</td><td>41.5</td><td style="color:var(--green)">+1.5</td><td>30.0 (72 %)</td><td>11.5</td><td>—</td><td><span class="chip chip-green">✓ abgeschlossen</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td>15</td><td>06.04. – 12.04.</td><td>32.0</td><td>25.5</td><td style="color:var(--red)">−6.5</td><td>18.0 (71 %)</td><td>7.5</td><td>3 d Krank · 10.-14.04.</td><td><span class="chip chip-green">✓ abgeschlossen</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td>16</td><td>13.04. – 19.04.</td><td>40.0</td><td>36.5</td><td style="color:var(--red)">−3.5</td><td>25.5 (70 %)</td><td>11.0</td><td>½ d Krank · 14.04.</td><td><span class="chip chip-green">✓ abgeschlossen</span></td>
+        </tr>
+        <tr style="cursor:pointer;background:color-mix(in srgb,var(--amber) 5%,var(--surface))">
+          <td>17</td><td>20.04. – 26.04.</td><td>40.0</td><td>38.5</td><td style="color:var(--red)">−1.5</td><td>28.5 (74 %)</td><td>10.0</td><td>—</td><td><span class="chip chip-amber">⏳ aktuell</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td>18</td><td>27.04. – 03.05.</td><td>24.0</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td>3 d Ferien · 28.-30.04.<br>1 d Feiertag · 01.05.</td><td><span class="chip chip-muted">geplant</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 3 · PRO MANDAT                                           -->
+<!-- =========================================================== -->
+<div id="tab-3" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Aktive Mandate</div><div class="kpi-value">4</div><div class="kpi-sub muted">2 Target · 1 Taskforce · 1 Time</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Billable-Stunden YTD</div><div class="kpi-value">312 h</div><div class="kpi-sub muted">über alle Mandate</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Time-Umsatz YTD</div><div class="kpi-value">CHF 42k</div><div class="kpi-sub muted">nur Time-Mandat-Stunden · CHF 165/h</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Ø Stunden / Mandat</div><div class="kpi-value">78 h</div><div class="kpi-sub muted">Target-Mandate Ø</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Stunden pro Mandat · April 2026</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-sm">April 2026</button>
+        <button class="btn btn-sm">Q1 2026</button>
+        <button class="btn btn-sm">Alle</button>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Mandat</th><th>Typ</th><th>Rolle</th><th>Stunden diesen Monat</th><th>Billable</th><th>Stunden YTD</th><th>Cap</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer">
+          <td><strong>CFO · Bauherr Muster AG</strong><div class="muted" style="font-size:11px">MAN-2026-014 · AM PW</div></td>
+          <td><span class="chip chip-accent">Target</span></td>
+          <td>CM</td>
+          <td><strong>42.5 h</strong></td>
+          <td><span class="billable yes">Ja</span></td>
+          <td>86 h</td>
+          <td class="muted">— (Fixhonorar)</td>
+          <td><span class="chip chip-green">läuft · Stage 2nd</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>BIM-Manager · Implenia</strong><div class="muted" style="font-size:11px">MAN-2026-008 · CM JV</div></td>
+          <td><span class="chip chip-accent">Taskforce</span></td>
+          <td>Research</td>
+          <td><strong>28.0 h</strong></td>
+          <td><span class="billable yes">Ja</span></td>
+          <td>54 h</td>
+          <td>80 h · 68 % ausgeschöpft</td>
+          <td><span class="chip chip-green">läuft · Stage CV Sent</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Interim Controller · Bauherr Muster</strong><div class="muted" style="font-size:11px">MAN-2026-021 · CM LR</div></td>
+          <td><span class="chip chip-accent">Time</span></td>
+          <td>Consultant</td>
+          <td><strong>16.5 h</strong></td>
+          <td><span class="billable yes">Ja</span></td>
+          <td>32 h</td>
+          <td class="muted">— (pure Stundenbasis)</td>
+          <td><span class="chip chip-green">läuft · monatliche Billing</span></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Head of Finance · HRS Real Estate</strong><div class="muted" style="font-size:11px">MAN-2026-003 · CM LR</div></td>
+          <td><span class="chip chip-accent">Target</span></td>
+          <td>CM</td>
+          <td><strong>15.0 h</strong></td>
+          <td><span class="billable yes">Ja</span></td>
+          <td>140 h</td>
+          <td class="muted">— (Fixhonorar)</td>
+          <td><span class="chip chip-muted">Stage Placement · vor Abschluss</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 4 · ÜBERSTUNDEN                                          -->
+<!-- =========================================================== -->
+<div id="tab-4" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Saldo YTD</div><div class="kpi-value">+24 h</div><div class="kpi-sub muted">abgegolten bis 50 h</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Schwelle Ausbezahlung</div><div class="kpi-value">50 h</div><div class="kpi-sub muted">pro Jahr · Vertrags-Regel</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Bis Jahresende</div><div class="kpi-value">26 h</div><div class="kpi-sub muted">Puffer bis Auszahlung</div></div>
+    <div class="kpi-card"><div class="kpi-label">Letztes Reset</div><div class="kpi-value">01.01.2026</div><div class="kpi-sub muted">Jahresstart · Konto rückgesetzt</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Monats-Verlauf 2026</div></div>
+        <table class="data-table">
+          <thead><tr><th>Monat</th><th>Soll</th><th>Ist</th><th>Delta Monat</th><th>Saldo kumuliert</th></tr></thead>
+          <tbody>
+            <tr><td>Januar</td><td>176 h</td><td>184 h</td><td style="color:var(--green)">+8 h</td><td><strong>+8 h</strong></td></tr>
+            <tr><td>Februar</td><td>160 h</td><td>168 h</td><td style="color:var(--green)">+8 h</td><td><strong>+16 h</strong></td></tr>
+            <tr><td>März</td><td>176 h</td><td>182 h</td><td style="color:var(--green)">+6 h</td><td><strong>+22 h</strong></td></tr>
+            <tr style="background:color-mix(in srgb,var(--accent) 5%,var(--surface))"><td>April (bis 25.04.)</td><td>140 h</td><td>142 h</td><td style="color:var(--green)">+2 h</td><td><strong>+24 h</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Überstunden-Regel</div></div>
+        <dl class="field-grid">
+          <dt>Modell</dt><dd>Jahreslohn deckt 50 h / Jahr</dd>
+          <dt>Bis Schwelle</dt><dd>keine Auszahlung, kein Zeit-Ausgleich</dd>
+          <dt>Über Schwelle</dt><dd>Auszahlung 125 % Stundensatz oder 1:1.25 Zeit-Ausgleich</dd>
+          <dt>Jahres-Reset</dt><dd>01.01. · nicht-abgegoltene Stunden verfallen</dd>
+          <dt>Dokumentation</dt><dd>Arbeitsvertrag §8 · <a href="#">PDF</a></dd>
+        </dl>
+        <div class="edit-hint" style="margin-top:10px">
+          Automatischer Alert bei Überschreitung 45 h (90 %) an HR + Vorgesetzten PW.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 5 · ABSENZEN (Mirror aus HR)                             -->
+<!-- =========================================================== -->
+<div id="tab-5" class="tab-panel">
+  <div style="background:color-mix(in srgb,var(--accent) 6%,var(--surface));border:1px solid var(--accent);border-radius:3px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.6">
+    <strong style="color:var(--accent)">🔗 Mirror aus HR-Tool</strong> · Absenzen werden im <a href="hr.html" style="color:var(--accent);font-weight:600">HR-Tool → Tab Absenzen &amp; Ferien</a> erfasst und hier nur gespiegelt. Hier nicht bearbeitbar.
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">Absenzen April 2026</div></div>
+    <div class="list-item">
+      <div class="name"><strong>Krankheit · 10. – 14.04.2026</strong> <span class="muted">· 3 Werktage</span></div>
+      <div class="meta">gemeldet 10.04. · Grippe · ohne Arztzeugnis (&lt; 5 Tage)</div>
+      <span class="chip chip-muted">bezogen</span>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Ferien · 28. – 30.04.2026</strong> <span class="muted">· 3 Tage</span></div>
+      <div class="meta">beantragt 15.04. · Genehmiger PW</div>
+      <span class="chip chip-amber">⏳ pending</span>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Feiertag · 01.05.2026</strong></div>
+      <div class="meta">Tag der Arbeit · bezahlt</div>
+      <span class="chip chip-muted">Feiertag</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-head"><div class="card-title">Saldo 2026 (aus HR)</div></div>
+    <div class="balance-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+      <div class="card" style="margin:0;padding:14px;box-shadow:var(--shadow-sm)">
+        <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px">Ferien-Rest</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--accent)">18 / 25</div>
+        <div class="muted" style="font-size:11px">7 bezogen · 2 geplant</div>
+      </div>
+      <div class="card" style="margin:0;padding:14px;box-shadow:var(--shadow-sm)">
+        <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px">Krank YTD</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--red)">3 d</div>
+        <div class="muted" style="font-size:11px">unter Team-Ø 4.2 d</div>
+      </div>
+      <div class="card" style="margin:0;padding:14px;box-shadow:var(--shadow-sm)">
+        <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px">Unbezahlt</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--text-light)">0 d</div>
+        <div class="muted" style="font-size:11px">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 6 · HISTORY                                              -->
+<!-- =========================================================== -->
+<div id="tab-6" class="tab-panel">
+  <div class="card">
+    <div class="card-head"><div class="card-title">Zeiterfassungs-Events</div></div>
+    <div class="hist-timeline">
+      <div class="hist-day">
+        <div class="hist-day-head">Heute · 25.04.2026</div>
+        <div class="hist-row"><div class="hist-time">11:30</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>Buchung erfasst · 2.0 h</strong></div><div class="hist-sub">CFO · Bauherr Muster AG · Mandat · Fr 25.04.</div><div class="hist-meta"><span class="actor">LR</span></div></div></div>
+        <div class="hist-row"><div class="hist-time">09:00</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>Buchung erfasst · 2.0 h</strong></div><div class="hist-sub">Research-Pipeline-Pflege · Intern · Fr 25.04.</div><div class="hist-meta"><span class="actor">LR</span></div></div></div>
+      </div>
+      <div class="hist-day">
+        <div class="hist-day-head">21.04.2026 · KW 17 Start</div>
+        <div class="hist-row"><div class="hist-time">17:15</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>Woche KW 16 abgeschlossen</strong></div><div class="hist-sub">36.5 h erfasst · −3.5 h unter Soll (½ d Krank) · gesperrt</div><div class="hist-meta"><span class="actor">LR</span></div></div></div>
+      </div>
+      <div class="hist-day">
+        <div class="hist-day-head">14.04.2026 · KW 15 Ende</div>
+        <div class="hist-row"><div class="hist-time">17:30</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>Woche KW 15 abgeschlossen</strong></div><div class="hist-sub">25.5 h · 3 d Krank (10.-14.04.) · gesperrt</div><div class="hist-meta"><span class="actor">LR</span></div></div></div>
+      </div>
+      <div class="hist-day">
+        <div class="hist-day-head">07.04.2026 · KW 14 Ende</div>
+        <div class="hist-row"><div class="hist-time">18:00</div><div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div><div class="hist-body"><div class="hist-title"><strong>Woche KW 14 abgeschlossen</strong></div><div class="hist-sub">41.5 h · +1.5 h über Soll</div><div class="hist-meta"><span class="actor">LR</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- =========================================================== -->
+<!-- DRAWERS                                                       -->
+<!-- =========================================================== -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER · Buchung erfassen -->
+<div class="drawer" id="bookDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⏱</div>
+    <div class="info">
+      <h2>Buchung erfassen</h2>
+      <div class="sub">Mandat, interne Kategorie oder Abwesenheit · Stunden-Granularität (0.5 h Schritte)</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('bookDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Kategorie</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="padding:10px;border:1px solid var(--accent);border-radius:3px;background:color-mix(in srgb,var(--accent) 5%,var(--bg));cursor:pointer"><input type="radio" name="cat" checked> <strong>Mandat</strong> <span class="muted">· billable Stunden</span></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="cat"> <strong>Intern</strong> <span class="muted">· Overhead / Admin / Training</span></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="cat"> <strong>Abwesenheit</strong> <span class="muted">· öffnet HR-Tool</span></label>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Mandat</h4>
+      <dl class="field-grid">
+        <dt>Mandat <span style="color:var(--red)">*</span></dt>
+        <dd><select>
+          <option>— wählen —</option>
+          <option>CFO · Bauherr Muster AG (Target · MAN-2026-014)</option>
+          <option>BIM-Manager · Implenia (Taskforce · MAN-2026-008)</option>
+          <option>Interim Controller · Bauherr Muster (Time · MAN-2026-021)</option>
+          <option>Head of Finance · HRS Real Estate (Target · MAN-2026-003)</option>
+        </select></dd>
+        <dt>Rolle im Mandat</dt>
+        <dd><select><option>CM</option><option>AM</option><option>Research</option><option>Consultant</option></select></dd>
+        <dt>Datum <span style="color:var(--red)">*</span></dt>
+        <dd><input type="date" value="2026-04-25"></dd>
+        <dt>Stunden <span style="color:var(--red)">*</span></dt>
+        <dd><input type="number" step="0.5" min="0.5" max="12" value="2.0" style="width:100px"> h · in 0.5-Schritten</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Tätigkeit (optional)</h4>
+      <dl class="field-grid">
+        <dt>Activity-Typ</dt><dd><select>
+          <option>— nicht kategorisiert —</option>
+          <option>Briefing-Call Kunde</option>
+          <option>Interview-Coaching Kandidat</option>
+          <option>Debriefing</option>
+          <option>Longlist-Research</option>
+          <option>CV-Review</option>
+          <option>Interview-Durchführung (Kunde ↔ Kandidat) — nur beobachten</option>
+          <option>Exposé / Dokument erstellen</option>
+          <option>Kunde-Update-Mail</option>
+          <option>Sonstige Mandat-Arbeit</option>
+        </select></dd>
+        <dt>Notiz</dt><dd><textarea placeholder="Was wurde gemacht? Für interne KPIs und Mandats-Journal" style="width:100%;min-height:50px"></textarea></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Verknüpfungen (optional)</h4>
+      <div class="list-item"><div class="name"><label><input type="checkbox"> Prozess · Tobias Furrer (CV Sent)</label></div></div>
+      <div class="list-item"><div class="name"><label><input type="checkbox"> Prozess · Martin Stucki (Briefing)</label></div></div>
+      <div class="list-item"><div class="name"><label><input type="checkbox"> Activity in CRM-Historie anlegen</label></div></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('bookDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Speichern &amp; Neu</button>
+    <button class="btn btn-sm btn-primary">Speichern</button>
+  </div>
+</div>
+
+<!-- DRAWER · Woche abschliessen -->
+<div class="drawer" id="weekCloseDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✓</div>
+    <div class="info">
+      <h2>Woche KW 17 abschliessen</h2>
+      <div class="sub">Wochen-Status auf „abgeschlossen" setzen · rückwirkende Edits gesperrt</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('weekCloseDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Wochen-Summe</h4>
+      <dl class="field-grid">
+        <dt>Erfasst</dt><dd><strong>38.5 h</strong></dd>
+        <dt>Soll</dt><dd>40.0 h (5 AT × 8 h)</dd>
+        <dt>Delta</dt><dd style="color:var(--red)"><strong>−1.5 h</strong></dd>
+        <dt>Billable</dt><dd>28.5 h · 74 %</dd>
+        <dt>Intern</dt><dd>10.0 h · 26 %</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Plausibilitäts-Check</h4>
+      <div style="font-size:13px;padding:10px 12px;background:color-mix(in srgb,var(--amber) 6%,var(--bg));border-radius:3px;border-left:3px solid var(--amber)">
+        ⚠ <strong>Hinweis:</strong> 1.5 h unter Soll. Wenn bewusst (z.B. Ferien-Vorbereitung, Firmen-Event), Kommentar anfügen.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Kommentar (optional)</h4>
+      <textarea placeholder="z.B. Dienstag Arzttermin 2 h · privat genutzt" style="width:100%;min-height:60px"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Nach Abschluss</h4>
+      <dl class="field-grid">
+        <dt>Edit-Rechte</dt><dd>nur HR-Manager + Admin (mit Audit-Log)</dd>
+        <dt>Info an</dt><dd>Vorgesetzter PW · automatische Zusammenfassung</dd>
+        <dt>Saldo-Update</dt><dd>Überstunden-Konto aktualisiert (−1.5 h → Saldo +22.5 h)</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('weekCloseDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Woche abschliessen</button>
+  </div>
+</div>
+
+<script src="../mockups/_shared/layout.js"></script>
+<script>
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
