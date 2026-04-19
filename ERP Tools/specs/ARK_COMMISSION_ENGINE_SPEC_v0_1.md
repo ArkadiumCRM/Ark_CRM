@@ -81,10 +81,22 @@ ALTER TABLE dim_mitarbeiter ADD COLUMN IF NOT EXISTS
     'backoffice',
     'none'
   )),
-  head_of_sparten TEXT[],                    -- ['CI','BT'] für Peter · Rollup-Scope
+  head_of_scope_type TEXT CHECK (head_of_scope_type IN (
+    'sparten',                 -- Peter (CI+BT) · Yavor (ARC+REM)
+    'custom_metric',           -- Stefano · Metrik-Definition ausstehend
+    'cross_sparten',           -- falls später gebraucht (alle Sparten)
+    'none'
+  )),
+  head_of_sparten TEXT[],       -- ['CI','BT'] wenn scope_type='sparten'
+  head_of_scope_definition JSONB, -- z.B. {metric:'new_mandates_acquired', target:50, ...} für 'custom_metric'
   bonus_ermessen_eligible BOOLEAN DEFAULT false,
   bonus_ermessen_approver_id UUID REFERENCES dim_mitarbeiter(id);  -- GF für Sabrina/Severina-BO-Teil
 ```
+
+**Beispiel-Werte**:
+- Peter: `scope_type='sparten'`, `head_of_sparten=['CI','BT']`, `scope_definition=NULL`
+- Yavor: `scope_type='sparten'`, `head_of_sparten=['ARC','REM']`, `scope_definition=NULL`
+- Stefano: `scope_type='custom_metric'`, `head_of_sparten=NULL`, `scope_definition={"status":"pending_definition","role_title":"Market Strategy & Client Solutions"}`
 
 ### 2.2 Neue Tabellen
 
@@ -748,40 +760,98 @@ NS;Nenad Stoparanovic;Q1-2026;bonus_ermessen;—;0;0;0;0;0;5000;5000
 
 ---
 
-## 9. Migrations-Strategie (bestehende Excel-Daten)
+## 9. Migrations-Strategie · Historische Daten (Peter 2026-04-19)
 
-### 9.1 Initial-Import
+### 9.1 Historie-Anforderung
 
-Peter hat Excel-Sheets für Joaquin + Peter + alle anderen MA. Migration:
+Peter-Input 2026-04-19: **Möglichkeit muss vorhanden sein vergangene Umsätze einzutragen auch bei langjährigen MA**. Beispiel Peter selbst (6 Jahre):
+- Jahre 1-2: Researcher (Pauschale pro Placement)
+- Jahre 3-4: CM (CM/AM 50/50 mit ZEG-Staffel)
+- Jahre 4-5: CM + AM (voller Anteil 100 %)
+- Jahre 5-6: Head of CI & BT (Teambudget-Rollup)
 
-```
-1. CSV-Export aller Excel-Sheets
-2. Import-Script:
-  FOR jede_zeile IN excel:
-    INSERT fact_commission_ledger (
-      mitarbeiter_id = map_kuerzel_to_id(zeile.MA),
-      period_year = 2026,
-      period_quarter = zeile.Quartal,
-      model = derive_from_role(zeile.MA.role),
-      net_fees_cumulated_chf = zeile.NetFees,
-      budget_cumulated_chf = zeile.Budget,
-      zeg_pct = zeile.ZEG,
-      staffel_rate_pct = zeile.Prov_Satz,
-      commission_gross_chf = zeile.Prov_Brutto,
-      abschlag_chf = zeile.Abschlag,
-      ruecklage_chf = zeile.Ruecklage,
-      status = 'approved',
-      notes = 'Migration aus Excel 2026-04-19'
-    )
+**Konsequenz**: Migration ist nicht nur "initial Import", sondern **dauerhafte Fähigkeit** historische Daten einzutragen. `dim_commission_year` speichert pro MA · pro Jahr · pro Rolle:
+
+```sql
+-- Beispiel Peter 2021-2026 (6 Rollen-Jahre)
+INSERT INTO dim_commission_year (mitarbeiter_id, year, commission_role, annual_budget_chf, annual_ote_chf) VALUES
+  ('uuid-peter', 2021, 'researcher', NULL, NULL),  -- Pauschale, kein Budget
+  ('uuid-peter', 2022, 'researcher', NULL, NULL),
+  ('uuid-peter', 2023, 'cm_am', 360000, 30000),
+  ('uuid-peter', 2024, 'cm_am', 440000, 40000),
+  ('uuid-peter', 2025, 'cm_am', 500000, 50000),    -- mit Split-Rollen AM+CM mal
+  ('uuid-peter', 2026, 'head_of', 1500000, 90000); -- seit Beförderung
 ```
 
-### 9.2 Parallelbetrieb Phase 1
+### 9.2 Historische Placements & Researcher-Fees
 
-Erste 3-6 Monate: ARK-Engine berechnet, Excel parallel weiterführen, Resultate manuell vergleichen → Vertrauen aufbauen.
+```sql
+-- Historische Placements eintragen (ggf. ohne existierende process_id)
+INSERT INTO fact_commission_ledger (
+  mitarbeiter_id, period_year, period_quarter,
+  commission_role, model,
+  net_fees_cumulated_chf, budget_cumulated_chf, zeg_pct,
+  staffel_rate_pct, commission_gross_chf, abschlag_chf, ruecklage_chf,
+  source_snapshot,
+  status = 'paid_ruecklage',  -- historisch: voll bezahlt
+  calculated_at = <historisches_datum>,
+  calculated_by = <admin-user>,
+  notes = 'Migration-Eintrag · Excel-Quelle · Periode vor CRM-Einführung'
+);
 
-### 9.3 Switch-over
+-- Historische Researcher-Pauschalen
+INSERT INTO fact_researcher_fee (
+  researcher_id, placement_date, rate_chf,
+  status = 'paid',
+  rationale = 'Historisch · ohne Process-Referenz',
+  notes = 'Migration aus Excel'
+);
+```
 
-Nach QA-Phase: Excel-Sheets archivieren, nur noch ARK-Engine produktiv.
+**Wichtige Felder für historische Imports**:
+- `notes` Pflicht mit "Migration"-Prefix für Audit-Trail-Klarheit
+- `source_snapshot` JSONB speichert Original-Excel-Daten als Backup
+- `calculated_at` kann rückdatiert werden (Historie-Rekonstruktion)
+- `calculated_by` = Admin-User (system-account) für Migrations-Batch
+
+### 9.3 Rollen-Historie-View
+
+```sql
+-- Übersicht für MA-Self: "Meine Rollen-Historie"
+CREATE VIEW v_my_role_history AS
+SELECT
+  mitarbeiter_id,
+  year,
+  commission_role,
+  annual_budget_chf,
+  annual_ote_chf,
+  (SELECT SUM(commission_gross_chf) FROM fact_commission_ledger fcl
+    WHERE fcl.mitarbeiter_id = dcy.mitarbeiter_id
+    AND fcl.period_year = dcy.year
+    AND fcl.status != 'superseded') AS total_commission_year
+FROM dim_commission_year dcy
+ORDER BY mitarbeiter_id, year DESC;
+```
+
+UI · Mitarbeiter-Profil-Tab "Karriere-Verlauf" zeigt Peter: "2021-2022 Researcher (CHF 8'400) → 2023 CM (CHF 24'500) → 2024 CM/AM (CHF 38'200) → 2025 CM (CHF 52'800) → 2026 Head of (CHF X YTD)".
+
+### 9.4 Parallelbetrieb + Switch-over
+
+- Phase 1 · 3-6 Monate: ARK-Engine läuft parallel · Excel-Abgleich pro Quartal
+- Validation: Unit-Tests gegen Peter-Q1-2026-Sheet + Joaquin-Q1-2026-Sheet (beide Resultate müssen matchen)
+- Switch-over: Nach 3-6 Monaten Clean-Lauf · Excel wird Archiv · ARK-Engine primär
+
+### 9.5 Rollen-Wechsel innerhalb Jahr
+
+Möglich: `dim_commission_year` erlaubt mehrere Einträge pro MA pro Jahr wenn Rolle wechselt:
+
+```sql
+-- Beispiel: MA wird mitten Jahr befördert von CM zu Head of
+UPDATE dim_commission_year SET pro_rata_end_month = 6 WHERE id = 'alte-rolle-cm';
+INSERT INTO dim_commission_year (year, commission_role='head_of', pro_rata_start_month=7, ...);
+```
+
+Commission-Berechnung berücksichtigt aktive Rolle pro Quartal (Q1-Q2 als CM · Q3-Q4 als Head of).
 
 ---
 
@@ -826,14 +896,14 @@ Nach QA-Phase: Excel-Sheets archivieren, nur noch ARK-Engine produktiv.
 5. ✅ Bonus-Ermessen: **kein CHF-Limit** · GF entscheidet · Head-of-Absprache bei Nicht-GF-Boni Pflicht · GF-Self-Approval ohne Absprache
 7. ✅ Quartals-Abschluss **nachträglich änderbar** mit Audit-Log (via `superseded`-Marker)
 
-**3 noch offen**:
-3. ⚠ **Stefano Papes · "Head of Market Strategy & Client Solutions"** — keine ARK-Sparte · Teambudget-Scope muss Peter klären:
-   - Option A: Cross-Sparten-Rollup (alle Umsätze · aber dann Dopplung mit Peter/Yavor)
-   - Option B: Nur Mandate die Stefano selber akquiriert hat (`dim_mandate.acquired_by_user_id`)
-   - Option C: Spezielle Mandats-Kategorie (z.B. alle Target-Retainer oder Strategic-Accounts)
-   - Option D: Eigenes Metrik-System (nicht Umsatz-basiert sondern z.B. Neu-Account-Akquise)
-6. ⚠ **Migration-Startpunkt**: Peter-Rückfrage — was gemeint war: Excel-Daten aus Joaquin-Sheet + Peter-Sheet (Q1 2026 · ggf. auch 2025) als Initial-Seed in `fact_commission_ledger` importieren? Oder startet ARK-Engine bei null und Excel wird erst ab 2027 abgelöst?
-1b. ⚠ **Assessment-Manager-Staffel-Detail**: ZEG-Staffel wie CM/AM · oder linear (50 % Ziel → 50 % Bonus) · oder binär (erreicht/nicht)?
+**Peter-Antworten 2026-04-19 (Runde 2)**:
+3. ✅ **Stefano Option D** · eigenes Metrik-System · Metrik-Definition "noch zu definieren" · Platzhalter bis Definition (keine ZEG-Rollup aktiv)
+6. ✅ **Migration mit Rollen-Historie** · MA haben über Jahre verschiedene Rollen durchlaufen (Peter 6J: Researcher → CM → CM/AM → Head of) · System muss vergangene Umsätze eintragen lassen + historische Rollen-Zuordnung abbilden
+1b. ✅ **Severina Jahresziel 2026: CHF 300k Assessment-Umsatz** · Staffel-Detail ebenfalls "noch zu definieren" · Vorschlag: ZEG-Staffel wie CM/AM + 100 %-Zuteilung (kein Split)
+
+**Noch offen (2 TBC)**:
+- Stefanos Metrik-System · konkrete Definition (Neu-Akquise · Pipeline-Aufbau · Client-Retention · ?)
+- Assessment-Staffel · ZEG wie CM/AM oder linear/binär · OTE-Betrag
 
 ---
 
