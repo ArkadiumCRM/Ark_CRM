@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Mitarbeitende · Lara Roth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../mockups/_shared/editorial.css">
+<style>
+  /* Page-specific Styles HR-Tool */
+
+  /* Organigramm-Baum (Tab 3 Rolle & Org) */
+  .org-tree { font-size:13px; list-style:none; padding-left:0; }
+  .org-tree ul { list-style:none; padding-left:24px; border-left:1px dashed var(--border-strong); margin-left:8px; }
+  .org-tree li { padding:6px 0; position:relative; }
+  .org-node { display:flex; gap:10px; align-items:center; padding:6px 8px; border-radius:3px; cursor:pointer; }
+  .org-node:hover { background:var(--bg); }
+  .org-node.self { background:var(--accent-soft); font-weight:600; }
+  .org-badge {
+    display:inline-flex; width:30px; height:30px; border-radius:3px;
+    background:var(--accent-soft); color:var(--accent); font-size:11px;
+    align-items:center; justify-content:center; font-weight:600; flex-shrink:0;
+  }
+  .org-role { font-size:11.5px; color:var(--text-light); }
+
+  /* Ferien-Kalender (Tab 4 Absenzen) */
+  .absence-calendar {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:2px;
+    background:var(--surface); padding:8px; border-radius:4px;
+    box-shadow:var(--shadow-sm);
+  }
+  .cal-day {
+    aspect-ratio:1; min-height:44px; padding:6px; font-size:11px;
+    background:var(--bg); border-radius:2px; display:flex; flex-direction:column;
+    position:relative;
+  }
+  .cal-day.weekend { background:color-mix(in srgb,var(--border) 40%,var(--bg)); }
+  .cal-day.today { outline:2px solid var(--accent); }
+  .cal-day .num { font-weight:600; font-size:12px; }
+  .cal-day.vacation { background:color-mix(in srgb,var(--accent) 30%,var(--bg)); color:var(--accent); font-weight:600; }
+  .cal-day.sick { background:color-mix(in srgb,var(--red) 25%,var(--bg)); color:var(--red); }
+  .cal-day.pending { background:color-mix(in srgb,var(--amber) 25%,var(--bg)); color:var(--amber); border:1px dashed var(--amber); }
+  .cal-day.holiday { background:color-mix(in srgb,var(--gold) 20%,var(--bg)); color:var(--gold); }
+  .cal-header {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:2px;
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); padding:0 8px; margin-bottom:6px; font-weight:600;
+  }
+  .cal-header div { text-align:center; padding:4px 0; }
+
+  /* Zertifikate-Grid (Tab 6) */
+  .cert-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+  .cert-card {
+    background:var(--surface); padding:14px 16px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .cert-card.expired { border-left-color:var(--red); opacity:0.7; }
+  .cert-card.expiring { border-left-color:var(--amber); }
+  .cert-card .name { font-weight:600; font-size:13px; margin-bottom:4px; }
+  .cert-card .issuer { font-size:11px; color:var(--text-light); margin-bottom:8px; }
+  .cert-card .dates { font-size:11.5px; color:var(--text-mid); display:flex; justify-content:space-between; }
+  .cert-card .dates .until { font-weight:500; }
+
+  /* Onboarding-Checklist (Tab 5) */
+  .checklist { display:flex; flex-direction:column; gap:4px; }
+  .check-item {
+    display:flex; gap:10px; align-items:flex-start; padding:10px 12px;
+    background:var(--surface); border-radius:3px; box-shadow:var(--shadow-sm);
+    font-size:12.5px;
+  }
+  .check-item.done { opacity:0.65; }
+  .check-item.done .name { text-decoration:line-through; }
+  .check-item input[type="checkbox"] { margin-top:2px; flex-shrink:0; }
+  .check-item .body { flex:1; }
+  .check-item .name { font-weight:500; }
+  .check-item .meta { font-size:11px; color:var(--text-light); margin-top:2px; }
+  .check-item .due { font-size:11px; color:var(--amber); font-weight:500; }
+  .phase-head {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); padding:14px 0 8px 0; font-weight:600;
+    border-bottom:1px solid var(--border); margin-bottom:8px;
+  }
+
+  /* HR-Dokumente-Grid (Tab 7) */
+  .doc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+  .doc-card {
+    background:var(--surface); padding:14px; border-radius:4px;
+    box-shadow:var(--shadow-sm); cursor:pointer;
+  }
+  .doc-card:hover { box-shadow:var(--shadow); }
+  .doc-icon {
+    width:42px; height:52px; background:var(--accent-soft); color:var(--accent);
+    border-radius:3px; display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:10px; margin-bottom:8px;
+  }
+  .doc-card .doc-name { font-size:12.5px; font-weight:500; line-height:1.35; }
+  .doc-card .doc-meta { font-size:11px; color:var(--text-light); margin-top:4px; }
+  .doc-card .retention {
+    font-size:10.5px; margin-top:6px; padding:3px 6px; border-radius:2px;
+    display:inline-block;
+  }
+  .doc-card .retention.ok { background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green); }
+  .doc-card .retention.warn { background:color-mix(in srgb,var(--amber) 20%,var(--bg)); color:var(--amber); }
+
+  /* Saldo-Kacheln (Tab 4) */
+  .balance-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
+  .balance-card {
+    background:var(--surface); padding:14px 16px; border-radius:4px;
+    box-shadow:var(--shadow-sm);
+  }
+  .balance-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .balance-card .val { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); margin:4px 0; }
+  .balance-card .sub { font-size:11px; color:var(--text-mid); }
+  .balance-card.warn .val { color:var(--amber); }
+  .balance-card.ok .val { color:var(--green); }
+
+  /* Audit-Row (Tab 9) */
+  .audit-row {
+    display:grid; grid-template-columns:140px 100px 120px 1fr 80px;
+    gap:10px; padding:10px 12px; border-bottom:1px solid var(--border);
+    font-size:12px; align-items:center;
+  }
+  .audit-row:hover { background:var(--bg); }
+  .audit-row .time { color:var(--text-light); font-size:11px; }
+  .audit-row .action { font-weight:600; }
+  .audit-row .action.view { color:var(--text-mid); }
+  .audit-row .action.update { color:var(--accent); }
+  .audit-row .action.delete { color:var(--red); }
+  .audit-row .action.export { color:var(--amber); }
+
+  /* ===== MOBILE / TABLET ===== */
+  @media (max-width:960px) and (min-width:641px) {
+    .org-tree ul { padding-left:16px; }
+  }
+  @media (max-width:640px) {
+    .grid-2 { grid-template-columns:1fr !important; gap:10px; }
+    .org-tree { font-size:12px; }
+    .org-tree ul { padding-left:12px; }
+    .absence-calendar { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .cal-day { min-height:36px; font-size:10px; }
+    .cert-grid { grid-template-columns:1fr; }
+    .doc-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+    .audit-row { grid-template-columns:1fr; gap:4px; padding:8px; }
+    .audit-row .time { font-size:10.5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text">
+      <div class="brand-name">ARKADIUM</div>
+      <div class="brand-sub">CRM · Executive Search</div>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="hr-list.html">Mitarbeitende</a><span class="sep">/</span>
+    <span class="current">Lara Roth</span>
+  </div>
+  <div class="header-right">
+    <span class="cmd-hint">⌘K</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button>
+  </div>
+</header>
+
+<!-- Mockup-Demo-Toggle (Probezeit-Erinnerung Banner) -->
+<div style="background:color-mix(in srgb,var(--amber) 6%,var(--surface));border-bottom:1px solid var(--border);padding:6px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px">
+  <span>ℹ <strong>Mockup-Demo:</strong> Probezeit-Ende-Banner (fällig in &lt; 30 Tagen) —</span>
+  <button class="btn btn-sm" style="padding:2px 8px;font-size:11px" onclick="const el=document.getElementById('probationBanner'); el.style.display = el.style.display==='none' ? 'flex' : 'none'">Banner anzeigen / ausblenden</button>
+</div>
+
+<!-- Probezeit-Ende-Banner (konditional) -->
+<div id="probationBanner" style="display:none;background:color-mix(in srgb,var(--amber) 8%,var(--surface));border-bottom:2px solid var(--amber);padding:14px 28px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1600px;margin:0 auto">
+    <div style="font-size:22px">⏰</div>
+    <div style="flex:1 1 300px">
+      <strong style="font-family:'Libre Baskerville',serif;font-size:15px;color:var(--amber)">Probezeit endet in 18 Tagen · 07.05.2026</strong>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Vorgesetzter PW sollte Probezeitgespräch terminieren und Übernahme bestätigen oder Abschluss einleiten.</div>
+    </div>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="openDrawer('probationDrawer')">📝 Probezeitgespräch protokollieren</button>
+    <button class="btn btn-sm">🔔 Reminder setzen</button>
+    <button class="btn btn-sm" onclick="document.getElementById('probationBanner').style.display='none'">Später</button>
+  </div>
+</div>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="entity-logo" title="Mitarbeiter-Kürzel">LR</div>
+    <div class="banner-title">
+      <h1>Lara Roth</h1>
+      <div class="banner-meta">
+        <span>Senior Consultant</span>
+        <span class="dot"></span><span>Vorgesetzter <strong>PW</strong></span>
+        <span class="dot"></span><span>Zürich</span>
+        <span class="dot"></span><span>Eintritt 08.11.2025</span>
+      </div>
+      <div class="banner-actions" style="margin-top:12px">
+        <button class="btn btn-primary btn-sm" onclick="openDrawer('vacationDrawer')">🏖 Ferienantrag</button>
+        <button class="btn btn-sm" onclick="openDrawer('absenceDrawer')">🤒 Krankmeldung</button>
+        <button class="btn btn-sm" onclick="openDrawer('trainingDrawer')">🎓 Schulung anfordern</button>
+        <button class="btn btn-sm" onclick="openDrawer('docUploadDrawer')">📎 Dokument hochladen</button>
+        <button class="btn btn-sm">📞 Anrufen</button>
+        <button class="btn btn-sm">✉ Email</button>
+        <button class="btn btn-sm">⋯ Mehr</button>
+      </div>
+    </div>
+    <div class="banner-chips" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">
+        <span class="chip chip-accent" title="Primär-Sparte">ING</span>
+        <span class="chip chip-muted" title="Team">Team ING & BT</span>
+        <button class="status-dropdown" onclick="statusMenu(this)" title="Mitarbeiter-Status ändern">Aktiv</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">
+        <span class="chip chip-amber" title="Probezeit läuft noch">⏳ Probezeit bis 07.05.</span>
+        <span class="chip chip-green">100 % Pensum</span>
+        <span class="chip chip-muted">Unbefristet</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">
+        <span class="chip chip-amber" onclick="switchTab(6)" style="cursor:pointer" title="Klick: zu Zertifikate &amp; Schulungen">⚠ 1 Zertifikat läuft ab (Sep)</span>
+        <span class="chip chip-muted">Rollen: CM · Researcher</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPSHOT BAR (sticky über Tabbar) -->
+<div class="snapshot-bar" style="position:sticky;top:0;z-index:50">
+  <div class="snapshot-item">
+    <span class="lbl">🏖 Ferien-Rest 2026</span>
+    <span class="val">18</span>
+    <span class="delta">von 25 · 7 bezogen</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🤒 Krankheitstage YTD</span>
+    <span class="val">3</span>
+    <span class="delta">unter Team-Ø (4.2)</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">⏳ Probezeit-Status</span>
+    <span class="val">18 d</span>
+    <span class="delta">bis Ende · 07.05.</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🎓 Aktive Zertifikate</span>
+    <span class="val">4</span>
+    <span class="delta">1 läuft ab in 5 Mt</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🎯 Onboarding</span>
+    <span class="val">82 %</span>
+    <span class="delta up">23 / 28 erledigt</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">📊 YTD Placements</span>
+    <span class="val">3</span>
+    <span class="delta">Ziel 2026: 12</span>
+  </div>
+</div>
+
+<!-- TABS (sticky unter Snapshot-Bar) -->
+<nav class="tabbar" style="position:sticky;top:64px;z-index:49">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Basis</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Anstellung</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Rolle &amp; Org</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Absenzen &amp; Ferien</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Onboarding</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>Zertifikate &amp; Schulungen</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Dokumente</div>
+  <div class="tab" data-tab="8" onclick="switchTab(8)"><span class="num">8</span>Kompensation</div>
+  <div class="tab" data-tab="9" onclick="switchTab(9)">History &amp; Audit</div>
+</nav>
+
+<div class="content">
+
+<!-- =========================================================== -->
+<!-- TAB 1 · BASIS — Persönliche Daten, Kontakt, Notfallkontakt -->
+<!-- =========================================================== -->
+<div id="tab-1" class="tab-panel active">
+  <!-- KPI-Strip Persönliche Übersicht -->
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Alter</div><div class="kpi-value">34</div><div class="kpi-sub muted">geboren 12.03.1992</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Dienstjahre</div><div class="kpi-value">0.5</div><div class="kpi-sub muted">seit 08.11.2025</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Kanton</div><div class="kpi-value">ZH</div><div class="kpi-sub muted">Quellensteuer-Pflicht</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Arbeitsbewilligung</div><div class="kpi-value">✓</div><div class="kpi-sub muted">CH-Bürgerin</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <!-- SEKTION 1 · Identität -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Identität</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editBasisDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Vorname</dt><dd>Lara</dd>
+          <dt>Nachname</dt><dd>Roth</dd>
+          <dt>Kürzel</dt><dd><strong style="font-family:'Libre Baskerville',serif;color:var(--accent)">LR</strong> <span class="muted">2-Buchstaben · systemweit</span></dd>
+          <dt>Geburtsdatum</dt><dd>12.03.1992 <span class="muted">· 34 Jahre</span></dd>
+          <dt>Geschlecht</dt><dd>weiblich</dd>
+          <dt>Nationalität</dt><dd>Schweiz</dd>
+          <dt>Zivilstand</dt><dd>ledig</dd>
+          <dt>Muttersprache</dt><dd>Deutsch</dd>
+          <dt>Weitere Sprachen</dt><dd>Englisch (C1), Französisch (B2)</dd>
+        </dl>
+      </div>
+
+      <!-- SEKTION 2 · Kontakt -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Kontakt</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editKontaktDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Email dienstlich</dt><dd><a href="mailto:lara.roth@arkadium.ch">lara.roth@arkadium.ch</a></dd>
+          <dt>Email privat</dt><dd class="muted">— nur für Notfälle</dd>
+          <dt>Handy dienstlich</dt><dd><a href="tel:+41791234567">+41 79 123 45 67</a></dd>
+          <dt>Handy privat</dt><dd class="muted">auf Anfrage · verschlüsselt hinterlegt</dd>
+          <dt>Festnetz Büro</dt><dd>+41 44 555 12 03 · Durchwahl 12</dd>
+          <dt>3CX-Nebenstelle</dt><dd>203</dd>
+          <dt>LinkedIn</dt><dd><a href="#">linkedin.com/in/lara-roth-arkadium</a></dd>
+        </dl>
+      </div>
+
+      <!-- SEKTION 3 · Adresse -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Wohnadresse</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editAdresseDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Strasse &amp; Nr.</dt><dd>Seefeldstrasse 142</dd>
+          <dt>PLZ / Ort</dt><dd>8008 Zürich</dd>
+          <dt>Kanton</dt><dd><strong>ZH</strong> <span class="muted">· Quellensteuer-Pflicht: nein (CH-Bürgerin)</span></dd>
+          <dt>Land</dt><dd>Schweiz</dd>
+          <dt>Wohnsituation</dt><dd>Miete</dd>
+          <dt>Arbeitsweg</dt><dd>~ 18 min · ÖV</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <!-- SEKTION 4 · Notfallkontakt -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Notfallkontakt</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editNotfallDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Name</dt><dd>Martin Roth</dd>
+          <dt>Beziehung</dt><dd>Vater</dd>
+          <dt>Telefon</dt><dd><a href="tel:+41441112233">+41 44 111 22 33</a></dd>
+          <dt>Alternative</dt><dd>Anna Roth (Mutter) · +41 44 111 22 34</dd>
+          <dt>Letzte Prüfung</dt><dd class="muted">08.11.2025 · Onboarding</dd>
+        </dl>
+        <div class="edit-hint" style="margin-top:10px">
+          <span style="color:var(--text-light)">ℹ Notfallkontakte werden nur bei medizinischen Notfällen oder längerer Nicht-Erreichbarkeit verwendet. Zugriff ausschliesslich durch HR-Manager + Admin (Audit-Log-pflichtig).</span>
+        </div>
+      </div>
+
+      <!-- SEKTION 5 · CH-Compliance (sensibel · eingeschränkter Zugriff) -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">5 · CH-Compliance <span class="chip chip-red" style="margin-left:8px;font-size:10px">🔒 Sensible Daten</span></div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editComplianceDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>AHV-Nr</dt><dd>756.•••.•••.•• <button class="btn btn-sm" style="margin-left:6px;font-size:10px">Aufdecken</button> <span class="muted" style="font-size:10.5px">· Audit-Log bei Aufdecken</span></dd>
+          <dt>Pass-Nr</dt><dd>X••••••• · gültig bis 14.09.2031</dd>
+          <dt>Arbeitsbewilligung</dt><dd><span class="chip chip-green">CH-Bürgerin · unbeschränkt</span></dd>
+          <dt>Pensionskasse</dt><dd>AXA Stiftung Berufliche Vorsorge</dd>
+          <dt>Krankenversicherung</dt><dd class="muted">privat · nicht hinterlegt</dd>
+          <dt>Hintergrund-Check</dt><dd><span class="chip chip-green">✓ bestanden</span> <span class="muted" style="font-size:10.5px">· 05.11.2025</span></dd>
+        </dl>
+        <div class="edit-hint" style="margin-top:10px">
+          <span style="color:var(--red)">⚠ DSG Art. 34 · Sensible Personendaten · Zugriff nur HR-Manager + Admin + Mitarbeiter selbst (Self-View). Jeder Zugriff wird im Audit-Log erfasst.</span>
+        </div>
+      </div>
+
+      <!-- SEKTION 6 · System-Zugang -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">6 · System-Zugang</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editSystemDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>CRM-Login</dt><dd><span class="chip chip-green">✓ aktiv</span> · letzter Login vor 2 h</dd>
+          <dt>2FA</dt><dd><span class="chip chip-green">✓ eingerichtet</span> · Authy</dd>
+          <dt>Rollen (CRM)</dt><dd><span class="tag">CM</span> <span class="tag">Researcher</span></dd>
+          <dt>LinkedIn Recruiter</dt><dd><span class="chip chip-green">Lizenz zugewiesen</span></dd>
+          <dt>Outlook / Email</dt><dd><span class="chip chip-green">OAuth verbunden</span></dd>
+          <dt>3CX / Telefon</dt><dd><span class="chip chip-green">Nebenstelle 203</span></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 2 · ANSTELLUNG — Vertrag, Pensum, Probezeit, CH-Details -->
+<!-- =========================================================== -->
+<div id="tab-2" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Anstellungsart</div><div class="kpi-value">Fest</div><div class="kpi-sub muted">Unbefristet</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Pensum</div><div class="kpi-value">100 %</div><div class="kpi-sub muted">40 h/Woche</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Kündigungsfrist</div><div class="kpi-value">3 Mt</div><div class="kpi-sub muted">beidseitig · auf Monatsende</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Ferienanspruch</div><div class="kpi-value">25 d</div><div class="kpi-sub muted">pro Jahr · gesetzl. 20 d + 5</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <!-- Aktiver Vertrag -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Aktiver Anstellungsvertrag</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editVertragDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Vertragstyp</dt><dd>Arbeitsvertrag unbefristet</dd>
+          <dt>Eintritt</dt><dd>08.11.2025 <span class="muted">· Montag</span></dd>
+          <dt>Austritt</dt><dd class="muted">— offen</dd>
+          <dt>Probezeit</dt><dd>6 Monate · bis <strong style="color:var(--amber)">07.05.2026</strong></dd>
+          <dt>Pensum</dt><dd>100 % · 40 h / Woche</dd>
+          <dt>Arbeitsort</dt><dd>Zürich (primär) · Home-Office 2 Tage / Woche</dd>
+          <dt>Funktion im Vertrag</dt><dd>Senior Consultant Executive Search</dd>
+          <dt>Kündigungsfrist</dt><dd>3 Monate beidseitig · auf Monatsende · nach Probezeit</dd>
+          <dt>Konkurrenzverbot</dt><dd>12 Monate · Radius 50 km · CHF 30k Karenzentschädigung</dd>
+          <dt>Ferientage / Jahr</dt><dd>25 Tage</dd>
+          <dt>Vertragsdokument</dt><dd><a href="#">Arbeitsvertrag_LRoth_2025-11-08.pdf</a> · <span class="muted">signiert 03.11.2025</span></dd>
+        </dl>
+      </div>
+
+      <!-- Arbeitszeit-Modell -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Arbeitszeit-Modell</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Soll-Stunden / Woche</dt><dd>40 h (5 Tage à 8 h)</dd>
+          <dt>Vertrauensarbeitszeit</dt><dd><span class="chip chip-green">✓ ja</span> <span class="muted" style="font-size:11px">keine Stempelpflicht</span></dd>
+          <dt>Kernzeit</dt><dd>09:00 – 12:00 · 14:00 – 16:00</dd>
+          <dt>Home-Office-Regel</dt><dd>2 Tage / Woche · flexibel mit Vorgesetztem</dd>
+          <dt>Überstunden-Regel</dt><dd>mit Jahreslohn abgegolten (bis 50 h / Jahr)</dd>
+          <dt>Pikettdienst</dt><dd class="muted">— entfällt</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <!-- Vertrags-Historie -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Vertrags-Historie</div><a href="#" class="card-link" onclick="event.stopPropagation()">+ Nachtrag</a></div>
+        <div class="list-item">
+          <div class="name">Arbeitsvertrag unbefristet · Senior Consultant</div>
+          <div class="meta">08.11.2025 — heute · 100 % · CHF 140k · <a href="#">PDF</a></div>
+          <span class="chip chip-green">aktuell</span>
+        </div>
+        <div class="muted" style="font-size:12px;padding:10px;text-align:center">
+          Keine weiteren Verträge · neuer Vertrag bei Beförderung / Pensum-Änderung / Übernahme nach Probezeit
+        </div>
+      </div>
+
+      <!-- Vorgesehene Meilensteine -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Kommende Meilensteine</div><a href="#" class="card-link" onclick="event.stopPropagation()">+ Meilenstein</a></div>
+        <div class="list-item">
+          <div class="name"><span class="chip chip-amber">⏳ 18 d</span> Probezeit-Ende</div>
+          <div class="meta">07.05.2026 · Probezeitgespräch PW terminieren, Übernahme oder Abschluss</div>
+          <button class="btn btn-sm">🔔 Reminder</button>
+        </div>
+        <div class="list-item">
+          <div class="name"><span class="chip chip-muted">6 Mt</span> Erstes Halbjahres-Gespräch</div>
+          <div class="meta">05.2026 · nach Probezeit · Performance-Review</div>
+          <button class="btn btn-sm">🔔 Reminder</button>
+        </div>
+        <div class="list-item">
+          <div class="name"><span class="chip chip-muted">1 Jahr</span> Jahresgespräch &amp; Lohnreview</div>
+          <div class="meta">11.2026 · Ziele 2027 · Bonus-Auszahlung</div>
+          <button class="btn btn-sm">🔔 Reminder</button>
+        </div>
+        <div class="list-item">
+          <div class="name"><span class="chip chip-muted">Lfd.</span> LinkedIn Recruiter Renewal</div>
+          <div class="meta">15.09.2026 · Lizenz läuft ab · rechtzeitig verlängern</div>
+          <button class="btn btn-sm">🔔 Reminder</button>
+        </div>
+      </div>
+
+      <!-- DSG-Retention-Hinweis -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">5 · Aufbewahrungsfristen (DSG)</div></div>
+        <dl class="field-grid">
+          <dt>Arbeitsvertrag</dt><dd>5 Jahre nach Austritt <span class="muted" style="font-size:11px">· OR Art. 319</span></dd>
+          <dt>AHV-Unterlagen</dt><dd>10 Jahre <span class="muted" style="font-size:11px">· OAVS Art. 85</span></dd>
+          <dt>Pensionskasse-Unterlagen</dt><dd>10 Jahre nach Pensionierung <span class="muted" style="font-size:11px">· BVG</span></dd>
+          <dt>Quellensteuer / Lohn</dt><dd>7 Jahre <span class="muted" style="font-size:11px">· ESTV</span></dd>
+          <dt>Krankheits-Zeugnisse</dt><dd>3 Jahre</dd>
+          <dt>Bewertungen / 1-on-1</dt><dd>3 Jahre</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 3 · ROLLE & ORGANISATION -->
+<!-- =========================================================== -->
+<div id="tab-3" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Primär-Sparte</div><div class="kpi-value">ING</div><div class="kpi-sub muted">Civil Engineering</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Team</div><div class="kpi-value">ING &amp; BT</div><div class="kpi-sub muted">6 Mitglieder</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Rollen</div><div class="kpi-value">2</div><div class="kpi-sub muted">CM · Researcher</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Aktive Mandate</div><div class="kpi-value">4</div><div class="kpi-sub muted">2 als CM · 2 als Research</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <!-- Rolle -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Rolle &amp; Funktion</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editRolleDrawer')">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Jobtitel</dt><dd>Senior Consultant Executive Search</dd>
+          <dt>Funktions-Stufe</dt><dd>Senior</dd>
+          <dt>Vorgesetzter</dt><dd><span class="org-badge" style="display:inline-flex">PW</span> <strong>Peter Wiederkehr</strong> · Managing Partner</dd>
+          <dt>Stellvertretung</dt><dd><span class="org-badge" style="display:inline-flex">JV</span> Jana Vogel</dd>
+          <dt>Zuständigkeits-Cluster</dt><dd><span class="tag">Hochbau</span> <span class="tag">Tiefbau</span></dd>
+        </dl>
+      </div>
+
+      <!-- System-Rollen (Multi-Rollen) -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · System-Rollen (RBAC)</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('editRBACDrawer')">Bearbeiten</a></div>
+        <div class="list-item">
+          <div class="name"><strong>CM · Candidate Manager</strong></div>
+          <div class="meta">Prozess- und Kandidaten-Ownership · Schreibrechte auf zugewiesene Prozesse</div>
+          <span class="chip chip-green">Primär</span>
+        </div>
+        <div class="list-item">
+          <div class="name"><strong>Researcher</strong></div>
+          <div class="meta">Longlist-Aufbau, Durchcall, Pipeline-Pflege · teamweit lesend, eigene Longlists schreibend</div>
+          <span class="chip chip-muted">Zusatz</span>
+        </div>
+        <div class="edit-hint" style="margin-top:10px">
+          Mehrfach-Rollen möglich · Admin oder HR-Manager vergibt. Änderung wird im Audit-Log erfasst und Betroffene per Email informiert.
+        </div>
+      </div>
+
+      <!-- Sparten & Cluster -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Sparten-Zuordnung</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Primär-Sparte</dt><dd>
+            <div class="toggle-group">
+              <div class="toggle-tag" data-code="ARC">ARC <span class="muted" style="font-size:10px;font-weight:400">Architecture</span></div>
+              <div class="toggle-tag" data-code="GT">GT <span class="muted" style="font-size:10px;font-weight:400">Building Tech</span></div>
+              <div class="toggle-tag active" data-code="ING">ING <span class="muted" style="font-size:10px;font-weight:400">Civil Engineering</span></div>
+              <div class="toggle-tag" data-code="PUR">PUR <span class="muted" style="font-size:10px;font-weight:400">Procurement</span></div>
+              <div class="toggle-tag" data-code="REM">REM <span class="muted" style="font-size:10px;font-weight:400">Real Estate</span></div>
+            </div>
+          </dd>
+          <dt>Sekundär-Sparten</dt><dd>
+            <span class="tag">GT <span class="muted">· Building Tech (unterstützend)</span></span>
+          </dd>
+          <dt>Cluster-Fokus</dt><dd>
+            <span class="tag">Hochbau</span>
+            <span class="tag">Tiefbau</span>
+            <span class="tag">Gebäudehülle</span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <!-- Organigramm -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Organigramm-Position</div><a href="#" class="card-link" onclick="event.stopPropagation()">Vollbild öffnen</a></div>
+        <ul class="org-tree">
+          <li>
+            <div class="org-node">
+              <span class="org-badge">PW</span>
+              <div><strong>Peter Wiederkehr</strong> · Managing Partner<div class="org-role">Geschäftsleitung · Sparten-Lead ING</div></div>
+            </div>
+            <ul>
+              <li>
+                <div class="org-node self">
+                  <span class="org-badge" style="background:var(--accent);color:#fff">LR</span>
+                  <div><strong>Lara Roth</strong> (du) · Senior Consultant<div class="org-role">Team ING &amp; BT · CM + Researcher</div></div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node">
+                  <span class="org-badge">JV</span>
+                  <div><strong>Jana Vogel</strong> · Senior Consultant<div class="org-role">Team ING &amp; BT · CM · Stellvertreterin</div></div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node">
+                  <span class="org-badge">MF</span>
+                  <div><strong>Marc Feller</strong> · Consultant<div class="org-role">Team ING &amp; BT · CM</div></div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node">
+                  <span class="org-badge">SK</span>
+                  <div><strong>Sarah Keller</strong> · Researcher<div class="org-role">Team ING &amp; BT · Research-Fokus</div></div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node">
+                  <span class="org-badge">TB</span>
+                  <div><strong>Tim Berger</strong> · Junior Researcher<div class="org-role">Team ING &amp; BT · Longlist</div></div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ziele & KPIs -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">5 · Ziele &amp; KPIs 2026</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Placements</dt><dd>Ziel <strong>12</strong> · IST <strong>3</strong> <span class="chip chip-muted">25 %</span></dd>
+          <dt>Umsatz</dt><dd>Ziel <strong>CHF 480k</strong> · IST <strong>CHF 138k</strong> <span class="chip chip-muted">29 %</span></dd>
+          <dt>Telefonate / Tag</dt><dd>Ziel <strong>20</strong> · Ø IST <strong>17.4</strong> <span class="chip chip-amber">87 %</span></dd>
+          <dt>Stellenbriefings / Mt</dt><dd>Ziel <strong>8</strong> · Ø IST <strong>6.2</strong> <span class="chip chip-amber">78 %</span></dd>
+          <dt>GOs / Mt</dt><dd>Ziel <strong>5</strong> · Ø IST <strong>4.8</strong> <span class="chip chip-green">96 %</span></dd>
+        </dl>
+        <div class="edit-hint" style="margin-top:10px">
+          Detail-Reports im <a href="#" style="color:var(--accent)">Performance-Tool</a> · Lohnrelevanz via <a href="#" style="color:var(--accent)">Provisionsrechnung</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 4 · ABSENZEN & FERIEN -->
+<!-- =========================================================== -->
+<div id="tab-4" class="tab-panel">
+  <!-- Saldo-Kacheln -->
+  <div class="balance-grid" style="margin-bottom:18px">
+    <div class="balance-card ok">
+      <div class="lbl">Ferien 2026</div>
+      <div class="val">18 / 25</div>
+      <div class="sub">7 bezogen · 2 geplant · 16 frei</div>
+    </div>
+    <div class="balance-card">
+      <div class="lbl">Ferien-Übertrag 2025</div>
+      <div class="val">2.5 d</div>
+      <div class="sub">verfällt am 30.06.2026</div>
+    </div>
+    <div class="balance-card">
+      <div class="lbl">Krankheit YTD</div>
+      <div class="val">3 d</div>
+      <div class="sub">unter Team-Ø (4.2 d)</div>
+    </div>
+    <div class="balance-card">
+      <div class="lbl">Unbezahlt YTD</div>
+      <div class="val">0 d</div>
+      <div class="sub">— keine</div>
+    </div>
+    <div class="balance-card warn">
+      <div class="lbl">Überstunden</div>
+      <div class="val">+24 h</div>
+      <div class="sub">durch Vertrauensarbeitszeit abgegolten</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <!-- Ferien-Kalender -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">1 · Ferien- &amp; Absenzen-Kalender · April 2026</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-sm">◀</button>
+            <button class="btn btn-sm">April 2026</button>
+            <button class="btn btn-sm">▶</button>
+          </div>
+        </div>
+        <div class="cal-header">
+          <div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div>
+        </div>
+        <div class="absence-calendar" id="aprilCal">
+          <div class="cal-day"><span class="num">31</span><span class="muted" style="font-size:9px">März</span></div>
+          <div class="cal-day"><span class="num">1</span></div>
+          <div class="cal-day"><span class="num">2</span></div>
+          <div class="cal-day"><span class="num">3</span></div>
+          <div class="cal-day holiday"><span class="num">4</span><span>Karfreitag</span></div>
+          <div class="cal-day weekend"><span class="num">5</span></div>
+          <div class="cal-day weekend"><span class="num">6</span></div>
+
+          <div class="cal-day holiday"><span class="num">7</span><span>Ostermontag</span></div>
+          <div class="cal-day"><span class="num">8</span></div>
+          <div class="cal-day"><span class="num">9</span></div>
+          <div class="cal-day sick"><span class="num">10</span><span>Krank</span></div>
+          <div class="cal-day sick"><span class="num">11</span><span>Krank</span></div>
+          <div class="cal-day weekend"><span class="num">12</span></div>
+          <div class="cal-day weekend"><span class="num">13</span></div>
+
+          <div class="cal-day sick"><span class="num">14</span><span>Krank</span></div>
+          <div class="cal-day"><span class="num">15</span></div>
+          <div class="cal-day"><span class="num">16</span></div>
+          <div class="cal-day"><span class="num">17</span></div>
+          <div class="cal-day"><span class="num">18</span></div>
+          <div class="cal-day weekend"><span class="num">19</span></div>
+          <div class="cal-day weekend today"><span class="num">20</span><span>heute</span></div>
+
+          <div class="cal-day"><span class="num">21</span></div>
+          <div class="cal-day"><span class="num">22</span></div>
+          <div class="cal-day"><span class="num">23</span></div>
+          <div class="cal-day"><span class="num">24</span></div>
+          <div class="cal-day"><span class="num">25</span></div>
+          <div class="cal-day weekend"><span class="num">26</span></div>
+          <div class="cal-day weekend"><span class="num">27</span></div>
+
+          <div class="cal-day pending"><span class="num">28</span><span>Antrag</span></div>
+          <div class="cal-day pending"><span class="num">29</span><span>Antrag</span></div>
+          <div class="cal-day vacation"><span class="num">30</span><span>Ferien</span></div>
+          <div class="cal-day"><span class="num">1</span><span class="muted" style="font-size:9px">Mai</span></div>
+          <div class="cal-day holiday"><span class="num">2</span><span class="muted" style="font-size:9px">Tag d. Arb.</span></div>
+          <div class="cal-day weekend"><span class="num">3</span></div>
+          <div class="cal-day weekend"><span class="num">4</span></div>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;margin-top:10px;flex-wrap:wrap">
+          <span><span style="display:inline-block;width:12px;height:12px;background:color-mix(in srgb,var(--accent) 30%,var(--bg));vertical-align:middle;margin-right:4px"></span>Ferien bezogen</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:color-mix(in srgb,var(--amber) 25%,var(--bg));border:1px dashed var(--amber);vertical-align:middle;margin-right:4px"></span>Ferien beantragt</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:color-mix(in srgb,var(--red) 25%,var(--bg));vertical-align:middle;margin-right:4px"></span>Krankheit</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:color-mix(in srgb,var(--gold) 20%,var(--bg));vertical-align:middle;margin-right:4px"></span>Feiertag</span>
+        </div>
+        <button class="btn btn-sm btn-primary" style="margin-top:14px" onclick="openDrawer('vacationDrawer')">+ Neuer Ferienantrag</button>
+      </div>
+    </div>
+
+    <div>
+      <!-- Anträge (pending) -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Offene Anträge</div></div>
+        <div class="list-item">
+          <div class="name"><strong>Ferien · 28. – 30.04.2026</strong> <span class="muted">· 3 Tage</span></div>
+          <div class="meta">beantragt 15.04.2026 · Genehmiger: PW · <span class="chip chip-amber">⏳ pending</span></div>
+          <button class="btn btn-sm">Details</button>
+        </div>
+        <div class="muted" style="font-size:12px;padding:10px;text-align:center">
+          Keine weiteren offenen Anträge.
+        </div>
+      </div>
+
+      <!-- Historie -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Absenzen-Historie 2026</div></div>
+        <div class="list-item">
+          <div class="name"><strong>Ferien · 23. – 27.03.2026</strong> <span class="muted">· 5 Tage · Ostern</span></div>
+          <div class="meta">genehmigt 08.03.2026 durch PW · <span class="chip chip-green">✓ bezogen</span></div>
+        </div>
+        <div class="list-item">
+          <div class="name"><strong>Ferien · 09. – 11.02.2026</strong> <span class="muted">· 2 Tage · Skiwoche</span></div>
+          <div class="meta">genehmigt 20.01.2026 durch PW · <span class="chip chip-green">✓ bezogen</span></div>
+        </div>
+        <div class="list-item">
+          <div class="name"><strong>Krankheit · 10. – 14.04.2026</strong> <span class="muted">· 3 Werktage</span></div>
+          <div class="meta">gemeldet 10.04.2026 · Grippe · <span class="chip chip-muted">ohne Arztzeugnis (&lt; 5 Tage)</span></div>
+        </div>
+        <button class="btn btn-sm" style="margin-top:8px">Alle Absenzen 2025 anzeigen</button>
+      </div>
+
+      <!-- Team-Kalender -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Team-Verfügbarkeit (Team ING &amp; BT)</div><a href="#" class="card-link" onclick="event.stopPropagation()">Vollbild</a></div>
+        <div class="list-item">
+          <div class="name">Heute · 20.04.2026 · <span class="chip chip-green">✓ 5 / 6 verfügbar</span></div>
+          <div class="meta">Tim Berger krank bis 22.04.</div>
+        </div>
+        <div class="list-item">
+          <div class="name">KW 17 · 21. – 25.04.2026 · <span class="chip chip-green">✓ 6 / 6 verfügbar</span></div>
+          <div class="meta">keine geplanten Absenzen</div>
+        </div>
+        <div class="list-item">
+          <div class="name">KW 18 · 28.04. – 02.05.2026 · <span class="chip chip-amber">⚠ 4 / 6 verfügbar</span></div>
+          <div class="meta">Lara Roth Ferien 28.-30.04. · 01.05. Feiertag</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 5 · ONBOARDING -->
+<!-- =========================================================== -->
+<div id="tab-5" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Fortschritt</div><div class="kpi-value">82 %</div><div class="kpi-sub muted">23 / 28 Punkten</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Template</div><div class="kpi-value">Consultant</div><div class="kpi-sub muted">Standard-Pfad</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Verbleibend</div><div class="kpi-value">5</div><div class="kpi-sub muted">3 überfällig</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Buddy</div><div class="kpi-value">JV</div><div class="kpi-sub muted">Jana Vogel</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">1 · Onboarding-Checkliste · Template „Consultant"</div>
+          <a href="#" class="card-link">Template ändern</a>
+        </div>
+
+        <div class="phase-head">Pre-Arrival (HR · vor Eintritt)</div>
+        <div class="checklist">
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Arbeitsvertrag erstellt &amp; versendet</div>
+              <div class="meta">erledigt 25.10.2025 · durch PW</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Vertrag signiert (beidseitig)</div>
+              <div class="meta">erledigt 03.11.2025</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Hintergrund-Check beauftragt</div>
+              <div class="meta">erledigt 05.11.2025 · bestanden</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">IT-Preparation (Email, CRM-Login, VPN)</div>
+              <div class="meta">erledigt 07.11.2025 · durch Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-head">Tag 1 (Buddy JV · 08.11.2025)</div>
+        <div class="checklist">
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Büro-Tour &amp; Schlüssel-Übergabe</div>
+              <div class="meta">erledigt 08.11.2025 · durch JV</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">System-Zugänge aktivieren (CRM, Email, 3CX)</div>
+              <div class="meta">erledigt 08.11.2025 · durch Admin</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">AHV-Anmeldung Formular 8.4 · BFS</div>
+              <div class="meta">erledigt 08.11.2025 · durch HR</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Quellensteuer-Erklärung Kanton ZH</div>
+              <div class="meta">erledigt 08.11.2025 · entfällt (CH-Bürgerin)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-head">Woche 1 (HR-Manager PW)</div>
+        <div class="checklist">
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Pensionskasse-Anmeldung (10-Tage-Frist)</div>
+              <div class="meta">erledigt 12.11.2025 · AXA Stiftung</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Versicherungs-Unterlagen ausgehändigt</div>
+              <div class="meta">erledigt 12.11.2025 · UVG + NBU</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Policies unterzeichnet (DSG, NDA, Spesen, IT-Sicherheit)</div>
+              <div class="meta">erledigt 10.11.2025</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">LinkedIn Recruiter Lizenz zugewiesen</div>
+              <div class="meta">erledigt 13.11.2025 · Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-head">Monat 1-3 (Fach-Einarbeitung)</div>
+        <div class="checklist">
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">Scheelen MDI-Zertifizierung abgeschlossen</div>
+              <div class="meta">erledigt 12.12.2025</div>
+            </div>
+          </div>
+          <div class="check-item done">
+            <input type="checkbox" checked>
+            <div class="body">
+              <div class="name">CRM-Grundschulung (Kandidaten, Accounts, Mandate)</div>
+              <div class="meta">erledigt 15.11.2025</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox">
+            <div class="body">
+              <div class="name">Scheelen Relief-Zertifizierung</div>
+              <div class="meta"><span class="due">⏰ überfällig seit 31.03.2026</span> · Buddy JV nachfassen</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox">
+            <div class="body">
+              <div class="name">Erste eigene Longlist (50+ Kandidaten) erstellen</div>
+              <div class="meta"><span class="due">⏰ überfällig seit 15.03.2026</span> · Coaching mit PW</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox">
+            <div class="body">
+              <div class="name">Erster Briefing-Call solo (Coaching durch JV)</div>
+              <div class="meta">bis 30.04.2026</div>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox">
+            <div class="body">
+              <div class="name">30-/60-/90-Tage Feedback mit PW</div>
+              <div class="meta"><span class="due">⏰ 60-Tage überfällig · 90-Tage fällig 05.02.2026</span></div>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox">
+            <div class="body">
+              <div class="name">Probezeit-Abschluss-Gespräch</div>
+              <div class="meta">07.05.2026 · Termin mit PW vereinbaren</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Onboarding-Buddy -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Buddy &amp; Mentor</div></div>
+        <dl class="field-grid">
+          <dt>Buddy</dt><dd><span class="org-badge" style="display:inline-flex">JV</span> Jana Vogel · Senior Consultant</dd>
+          <dt>Mentor</dt><dd><span class="org-badge" style="display:inline-flex">PW</span> Peter Wiederkehr · Managing Partner</dd>
+          <dt>Buddy-Meetings</dt><dd>wöchentlich · Montag 09:00</dd>
+          <dt>Letztes Meeting</dt><dd>15.04.2026 · <a href="#">Protokoll</a></dd>
+        </dl>
+      </div>
+
+      <!-- Onboarding-Notizen -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Buddy-Notizen</div><a href="#" class="card-link" onclick="event.stopPropagation()">+ Notiz</a></div>
+        <div class="list-item">
+          <div class="name"><strong>Update · 15.04.2026 · JV</strong></div>
+          <div class="meta">Lara ist stabil in Kandidaten-Research. Zwei Themen offen: Scheelen-Relief-Zertifizierung nicht abgeschlossen, braucht Zeit. Erste Longlist verzögert — erwartet bis 25.04. Empfehlung: Erinnerung an PW für Probezeitgespräch.</div>
+        </div>
+        <div class="list-item">
+          <div class="name"><strong>Update · 08.03.2026 · JV</strong></div>
+          <div class="meta">Gut im Team integriert, aktive Mitarbeit in Team-Meetings. Scheelen-MDI sehr gut abgeschlossen. Erster Briefing-Call noch nicht erfolgt — bewusst zurückgestellt, da gute Research-Arbeit Priorität hat.</div>
+        </div>
+        <div class="list-item">
+          <div class="name"><strong>Update · 08.12.2025 · JV</strong></div>
+          <div class="meta">Erste 4 Wochen solid. Sehr strukturiert im Research, gutes Netzwerk-Thinking. Kulturfit hoch. Empfehlung Übernahme nach Probezeit bereits absehbar.</div>
+        </div>
+      </div>
+
+      <!-- Shortcuts -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">4 · Onboarding-Aktionen</div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-sm" onclick="openDrawer('onboardingTaskDrawer')">+ Aufgabe zum Template hinzufügen</button>
+          <button class="btn btn-sm">📄 Onboarding-Pass als PDF</button>
+          <button class="btn btn-sm">✉ 30-/60-/90-Feedback-Mail an PW</button>
+          <button class="btn btn-sm btn-primary" onclick="openDrawer('probationDrawer')">📝 Probezeit-Abschluss protokollieren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 6 · ZERTIFIKATE & SCHULUNGEN -->
+<!-- =========================================================== -->
+<div id="tab-6" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Aktive Zertifikate</div><div class="kpi-value">4</div><div class="kpi-sub muted">alle gültig</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Laufen ab &lt; 6 Mt</div><div class="kpi-value">1</div><div class="kpi-sub muted">LinkedIn Recruiter</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Schulungen YTD</div><div class="kpi-value">2</div><div class="kpi-sub muted">Scheelen MDI · CRM</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Schulungs-Budget</div><div class="kpi-value">CHF 2'800</div><div class="kpi-sub muted">von 4'000 · 2026</div></div>
+  </div>
+
+  <!-- Aktive Zertifikate -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">1 · Aktive Zertifikate</div>
+      <a href="#" class="card-link" onclick="openDrawer('certDrawer')">+ Zertifikat erfassen</a>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="name">Scheelen MDI · Master</div>
+        <div class="issuer">Scheelen Institut · 12.12.2025</div>
+        <div class="dates">
+          <span>erhalten 12.12.2025</span>
+          <span class="until">gültig bis 12.12.2028</span>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="name">LinkedIn Recruiter</div>
+        <div class="issuer">LinkedIn · 15.09.2025</div>
+        <div class="dates">
+          <span>erhalten 15.09.2025</span>
+          <span class="until" style="color:var(--amber)">⚠ läuft ab 15.09.2026</span>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="name">CRM-Advanced (Arkadium intern)</div>
+        <div class="issuer">Arkadium · 15.11.2025</div>
+        <div class="dates">
+          <span>erhalten 15.11.2025</span>
+          <span class="until">unbefristet</span>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="name">EQ-Zertifikat · Foundation</div>
+        <div class="issuer">Emotional Intelligence Center · 2024</div>
+        <div class="dates">
+          <span>erhalten 08.11.2024</span>
+          <span class="until">gültig bis 08.11.2027</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Geplante / Offene Schulungen -->
+  <div class="card collapsible" style="margin-top:14px">
+    <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Geplante &amp; Offene Schulungen</div><a href="#" class="card-link" onclick="event.stopPropagation();openDrawer('trainingDrawer')">+ Schulung anfordern</a></div>
+    <div class="list-item">
+      <div class="name"><strong>Scheelen Relief-Zertifizierung</strong> <span class="chip chip-amber">⏰ überfällig</span></div>
+      <div class="meta">geplant Q1 2026 · Kosten CHF 1'400 · Anbieter Scheelen Institut · <a href="#">Details</a></div>
+      <button class="btn btn-sm btn-primary">Anmelden</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>LinkedIn Recruiter Renewal</strong> <span class="chip chip-muted">geplant Q3</span></div>
+      <div class="meta">bis 15.09.2026 · Kosten CHF 950 / Jahr · Automatische Verlängerung möglich</div>
+      <button class="btn btn-sm">🔔 Reminder · 30 d vorher</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Swiss Recruiting Summit 2026</strong> <span class="chip chip-muted">freiwillig</span></div>
+      <div class="meta">21. – 22.05.2026 · Bern · Kosten CHF 890 · durch PW angeregt</div>
+      <button class="btn btn-sm">Anfragen</button>
+    </div>
+  </div>
+
+  <!-- Historie -->
+  <div class="card collapsible" style="margin-top:14px">
+    <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Schulungs-Historie</div></div>
+    <div class="list-item">
+      <div class="name">Scheelen MDI Master-Zertifizierung · 3 Tage</div>
+      <div class="meta">10. – 12.12.2025 · Zürich · CHF 2'400 · genehmigt durch PW</div>
+      <span class="chip chip-green">✓ abgeschlossen</span>
+    </div>
+    <div class="list-item">
+      <div class="name">CRM-Advanced Intern · 2 Tage</div>
+      <div class="meta">14. – 15.11.2025 · intern · kostenlos</div>
+      <span class="chip chip-green">✓ abgeschlossen</span>
+    </div>
+    <div class="list-item">
+      <div class="name">Executive Search Foundations · 5 Tage</div>
+      <div class="meta">2024 · externer Anbieter · CHF 3'200 · vor Arkadium</div>
+      <span class="chip chip-muted">aus CV</span>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 7 · DOKUMENTE -->
+<!-- =========================================================== -->
+<div id="tab-7" class="tab-panel">
+  <div class="kpi-strip cols-4">
+    <div class="kpi-card"><div class="kpi-label">Dokumente total</div><div class="kpi-value">14</div><div class="kpi-sub muted">alle verschlüsselt</div></div>
+    <div class="kpi-card blue"><div class="kpi-label">Verträge</div><div class="kpi-value">3</div><div class="kpi-sub muted">Arbeitsvertrag · PK · NDA</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Zertifikate</div><div class="kpi-value">4</div><div class="kpi-sub muted">PDF-Originale</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Zum Löschen</div><div class="kpi-value">0</div><div class="kpi-sub muted">Retention-clean</div></div>
+  </div>
+
+  <!-- Upload + Filter -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Dokumenten-Ablage</div>
+      <button class="btn btn-sm btn-primary" onclick="openDrawer('docUploadDrawer')">+ Dokument hochladen</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="chip chip-accent">Alle (14)</span>
+      <span class="chip chip-muted">Verträge (3)</span>
+      <span class="chip chip-muted">Policies (4)</span>
+      <span class="chip chip-muted">Zertifikate (4)</span>
+      <span class="chip chip-muted">Arbeitszeugnisse (0)</span>
+      <span class="chip chip-muted">Sonstige (3)</span>
+    </div>
+
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Arbeitsvertrag unbefristet</div>
+        <div class="doc-meta">signiert 03.11.2025 · 342 KB</div>
+        <div class="retention ok">✓ Retention 5 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Pensionskasse Anmeldung</div>
+        <div class="doc-meta">12.11.2025 · 88 KB · AXA</div>
+        <div class="retention ok">✓ Retention 10 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">NDA &amp; Verschwiegenheit</div>
+        <div class="doc-meta">10.11.2025 · 112 KB</div>
+        <div class="retention ok">✓ Retention 5 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">DSG-Policy Unterschrift</div>
+        <div class="doc-meta">10.11.2025 · 64 KB</div>
+        <div class="retention ok">✓ Retention 5 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">IT-Sicherheits-Policy</div>
+        <div class="doc-meta">10.11.2025 · 88 KB</div>
+        <div class="retention ok">✓ Retention 5 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Spesen-Policy</div>
+        <div class="doc-meta">10.11.2025 · 72 KB</div>
+        <div class="retention ok">✓ Retention 5 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Scheelen MDI Zertifikat</div>
+        <div class="doc-meta">12.12.2025 · 210 KB</div>
+        <div class="retention ok">✓ gültig bis 2028</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">LinkedIn Recruiter Cert</div>
+        <div class="doc-meta">15.09.2025 · 180 KB</div>
+        <div class="retention warn">⚠ läuft ab 09/26</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">CRM-Advanced Diplom</div>
+        <div class="doc-meta">15.11.2025 · 94 KB · intern</div>
+        <div class="retention ok">✓ unbefristet</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">EQ-Foundation Zertifikat</div>
+        <div class="doc-meta">08.11.2024 · 145 KB</div>
+        <div class="retention ok">✓ gültig bis 2027</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">JPG</div>
+        <div class="doc-name">Passfoto (Profil)</div>
+        <div class="doc-meta">08.11.2025 · 2.1 MB</div>
+        <div class="retention ok">✓ solange aktiv</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Hintergrund-Check Report</div>
+        <div class="doc-meta">05.11.2025 · 420 KB</div>
+        <div class="retention ok">✓ Retention 3 J.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Lebenslauf (bei Einstellung)</div>
+        <div class="doc-meta">20.10.2025 · 180 KB</div>
+        <div class="retention ok">✓ solange aktiv</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-name">Referenzschreiben · 2 Stück</div>
+        <div class="doc-meta">20.10.2025 · 320 KB</div>
+        <div class="retention ok">✓ solange aktiv</div>
+      </div>
+    </div>
+
+    <div class="edit-hint" style="margin-top:14px">
+      ℹ Alle Dokumente liegen verschlüsselt (AES-256) in Azure Blob-Storage · Zugriff ausschliesslich HR-Manager + Admin + Mitarbeiter selbst (Self-View) · jeder Download wird im Audit-Log erfasst.
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 8 · KOMPENSATION (read-only) -->
+<!-- =========================================================== -->
+<div id="tab-8" class="tab-panel">
+  <div style="background:color-mix(in srgb,var(--accent) 6%,var(--surface));border:1px solid var(--accent);border-radius:3px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.6">
+    <strong style="color:var(--accent)">🔒 Read-Only</strong> · Kompensations-Daten werden im <a href="#" style="color:var(--accent);font-weight:600">Payroll-System</a> gepflegt und hier nur gespiegelt. Änderungen ausschliesslich durch Backoffice + Admin. Ansicht eingeschränkt auf Mitarbeiter selbst + Vorgesetzten + HR-Manager.
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Aktuelles Lohnpaket</div></div>
+        <dl class="field-grid">
+          <dt>Jahresgehalt Brutto</dt><dd><strong style="font-family:'Libre Baskerville',serif;font-size:18px">CHF 140'000</strong></dd>
+          <dt>Aufteilung</dt><dd>13 × CHF 10'769 (monatlich)</dd>
+          <dt>Gültig seit</dt><dd>08.11.2025 · Eintritt</dd>
+          <dt>Nächster Review</dt><dd>11.2026 · Jahresgespräch</dd>
+          <dt>Quellensteuer-pflichtig</dt><dd class="muted">nein · CH-Bürgerin</dd>
+          <dt>Pensum</dt><dd>100 %</dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Variable Vergütung</div></div>
+        <dl class="field-grid">
+          <dt>Bonus-Pool</dt><dd><span class="chip chip-green">✓ berechtigt</span> · nach Probezeit</dd>
+          <dt>Provisions-Modell</dt><dd>30 % des Net-Fees bei eigenen Placements · Research-Anteil 15 %</dd>
+          <dt>YTD Provisions-Basis</dt><dd>CHF 42'800 <span class="muted">· 3 Placements geschlossen</span></dd>
+          <dt>Erwartet Q4 2026</dt><dd>CHF 18'000 – 28'000 <span class="muted">· Pipeline-basiert</span></dd>
+          <dt>Auszahlung</dt><dd>Quartalsweise · +3 Mt nach Placement-Abschluss (Garantiefrist)</dd>
+          <dt>Team-Anteil</dt><dd>5 % Team-Pool bei Mandats-Akquise durch PW</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Benefits &amp; Spesen</div></div>
+        <dl class="field-grid">
+          <dt>Schulungsbudget</dt><dd>CHF 4'000 / Jahr · YTD CHF 2'800</dd>
+          <dt>Öffentlicher Verkehr</dt><dd><span class="chip chip-green">SBB-GA 2. Klasse</span></dd>
+          <dt>Mobiltelefon</dt><dd>Firma-Abo · CHF 80 / Mt Pauschale privat</dd>
+          <dt>Home-Office-Spesen</dt><dd>CHF 100 / Mt Pauschale</dd>
+          <dt>Kranken-Zusatz</dt><dd><span class="chip chip-muted">nicht abgeschlossen</span></dd>
+          <dt>Weitere</dt><dd>Fitness-Beitrag CHF 600 / Jahr · bar</dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Lohn-Historie</div></div>
+        <div class="list-item">
+          <div class="name"><strong>CHF 140'000</strong> · Senior Consultant · 13 × Mt</div>
+          <div class="meta">seit 08.11.2025 · Eintritts-Lohn</div>
+          <span class="chip chip-green">aktuell</span>
+        </div>
+        <div class="muted" style="font-size:12px;padding:10px;text-align:center">
+          Keine weiteren Einträge · neuer Eintrag bei Lohnreview.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">5 · Externe Links</div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-sm">→ Payroll-System öffnen (Bexio)</button>
+          <button class="btn btn-sm">→ Aktuelle Lohnabrechnung</button>
+          <button class="btn btn-sm">→ Provisionsabrechnung Q1 2026</button>
+          <button class="btn btn-sm">→ Lohnausweis 2025</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- TAB 9 · HISTORY & AUDIT -->
+<!-- =========================================================== -->
+<div id="tab-9" class="tab-panel">
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <span class="chip chip-accent active">Alle Events</span>
+    <span class="chip chip-muted">HR-Events</span>
+    <span class="chip chip-muted">🔒 Sensible Zugriffe</span>
+    <span class="chip chip-muted">System-Events</span>
+    <span class="chip chip-muted">Stage-Transitions</span>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <!-- HR-History (fachlich) -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">1 · HR-Ereignis-Verlauf</div></div>
+        <div class="hist-timeline">
+          <div class="hist-day">
+            <div class="hist-day-head">Heute · 20.04.2026</div>
+            <div class="hist-row">
+              <div class="hist-time">11:30</div>
+              <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+              <div class="hist-body">
+                <div class="hist-title"><strong>Ferienantrag eingereicht</strong></div>
+                <div class="hist-sub">28. – 30.04.2026 · 3 Tage · an PW zur Genehmigung</div>
+                <div class="hist-meta"><span class="actor">LR</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hist-day">
+            <div class="hist-day-head">14.04.2026</div>
+            <div class="hist-row">
+              <div class="hist-time">09:00</div>
+              <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+              <div class="hist-body">
+                <div class="hist-title"><strong>Krankmeldung beendet</strong></div>
+                <div class="hist-sub">Grippe · 10. – 14.04.2026 · 3 Werktage · ohne Arztzeugnis</div>
+                <div class="hist-meta"><span class="actor">LR</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hist-day">
+            <div class="hist-day-head">12.12.2025</div>
+            <div class="hist-row">
+              <div class="hist-time">16:00</div>
+              <div class="hist-cat"><span class="hist-cat-chip cat-assessment">Zertifikat</span></div>
+              <div class="hist-body">
+                <div class="hist-title"><strong>Scheelen MDI · Master-Zertifikat erhalten</strong></div>
+                <div class="hist-sub">gültig bis 12.12.2028 · hochgeladen</div>
+                <div class="hist-meta"><span class="actor">LR</span> · <a href="#">Zertifikat</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="hist-day">
+            <div class="hist-day-head">08.11.2025</div>
+            <div class="hist-row">
+              <div class="hist-time">09:00</div>
+              <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+              <div class="hist-body">
+                <div class="hist-title"><strong>Eintritt · Onboarding gestartet</strong></div>
+                <div class="hist-sub">Senior Consultant · 100 % · Team ING &amp; BT · Vorgesetzter PW</div>
+                <div class="hist-meta"><span class="actor">HR</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hist-day">
+            <div class="hist-day-head">03.11.2025</div>
+            <div class="hist-row">
+              <div class="hist-time">14:00</div>
+              <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+              <div class="hist-body">
+                <div class="hist-title"><strong>Arbeitsvertrag signiert (beidseitig)</strong></div>
+                <div class="hist-sub">unbefristet · 100 % · Probezeit 6 Mt</div>
+                <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Vertrag</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Audit-Log (technisch · sensibel) -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">2 · Audit-Log · Sensible Zugriffe</div></div>
+
+        <div style="display:grid;grid-template-columns:140px 100px 120px 1fr 80px;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-light);font-weight:600">
+          <div>Zeit</div><div>Aktion</div><div>Akteur</div><div>Objekt</div><div>Status</div>
+        </div>
+
+        <div class="audit-row">
+          <div class="time">20.04.2026 10:42</div>
+          <div class="action view">VIEW</div>
+          <div>PW</div>
+          <div>AHV-Nr aufgedeckt · Grund: Lohnmeldung</div>
+          <div><span class="chip chip-green">✓</span></div>
+        </div>
+        <div class="audit-row">
+          <div class="time">20.04.2026 08:15</div>
+          <div class="action view">VIEW</div>
+          <div>LR</div>
+          <div>Self-View · Profil gelesen</div>
+          <div><span class="chip chip-green">✓</span></div>
+        </div>
+        <div class="audit-row">
+          <div class="time">15.04.2026 14:30</div>
+          <div class="action update">UPDATE</div>
+          <div>HR</div>
+          <div>Kontakt · Handy dienstlich geändert</div>
+          <div><span class="chip chip-green">✓</span></div>
+        </div>
+        <div class="audit-row">
+          <div class="time">12.04.2026 16:20</div>
+          <div class="action export">EXPORT</div>
+          <div>Backoffice</div>
+          <div>Arbeitsvertrag heruntergeladen · Grund: Archiv</div>
+          <div><span class="chip chip-green">✓</span></div>
+        </div>
+        <div class="audit-row">
+          <div class="time">08.04.2026 09:05</div>
+          <div class="action view">VIEW</div>
+          <div>PW</div>
+          <div>Kompensations-Tab geöffnet · Grund: Provisionsreview</div>
+          <div><span class="chip chip-green">✓</span></div>
+        </div>
+        <div class="audit-row">
+          <div class="time">05.04.2026 11:50</div>
+          <div class="action view">VIEW</div>
+          <div>Unbekannt · IP 203.0.113.42</div>
+          <div>Zugriffsversuch Profil-API · nicht autorisiert</div>
+          <div><span class="chip chip-red">✕ blockiert</span></div>
+        </div>
+
+        <button class="btn btn-sm" style="margin-top:12px">Alle Audit-Einträge anzeigen</button>
+
+        <div class="edit-hint" style="margin-top:12px">
+          ℹ Audit-Log wird 2 Jahre aufbewahrt (DSG Art. 17) · Sichtbarkeit nur für HR-Manager + Admin + Mitarbeiter selbst.
+        </div>
+      </div>
+
+      <!-- Rechte & Datenschutz -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">3 · Datenschutz-Rechte (DSG)</div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-sm">📄 Auskunft generieren (Art. 25 DSG)</button>
+          <button class="btn btn-sm">✏ Berichtigung beantragen (Art. 32 DSG)</button>
+          <button class="btn btn-sm" disabled title="Erst nach Austritt + Aufbewahrungsfristen möglich">🗑 Löschung beantragen (Art. 32 DSG)</button>
+          <button class="btn btn-sm">⚖ Legal-Hold aktivieren <span class="muted">· nur Admin</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- =========================================================== -->
+<!-- DRAWERS                                                       -->
+<!-- =========================================================== -->
+
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER · Ferienantrag -->
+<div class="drawer" id="vacationDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🏖</div>
+    <div class="info">
+      <h2>Ferienantrag stellen</h2>
+      <div class="sub">Gehst an Vorgesetzten PW zur Genehmigung · Status: pending</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('vacationDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Zeitraum</h4>
+      <dl class="field-grid">
+        <dt>Von <span style="color:var(--red)">*</span></dt>
+        <dd><input type="date" style="width:160px"></dd>
+        <dt>Bis <span style="color:var(--red)">*</span></dt>
+        <dd><input type="date" style="width:160px"></dd>
+        <dt>Halber Tag</dt>
+        <dd><label><input type="checkbox"> Vormittag · </label><label><input type="checkbox"> Nachmittag</label></dd>
+        <dt>Werktage (auto)</dt>
+        <dd><strong>3 Tage</strong> · Wochenenden &amp; Feiertage werden automatisch abgezogen</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Saldo-Check</h4>
+      <dl class="field-grid">
+        <dt>Ferien-Rest 2026</dt><dd>18 Tage</dd>
+        <dt>Nach diesem Antrag</dt><dd><strong>15 Tage</strong></dd>
+        <dt>Übertrag 2025 verfällt</dt><dd class="muted">30.06.2026 · 2.5 d</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Team-Konflikt-Check</h4>
+      <div style="font-size:13px;padding:10px 12px;background:color-mix(in srgb,var(--green) 8%,var(--bg));border-radius:3px;border-left:3px solid var(--green)">
+        ✓ <strong>Kein Team-Konflikt</strong> · In KW 18 sind 4 von 6 Team-Mitgliedern verfügbar (inkl. Stellvertretung JV).
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung (optional)</h4>
+      <textarea placeholder="z.B. Familienbesuch, Kurzurlaub, ..." style="width:100%;min-height:60px"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Übergabe &amp; Stellvertretung</h4>
+      <dl class="field-grid">
+        <dt>Stellvertretung</dt><dd><select><option>JV · Jana Vogel (Standard)</option><option>MF · Marc Feller</option><option>— eigen gewählt</option></select></dd>
+        <dt>Laufende Mandate</dt><dd>2 aktive Prozesse · Brief an JV erforderlich</dd>
+        <dt>Outlook Abwesenheit</dt><dd><label><input type="checkbox" checked> Auto-Reply aktivieren</label></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('vacationDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Als Entwurf speichern</button>
+    <button class="btn btn-sm btn-primary">Antrag einreichen</button>
+  </div>
+</div>
+
+<!-- DRAWER · Krankmeldung -->
+<div class="drawer" id="absenceDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--red) 15%,var(--bg));color:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤒</div>
+    <div class="info">
+      <h2>Krankmeldung erfassen</h2>
+      <div class="sub">Keine Genehmigung erforderlich · Vorgesetzter wird automatisch informiert</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('absenceDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Zeitraum</h4>
+      <dl class="field-grid">
+        <dt>Von <span style="color:var(--red)">*</span></dt>
+        <dd><input type="date" style="width:160px"></dd>
+        <dt>Bis (offen möglich)</dt>
+        <dd><input type="date" style="width:160px"> <span class="muted" style="font-size:11px">· leer = noch offen</span></dd>
+        <dt>Erstmeldung</dt>
+        <dd><label><input type="radio" name="first" checked> Ja · heute</label> <label><input type="radio" name="first"> Nein · Folgemeldung</label></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Arztzeugnis</h4>
+      <dl class="field-grid">
+        <dt>Erforderlich ab</dt><dd>5 Tagen am Stück · Firmen-Richtlinie</dd>
+        <dt>Status</dt><dd><span class="chip chip-muted">nicht erforderlich · &lt; 5 Tage</span></dd>
+        <dt>Zeugnis hochladen</dt><dd><input type="file" accept=".pdf,.jpg,.png"> <span class="muted" style="font-size:11px">· optional</span></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Bemerkung (optional · nicht öffentlich)</h4>
+      <textarea placeholder="Wird nicht im Team-Kalender angezeigt · nur HR sichtbar" style="width:100%;min-height:60px"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Auswirkungen</h4>
+      <div style="font-size:13px;padding:10px 12px;background:var(--bg);border-radius:3px">
+        ✓ Auto-Reply Outlook aktiviert · ✓ Stellvertretung JV übernimmt offene Mandate · ✓ Team-Kalender aktualisiert · ✓ Vorgesetzter PW per Email informiert
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('absenceDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Krankmeldung speichern</button>
+  </div>
+</div>
+
+<!-- DRAWER · Schulung anfordern -->
+<div class="drawer" id="trainingDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎓</div>
+    <div class="info">
+      <h2>Schulung anfordern</h2>
+      <div class="sub">Geht an Vorgesetzten zur Freigabe · Schulungsbudget 2026: CHF 4'000 / 2'800 genutzt</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('trainingDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Schulung</h4>
+      <dl class="field-grid">
+        <dt>Bezeichnung <span style="color:var(--red)">*</span></dt>
+        <dd><input type="text" placeholder="z.B. Scheelen Relief-Zertifizierung" style="width:100%"></dd>
+        <dt>Anbieter</dt>
+        <dd><input type="text" placeholder="z.B. Scheelen Institut" style="width:100%"></dd>
+        <dt>Typ</dt>
+        <dd><select><option>Zertifizierung</option><option>Seminar</option><option>Konferenz</option><option>Online-Kurs</option><option>Coaching</option></select></dd>
+        <dt>Zeitraum</dt>
+        <dd><input type="date"> &nbsp;bis&nbsp; <input type="date"></dd>
+        <dt>Dauer</dt>
+        <dd><input type="number" style="width:80px" placeholder="3"> Tage</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Kosten &amp; Budget</h4>
+      <dl class="field-grid">
+        <dt>Kosten CHF <span style="color:var(--red)">*</span></dt>
+        <dd><input type="number" placeholder="1400" style="width:120px"> CHF · brutto</dd>
+        <dt>Reisekosten</dt>
+        <dd><input type="number" placeholder="0" style="width:120px"> CHF · geschätzt</dd>
+        <dt>Nach Antrag verbleibend</dt>
+        <dd><strong style="color:var(--accent)">CHF 1'200 / 4'000</strong> von Budget 2026</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung</h4>
+      <textarea placeholder="Warum ist diese Schulung für deine Arbeit relevant?" style="width:100%;min-height:80px"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Zertifikat-Erwartung</h4>
+      <label><input type="checkbox"> Diese Schulung schliesst mit Zertifikat ab · nach Abschluss im Tab „Zertifikate" erfassen</label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('trainingDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Als Entwurf speichern</button>
+    <button class="btn btn-sm btn-primary">Antrag einreichen</button>
+  </div>
+</div>
+
+<!-- DRAWER · Dokument hochladen -->
+<div class="drawer" id="docUploadDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📎</div>
+    <div class="info">
+      <h2>Dokument hochladen</h2>
+      <div class="sub">Verschlüsselte Ablage · automatische Retention-Regel je Dokument-Typ</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('docUploadDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Datei</h4>
+      <div style="padding:22px;border:2px dashed var(--border-strong);border-radius:4px;text-align:center;background:var(--bg)">
+        <div style="font-size:28px;margin-bottom:6px">📄</div>
+        <div style="font-size:13px">Datei hierhin ziehen oder <button class="btn btn-sm">Durchsuchen</button></div>
+        <div class="muted" style="font-size:11px;margin-top:6px">PDF · JPG · PNG · max 25 MB</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Metadaten</h4>
+      <dl class="field-grid">
+        <dt>Dokument-Typ <span style="color:var(--red)">*</span></dt>
+        <dd><select id="docTypeSelect">
+          <option>— wählen —</option>
+          <option>Arbeitsvertrag</option>
+          <option>Vertrags-Nachtrag</option>
+          <option>Arbeitszeugnis</option>
+          <option>Zertifikat / Zeugnis</option>
+          <option>Policy-Unterschrift</option>
+          <option>Hintergrund-Check</option>
+          <option>Ärztliches Zeugnis</option>
+          <option>Passfoto / Portrait</option>
+          <option>Sonstiges</option>
+        </select></dd>
+        <dt>Name / Titel</dt>
+        <dd><input type="text" placeholder="z.B. Arbeitsvertrag 2025" style="width:100%"></dd>
+        <dt>Datum des Dokuments</dt>
+        <dd><input type="date"></dd>
+        <dt>Gültig bis</dt>
+        <dd><input type="date"> <span class="muted" style="font-size:11px">· nur bei Zertifikaten</span></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Aufbewahrungsregel (auto)</h4>
+      <div style="font-size:13px;padding:10px 12px;background:color-mix(in srgb,var(--accent) 6%,var(--bg));border-radius:3px;border-left:3px solid var(--accent)">
+        Je nach Dokument-Typ wird die gesetzliche Aufbewahrungsfrist automatisch gesetzt. Arbeitsverträge: 5 J. nach Austritt · AHV-Unterlagen: 10 J. · Krankheitszeugnisse: 3 J. · Policies: 5 J.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Sichtbarkeit</h4>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <label><input type="radio" name="docvis" checked> HR-Manager + Admin + Mitarbeiter selbst <span class="muted">(Standard · empfohlen)</span></label>
+        <label><input type="radio" name="docvis"> Nur HR-Manager + Admin <span class="muted">(sensibel)</span></label>
+        <label><input type="radio" name="docvis"> Auch Vorgesetzter sichtbar</label>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('docUploadDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Hochladen &amp; Speichern</button>
+  </div>
+</div>
+
+<!-- DRAWER · Zertifikat erfassen -->
+<div class="drawer" id="certDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎓</div>
+    <div class="info">
+      <h2>Zertifikat erfassen</h2>
+      <div class="sub">Neue Zertifizierung oder Schulungsabschluss dokumentieren</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('certDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Zertifikat</h4>
+      <dl class="field-grid">
+        <dt>Name <span style="color:var(--red)">*</span></dt>
+        <dd><input type="text" placeholder="z.B. Scheelen Relief Master" style="width:100%"></dd>
+        <dt>Anbieter</dt>
+        <dd><input type="text" placeholder="z.B. Scheelen Institut" style="width:100%"></dd>
+        <dt>Erhalten am <span style="color:var(--red)">*</span></dt>
+        <dd><input type="date"></dd>
+        <dt>Gültig bis</dt>
+        <dd><input type="date"> <span class="muted" style="font-size:11px">· leer = unbefristet</span></dd>
+        <dt>Kategorie</dt>
+        <dd><select>
+          <option>Recruiting &amp; Sourcing</option>
+          <option>Assessment-Tools (Scheelen MDI/Relief/ASSESS/EQ)</option>
+          <option>Soft-Skills / Coaching</option>
+          <option>Technical / CRM</option>
+          <option>Arbeitsrecht / Compliance</option>
+          <option>Sonstiges</option>
+        </select></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Dokument</h4>
+      <input type="file" accept=".pdf,.jpg,.png"> <span class="muted" style="font-size:11px">· Original als PDF / JPG</span>
+    </div>
+    <div class="drawer-section">
+      <h4>Renewal-Reminder</h4>
+      <label><input type="checkbox" checked> Reminder 30 Tage vor Ablauf setzen</label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('certDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Speichern</button>
+  </div>
+</div>
+
+<!-- DRAWER · Probezeit-Abschluss -->
+<div class="drawer drawer-wide" id="probationDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--amber) 20%,var(--bg));color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📝</div>
+    <div class="info">
+      <h2>Probezeit-Abschluss · Lara Roth</h2>
+      <div class="sub">Ende Probezeit 07.05.2026 · beidseitige Entscheidung dokumentieren</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('probationDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Entscheidung</div>
+    <div class="drawer-tab">Feedback Vorgesetzter</div>
+    <div class="drawer-tab">Feedback Mitarbeitende</div>
+    <div class="drawer-tab">Vereinbarungen</div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-pane" style="display:block">
+      <div class="drawer-section">
+        <h4>Entscheidung</h4>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <label style="padding:12px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:color-mix(in srgb,var(--green) 6%,var(--bg))">
+            <input type="radio" name="prob" checked>
+            <strong>✓ Übernahme nach Probezeit</strong>
+            <div class="muted" style="font-size:11.5px;margin-left:20px;margin-top:4px">Mitarbeiter-Status bleibt Aktiv · unbefristeter Vertrag läuft weiter · Kündigungsfrist wechselt auf 3 Monate</div>
+          </label>
+          <label style="padding:12px;border:1px solid var(--border);border-radius:3px;cursor:pointer">
+            <input type="radio" name="prob">
+            <strong>⚠ Probezeit verlängern</strong>
+            <div class="muted" style="font-size:11.5px;margin-left:20px;margin-top:4px">Zusätzliche 1-3 Monate · nur in Ausnahmefällen · Vertrags-Nachtrag erforderlich</div>
+          </label>
+          <label style="padding:12px;border:1px solid var(--border);border-radius:3px;cursor:pointer">
+            <input type="radio" name="prob">
+            <strong>✕ Abschluss in Probezeit</strong>
+            <div class="muted" style="font-size:11.5px;margin-left:20px;margin-top:4px">Kündigung innerhalb 7-Tage-Frist · Exit-Prozess startet · Auslauf-Datum definieren</div>
+          </label>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Gesprächs-Termin</h4>
+        <dl class="field-grid">
+          <dt>Datum</dt><dd><input type="date" value="2026-05-05"></dd>
+          <dt>Zeit</dt><dd><input type="time" value="14:00"></dd>
+          <dt>Teilnehmende</dt><dd>Lara Roth · PW · <label><input type="checkbox"> + HR (JV)</label></dd>
+          <dt>Location</dt><dd>Büro Zürich · Besprechungsraum</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Feedback PW</h4><textarea style="width:100%;min-height:200px" placeholder="Einschätzung Vorgesetzter zu Performance, Kultur-Fit, Entwicklungspotenzial ..."></textarea></div></div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Feedback Lara</h4><textarea style="width:100%;min-height:200px" placeholder="Selbsteinschätzung und Feedback zum Team, Onboarding, Arbeitsalltag ..."></textarea></div></div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Entwicklungs-Vereinbarungen</h4><textarea style="width:100%;min-height:120px" placeholder="Konkrete Ziele für nächste 6 Monate ..."></textarea></div></div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('probationDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Entwurf speichern</button>
+    <button class="btn btn-sm btn-primary">Abschliessen &amp; Vertrag festigen</button>
+  </div>
+</div>
+
+<!-- DRAWER · Vertrag bearbeiten -->
+<div class="drawer drawer-wide" id="editVertragDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📄</div>
+    <div class="info">
+      <h2>Anstellungsvertrag bearbeiten</h2>
+      <div class="sub">Nur HR-Manager + Admin · Änderungen werden im Audit-Log erfasst</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('editVertragDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Vertragsdaten</div>
+    <div class="drawer-tab">Funktion &amp; Ort</div>
+    <div class="drawer-tab">Fristen</div>
+    <div class="drawer-tab">Dokument</div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-pane" style="display:block">
+      <div class="drawer-section">
+        <h4>Vertrags-Typ</h4>
+        <dl class="field-grid">
+          <dt>Typ</dt><dd><select><option>Arbeitsvertrag unbefristet</option><option>Arbeitsvertrag befristet</option><option>Lehrvertrag</option><option>Praktikumsvertrag</option><option>Mandatsvertrag</option></select></dd>
+          <dt>Eintritt</dt><dd><input type="date" value="2025-11-08"></dd>
+          <dt>Austritt</dt><dd><input type="date"> <span class="muted" style="font-size:11px">leer = unbefristet</span></dd>
+          <dt>Pensum %</dt><dd><input type="number" value="100" min="0" max="100" style="width:80px"> %</dd>
+          <dt>Soll-Stunden / Wo</dt><dd><input type="number" value="40" style="width:80px"> h</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Funktion</h4><dl class="field-grid"><dt>Jobtitel</dt><dd><input type="text" value="Senior Consultant Executive Search" style="width:100%"></dd><dt>Arbeitsort</dt><dd><input type="text" value="Zürich" style="width:100%"></dd></dl></div></div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Fristen</h4><dl class="field-grid"><dt>Probezeit</dt><dd><input type="number" value="6" style="width:60px"> Monate · endet am <strong>07.05.2026</strong></dd><dt>Kündigungsfrist</dt><dd><input type="number" value="3" style="width:60px"> Monate · beidseitig</dd><dt>Ferientage / Jahr</dt><dd><input type="number" value="25" style="width:60px"></dd></dl></div></div>
+    <div class="drawer-pane" style="display:none"><div class="drawer-section"><h4>Vertragsdokument</h4><input type="file" accept=".pdf"><div class="muted" style="font-size:11.5px;margin-top:8px">Aktuelles Dokument: <a href="#">Arbeitsvertrag_LRoth_2025-11-08.pdf</a></div></div></div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('editVertragDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Speichern</button>
+  </div>
+</div>
+
+<!-- DRAWER · Rollen bearbeiten -->
+<div class="drawer" id="editRBACDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🔐</div>
+    <div class="info">
+      <h2>System-Rollen verwalten</h2>
+      <div class="sub">Mehrfachzuweisung möglich · Admin + HR-Manager · Audit-Log-pflichtig</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('editRBACDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Verfügbare Rollen</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox" checked><div><strong>CM · Candidate Manager</strong><div class="muted" style="font-size:11.5px">Prozess- und Kandidaten-Ownership</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox"><div><strong>AM · Account Manager</strong><div class="muted" style="font-size:11.5px">Mandat- und Account-Ownership</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox" checked><div><strong>Researcher</strong><div class="muted" style="font-size:11.5px">Longlist, Durchcall, Pipeline-Pflege</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox"><div><strong>Backoffice</strong><div class="muted" style="font-size:11.5px">Rechnungen, Provisionen, Payroll-Export</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox"><div><strong>HR-Manager</strong><div class="muted" style="font-size:11.5px">Mitarbeiter-Verwaltung · Verträge · Absenzen · sensible Daten</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox"><div><strong>Head of Department</strong><div class="muted" style="font-size:11.5px">Team-Scope lesend · eigenes Team-Dashboard</div></div></label>
+        <label style="padding:10px;border:1px solid var(--border);border-radius:3px;display:flex;gap:10px;align-items:flex-start"><input type="checkbox"><div><strong>Admin</strong><div class="muted" style="font-size:11.5px">System-weit · Feature-Flags · Automation · RBAC-Editor</div></div></label>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Gültigkeit</h4>
+      <dl class="field-grid">
+        <dt>Ab</dt><dd><input type="date" value="2025-11-08"></dd>
+        <dt>Bis</dt><dd><input type="date"> <span class="muted" style="font-size:11px">leer = unbefristet</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('editRBACDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">Speichern &amp; Mitarbeiter informieren</button>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- SCRIPTS                                                      -->
+<!-- =========================================================== -->
+<script src="../mockups/_shared/layout.js"></script>
+<script>
+  // Escape schliesst alle Drawer
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Mockup-Demo: Banner standardmässig zeigen
+  document.addEventListener('DOMContentLoaded', () => {
+    const b = document.getElementById('probationBanner');
+    if (b) b.style.display = 'flex';
+  });
+
+  // Drawer-Tab-Switch (Pane-Wechsel)
+  document.querySelectorAll('.drawer-tab').forEach((tab, idx, all) => {
+    tab.addEventListener('click', function() {
+      const drawer = this.closest('.drawer');
+      const tabs = drawer.querySelectorAll('.drawer-tab');
+      const panes = drawer.querySelectorAll('.drawer-pane');
+      const i = Array.from(tabs).indexOf(this);
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      panes.forEach((p, pi) => p.style.display = (pi === i) ? 'block' : 'none');
+    });
+  });
+</script>
+
+</body>
+</html>

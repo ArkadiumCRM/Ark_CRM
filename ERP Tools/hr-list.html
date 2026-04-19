@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Mitarbeitende</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../mockups/_shared/editorial.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="logo-mark">A</div>
+    <div class="brand-text"><div class="brand-name">ARKADIUM</div><div class="brand-sub">CRM · Executive Search</div></div>
+  </div>
+  <div class="breadcrumb"><span class="current">Mitarbeitende</span></div>
+  <div class="header-right"><span class="cmd-hint">⌘K</span><button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀</button></div>
+</header>
+
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Mitarbeitende</h1>
+    <span class="muted">18 aktiv · 2 in Probezeit · 1 Austritt geplant · Feature-Flag <span class="chip chip-amber" style="font-size:10px">🔒 HR-Tool Phase 3</span></span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">+ Mitarbeitende:r</button>
+    <button class="btn btn-sm">🗂 Organigramm-Ansicht</button>
+    <button class="btn btn-sm">📅 Team-Kalender</button>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Aktive Mitarbeitende</div><div class="kpi-value">18</div><div class="kpi-sub muted">inkl. Praktika</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--amber)">In Probezeit</div><div class="kpi-value" style="color:var(--amber)">2</div><div class="kpi-sub muted">1 endet &lt; 30 d</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Pensum</div><div class="kpi-value">92 %</div><div class="kpi-sub muted">16.6 FTE · 2 Teilzeit</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--red)">Heute abwesend</div><div class="kpi-value" style="color:var(--red)">3</div><div class="kpi-sub muted">2 Ferien · 1 krank</div></div>
+    <div class="kpi-card"><div class="kpi-label">Zertifikate &lt; 6 Mt</div><div class="kpi-value">4</div><div class="kpi-sub muted">Renewal-Alerts</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Dienstjahre</div><div class="kpi-value">4.2</div><div class="kpi-sub muted">stabile Fluktuation</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche · Name, Kürzel, Rolle …" style="flex:1 1 280px">
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC · Architecture</option>
+      <option>GT · Building Technology</option>
+      <option>ING · Civil Engineering</option>
+      <option>PUR · Procurement</option>
+      <option>REM · Real Estate</option>
+      <option>Cross-Sparten</option>
+    </select>
+    <select>
+      <option>Alle Teams</option>
+      <option>Team ING &amp; BT</option>
+      <option>Team ARC &amp; REM</option>
+      <option>Team PUR</option>
+      <option>Geschäftsleitung</option>
+      <option>Backoffice</option>
+    </select>
+    <select>
+      <option>Alle Rollen</option>
+      <option>AM · Account Manager</option>
+      <option>CM · Candidate Manager</option>
+      <option>Researcher</option>
+      <option>Backoffice</option>
+      <option>HR-Manager</option>
+      <option>Admin</option>
+      <option>Head of Department</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>Aktiv</option>
+      <option>In Probezeit</option>
+      <option>Gekündigt (aktiv bis Austritt)</option>
+      <option>Austritt geplant</option>
+      <option>Inaktiv</option>
+      <option>Abwesend (aktuell)</option>
+    </select>
+    <select>
+      <option>Alle Standorte</option>
+      <option>Zürich</option>
+      <option>Remote CH</option>
+      <option>Home-Office only</option>
+    </select>
+  </div>
+
+  <!-- Chip-Tabs -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">18</span></div>
+      <div class="chip-tab">Aktiv <span class="count">18</span></div>
+      <div class="chip-tab" style="color:var(--amber)">⏳ Probezeit <span class="count">2</span></div>
+      <div class="chip-tab">Heute abwesend <span class="count">3</span></div>
+      <div class="chip-tab">Zertifikat läuft ab <span class="count">4</span></div>
+      <div class="chip-tab">Onboarding offen <span class="count">3</span></div>
+      <div class="chip-tab">Austritt geplant <span class="count">1</span></div>
+    </div>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active">Tabelle</div>
+      <div class="chip-tab">Karten</div>
+      <div class="chip-tab">Organigramm</div>
+    </div>
+  </div>
+
+  <!-- Tabelle -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Mitarbeitende:r</th>
+          <th>Rolle · Funktion</th>
+          <th>Sparte · Team</th>
+          <th>Vorgesetzte:r</th>
+          <th>Eintritt</th>
+          <th>Pensum</th>
+          <th>Status</th>
+          <th>Ferien-Rest</th>
+          <th>Nächstes Expiry</th>
+          <th class="right">›</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer" onclick="location.href='hr.html'">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%;border:2px solid var(--gold)">LR</div></td>
+          <td><strong>Lara Roth</strong> <span class="chip chip-amber" style="font-size:9px;margin-left:4px">⏳ Probezeit</span><div class="muted" style="font-size:11px">34 J. · Zürich</div></td>
+          <td>Senior Consultant · CM + Researcher</td>
+          <td><span class="chip chip-accent">ING</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>08.11.2025</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>18 / 25 d</td>
+          <td><span style="color:var(--amber)">LinkedIn · 15.09.</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">PW</div></td>
+          <td><strong>Peter Wiederkehr</strong><div class="muted" style="font-size:11px">51 J. · Zürich</div></td>
+          <td>Managing Partner · AM + Admin</td>
+          <td><span class="chip chip-accent">ING</span> · GL</td>
+          <td class="muted">—</td>
+          <td>01.01.2018</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>9 / 30 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">JV</div></td>
+          <td><strong>Jana Vogel</strong><div class="muted" style="font-size:11px">42 J. · Zürich</div></td>
+          <td>Senior Consultant · CM</td>
+          <td><span class="chip chip-accent">ING</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>15.03.2020</td>
+          <td>80 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>12 / 25 d</td>
+          <td>Scheelen MDI · 08.2028</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">MF</div></td>
+          <td><strong>Marc Feller</strong><div class="muted" style="font-size:11px">38 J. · Winterthur</div></td>
+          <td>Consultant · CM</td>
+          <td><span class="chip chip-accent">ING</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>01.09.2022</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>21 / 25 d</td>
+          <td><span style="color:var(--red)">Relief · 31.05.</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">SK</div></td>
+          <td><strong>Sarah Keller</strong> <span class="chip" style="font-size:9px">🏖</span><div class="muted" style="font-size:11px">29 J. · Zürich</div></td>
+          <td>Researcher</td>
+          <td><span class="chip chip-accent">ING</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>01.02.2024</td>
+          <td>80 %</td>
+          <td><span class="chip chip-muted">Ferien bis 25.04.</span></td>
+          <td>4 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">TB</div></td>
+          <td><strong>Tim Berger</strong> <span class="chip chip-red" style="font-size:9px">🤒</span><div class="muted" style="font-size:11px">26 J. · Zürich</div></td>
+          <td>Junior Researcher</td>
+          <td><span class="chip chip-accent">ING</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>01.09.2025</td>
+          <td>100 %</td>
+          <td><span class="chip chip-muted">Krank bis 22.04.</span></td>
+          <td>22 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">ME</div></td>
+          <td><strong>Michael Egger</strong><div class="muted" style="font-size:11px">44 J. · Zürich</div></td>
+          <td>Senior Consultant · AM</td>
+          <td><span class="chip chip-accent">ARC</span> · ARC &amp; REM</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>01.06.2019</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>7 / 25 d</td>
+          <td>Scheelen ASSESS · 03.2027</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">AM</div></td>
+          <td><strong>Anna Meyer</strong><div class="muted" style="font-size:11px">37 J. · Zürich</div></td>
+          <td>Consultant · CM</td>
+          <td><span class="chip chip-accent">ARC</span> · ARC &amp; REM</td>
+          <td><span class="actor-chip">ME</span></td>
+          <td>15.04.2021</td>
+          <td>80 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>14 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">DH</div></td>
+          <td><strong>Daniel Huber</strong><div class="muted" style="font-size:11px">45 J. · Zürich</div></td>
+          <td>Senior Consultant · AM + CM</td>
+          <td><span class="chip chip-accent">REM</span> · ARC &amp; REM</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>01.10.2020</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>17 / 28 d</td>
+          <td>Hintergrund-Check · 11.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">NP</div></td>
+          <td><strong>Nina Preisig</strong><div class="muted" style="font-size:11px">32 J. · Zug</div></td>
+          <td>Consultant · CM</td>
+          <td><span class="chip chip-accent">GT</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>01.03.2023</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>19 / 25 d</td>
+          <td>EQ · 06.2027</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">SR</div></td>
+          <td><strong>Silvan Rüegg</strong> <span class="chip chip-amber" style="font-size:9px">⏳ Probezeit</span><div class="muted" style="font-size:11px">28 J. · Zürich</div></td>
+          <td>Researcher</td>
+          <td><span class="chip chip-accent">GT</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">NP</span></td>
+          <td>01.02.2026</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>22 / 25 d</td>
+          <td>Scheelen MDI · 07.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">KF</div></td>
+          <td><strong>Karin Frei</strong><div class="muted" style="font-size:11px">39 J. · Zürich</div></td>
+          <td>Consultant · CM</td>
+          <td><span class="chip chip-accent">PUR</span> · PUR</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>01.07.2022</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>11 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">RS</div></td>
+          <td><strong>Roman Schmid</strong><div class="muted" style="font-size:11px">36 J. · Winterthur</div></td>
+          <td>Researcher</td>
+          <td><span class="chip chip-accent">PUR</span> · PUR</td>
+          <td><span class="actor-chip">KF</span></td>
+          <td>15.01.2024</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>16 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">CD</div></td>
+          <td><strong>Claudia Denzler</strong><div class="muted" style="font-size:11px">46 J. · Zürich</div></td>
+          <td>Backoffice-Lead</td>
+          <td class="muted">— · Backoffice</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>01.05.2018</td>
+          <td>60 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>6 / 18 d</td>
+          <td>Bexio-Cert · 12.2026</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">TM</div></td>
+          <td><strong>Tanja Müller</strong> <span class="chip chip-red" style="font-size:9px">🏖</span><div class="muted" style="font-size:11px">33 J. · Zürich</div></td>
+          <td>Backoffice · Rechnungswesen</td>
+          <td class="muted">— · Backoffice</td>
+          <td><span class="actor-chip">CD</span></td>
+          <td>01.11.2021</td>
+          <td>80 %</td>
+          <td><span class="chip chip-muted">Ferien bis 23.04.</span></td>
+          <td>3 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">FS</div></td>
+          <td><strong>Fabian Steiner</strong><div class="muted" style="font-size:11px">41 J. · Basel</div></td>
+          <td>Senior Consultant · AM</td>
+          <td><span class="chip chip-accent">REM</span> · ARC &amp; REM</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>15.08.2019</td>
+          <td>100 %</td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>13 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">EB</div></td>
+          <td><strong>Elias Brunner</strong><div class="muted" style="font-size:11px">30 J. · Zürich</div></td>
+          <td>Consultant · CM</td>
+          <td><span class="chip chip-accent">GT</span> · ING &amp; BT</td>
+          <td><span class="actor-chip">NP</span></td>
+          <td>01.10.2023</td>
+          <td>100 %</td>
+          <td><span class="chip chip-red">Austritt 30.06.2026</span></td>
+          <td>8 / 19 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">LB</div></td>
+          <td><strong>Lea Brunschwiler</strong><div class="muted" style="font-size:11px">27 J. · Zürich</div></td>
+          <td>Praktikantin Research</td>
+          <td><span class="chip chip-accent">ARC</span> · ARC &amp; REM</td>
+          <td><span class="actor-chip">AM</span></td>
+          <td>01.03.2026</td>
+          <td>100 %</td>
+          <td><span class="chip chip-muted">Praktikum bis 31.08.2026</span></td>
+          <td>10 / 25 d</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer: Austritts-Timeline -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><div class="card-title">📤 Geplante Austritte</div></div>
+    <div class="list-item">
+      <div class="name"><strong>Elias Brunner</strong> · Consultant GT · letzter Tag <strong style="color:var(--red)">30.06.2026</strong></div>
+      <div class="meta">Kündigung erhalten 28.03.2026 · Offboarding-Checkliste zu 30 % · Nachfolge-Suche läuft</div>
+      <button class="btn btn-sm">Offboarding öffnen</button>
+    </div>
+  </div>
+
+  <!-- Footer: Offene HR-Aufgaben -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><div class="card-title">📋 Offene HR-Aufgaben</div></div>
+    <div class="list-item">
+      <div class="name"><span class="chip chip-amber">⏳ 18 d</span> Probezeit-Gespräch Lara Roth terminieren</div>
+      <div class="meta">Ende Probezeit 07.05.2026 · Zuständig PW</div>
+      <button class="btn btn-sm" onclick="location.href='hr.html'">Öffnen</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><span class="chip chip-amber">⚠</span> Scheelen Relief-Zertifizierung Marc Feller läuft ab</div>
+      <div class="meta">Gültig bis 31.05.2026 · Renewal buchen</div>
+      <button class="btn btn-sm">Schulung buchen</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><span class="chip chip-muted">neu</span> 2 Ferienanträge zur Genehmigung</div>
+      <div class="meta">Lara Roth (28.-30.04.) · Karin Frei (05.-09.05.)</div>
+      <button class="btn btn-sm">Anträge prüfen</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><span class="chip chip-muted">fällig</span> Offboarding-Plan Elias Brunner</div>
+      <div class="meta">Letzter Tag 30.06.2026 · 12 Tasks noch offen</div>
+      <button class="btn btn-sm">Plan öffnen</button>
+    </div>
+  </div>
+</div>
+
+<script src="../mockups/_shared/layout.js"></script>
+<script>
+/* Auto-wire: jeder Row-Klick → Mitarbeiter-Detailmaske */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'hr.html');
+  });
+});
+</script>
+</body>
+</html>
