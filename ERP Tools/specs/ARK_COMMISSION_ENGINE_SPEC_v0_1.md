@@ -47,9 +47,22 @@ tags: [spec, commission, provisionierung, kern-usp, phase-1, option-d]
 - Time-Mandat-Sonderabrechnung (Business-Model `time` wird ausgeschlossen · Mechanik Phase 3)
 - Multi-Tenant-Härtung (SaaS-Phase 2)
 
-### 1.3 TBC · offene Peter-Frage
+### 1.3 Peter-Klärung 2026-04-19 · 5 von 7 geklärt
 
-- **Assessment-Manager-Provisions-Modell** (Severina Nolan · Option A Pauschale wie Researcher · Option B CM-50/50 · Option C eigenes %-Modell vom Assessment-Honorar)
+| # | Frage | Antwort Peter 2026-04-19 |
+|---|-------|---------------------------|
+| 1 | Assessment-Manager-Modell | **Jahresziel für Assessments** · definierter Bonus-Betrag · quartalsweise Auszahlung wie CM/AM · Staffel-Detail TBC (ZEG vs. linear?) |
+| 2 | Yavor Head-of-Sparten | **ARC + REM** (Architecture & Real Estate Management) |
+| 3 | Stefano Head-of-Sparten | **"Market Strategy & Client Solutions"** — KEINE Sparte in STAMMDATEN · **TBC**: Teambudget-Scope muss Peter klären (Cross-Sparten · Mandats-Akquise · spezielle Kategorie) |
+| 4 | Researcher-Pauschale-Algo | **CHF 500 default** · frei umstellbar 250-750 · kein Auto-Algo nach Fee |
+| 5 | Bonus-Ermessen-Limit | **Kein festes Limit** · GF entscheidet · für Nicht-GF-Boni Head-of-Absprache Pflicht · GF kann sich self-approval ohne Absprache |
+| 6 | Migration-Startpunkt | **TBC** — Peter klären: Excel-Daten 2025/Q1-2026 als Initial-Import ODER Start bei null? |
+| 7 | Quartals-Abschluss-Freeze | **Nachträgliche Änderungen erlaubt** · mit Audit-Log · Vor-Quartals-Entries als `superseded` markieren |
+
+**Noch offen (2 TBC)**:
+- **Stefano-Teambudget-Scope** (keine Sparte · wie rollen?)
+- **Migration-Rückfrage** (Excel-Import ja/nein)
+- **Assessment-Manager-Staffel-Detail** (gleiche ZEG-Staffel wie CM/AM · oder eigenes lineares/binäres Modell?)
 
 ---
 
@@ -322,27 +335,32 @@ GROUP BY cb.id;
 
 ## 3. Berechnungs-Engine · Kern-Logik
 
-### 3.1 Researcher-Pauschale
+### 3.1 Researcher-Pauschale · Peter-bestätigt 2026-04-19
 
 **Input**: Placement (Stage `placement` erreicht) · `dim_kandidat.created_by_user_id` = Researcher
-**Output**: `fact_researcher_fee` mit CHF 250-750
+**Output**: `fact_researcher_fee` mit CHF 500 default · frei umstellbar 250-750
 
-**Algorithmus**:
+**Algorithmus (simplifiziert · kein Auto-Staffel)**:
 ```
 wenn placement.stage == 'placement'
   und candidate.created_by_user_id ist Researcher-Rolle:
 
-  rate = default 500 (Mittelwert)  -- kann überschrieben werden mit Head-of-Approval
+  INSERT fact_researcher_fee(
+    researcher_id,
+    candidate_id,
+    process_id,
+    placement_date,
+    rate_chf = 500,        -- DEFAULT (Peter 2026-04-19)
+    status = 'pending'     -- kann manuell auf 250-750 gesetzt werden vor Approval
+  )
 
-  INSERT fact_researcher_fee(researcher_id, candidate_id, process_id, placement_date, rate_chf=500, status='pending')
-
-  wenn gross_fee > 100'000 ODER mandate_type == 'target':
-    rate = 750 (oberes Ende)
-  sonst wenn gross_fee < 30'000:
-    rate = 250 (unteres Ende)
-  sonst:
-    rate = 500 (Default)
+  Notification an Head-of oder GF für Rate-Review
+  wenn manueller Override (z.B. 750 bei Top-Executive-Placement oder 250 bei minimalem Aufwand):
+    Update rate_chf + rationale-Feld Pflicht
+    approved_by = Head-of (normal) oder GF (Ausnahme)
 ```
+
+**Rationale-Feld**: Pflicht bei Override · Beispiele: "Top-Executive-Placement + schnelle Closing" (→750) · "Minimaler Research-Aufwand · Kandidat war Walk-In" (→250)
 
 **Claw-back**: wenn Garantie-Breach → `fact_researcher_fee.status = 'clawed_back'`
 
@@ -537,23 +555,63 @@ FOR guarantee IN fact_candidate_guarantee WHERE end_at = today:
   Wenn Austritt: fact_ruecklage_release type='clawback' · Gegen-Buchung
 ```
 
-### 4.4 Bonus-Ermessen-Flow (GF)
+### 4.4 Bonus-Ermessen-Flow · Peter-Update 2026-04-19
 
+**Zwei Sub-Flows**:
+
+**Sub-Flow A · GF-Self-Bonus** (Nenad für sich selber):
 ```
-UI · Nenad Stoparanovic öffnet /commission/bonus
+UI · Nenad öffnet /commission/bonus · Tab "Mein Bonus"
   ↓
-"Neuer Ermessens-Bonus"-Drawer:
-  - Zielperson: [select MA]
-  - Betrag CHF: [input]
-  - Periode: [year + quarter]
-  - Begründung: [textarea · Pflicht]
+Drawer: Betrag · Periode · Begründung
   ↓
 INSERT fact_bonus_payment
-  wenn approver_id = self (GF) AND mitarbeiter_id = GF: status='approved' auto
-  wenn Zielperson = Sabrina/Severina-BO: approver_id = GF, status='approved' nach manuellem Klick
+  mitarbeiter_id = NS, approver_id = NS (self)
+  status = 'approved' auto (self-approval)
+  head_of_consensus_required = false
   ↓
-Bonus erscheint im nächsten Quartals-Batch als zusätzlicher Posten
+Bonus im nächsten Quartals-Batch
 ```
+
+**Sub-Flow B · GF-Bonus-für-andere-MA** (Nenad schüttet Bonus für ST, SN, oder jeden anderen):
+```
+UI · Nenad öffnet /commission/bonus · Tab "Bonus vorschlagen"
+  ↓
+Drawer: Zielperson · Betrag · Periode · Begründung
+  ↓
+INSERT fact_bonus_payment
+  mitarbeiter_id = <Ziel>
+  approver_id = NS
+  head_of_consensus_required = true (Pflicht bei Nicht-GF)
+  status = 'proposed'
+  ↓
+Notification an relevante Head-ofs (nach Sparten-Zuordnung des Ziel-MA):
+  - z.B. für Joaquin (CI) → Peter benachrichtigt
+  - z.B. für Anna (ARC) → Yavor benachrichtigt
+  - Severina/Sabrina · Cross-Head-Konsens (alle 3 Head-ofs)
+  ↓
+Head-ofs bestätigen oder widersprechen (in-app)
+  ↓
+wenn alle relevanten Head-ofs bestätigt → UPDATE status = 'approved'
+wenn mindestens 1 Head-of widerspricht → Review-Meeting · manuelle Klärung
+  ↓
+Nach Approval: Bonus im nächsten Quartals-Batch
+```
+
+**Schema-Erweiterung `fact_bonus_payment`**:
+```sql
+ALTER TABLE fact_bonus_payment ADD COLUMN IF NOT EXISTS
+  head_of_consensus_required BOOLEAN DEFAULT true,
+  head_of_approvals JSONB,  -- [{head_of_id, approved_at, approved: true/false, comment}, ...]
+  consensus_status TEXT DEFAULT 'pending' CHECK (consensus_status IN (
+    'pending', 'consensus_reached', 'disputed', 'not_required'
+  ));
+```
+
+**Approval-Regel**:
+- GF-Self-Bonus: `head_of_consensus_required = false` · instant approval
+- Bonus für andere: `head_of_consensus_required = true` · alle relevanten Head-ofs müssen bestätigen
+- Kein festes CHF-Limit (GF entscheidet im Rahmen seines Ermessens)
 
 ### 4.5 Simulations-Flow (Was-wäre-wenn)
 
@@ -759,15 +817,23 @@ Nach QA-Phase: Excel-Sheets archivieren, nur noch ARK-Engine produktiv.
 
 ---
 
-## 12. Offene Entscheidungen (Peter)
+## 12. Entscheidungs-Status (Peter 2026-04-19)
 
-1. **Assessment-Manager-Modell**: Pauschale (wie Researcher) · CM-50/50 · %-vom-Assessment-Honorar?
-2. **Yavor Bojkov Head-of-Sparten**: welche Sparten?
-3. **Stefano Papes Head-of-Sparten**: welche Sparten?
-4. **Researcher-Pauschale-Algorithmus**: automatisch (500 default · 250/750 nach Fee) oder immer manuell Head-of-Approval?
-5. **Bonus-Ermessen-Limit**: gibt's ein Max-CHF pro Quartal für GF-Self-Approval?
-6. **Migration-Startpunkt**: ab wann historische Daten importieren (nur 2026 oder auch 2025)?
-7. **Quartals-Abschluss-Freezing**: kann ein abgeschlossenes Quartal nachträglich geändert werden (z.B. bei nachträglichem Placement-Backdate)?
+**5 geklärt**:
+1. ✅ Assessment-Manager · Jahresziel + quartalsweise Bonus wie CM/AM (Staffel-Detail TBC)
+2. ✅ Yavor = Head of **ARC + REM**
+4. ✅ Researcher-Pauschale: **CHF 500 default · frei umstellbar** (250-750)
+5. ✅ Bonus-Ermessen: **kein CHF-Limit** · GF entscheidet · Head-of-Absprache bei Nicht-GF-Boni Pflicht · GF-Self-Approval ohne Absprache
+7. ✅ Quartals-Abschluss **nachträglich änderbar** mit Audit-Log (via `superseded`-Marker)
+
+**3 noch offen**:
+3. ⚠ **Stefano Papes · "Head of Market Strategy & Client Solutions"** — keine ARK-Sparte · Teambudget-Scope muss Peter klären:
+   - Option A: Cross-Sparten-Rollup (alle Umsätze · aber dann Dopplung mit Peter/Yavor)
+   - Option B: Nur Mandate die Stefano selber akquiriert hat (`dim_mandate.acquired_by_user_id`)
+   - Option C: Spezielle Mandats-Kategorie (z.B. alle Target-Retainer oder Strategic-Accounts)
+   - Option D: Eigenes Metrik-System (nicht Umsatz-basiert sondern z.B. Neu-Account-Akquise)
+6. ⚠ **Migration-Startpunkt**: Peter-Rückfrage — was gemeint war: Excel-Daten aus Joaquin-Sheet + Peter-Sheet (Q1 2026 · ggf. auch 2025) als Initial-Seed in `fact_commission_ledger` importieren? Oder startet ARK-Engine bei null und Excel wird erst ab 2027 abgelöst?
+1b. ⚠ **Assessment-Manager-Staffel-Detail**: ZEG-Staffel wie CM/AM · oder linear (50 % Ziel → 50 % Bonus) · oder binär (erreicht/nicht)?
 
 ---
 
