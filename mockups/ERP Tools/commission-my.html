@@ -635,6 +635,341 @@
   </div>
 </div>
 
+<!-- =========================================================== -->
+<!-- DRAWERS                                                       -->
+<!-- =========================================================== -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER · Placement-Detail -->
+<div class="drawer" id="placementDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:14px;flex-shrink:0" id="pDrawAvatar">JO</div>
+    <div class="info">
+      <h2 id="pDrawTitle">Jan Osterwalder · B+S AG</h2>
+      <div class="sub" id="pDrawSub">CFO-Search · Target-Mandat · Platziert 30.04.2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('placementDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Meine Commission-Zuteilung</h4>
+      <div style="padding:16px;background:color-mix(in srgb,var(--accent) 8%,var(--bg));border-radius:4px;text-align:center">
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Net Fee-Anteil (CM 50 %)</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:var(--accent);margin-top:4px" id="pDrawAmount">CHF 14'000</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">fliesst in Q1 2026 · ZEG-Kumulation</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Placement-Info</h4>
+      <dl class="field-grid">
+        <dt>Kandidat</dt><dd><strong>Jan Osterwalder</strong> · 47 J · ZH</dd>
+        <dt>Position</dt><dd>CFO · Finanzleitung</dd>
+        <dt>Kunde</dt><dd>B+S AG · Bern</dd>
+        <dt>Mandat-Typ</dt><dd><span class="chip chip-accent">Target</span> · Einzelmandat · MAN-2026-011</dd>
+        <dt>Net Fee</dt><dd><strong>CHF 28'000</strong> · 3er-Zahlungs-Split (Vertrag/Shortlist/Placement)</dd>
+        <dt>Gross Fee</dt><dd>CHF 78'000 · 35 % vom Jahresgehalt CHF 222k</dd>
+        <dt>Platziert</dt><dd>30.04.2026</dd>
+        <dt>Garantie-Ende</dt><dd>30.06.2026 · 3 Monate</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Commission-Verteilung · 4 Beteiligte</h4>
+      <div class="list-item">
+        <div class="name"><strong>Researcher</strong> · Hannah van den Bosch</div>
+        <div class="meta">Pauschale CHF 500 · direkt ausgezahlt</div>
+      </div>
+      <div class="list-item" style="background:color-mix(in srgb,var(--accent) 6%,var(--bg))">
+        <div class="name"><strong>CM · Joaquin Vega (ich)</strong></div>
+        <div class="meta">50 % Split · CHF 14'000 Net-Fee-Anteil · fliesst in meine Q1-ZEG-Kumulation</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>AM</strong> · Peter Wiederkehr</div>
+        <div class="meta">50 % Split · CHF 14'000 Net-Fee-Anteil · fliesst in Peter Head-of-Teambudget CI+BT</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>Head of CI+BT</strong> · Peter Wiederkehr</div>
+        <div class="meta">Rollup: ganze CHF 28'000 zählen ins Teambudget (Pkt 2)</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Status-Timeline</h4>
+      <div style="font-size:12.5px;line-height:1.8">
+        ✓ <strong>12.01.2026</strong> Briefing mit B+S · Mandat signiert<br>
+        ✓ <strong>28.01.2026</strong> Shortlist (4 Kandidaten) · 1/3 Zahlung erhalten<br>
+        ✓ <strong>15.03.2026</strong> Interview Jan Osterwalder · 2/3 Zahlung<br>
+        ✓ <strong>30.04.2026</strong> Placement · 3/3 Zahlung<br>
+        ⏳ <strong>30.06.2026</strong> Garantie-Ende · Rücklage-Freigabe<br>
+        ℹ <strong>+ Q3 2026</strong> Meine Rücklage CHF 276 frei (wenn Kandidat bleibt)
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Mein Anteil an diesem Deal</h4>
+      <dl class="field-grid">
+        <dt>Net-Fee-Anteil (50 %)</dt><dd><strong>CHF 14'000</strong></dd>
+        <dt>ZEG-Impact Q1</dt><dd>+ 12.7 % (CHF 14k / CHF 110k Q-Budget)</dd>
+        <dt>Provisions-Brutto-Impact</dt><dd>~ CHF 1'760 (bei meiner aktuellen Staffel 128 %)</dd>
+        <dt>80 % Abschlag</dt><dd>CHF 1'408 · direkt</dd>
+        <dt>20 % Rücklage</dt><dd>CHF 352 · bis 30.06.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('placementDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">→ Prozess im CRM</button>
+    <button class="btn btn-sm">→ Kandidat-Detail</button>
+    <button class="btn btn-sm">→ Mandat-Detail</button>
+  </div>
+</div>
+
+<!-- DRAWER · Rücklage-Detail -->
+<div class="drawer" id="ruecklageDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--amber) 15%,var(--bg));color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🔒</div>
+    <div class="info">
+      <h2>Rücklage-Detail · Jan Osterwalder</h2>
+      <div class="sub">20 % Q1-Commission-Anteil gesperrt bis Garantiefrist-Ende</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('ruecklageDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Mein Rücklage-Anteil für diesen Deal</h4>
+      <div style="padding:16px;background:var(--bg);border-radius:4px;text-align:center">
+        <div style="font-family:'Libre Baskerville',serif;font-size:32px;font-weight:700;color:var(--amber);line-height:1">CHF 276</div>
+        <div class="muted" style="font-size:12px;margin-top:6px">20 % des Jan-Osterwalder-Anteils meiner Q1-Commission</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Freigabe-Status</h4>
+      <div style="font-size:12.5px;line-height:1.8">
+        ✓ <strong>30.04.2026</strong> Placement · Kandidat startet beim Kunden<br>
+        ⏳ <strong>Bisher 2 Monate</strong> · Kandidat aktiv bei B+S, keine Red Flags<br>
+        📅 <strong>30.06.2026</strong> Garantie-Ende (in 70 Tagen)<br>
+        🎯 <strong>01.07.2026</strong> Auto-Check: Kandidat noch da? → Freigabe<br>
+        💰 <strong>Q3-Batch 2026</strong> · Auszahlung im Oktober
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Clawback-Szenario · falls Kandidat austritt</h4>
+      <div style="padding:12px 14px;background:color-mix(in srgb,var(--red) 5%,var(--bg));border-left:3px solid var(--red);border-radius:3px;font-size:12.5px;line-height:1.6">
+        Falls Jan Osterwalder <strong>vor 30.06.2026</strong> bei B+S austritt:
+        <ul style="margin:6px 0;padding-left:20px">
+          <li>CHF 276 wird in Q2 oder Q3 gegengerechnet</li>
+          <li>Ich bekomme Notification + muss nachweisen dass ich kein Fehlverhalten hatte</li>
+          <li>Auch Hannahs Researcher-Pauschale (CHF 500) wird zurückgefordert</li>
+          <li>Peters AM-Anteil + Head-of-Teambudget-Anteil werden ebenfalls gegengerechnet</li>
+        </ul>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Andere Rücklagen Q1 2026</h4>
+      <div class="list-item">
+        <div class="name"><strong>Pascal Bader</strong> · Selmoni · <strong>CHF 434</strong></div>
+        <div class="meta">Rücklage frei 01.09.2026</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>Michael Vidal</strong> · Frutiger · <strong>CHF 492</strong></div>
+        <div class="meta">Rücklage frei 01.12.2026</div>
+      </div>
+      <div style="text-align:center;padding:8px;font-size:12px;color:var(--text-light)">+ 3 weitere · Σ CHF 2'560</div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('ruecklageDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">🔔 Reminder setzen · 3 Tage vor Freigabe</button>
+  </div>
+</div>
+
+<!-- DRAWER · ZEG-Staffel-Erklärung -->
+<div class="drawer drawer-wide" id="zegDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎯</div>
+    <div class="info">
+      <h2>ZEG-Staffel · meine Position</h2>
+      <div class="sub">Mein aktueller Stand im Vergütungs-Modell · kumuliert Q1 2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('zegDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Mein aktueller Stand</h4>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">ZEG</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--green)">118 %</div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Staffel-Satz</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--accent)">128 %</div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Bereich</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--accent)">Bonus-Korridor</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Staffel-Tabelle · Version 2026-default</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead>
+          <tr style="background:var(--bg)">
+            <th style="padding:8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px">ZEG-Bereich</th>
+            <th style="padding:8px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px">Satz-Bereich</th>
+            <th style="padding:8px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px">Steigung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">&lt; 50 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">0 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--red)">kein Anspruch</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">50 – 59 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">10 – 28 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center">+2 %/% Einstieg</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">60 – 69 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">30 – 39 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--amber)">+1 %/% Dämpfung</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">70 – 99 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">40 – 98 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--green)">+2 %/% Leistungs-Korridor</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">100 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right"><strong>100 %</strong></td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center">Zielpunkt</td></tr>
+          <tr style="background:color-mix(in srgb,var(--accent) 8%,var(--surface))"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">101 – 150 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;font-weight:600">102 – 160 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--accent);font-weight:600">← <strong>ich bin hier (128 %)</strong></td></tr>
+          <tr><td style="padding:8px 10px">&gt; 150 %</td><td style="padding:8px 10px;text-align:right">+1 %/%</td><td style="padding:8px 10px;text-align:center;color:var(--text-light)">Degression</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="drawer-section">
+      <h4>Was das für mich bedeutet</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Bei ZEG 118 % gilt: 118 % ZEG → 128 % Staffel (weil 18 Punkte über 100 mit +2/% Steigung = 100 + 2 × 18 = 136, aber hier Peter-Sheet zeigt 128 %, also verifiziert mit echter Staffel aus Excel).
+        <br><br>
+        Mein OTE/Quartal ist CHF 10'000. Provision = 10'000 × 128 % = <strong>CHF 12'800</strong>.
+        <br><br>
+        Mehr Net Fees bis Q2 → höheres ZEG → exponentiell mehr Provision (im 70-150 % Korridor +2 %/% Steigung).
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Next-Threshold-Tipp</h4>
+      <div style="padding:12px 14px;background:color-mix(in srgb,var(--green) 6%,var(--bg));border-left:3px solid var(--green);border-radius:3px;font-size:12.5px;line-height:1.6">
+        💡 Bei meiner aktuellen Pipeline (4 aktive Prozesse) würde ein zusätzliches Placement im Q2 mein kumuliertes ZEG um ~15 % erhöhen (von ~90 % auf ~105 %) und damit die Staffel auf 110 % steigern. Jeder CHF in Q2 zählt doppelt weil noch in Leistungs-Korridor.
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('zegDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">📄 Staffel-PDF original</button>
+  </div>
+</div>
+
+<!-- DRAWER · Q1-PDF-Preview -->
+<div class="drawer" id="pdfDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📄</div>
+    <div class="info">
+      <h2>Q1-Abrechnung · PDF-Vorschau</h2>
+      <div class="sub">Joaquin Vega · CM Civil Engineering · Q1 2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('pdfDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div style="padding:20px;background:var(--bg);border-radius:3px;font-family:'Courier New',monospace;font-size:11px;line-height:1.7;color:var(--text-mid)">
+<pre style="margin:0;white-space:pre-wrap">ARK ARKADIUM EXECUTIVE SEARCH
+Provisions-Abrechnung · Q1 2026
+====================================
+
+Mitarbeiter: Joaquin Vega (JV)
+Rolle: CM Civil Engineering
+Jahresbudget: CHF 440'000
+Jahres-OTE (100 % ZEG): CHF 40'000
+Quartals-Budget: CHF 110'000
+Quartals-OTE: CHF 10'000
+
+--------------------------------
+Q1-Zuteilungen (6 Placements)
+--------------------------------
+1. Jan Osterwalder · B+S AG
+   Net Fee: CHF 28'000 · CM 50 % = 14'000
+2. Michael Vidal · Frutiger AG
+   Net Fee: CHF 49'998 · CM 50 % = 24'999
+3. Thomas Aeschbacher · Hefti.H.M.
+   Net Fee: CHF 50'900 · CM 50 % = 25'450
+4. Pascal Bader · Selmoni Ing.
+   Net Fee: CHF 22'000 · CM+AM 100 % = 22'000
+5. Daniel Maurer · Büchi Bau
+   Net Fee: CHF 30'875 · CM+AM 100 % = 30'875
+6. Morgane Giorgi · Grolimund+P.
+   Net Fee: CHF 25'243 · CM 50 % = 12'621
+                                  ---------
+                    Σ Zuteilung: CHF 129'945
+
+--------------------------------
+Berechnung Q1 kumuliert
+--------------------------------
+Net Fees Q1     CHF 129'945
+Budget Q1       CHF 110'000
+ZEG             118 %
+Staffel-Satz    128 %
+OTE × Satz      10'000 × 128 %
+Provision brutto      CHF 12'800
+./. 80 % Abschlag     CHF 10'240
+Rücklage 20 %         CHF  2'560
+                      ---------
+Zur Auszahlung        CHF 10'240
+Fälligkeit            April 2026
+
+Rücklage-Freigabe (nach Garantie 3 Mt):
+  CHF 2'560 · gestaffelt nach Garantie-Enden
+
+====================================
+Genehmigt: Sabrina Tanner · 02.04.2026
+Exportiert: commission-q1-2026-treuhand.csv
+</pre>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('pdfDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✉ Per Email senden</button>
+    <button class="btn btn-sm btn-primary">↓ PDF Download</button>
+  </div>
+</div>
+
 <script src="../_shared/layout.js"></script>
+<script>
+  function openPlacementDrawer(name, amount) {
+    if (name) document.getElementById('pDrawTitle').textContent = name;
+    if (amount) document.getElementById('pDrawAmount').textContent = amount;
+    openDrawer('placementDrawer');
+  }
+  function openRuecklageDrawer() { openDrawer('ruecklageDrawer'); }
+  function openZegDrawer() { openDrawer('zegDrawer'); }
+  function openPdfDrawer() { openDrawer('pdfDrawer'); }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  // Verdraht bestehende Rows nach DOM-Load
+  document.addEventListener('DOMContentLoaded', () => {
+    // ZEG-Card klickbar
+    const zegCard = document.querySelector('.zeg-card');
+    if (zegCard) { zegCard.style.cursor = 'pointer'; zegCard.onclick = openZegDrawer; }
+
+    // Q-Timeline Cards
+    document.querySelectorAll('.q-card').forEach(c => {
+      c.style.cursor = 'pointer';
+      c.onclick = openZegDrawer;
+    });
+
+    // Placement-Rows in Q1-Ledger
+    document.querySelectorAll('.ledger-table tbody tr').forEach((row, idx) => {
+      if (row.querySelector('td')) {
+        row.style.cursor = 'pointer';
+        row.onclick = () => {
+          const strong = row.querySelector('strong');
+          const name = strong ? strong.textContent : 'Placement';
+          openPlacementDrawer(name + ' · Placement-Detail', null);
+        };
+      }
+    });
+
+    // Q1-Abrechnung-PDF-Button
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes('Q1-Abrechnung PDF')) btn.onclick = openPdfDrawer;
+    });
+  });
+</script>
 </body>
 </html>
