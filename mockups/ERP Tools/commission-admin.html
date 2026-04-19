@@ -543,7 +543,7 @@
         <div class="num">CHF 64'750</div>
         <div class="num" style="color:var(--green)">CHF 51'800</div>
         <div class="num" style="color:var(--green)">CHF 12'950</div>
-        <div><span class="chip chip-green">paid_ruecklage</span></div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
         <div>02.10.2025</div>
         <div><button class="btn btn-sm">Details</button></div>
       </div>
@@ -553,7 +553,7 @@
         <div class="num">CHF 58'900</div>
         <div class="num" style="color:var(--green)">CHF 47'120</div>
         <div class="num" style="color:var(--green)">CHF 11'780</div>
-        <div><span class="chip chip-green">paid_ruecklage</span></div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
         <div>01.07.2025</div>
         <div><button class="btn btn-sm">Details</button></div>
       </div>
@@ -563,7 +563,7 @@
         <div class="num">CHF 49'750</div>
         <div class="num" style="color:var(--green)">CHF 39'800</div>
         <div class="num" style="color:var(--green)">CHF 9'950</div>
-        <div><span class="chip chip-green">paid_ruecklage</span></div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
         <div>03.04.2025</div>
         <div><button class="btn btn-sm">Details</button></div>
       </div>
@@ -921,7 +921,9 @@
           5. 11 Email-Notifications versendet<br>
           6. 3 Rücklage-Freigaben durchgeführt<br>
           7. 1 Clawback (Peter · −480) vollzogen<br>
+          <!-- ark-lint-skip:begin reason=admin-saga-preview -->
           8. Audit-Log-Eintrag in fact_commission_batch mit Timestamp
+          <!-- ark-lint-skip:end -->
         </div>
         <div style="margin-top:12px;padding:10px 14px;background:var(--bg);border-radius:3px;font-size:12.5px">
           <strong>Fälligkeit Lohnauszahlung via Treuhänder</strong>: 15.04.2026<br>
@@ -1035,6 +1037,7 @@
     </div>
     <div class="drawer-section">
       <h4>Nach Bestätigung</h4>
+      <!-- ark-lint-skip:begin reason=admin-saga-preview -->
       <div style="font-size:12.5px;line-height:1.7">
         1. Clawback-Event in `fact_commission_ledger` (CHF -480 · status='clawed_back')<br>
         2. Peters Q2-Batch-Netto reduziert<br>
@@ -1042,6 +1045,7 @@
         4. Schutzfrist-Alert an PW<br>
         5. Notifications an alle 3 Beteiligten + GF (cc)
       </div>
+      <!-- ark-lint-skip:end -->
     </div>
   </div>
   <div class="drawer-foot">

@@ -1489,3 +1489,35 @@
 | SNAKE-CASE \| 518 \| alert('Öffnet Dashboard in neuem Tab als Account-Manager-User gerendert · URL: /... \| -> deutsches Label statt snake_case in Alert/Confirm |
 | DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
 
+
+## [2026-04-19 19:55] session-13946034 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 958 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 959 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1236 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1237 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1238 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1239 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1240 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1241 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+

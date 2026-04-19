@@ -430,10 +430,10 @@
   <div class="filter-bar">
     <select>
       <option>Alle Typen</option>
-      <option>verbal</option>
-      <option>first_written</option>
-      <option>final_written</option>
-      <option>notice_fristlos</option>
+      <option value="verbal">Mündliche Ermahnung</option>
+      <option value="first_written">1. schriftliche Verwarnung</option>
+      <option value="final_written">Letzte schriftliche Verwarnung</option>
+      <option value="notice_fristlos">Fristlose Kündigung</option>
     </select>
     <select>
       <option>Alle Status</option>
@@ -634,7 +634,7 @@
   <div class="drawer-body">
 
     <div class="info-box">
-      <strong>Eskalations-Reihenfolge:</strong> verbal → first_written → final_written → Kündigung.
+      <strong>Eskalations-Reihenfolge:</strong> Mündliche Ermahnung → 1. schriftliche Verwarnung → Letzte schriftliche Verwarnung → Kündigung.
       Jede Stufe benötigt dokumentierte Vorstufe.
     </div>
 
@@ -642,9 +642,9 @@
       <label>Mitarbeiter</label>
       <select>
         <option>Wählen…</option>
-        <option>Anna Huber (hat bereits: verbal + first_written)</option>
-        <option>Max Muster (hat bereits: verbal + first_written)</option>
-        <option>Lisa Beispiel (hat bereits: first_written)</option>
+        <option>Anna Huber (hat bereits: Mündliche Ermahnung + 1. schriftliche Verwarnung)</option>
+        <option>Max Muster (hat bereits: Mündliche Ermahnung + 1. schriftliche Verwarnung)</option>
+        <option>Lisa Beispiel (hat bereits: 1. schriftliche Verwarnung)</option>
         <option>— Neuer MA —</option>
       </select>
     </div>
@@ -652,10 +652,10 @@
     <div class="field">
       <label>Typ</label>
       <select>
-        <option>verbal · Mündliche Ermahnung</option>
-        <option>first_written · Erste schriftliche Verwarnung</option>
-        <option>final_written · Letzte schriftliche Verwarnung</option>
-        <option>notice_fristlos · Fristlose Kündigung (Art. 337 OR)</option>
+        <option value="verbal">Mündliche Ermahnung</option>
+        <option value="first_written">1. schriftliche Verwarnung</option>
+        <option value="final_written">Letzte schriftliche Verwarnung</option>
+        <option value="notice_fristlos">Fristlose Kündigung (Art. 337 OR)</option>
       </select>
     </div>
 

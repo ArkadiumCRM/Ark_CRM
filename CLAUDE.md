@@ -152,6 +152,13 @@ Bei jedem grösseren Edit (> 100 Zeilen Diff) **vor** dem Edit Backup schreiben,
 
 Wenn ein Tooling/Encoding-Problem auftritt (z.B. Windows cp1252 in Bash-Heredocs): die Datei direkt mit Edit/Write schreiben, nicht über Bash-Pipes.
 
+**Ausnahme lateinische Eigennamen:** Reglemente + Verträge mit lateinischen Kunstnamen bleiben unverändert (keine Umlaut-Substitute, sondern Latein-Corporate-Brand):
+- **Praemium Victoria** (Provisionsvertrag)
+- **Generalis Provisio** (Allgemeine Anstellungsbedingungen)
+- **Tempus Passio 365** (Arbeitszeitenreglement)
+- **Locus Extra** (Mobiles Arbeiten)
+- **Progressus** (Stellenbeschreibung)
+
 ## Keine-DB-Technikdetails-im-UI-Regel (CRITICAL — 2026-04-15)
 
 **Niemals** in User-facing-Texten (Card-Titel, Subtitel, Tooltips, Hinweise, Empty-States, Breadcrumbs, Labels) Tabellen- oder Spalten-Namen der Datenbank anzeigen — also keine `dim_*`, `fact_*`, `bridge_*`, Spalten-Namen wie `candidate_id`, `stage`, `_fk`, etc.
