@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR Verwarnungen &amp; Disziplinar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .wd-page {
+    padding:20px 28px 40px;
+    max-width:1600px; margin:0 auto;
+  }
+
+  .wd-head {
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border);
+    margin-bottom:22px;
+  }
+  .wd-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .wd-head .sub {
+    font-size:13px; color:var(--text-light);
+  }
+  .wd-head .actions {
+    margin-left:auto; display:flex; gap:10px;
+  }
+  .wd-head button {
+    padding:9px 16px; font-size:13px; font-weight:500;
+    border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif;
+  }
+  .wd-head .btn-primary {
+    background:var(--accent); color:white; border:1px solid var(--accent);
+  }
+  .wd-head .btn-primary:hover { filter:brightness(1.1); }
+  .wd-head .btn-secondary {
+    background:var(--surface); color:var(--text);
+    border:1px solid var(--border-strong);
+  }
+
+  /* KPI-BAR */
+  .kpi-bar {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    margin-bottom:24px;
+  }
+  .kpi {
+    background:var(--surface); padding:16px 18px; border-radius:6px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .kpi.red { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi .big {
+    font-size:32px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif; line-height:1;
+  }
+  .kpi.red .big { color:var(--red); }
+  .kpi.amber .big { color:#b06100; }
+  .kpi.green .big { color:#2a6a2a; }
+  .kpi .label {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
+    color:var(--text-light); margin-top:6px; font-weight:500;
+  }
+  .kpi .sub {
+    font-size:11px; color:var(--text-light); margin-top:3px;
+  }
+
+  /* TABS */
+  .tabs {
+    display:flex; gap:2px; border-bottom:2px solid var(--border);
+    margin-bottom:20px;
+  }
+  .tab {
+    padding:10px 20px; cursor:pointer; font-size:13px;
+    font-weight:500; color:var(--text-light);
+    border-bottom:2px solid transparent; margin-bottom:-2px;
+    transition:all 0.15s;
+  }
+  .tab:hover { color:var(--accent); }
+  .tab.active {
+    color:var(--accent); border-bottom-color:var(--accent);
+    font-weight:600;
+  }
+  .tab .count {
+    background:var(--surface-alt); padding:1px 7px;
+    border-radius:8px; font-size:10px; margin-left:6px;
+    color:var(--text-light);
+  }
+  .tab.active .count {
+    background:var(--accent); color:white;
+  }
+
+  /* FILTER-BAR */
+  .filter-bar {
+    display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;
+    align-items:center;
+  }
+  .filter-bar select, .filter-bar input {
+    padding:7px 10px; border:1px solid var(--border-strong);
+    border-radius:3px; font-size:12px; background:var(--surface);
+    font-family:'DM Sans',sans-serif;
+  }
+  .filter-bar .spacer { flex:1; }
+
+  /* LAYOUT: List + Detail */
+  .wd-layout {
+    display:grid; grid-template-columns:1.3fr 1fr; gap:20px;
+  }
+  @media (max-width:1100px) {
+    .wd-layout { grid-template-columns:1fr; }
+    .kpi-bar { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* LIST */
+  .wd-list {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); overflow:hidden;
+  }
+  .wd-row {
+    padding:14px 18px; border-bottom:1px solid var(--border);
+    display:grid; grid-template-columns:auto 1fr auto; gap:14px;
+    align-items:center; cursor:pointer; transition:background 0.1s;
+  }
+  .wd-row:hover { background:var(--surface-alt); }
+  .wd-row.selected {
+    background:var(--surface-alt); border-left:3px solid var(--accent);
+    padding-left:15px;
+  }
+  .wd-row:last-child { border-bottom:none; }
+
+  .wd-icon {
+    width:38px; height:38px; border-radius:50%;
+    background:var(--surface-alt); color:var(--text-light);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:700;
+  }
+  .wd-icon.verbal { background:#e8edf3; color:#6b7b8c; }
+  .wd-icon.first { background:#fff4e0; color:#b06100; }
+  .wd-icon.final { background:#ffe0e0; color:#a02020; }
+  .wd-icon.investigation { background:#e0ecff; color:var(--accent); }
+  .wd-icon.confirmed { background:#ffe0e0; color:#a02020; }
+  .wd-icon.dismissed { background:#e0f5e0; color:#2a6a2a; }
+  .wd-icon.paid { background:#e0f5e0; color:#2a6a2a; }
+
+  .wd-body { min-width:0; }
+  .wd-title {
+    font-weight:600; font-size:13px; color:var(--text);
+    margin-bottom:2px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .wd-meta {
+    font-size:11px; color:var(--text-light);
+  }
+  .wd-meta .sep { margin:0 6px; opacity:0.5; }
+
+  .wd-right {
+    font-size:11px; color:var(--text-light); text-align:right;
+  }
+  .wd-right .status {
+    padding:3px 9px; border-radius:10px; font-size:10px;
+    font-weight:600; text-transform:uppercase; letter-spacing:0.4px;
+    display:inline-block;
+  }
+  .status.verbal { background:#e8edf3; color:#6b7b8c; }
+  .status.under-watch { background:#fff4e0; color:#b06100; }
+  .status.final-watch { background:#ffe0e0; color:#a02020; }
+  .status.resolved { background:#e0f5e0; color:#2a6a2a; }
+  .status.investigation { background:#e0ecff; color:var(--accent); }
+  .status.confirmed { background:#ffe0e0; color:#a02020; }
+  .status.dismissed { background:#f0f0f0; color:#666; }
+  .status.paid { background:#e0f5e0; color:#2a6a2a; }
+
+  .wd-deadline {
+    margin-top:3px;
+  }
+  .wd-deadline.urgent { color:var(--red); font-weight:600; }
+  .wd-deadline.warning { color:#b06100; font-weight:600; }
+
+  /* DETAIL-PANEL */
+  .wd-detail {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); padding:22px 24px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .wd-detail h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:20px; color:var(--accent); font-weight:700;
+  }
+  .wd-detail .subtitle {
+    font-size:13px; color:var(--text-light); margin-top:-10px;
+  }
+
+  .detail-meta {
+    display:grid; grid-template-columns:auto 1fr; gap:6px 18px;
+    font-size:12px; padding:14px 16px; background:var(--surface-alt);
+    border-radius:4px;
+  }
+  .detail-meta .k { color:var(--text-light); }
+  .detail-meta .v { color:var(--text); }
+
+  .timeline {
+    display:flex; flex-direction:column; gap:0;
+    position:relative; padding-left:24px;
+  }
+  .timeline::before {
+    content:""; position:absolute; left:8px; top:10px; bottom:10px;
+    width:2px; background:var(--border);
+  }
+  .tl-event {
+    position:relative; padding:10px 0 14px;
+  }
+  .tl-event::before {
+    content:""; position:absolute; left:-20px; top:14px;
+    width:11px; height:11px; border-radius:50%;
+    background:var(--surface); border:2px solid var(--border);
+  }
+  .tl-event.verbal::before { border-color:#6b7b8c; background:#e8edf3; }
+  .tl-event.first::before { border-color:#b06100; background:#fff4e0; }
+  .tl-event.final::before { border-color:#a02020; background:#ffe0e0; }
+  .tl-event.resolved::before { border-color:#2a6a2a; background:#e0f5e0; }
+  .tl-event.incident::before { border-color:var(--accent); background:#e0ecff; }
+  .tl-event .when {
+    font-size:11px; color:var(--text-light); font-weight:500;
+  }
+  .tl-event .what {
+    font-size:13px; color:var(--text); font-weight:600; margin:2px 0;
+  }
+  .tl-event .by {
+    font-size:11px; color:var(--text-light);
+  }
+  .tl-event .reason {
+    margin-top:4px; font-size:12px; color:var(--text);
+    font-style:italic; padding:6px 10px;
+    background:var(--surface-alt); border-left:2px solid var(--border);
+    border-radius:3px;
+  }
+
+  .legal-refs {
+    display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;
+  }
+  .legal-refs .chip {
+    padding:3px 8px; background:var(--surface); border-radius:10px;
+    font-size:10px; color:var(--accent); font-weight:600;
+    border:1px solid var(--accent);
+  }
+
+  .action-row {
+    display:flex; gap:8px; margin-top:8px;
+  }
+  .action-row button {
+    padding:8px 14px; border-radius:3px; font-size:12px;
+    font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;
+  }
+  .action-row .btn-primary {
+    background:var(--accent); color:white; border:1px solid var(--accent);
+  }
+  .action-row .btn-ghost {
+    background:var(--surface); color:var(--text);
+    border:1px solid var(--border-strong);
+  }
+  .action-row .btn-red {
+    background:#fff4f4; color:#a02020;
+    border:1px solid #ffcaca;
+  }
+
+  /* OFFSET-WARNING (DISZIPLINAR) */
+  .offset-warn {
+    padding:12px 16px; background:#fff4e0;
+    border:1px solid #f5d39b; border-radius:4px;
+    font-size:12px; color:#7a4a00;
+  }
+  .offset-warn strong { display:block; margin-bottom:4px; color:#4a2a00; }
+  .offset-warn.ok {
+    background:#e0f5e0; border-color:#b5d8b5; color:#1a4a1a;
+  }
+  .offset-warn.ok strong { color:#0a3a0a; }
+
+  /* DRAWER */
+  .drawer-backdrop {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.35); z-index:40;
+  }
+  .drawer-backdrop.open { display:block; }
+  .drawer {
+    position:fixed; top:0; right:-820px; width:760px; height:100%;
+    background:var(--surface); z-index:50;
+    box-shadow:-6px 0 20px rgba(0,0,0,0.15);
+    transition:right 0.25s; overflow-y:auto;
+  }
+  .drawer.open { right:0; }
+  .drawer-head {
+    padding:18px 26px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface-alt);
+  }
+  .drawer-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:20px; color:var(--accent);
+  }
+  .drawer-close {
+    background:none; border:none; font-size:22px; cursor:pointer;
+    color:var(--text-light);
+  }
+  .drawer-tabs {
+    display:flex; gap:2px; padding:0 26px;
+    border-bottom:1px solid var(--border); background:var(--surface);
+  }
+  .drawer-tab {
+    padding:12px 18px; cursor:pointer; font-size:13px;
+    font-weight:500; color:var(--text-light);
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .drawer-tab.active {
+    color:var(--accent); border-bottom-color:var(--accent);
+    font-weight:600;
+  }
+  .drawer-body { padding:22px 26px; font-size:13px; }
+  .drawer-body .field { margin-bottom:16px; }
+  .drawer-body .field label {
+    display:block; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.4px; color:var(--text-light); margin-bottom:5px;
+    font-weight:500;
+  }
+  .drawer-body input, .drawer-body select, .drawer-body textarea {
+    width:100%; padding:9px 11px; border:1px solid var(--border-strong);
+    border-radius:3px; font-size:13px;
+    font-family:'DM Sans',sans-serif; background:var(--surface);
+  }
+  .drawer-body textarea { resize:vertical; min-height:80px; }
+  .drawer-body .row2 {
+    display:grid; grid-template-columns:1fr 1fr; gap:12px;
+  }
+  .info-box {
+    padding:10px 14px; background:var(--surface-alt);
+    border-radius:4px; font-size:12px; margin-bottom:14px;
+    border-left:3px solid var(--accent);
+  }
+  .info-box.red { border-left-color:var(--red); background:#fff4f4; }
+  .info-box strong { color:var(--accent); }
+  .info-box.red strong { color:var(--red); }
+
+  .legal-select {
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .legal-select label {
+    padding:4px 10px; background:var(--surface-alt); border-radius:10px;
+    font-size:11px; cursor:pointer; user-select:none;
+    display:flex; align-items:center; gap:4px;
+    border:1px solid transparent;
+  }
+  .legal-select input[type="checkbox"]:checked + span {
+    color:var(--accent); font-weight:600;
+  }
+
+  .drawer-foot {
+    padding:16px 26px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface-alt); gap:10px;
+  }
+  .drawer-foot .left { font-size:11px; color:var(--text-light); }
+  .drawer-foot .right { display:flex; gap:10px; }
+  .drawer-foot button {
+    padding:9px 18px; border-radius:3px; font-size:13px;
+    font-weight:500; cursor:pointer; border:1px solid transparent;
+  }
+  .drawer-foot .btn-primary {
+    background:var(--accent); color:white; border-color:var(--accent);
+  }
+  .drawer-foot .btn-secondary {
+    background:var(--surface); color:var(--text);
+    border-color:var(--border-strong);
+  }
+  .drawer-foot .btn-red {
+    background:var(--red); color:white; border-color:var(--red);
+  }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="wd-page">
+
+  <!-- HEADER -->
+  <div class="wd-head">
+    <h1>Verwarnungen &amp; Disziplinar</h1>
+    <span class="sub">Eskalations-Tracker nach OR 321a · Art. 337 OR</span>
+    <div class="actions">
+      <button class="btn-secondary">📊 Reports</button>
+      <button class="btn-primary" onclick="openDrawer('drawer-warning')">+ Verwarnung ausstellen</button>
+      <button class="btn-primary" onclick="openDrawer('drawer-incident')">⚠ Disziplinar melden</button>
+    </div>
+  </div>
+
+  <!-- KPI-BAR -->
+  <div class="kpi-bar">
+    <div class="kpi amber">
+      <div class="big">3</div>
+      <div class="label">Aktive Verwarnungen</div>
+      <div class="sub">1× final · 2× first-written</div>
+    </div>
+    <div class="kpi red">
+      <div class="big">1</div>
+      <div class="label">Follow-up fällig ≤ 7 Tage</div>
+      <div class="sub">Anna H. · 23.04.</div>
+    </div>
+    <div class="kpi">
+      <div class="big">2</div>
+      <div class="label">Disziplinar in Investigation</div>
+      <div class="sub">GL-Review pending</div>
+    </div>
+    <div class="kpi green">
+      <div class="big">0</div>
+      <div class="label">Payroll-Offset im April</div>
+      <div class="sub">keine zur Verrechnung</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('warnings')">Verwarnungen <span class="count">5</span></div>
+    <div class="tab" onclick="switchTab('discipline')">Disziplinar-Incidents <span class="count">3</span></div>
+    <div class="tab" onclick="switchTab('archive')">Archiv (resolved) <span class="count">12</span></div>
+  </div>
+
+  <!-- FILTER-BAR -->
+  <div class="filter-bar">
+    <select>
+      <option>Alle Typen</option>
+      <option value="verbal">Mündliche Ermahnung</option>
+      <option value="first_written">1. schriftliche Verwarnung</option>
+      <option value="final_written">Letzte schriftliche Verwarnung</option>
+      <option value="notice_fristlos">Fristlose Kündigung</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>Aktiv</option>
+      <option>Follow-up fällig</option>
+      <option>Eskaliert</option>
+    </select>
+    <select>
+      <option>Alle MA</option>
+      <option>Anna Huber</option>
+      <option>Max Muster</option>
+    </select>
+    <input type="text" placeholder="Suche Grund..." style="width:220px;">
+    <div class="spacer"></div>
+    <span style="font-size:11px; color:var(--text-light);">5 von 5 angezeigt</span>
+  </div>
+
+  <!-- LAYOUT: List + Detail -->
+  <div class="wd-layout">
+
+    <!-- LIST -->
+    <div class="wd-list">
+
+      <!-- Row 1: Tatjana Final-Written -->
+      <div class="wd-row selected">
+        <div class="wd-icon final">!!</div>
+        <div class="wd-body">
+          <div class="wd-title">Anna Huber · Letzte schriftliche Verwarnung</div>
+          <div class="wd-meta">
+            <span>Ausgestellt 09.04.2026 von NS</span>
+            <span class="sep">·</span>
+            <span>Grund: Unangemeldete Nebentätigkeit</span>
+          </div>
+        </div>
+        <div class="wd-right">
+          <span class="status final-watch">Final-Watch</span>
+          <div class="wd-deadline urgent">Follow-up 23.04. · 4 T</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Max Muster First-Written -->
+      <div class="wd-row">
+        <div class="wd-icon first">!</div>
+        <div class="wd-body">
+          <div class="wd-title">Max Muster · Erste schriftliche Verwarnung</div>
+          <div class="wd-meta">
+            <span>Ausgestellt 01.04.2026 von PW</span>
+            <span class="sep">·</span>
+            <span>Wiederholt unentschuldigt zu spät</span>
+          </div>
+        </div>
+        <div class="wd-right">
+          <span class="status under-watch">Under-Watch</span>
+          <div class="wd-deadline">Follow-up 01.05. · 12 T</div>
+        </div>
+      </div>
+
+      <!-- Row 3: Max Muster Verbal -->
+      <div class="wd-row">
+        <div class="wd-icon verbal">V</div>
+        <div class="wd-body">
+          <div class="wd-title">Max Muster · Mündliche Ermahnung</div>
+          <div class="wd-meta">
+            <span>Ausgestellt 15.03.2026 von PW</span>
+            <span class="sep">·</span>
+            <span>Vertraulichkeitspflicht-Warnung</span>
+          </div>
+        </div>
+        <div class="wd-right">
+          <span class="status verbal">Dokumentiert</span>
+          <div class="wd-deadline">Kein Follow-up</div>
+        </div>
+      </div>
+
+      <!-- Row 4: Lisa Beispiel First-Written -->
+      <div class="wd-row">
+        <div class="wd-icon first">!</div>
+        <div class="wd-body">
+          <div class="wd-title">Lisa Beispiel · Erste schriftliche Verwarnung</div>
+          <div class="wd-meta">
+            <span>Ausgestellt 20.03.2026 von SP</span>
+            <span class="sep">·</span>
+            <span>Fehlende CRM-Datenpflege</span>
+          </div>
+        </div>
+        <div class="wd-right">
+          <span class="status under-watch">Under-Watch</span>
+          <div class="wd-deadline">Follow-up 20.04. · 1 T</div>
+        </div>
+      </div>
+
+      <!-- Row 5: Tatjana Verbal -->
+      <div class="wd-row">
+        <div class="wd-icon verbal">V</div>
+        <div class="wd-body">
+          <div class="wd-title">Anna Huber · Mündliche Ermahnung</div>
+          <div class="wd-meta">
+            <span>Ausgestellt 20.02.2026 von NS</span>
+            <span class="sep">·</span>
+            <span>Erstgespräch Nebentätigkeits-Meldepflicht</span>
+          </div>
+        </div>
+        <div class="wd-right">
+          <span class="status verbal">Dokumentiert</span>
+          <div class="wd-deadline">—</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL-PANEL: Tatjana P. Eskalation -->
+    <div class="wd-detail">
+      <h2>Anna Huber</h2>
+      <div class="subtitle">Letzte schriftliche Verwarnung · Lifecycle: Final-Watch</div>
+
+      <div class="detail-meta">
+        <span class="k">Ausgestellt am</span>
+        <span class="v">09.04.2026</span>
+        <span class="k">Ausgestellt von</span>
+        <span class="v">Nenad Stoparanovic (Founder)</span>
+        <span class="k">Follow-up-Deadline</span>
+        <span class="v" style="color:var(--red); font-weight:600;">23.04.2026 (in 4 Tagen)</span>
+        <span class="k">Alternative angeboten</span>
+        <span class="v">Aufhebungsvertrag</span>
+      </div>
+
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; color:var(--text-light); letter-spacing:0.4px; font-weight:500; margin-bottom:6px;">Grund</div>
+        <div style="font-size:13px; line-height:1.5; padding:10px 12px; background:var(--surface-alt); border-radius:4px;">
+          Wiederholte Ausübung einer entgeltlichen Nebentätigkeit für einen Drittanbieter ohne vorgängige schriftliche Zustimmung durch die Geschäftsleitung. Trotz erster schriftlicher Verwarnung vom 05.03.2026 + Frist zur Offenlegung keine vollständige Meldung erhalten.
+        </div>
+        <div class="legal-refs">
+          <span class="chip">OR 321a · Treuepflicht</span>
+          <span class="chip">Generalis Provisio §3.5.3</span>
+          <span class="chip">Disziplinarstrafe CHF 3'000</span>
+        </div>
+      </div>
+
+      <!-- Eskalations-Timeline -->
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; color:var(--text-light); letter-spacing:0.4px; font-weight:500; margin-bottom:10px;">Eskalations-Chronologie</div>
+        <div class="timeline">
+          <div class="tl-event verbal">
+            <div class="when">20.02.2026 · 2 Mt zurück</div>
+            <div class="what">Mündliche Ermahnung</div>
+            <div class="by">NS · Gespräch ohne Protokoll</div>
+            <div class="reason">"Hinweis auf Zustimmungspflicht gemäss Generalis Provisio §3.5.3 — MA gab Unklarheit bzgl. eigener Projektarbeit an"</div>
+          </div>
+          <div class="tl-event first">
+            <div class="when">05.03.2026 · 1.5 Mt zurück</div>
+            <div class="what">Erste schriftliche Verwarnung</div>
+            <div class="by">NS · Dokument signiert</div>
+            <div class="reason">"Nachweis entgeltlicher Nebentätigkeit durch externen Hinweis bestätigt — 30-Tage-Frist zur vollständigen schriftlichen Offenlegung gesetzt"</div>
+          </div>
+          <div class="tl-event final">
+            <div class="when">09.04.2026 · heute -10 T</div>
+            <div class="what">Letzte schriftliche Verwarnung</div>
+            <div class="by">NS · Empfangsbestätigung ausstehend</div>
+            <div class="reason">"Offenlegung unvollständig · Disziplinarstrafe CHF 3'000 angedroht · bei weiterer Nichterfüllung fristlose Kündigung (Art. 337 OR) oder Aufhebungsvertrag als Alternative."</div>
+          </div>
+          <div class="tl-event" style="opacity:0.5;">
+            <div class="when">23.04.2026 · Follow-up</div>
+            <div class="what">Entscheidungs-Deadline</div>
+            <div class="by">Erwartete Resolution</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <button class="btn-primary">✓ Compliance bestätigen</button>
+        <button class="btn-ghost">📝 Aufhebungsvereinbarung</button>
+        <button class="btn-red">⚠ Fristlos kündigen</button>
+      </div>
+
+      <div style="font-size:11px; color:var(--text-light); text-align:center; margin-top:4px;">
+        Compliance → Lifecycle zurück zu Aktiv · Aufhebung → Drawer öffnet · Fristlos → Art. 337 OR + Saga-Start
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DRAWER: Neue Verwarnung ausstellen -->
+<div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer-warning">
+  <div class="drawer-head">
+    <h2>Verwarnung ausstellen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">1 · Typ + Kontext</div>
+    <div class="drawer-tab">2 · Follow-up</div>
+    <div class="drawer-tab">3 · Dokument + Benachrichtigung</div>
+  </div>
+  <div class="drawer-body">
+
+    <div class="info-box">
+      <strong>Eskalations-Reihenfolge:</strong> Mündliche Ermahnung → 1. schriftliche Verwarnung → Letzte schriftliche Verwarnung → Kündigung.
+      Jede Stufe benötigt dokumentierte Vorstufe.
+    </div>
+
+    <div class="field">
+      <label>Mitarbeiter</label>
+      <select>
+        <option>Wählen…</option>
+        <option>Anna Huber (hat bereits: Mündliche Ermahnung + 1. schriftliche Verwarnung)</option>
+        <option>Max Muster (hat bereits: Mündliche Ermahnung + 1. schriftliche Verwarnung)</option>
+        <option>Lisa Beispiel (hat bereits: 1. schriftliche Verwarnung)</option>
+        <option>— Neuer MA —</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Typ</label>
+      <select>
+        <option value="verbal">Mündliche Ermahnung</option>
+        <option value="first_written">1. schriftliche Verwarnung</option>
+        <option value="final_written">Letzte schriftliche Verwarnung</option>
+        <option value="notice_fristlos">Fristlose Kündigung (Art. 337 OR)</option>
+      </select>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Ausgestellt am</label>
+        <input type="date" value="2026-04-19">
+      </div>
+      <div class="field">
+        <label>Ausgestellt von</label>
+        <select>
+          <option>Nenad Stoparanovic (Founder)</option>
+          <option>Peter Wiederkehr (Head ING)</option>
+          <option>Stefano Papes (Head ARC)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Grund (Pflicht)</label>
+      <textarea rows="4" placeholder="Konkreter Anlass · Vorfall · Verhaltensbeschreibung"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Rechtliche Grundlagen (Multi-Select)</label>
+      <div class="legal-select">
+        <label><input type="checkbox" checked><span>OR 321a · Treuepflicht</span></label>
+        <label><input type="checkbox"><span>OR 337 · Fristlose Kündigung</span></label>
+        <label><input type="checkbox"><span>OR 340 · Konkurrenzverbot</span></label>
+        <label><input type="checkbox"><span>ZGB 28 · Persönlichkeitsverletzung</span></label>
+        <label><input type="checkbox"><span>StGB 173 · Üble Nachrede</span></label>
+        <label><input type="checkbox"><span>UWG · Unlauterer Wettbewerb</span></label>
+      </div>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <div class="left">Schritt 1 von 3</div>
+    <div class="right">
+      <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+      <button class="btn-primary">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER: Disziplinar-Incident -->
+<div class="drawer" id="drawer-incident">
+  <div class="drawer-head">
+    <h2>Disziplinar-Incident melden</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">1 · Vorfall</div>
+    <div class="drawer-tab">2 · Evidenz</div>
+    <div class="drawer-tab">3 · GL-Approval</div>
+    <div class="drawer-tab">4 · Payroll-Verrechnung</div>
+  </div>
+  <div class="drawer-body">
+
+    <div class="info-box red">
+      <strong>Disziplinar-Strafen-Katalog (Arbeitsvertrag §10 · Arkadium):</strong><br>
+      Konkurrenzierung CHF 20'000 · Abwerbung CHF 10'000 · Diffamation CHF 5'000 · Geheimhaltung-Verletzung CHF 20'000 · Nebentätigkeit ohne Zustimmung CHF 3'000
+    </div>
+
+    <div class="field">
+      <label>Mitarbeiter</label>
+      <select><option>Wählen…</option></select>
+    </div>
+
+    <div class="field">
+      <label>Verletzungs-Typ</label>
+      <select>
+        <optgroup label="Während Arbeitsverhältnis">
+          <option>Konkurrenzierung während AV — CHF 20'000</option>
+          <option>Abwerbung während AV — CHF 10'000</option>
+          <option>Nebentätigkeit ohne Zustimmung — CHF 3'000</option>
+          <option>Diffamierende Äusserung — CHF 5'000</option>
+          <option>Geschäftsgeheimnis-Verletzung — CHF 20'000</option>
+        </optgroup>
+        <optgroup label="Nachvertraglich (Post-AV)">
+          <option>Konkurrenzverbot post-AV — min CHF 80'000 (12 Bruttomonatslöhne)</option>
+          <option>Abwerbeverbot post-AV — CHF 80'000 pro Zuwiderhandlung</option>
+          <option>Geheimhaltung post-AV — CHF 20'000 pro Verletzung</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Vorfall-Datum</label>
+        <input type="date">
+      </div>
+      <div class="field">
+        <label>Strafbetrag (CHF)</label>
+        <input type="number" value="20000">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Beschreibung</label>
+      <textarea rows="3" placeholder="Was ist passiert · Umstände · Kontext"></textarea>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <div class="left">Schritt 1 von 4 · Status: investigation</div>
+    <div class="right">
+      <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+      <button class="btn-primary">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDrawer(id) {
+    document.getElementById('backdrop').classList.add('open');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('backdrop').classList.remove('open');
+    document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

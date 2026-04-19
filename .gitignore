@@ -59,3 +59,22 @@ Unbenannt.canvas
 # Temporary / staging
 *.tmp
 *.bak
+
+# Obsidian local metadata
+.obsidian/workspace.json
+.obsidian/graph.json
+.obsidian/workspace-mobile.json
+
+# Playwright MCP session caches
+.playwright-mcp/
+
+# Superpowers plugin local state
+.superpowers/
+
+# Claude Code local state (beyond settings.local.json)
+.claude/todos/
+.claude/plans/
+.claude/worktrees/
+
+# HR raw sources (local-only · too large for git · contains videos/InDesign/GoPro)
+raw/HR/

@@ -1109,3 +1109,415 @@
 | UMLAUT \| 221 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
 | UMLAUT \| 226 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
 
+
+## [2026-04-18 22:25] session-205d1e89 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 203 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 242 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 242 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 242 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 247 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-18 22:50] session-205d1e89 | stammdaten.html (19 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 2753 \| <div class="cc-desc">Vier-Augen-Prinzip. Default <code>suggest_only</code> · <co... \| -> sprechenden Begriff statt snake_case-Identifier |
+| DB-TECH \| 2864 \| <tr onclick="openEntry('ps_expose')"><td>1</td><td><span class="code">expose</sp... \| -> use sprechenden Begriff |
+| DB-TECH \| 2865 \| <tr onclick="openEntry('ps_cv_sent')"><td>2</td><td><span class="code">cv_sent</... \| -> use sprechenden Begriff |
+| DB-TECH \| 2866 \| <tr onclick="openEntry('ps_ti')"><td>3</td><td><span class="code">ti</span></td>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2867 \| <tr onclick="openEntry('ps_1st')"><td>4</td><td><span class="code">first</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2868 \| <tr onclick="openEntry('ps_2nd')"><td>5</td><td><span class="code">second</span>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2869 \| <tr onclick="openEntry('ps_3rd')"><td>6</td><td><span class="code">third</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2870 \| <tr onclick="openEntry('ps_assess')"><td>7</td><td><span class="code">assessment... \| -> use sprechenden Begriff |
+| DB-TECH \| 2871 \| <tr onclick="openEntry('ps_offer')"><td>8</td><td><span class="code">offer</span... \| -> use sprechenden Begriff |
+| DB-TECH \| 2872 \| <tr onclick="openEntry('ps_placement')"><td>9</td><td><span class="code">placeme... \| -> use sprechenden Begriff |
+| DB-TECH \| 3055 \| <div><div class="u-entity">Aktuell laufende Prozesse in Stage TI</div><div class... \| -> use sprechenden Begriff |
+| DB-TECH \| 3060 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3060 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> deutsches Label fuer Enum-Value |
+| DB-TECH \| 3065 \| <div><div class="u-entity">Coaching-TI-Aktivitäten</div><div class="u-where">fac... \| -> use sprechenden Begriff |
+| DB-TECH \| 3070 \| <div><div class="u-entity">Debriefing-TI-Aktivitäten</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3075 \| <div><div class="u-entity">Reminders mit Bezug zu TI</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3539 \| ['<span class="code">cv_parse</span>','CV-Extraktion → dim_candidates_profile','... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3554 \| ['<span class="code">candidate.stage_changed</span>','Lifecycle','candidate','<s... \| -> deutsches Label fuer Enum-Value |
+| SNAKE-CASE \| 3560 \| ['<span class="code">process.stage_changed</span>','Prozess','process','<strong>... \| -> deutsches Label fuer Enum-Value |
+
+
+## [2026-04-18 22:51] session-205d1e89 | stammdaten.html (19 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 2783 \| <div class="cc-desc">Vier-Augen-Prinzip. Default <code>suggest_only</code> · <co... \| -> sprechenden Begriff statt snake_case-Identifier |
+| DB-TECH \| 2894 \| <tr onclick="openEntry('ps_expose')"><td>1</td><td><span class="code">expose</sp... \| -> use sprechenden Begriff |
+| DB-TECH \| 2895 \| <tr onclick="openEntry('ps_cv_sent')"><td>2</td><td><span class="code">cv_sent</... \| -> use sprechenden Begriff |
+| DB-TECH \| 2896 \| <tr onclick="openEntry('ps_ti')"><td>3</td><td><span class="code">ti</span></td>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2897 \| <tr onclick="openEntry('ps_1st')"><td>4</td><td><span class="code">first</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2898 \| <tr onclick="openEntry('ps_2nd')"><td>5</td><td><span class="code">second</span>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2899 \| <tr onclick="openEntry('ps_3rd')"><td>6</td><td><span class="code">third</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2900 \| <tr onclick="openEntry('ps_assess')"><td>7</td><td><span class="code">assessment... \| -> use sprechenden Begriff |
+| DB-TECH \| 2901 \| <tr onclick="openEntry('ps_offer')"><td>8</td><td><span class="code">offer</span... \| -> use sprechenden Begriff |
+| DB-TECH \| 2902 \| <tr onclick="openEntry('ps_placement')"><td>9</td><td><span class="code">placeme... \| -> use sprechenden Begriff |
+| DB-TECH \| 3085 \| <div><div class="u-entity">Aktuell laufende Prozesse in Stage TI</div><div class... \| -> use sprechenden Begriff |
+| DB-TECH \| 3090 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3090 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> deutsches Label fuer Enum-Value |
+| DB-TECH \| 3095 \| <div><div class="u-entity">Coaching-TI-Aktivitäten</div><div class="u-where">fac... \| -> use sprechenden Begriff |
+| DB-TECH \| 3100 \| <div><div class="u-entity">Debriefing-TI-Aktivitäten</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3105 \| <div><div class="u-entity">Reminders mit Bezug zu TI</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3569 \| ['<span class="code">cv_parse</span>','CV-Extraktion → dim_candidates_profile','... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3584 \| ['<span class="code">candidate.stage_changed</span>','Lifecycle','candidate','<s... \| -> deutsches Label fuer Enum-Value |
+| SNAKE-CASE \| 3590 \| ['<span class="code">process.stage_changed</span>','Prozess','process','<strong>... \| -> deutsches Label fuer Enum-Value |
+
+
+## [2026-04-18 22:51] session-205d1e89 | stammdaten.html (19 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 2790 \| <div class="cc-desc">Vier-Augen-Prinzip. Default <code>suggest_only</code> · <co... \| -> sprechenden Begriff statt snake_case-Identifier |
+| DB-TECH \| 2901 \| <tr onclick="openEntry('ps_expose')"><td>1</td><td><span class="code">expose</sp... \| -> use sprechenden Begriff |
+| DB-TECH \| 2902 \| <tr onclick="openEntry('ps_cv_sent')"><td>2</td><td><span class="code">cv_sent</... \| -> use sprechenden Begriff |
+| DB-TECH \| 2903 \| <tr onclick="openEntry('ps_ti')"><td>3</td><td><span class="code">ti</span></td>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2904 \| <tr onclick="openEntry('ps_1st')"><td>4</td><td><span class="code">first</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2905 \| <tr onclick="openEntry('ps_2nd')"><td>5</td><td><span class="code">second</span>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2906 \| <tr onclick="openEntry('ps_3rd')"><td>6</td><td><span class="code">third</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2907 \| <tr onclick="openEntry('ps_assess')"><td>7</td><td><span class="code">assessment... \| -> use sprechenden Begriff |
+| DB-TECH \| 2908 \| <tr onclick="openEntry('ps_offer')"><td>8</td><td><span class="code">offer</span... \| -> use sprechenden Begriff |
+| DB-TECH \| 2909 \| <tr onclick="openEntry('ps_placement')"><td>9</td><td><span class="code">placeme... \| -> use sprechenden Begriff |
+| DB-TECH \| 3092 \| <div><div class="u-entity">Aktuell laufende Prozesse in Stage TI</div><div class... \| -> use sprechenden Begriff |
+| DB-TECH \| 3097 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3097 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> deutsches Label fuer Enum-Value |
+| DB-TECH \| 3102 \| <div><div class="u-entity">Coaching-TI-Aktivitäten</div><div class="u-where">fac... \| -> use sprechenden Begriff |
+| DB-TECH \| 3107 \| <div><div class="u-entity">Debriefing-TI-Aktivitäten</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3112 \| <div><div class="u-entity">Reminders mit Bezug zu TI</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3576 \| ['<span class="code">cv_parse</span>','CV-Extraktion → dim_candidates_profile','... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3591 \| ['<span class="code">candidate.stage_changed</span>','Lifecycle','candidate','<s... \| -> deutsches Label fuer Enum-Value |
+| SNAKE-CASE \| 3597 \| ['<span class="code">process.stage_changed</span>','Prozess','process','<strong>... \| -> deutsches Label fuer Enum-Value |
+
+
+## [2026-04-18 23:02] session-205d1e89 | stammdaten.html (19 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 2791 \| <div class="cc-desc">Vier-Augen-Prinzip. Default <code>suggest_only</code> · <co... \| -> sprechenden Begriff statt snake_case-Identifier |
+| DB-TECH \| 2902 \| <tr onclick="openEntry('ps_expose')"><td>1</td><td><span class="code">expose</sp... \| -> use sprechenden Begriff |
+| DB-TECH \| 2903 \| <tr onclick="openEntry('ps_cv_sent')"><td>2</td><td><span class="code">cv_sent</... \| -> use sprechenden Begriff |
+| DB-TECH \| 2904 \| <tr onclick="openEntry('ps_ti')"><td>3</td><td><span class="code">ti</span></td>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2905 \| <tr onclick="openEntry('ps_1st')"><td>4</td><td><span class="code">first</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2906 \| <tr onclick="openEntry('ps_2nd')"><td>5</td><td><span class="code">second</span>... \| -> use sprechenden Begriff |
+| DB-TECH \| 2907 \| <tr onclick="openEntry('ps_3rd')"><td>6</td><td><span class="code">third</span><... \| -> use sprechenden Begriff |
+| DB-TECH \| 2908 \| <tr onclick="openEntry('ps_assess')"><td>7</td><td><span class="code">assessment... \| -> use sprechenden Begriff |
+| DB-TECH \| 2909 \| <tr onclick="openEntry('ps_offer')"><td>8</td><td><span class="code">offer</span... \| -> use sprechenden Begriff |
+| DB-TECH \| 2910 \| <tr onclick="openEntry('ps_placement')"><td>9</td><td><span class="code">placeme... \| -> use sprechenden Begriff |
+| DB-TECH \| 3093 \| <div><div class="u-entity">Aktuell laufende Prozesse in Stage TI</div><div class... \| -> use sprechenden Begriff |
+| DB-TECH \| 3098 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3098 \| <div><div class="u-entity">History-Events "stage_changed → ti"</div><div class="... \| -> deutsches Label fuer Enum-Value |
+| DB-TECH \| 3103 \| <div><div class="u-entity">Coaching-TI-Aktivitäten</div><div class="u-where">fac... \| -> use sprechenden Begriff |
+| DB-TECH \| 3108 \| <div><div class="u-entity">Debriefing-TI-Aktivitäten</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3113 \| <div><div class="u-entity">Reminders mit Bezug zu TI</div><div class="u-where">f... \| -> use sprechenden Begriff |
+| DB-TECH \| 3577 \| ['<span class="code">cv_parse</span>','CV-Extraktion → dim_candidates_profile','... \| -> use sprechenden Begriff |
+| SNAKE-CASE \| 3592 \| ['<span class="code">candidate.stage_changed</span>','Lifecycle','candidate','<s... \| -> deutsches Label fuer Enum-Value |
+| SNAKE-CASE \| 3598 \| ['<span class="code">process.stage_changed</span>','Prozess','process','<strong>... \| -> deutsches Label fuer Enum-Value |
+
+
+## [2026-04-19 00:48] session-205d1e89 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 229 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 268 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 268 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 268 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 273 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 01:51] session-0a1df309 | feedback_phase3_modules_separate.md (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 2 \| name: Phase-3-ERP-Module separat halten · Topbar-Toggle fuer Zugriff \| -> für |
+| UMLAUT \| 3 \| description: Phase-3-Mockups (HR, Zeiterfassung, Billing, Publishing, Performanc... \| -> spät |
+
+
+## [2026-04-19 02:07] session-0a1df309 | feedback_phase3_modules_separate.md (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 2 \| name: Phase-3-ERP-Module separat halten · Topbar-Toggle fuer Zugriff \| -> für |
+| UMLAUT \| 3 \| description: Phase-3-Mockups (HR, Zeiterfassung, Billing, Publishing, Performanc... \| -> spät |
+
+
+## [2026-04-19 02:45] session-0a1df309 | feedback_phase3_modules_separate.md (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 2 \| name: Phase-3-ERP-Module separat halten · Topbar-Toggle fuer Zugriff \| -> für |
+| UMLAUT \| 3 \| description: Phase-3-Mockups (HR, Zeiterfassung, Billing, Publishing, Performanc... \| -> spät |
+
+
+## [2026-04-19 03:02] session-0a1df309 | hr.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1100 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 13:20] session-0a1df309 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1252 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1253 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 13:27] session-0a1df309 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 974 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 975 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 14:45] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 223 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 262 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 262 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 262 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 267 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 15:02] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 254 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 293 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 293 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 293 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 298 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 16:01] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 279 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 318 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 318 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 318 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 323 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 16:09] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 316 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 355 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 355 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 355 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 360 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 16:19] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 354 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 393 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 393 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 393 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 398 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 16:29] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 392 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 431 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 431 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 431 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 436 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 16:34] session-13946034 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 399 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 438 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 438 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 438 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 443 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-19 17:00] session-13946034 | hr.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1160 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:00] session-13946034 | hr.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1206 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:00] session-13946034 | hr.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1208 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:03] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1149 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:03] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1103 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:03] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1101 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:15] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1102 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:15] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1253 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1254 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 17:16] session-13946034 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 975 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 976 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 17:22] session-13946034 | admin-dashboard-templates.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 536 \| alert('Öffnet Dashboard in neuem Tab als Account-Manager-User gerendert · URL: /... \| -> deutsches Label statt snake_case in Alert/Confirm |
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-19 17:23] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1252 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1253 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 17:23] session-13946034 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 974 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 975 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 17:23] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1101 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 17:23] session-13946034 | dashboard-mobile.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 203 \| <div class="muted" style="font-size:13px">Zeigt wie das Dashboard bei den 3 Brea... \| -> sprechenden Begriff statt snake_case-Identifier |
+
+
+## [2026-04-19 18:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1236 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1237 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 18:05] session-13946034 | hr-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1086 \| function openSidePanel(kuerzel) { \| -> Kürzel |
+
+
+## [2026-04-19 18:05] session-13946034 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 958 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 959 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 18:06] session-13946034 | admin-dashboard-templates.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 518 \| alert('Öffnet Dashboard in neuem Tab als Account-Manager-User gerendert · URL: /... \| -> deutsches Label statt snake_case in Alert/Confirm |
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-19 19:55] session-13946034 | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 958 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 959 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1236 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1237 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1238 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1239 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-19 21:05] session-13946034 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1240 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1241 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+

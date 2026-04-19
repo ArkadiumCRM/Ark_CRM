@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Accounts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+</head>
+<body>
+
+
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Accounts</h1>
+    <span class="muted">124 aktiv · 34 prospect · 18 firmengruppen</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">+ Neuer Account</button>
+    <button class="btn btn-sm">↓ Export</button>
+    <button class="btn btn-sm">⋯</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPI-Leiste -->
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value">176</div><div class="kpi-sub muted">alle Status</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--green)">Aktiv</div><div class="kpi-value" style="color:var(--green)">124</div><div class="kpi-sub muted">70 % Portfolio</div></div>
+    <div class="kpi-card"><div class="kpi-label">Prospect</div><div class="kpi-value">34</div><div class="kpi-sub muted">Neuakquise</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--gold)">Klasse A</div><div class="kpi-value" style="color:var(--gold)">18</div><div class="kpi-sub muted">Top-Kunden</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--red)">Claim-Fälle</div><div class="kpi-value" style="color:var(--red)">3</div><div class="kpi-sub muted">Schutzfrist-Verletzungen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Zuletzt kontaktiert</div><div class="kpi-value" style="font-size:14px;padding-top:8px">vor 2 h</div><div class="kpi-sub muted">Eva Studer · BM AG</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche Account (Name, UID, Sparte, AM …)" style="flex:1 1 280px;min-width:220px">
+    <select><option>Alle AMs</option><option>PW</option><option>JV</option><option>LR</option><option>MF</option><option>NP</option></select>
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC · Architecture</option>
+      <option>GT · Building Tech</option>
+      <option>ING · Civil Engineering</option>
+      <option>PUR · Procurement</option>
+      <option>REM · Real Estate</option>
+    </select>
+    <select><option>Alle Klassen</option><option>A · Top</option><option>B · Standard</option><option>C · Gelegentlich</option></select>
+    <select><option>Alle Status</option><option>Aktiv</option><option>Prospect</option><option>Inactive</option><option>Blacklisted</option></select>
+    <select><option>Alle Kantone</option><option>ZH</option><option>BE</option><option>ZG</option><option>GE</option></select>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active">Tabelle</div>
+      <div class="chip-tab">Karten</div>
+      <div class="chip-tab">Karte</div>
+    </div>
+  </div>
+
+  <!-- Chip-Tabs Status -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">176</span></div>
+      <div class="chip-tab">Aktiv <span class="count">124</span></div>
+      <div class="chip-tab">Prospect <span class="count">34</span></div>
+      <div class="chip-tab">🔥 Hot <span class="count">12</span></div>
+      <div class="chip-tab">Klasse A <span class="count">18</span></div>
+      <div class="chip-tab"><span style="color:var(--red)">⚠</span> Claim <span class="count">3</span></div>
+      <div class="chip-tab">🏛 In Gruppe <span class="count">42</span></div>
+      <div class="chip-tab">Inactive <span class="count">14</span></div>
+    </div>
+  </div>
+
+  <!-- Tabelle -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Firma</th>
+          <th>Sparte</th>
+          <th>Klasse</th>
+          <th>Status</th>
+          <th>Standort</th>
+          <th>MA</th>
+          <th>AM</th>
+          <th>Offene Mandate</th>
+          <th>Placements YTD</th>
+          <th>Letzter Kontakt</th>
+          <th class="right">›</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 5%, var(--surface));border-left:3px solid var(--red)" onclick="location.href='../Vollansichten/accounts.html'">
+          <td><strong>Bauherr Muster AG</strong> <span class="chip chip-red" style="font-size:9px;margin-left:4px">⚠ 1 Claim</span><div class="muted" style="font-size:11px">🏛 Muster Holding Gruppe</div></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Zürich</td>
+          <td>420</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>5</td>
+          <td style="color:var(--gold);font-weight:600">3</td>
+          <td>vor 2 h · E. Studer</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/accounts.html'">
+          <td><strong>Muster Immobilien AG</strong><div class="muted" style="font-size:11px">🏛 Muster Holding Gruppe</div></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip">B</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Zug</td>
+          <td>85</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>1</td>
+          <td style="color:var(--gold);font-weight:600">1</td>
+          <td>vor 1 Tag · M. Ochsner</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Implenia AG</strong></td>
+          <td><span class="chip chip-accent">ING</span> <span class="chip" style="font-size:9px">ARC</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Dietlikon ZH</td>
+          <td>9'000</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>2</td>
+          <td>2</td>
+          <td>vor 3 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Losinger Marazzi AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip">B</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Lausanne</td>
+          <td>2'400</td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>1</td>
+          <td>0</td>
+          <td>vor 5 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Marti AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip">B</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Bern</td>
+          <td>2'500</td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>3</td>
+          <td>1</td>
+          <td>vor 1 Woche</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Halter AG</strong> <span class="chip chip-gold" style="font-size:9px;margin-left:4px">Neu-Akquise</span></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td class="muted">—</td>
+          <td><span class="chip chip-amber">Prospect</span></td>
+          <td>Zürich</td>
+          <td>450</td>
+          <td><span class="actor-chip">PW</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>Pitch heute 14:30</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>HRS Real Estate AG</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip">B</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Zürich</td>
+          <td>180</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>1</td>
+          <td>0</td>
+          <td>vor 2 Wochen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Steiner Investment AG</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip">B</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Zürich</td>
+          <td>320</td>
+          <td><span class="actor-chip">LR</span></td>
+          <td>1</td>
+          <td>0</td>
+          <td>vor 3 Wochen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Züblin AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip">C</span></td>
+          <td><span class="chip chip-green">Aktiv</span></td>
+          <td>Zürich</td>
+          <td>680</td>
+          <td><span class="actor-chip">MF</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>vor 2 Monaten</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer;opacity:0.65">
+          <td><strong>BKW Engineering AG</strong></td>
+          <td><span class="chip chip-accent">GT</span></td>
+          <td><span class="chip">C</span></td>
+          <td><span class="chip">Inactive</span></td>
+          <td>Bern</td>
+          <td>3'100</td>
+          <td><span class="actor-chip">NP</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>vor 8 Monaten</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="11" style="text-align:center">+ 166 weitere · <button class="btn btn-sm">↓ Mehr laden</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Row-Click → Account-Detailseite · Tabelle sortierbar via Column-Header · Bulk-Aktionen via Shift/Ctrl-Select (Phase 2).
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+/* Auto-wire: jeder Row-Klick → Account-Detailmaske */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/accounts.html');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR Academy Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .ac-page { padding:20px 28px 40px; max-width:1700px; margin:0 auto; }
+
+  .ac-head {
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border);
+    margin-bottom:22px;
+  }
+  .ac-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .ac-head .sub { font-size:13px; color:var(--text-light); }
+  .ac-head .actions { margin-left:auto; display:flex; gap:10px; }
+  .ac-head button {
+    padding:9px 16px; font-size:13px; font-weight:500;
+    border-radius:3px; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+  }
+  .ac-head .btn-primary {
+    background:var(--accent); color:white; border:1px solid var(--accent);
+  }
+  .ac-head .btn-secondary {
+    background:var(--surface); color:var(--text);
+    border:1px solid var(--border-strong);
+  }
+
+  .kpi-bar {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    margin-bottom:24px;
+  }
+  .kpi {
+    background:var(--surface); padding:16px 18px; border-radius:6px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi .big {
+    font-size:32px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif; line-height:1;
+  }
+  .kpi.amber .big { color:#b06100; }
+  .kpi.green .big { color:#2a6a2a; }
+  .kpi .label {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
+    color:var(--text-light); margin-top:6px; font-weight:500;
+  }
+  .kpi .sub { font-size:11px; color:var(--text-light); margin-top:3px; }
+
+  .tabs {
+    display:flex; gap:2px; border-bottom:2px solid var(--border);
+    margin-bottom:20px;
+  }
+  .tab {
+    padding:10px 20px; cursor:pointer; font-size:13px;
+    font-weight:500; color:var(--text-light);
+    border-bottom:2px solid transparent; margin-bottom:-2px;
+  }
+  .tab:hover { color:var(--accent); }
+  .tab.active {
+    color:var(--accent); border-bottom-color:var(--accent); font-weight:600;
+  }
+  .tab .count {
+    background:var(--surface-alt); padding:1px 7px;
+    border-radius:8px; font-size:10px; margin-left:6px;
+    color:var(--text-light);
+  }
+  .tab.active .count { background:var(--accent); color:white; }
+
+  /* FILTER */
+  .filter-bar {
+    display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;
+    align-items:center;
+  }
+  .filter-bar select, .filter-bar input {
+    padding:7px 10px; border:1px solid var(--border-strong);
+    border-radius:3px; font-size:12px; background:var(--surface);
+    font-family:'DM Sans',sans-serif;
+  }
+  .filter-bar .spacer { flex:1; }
+
+  /* HEATMAP-TABLE */
+  .heatmap-wrap {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); overflow:auto;
+  }
+  .heatmap {
+    width:100%; border-collapse:collapse; font-size:11px;
+  }
+  .heatmap thead th {
+    padding:8px 6px; background:var(--surface-alt);
+    text-align:center; font-weight:500; color:var(--text-light);
+    text-transform:uppercase; letter-spacing:0.3px; font-size:9px;
+    border-bottom:2px solid var(--border);
+    white-space:nowrap;
+  }
+  .heatmap thead th.ma-col {
+    text-align:left; padding-left:14px; min-width:180px;
+    position:sticky; left:0; background:var(--surface-alt); z-index:2;
+  }
+  .heatmap thead th.group-header {
+    background:var(--accent); color:white; font-weight:600;
+    border-bottom:1px solid var(--accent);
+  }
+  .heatmap tbody td {
+    padding:8px 6px; text-align:center;
+    border-bottom:1px solid var(--border);
+  }
+  .heatmap tbody td.ma-col {
+    text-align:left; padding-left:14px;
+    position:sticky; left:0; background:var(--surface); z-index:1;
+    border-right:1px solid var(--border);
+  }
+  .heatmap tbody tr:hover td { background:var(--surface-alt); }
+  .heatmap tbody tr:hover td.ma-col { background:var(--surface-alt); }
+  .heatmap tbody tr.selected td { background:var(--surface-alt); }
+
+  .ma-row {
+    display:flex; align-items:center; gap:8px;
+  }
+  .ma-avatar-s {
+    width:24px; height:24px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), #3a5a7a);
+    color:white; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; letter-spacing:0.3px;
+  }
+  .ma-row .name {
+    font-weight:600; color:var(--text); font-size:12px;
+  }
+  .ma-row .role {
+    font-size:10px; color:var(--text-light);
+  }
+
+  .cell-status {
+    display:inline-block; width:20px; height:20px; border-radius:3px;
+    font-size:10px; line-height:20px; text-align:center;
+    font-weight:700;
+  }
+  .cell-status.done { background:#e0f5e0; color:#2a6a2a; }
+  .cell-status.inprogress { background:#fff4e0; color:#b06100; }
+  .cell-status.missing { background:var(--surface-alt); color:var(--text-light); }
+  .cell-status.not_required { background:transparent; color:var(--text-light); opacity:0.3; }
+  .cell-status.high-score { border:2px solid var(--accent); }
+
+  .progress-pct {
+    font-weight:600; font-variant-numeric:tabular-nums;
+    color:var(--accent);
+  }
+  .progress-pct.low { color:var(--red); }
+  .progress-pct.mid { color:var(--amber); }
+
+  /* MODULE-KATALOG */
+  .module-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:12px;
+  }
+  .module-card {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); padding:16px 18px;
+    border-top:3px solid var(--accent);
+    cursor:pointer; transition:box-shadow 0.15s;
+  }
+  .module-card:hover { box-shadow:var(--shadow); }
+  .module-card.fg-a { border-top-color:#5a7a9a; }
+  .module-card.fg-b { border-top-color:#7a9a5a; }
+  .module-card.fg-c { border-top-color:#9a7a5a; }
+  .module-card .code {
+    font-size:10px; color:var(--text-light); font-weight:600;
+    letter-spacing:0.5px; text-transform:uppercase;
+  }
+  .module-card .title {
+    font-size:14px; font-weight:600; margin:3px 0 10px;
+    color:var(--text);
+  }
+  .module-card .meta {
+    display:flex; gap:12px; font-size:11px;
+    color:var(--text-light); flex-wrap:wrap;
+  }
+  .module-card .trainers {
+    display:flex; gap:4px; margin-top:10px;
+  }
+  .module-card .tr-avatar {
+    width:22px; height:22px; border-radius:50%;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:700;
+  }
+  .module-card .completion-row {
+    margin-top:10px; display:flex; align-items:center; gap:8px;
+  }
+  .module-card .completion-bar {
+    flex:1; height:4px; background:var(--border); border-radius:2px;
+    overflow:hidden;
+  }
+  .module-card .completion-bar .fill {
+    height:100%; background:var(--accent);
+  }
+  .module-card .completion-pct {
+    font-size:10px; color:var(--text-light); font-variant-numeric:tabular-nums;
+    font-weight:600;
+  }
+
+  /* SCHEELEN-TRACKER */
+  .scheelen-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+  }
+  .scheelen-pillar {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); padding:18px 20px;
+  }
+  .scheelen-pillar h3 {
+    margin:0 0 12px; font-size:14px; color:var(--text);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .scheelen-pillar h3 .completion-ratio {
+    font-size:11px; color:var(--text-light); font-weight:500;
+  }
+  .scheelen-list {
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .scheelen-row {
+    display:grid; grid-template-columns:auto 1fr auto; gap:10px;
+    padding:7px 10px; background:var(--surface-alt);
+    border-radius:3px; font-size:12px; align-items:center;
+  }
+  .scheelen-row .dot {
+    width:10px; height:10px; border-radius:50%;
+  }
+  .scheelen-row .dot.done { background:var(--green); }
+  .scheelen-row .dot.expiring { background:var(--amber); }
+  .scheelen-row .dot.missing { background:var(--red); }
+  .scheelen-row .ma {
+    font-weight:500; color:var(--text);
+  }
+  .scheelen-row .status-text {
+    font-size:10px; color:var(--text-light);
+  }
+  .scheelen-row .status-text.missing { color:var(--red); font-weight:600; }
+
+  /* LAYOUT: Heatmap + Side */
+  .ac-layout {
+    display:grid; grid-template-columns:1.4fr 1fr; gap:20px;
+  }
+  @media (max-width:1200px) {
+    .ac-layout { grid-template-columns:1fr; }
+    .kpi-bar { grid-template-columns:repeat(2,1fr); }
+  }
+
+  .detail-card {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); padding:20px 22px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .detail-card h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:18px; color:var(--accent);
+  }
+  .detail-card .subtitle { font-size:12px; color:var(--text-light); margin-top:-8px; }
+
+  .phase-accordion {
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .phase {
+    border:1px solid var(--border); border-radius:4px;
+    overflow:hidden;
+  }
+  .phase-head {
+    padding:10px 14px; background:var(--surface-alt);
+    display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer; font-size:12px;
+  }
+  .phase-head .phase-name {
+    font-weight:600; color:var(--text);
+  }
+  .phase-head .phase-week {
+    font-size:10px; color:var(--text-light);
+  }
+  .phase-head .phase-progress {
+    font-variant-numeric:tabular-nums; font-weight:600;
+    color:var(--accent);
+  }
+  .phase-body {
+    padding:10px 14px; display:flex; flex-direction:column; gap:6px;
+  }
+  .phase-body .task-row {
+    display:grid; grid-template-columns:auto 1fr auto; gap:10px;
+    align-items:center; font-size:11px;
+    padding:5px 0;
+  }
+  .phase-body .task-row .icon {
+    width:16px; height:16px; border-radius:50%; text-align:center;
+    line-height:16px; font-size:10px; font-weight:700;
+  }
+  .phase-body .task-row .icon.done { background:#e0f5e0; color:#2a6a2a; }
+  .phase-body .task-row .icon.inprogress { background:#fff4e0; color:#b06100; }
+  .phase-body .task-row .icon.pending { background:var(--surface-alt); color:var(--text-light); border:1px solid var(--border-strong); }
+  .phase-body .task-row .name { color:var(--text); }
+  .phase-body .task-row .score {
+    font-variant-numeric:tabular-nums; color:var(--text-light);
+    font-size:10px;
+  }
+
+  /* DRAWER */
+  .drawer-backdrop {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.35); z-index:40;
+  }
+  .drawer-backdrop.open { display:block; }
+  .drawer {
+    position:fixed; top:0; right:-600px; width:540px; height:100%;
+    background:var(--surface); z-index:50;
+    box-shadow:-6px 0 20px rgba(0,0,0,0.15);
+    transition:right 0.25s; overflow-y:auto;
+  }
+  .drawer.open { right:0; }
+  .drawer-head {
+    padding:18px 22px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface-alt);
+  }
+  .drawer-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:18px; color:var(--accent);
+  }
+  .drawer-close {
+    background:none; border:none; font-size:22px; cursor:pointer;
+    color:var(--text-light);
+  }
+  .drawer-body { padding:22px; font-size:13px; }
+  .drawer-body .field { margin-bottom:16px; }
+  .drawer-body .field label {
+    display:block; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.4px; color:var(--text-light); margin-bottom:5px;
+    font-weight:500;
+  }
+  .drawer-body input, .drawer-body select, .drawer-body textarea {
+    width:100%; padding:9px 11px; border:1px solid var(--border-strong);
+    border-radius:3px; font-size:13px; background:var(--surface);
+  }
+  .drawer-body .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .score-slider {
+    display:flex; gap:4px; margin-top:6px;
+  }
+  .score-slider .btn {
+    flex:1; padding:6px 0; text-align:center;
+    border:1px solid var(--border-strong); border-radius:3px;
+    cursor:pointer; font-size:12px; font-weight:500;
+    background:var(--surface); color:var(--text);
+  }
+  .score-slider .btn.active {
+    background:var(--accent); color:white; border-color:var(--accent);
+  }
+  .info-box {
+    padding:10px 14px; background:var(--surface-alt);
+    border-radius:4px; font-size:12px; margin-bottom:14px;
+    border-left:3px solid var(--accent);
+  }
+  .drawer-foot {
+    padding:16px 22px; border-top:1px solid var(--border);
+    display:flex; justify-content:flex-end; gap:10px;
+    background:var(--surface-alt);
+  }
+  .drawer-foot button {
+    padding:9px 18px; border-radius:3px; font-size:13px;
+    font-weight:500; cursor:pointer; border:1px solid transparent;
+  }
+  .drawer-foot .btn-primary {
+    background:var(--accent); color:white; border-color:var(--accent);
+  }
+  .drawer-foot .btn-secondary {
+    background:var(--surface); color:var(--text);
+    border-color:var(--border-strong);
+  }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="ac-page">
+
+  <!-- HEADER -->
+  <div class="ac-head">
+    <h1>Academy</h1>
+    <span class="sub">21 Module · Communication Edge · M4 Modell · Scheelen</span>
+    <div class="actions">
+      <button class="btn-secondary">📊 Abschluss-Report</button>
+      <button class="btn-secondary">➕ Trainer zuweisen</button>
+      <button class="btn-primary" onclick="openDrawer('drawer-module-complete')">✓ Modul abschliessen</button>
+    </div>
+  </div>
+
+  <!-- KPI-BAR -->
+  <div class="kpi-bar">
+    <div class="kpi">
+      <div class="big">12</div>
+      <div class="label">Aktive Learner</div>
+      <div class="sub">2 in Onboarding · 10 Refresher</div>
+    </div>
+    <div class="kpi green">
+      <div class="big">48</div>
+      <div class="label">Module-Completions YTD</div>
+      <div class="sub">Durchschnittsscore 7.4</div>
+    </div>
+    <div class="kpi amber">
+      <div class="big">3</div>
+      <div class="label">Scheelen-Cert fehlt</div>
+      <div class="sub">MA nach 6 Mt ohne Scheelen-Set</div>
+    </div>
+    <div class="kpi green">
+      <div class="big">85%</div>
+      <div class="label">Abdeckung Consultant-Onboarding</div>
+      <div class="sub">Durchschnittliches Completion-Rate</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active">MA-Fortschritt (Heatmap) <span class="count">12</span></div>
+    <div class="tab">Module-Katalog <span class="count">21</span></div>
+    <div class="tab">Scheelen-Cert-Tracker <span class="count">4</span></div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <select>
+      <option>Alle Rollen</option>
+      <option>Consultant</option>
+      <option>Research Analyst</option>
+      <option>Team Leader</option>
+    </select>
+    <select>
+      <option>Alle Fachgebiete</option>
+      <option>A · Arkadium</option>
+      <option>B · Branche</option>
+      <option>C · Communication</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>In Onboarding</option>
+      <option>Aktiv</option>
+      <option>Completed 100%</option>
+    </select>
+    <input type="text" placeholder="MA suchen..." style="width:200px;">
+    <div class="spacer"></div>
+    <span style="font-size:11px; color:var(--text-light);">12 MA · Stand 19.04.2026</span>
+  </div>
+
+  <!-- LAYOUT: Heatmap + Detail -->
+  <div class="ac-layout">
+
+    <!-- HEATMAP -->
+    <div class="heatmap-wrap">
+      <table class="heatmap">
+        <thead>
+          <tr>
+            <th class="ma-col" rowspan="2">Mitarbeiter</th>
+            <th class="group-header" colspan="3">Communication Edge (C)</th>
+            <th class="group-header" colspan="1">M4</th>
+            <th class="group-header" colspan="4">M1 Meet</th>
+            <th class="group-header" colspan="4">M2 Match</th>
+            <th class="group-header" colspan="4">M3 Market</th>
+            <th class="group-header" colspan="4">M4 Money</th>
+            <th rowspan="2">Completion</th>
+          </tr>
+          <tr>
+            <th title="Communication Edge I">CE1</th>
+            <th title="Communication Edge II">CE2</th>
+            <th title="Communication Edge III">CE3</th>
+            <th title="M4 Modell">M4</th>
+            <th>1.1</th>
+            <th>1.2</th>
+            <th>1.3</th>
+            <th>1.4</th>
+            <th>2.1</th>
+            <th>2.2</th>
+            <th>2.3</th>
+            <th>2.4</th>
+            <th>3.1</th>
+            <th>3.2</th>
+            <th>3.3</th>
+            <th>3.4</th>
+            <th>4.1</th>
+            <th>4.2</th>
+            <th>4.3</th>
+            <th>4.4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="selected">
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">MM</div>
+                <div>
+                  <div class="name">Max Muster</div>
+                  <div class="role">Consultant · ARC · Onboarding Wk 10</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td class="progress-pct">71%</td>
+          </tr>
+          <tr>
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">AH</div>
+                <div>
+                  <div class="name">Anna Huber</div>
+                  <div class="role">Consultant · REM</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td class="progress-pct">100%</td>
+          </tr>
+          <tr>
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">LD</div>
+                <div>
+                  <div class="name">Lisa Demo</div>
+                  <div class="role">Research Analyst · ING · Wk 5</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td class="progress-pct mid">60% <span style="font-size:9px; color:var(--text-light);">(Researcher-Scope)</span></td>
+          </tr>
+          <tr>
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">TS</div>
+                <div>
+                  <div class="name">Thomas Schmidt</div>
+                  <div class="role">Consultant · ING</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td class="progress-pct">100%</td>
+          </tr>
+          <tr>
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">MK</div>
+                <div>
+                  <div class="name">Maria Keller</div>
+                  <div class="role">Research Analyst · REM · Wk 3</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status inprogress">·</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status missing">○</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td><span class="cell-status not_required">—</span></td>
+            <td class="progress-pct low">25%</td>
+          </tr>
+          <tr>
+            <td class="ma-col">
+              <div class="ma-row">
+                <div class="ma-avatar-s">PW</div>
+                <div>
+                  <div class="name">Peter Wiederkehr</div>
+                  <div class="role">Head of CE &amp; BT</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td><span class="cell-status done high-score">✓</span></td>
+            <td class="progress-pct">100% <span style="font-size:9px; color:var(--green);">⭐</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DETAIL-PANEL: Max Muster -->
+    <div class="detail-card">
+      <h2>Max Muster</h2>
+      <div class="subtitle">Consultant · ARC · Onboarding Woche 10/14 · Template "Consultant · 14 Wochen"</div>
+
+      <div style="display:flex; gap:14px; padding:14px 16px; background:var(--surface-alt); border-radius:4px; font-size:12px;">
+        <div>
+          <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Fortschritt</div>
+          <div style="font-size:22px; font-weight:700; color:var(--accent); font-family:'Libre Baskerville',serif;">15/21</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Ø Score Trainer</div>
+          <div style="font-size:22px; font-weight:700; color:#2a6a2a; font-family:'Libre Baskerville',serif;">7.4</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Buddy</div>
+          <div style="font-size:13px; font-weight:600; color:var(--text); margin-top:4px;">Thomas Schmidt</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Probezeit-Ende</div>
+          <div style="font-size:13px; font-weight:600; color:var(--text); margin-top:4px;">28.05.2026</div>
+        </div>
+      </div>
+
+      <div class="phase-accordion">
+        <div class="phase">
+          <div class="phase-head">
+            <div>
+              <span class="phase-name">Pre-Arrival</span>
+              <span class="phase-week"> · Wk 0</span>
+            </div>
+            <span class="phase-progress">3/3 ✓</span>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-head">
+            <div>
+              <span class="phase-name">Day 1</span>
+              <span class="phase-week"> · Wk 1</span>
+            </div>
+            <span class="phase-progress">7/7 ✓</span>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-head">
+            <div>
+              <span class="phase-name">Woche 1</span>
+              <span class="phase-week"> · Wk 1</span>
+            </div>
+            <span class="phase-progress">4/4 ✓</span>
+          </div>
+        </div>
+        <div class="phase" style="border-color:#b06100;">
+          <div class="phase-head" style="background:#fff4e0;">
+            <div>
+              <span class="phase-name">Woche 2–4</span>
+              <span class="phase-week"> · Wk 2</span>
+            </div>
+            <span class="phase-progress">4/4 ✓</span>
+          </div>
+        </div>
+        <div class="phase" style="border-color:var(--accent);">
+          <div class="phase-head" style="background:#e0ecff;">
+            <div>
+              <span class="phase-name">Monat 2 (läuft)</span>
+              <span class="phase-week"> · Wk 5</span>
+            </div>
+            <span class="phase-progress">6/9</span>
+          </div>
+          <div class="phase-body">
+            <div class="task-row">
+              <span class="icon done">✓</span>
+              <span class="name">Communication Edge Part II</span>
+              <span class="score">Score 7</span>
+            </div>
+            <div class="task-row">
+              <span class="icon done">✓</span>
+              <span class="name">M 1.3 CV Chase</span>
+              <span class="score">Score 8</span>
+            </div>
+            <div class="task-row">
+              <span class="icon done">✓</span>
+              <span class="name">M 2.1–2.4 Serie</span>
+              <span class="score">Ø 7.5</span>
+            </div>
+            <div class="task-row">
+              <span class="icon inprogress">·</span>
+              <span class="name">M 3.3 Akquise &amp; Home Run Call</span>
+              <span class="score">gestartet 14.04.</span>
+            </div>
+            <div class="task-row">
+              <span class="icon pending">○</span>
+              <span class="name">Communication Edge Part III</span>
+              <span class="score">—</span>
+            </div>
+            <div class="task-row">
+              <span class="icon pending">○</span>
+              <span class="name">Erstes eigenes Briefing-Gespräch</span>
+              <span class="score">geplant KW 17</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-head">
+            <div>
+              <span class="phase-name">Monat 3</span>
+              <span class="phase-week"> · Wk 9</span>
+            </div>
+            <span class="phase-progress">0/13</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODULE-KATALOG PREVIEW -->
+  <h2 style="font-family:'Libre Baskerville',serif; font-size:18px; margin:30px 0 16px; color:var(--accent);">Module-Katalog · Auszug</h2>
+  <div class="module-grid">
+    <div class="module-card fg-c">
+      <div class="code">COMM_EDGE_1 · 8h</div>
+      <div class="title">Communication Edge Part I</div>
+      <div class="meta">
+        <span>Fachgebiet C</span>
+        <span>Pflicht CM + RA</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar" title="Peter Wiederkehr">PW</div>
+        <div class="tr-avatar" title="Stefano Papes">SP</div>
+        <div class="tr-avatar" title="Thomas Schmidt">TS</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:92%;"></div></div>
+        <span class="completion-pct">11/12</span>
+      </div>
+    </div>
+    <div class="module-card fg-c">
+      <div class="code">COMM_EDGE_2 · 8h</div>
+      <div class="title">Communication Edge Part II</div>
+      <div class="meta">
+        <span>Prereq: CE1</span>
+        <span>Pflicht CM + RA</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar">PW</div>
+        <div class="tr-avatar">SP</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:83%;"></div></div>
+        <span class="completion-pct">10/12</span>
+      </div>
+    </div>
+    <div class="module-card fg-a">
+      <div class="code">M4_MODELL · 6h</div>
+      <div class="title">M4 Modell (4-Phasen-Recruiting)</div>
+      <div class="meta">
+        <span>Fachgebiet A</span>
+        <span>Pflicht CM + RA</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar">PW</div>
+        <div class="tr-avatar">SP</div>
+        <div class="tr-avatar">NS</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:100%;"></div></div>
+        <span class="completion-pct">12/12</span>
+      </div>
+    </div>
+    <div class="module-card fg-a">
+      <div class="code">M_1_2_HUNT · 3h</div>
+      <div class="title">M 1.2 Hunt</div>
+      <div class="meta">
+        <span>Telefon-Erstansprache</span>
+        <span>Pflicht CM + RA</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar">PW</div>
+        <div class="tr-avatar">SP</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:83%;"></div></div>
+        <span class="completion-pct">10/12</span>
+      </div>
+    </div>
+    <div class="module-card fg-a">
+      <div class="code">M_4_3_OFFER · 2h</div>
+      <div class="title">M 4.3 Offer</div>
+      <div class="meta">
+        <span>Vertragsverhandlung</span>
+        <span>Pflicht Consultant only</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar">NS</div>
+        <div class="tr-avatar">PW</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:67%;"></div></div>
+        <span class="completion-pct">6/9</span>
+      </div>
+    </div>
+    <div class="module-card fg-a">
+      <div class="code">LERNKARTEI_1 · 2h</div>
+      <div class="title">Lernkartei 1</div>
+      <div class="meta">
+        <span>Schnellreferenz</span>
+        <span>Pflicht CM + RA</span>
+      </div>
+      <div class="trainers">
+        <div class="tr-avatar">SP</div>
+      </div>
+      <div class="completion-row">
+        <div class="completion-bar"><div class="fill" style="width:100%;"></div></div>
+        <span class="completion-pct">12/12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEELEN-TRACKER -->
+  <h2 style="font-family:'Libre Baskerville',serif; font-size:18px; margin:30px 0 16px; color:var(--accent);">Scheelen-Zertifikate · Pflicht für alle Rollen</h2>
+  <div class="scheelen-grid">
+    <div class="scheelen-pillar">
+      <h3>Scheelen MDI <span class="completion-ratio">11/12 MA</span></h3>
+      <div class="scheelen-list">
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Peter Wiederkehr</span><span class="status-text">aktiv · 2019</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Anna Huber</span><span class="status-text">aktiv · 2021</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Thomas Schmidt</span><span class="status-text">aktiv · 2020</span></div>
+        <div class="scheelen-row"><div class="dot missing"></div><span class="ma">Maria Keller</span><span class="status-text missing">fehlt · nach 6 Mt fällig</span></div>
+      </div>
+    </div>
+    <div class="scheelen-pillar">
+      <h3>Scheelen RELIEF <span class="completion-ratio">9/12 MA</span></h3>
+      <div class="scheelen-list">
+        <div class="scheelen-row"><div class="dot expiring"></div><span class="ma">Peter Wiederkehr</span><span class="status-text">läuft ab 04.06.2026</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Anna Huber</span><span class="status-text">aktiv · 2023</span></div>
+        <div class="scheelen-row"><div class="dot missing"></div><span class="ma">Max Muster</span><span class="status-text missing">fehlt · Onboarding Wk 10</span></div>
+        <div class="scheelen-row"><div class="dot missing"></div><span class="ma">Lisa Demo</span><span class="status-text missing">fehlt · Onboarding Wk 5</span></div>
+      </div>
+    </div>
+    <div class="scheelen-pillar">
+      <h3>Scheelen ASSESS 5.0 <span class="completion-ratio">10/12 MA</span></h3>
+      <div class="scheelen-list">
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Peter Wiederkehr</span><span class="status-text">aktiv · 2020</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Anna Huber</span><span class="status-text">aktiv · 2021</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Thomas Schmidt</span><span class="status-text">aktiv · 2022</span></div>
+        <div class="scheelen-row"><div class="dot missing"></div><span class="ma">Maria Keller</span><span class="status-text missing">fehlt · RA-Fokus</span></div>
+      </div>
+    </div>
+    <div class="scheelen-pillar">
+      <h3>Scheelen TriMetrix® EQ <span class="completion-ratio">10/12 MA</span></h3>
+      <div class="scheelen-list">
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Peter Wiederkehr</span><span class="status-text">aktiv · 2021</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Anna Huber</span><span class="status-text">aktiv · 2022</span></div>
+        <div class="scheelen-row"><div class="dot done"></div><span class="ma">Thomas Schmidt</span><span class="status-text">aktiv · 2023</span></div>
+        <div class="scheelen-row"><div class="dot missing"></div><span class="ma">Max Muster</span><span class="status-text missing">fehlt · Onboarding</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DRAWER: Modul abschliessen -->
+<div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer-module-complete">
+  <div class="drawer-head">
+    <h2>Modul abschliessen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <div class="info-box">
+      <strong>Multiple Trainer je Modul möglich.</strong> Trainer bewertet MA-Performance · MA bewertet Selbstverständnis.
+    </div>
+
+    <div class="field">
+      <label>Mitarbeiter</label>
+      <select>
+        <option>Max Muster · Consultant ARC</option>
+        <option>Lisa Demo · Research Analyst ING</option>
+        <option>Maria Keller · Research Analyst REM</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Modul</label>
+      <select>
+        <option>Communication Edge Part III (CE3)</option>
+        <option>M 3.3 Akquise &amp; Home Run Call</option>
+        <option>M 3.4 CV sent</option>
+        <option>M 4.1 TIVT Orga</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Trainer (wer hat geschult?)</label>
+      <select>
+        <option>Peter Wiederkehr</option>
+        <option>Stefano Papes</option>
+        <option>Thomas Schmidt (Senior Consultant)</option>
+        <option>Nenad Stoparanovic</option>
+      </select>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Abschluss-Datum</label>
+        <input type="date" value="2026-04-19">
+      </div>
+      <div class="field">
+        <label>Dauer (h)</label>
+        <input type="number" value="8" step="0.5">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>MA-Selbst-Score (1–10)</label>
+      <div class="score-slider">
+        <div class="btn">1</div><div class="btn">2</div><div class="btn">3</div>
+        <div class="btn">4</div><div class="btn">5</div><div class="btn">6</div>
+        <div class="btn active">7</div><div class="btn">8</div><div class="btn">9</div>
+        <div class="btn">10</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Trainer-Score (1–10)</label>
+      <div class="score-slider">
+        <div class="btn">1</div><div class="btn">2</div><div class="btn">3</div>
+        <div class="btn">4</div><div class="btn">5</div><div class="btn">6</div>
+        <div class="btn">7</div><div class="btn active">8</div><div class="btn">9</div>
+        <div class="btn">10</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Trainer-Notiz</label>
+      <textarea rows="3" placeholder="Stärken · Entwicklungspunkte · Next Steps"></textarea>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary">✓ Abschliessen</button>
+  </div>
+</div>
+
+<script>
+  function openDrawer(id) {
+    document.getElementById('backdrop').classList.add('open');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('backdrop').classList.remove('open');
+    document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  document.querySelectorAll('.score-slider').forEach(slider => {
+    slider.addEventListener('click', e => {
+      if (e.target.classList.contains('btn')) {
+        slider.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
