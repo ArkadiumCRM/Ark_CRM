@@ -2,17 +2,23 @@
 title: "Provisionierung (Mitarbeiter-Vergütung)"
 type: concept
 created: 2026-04-16
-updated: 2026-04-16
-sources: ["Anhang - Provisionsstaffel CM.pdf", "Provisionssheet Joaquin Vega.xlsx", "Provisionssheet Peter Wiederkehr.xlsx"]
-tags: [concept, provisionen, vergütung, payroll, crm-2.0, out-of-scope]
+updated: 2026-04-19
+sources: ["Anhang - Provisionsstaffel CM.pdf", "Provisionssheet Joaquin Vega.xlsx", "Provisionssheet Peter Wiederkehr.xlsx", "Peter-Entscheidung 2026-04-19 Option D"]
+tags: [concept, provisionen, vergütung, payroll, crm-1.0, kern-usp, commission-engine]
 ---
 
 # Provisionierung (Mitarbeiter-Vergütung)
 
-Interne Vergütungssystematik für Arkadium-Mitarbeiter. Pro Rolle unterschiedliches Modell. Heute manuell in Excel abgewickelt, ab **CRM 2.0** als eigenes Buchhaltungs-/Payroll-Modul geplant.
+Interne Vergütungssystematik für Arkadium-Mitarbeiter. Pro Rolle unterschiedliches Modell. Seit Peter-Entscheidung **2026-04-19 (Option D)** ist die Commission-Engine **Phase 1 Kern-USP des ARK-CRM** — nicht mehr vertagt auf CRM 2.0.
 
-> [!info] Scope-Abgrenzung CRM 1.0
-> **CRM 1.0 erfasst Umsatz, nicht Ausschüttung.** Die Provisionierung läuft weiter in Excel. Im CRM werden nur jene Felder hinterlegt, die als **Eingangsgrössen** für die externe Provisions-Berechnung nötig sind (Net Fee, Deal-Zuteilung CM/AM, Start-Datum, Sparte). Die Berechnungs-Engine (ZEG, Staffel, Rücklage, Quartals-Auszahlung) kommt erst mit **CRM 2.0**.
+> [!info] Scope-Update 2026-04-19 · Commission-Engine = CRM 1.0 Kern-USP
+> **Die frühere Regel "CRM 1.0 = Umsatz-Tracking / CRM 2.0 = Provisions-Engine" ist mit Option D aufgehoben.** Commission-Engine wird als Phase-1-Kern gebaut (Spec: `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`). Grund: Markt-Validierung — Bullhorn/Invenias/Salesforce haben keine native Commission-Split-Logik für Headhunting → ARKs Killer-USP für SaaS-Phase-2. Break-Even-Modellierung ab ~5 SaaS-Kunden Jahr 4-5.
+>
+> **Scope Phase 1 inkludiert**: Commission-Ledger, ZEG-Staffel-Engine, Quartals-Kumulation, 80/20-Split, Researcher-Pauschale, Head-of-Teambudget-Rollup, Bonus-Ermessens-Flow für Nicht-Berechtigte, CSV/Excel/XML-Export (kein aktiver Bexio-API-Call in Phase 1).
+>
+> **Weiterhin ausserhalb Phase 1**: Eigene Swissdec-Payroll, Brutto/Netto-Berechnung, AHV/ALV/BVG/UVG-Integration, Quellensteuer-Tarif-Engine, Lohnausweis-Generierung. Payroll-Export an Treuhänder/Bexio als CSV bleibt Standard bis Phase 3.
+>
+> **Verwandt**: Memory `project_commission_model.md` + `project_arkadium_roles_2026.md` · Handoff-Strategy `ERP Tools/specs/ARK_HR_STRATEGY_DECISION_v0_1.md`.
 
 ## Rollen-Modell
 
@@ -143,21 +149,32 @@ Für spätere Provisions-Engine-Anbindung (CRM 2.0) sind folgende Felder kritisc
 | `salary_candidate_target_chf` | `fact_process_finance` | Basis Erfolgsbasis-Staffel |
 | `business_model` | `dim_mandate` / `fact_process_finance` | Mandat / Erfolgsbasis / Taskforce / Time (Time = ausserordentlich) |
 
-## Out-of-Scope CRM 1.0
+## Scope-Update 2026-04-19 · Commission-Engine in CRM 1.0
 
-Folgende Dinge **nicht** im CRM 1.0 bauen — kommt mit 2.0 als Payroll-/Buchhaltungs-Modul:
+Mit Option D (Peter-Entscheidung 2026-04-19) ist folgendes **im Scope Phase 1**:
 
-- Provisions-Staffel-Engine (ZEG → Satz)
-- Quartals-Kummulation
-- 80/20-Splitting Abschlag/Rücklage
-- Auszahlungs-Workflow + Lohn-Export
-- Pro-Rata-Berechnung bei Eintritt/Austritt
-- Head-of-Teambudget-Rollup
-- Time-Sonderabrechnung
-- Rücklage-Freigabe nach Garantie-Ablauf
+- ✅ Provisions-Staffel-Engine (ZEG → Satz)
+- ✅ Quartals-Kumulation
+- ✅ 80/20-Splitting Abschlag/Rücklage
+- ✅ Auszahlungs-Workflow (internal) + CSV/Excel/XML-Export
+- ✅ Pro-Rata-Berechnung bei Eintritt/Austritt
+- ✅ Head-of-Teambudget-Rollup
+- ✅ Researcher-Pauschale-Zuteilung
+- ✅ Rücklage-Freigabe nach Garantie-Ablauf
+- ✅ Bonus-Ermessens-Flow (Nicht-Berechtigte: GF-Ermessen)
+- ✅ Commission-UI in Mockups (eigene Views: MA-Self, Head-of, Admin/Backoffice)
 
-> [!warning] Nicht in UI einbauen
-> Keine Provisions-UI in Mockups, Kandidaten-/Prozess-/Account-Detail-Masken etc. Auch keine „Provision berechnet: CHF X" Anzeige. Nur die oben gelisteten **Input-Felder** sind Teil von CRM 1.0.
+**Weiterhin ausserhalb Phase 1 (Treuhänder-Modell bleibt):**
+- ❌ Eigene Swissdec-Zertifizierung
+- ❌ AHV/IV/EO/ALV-Berechnung
+- ❌ BVG-Integration
+- ❌ Quellensteuer-Tarif-Engine
+- ❌ Lohnausweis-Generierung
+- ❌ Brutto/Netto-Berechnung
+- ❌ Aktiver Bexio-API-Call (nur CSV-Export für Peter Phase 1 · API-Integration als eigenes Phase-2-Wave)
+- ❌ Time-Sonderabrechnung (Mechanik noch offen, Phase 3)
+
+**Grundsatz**: Commission-Engine berechnet **was** an jede Person ausgezahlt werden soll. Treuhänder/Bexio/Abacus macht das **wie** (Brutto/Netto-Lohnlauf, Swissdec-Meldungen). ARK-CRM übergibt das Resultat als Export-File an den Payroll-Provider.
 
 ## Quellen
 
