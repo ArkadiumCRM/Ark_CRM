@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Commission · Meine Provisionen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  /* Commission-My · MA-Self-View */
+
+  .cm-page { padding:20px 28px 40px; max-width:1400px; margin:0 auto; }
+
+  .cm-head {
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border);
+    margin-bottom:22px;
+  }
+  .cm-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .cm-head .meta { font-size:13px; color:var(--text-light); }
+
+  /* Big Hero Card */
+  .hero-grid {
+    display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:16px;
+    margin-bottom:22px;
+  }
+  .hero-card {
+    background:var(--surface); padding:22px 24px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .hero-card .lbl {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.4px;
+    color:var(--text-light); font-weight:600;
+  }
+  .hero-card .big {
+    font-family:'Libre Baskerville',serif; font-size:38px;
+    font-weight:700; color:var(--accent); line-height:1; margin:10px 0 6px;
+  }
+  .hero-card .unit { font-size:18px; color:var(--text-light); margin-left:4px; }
+  .hero-card .sub { font-size:12px; color:var(--text-mid); }
+  .hero-card.primary { border-left-color:var(--accent); }
+  .hero-card.secondary { border-left-color:var(--gold); }
+  .hero-card.secondary .big { color:var(--gold); }
+  .hero-card.tertiary { border-left-color:var(--text-light); }
+  .hero-card.tertiary .big { color:var(--text-mid); font-size:26px; }
+
+  /* ZEG-Progress-Bar (kern-Visualisierung) */
+  .zeg-card {
+    background:var(--surface); padding:22px 24px; border-radius:4px;
+    box-shadow:var(--shadow-sm); margin-bottom:22px;
+  }
+  .zeg-head {
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:14px;
+  }
+  .zeg-head h3 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:16px; font-weight:700;
+  }
+  .zeg-head .current {
+    font-family:'Libre Baskerville',serif; font-size:26px;
+    font-weight:700; color:var(--green);
+  }
+  .zeg-bar {
+    position:relative; height:40px; background:var(--bg);
+    border-radius:3px; overflow:hidden;
+  }
+  .zeg-fill {
+    position:absolute; top:0; left:0; bottom:0;
+    background:linear-gradient(90deg, var(--red) 0%, var(--amber) 25%, var(--green) 50%, var(--gold) 100%);
+    border-radius:3px;
+    transition:width 0.6s ease;
+  }
+  .zeg-markers {
+    position:relative; margin-top:8px; height:20px;
+    font-size:11px; color:var(--text-light);
+  }
+  .zeg-marker {
+    position:absolute; top:0; transform:translateX(-50%);
+    text-align:center;
+  }
+  .zeg-marker .line {
+    width:1px; height:6px; background:var(--border-strong); margin:0 auto 2px;
+  }
+  .zeg-pointer {
+    position:absolute; top:-6px; transform:translateX(-50%);
+    width:0; height:0; border-left:8px solid transparent;
+    border-right:8px solid transparent; border-bottom:10px solid var(--accent);
+  }
+  .zeg-legend {
+    display:flex; gap:18px; font-size:12px; margin-top:14px;
+    color:var(--text-mid); flex-wrap:wrap;
+  }
+
+  /* Quartals-Timeline */
+  .quarter-timeline {
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
+    margin-bottom:22px;
+  }
+  .q-card {
+    background:var(--surface); padding:14px 16px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-top:3px solid var(--border);
+  }
+  .q-card.done { border-top-color:var(--green); }
+  .q-card.current { border-top-color:var(--accent); background:color-mix(in srgb,var(--accent) 4%,var(--surface)); }
+  .q-card.future { opacity:0.55; border-top-color:var(--border); }
+  .q-card .q-head {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:8px;
+  }
+  .q-card .q-label {
+    font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600;
+  }
+  .q-card .q-zeg {
+    font-family:'Libre Baskerville',serif; font-size:13px;
+    font-weight:700; color:var(--green);
+  }
+  .q-card .q-amount {
+    font-family:'Libre Baskerville',serif; font-size:19px;
+    font-weight:700; color:var(--accent);
+  }
+  .q-card .q-status {
+    font-size:11px; color:var(--text-mid); margin-top:4px;
+  }
+  .q-card.current .q-zeg { color:var(--accent); }
+  .q-card.future .q-zeg,
+  .q-card.future .q-amount { color:var(--text-light); }
+
+  /* Section-Head */
+  .sec-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin:28px 0 14px; padding-bottom:6px;
+    border-bottom:1px solid var(--border);
+  }
+  .sec-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:17px; font-weight:700; color:var(--accent);
+  }
+  .sec-head .count {
+    font-size:12px; color:var(--text-light); margin-left:10px;
+    font-weight:400;
+  }
+
+  /* Placement-Ledger */
+  .ledger-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .ledger-table th {
+    text-align:left; padding:10px 12px; background:var(--bg);
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600;
+    border-bottom:1px solid var(--border);
+  }
+  .ledger-table td {
+    padding:10px 12px; border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  .ledger-table tbody tr:hover { background:var(--bg); }
+  .ledger-table td.num { font-family:'Libre Baskerville',serif; text-align:right; }
+  .ledger-table .kand-cell { display:flex; align-items:center; gap:10px; }
+  .ledger-table .kand-avatar {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-size:10.5px; font-weight:700;
+    flex-shrink:0;
+  }
+
+  /* Rücklage-Card */
+  .ruecklage-grid {
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+    margin-bottom:22px;
+  }
+  .ruecklage-card {
+    background:var(--surface); padding:16px 18px; border-radius:4px;
+    box-shadow:var(--shadow-sm);
+  }
+  .ruecklage-card .lbl {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600;
+  }
+  .ruecklage-card .big {
+    font-family:'Libre Baskerville',serif; font-size:22px;
+    font-weight:700; margin:6px 0 4px;
+  }
+  .ruecklage-card.frei .big { color:var(--green); }
+  .ruecklage-card.gesperrt .big { color:var(--amber); }
+  .ruecklage-card.clawback .big { color:var(--red); }
+
+  /* Simulations-Card */
+  .simulate-card {
+    background:linear-gradient(135deg, color-mix(in srgb,var(--accent) 8%, var(--surface)) 0%, var(--surface) 100%);
+    padding:22px 24px; border-radius:4px; box-shadow:var(--shadow-sm);
+    border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);
+  }
+  .simulate-card h3 {
+    margin:0 0 8px; font-family:'Libre Baskerville',serif;
+    font-size:16px; font-weight:700; color:var(--accent);
+  }
+  .simulate-card .sim-form {
+    display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto;
+    gap:10px; align-items:end; margin-top:12px;
+  }
+  .simulate-card label {
+    display:block; font-size:11px; color:var(--text-light);
+    margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;
+    font-weight:600;
+  }
+  .simulate-card input, .simulate-card select {
+    width:100%; padding:7px 9px; border:1px solid var(--border-strong);
+    border-radius:3px; background:var(--surface); font-size:13px;
+  }
+  .simulate-result {
+    margin-top:14px; padding:12px 16px; background:var(--surface);
+    border-radius:3px; border-left:3px solid var(--accent);
+  }
+
+  @media (max-width:960px) {
+    .hero-grid { grid-template-columns:1fr; }
+    .quarter-timeline { grid-template-columns:1fr 1fr; }
+    .ruecklage-grid { grid-template-columns:1fr; }
+    .simulate-card .sim-form { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<!-- HEADER -->
+
+<div class="cm-page">
+
+  <!-- TITLE -->
+  <div class="cm-head">
+    <h1>Meine Provisionen</h1>
+    <span class="meta">Joaquin Vega · CM Civil Engineering · Geschäftsjahr 2026 · Q1 abgeschlossen · Q2 läuft</span>
+    <span class="spacer"></span>
+    <select style="padding:7px 12px;border:1px solid var(--border-strong);border-radius:3px;background:var(--surface);font-size:13px">
+      <option>2026 (aktuell)</option>
+      <option>2025</option>
+      <option>2024</option>
+    </select>
+    <button class="btn btn-sm">📄 Q1-Abrechnung PDF</button>
+  </div>
+
+  <!-- HERO-CARDS -->
+  <div class="hero-grid">
+    <div class="hero-card primary">
+      <div class="lbl">Aktuelles Quartal Brutto · Q1 2026</div>
+      <div class="big">CHF 12'800<span class="unit"></span></div>
+      <div class="sub">bei ZEG 118 % · Staffel 128 % · OTE-Basis CHF 10'000/Q</div>
+    </div>
+    <div class="hero-card secondary">
+      <div class="lbl">Bereits ausgezahlt · 80 % Abschlag</div>
+      <div class="big">CHF 10'240<span class="unit"></span></div>
+      <div class="sub">Apr 2026 · via Treuhänder</div>
+    </div>
+    <div class="hero-card tertiary">
+      <div class="lbl">Rücklage aktiv · 20 %</div>
+      <div class="big">CHF 2'560<span class="unit"></span></div>
+      <div class="sub">bis Garantie-Ablauf Ø 31.10.2026</div>
+    </div>
+  </div>
+
+  <!-- ZEG-PROGRESS -->
+  <div class="zeg-card">
+    <div class="zeg-head">
+      <div>
+        <h3>🎯 ZEG-Staffel · kumulativ bis Q1 2026</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">Net Fees CHF 129'945 / Budget CHF 110'000</div>
+      </div>
+      <div class="current">118 %</div>
+    </div>
+    <div class="zeg-bar">
+      <div class="zeg-fill" style="width:78.6%"></div>
+      <div class="zeg-pointer" style="left:78.6%"></div>
+    </div>
+    <div class="zeg-markers">
+      <div class="zeg-marker" style="left:0%"><div class="line"></div>0%</div>
+      <div class="zeg-marker" style="left:33.3%"><div class="line"></div>50% · Einstieg</div>
+      <div class="zeg-marker" style="left:40%"><div class="line"></div>60% · Dämpfung</div>
+      <div class="zeg-marker" style="left:46.6%"><div class="line"></div>70% · Leistungs-Korridor</div>
+      <div class="zeg-marker" style="left:66.6%"><div class="line"></div>100% · Ziel</div>
+      <div class="zeg-marker" style="left:100%"><div class="line"></div>150%+</div>
+    </div>
+    <div class="zeg-legend">
+      <span>🔴 &lt; 50 %: 0 % Provision</span>
+      <span>🟡 50-69 %: langsamer Anstieg</span>
+      <span>🟢 70-150 %: +2 %/%</span>
+      <span>🟨 &gt; 150 %: Degression +1 %/%</span>
+    </div>
+  </div>
+
+  <!-- QUARTALS-TIMELINE -->
+  <div class="quarter-timeline">
+    <div class="q-card done">
+      <div class="q-head">
+        <span class="q-label">Q1 2026</span>
+        <span class="q-zeg">118 %</span>
+      </div>
+      <div class="q-amount">CHF 12'800</div>
+      <div class="q-status">✓ abgeschlossen · 10'240 ausgezahlt Apr</div>
+    </div>
+    <div class="q-card current">
+      <div class="q-head">
+        <span class="q-label">Q2 2026 · läuft</span>
+        <span class="q-zeg">~68 %</span>
+      </div>
+      <div class="q-amount">CHF 3'700 <span style="font-size:12px;color:var(--text-light);font-weight:400">(Prognose)</span></div>
+      <div class="q-status">⏳ aktuell · 2 Placements eingetragen · Close 30.06.</div>
+    </div>
+    <div class="q-card future">
+      <div class="q-head">
+        <span class="q-label">Q3 2026</span>
+        <span class="q-zeg">—</span>
+      </div>
+      <div class="q-amount">—</div>
+      <div class="q-status">geplant</div>
+    </div>
+    <div class="q-card future">
+      <div class="q-head">
+        <span class="q-label">Q4 2026</span>
+        <span class="q-zeg">—</span>
+      </div>
+      <div class="q-amount">—</div>
+      <div class="q-status">geplant</div>
+    </div>
+  </div>
+
+  <!-- PLACEMENTS Q1 -->
+  <div class="sec-head">
+    <h2>💼 Einfliessende Placements Q1 2026 <span class="count">· 6 Deals · Σ zugeteilt CHF 129'945</span></h2>
+    <button class="btn btn-sm">Alle Placements</button>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="ledger-table">
+      <thead>
+        <tr>
+          <th>Kandidat</th>
+          <th>Kunde</th>
+          <th>Start</th>
+          <th>Garantie-Ende</th>
+          <th>Net Fee</th>
+          <th>Punkte</th>
+          <th>Meine Zuteilung</th>
+          <th>Rolle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">JO</div><div><strong>Jan Osterwalder</strong><div class="muted" style="font-size:11px">CFO-Search</div></div></td>
+          <td>B+S AG</td>
+          <td>30.04.2026</td>
+          <td>30.06.2026</td>
+          <td class="num">CHF 28'000</td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 14'000</td>
+          <td><span class="chip chip-accent">CM</span></td>
+        </tr>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">MV</div><div><strong>Michael Vidal</strong><div class="muted" style="font-size:11px">BIM-Lead</div></div></td>
+          <td>Frutiger AG</td>
+          <td>01.09.2026</td>
+          <td>30.11.2026</td>
+          <td class="num">CHF 49'998</td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 24'999</td>
+          <td><span class="chip chip-accent">CM</span></td>
+        </tr>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">TA</div><div><strong>Thomas Aeschbacher</strong><div class="muted" style="font-size:11px">Projektleiter</div></div></td>
+          <td>Hefti.Hess.M.</td>
+          <td>01.08.2026</td>
+          <td>31.10.2026</td>
+          <td class="num">CHF 50'900</td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 25'450</td>
+          <td><span class="chip chip-accent">CM</span></td>
+        </tr>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">PB</div><div><strong>Pascal Bader</strong><div class="muted" style="font-size:11px">Senior Engineer</div></div></td>
+          <td>Selmoni Ing.</td>
+          <td>01.06.2026</td>
+          <td>31.08.2026</td>
+          <td class="num">CHF 22'000</td>
+          <td class="num">2</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 22'000</td>
+          <td><span class="chip chip-accent">CM+AM</span></td>
+        </tr>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">DM</div><div><strong>Daniel Maurer</strong><div class="muted" style="font-size:11px">Gesamtbauleiter</div></div></td>
+          <td>Büchi Bau</td>
+          <td>01.07.2026</td>
+          <td>30.09.2026</td>
+          <td class="num">CHF 30'875</td>
+          <td class="num">2</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 30'875</td>
+          <td><span class="chip chip-accent">CM+AM</span></td>
+        </tr>
+        <tr>
+          <td class="kand-cell"><div class="kand-avatar">MG</div><div><strong>Morgane Giorgi</strong><div class="muted" style="font-size:11px">Bauleiterin</div></div></td>
+          <td>Grolimund+P.</td>
+          <td>01.06.2026</td>
+          <td>31.08.2026</td>
+          <td class="num">CHF 25'243</td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--accent);font-weight:600">CHF 12'621</td>
+          <td><span class="chip chip-accent">CM</span></td>
+        </tr>
+        <tr style="background:var(--bg);font-weight:600">
+          <td colspan="4" style="text-align:right">Σ Q1 2026 · meine Zuteilung</td>
+          <td class="num">CHF 206'016</td>
+          <td></td>
+          <td class="num" style="color:var(--accent);font-family:'Libre Baskerville',serif;font-size:15px">CHF 129'945</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RÜCKLAGE -->
+  <div class="sec-head">
+    <h2>🔒 Rücklage-Status · 20 % von Q1 2026</h2>
+    <span class="muted" style="font-size:12px">Freigabe nach Kandidat-Garantie-Ende (je 3 Mt nach Start)</span>
+  </div>
+
+  <div class="ruecklage-grid">
+    <div class="ruecklage-card gesperrt">
+      <div class="lbl">Gesperrt</div>
+      <div class="big">CHF 2'560</div>
+      <div class="muted" style="font-size:12px">6 Kandidaten · nächste Freigabe 30.06. (Jan Osterwalder)</div>
+    </div>
+    <div class="ruecklage-card frei">
+      <div class="lbl">Voraussichtlich frei bis 31.12.2026</div>
+      <div class="big">CHF 2'560</div>
+      <div class="muted" style="font-size:12px">alle 6 Kandidaten bei erfolgreicher Garantiezeit</div>
+    </div>
+    <div class="ruecklage-card clawback">
+      <div class="lbl">Risiko-Clawback</div>
+      <div class="big">CHF 0</div>
+      <div class="muted" style="font-size:12px">keine Warnsignale · alle Kandidaten aktiv beim Kunden</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;margin-top:14px">
+    <table class="ledger-table">
+      <thead>
+        <tr>
+          <th>Kandidat · Kunde</th>
+          <th>Start</th>
+          <th>Garantie-Ende</th>
+          <th>Status</th>
+          <th>Rücklage-Anteil</th>
+          <th>Freigabe-Datum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Jan Osterwalder</strong> · B+S AG</td>
+          <td>30.04.</td>
+          <td>30.06.2026</td>
+          <td><span class="chip chip-green">✓ in Probezeit ok</span></td>
+          <td class="num">CHF 276</td>
+          <td>01.07.2026 <span class="chip chip-muted" style="font-size:9px">69 Tage</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pascal Bader</strong> · Selmoni Ing.</td>
+          <td>01.06.</td>
+          <td>31.08.2026</td>
+          <td><span class="chip chip-muted">⏳ Start steht noch aus</span></td>
+          <td class="num">CHF 434</td>
+          <td>01.09.2026</td>
+        </tr>
+        <tr>
+          <td><strong>Morgane Giorgi</strong> · Grolimund+P.</td>
+          <td>01.06.</td>
+          <td>31.08.2026</td>
+          <td><span class="chip chip-muted">⏳ Start steht noch aus</span></td>
+          <td class="num">CHF 249</td>
+          <td>01.09.2026</td>
+        </tr>
+        <tr>
+          <td><strong>Daniel Maurer</strong> · Büchi Bau</td>
+          <td>01.07.</td>
+          <td>30.09.2026</td>
+          <td><span class="chip chip-muted">⏳ Start steht noch aus</span></td>
+          <td class="num">CHF 609</td>
+          <td>01.10.2026</td>
+        </tr>
+        <tr>
+          <td><strong>Thomas Aeschbacher</strong> · Hefti.Hess.M.</td>
+          <td>01.08.</td>
+          <td>31.10.2026</td>
+          <td><span class="chip chip-muted">⏳ Start steht noch aus</span></td>
+          <td class="num">CHF 502</td>
+          <td>01.11.2026</td>
+        </tr>
+        <tr>
+          <td><strong>Michael Vidal</strong> · Frutiger AG</td>
+          <td>01.09.</td>
+          <td>30.11.2026</td>
+          <td><span class="chip chip-muted">⏳ Start steht noch aus</span></td>
+          <td class="num">CHF 492</td>
+          <td>01.12.2026</td>
+        </tr>
+        <tr style="background:var(--bg);font-weight:600">
+          <td colspan="4" style="text-align:right">Σ</td>
+          <td class="num" style="color:var(--accent)">CHF 2'562</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SIMULATION -->
+  <div class="sec-head">
+    <h2>🔮 Was-wäre-wenn · Simulation</h2>
+    <span class="muted" style="font-size:12px">spielt neues Placement durch, ohne zu speichern</span>
+  </div>
+
+  <div class="simulate-card">
+    <h3>Simuliere ein zusätzliches Placement in Q2 2026</h3>
+    <p class="muted" style="font-size:13px;margin-top:2px">Was würde ein Deal heute an Commission auslösen?</p>
+    <div class="sim-form">
+      <div>
+        <label>Net Fee CHF</label>
+        <input type="number" value="30000" step="1000">
+      </div>
+      <div>
+        <label>Rolle</label>
+        <select>
+          <option>CM (50 % Split)</option>
+          <option>AM (50 % Split)</option>
+          <option>CM + AM (100 %)</option>
+        </select>
+      </div>
+      <div>
+        <label>Business-Model</label>
+        <select>
+          <option>Target (Einzelmandat · Fixhonorar)</option>
+          <option>Erfolgsbasis (Best-Effort · ohne Mandat)</option>
+          <option>Taskforce (RPO · Monatsfee + Success-Fee)</option>
+          <option style="color:var(--text-light)">Time (ausgeschlossen aus ZEG)</option>
+        </select>
+      </div>
+      <div>
+        <label>Datum</label>
+        <input type="date" value="2026-05-15">
+      </div>
+      <div>
+        <button class="btn btn-sm btn-primary" style="padding:7px 16px">Berechnen</button>
+      </div>
+    </div>
+    <div class="simulate-result">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:center">
+        <div>
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px">Zuteilung</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700">CHF 15'000</div>
+        </div>
+        <div>
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px">ZEG Q1+Q2 neu</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700;color:var(--green)">82 %</div>
+        </div>
+        <div>
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px">Commission-Delta</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700;color:var(--accent)">+ CHF 1'400</div>
+        </div>
+        <div>
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px">davon Abschlag</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--gold)">CHF 1'120</div>
+        </div>
+      </div>
+      <div class="muted" style="font-size:11.5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        ℹ Simulation basiert auf aktuellem Budget + Staffel-Version <code>2026-default</code>. Target · Erfolgsbasis · Taskforce fliessen in ZEG ein · Time-Mandate werden ausgeschlossen.
+      </div>
+    </div>
+  </div>
+
+  <!-- JAHRES-DETAIL -->
+  <div class="sec-head">
+    <h2>📈 Mein Jahr 2026</h2>
+  </div>
+
+  <div class="card" style="padding:18px 22px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+      <div>
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">Jahresbudget</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700">CHF 440'000</div>
+        <div class="muted" style="font-size:12px">Net-Fee-Ziel · CM CI</div>
+      </div>
+      <div>
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">OTE bei 100 % ZEG</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700">CHF 40'000</div>
+        <div class="muted" style="font-size:12px">variables Gehalt voll</div>
+      </div>
+      <div>
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">Commission YTD brutto</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--accent)">CHF 12'800</div>
+        <div class="muted" style="font-size:12px">Q1 · Q2 läuft</div>
+      </div>
+      <div>
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">Ausgezahlt YTD</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--gold)">CHF 10'240</div>
+        <div class="muted" style="font-size:12px">80 %-Abschlag Q1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP -->
+  <div style="margin-top:24px;padding:14px 18px;background:var(--bg);border-radius:4px;font-size:12.5px;color:var(--text-mid)">
+    <strong>ℹ So funktioniert meine Commission</strong><br>
+    Net Fee eines Placements wird nach Rolle zugeteilt (50 % als CM oder AM · 100 % wenn beide). Time-Mandate werden ausgeschlossen. Kumulativ pro Quartal wird ZEG berechnet · daraus via Staffel der Provisions-Satz · davon bekommt man den Anteil vom OTE/Quartal. 80 % werden sofort ausgezahlt, 20 % bleiben Rücklage bis Garantiefrist-Ende (3 Mt nach Start) · dann frei oder bei Austritt des Kandidaten clawback.
+    <br><a href="#" style="color:var(--accent);margin-top:8px;display:inline-block">📄 Komplette Provisions-Regel lesen</a>
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- DRAWERS                                                       -->
+<!-- =========================================================== -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER · Placement-Detail -->
+<div class="drawer" id="placementDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:14px;flex-shrink:0" id="pDrawAvatar">JO</div>
+    <div class="info">
+      <h2 id="pDrawTitle">Jan Osterwalder · B+S AG</h2>
+      <div class="sub" id="pDrawSub">CFO-Search · Target-Mandat · Platziert 30.04.2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('placementDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Meine Commission-Zuteilung</h4>
+      <div style="padding:16px;background:color-mix(in srgb,var(--accent) 8%,var(--bg));border-radius:4px;text-align:center">
+        <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Net Fee-Anteil (CM 50 %)</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:var(--accent);margin-top:4px" id="pDrawAmount">CHF 14'000</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">fliesst in Q1 2026 · ZEG-Kumulation</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Placement-Info</h4>
+      <dl class="field-grid">
+        <dt>Kandidat</dt><dd><strong>Jan Osterwalder</strong> · 47 J · ZH · Jahresgehalt CHF 222'000</dd>
+        <dt>Position</dt><dd>CFO · Finanzleitung</dd>
+        <dt>Kunde</dt><dd>B+S AG · Bern</dd>
+        <dt>Mandat-Typ</dt><dd><span class="chip chip-accent">Target</span> · Einzelmandat · MAN-2026-011</dd>
+        <dt>Rechnungsbetrag</dt><dd><strong>CHF 28'500</strong> · 3er-Zahlungs-Split (je CHF 9'500 · Vertrag/Shortlist/Placement)</dd>
+        <dt>Sub-Fees</dt><dd>CHF 500 · Researcher-Pauschale (Hannah)</dd>
+        <dt>Net Fee</dt><dd><strong style="color:var(--accent)">CHF 28'000</strong> · Basis für ZEG-Provision</dd>
+        <dt>Platziert</dt><dd>30.04.2026</dd>
+        <dt>Garantie-Ende</dt><dd>30.06.2026 · 3 Monate</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Commission-Verteilung · 4 Beteiligte</h4>
+      <div class="list-item">
+        <div class="name"><strong>Researcher</strong> · Hannah van den Bosch</div>
+        <div class="meta">Pauschale CHF 500 · direkt ausgezahlt</div>
+      </div>
+      <div class="list-item" style="background:color-mix(in srgb,var(--accent) 6%,var(--bg))">
+        <div class="name"><strong>CM · Joaquin Vega (ich)</strong></div>
+        <div class="meta">50 % Split · CHF 14'000 Net-Fee-Anteil · fliesst in meine Q1-ZEG-Kumulation</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>AM</strong> · Peter Wiederkehr</div>
+        <div class="meta">50 % Split · CHF 14'000 Net-Fee-Anteil · fliesst in Peter Head-of-Teambudget CI+BT</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>Head of CI+BT</strong> · Peter Wiederkehr</div>
+        <div class="meta">Rollup: ganze CHF 28'000 zählen ins Teambudget (Pkt 2)</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Status-Timeline</h4>
+      <div style="font-size:12.5px;line-height:1.8">
+        ✓ <strong>12.01.2026</strong> Briefing mit B+S · Mandat signiert<br>
+        ✓ <strong>28.01.2026</strong> Shortlist (4 Kandidaten) · 1/3 Zahlung erhalten<br>
+        ✓ <strong>15.03.2026</strong> Interview Jan Osterwalder · 2/3 Zahlung<br>
+        ✓ <strong>30.04.2026</strong> Placement · 3/3 Zahlung<br>
+        ⏳ <strong>30.06.2026</strong> Garantie-Ende · Rücklage-Freigabe<br>
+        ℹ <strong>+ Q3 2026</strong> Meine Rücklage CHF 276 frei (wenn Kandidat bleibt)
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Mein Anteil an diesem Deal</h4>
+      <dl class="field-grid">
+        <dt>Net-Fee-Anteil (50 %)</dt><dd><strong>CHF 14'000</strong></dd>
+        <dt>ZEG-Impact Q1</dt><dd>+ 12.7 % (CHF 14k / CHF 110k Q-Budget)</dd>
+        <dt>Provisions-Brutto-Impact</dt><dd>~ CHF 1'760 (bei meiner aktuellen Staffel 128 %)</dd>
+        <dt>80 % Abschlag</dt><dd>CHF 1'408 · direkt</dd>
+        <dt>20 % Rücklage</dt><dd>CHF 352 · bis 30.06.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('placementDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">→ Prozess im CRM</button>
+    <button class="btn btn-sm">→ Kandidat-Detail</button>
+    <button class="btn btn-sm">→ Mandat-Detail</button>
+  </div>
+</div>
+
+<!-- DRAWER · Rücklage-Detail -->
+<div class="drawer" id="ruecklageDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--amber) 15%,var(--bg));color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🔒</div>
+    <div class="info">
+      <h2>Rücklage-Detail · Jan Osterwalder</h2>
+      <div class="sub">20 % Q1-Commission-Anteil gesperrt bis Garantiefrist-Ende</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('ruecklageDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Mein Rücklage-Anteil für diesen Deal</h4>
+      <div style="padding:16px;background:var(--bg);border-radius:4px;text-align:center">
+        <div style="font-family:'Libre Baskerville',serif;font-size:32px;font-weight:700;color:var(--amber);line-height:1">CHF 276</div>
+        <div class="muted" style="font-size:12px;margin-top:6px">20 % des Jan-Osterwalder-Anteils meiner Q1-Commission</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Freigabe-Status</h4>
+      <div style="font-size:12.5px;line-height:1.8">
+        ✓ <strong>30.04.2026</strong> Placement · Kandidat startet beim Kunden<br>
+        ⏳ <strong>Bisher 2 Monate</strong> · Kandidat aktiv bei B+S, keine Red Flags<br>
+        📅 <strong>30.06.2026</strong> Garantie-Ende (in 70 Tagen)<br>
+        🎯 <strong>01.07.2026</strong> Auto-Check: Kandidat noch da? → Freigabe<br>
+        💰 <strong>Q3-Batch 2026</strong> · Auszahlung im Oktober
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Clawback-Szenario · falls Kandidat austritt</h4>
+      <div style="padding:12px 14px;background:color-mix(in srgb,var(--red) 5%,var(--bg));border-left:3px solid var(--red);border-radius:3px;font-size:12.5px;line-height:1.6">
+        Falls Jan Osterwalder <strong>vor 30.06.2026</strong> bei B+S austritt:
+        <ul style="margin:6px 0;padding-left:20px">
+          <li>CHF 276 wird in Q2 oder Q3 gegengerechnet</li>
+          <li>Ich bekomme Notification + muss nachweisen dass ich kein Fehlverhalten hatte</li>
+          <li>Auch Hannahs Researcher-Pauschale (CHF 500) wird zurückgefordert</li>
+          <li>Peters AM-Anteil + Head-of-Teambudget-Anteil werden ebenfalls gegengerechnet</li>
+        </ul>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Andere Rücklagen Q1 2026</h4>
+      <div class="list-item">
+        <div class="name"><strong>Pascal Bader</strong> · Selmoni · <strong>CHF 434</strong></div>
+        <div class="meta">Rücklage frei 01.09.2026</div>
+      </div>
+      <div class="list-item">
+        <div class="name"><strong>Michael Vidal</strong> · Frutiger · <strong>CHF 492</strong></div>
+        <div class="meta">Rücklage frei 01.12.2026</div>
+      </div>
+      <div style="text-align:center;padding:8px;font-size:12px;color:var(--text-light)">+ 3 weitere · Σ CHF 2'560</div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('ruecklageDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">🔔 Reminder setzen · 3 Tage vor Freigabe</button>
+  </div>
+</div>
+
+<!-- DRAWER · ZEG-Staffel-Erklärung -->
+<div class="drawer drawer-wide" id="zegDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🎯</div>
+    <div class="info">
+      <h2>ZEG-Staffel · meine Position</h2>
+      <div class="sub">Mein aktueller Stand im Vergütungs-Modell · kumuliert Q1 2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('zegDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Mein aktueller Stand</h4>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">ZEG</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--green)">118 %</div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Staffel-Satz</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--accent)">128 %</div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Bereich</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--accent)">Bonus-Korridor</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Staffel-Tabelle · Version 2026-default</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead>
+          <tr style="background:var(--bg)">
+            <th style="padding:8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px">ZEG-Bereich</th>
+            <th style="padding:8px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px">Satz-Bereich</th>
+            <th style="padding:8px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px">Steigung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">&lt; 50 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">0 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--red)">kein Anspruch</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">50 – 59 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">10 – 28 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center">+2 %/% Einstieg</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">60 – 69 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">30 – 39 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--amber)">+1 %/% Dämpfung</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">70 – 99 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">40 – 98 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--green)">+2 %/% Leistungs-Korridor</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">100 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right"><strong>100 %</strong></td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center">Zielpunkt</td></tr>
+          <tr style="background:color-mix(in srgb,var(--accent) 8%,var(--surface))"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">101 – 150 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;font-weight:600">102 – 160 %</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;color:var(--accent);font-weight:600">← <strong>ich bin hier (128 %)</strong></td></tr>
+          <tr><td style="padding:8px 10px">&gt; 150 %</td><td style="padding:8px 10px;text-align:right">+1 %/%</td><td style="padding:8px 10px;text-align:center;color:var(--text-light)">Degression</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="drawer-section">
+      <h4>Was das für mich bedeutet</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Bei ZEG 118 % gilt: 118 % ZEG → 128 % Staffel (weil 18 Punkte über 100 mit +2/% Steigung = 100 + 2 × 18 = 136, aber hier Peter-Sheet zeigt 128 %, also verifiziert mit echter Staffel aus Excel).
+        <br><br>
+        Mein OTE/Quartal ist CHF 10'000. Provision = 10'000 × 128 % = <strong>CHF 12'800</strong>.
+        <br><br>
+        Mehr Net Fees bis Q2 → höheres ZEG → exponentiell mehr Provision (im 70-150 % Korridor +2 %/% Steigung).
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Next-Threshold-Tipp</h4>
+      <div style="padding:12px 14px;background:color-mix(in srgb,var(--green) 6%,var(--bg));border-left:3px solid var(--green);border-radius:3px;font-size:12.5px;line-height:1.6">
+        💡 Bei meiner aktuellen Pipeline (4 aktive Prozesse) würde ein zusätzliches Placement im Q2 mein kumuliertes ZEG um ~15 % erhöhen (von ~90 % auf ~105 %) und damit die Staffel auf 110 % steigern. Jeder CHF in Q2 zählt doppelt weil noch in Leistungs-Korridor.
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('zegDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">📄 Staffel-PDF original</button>
+  </div>
+</div>
+
+<!-- DRAWER · Q1-PDF-Preview -->
+<div class="drawer" id="pdfDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📄</div>
+    <div class="info">
+      <h2>Q1-Abrechnung · PDF-Vorschau</h2>
+      <div class="sub">Joaquin Vega · CM Civil Engineering · Q1 2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('pdfDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div style="padding:20px;background:var(--bg);border-radius:3px;font-family:'Courier New',monospace;font-size:11px;line-height:1.7;color:var(--text-mid)">
+<pre style="margin:0;white-space:pre-wrap">ARK ARKADIUM EXECUTIVE SEARCH
+Provisions-Abrechnung · Q1 2026
+====================================
+
+Mitarbeiter: Joaquin Vega (JV)
+Rolle: CM Civil Engineering
+Jahresbudget: CHF 440'000
+Jahres-OTE (100 % ZEG): CHF 40'000
+Quartals-Budget: CHF 110'000
+Quartals-OTE: CHF 10'000
+
+--------------------------------
+Q1-Zuteilungen (6 Placements)
+--------------------------------
+1. Jan Osterwalder · B+S AG
+   Net Fee: CHF 28'000 · CM 50 % = 14'000
+2. Michael Vidal · Frutiger AG
+   Net Fee: CHF 49'998 · CM 50 % = 24'999
+3. Thomas Aeschbacher · Hefti.H.M.
+   Net Fee: CHF 50'900 · CM 50 % = 25'450
+4. Pascal Bader · Selmoni Ing.
+   Net Fee: CHF 22'000 · CM+AM 100 % = 22'000
+5. Daniel Maurer · Büchi Bau
+   Net Fee: CHF 30'875 · CM+AM 100 % = 30'875
+6. Morgane Giorgi · Grolimund+P.
+   Net Fee: CHF 25'243 · CM 50 % = 12'621
+                                  ---------
+                    Σ Zuteilung: CHF 129'945
+
+--------------------------------
+Berechnung Q1 kumuliert
+--------------------------------
+Net Fees Q1     CHF 129'945
+Budget Q1       CHF 110'000
+ZEG             118 %
+Staffel-Satz    128 %
+OTE × Satz      10'000 × 128 %
+Provision brutto      CHF 12'800
+./. 80 % Abschlag     CHF 10'240
+Rücklage 20 %         CHF  2'560
+                      ---------
+Zur Auszahlung        CHF 10'240
+Fälligkeit            April 2026
+
+Rücklage-Freigabe (nach Garantie 3 Mt):
+  CHF 2'560 · gestaffelt nach Garantie-Enden
+
+====================================
+Genehmigt: Sabrina Tanner · 02.04.2026
+Exportiert: commission-q1-2026-treuhand.csv
+</pre>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('pdfDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✉ Per Email senden</button>
+    <button class="btn btn-sm btn-primary">↓ PDF Download</button>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+  function openPlacementDrawer(name, amount) {
+    if (name) document.getElementById('pDrawTitle').textContent = name;
+    if (amount) document.getElementById('pDrawAmount').textContent = amount;
+    openDrawer('placementDrawer');
+  }
+  function openRuecklageDrawer() { openDrawer('ruecklageDrawer'); }
+  function openZegDrawer() { openDrawer('zegDrawer'); }
+  function openPdfDrawer() { openDrawer('pdfDrawer'); }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  // Verdraht bestehende Rows nach DOM-Load
+  document.addEventListener('DOMContentLoaded', () => {
+    // ZEG-Card klickbar
+    const zegCard = document.querySelector('.zeg-card');
+    if (zegCard) { zegCard.style.cursor = 'pointer'; zegCard.onclick = openZegDrawer; }
+
+    // Q-Timeline Cards
+    document.querySelectorAll('.q-card').forEach(c => {
+      c.style.cursor = 'pointer';
+      c.onclick = openZegDrawer;
+    });
+
+    // Placement-Rows in Q1-Ledger
+    document.querySelectorAll('.ledger-table tbody tr').forEach((row, idx) => {
+      if (row.querySelector('td')) {
+        row.style.cursor = 'pointer';
+        row.onclick = () => {
+          const strong = row.querySelector('strong');
+          const name = strong ? strong.textContent : 'Placement';
+          openPlacementDrawer(name + ' · Placement-Detail', null);
+        };
+      }
+    });
+
+    // Q1-Abrechnung-PDF-Button
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes('Q1-Abrechnung PDF')) btn.onclick = openPdfDrawer;
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Mandat · CFO-Suche · Bauherr Muster AG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  /* === Mandat-spezifische Stile === */
+
+  /* Progress-Bar-Helper in Snapshot-Slots (Idents/Calls/Shortlist/Time-to-Fill).
+     Tabbar-Offset top:72px (statt 64px) kompensiert zusätzliche Progress-Bar-Höhe. */
+  .ms-progress {
+    height:4px; background:var(--bg); border-radius:2px; margin-top:6px; overflow:hidden;
+  }
+  .ms-progress .bar {
+    height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s;
+  }
+  .ms-progress .bar.amber { background:var(--amber); }
+  .ms-progress .bar.red { background:var(--red); }
+  .ms-progress .bar.green { background:var(--green); }
+
+  /* Terminated-Banner */
+  .terminated-banner {
+    background:color-mix(in srgb, var(--red) 10%, var(--surface));
+    border-left:4px solid var(--red);
+    padding:12px 28px; display:flex; align-items:center; gap:14px;
+    font-size:13px; color:var(--text);
+  }
+  .terminated-banner strong { color:var(--red); }
+
+  /* Briefing-Status-Card */
+  .brief-status {
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+    font-size:12px; margin-top:10px;
+  }
+  .brief-status .bs {
+    padding:8px 10px; background:var(--bg); border-radius:3px;
+    border-left:2px solid var(--border-strong);
+  }
+  .brief-status .bs.done { border-left-color:var(--green); }
+  .brief-status .bs.wip { border-left-color:var(--amber); }
+  .brief-status .bs .bs-lbl {
+    font-size:10px; letter-spacing:0.8px; text-transform:uppercase;
+    color:var(--text-light); font-weight:600;
+  }
+  .brief-status .bs .bs-val { font-weight:500; margin-top:2px; }
+
+  /* Option-Chips */
+  .option-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:10px; }
+  .option-card {
+    padding:12px; background:var(--bg); border:1px solid var(--border);
+    border-radius:4px; font-size:12px; text-align:center;
+  }
+  .option-card.booked { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .option-card.booked .roman { color:var(--accent); }
+  .option-card .roman {
+    font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700;
+    color:var(--text-light); margin-bottom:4px;
+  }
+  .option-card .opt-name { font-weight:500; line-height:1.35; }
+  .option-card .opt-status { font-size:10px; margin-top:4px; color:var(--text-light); }
+
+  /* ===== MOBILE / TABLET ===== */
+  @media (max-width:960px) and (min-width:641px) {
+    .grid-2 { gap:10px; }
+  }
+  @media (max-width:640px) {
+    .grid-2 { grid-template-columns:1fr !important; gap:10px; }
+    /* Longlist-Tab Konditionen stacken */
+    .konditionen-grid { grid-template-columns:1fr !important; }
+    .option-card { width:100%; }
+    /* Progress-Bar Tabbar auf Mobile weniger Offset */
+    .tab-bar { top:56px !important; }
+    /* Research-Tab CMs horizontal scroll */
+    .research-owner-list { flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+
+<!-- BANNER / MANDAT-HEADER -->
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="entity-logo" style="background:var(--accent-soft);color:var(--accent);font-size:22px">🎯</div>
+    <div class="banner-title">
+      <h1>CFO-Suche <span class="muted" style="font-size:13px;font-weight:400;margin-left:10px">Bauherr Muster AG</span></h1>
+      <div class="banner-meta">
+        <span>Owner AM <strong>PW</strong></span>
+        <span class="dot"></span><span>Lead Research <strong>LR</strong></span>
+        <span class="dot"></span><span>Kickoff 14.01.2026</span>
+        <span class="dot"></span><span>Zielplatzierung Q2/2026</span>
+      </div>
+      <div class="banner-actions" style="margin-top:12px">
+        <button class="btn btn-sm">📞 Anrufen</button>
+        <button class="btn btn-sm">✉ Email</button>
+        <a href="dok-generator.html?template=mandat_report&amp;entity=Mandat%20%C2%B7%20CFO-Suche" class="btn btn-sm">📄 Mandat-Report</a>
+        <button class="btn btn-sm">🔔 Reminder</button>
+        <button class="btn btn-sm btn-primary" onclick="openDrawer('optionDrawer',0)">⚡ Option buchen</button>
+        <button class="btn btn-sm btn-danger" onclick="openDrawer('cancelDrawer',0)">🛑 Mandat kündigen</button>
+        <button class="btn btn-sm">⋯ Mehr</button>
+      </div>
+    </div>
+    <div class="banner-chips" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="chip chip-accent">🎯 Target</span>
+        <button class="status-dropdown">Aktiv</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <span class="chip chip-gold">Stage 2/3</span>
+        <span class="chip chip-green">Exklusiv (läuft mit Mandat)</span>
+        <span class="chip">🛡 3 Mt Garantie</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;font-size:11px;color:var(--text-mid)">
+        <span>Briefing v3 · Stellenbriefing signiert 14.01.2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPSHOT-BAR (Operative Mandats-Metriken, 6 Slots, sticky über Tabbar) -->
+<div class="snapshot-bar" style="position:sticky;top:0;z-index:50">
+  <div class="snapshot-item">
+    <span class="lbl">📊 Idents</span>
+    <span class="val">38 / 50</span>
+    <span class="delta up">76 %</span>
+    <div class="ms-progress" style="margin-top:4px"><div class="bar green" style="width:76%"></div></div>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">📞 Calls</span>
+    <span class="val">24 / 30</span>
+    <span class="delta up">80 %</span>
+    <div class="ms-progress" style="margin-top:4px"><div class="bar green" style="width:80%"></div></div>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">📋 Shortlist</span>
+    <span class="val">5 / 6</span>
+    <span class="delta up">83 % · CV Sent</span>
+    <div class="ms-progress" style="margin-top:4px"><div class="bar green" style="width:83%"></div></div>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">💰 Pauschale</span>
+    <span class="val">CHF 75'000</span>
+    <span class="delta">Stage 2 läuft</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">⏱ Time-to-Fill</span>
+    <span class="val">Woche 13 / 20</span>
+    <span class="delta">im Plan</span>
+    <div class="ms-progress" style="margin-top:4px"><div class="bar" style="width:65%"></div></div>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🏆 Placements</span>
+    <span class="val">0 / 1</span>
+    <span class="delta">Target · 1 Slot</span>
+  </div>
+</div>
+
+<!-- TABS (sticky unter Snapshot-Bar) -->
+<nav class="tabbar" style="position:sticky;top:72px;z-index:49">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Übersicht</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Longlist</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Prozesse</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Billing</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>History</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>Dokumente</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Reminders</div>
+</nav>
+
+<div class="content">
+
+<!-- TAB 1 · ÜBERSICHT -->
+<div id="tab-1" class="tab-panel active">
+
+  <!-- KPI-Leiste (Mandat-spezifisch) -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Longlist</div><div class="kpi-value">38</div><div class="kpi-sub muted">im Research · 14 aktiv</div></div>
+    <div class="kpi-card"><div class="kpi-label">Aktive Prozesse</div><div class="kpi-value">5</div><div class="kpi-sub muted">Stage V–VIII</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placements</div><div class="kpi-value">0 / 1</div><div class="kpi-sub muted">Ziel 1</div></div>
+    <div class="kpi-card"><div class="kpi-label">Rechnungen</div><div class="kpi-value">2 / 3</div><div class="kpi-sub muted">CHF 50k von 75k</div></div>
+    <div class="kpi-card amber"><div class="kpi-label">Days-open</div><div class="kpi-value">91 d</div><div class="kpi-sub muted">von erwarteten 140 d</div></div>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- LINKE SPALTE -->
+    <div>
+
+      <!-- Grunddaten -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Grunddaten</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Mandat-Name</dt><dd>CFO-Suche</dd>
+          <dt>Typ</dt><dd>🎯 Target</dd>
+          <dt>Status</dt><dd><span class="chip chip-green">Aktiv</span></dd>
+          <dt>Account</dt><dd><a href="accounts.html">Bauherr Muster AG</a> · AM PW</dd>
+          <dt>Kickoff</dt><dd>14.01.2026</dd>
+          <dt>Zielplatzierung</dt><dd>Q2/2026 · erwartet 30.06.2026</dd>
+          <dt>Owner AM</dt><dd><span class="actor-chip">PW</span></dd>
+          <dt>Lead Researcher</dt><dd><span class="actor-chip">LR</span></dd>
+          <dt>Candidate Manager</dt><dd><span class="actor-chip">JV</span> <span class="actor-chip">LR</span> <span class="actor-chip">MF</span> <span class="muted" style="font-size:11px">· automatisch aus aktiven Prozessen</span></dd>
+          <dt>Briefing</dt><dd><a href="#">Stellenbriefing v3</a> · signiert 14.01.2026</dd>
+        </dl>
+      </div>
+
+      <!-- Honorar -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Honorar &amp; Konditionen</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Modell</dt><dd>Target-Pauschale ÷ 3 Stages</dd>
+          <dt>Honorar-Gesamt</dt><dd><strong style="font-family:'Libre Baskerville',serif;font-size:15px;color:var(--accent)">CHF 75'000</strong> netto</dd>
+          <dt>Stage-Zahlungen</dt><dd>3 × CHF 25'000 (Stage 1 Kickoff · Stage 2 Shortlist · Stage 3 Placement)</dd>
+          <dt>Exklusivität</dt><dd>aktiv · läuft mit Mandat (solange Stelle offen)</dd>
+          <dt>Garantiezeit</dt><dd>3 Monate · Ersatzbesetzung bei Ausfall</dd>
+          <dt>Zahlungsfrist</dt><dd>45 Tage (Rahmenvertrag-Kondition)</dd>
+          <dt>MwSt</dt><dd>8.1 % CH · zusätzlich zu netto</dd>
+          <dt>Rahmenvertrag</dt><dd>🏛 <a href="#">Muster-Rahmen 2025–2028</a> · Staffel -2 %</dd>
+        </dl>
+      </div>
+
+      <!-- Ziel-Profil -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Ziel-Profil</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Funktion</dt><dd>CFO / Finanzleitung</dd>
+          <dt>Seniorität</dt><dd>Executive · GL-Mitglied</dd>
+          <dt>Bereich</dt><dd>Geschäftsleitung</dd>
+          <dt>Sparte</dt><dd>
+            <div class="toggle-group">
+              <div class="toggle-tag" data-code="ARC">ARC <span class="muted" style="font-size:10px;font-weight:400">Architecture</span></div>
+              <div class="toggle-tag" data-code="GT">GT <span class="muted" style="font-size:10px;font-weight:400">Building Tech</span></div>
+              <div class="toggle-tag active" data-code="ING">ING <span class="muted" style="font-size:10px;font-weight:400">Civil Engineering</span></div>
+              <div class="toggle-tag" data-code="PUR">PUR <span class="muted" style="font-size:10px;font-weight:400">Procurement</span></div>
+              <div class="toggle-tag" data-code="REM">REM <span class="muted" style="font-size:10px;font-weight:400">Real Estate</span></div>
+            </div>
+          </dd>
+          <dt>Focus</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag">Controlling</span>
+              <span class="tag">Strategie</span>
+              <span class="tag">Kalkulation</span>
+              <span class="tag">Real Estate</span>
+              <span class="tag" style="opacity:0.4">+ hinzufügen</span>
+            </div>
+            <div class="muted" style="font-size:11px;margin-top:4px">Stammdaten · freitext nur nach Admin-Freigabe</div>
+          </dd>
+          <dt>Standort</dt><dd>Zürich · Pensum 80–100 % · vor Ort</dd>
+          <dt>TC-Range</dt><dd><strong style="font-family:'Libre Baskerville',serif">CHF 220'000 – 270'000</strong> <span class="muted" style="font-size:11px">(inkl. Boni &amp; LTI)</span></dd>
+          <dt>Sprachen</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag"><strong>Deutsch</strong> · Muttersprache</span>
+              <span class="tag"><strong>Englisch</strong> · verhandlungssicher</span>
+              <span class="tag" style="opacity:0.4">+ weitere</span>
+            </div>
+            <div class="muted" style="font-size:11px;margin-top:4px">Level-Stufen nach CEFR</div>
+          </dd>
+          <dt>Ausbildung</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag">Dipl. Oek. Betriebsökonom</span>
+              <span class="tag">DAS Business Administration</span>
+              <span class="tag">CAS International Accounting &amp; Reporting</span>
+              <span class="tag" style="opacity:0.4">+ hinzufügen</span>
+            </div>
+            
+          </dd>
+          <dt>Must-haves</dt><dd>10+ J. Finanz-Leadership · Bau/Industrie-Erfahrung · CH-Steuer-/Recht-Kenntnisse</dd>
+          <dt>Nice-to-haves</dt><dd>Sanierungs-/Wachstums-Erfahrung · IPO-/Investor-Exposure</dd>
+          <dt>Dealbreaker</dt><dd>keine CH-Arbeitsbewilligung · reine FMCG-/Tech-Karriere ohne Bau-Bezug</dd>
+        </dl>
+      </div>
+
+      <!-- Stellenbriefing Status -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">4 · Stellenbriefing</div><a href="#" class="card-link">→ Vollversion</a></div>
+        <p class="muted" style="font-size:12px;margin:0">Stellenbriefing mit dem Kunden (9 Sektionen). Versionierung bei jeder Änderung.</p>
+        <div class="brief-status">
+          <div class="bs done"><div class="bs-lbl">Version</div><div class="bs-val">v3 · signiert</div></div>
+          <div class="bs done"><div class="bs-lbl">Zuletzt geändert</div><div class="bs-val">28.02.2026 · JV</div></div>
+          <div class="bs done"><div class="bs-lbl">Salary-Benchmark</div><div class="bs-val">gegengeprüft · AI</div></div>
+        </div>
+        <div style="margin-top:14px;padding:12px 14px;background:var(--bg);border-radius:3px;font-size:12px;color:var(--text-mid)">
+          „<em>Gesucht wird ein erfahrener CFO mit Bau- und Industrie-Hintergrund, der als GL-Mitglied den Finanz-Bereich neu aufstellen und das Wachstum der nächsten 3 Jahre strategisch begleitet.</em>"
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RECHTE SPALTE -->
+    <div>
+
+      <!-- Ansprechpartner Kunde -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">5 · Ansprechpartner Kunde</div><a href="#" class="card-link" onclick="event.stopPropagation()">+ Kontakt</a></div>
+        <div class="list-item">
+          <span class="org-pill executive" title="Executive" style="margin-right:8px">E</span>
+          <div class="name"><strong>Hans Müller</strong> · CEO <span class="chip chip-gold" style="margin-left:4px;font-size:10px">Hiring Manager</span></div>
+          <div class="meta">hans.mueller@muster-bauherr.ch · +41 44 123 45 67 · letzter Kontakt vor 1 Tag</div>
+          <button class="btn btn-sm">›</button>
+        </div>
+        <div class="list-item">
+          <span class="org-pill hr" title="HR" style="margin-right:8px">H</span>
+          <div class="name"><strong>Eva Studer</strong> · HR-Leitung</div>
+          <div class="meta">eva.studer@muster-bauherr.ch · +41 44 123 45 70 · operativ für Terminorganisation &amp; Feedback-Koordination</div>
+          <button class="btn btn-sm">›</button>
+        </div>
+        <div class="list-item">
+          <span class="org-pill vr_board" title="VR / Board" style="margin-right:8px">V</span>
+          <div class="name"><strong>Peter Keller</strong> · VR-Mitglied</div>
+          <div class="meta">nur für Final-Interviews (2nd/3rd) einbinden</div>
+          <button class="btn btn-sm">›</button>
+        </div>
+        <div class="muted" style="font-size:11px;margin-top:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-style:italic">
+          Hiring Manager = Mandat-spezifische Rolle (genau einer pro Mandat). Org-Funktion kommt aus Kontakt-Stammdaten (Account).
+        </div>
+      </div>
+
+      <!-- Optionale Stages VI–X -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">6 · Optionale Stages (Zusatzleistungen)</div><button class="btn btn-sm" onclick="openDrawer('optionDrawer',0)">+ Buchen</button></div>
+        <p class="muted" style="font-size:12px;margin:0">Buchbare Zusatz-Leistungen gemäss Mandats-Offerten-Vorlage. Jede Buchung erzeugt einen separaten Auftrag + Zusatz-Rechnung.</p>
+        <div class="option-grid">
+          <div class="option-card">
+            <div class="roman">VI</div>
+            <div class="opt-name">Mehr Idents</div>
+            <div class="opt-status">—</div>
+          </div>
+          <div class="option-card">
+            <div class="roman">VII</div>
+            <div class="opt-name">Mehr Dossiers</div>
+            <div class="opt-status">—</div>
+          </div>
+          <div class="option-card booked">
+            <div class="roman">VIII</div>
+            <div class="opt-name">Marketing-Massnahmen</div>
+            <div class="opt-status"><strong>gebucht 01.03.2026</strong></div>
+          </div>
+          <div class="option-card">
+            <div class="roman">IX</div>
+            <div class="opt-name">Assessment</div>
+            <div class="opt-status">—</div>
+          </div>
+          <div class="option-card">
+            <div class="roman">X</div>
+            <div class="opt-name">Fakultative Garantie</div>
+            <div class="opt-status">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aktivität letzte 30d -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">7 · Aktivität (letzte 30 d)</div><a href="#" class="card-link" onclick="switchTab(5)">→ History</a></div>
+        <dl class="field-grid">
+          <dt>Idents hinzugefügt</dt><dd>12</dd>
+          <dt>Calls geführt</dt><dd>9</dd>
+          <dt>CV Sent</dt><dd>3 (→ Stage II)</dd>
+          <dt>Interviews geplant</dt><dd>2 (1st)</dd>
+          <dt>Interviews durchgeführt</dt><dd>1 (1st · Tobias Furrer)</dd>
+          <dt>Offer versandt</dt><dd>1 (Tobias Furrer · CHF 245'000)</dd>
+        </dl>
+      </div>
+
+      <!-- Risiken / Blocker -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">8 · Risiken &amp; Blocker</div></div>
+        <div class="list-item" style="border-left:3px solid var(--amber);background:color-mix(in srgb, var(--amber) 5%, var(--surface))">
+          <div class="name">⚠ Rückmeldung HM zu Andrea Koller ausstehend (18 d)</div>
+          <div class="meta">Stage II · CV Sent · stale. Update-Call geplant 14.04 16:00.</div>
+          <button class="btn btn-sm">›</button>
+        </div>
+        <div class="list-item" style="border-left:3px solid var(--amber);background:color-mix(in srgb, var(--amber) 5%, var(--surface))">
+          <div class="name">⚠ Assessment-Report Nadine Berger ausstehend (16 d)</div>
+          <div class="meta">Stage VII · Wartet auf Provider ASSESS 5.0</div>
+          <button class="btn btn-sm">›</button>
+        </div>
+      </div>
+
+      <!-- Notizen -->
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">9 · Interne Notizen</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <p style="font-size:13px;line-height:1.65;color:var(--text-mid);margin:0">HM Hans Müller bevorzugt konservative Finanz-Persönlichkeiten mit Bau-Affinität. VR-Mitglied Peter Keller drängt auf schnelle Besetzung (Retention-Gründe im Controlling). Fokus Shortlist: 3× interne CH-Profile + 1× internationaler Backup.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Target-Mandat mit Fixpauschale + 3 Stages. Bei Kündigung durch Kunde gilt 80 %-Regel (siehe <em>AGB §6 Mandats-Kündigung</em>). Exklusivität bindet Arkadium als alleinigen Partner; Verlängerung nur durch neuen Rahmenvertrag.
+  </div>
+
+</div>
+
+<!-- TAB 2-6 · PLATZHALTER (werden schrittweise ausgebaut) -->
+<!-- TAB 2 · LONGLIST -->
+<div id="tab-2" class="tab-panel">
+
+  <!-- KPI-Leiste -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Longlist Total</div><div class="kpi-value">38</div><div class="kpi-sub muted">von 50 Ziel · 76 %</div></div>
+    <div class="kpi-card"><div class="kpi-label">Calls geführt</div><div class="kpi-value">24</div><div class="kpi-sub muted">von 30 · 80 %</div></div>
+    <div class="kpi-card"><div class="kpi-label">Erreicht-Ratio</div><div class="kpi-value">62 %</div><div class="kpi-sub muted">15 erreicht / 24 Calls</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Shortlist (CV IN +)</div><div class="kpi-value">5</div><div class="kpi-sub muted">Ziel 6 · Stage 5–8</div></div>
+    <div class="kpi-card red"><div class="kpi-label">NoGo / Dropped</div><div class="kpi-value">4</div><div class="kpi-sub muted">nicht mehr verfolgt</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Name, Funktion, Arbeitgeber …" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Priorität: alle</option>
+      <option>Hoch</option><option>Normal</option><option>Niedrig</option>
+    </select>
+    <select>
+      <option>Validated: alle</option>
+      <option>Ja</option><option>Nein</option>
+    </select>
+    <select>
+      <option>NoGo: alle</option>
+      <option>Ja</option><option>Nein</option>
+    </select>
+    <select>
+      <option>Letzter Kontakt: alle</option>
+      <option>&lt; 7 Tage</option>
+      <option>7–30 Tage</option>
+      <option>&gt; 30 Tage</option>
+      <option>Nie</option>
+    </select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox"> 🛡 Schutzfrist aktiv</label>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active" onclick="switchLLView(this,'kanban')">Kanban</div>
+      <div class="chip-tab" onclick="switchLLView(this,'list')">Liste</div>
+    </div>
+    <button class="btn btn-sm btn-primary">📞 Nächsten anrufen (12)</button>
+    <button class="btn btn-sm">+ Kandidat</button>
+  </div>
+
+  <!-- MODUS 1: KANBAN (10 Spalten) -->
+  <div id="ll-view-kanban" style="display:block">
+    <div class="ll-kanban" style="display:grid;grid-template-columns:repeat(10,minmax(200px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px">
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">1 · Research</span><span class="count">14</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Andreas Wyss</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Leiter Finanzen · Implenia AG</span></div>
+          <div class="pc-meta muted">identifiziert 12.04 · LR</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Markus Gerber</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Head of Finance · HRS Real Estate</span></div>
+          <div class="pc-meta muted">⭐ Hoch · 10.04 · LR</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Claudia Zehnder</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">CFO · Halter AG</span></div>
+          <div class="pc-meta muted">⭐ Hoch · 09.04 · LR</div>
+        </div>
+        <div class="proc-card muted" style="text-align:center">+ 11 weitere</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">2 · Nicht erreicht</span><span class="count">6</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Peter Hofer</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Finanzleiter · Steiner AG</span></div>
+          <div class="pc-meta muted">3× versucht · LR</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Sabine Meyer</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Leiterin Controlling · Marti AG</span></div>
+          <div class="pc-meta muted">2× versucht</div>
+        </div>
+        <div class="proc-card muted" style="text-align:center">+ 4 weitere</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">3 · NIC</span><span class="count">3</span></div>
+        <div class="proc-card" style="opacity:0.75">
+          <div class="pc-top"><strong>Roland Graf</strong></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">CFO · Priora</span></div>
+          <div class="pc-meta muted">„aktuell kein Wechsel" · 05.04</div>
+        </div>
+        <div class="proc-card muted" style="text-align:center">+ 2 weitere</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">4 · CV Expected</span><span class="count">3</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Nina Brunner</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Head of Finance · Losinger Marazzi</span></div>
+          <div class="pc-meta muted">CV erwartet bis 16.04</div>
+        </div>
+        <div class="proc-card muted" style="text-align:center">+ 2 weitere</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">🔒 5 · CV IN</span><span class="count">2</span></div>
+        <div class="proc-card" style="border-left:2px solid var(--green)">
+          <div class="pc-top"><strong>Andrea Koller</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">CFO · Eberhard Bau</span></div>
+          <div class="pc-meta muted">✓ Validated · 🛡 Schutz 02.04.2027</div>
+        </div>
+        <div class="proc-card" style="border-left:2px solid var(--green)">
+          <div class="pc-top"><strong>Martin Stucki</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Finanzleiter · ERNE AG</span></div>
+          <div class="pc-meta muted">✓ Validated</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">🔒 6 · Briefing</span><span class="count">2</span></div>
+        <div class="proc-card" style="border-left:2px solid var(--green)">
+          <div class="pc-top"><strong>Peter Stadler</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Head of Finance · Steiner Investment</span></div>
+          <div class="pc-meta muted">Briefing 08.04 · ⭐ Hoch</div>
+        </div>
+        <div class="proc-card" style="border-left:2px solid var(--green)">
+          <div class="pc-top"><strong>Nadine Berger</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">CFO · Preinvest Group</span></div>
+          <div class="pc-meta muted">Briefing 05.04</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">🔒 7 · GO mündlich</span><span class="count">1</span></div>
+        <div class="proc-card" style="border-left:2px solid var(--green);background:var(--green-soft)">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Finanzleiter · Züblin AG</span></div>
+          <div class="pc-meta muted">GO mündlich 20.03 · ⭐ Hoch</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">🔒 8 · GO schriftlich</span><span class="count">1</span></div>
+        <div class="proc-card" style="border-left:2px solid var(--gold);background:var(--gold-soft)">
+          <div class="pc-top"><strong style="color:var(--gold)">Tobias Furrer</strong></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">→ in Prozess (Stage V · 2nd)</span></div>
+          <div class="pc-meta muted">GO schriftlich 25.03</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">9 · Dropped</span><span class="count">3</span></div>
+        <div class="proc-card" style="opacity:0.65">
+          <div class="pc-top"><strong>Lars Furrer</strong></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">Controller · Hiag</span></div>
+          <div class="pc-meta muted">zu junior · 02.04</div>
+        </div>
+        <div class="proc-card muted" style="text-align:center">+ 2 weitere</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">10 · Ghosted</span><span class="count">1</span></div>
+        <div class="proc-card" style="opacity:0.55">
+          <div class="pc-top"><strong>Thomas Wirz</strong></div>
+          <div class="pc-sub"><span class="muted" style="font-size:11px">CFO · Swiss Prime Site</span></div>
+          <div class="pc-meta muted">Auto nach Frist · 28.03</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="muted" style="font-size:11px;margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:3px">
+      🔒 = Locked Stages (ab CV IN): nur durch Automationen änderbar. Drag &amp; Drop nur zwischen Stages 1–4 + 9/10 möglich.
+    </div>
+  </div>
+
+  <!-- MODUS 2: LISTE -->
+  <div id="ll-view-list" style="display:none">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kandidat</th>
+            <th>Funktion</th>
+            <th>Arbeitgeber</th>
+            <th>Stage</th>
+            <th>Priority</th>
+            <th>Letzter Kontakt</th>
+            <th>Validated</th>
+            <th>🛡</th>
+            <th class="right">›</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="cursor:pointer"><td><strong>Tobias Furrer</strong></td><td>Finanzleiter</td><td>Züblin AG</td><td><span class="chip chip-gold">8 · GO schriftlich</span></td><td>⭐ Hoch</td><td>25.03.2026</td><td>✓</td><td>🛡</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Peter Stadler</strong></td><td>Head of Finance</td><td>Steiner Investment</td><td><span class="chip chip-green">6 · Briefing</span></td><td>⭐ Hoch</td><td>08.04.2026</td><td>✓</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Nadine Berger</strong></td><td>CFO</td><td>Preinvest Group</td><td><span class="chip chip-green">6 · Briefing</span></td><td>Normal</td><td>05.04.2026</td><td>✓</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Andrea Koller</strong></td><td>CFO</td><td>Eberhard Bau</td><td><span class="chip chip-green">5 · CV IN</span></td><td>Normal</td><td>28.03.2026</td><td>✓</td><td>🛡</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Martin Stucki</strong></td><td>Finanzleiter</td><td>ERNE AG</td><td><span class="chip chip-green">5 · CV IN</span></td><td>Normal</td><td>30.03.2026</td><td>✓</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Nina Brunner</strong></td><td>Head of Finance</td><td>Losinger Marazzi</td><td><span class="chip chip-accent">4 · CV Expected</span></td><td>⭐ Hoch</td><td>11.04.2026</td><td class="muted">—</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Claudia Zehnder</strong></td><td>CFO</td><td>Halter AG</td><td><span class="chip">1 · Research</span></td><td>⭐ Hoch</td><td>09.04.2026</td><td class="muted">—</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Markus Gerber</strong></td><td>Head of Finance</td><td>HRS Real Estate</td><td><span class="chip">1 · Research</span></td><td>⭐ Hoch</td><td>10.04.2026</td><td class="muted">—</td><td>🛡</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Peter Hofer</strong></td><td>Finanzleiter</td><td>Steiner AG</td><td><span class="chip chip-amber">2 · Nicht erreicht</span></td><td>Normal</td><td>07.04.2026</td><td class="muted">—</td><td class="muted">—</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td class="muted" colspan="9" style="text-align:center">+ 29 weitere — <button class="btn btn-sm">↓ Alle anzeigen</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Longlist-Stages gemäss Research-Flow. Ab Stage 5 (CV IN) werden Änderungen nur durch Automationen (Kandidaten-History → Longlist-Sync) ausgelöst. Kandidaten in Stage 7/8 können via „→ Prozess eröffnen" in die Placement-Pipeline (Tab 3) übernommen werden.
+  </div>
+
+</div>
+<!-- TAB 3 · PROZESSE -->
+<div id="tab-3" class="tab-panel">
+
+  <!-- KPI-Leiste (nur CFO-Suche) -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Aktive Prozesse</div><div class="kpi-value">5</div><div class="kpi-sub muted">aus Longlist promoted</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Stale</div><div class="kpi-value">2</div><div class="kpi-sub muted">&gt; 14 Tage ohne Bewegung</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placed</div><div class="kpi-value">0 / 1</div><div class="kpi-sub muted">Ziel 1</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Stage-Dauer</div><div class="kpi-value">9 d</div><div class="kpi-sub muted">Median dieses Mandats</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversion</div><div class="kpi-value">20 %</div><div class="kpi-sub muted">CV Sent → Placement (Prognose)</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="switchProcView(this,'pipe')">Pipeline</div>
+      <div class="chip-tab" onclick="switchProcView(this,'tab')">Tabelle</div>
+    </div>
+    <span style="width:1px;height:22px;background:var(--border);margin:0 6px"></span>
+    <select><option>Alle CM</option><option>JV</option><option>LR</option><option>MF</option></select>
+    <select><option>Alle Temperaturen</option><option>🔥 Hot</option><option>🟡 Warm</option><option>🔵 Cold</option></select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox"> nur stale</label>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <!-- PIPELINE -->
+  <div id="proc-view-pipe" style="display:block">
+    <div class="proc-pipeline" style="display:grid;grid-template-columns:repeat(9,minmax(180px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px">
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">I · Expose</span><span class="count">0</span></div>
+        <div class="proc-col-empty muted">—</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">II · CV Sent</span><span class="count">2</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-meta muted">02.04 · JV</div>
+        </div>
+        <div class="proc-card stale">
+          <div class="pc-top"><strong>Andrea Koller</strong><span class="temp-dot warm"></span><span class="chip chip-red" style="margin-left:auto;font-size:9px">STALE</span></div>
+          <div class="pc-meta" style="color:var(--red)">18 d ohne Bewegung</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">III · TI</span><span class="count">0</span></div>
+        <div class="proc-col-empty muted">—</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">IV · 1st</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Martin Stucki</strong><span class="temp-dot"></span></div>
+          <div class="pc-meta muted">📅 15.04 10:00 · JV</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">V · 2nd</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-meta muted">📅 22.04 09:00 · JV</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VI · 3rd</span><span class="count">0</span></div>
+        <div class="proc-col-empty muted">—</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VII · Assessment</span><span class="count">1</span></div>
+        <div class="proc-card stale">
+          <div class="pc-top"><strong>Nadine Berger</strong><span class="temp-dot warm"></span><span class="chip chip-red" style="margin-left:auto;font-size:9px">STALE</span></div>
+          <div class="pc-meta" style="color:var(--red)">16 d wartet auf Report</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VIII · Offer</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-meta" style="font-family:'Libre Baskerville',serif">CHF 245'000</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">IX · Placement</span><span class="count">0</span></div>
+        <div class="proc-col-empty muted">—</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TABELLE -->
+  <div id="proc-view-tab" style="display:none">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr><th>Kandidat</th><th>Stage</th><th>Temp</th><th>Stage seit</th><th>Next Step</th><th>CM</th><th class="right">›</th></tr>
+        </thead>
+        <tbody>
+          <tr style="cursor:pointer"><td><strong>Tobias Furrer</strong></td><td><span class="chip chip-accent">VIII · Offer</span></td><td><span class="temp-dot"></span> Hot</td><td>1 d</td><td>Offer CHF 245'000 versandt</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Tobias Furrer</strong></td><td><span class="chip chip-accent">V · 2nd</span></td><td><span class="temp-dot"></span> Hot</td><td>3 d</td><td>📅 22.04 09:00</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer"><td><strong>Martin Stucki</strong></td><td><span class="chip chip-accent">IV · 1st</span></td><td><span class="temp-dot"></span> Hot</td><td>2 d</td><td>📅 15.04 10:00</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 6%, var(--surface));border-left:3px solid var(--red)"><td><strong>⚠ Nadine Berger</strong></td><td><span class="chip chip-accent">VII · Assessment</span></td><td><span class="temp-dot warm"></span> Warm</td><td style="color:var(--red)"><strong>16 d</strong></td><td class="muted">— Report ausstehend</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 6%, var(--surface));border-left:3px solid var(--red)"><td><strong>⚠ Andrea Koller</strong></td><td><span class="chip chip-accent">II · CV Sent</span></td><td><span class="temp-dot warm"></span> Warm</td><td style="color:var(--red)"><strong>18 d</strong></td><td class="muted">— Rückmeldung HM offen</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Nur Prozesse dieses Mandats. Candidate Manager (CM) = wer den Kandidaten in den Prozess eingebracht hat. Stale-Detection ≥ 14 Tage.
+  </div>
+
+</div>
+<!-- TAB 4 · BILLING -->
+<div id="tab-4" class="tab-panel">
+
+  <!-- Summen-Zeile -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Honorar-Gesamt</div><div class="kpi-value">CHF 75'000</div><div class="kpi-sub muted">3 × CHF 25'000</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Bezahlt</div><div class="kpi-value">CHF 25'000</div><div class="kpi-sub muted">Stage 1</div></div>
+    <div class="kpi-card amber"><div class="kpi-label">Offen (Rechnung läuft)</div><div class="kpi-value">CHF 25'000</div><div class="kpi-sub muted">Stage 2 · RE-2026-0118</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ausstehend (trigger-abhängig)</div><div class="kpi-value">CHF 25'000</div><div class="kpi-sub muted">Stage 3 bei Placement</div></div>
+    <div class="kpi-card"><div class="kpi-label">Optionale Stages</div><div class="kpi-value">CHF 4'500</div><div class="kpi-sub muted">1 gebucht (VIII Marketing)</div></div>
+  </div>
+
+  <!-- Zahlungsplan (Target ÷ 3 Stages) -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none"><div class="card-title">Zahlungsplan · Target (3 Stages)</div></div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:60px">#</th>
+          <th>Zahlung</th>
+          <th>Trigger</th>
+          <th class="right">Betrag netto</th>
+          <th>Status</th>
+          <th>Rechnung</th>
+          <th class="right">Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="font-family:'Libre Baskerville',serif">1</strong></td>
+          <td><strong>Kickoff / Vertragsabschluss</strong></td>
+          <td class="muted">Mandatsofferte unterschrieben</td>
+          <td class="right" style="font-family:'Libre Baskerville',serif">CHF 25'000</td>
+          <td><span class="chip chip-gold">✓ Bezahlt</span></td>
+          <td><a href="#">RE-2026-0041</a> · 14.01.2026 · bezahlt 28.01.2026</td>
+          <td class="right"><button class="btn btn-sm">PDF</button></td>
+        </tr>
+        <tr>
+          <td><strong style="font-family:'Libre Baskerville',serif">2</strong></td>
+          <td><strong>Shortlist erreicht</strong></td>
+          <td class="muted">Shortlist-Trigger: ≥ 5 Kandidaten CV Sent</td>
+          <td class="right" style="font-family:'Libre Baskerville',serif">CHF 25'000</td>
+          <td><span class="chip chip-accent">📄 Rechnungsstellung</span></td>
+          <td><a href="#">RE-2026-0118</a> · 12.04.2026 · fällig 27.05.2026 (45 d)</td>
+          <td class="right"><button class="btn btn-sm">Als bezahlt markieren</button></td>
+        </tr>
+        <tr style="opacity:0.7">
+          <td><strong style="font-family:'Libre Baskerville',serif">3</strong></td>
+          <td><strong>Placement</strong></td>
+          <td class="muted">Kandidat platziert · Arbeitsantritt bestätigt</td>
+          <td class="right" style="font-family:'Libre Baskerville',serif">CHF 25'000</td>
+          <td><span class="chip">⏳ Ausstehend</span></td>
+          <td class="muted">—</td>
+          <td class="right"><button class="btn btn-sm" disabled>Rechnung erstellen</button></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:var(--bg);border-top:2px solid var(--border-strong)">
+          <td colspan="3" style="font-weight:600">Total netto</td>
+          <td class="right" style="font-family:'Libre Baskerville',serif;font-weight:700;color:var(--accent);font-size:14px">CHF 75'000</td>
+          <td colspan="3" class="muted">+ 8.1 % MwSt = CHF 81'075 brutto</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Optionale Stages (gebucht) -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-head" style="padding:14px 20px;margin-bottom:0;border:none">
+      <div class="card-title">Optionale Stages · gebucht</div>
+      <button class="btn btn-sm" onclick="openDrawer('optionDrawer',0)">+ Weitere buchen</button>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Option</th><th>Beschreibung</th><th class="right">Preis netto</th><th>Status</th><th>Auftrag / Rechnung</th><th class="right"></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="font-family:'Libre Baskerville',serif">VIII</strong> Marketing</td>
+          <td class="muted">LinkedIn-Kampagne + Xing-Active-Sourcing</td>
+          <td class="right" style="font-family:'Libre Baskerville',serif">CHF 4'500</td>
+          <td><span class="chip chip-gold">✓ Bezahlt</span></td>
+          <td><a href="#">AUF-2026-009</a> · <a href="#">RE-2026-0063</a> · bezahlt 15.03.2026</td>
+          <td class="right"><button class="btn btn-sm">›</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Kündigungs-/Rückerstattungs-Sektion (konditional — hier ausgeblendet, da Mandat aktiv) -->
+  <div class="card" style="border:1px dashed var(--border-strong);background:var(--bg);text-align:center;color:var(--text-light);font-size:12px;font-style:italic">
+    Kündigungs- und Rückerstattungs-Rechnungen werden hier angezeigt, sobald sie anfallen (Mandat-Kündigung 80 %-Regel oder Garantie-Refund bei Austritt innerhalb 3 Mt).
+  </div>
+
+  <!-- Zahlungs-Historie -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">Zahlungs-Historie (letzte Ereignisse)</div></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-head"><strong>Rechnung RE-2026-0118 versandt</strong><span class="muted">12.04.2026 · 14:30 · JV</span></div><div class="tl-sub">Stage 2 Shortlist · CHF 25'000 netto · Empfänger finance@muster-bauherr.ch · fällig 27.05.2026</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-head"><strong>Rechnung RE-2026-0063 bezahlt</strong><span class="muted">15.03.2026 · SYS</span></div><div class="tl-sub">Optionale Stage VIII Marketing · Zahlungseingang CHF 4'500 · bank-match konfirmiert</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-head"><strong>Rechnung RE-2026-0041 bezahlt</strong><span class="muted">28.01.2026 · SYS</span></div><div class="tl-sub">Stage 1 Kickoff · Zahlungseingang CHF 25'000 · bank-match konfirmiert</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-head"><strong>Rechnung RE-2026-0041 versandt</strong><span class="muted">14.01.2026 · JV</span></div><div class="tl-sub">Stage 1 Kickoff · CHF 25'000 netto · bei Vertragsabschluss</div></div></div>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Target-Pauschale ÷ 3 Stages. Zahlungsfrist 45 Tage (Rahmenvertrag-Kondition, Standard wäre 30 d). MwSt 8.1 % wird netto zu jeder Rechnung addiert. Status-Lifecycle je Rechnung: offen → Rechnungsstellung → bezahlt / überfällig.
+  </div>
+
+</div>
+<!-- TAB 5 · HISTORY -->
+<div id="tab-5" class="tab-panel">
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suchen in History (Detail, Akteur, Entity)" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Alle Kategorien (18)</option>
+      <optgroup label="User-Aktionen">
+        <option>Kontaktberührung</option>
+        <option>Erreicht</option>
+        <option>Emailverkehr</option>
+        <option>Messaging</option>
+        <option>Interviewprozess</option>
+        <option>Placementprozess</option>
+        <option>Refresh Kandidatenpflege</option>
+        <option>Mandatsakquise</option>
+        <option>Erfolgsbasis</option>
+        <option>Assessment</option>
+      </optgroup>
+      <optgroup label="System &amp; Automation (NEU v1.4)">
+        <option>System / Meta</option>
+        <option>Kalender &amp; Planung</option>
+        <option>Dokumenten-Pipeline</option>
+        <option>Garantie &amp; Schutzfrist</option>
+        <option>Scraper &amp; Intelligence</option>
+        <option>Pipeline-Transitions</option>
+        <option>Saga-Events</option>
+        <option>AI &amp; LLM</option>
+      </optgroup>
+    </select>
+    <select>
+      <option>Alle Akteure</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option><option>NP</option><option>NS</option>
+      <option>— System (automatisch) —</option>
+    </select>
+    <select>
+      <option>Alle Bezüge</option>
+      <option>Nur Account-Level</option>
+      <option>Kontakte</option>
+      <option>Mandate</option>
+      <option>Prozesse / Kandidaten</option>
+      <option>Schutzfristen</option>
+      <option>Assessment-Orders</option>
+    </select>
+    <select>
+      <option>Letzte 30 Tage</option>
+      <option>Letzte 90 Tage</option>
+      <option>Letzte 12 Monate</option>
+      <option>Alle</option>
+      <option>Benutzerdefiniert …</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <!-- Kategorie-Chip-Legende (toggle) -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">87</span></div>
+      <div class="chip-tab">Interviewprozess <span class="count">23</span></div>
+      <div class="chip-tab">Placementprozess <span class="count">14</span></div>
+      <div class="chip-tab">Emailverkehr <span class="count">18</span></div>
+      <div class="chip-tab">Erreicht <span class="count">9</span></div>
+      <div class="chip-tab">Mandatsakquise <span class="count">6</span></div>
+      <div class="chip-tab">Assessment <span class="count">5</span></div>
+      <div class="chip-tab">Schutzfrist <span class="count">4</span></div>
+      <div class="chip-tab">System <span class="count">8</span></div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card" style="padding:24px 28px">
+    <div class="hist-timeline">
+
+      <!-- HEUTE -->
+      <div class="hist-day">
+        <div class="hist-day-head">Heute · 14.04.2026</div>
+
+        <!-- DEMO pending-Row (v1.3) — zeigt Klassifizierungs-Tab im Drawer -->
+        <div class="hist-row hist-pending" data-cls="pending" data-ai-suggest="#15 Erreicht - Update Call|84" style="border-left:3px solid #fbbf24;padding-left:10px;background:color-mix(in srgb, #fbbf24 4%, transparent)">
+          <div class="hist-time">07:58</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Anruf zum Mandat · Hans Müller</strong> <span class="muted" style="font-weight:400">— 4:32 min · ⏳ noch nicht klassifiziert</span></div>
+            <div class="hist-sub">3CX-Auto-Import, Transkript generiert. AI-Vorschlag: „Update Call" mit 84 % Konfidenz. Click öffnet Klassifizierungs-Drawer.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a> · <a href="#">Mandat · aktuell</a> · <span class="chip" style="background:#fef3c7;color:#92400e;margin-left:4px">⏳ pending Klassifizierung</span></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">14:22</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Update-Call · Hans Müller (CEO)</strong> <span class="muted" style="font-weight:400">— 42 min</span></div>
+            <div class="hist-sub">CFO-Mandat Update: M. Gerber hat eher Schweiz-Affinität, S. Keller zu international. Prio auf Gerber + Furrer fokussieren. Transkript &amp; AI-Summary verfügbar.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a> · <a href="#">Mandat · CFO-Suche</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">09:45</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>E-Mail erhalten · Eva Studer (HR-L)</strong></div>
+            <div class="hist-sub">Rückmeldung zu CV T. Furrer: 1st Interview bestätigt für 08.04 14:00 vor Ort.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kontakt · E. Studer</a> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTERN -->
+      <div class="hist-day">
+        <div class="hist-day-head">Gestern · 13.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">16:08</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>2nd Interview geplant · T. Furrer</strong></div>
+            <div class="hist-sub">Termin 22.04 09:00 · Teilnehmer: Hans Müller, Eva Studer, Peter Keller (VR).</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess · Stage V</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">11:30</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-kontakt">Kontaktberührung</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Anrufversuch · Hans Müller (CEO)</strong> <span class="muted" style="font-weight:400">— nicht erreicht</span></div>
+            <div class="hist-sub">Voicemail hinterlassen. Rückruf erwartet.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">12.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">10:15</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>✓ Placement · Julian Egger als Projektleiter Hochbau</strong></div>
+            <div class="hist-sub">Mandat Taskforce „PL Hochbau" · Position #2 von 3 · Start 01.06.2026 · TC CHF 138'000 · Honorar-Staffel 21 %.</div>
+            <div class="hist-meta"><span class="actor">LR</span> · <a href="#">Kandidat · J. Egger</a> · <a href="#">Mandat · PL Hochbau</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">08.04.2026</div>
+
+        <div class="hist-row hist-warn">
+          <div class="hist-time">09:12</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Schutzfrist · Claim-Fall eröffnet — Tobias Sommer</strong></div>
+            <div class="hist-sub">AM hat Scraper-Fund bestätigt und Claim-Workflow gestartet (Ursprung: Mandat „Ehem. CFO-Mandat 2025", Schutzfrist bis 15.10.2026). → Bearbeitung in Tab 9.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · Activity-Type #64 Schutzfrist Status-Änderung · <a href="#">Schutzfrist · T. Sommer</a> · <a href="#">Tab 9</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">14:05</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>1st Interview durchgeführt · T. Furrer</strong></div>
+            <div class="hist-sub">Teams-Call 70 min mit H. Müller &amp; E. Studer. Feedback positiv (Rating 4/5), weiter zu 2nd mit VR.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">04.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">16:42</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-assessment">Assessment</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>ASSESS 5.0 · T. Furrer · Report erhalten</strong></div>
+            <div class="hist-sub">Report via Order ORD-2026-042 · 1 ASSESS-Credit eingelöst · Standard-Profil „Executive Leader".</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Order ORD-2026-042</a> · <a href="#">Kandidat · T. Furrer</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">02.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">11:18</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>CV Sent · Tobias Furrer an Eva Studer (HR-L)</strong></div>
+            <div class="hist-sub">ARK-CV v3 + Exposé als PDF · Vorstellungs-Typ = Dossier per E-Mail · Schutzfrist bis 02.04.2027 aktiviert.</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Mandat · CFO-Suche</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">15.03.2026</div>
+
+        <div class="hist-row hist-ok">
+          <div class="hist-time">15:30</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>✓ Neues Mandat gewonnen · BIM-Manager (Target)</strong></div>
+            <div class="hist-sub">Target-Mandat · Honorar-Gesamt CHF 66'000 · Stage-1-Rechnung über CHF 22'000 wird generiert.</div>
+            <div class="hist-meta"><span class="actor">MF</span> · <a href="#">Mandat · BIM-Manager</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">12.03.2026</div>
+
+        <div class="hist-row hist-system">
+          <div class="hist-time">09:00</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Schutzfrist · Auto-verlängert auf 16 Mt — Stefan Keller</strong></div>
+            <div class="hist-sub">Info-Request nach 10 Tagen unbeantwortet → automatische Extension von 12 auf 16 Monate.</div>
+            <div class="hist-meta"><span class="actor actor-system">automation</span><span class="src-badge src-batch">nightly-batch</span> · Activity-Type #83 Schutzfrist - Auf 16 Mt verlängert · <a href="#">Schutzfrist · S. Keller</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01.03. -->
+      <div class="hist-day">
+        <div class="hist-day-head">01.03.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">10:00</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-assessment">Assessment</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Assessment-Order ORD-2026-042 signiert</strong></div>
+            <div class="hist-sub">10× ASSESS 5.0 + 5× EQ-Profil · CHF 28'000 netto · gültig 24 Monate bis 01.03.2028.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Order ORD-2026-042</a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-sm">↓ Weitere laden (79 von 87)</button>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    History-Einträge gemäss Activity-Types-Katalog §14 v1.4 (117 Typen in 18 Kategorien — davon 11 User-Kategorien + 7 System-Kategorien). Jeder Eintrag verlinkt auf die Quell-Entity. System-Events (🤖) stammen aus Integrationen (Outlook · 3CX · Scraper), Sagas (Placement · Mandat-Kündigung), Scheduled-Jobs (Nightly-Batch) und AI-Pipelines (LLM). Akteur-Kürzel = Arkadium-Mitarbeiter (2 Buchstaben).
+  </div>
+
+</div>
+<!-- TAB 6 · DOKUMENTE -->
+<div id="tab-6" class="tab-panel">
+
+  <!-- KPI-Leiste -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value">11</div><div class="kpi-sub muted">alle Kategorien</div></div>
+    <div class="kpi-card"><div class="kpi-label">Rechnungen</div><div class="kpi-value">3</div><div class="kpi-sub muted">Stage 1 bezahlt · 2 offen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Offerten &amp; Verträge</div><div class="kpi-value">2</div><div class="kpi-sub muted">1 Offerte · 1 Vertrag signiert</div></div>
+    <div class="kpi-card"><div class="kpi-label">Assessment-Reports</div><div class="kpi-value">2</div><div class="kpi-sub muted">Shortlist · Stage IX</div></div>
+    <div class="kpi-card"><div class="kpi-label">Zuletzt hochgeladen</div><div class="kpi-value" style="font-size:14px;padding-top:8px">14.04.2026</div><div class="kpi-sub muted">von JV</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Dateinamen, Tags, Verknüpfungen …" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Alle Jahre</option>
+      <option>2026</option><option>2025</option><option>2024</option><option>älter</option>
+    </select>
+    <select id="doc-link-type" onchange="updateDocLinkItems(this.value)">
+      <option value="">Verknüpfung: alle Typen</option>
+      <option value="account">Nur Account-Level</option>
+      <option value="mandat">Mandat …</option>
+      <option value="assessment">Assessment-Order …</option>
+      <option value="erfolgsbasis">Erfolgsbasis …</option>
+      <option value="schutzfrist">Schutzfrist / Claim …</option>
+    </select>
+    <select id="doc-link-item" disabled>
+      <option>— erst Typ wählen —</option>
+    </select>
+    <select>
+      <option>Alle Urheber</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option>
+      <option>— Doc-Generator —</option>
+      <option>— Upload Kunde —</option>
+    </select>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active" onclick="switchDocView(this,'list')">Liste</div>
+      <div class="chip-tab" onclick="switchDocView(this,'grid')">Kacheln</div>
+    </div>
+    <button class="btn btn-sm btn-primary" onclick="openDrawer('uploadDrawer',0)">+ Upload</button>
+  </div>
+
+  <!-- Kategorie-Chips -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterDocCat(this,'all')">Alle <span class="count">11</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'offerte-vertrag')">Offerten &amp; Verträge <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'rechnung')">Rechnungen <span class="count">3</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'assessment')">Assessment <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'stellenbriefing')">Stellenbriefing <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'scraper')">Scraper-Belege <span class="count">0</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'sonstiges')">Sonstiges <span class="count">3</span></div>
+    </div>
+  </div>
+
+  <!-- MODUS 1: LISTE (default) -->
+  <div id="doc-view-list" style="display:block">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:44px"></th>
+            <th>Name</th>
+            <th>Kategorie</th>
+            <th>Verknüpfung</th>
+            <th>Erstellt</th>
+            <th>Urheber</th>
+            <th class="right">Grösse</th>
+            <th class="right">›</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr data-cat="rechnung" style="cursor:pointer" onclick="openDrawer('docDrawer',0)">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Rechnung Mandat CFO-Suche · Stage 2</strong><div class="muted" style="font-size:11px">RE-2026-0118 · CHF 25'000 netto</div></td>
+            <td><span class="chip chip-accent">Rechnung</span></td>
+            <td><a href="#">Mandat · CFO-Suche</a></td>
+            <td>12.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">84 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="assessment" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>ASSESS 5.0 · Report Tobias Furrer</strong><div class="muted" style="font-size:11px">Standard-Profil „Executive Leader"</div></td>
+            <td><span class="chip chip-accent">Assessment</span></td>
+            <td><a href="#">Order ORD-2026-042</a> · <a href="#">Kandidat · T. Furrer</a></td>
+            <td>04.04.2026</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">2.4 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="stellenbriefing" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Stellenbriefing · CFO Bauherr Muster AG</strong><div class="muted" style="font-size:11px">9 Sektionen · versioniert (v3)</div></td>
+            <td><span class="chip chip-accent">Stellenbriefing</span></td>
+            <td><a href="#">Mandat · CFO-Suche</a></td>
+            <td>14.01.2026</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right">186 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="offerte-vertrag" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Mandats-Offerte · Taskforce PL Hochbau</strong><div class="muted" style="font-size:11px">3 Positionen · Monatsfee CHF 12'000 + Success CHF 8'000/Platzierung</div></td>
+            <td><span class="chip chip-accent">Offerte</span></td>
+            <td><a href="#">Mandat · PL Hochbau</a></td>
+            <td>12.02.2026</td>
+            <td><span class="actor-chip">Doc-Gen · MF</span></td>
+            <td class="right">156 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="offerte-vertrag" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Vertrag · Taskforce PL Hochbau · signiert</strong></td>
+            <td><span class="chip chip-gold">Vertrag</span></td>
+            <td><a href="#">Mandat · PL Hochbau</a></td>
+            <td>28.02.2026</td>
+            <td><span class="actor-chip">Upload · MF</span></td>
+            <td class="right">488 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="offerte-vertrag" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Assessment-Order ORD-2026-042 · signiert</strong><div class="muted" style="font-size:11px">10× ASSESS 5.0 + 5× EQ · CHF 28'000</div></td>
+            <td><span class="chip chip-gold">Vertrag</span></td>
+            <td><a href="#">Order ORD-2026-042</a></td>
+            <td>01.03.2026</td>
+            <td><span class="actor-chip">Upload · PW</span></td>
+            <td class="right">92 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="rechnung" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Rechnung Assessment-Order</strong><div class="muted" style="font-size:11px">RE-2026-0081 · CHF 28'000</div></td>
+            <td><span class="chip chip-accent">Rechnung</span></td>
+            <td><a href="#">Order ORD-2026-042</a></td>
+            <td>01.03.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">76 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="scraper" style="cursor:pointer;background:color-mix(in srgb, var(--red) 5%, var(--surface));border-left:3px solid var(--red)">
+            <td><span class="file-type ft-img">IMG</span></td>
+            <td><strong>⚠ Scraper-Screenshot · LinkedIn Tobias Sommer</strong><div class="muted" style="font-size:11px">„Head of Finance" bei Bauherr Muster AG seit 03.2026</div></td>
+            <td><span class="chip chip-red">Scraper-Beleg</span></td>
+            <td><a href="#">Schutzfrist · T. Sommer</a> · <a href="#">Tab 9</a></td>
+            <td>08.04.2026</td>
+            <td><span class="actor-chip">SYS</span></td>
+            <td class="right">340 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="stellenbriefing" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Kultur-Interview Bauherr Muster AG</strong><div class="muted" style="font-size:11px">Werte, Kommunikation, Entscheidungskultur</div></td>
+            <td><span class="chip">Stellenbriefing</span></td>
+            <td class="muted">Account-Level</td>
+            <td>03.2025</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">580 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-xlsx">XLSX</span></td>
+            <td><strong>KPI-Report Q1 2026</strong></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td class="muted">Account-Level</td>
+            <td>02.04.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">44 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn btn-sm">↓ Weitere laden (112 von 124)</button>
+    </div>
+  </div>
+
+  <!-- MODUS 2: KACHELN -->
+  <div id="doc-view-grid" style="display:none">
+    <div class="file-grid">
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Rechnung CFO Stage 2</div><div class="file-meta">12.04.2026 · 84 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">ARK-CV T. Furrer v3</div><div class="file-meta">02.04.2026 · 412 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Exposé T. Furrer</div><div class="file-meta">02.04.2026 · 1.2 MB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">ASSESS 5.0 Report T. Furrer</div><div class="file-meta">04.04.2026 · 2.4 MB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--accent-soft);color:var(--accent)">DOCX</div><div class="file-name">Stellenbriefing CFO</div><div class="file-meta">14.01.2026 · 186 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Offerte Taskforce PL</div><div class="file-meta">12.02.2026 · 156 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">PDF</div><div class="file-name">Vertrag Taskforce signiert</div><div class="file-meta">28.02.2026 · 488 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--red-soft);color:var(--red)">IMG</div><div class="file-name">⚠ Scraper LinkedIn Sommer</div><div class="file-meta">08.04.2026 · 340 KB</div></div>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Account-Dokumente (Offerten, Verträge, Rechnungen, Stellenbriefings, Reports). Kandidaten-Dossiers (ARK-CV / Exposé) leben in der Kandidatenmaske — hier nicht dupliziert. Urheber „Doc-Gen" = automatisch generiert, „Upload" = manuell hochgeladen, „SYS" = System (Scraper-Belege). Retention gemäss Audit-Log-Regel: Rechnungen/Verträge 10 Jahre.
+  </div>
+
+</div>
+
+<!-- TAB 7 · REMINDERS -->
+<div id="tab-7" class="tab-panel">
+
+  <!-- KPI-Leiste -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Offen</div><div class="kpi-value">9</div><div class="kpi-sub muted">alle offenen Reminders</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Überfällig</div><div class="kpi-value">2</div><div class="kpi-sub muted">sofortiges Handeln</div></div>
+    <div class="kpi-card"><div class="kpi-label">Heute</div><div class="kpi-value">1</div><div class="kpi-sub muted">fällig am 16.04.2026</div></div>
+    <div class="kpi-card"><div class="kpi-label">Diese Woche</div><div class="kpi-value">3</div><div class="kpi-sub muted">bis 20.04.2026</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Erledigt (30 d)</div><div class="kpi-value">18</div><div class="kpi-sub muted">seit 16.03.2026</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Reminder-Titel, Kontext, Entity …" style="flex:1 1 260px;min-width:220px">
+    <select>
+      <option>Alle Typen</option>
+      <option>Mandat-Review</option>
+      <option>Stage-Deadline</option>
+      <option>Kandidat-Nachfassen</option>
+      <option>Abschluss-Rechnung</option>
+      <option>Debriefing</option>
+      <option>Follow-up</option>
+      <option>Schutzfrist</option>
+      <option>Garantie</option>
+      <option>Custom</option>
+    </select>
+    <select>
+      <option>Alle Zuständigen</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option><option>NP</option><option>NS</option>
+      <option>Backoffice</option>
+    </select>
+    <select>
+      <option>Alle Quellen</option>
+      <option>Manuell erstellt</option>
+      <option>Auto (System-Trigger)</option>
+      <option>Aus Prozess</option>
+      <option>Aus Billing</option>
+      <option>Aus Longlist</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="openReminderNew()">+ Reminder</button>
+  </div>
+
+  <!-- Status-Chip-Tabs -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterRemStatus(this,'all')">Alle offenen <span class="count">9</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'overdue')"><span style="color:var(--red)">●</span> Überfällig <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'today')">Heute <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'week')">Diese Woche <span class="count">3</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'later')">Später <span class="count">3</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'done')">Erledigt <span class="count">18</span></div>
+    </div>
+  </div>
+
+  <!-- ÜBERFÄLLIG -->
+  <div class="rem-section" data-rem-group="overdue">
+    <div class="rem-section-head" style="border-left:3px solid var(--red)">
+      <h3 style="color:var(--red)">⚠ Überfällig</h3>
+      <span class="count">2</span>
+    </div>
+    <div class="card" style="padding:0;border-left:3px solid var(--red)">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="overdue" style="cursor:pointer" onclick="openDrawer('reminderDrawer',0)">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Stage-Deadline VI · Mehr Idents</strong><div class="muted" style="font-size:11px">Ziel: 28.03.2026 — noch keine neuen Idents eingetragen</div></td>
+            <td><span class="chip chip-accent">Stage-Deadline</span></td>
+            <td style="color:var(--red);font-weight:600">19 d überfällig</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="overdue" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Kandidat-Nachfassen · Andrea Koller</strong><div class="muted" style="font-size:11px">Rückmeldung HM offen seit 18 Tagen</div></td>
+            <td><span class="chip chip-accent">Kandidat-Nachfassen</span></td>
+            <td style="color:var(--red);font-weight:600">5 d überfällig</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- HEUTE -->
+  <div class="rem-section" data-rem-group="today">
+    <div class="rem-section-head">
+      <h3>Heute · 16.04.2026</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="today" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Mandat-Review Wochenabschluss</strong><div class="muted" style="font-size:11px">Pipeline durchgehen, Prioritäten für nächste Woche festlegen</div></td>
+            <td><span class="chip chip-accent">Mandat-Review</span></td>
+            <td>16:00 Uhr</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DIESE WOCHE -->
+  <div class="rem-section" data-rem-group="week">
+    <div class="rem-section-head">
+      <h3>Diese Woche · bis 20.04.2026</h3>
+      <span class="count">3</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Debriefing 2nd Interview · Nadine Berger</strong><div class="muted" style="font-size:11px">Assessment-Report ausstehend — nachfassen</div></td>
+            <td><span class="chip chip-accent">Debriefing</span></td>
+            <td>17.04.2026 · morgen</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Stage-Abschluss III · CV Sent</strong><div class="muted" style="font-weight:400;font-size:11px">6 Kandidaten versandt, Rückmeldung ausstehend</div></td>
+            <td><span class="chip chip-accent">Stage-Deadline</span></td>
+            <td>18.04.2026 · in 2 d</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Abschluss-Rechnung prüfen</strong><div class="muted" style="font-size:11px">Stage-III-Rechnung CHF 35'000 bereit zur Freigabe</div></td>
+            <td><span class="chip chip-accent">Abschluss-Rechnung</span></td>
+            <td>20.04.2026 · in 4 d</td>
+            <td><span class="actor-chip">MF</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SPÄTER -->
+  <div class="rem-section" data-rem-group="later">
+    <div class="rem-section-head">
+      <h3>Später</h3>
+      <span class="count">3</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Garantiefrist-Ende · Julian Egger</strong><div class="muted" style="font-size:11px">3 Mt Garantie läuft ab — Check mit AM</div></td>
+            <td><span class="chip chip-accent">Garantie</span></td>
+            <td>01.08.2026</td>
+            <td><span class="actor-chip">Backoffice</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Mandat-Review Q2</strong><div class="muted" style="font-size:11px">Quartals-Bilanz mit Account-Owner</div></td>
+            <td><span class="chip chip-accent">Mandat-Review</span></td>
+            <td>28.06.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Schutzfrist-Info-Request · 3 Kandidaten</strong><div class="muted" style="font-size:11px">10-Tage-Fenster nach Mandat-Abschluss</div></td>
+            <td><span class="chip chip-accent">Schutzfrist</span></td>
+            <td>10.05.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ERLEDIGT (collapsed) -->
+  <div class="section-head collapsed" onclick="toggleSection(this)" style="margin-top:18px">
+    <span class="caret">▾</span>
+    <h3>Erledigt (letzte 30 Tage)</h3>
+    <span class="count">18</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Stage-II · Longlist-Freigabe HM</s></td><td><span class="chip">Stage-Deadline</span></td><td class="muted">erledigt 10.04</td><td><span class="actor-chip">PW</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Zwischenrechnung Stage II</s></td><td><span class="chip">Abschluss-Rechnung</span></td><td class="muted">erledigt 02.04</td><td><span class="actor-chip">MF</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td class="muted" colspan="6" style="text-align:center">+ 16 weitere</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Reminders werden manuell angelegt oder automatisch durch System-Trigger (Stage-Deadline bei Mandat-Fortschritt, Kandidat-Nachfassen nach X Tagen ohne Bewegung, Garantiefrist-Ende nach Placement, überfällige Rechnungen). Auch im globalen Dashboard sichtbar. Overdue-Reminders erzeugen Eskalations-Mail an Zuständigen.
+  </div>
+
+</div>
+
+</div>
+
+<!-- KB BAR -->
+<div class="kb-bar">
+  <span><kbd>1</kbd>–<kbd>7</kbd> Tabs</span>
+  <span><kbd>O</kbd> Option buchen</span>
+  <span><kbd>K</kbd> Kündigen</span>
+  <span><kbd>T</kbd> Theme</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd> Command Palette</span>
+</div>
+
+<!-- DRAWER BACKDROP -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- OPTION-BUCHEN-DRAWER -->
+<div class="drawer" id="optionDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⚡</div>
+    <div class="info">
+      <h2>Optionale Stage buchen</h2>
+      <div class="sub">Zusatz-Leistung zum Mandat · erzeugt separaten Auftrag + Rechnung</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('optionDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Stage wählen</h4>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px">
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="opt" style="margin-top:2px"><div><strong>VI · Mehr Idents</strong><br><span class="muted" style="font-size:11px">+25 zusätzliche Identifikationen · CHF 3'500</span></div></label>
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="opt" style="margin-top:2px"><div><strong>VII · Mehr Dossiers</strong><br><span class="muted" style="font-size:11px">+3 zusätzliche ausgearbeitete Dossiers · CHF 2'800</span></div></label>
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px;cursor:pointer;opacity:0.5"><input type="radio" disabled style="margin-top:2px"><div><strong>VIII · Marketing-Massnahmen</strong> <span class="chip chip-accent" style="margin-left:4px;font-size:9px">bereits gebucht</span><br><span class="muted" style="font-size:11px">LinkedIn-Kampagne, Xing-Active-Sourcing · CHF 4'500</span></div></label>
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="opt" style="margin-top:2px"><div><strong>IX · Assessment</strong><br><span class="muted" style="font-size:11px">ASSESS 5.0 für finale Shortlist-Kandidaten · CHF 1'800 / Kandidat</span></div></label>
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px;cursor:pointer"><input type="radio" name="opt" style="margin-top:2px"><div><strong>X · Fakultative Garantie</strong><br><span class="muted" style="font-size:11px">+1 / +2 / +3 Mt Garantie (max 6 Mt total) · CHF 2'000/Monat</span></div></label>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Anmerkung / Begründung</h4>
+      <textarea rows="3" style="width:100%;resize:vertical" placeholder="Kurze Begründung (intern, audit-trail)…"></textarea>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('optionDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">⚡ Option buchen &amp; Rechnung erstellen</button>
+  </div>
+</div>
+
+<!-- KÜNDIGUNGS-DRAWER -->
+<div class="drawer" id="cancelDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--red-soft);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🛑</div>
+    <div class="info">
+      <h2>Mandat kündigen</h2>
+      <div class="sub">CFO-Suche · Bauherr Muster AG</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('cancelDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Kündigung durch</h4>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px">
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px"><input type="radio" name="by" checked> Kunde kündigt (häufigster Fall)</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px"><input type="radio" name="by"> Arkadium kündigt (Exit-Option Arkadium)</label>
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:3px"><input type="radio" name="by"> Einvernehmlich</label>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Grund <span style="color:var(--red)">*</span></h4>
+      <select style="width:100%"><option>— wählen —</option><option>Position intern besetzt</option><option>Position anderweitig besetzt (Mitbewerber)</option><option>Strategie-Change Kunde</option><option>Unzufriedenheit mit Arkadium</option><option>Budget gestrichen</option><option>Sonstiges (freitext)</option></select>
+      <textarea rows="2" style="width:100%;resize:vertical;margin-top:8px" placeholder="Details / freitext (audit-relevant) …"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Billing-Konsequenz (80 %-Regel)</h4>
+      <div style="padding:14px;background:var(--bg);border-radius:3px;font-size:12.5px;line-height:1.7">
+        Mandat befindet sich in <strong>Stage 2 von 3</strong>. Bei Kundenkündigung wird die noch offene Pauschale (Stage 3) zu <strong>80 %</strong> in Rechnung gestellt, sofern Arkadium die Shortlist geliefert hat.<br><br>
+        <strong>Kündigungs-Rechnung (Vorschau):</strong><br>
+        Stage 3 offen: CHF 25'000 × 80 % = <strong style="color:var(--accent);font-family:'Libre Baskerville',serif">CHF 20'000 netto</strong><br>
+        + MwSt 8.1 % = CHF 1'620 → Total CHF 21'620 brutto
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Kündigungs-Datum</h4>
+      <input type="date" value="2026-04-14">
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('cancelDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm" onclick="closeDrawer('cancelDrawer');openDrawer('mandatKuendigungSagaDrawer')" title="Demo: Saga-Trace einer bereits abgeschlossenen Kündigung ansehen">⚙️ Saga-Vorschau (Demo)</button>
+    <button class="btn btn-sm btn-danger btn-primary">🛑 Mandat kündigen &amp; Rechnung erstellen</button>
+  </div>
+</div>
+
+<!-- ============= MANDAT-KÜNDIGUNGS-SAGA-DRAWER (POST-Saga Trace, NEU v1.4) ============= -->
+<!-- Öffnet bei Klick auf „Saga-Trace ansehen" nach erfolgter Kündigung — zeigt die 6 TX3-Substeps. -->
+<div class="drawer" id="mandatKuendigungSagaDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:#fee2e2;color:#991b1b;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⚙️</div>
+    <div class="info">
+      <h2>Saga-Trace · Mandat-Kündigung</h2>
+      <div class="sub">CFO-Suche · Bauherr Muster AG · 14.04.2026 11:32</div>
+      <div style="margin-top:6px">
+        <span class="actor-chip" style="font-family:'SF Mono',Menlo,monospace;background:#fee2e2;color:#991b1b;border-color:#fecaca">SAGA-2026-0414-1119</span>
+        <span class="actor-chip" style="margin-left:4px">Dauer gesamt · 2'870 ms</span>
+        <span class="actor-chip" style="margin-left:4px;background:#d1fae5;color:#065f46;border-color:#a7f3d0">✓ 6/6 Steps erfolgreich</span>
+      </div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('mandatKuendigungSagaDrawer')">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <h4>Kündigungs-Kontext</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        <div><span class="muted">Mandat:</span> <a href="#">CFO-Suche (Target-Mandat)</a> · <span class="muted">Bauherr:</span> Muster AG · <span class="muted">Pauschale:</span> CHF 45'000</div>
+        <div><span class="muted">Stage bei Kündigung:</span> 2 von 3 · <span class="muted">Grund:</span> Position intern besetzt · <span class="muted">Initiator:</span> Kunde</div>
+        <div><span class="muted">Ausgelöst von:</span> <span class="actor">MF</span> · 14.04.2026 11:32:18 · via Kündigungs-Drawer</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Saga-Substeps (6) — TX3 Mandat-Kündigung</h4>
+      <div class="timeline" style="padding-left:4px">
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#10b981"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V1 · Mandat-Status auf „gekündigt"</strong> <span class="muted">11:32:18.201 · 134 ms</span></div>
+            <div class="tl-sub">Mandat-Stage = cancelled · Kündigungs-Datum 14.04.2026 · cancellation_reason = „Position intern besetzt" · cancelled_by = kunde</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-saga">saga-engine</span> → User-Timeline-Eintrag #116 „Mandat - Gekündigt" <a href="#">↗</a></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#10b981"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V2 · Kündigungs-Rechnung berechnet</strong> <span class="muted">11:32:18.335 · 198 ms</span></div>
+            <div class="tl-sub">80 %-Regel angewendet (Kunde kündigt · Stage 3 offen · Shortlist geliefert) · Offene Pauschale CHF 25'000 × 80 % = <strong>CHF 20'000 netto</strong> · MwSt 8.1 % CHF 1'620 · Brutto CHF 21'620</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-saga">saga-engine</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#10b981"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V3 · Rechnungs-Row erstellt</strong> <span class="muted">11:32:18.533 · 89 ms</span></div>
+            <div class="tl-sub">Kündigungs-Rechnung RE-2026-0287 · Fälligkeit 14.05.2026 · Status = pending · Kategorie = „Mandat-Kündigung 80 %"</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-saga">saga-engine</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#10b981"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V4 · Rechnungs-PDF generiert (async)</strong> <span class="muted">11:32:18.622 · 1'847 ms</span></div>
+            <div class="tl-sub">Template „mandate_cancellation_invoice" · Anhänge: Mandatsofferte · Shortlist-Bericht · AGB §6. PDF ca. 340 KB gespeichert, Email-Entwurf vorbereitet</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-llm">llm</span> <span class="muted">(Template-Engine, nicht AI)</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#10b981"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V5 · Schutzfristen eröffnet</strong> <span class="muted">11:32:20.469 · 411 ms</span></div>
+            <div class="tl-sub">12 Direkteinstellungs-Schutzfristen für vorgestellte Kandidaten bei Muster AG angelegt (Kandidat × Kunde) · Default 12 Monate · Start = Kündigungs-Datum · AGB §6</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-saga">saga-engine</span> → 12× User-Timeline-Eintrag #82 „Schutzfrist - Gestartet" <a href="#">↗</a></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--gold)"></div>
+          <div class="tl-body">
+            <div class="tl-head"><strong>V6 · Event-Fanout an abhängige Entitäten</strong> <span class="muted">11:32:20.880 · 191 ms</span></div>
+            <div class="tl-sub">3 offene Prozesse automatisch auf „abgelehnt" gesetzt (Grund „Mandat gekündigt") · Notifications an 2 Process-Owner (PW · JV) · Stellenplan-Update · Scraper-Deaktivierung für Muster AG (Scraper-Types laufen bis Garantie-Auslauf weiter, dann stoppen)</div>
+            <div style="margin-top:3px"><span class="actor actor-system">automation</span><span class="src-badge src-saga">saga-engine</span> → User-Timeline-Eintrag #116 <a href="#">↗</a> + 3× #98 „Prozess - Automatisch abgelehnt" <a href="#">↗</a></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Korrelierte User-Timeline-Einträge</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        <div>• <a href="#">#116 Mandat - Gekündigt</a> · <span class="muted">Haupt-Eintrag (aus V1)</span></div>
+        <div>• 12× <a href="#">#82 Schutzfrist - Gestartet</a> · <span class="muted">aus V5 emittiert (pro vorgestellter Kandidat)</span></div>
+        <div>• 3× <a href="#">#98 Prozess - Automatisch abgelehnt</a> · <span class="muted">aus V6 Event-Fanout</span></div>
+        <div class="muted" style="font-size:11px;margin-top:4px">Rechnungs-Generierung (V2–V4) läuft als reiner System-Event ohne User-Timeline — Rechnung erscheint direkt in Billing-Liste.</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Rollback-Status</h4>
+      <div style="font-size:12.5px">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#d1fae5;border-radius:3px;border-left:3px solid #10b981">
+          <span style="font-size:16px">✓</span>
+          <div><strong>Alle 6 Steps erfolgreich</strong> — kein Rollback nötig. Bei Fehler wäre Rollback kompensierend: Mandat-Status zurück auf „aktiv" · Rechnung storniert · Schutzfristen gelöscht · Prozesse wiedereröffnet.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('mandatKuendigungSagaDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm" onclick="alert('Admin-Debug-Tab: /admin/event-log?correlation=SAGA-2026-0414-1119 · Zeigt alle 6 Steps plus Rule-Executions und Durations. Nur Admin-Rolle.')">⚙️ Admin-Debug-Tab öffnen</button>
+    <button class="btn btn-sm btn-primary" onclick="closeDrawer('mandatKuendigungSagaDrawer');alert('Sprung zu Rechnung RE-2026-0287 in Tab Billing')">→ Rechnung RE-2026-0287</button>
+  </div>
+</div>
+
+<!-- ============= UPLOAD-DRAWER ============= -->
+<div class="drawer" id="uploadDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">↑</div>
+    <div class="info">
+      <h2>Dokument hochladen</h2>
+      <div class="sub">Kategorie wählen, Datei auswählen, optional verknüpfen</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('uploadDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <form id="uploadForm" onsubmit="return doUpload(event)">
+      <div class="drawer-section">
+        <h4>Datei</h4>
+        <div id="uploadDropzone" onclick="document.getElementById('uploadFile').click()" style="border:2px dashed var(--border);border-radius:4px;padding:28px;text-align:center;cursor:pointer;background:var(--bg);transition:all 0.15s" ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-soft)'" ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'" ondrop="handleDrop(event)">
+          <div style="font-size:32px;color:var(--text-light);margin-bottom:8px">📄</div>
+          <div style="font-size:13px;font-weight:600" id="uploadFileName">Datei hierher ziehen oder klicken</div>
+          <div class="muted" style="font-size:11px;margin-top:4px" id="uploadFileMeta">PDF, DOCX, XLSX, JPG, PNG · max. 20 MB</div>
+        </div>
+        <input type="file" id="uploadFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" style="display:none" onchange="onUploadFile(this)">
+      </div>
+      <div class="drawer-section">
+        <h4>Metadaten</h4>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+          <label>Kategorie <span style="color:var(--red)">*</span></label>
+          <select id="uploadCat" required>
+            <option value="">— wählen —</option>
+            <option value="offerte-vertrag">Offerte / Vertrag</option>
+            <option value="rechnung">Rechnung</option>
+            <option value="stellenbriefing">Stellenbriefing</option>
+            <option value="assessment">Assessment</option>
+            <option value="scraper">Scraper-Beleg</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+          <label>Titel</label>
+          <input type="text" id="uploadTitle" placeholder="(leer = Dateiname übernehmen)">
+          <label>Notiz</label>
+          <textarea id="uploadNote" rows="2" style="resize:vertical" placeholder="Kurz-Hinweis (optional)"></textarea>
+          <label>Verknüpfung</label>
+          <select id="uploadLink">
+            <option value="">Mandat-Level (keine Verknüpfung)</option>
+            <option value="Stage II Longlist">Stage II Longlist</option>
+            <option value="Stage III CV Sent">Stage III CV Sent</option>
+            <option value="Stage IV 1st Interview">Stage IV 1st Interview</option>
+            <option value="Billing Stage II">Billing Stage II</option>
+          </select>
+          <label>Urheber</label>
+          <div style="font-size:13px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text-mid)">
+            <span id="uploadAuthor" data-value="Upload · PW">Upload · PW</span>
+            <span class="muted" style="font-size:11px;margin-left:6px">(aktueller User · automatisch)</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="drawer-foot">
+    <button type="button" class="btn btn-sm" onclick="closeDrawer('uploadDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button type="button" class="btn btn-sm btn-primary" onclick="doUpload(event)">↑ Hochladen</button>
+  </div>
+</div>
+
+<!-- ============= HISTORY-DRAWER ============= -->
+<div class="drawer drawer-wide" id="historyDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" id="histDrawIcon">💬</div>
+    <div class="info">
+      <h2 id="histDrawTitle">Event-Detail</h2>
+      <div class="sub" id="histDrawSub">—</div>
+      <div style="margin-top:6px" id="histDrawChips"></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('historyDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs" id="histDrawTabs"></div>
+  <div class="drawer-body" id="histDrawBodyWrap"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('historyDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✎ Bearbeiten</button>
+    <button class="btn btn-sm btn-primary">🔗 Zur Quell-Entity</button>
+  </div>
+</div>
+
+<!-- ============= REMINDER-DRAWER ============= -->
+<div class="drawer" id="reminderDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⏰</div>
+    <div class="info">
+      <h2 id="remDrawTitle">Neuer Reminder</h2>
+      <div class="sub" id="remDrawSub">Erstelle einen Termin-, Follow-up- oder System-Reminder</div>
+      <div style="margin-top:6px" id="remDrawChips"><span class="chip chip-accent">neu</span></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('reminderDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Reminder</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+        <label>Titel <span style="color:var(--red)">*</span></label>
+        <input type="text" id="remTitle" placeholder="z.B. Stage-Deadline VI prüfen">
+        <label>Typ <span style="color:var(--red)">*</span></label>
+        <select id="remType">
+          <option>Mandat-Review</option>
+          <option>Stage-Deadline</option>
+          <option>Kandidat-Nachfassen</option>
+          <option>Abschluss-Rechnung</option>
+          <option>Debriefing</option>
+          <option>Follow-up</option>
+          <option>Schutzfrist</option>
+          <option>Garantie</option>
+          <option>Custom</option>
+        </select>
+        <label>Fällig am <span style="color:var(--red)">*</span></label>
+        <input type="datetime-local" id="remDue">
+        <label>Zuständig <span style="color:var(--red)">*</span></label>
+        <select id="remOwner">
+          <option selected>PW</option>
+          <option>JV</option><option>LR</option><option>MF</option><option>NP</option><option>NS</option>
+          <option>Backoffice</option>
+        </select>
+        <label>Kontext</label>
+        <textarea id="remContext" rows="3" style="resize:vertical" placeholder="Hintergrund, Personen, Agenda"></textarea>
+        <label>Verknüpfung</label>
+        <select id="remLink">
+          <option value="">Mandat-Level (keine Verknüpfung)</option>
+          <option>Stage II Longlist</option>
+          <option>Stage III CV Sent</option>
+          <option>Stage IV 1st Interview</option>
+          <option>Prozess · Nadine Berger</option>
+          <option>Billing Stage II</option>
+        </select>
+        <label>Wiederholen</label>
+        <select id="remRecur">
+          <option value="none">Einmalig</option>
+          <option value="weekly">Wöchentlich</option>
+          <option value="monthly">Monatlich</option>
+          <option value="quarterly">Quartalsweise</option>
+        </select>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Benachrichtigung</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;font-size:13px">
+        <label>Vorlaufzeit</label>
+        <select id="remLead">
+          <option value="0">Zum Fälligkeitstermin</option>
+          <option value="1h">1 h vorher</option>
+          <option value="1d">1 Tag vorher</option>
+          <option value="3d" selected>3 Tage vorher</option>
+          <option value="1w">1 Woche vorher</option>
+        </select>
+        <label>Eskalation</label>
+        <div class="muted" style="font-size:12px">3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead</div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('reminderDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="saveReminder(event)">💾 Reminder anlegen</button>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+/* ============================================================
+   P0-Parity mit Candidates: Upload · History-Drawer · Reminder
+   ============================================================ */
+
+const HIST_CHAN_MAP = {
+  'cat-erreicht':   { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-kontakt':    { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-interview':  { kanal:'Phone',  label:'Phone',  icon:'👔' },
+  'cat-placement':  { kanal:'Phone',  label:'Phone',  icon:'🏆' },
+  'cat-mandat':     { kanal:'Phone',  label:'Phone',  icon:'📋' },
+  'cat-assessment': { kanal:'System', label:'System', icon:'📊' },
+  'cat-email':      { kanal:'Email',  label:'Email',  icon:'✉' },
+  'cat-system':     { kanal:'System', label:'System', icon:'⚙' },
+};
+let HIST_CURRENT = null;
+
+function openHistDrawer(rowEl) {
+  const cat = rowEl.querySelector('.hist-cat-chip');
+  const catText = cat ? cat.textContent.trim() : '—';
+  const catCls = cat ? (Array.from(cat.classList).find(c => HIST_CHAN_MAP.hasOwnProperty(c)) || '') : '';
+  const chan = HIST_CHAN_MAP[catCls] || { kanal:'System', label:'System', icon:'💬' };
+  const time = rowEl.querySelector('.hist-time')?.textContent.trim() || '—';
+  const titleRaw = rowEl.querySelector('.hist-title')?.textContent || '—';
+  const titleClean = titleRaw.replace(/—\s*(\d+\s*min|nicht erreicht).*/,'').trim();
+  const durMatch = titleRaw.match(/—\s*(\d+\s*min|nicht erreicht)/);
+  const durationRaw = durMatch ? durMatch[1] : '';
+  const isNE = /nicht erreicht/i.test(titleRaw);
+  const isBriefingCall = /briefing/i.test(titleClean) && chan.kanal === 'Phone';
+  const isSystemAuto = chan.kanal === 'System';
+  const isAnswered = chan.kanal === 'Phone' && !isNE && !isSystemAuto;
+  const sub = rowEl.querySelector('.hist-sub')?.textContent.trim() || '';
+  const meta = rowEl.querySelector('.hist-meta');
+  const actor = meta?.querySelector('.actor')?.textContent.trim() || '—';
+  const dayHead = rowEl.closest('.hist-day')?.querySelector('.hist-day-head')?.textContent.trim() || '';
+  const dateOnly = dayHead.replace(/^.*·\s*/, '');
+  const links = meta ? Array.from(meta.querySelectorAll('a')).map(a => a.textContent.trim()) : [];
+  const isWarn = rowEl.classList.contains('hist-warn');
+  const isOk = rowEl.classList.contains('hist-ok');
+
+  // v1.3: pending-Erkennung
+  const isPending = rowEl.classList.contains('hist-pending') || rowEl.getAttribute('data-cls') === 'pending';
+  const aiSuggestion = rowEl.getAttribute('data-ai-suggest') || '';
+
+  HIST_CURRENT = { title:titleClean, cat:catText, catCls, chan, date:dateOnly, time, actor, duration:durationRaw, isNE, isAnswered, isBriefingCall, isSystemAuto, body:sub, links, sentiment:isWarn?'negative':(isOk?'positive':''), cls: isPending ? 'pending' : 'confirmed', aiSuggestion };
+
+  document.getElementById('histDrawIcon').textContent = chan.icon;
+  document.getElementById('histDrawTitle').textContent = titleClean;
+  document.getElementById('histDrawSub').textContent = dateOnly + ' · ' + time + ' · ' + chan.label;
+  const chipsWrap = document.getElementById('histDrawChips');
+  let chips = `<span class="hist-cat-chip ${catCls}">${catText}</span>`;
+  chips += ` <span class="chip" style="margin-left:4px">${actor}</span>`;
+  if (isPending) {
+    chips += ` <span class="chip" style="margin-left:4px;background:#fef3c7;color:#92400e">⏳ pending Klassifizierung</span>`;
+    if (aiSuggestion) {
+      const [sugName, sugConf] = aiSuggestion.split('|');
+      chips += ` <span class="chip" style="margin-left:4px;background:#ede9fe;color:#6d28d9">AI: ${escapeHtml(sugName)} · ${sugConf}%</span>`;
+    }
+  } else {
+    chips += ` <span class="chip chip-green" style="margin-left:4px">✓ Bestätigt</span>`;
+  }
+  if (isSystemAuto) chips += ` <span class="chip" style="margin-left:4px">⚡ Auto</span>`;
+  chipsWrap.innerHTML = chips;
+
+  const tabs = [{ id:'overview', label:'Übersicht' }];
+  if (chan.kanal === 'Email') tabs.push({ id:'email', label:'Email-Thread' });
+  if (isAnswered) tabs.push({ id:'transcript', label:'Transkript' });
+  if (isAnswered && !isBriefingCall) tabs.push({ id:'ai', label:'AI-Summary' });
+  if (isAnswered && isBriefingCall) tabs.push({ id:'briefing', label:'AI → Briefing' });
+  if (isPending) tabs.push({ id:'classify', label:'🏷 Klassifizierung' });  // NEU v1.3
+  tabs.push({ id:'history', label:'📜 Verlauf' });  // NEU v1.3 — immer
+  tabs.push({ id:'reminders', label:'Reminders' });
+
+  const tabsEl = document.getElementById('histDrawTabs');
+  tabsEl.innerHTML = tabs.map((t,i) => `<div class="drawer-tab${i===0?' active':''}" onclick="histSwitchTab('${t.id}', this)">${t.label}</div>`).join('');
+  histRenderPane(tabs[0].id);
+  openDrawer('historyDrawer');
+}
+
+function histSwitchTab(id, el) {
+  el.parentElement.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  histRenderPane(id);
+}
+
+function histRenderPane(id) {
+  const e = HIST_CURRENT; if (!e) return;
+  const wrap = document.getElementById('histDrawBodyWrap');
+  if (id === 'overview') {
+    let h = `<div class="drawer-section"><h4>Details</h4><dl class="field-grid">`;
+    h += `<dt>Kategorie</dt><dd>${escapeHtml(e.cat)}</dd>`;
+    h += `<dt>Activity-Type</dt><dd>${escapeHtml(e.title)}</dd>`;
+    h += `<dt>Kanal</dt><dd>${escapeHtml(e.chan.label)}</dd>`;
+    h += `<dt>Datum &amp; Uhrzeit</dt><dd>${escapeHtml(e.date)} · ${escapeHtml(e.time)} Uhr</dd>`;
+    h += `<dt>Erfasst von</dt><dd>${escapeHtml(e.actor)}</dd>`;
+    if (e.duration) h += `<dt>Dauer</dt><dd>${escapeHtml(e.duration)}</dd>`;
+    h += `<dt>Status</dt><dd>✓ Bestätigt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Notizen</h4><div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div></div>`;
+    if (e.links.length) h += `<div class="drawer-section"><h4>Verknüpfungen</h4>${e.links.map(l => `<div class="list-item"><div class="name">🔗 ${escapeHtml(l)}</div><span class="chip">›</span></div>`).join('')}</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'email') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Email-Thread</h4><div style="border:1px solid var(--border);border-radius:3px;padding:14px;background:var(--surface)"><div style="font-size:11px;color:var(--text-light);margin-bottom:6px">↙ Eingehend · ${escapeHtml(e.date+' '+e.time)}</div><div style="font-size:13px;font-weight:600;margin:8px 0;padding-bottom:6px;border-bottom:1px solid var(--border)">${escapeHtml(e.title)}</div><div style="font-size:12.5px;line-height:1.6;color:var(--text-mid)">${escapeHtml(e.body)}</div></div><div class="flex gap-8" style="margin-top:10px"><button class="btn btn-sm btn-primary">↩ Antworten</button><button class="btn btn-sm">↪ Weiterleiten</button></div></div>`;
+    return;
+  }
+  if (id === 'transcript') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Transkript</h4><pre style="font-size:12px;line-height:1.7;background:var(--bg);border-radius:3px;padding:14px;white-space:pre-wrap;font-family:'Courier New',monospace;color:var(--text-mid);max-height:340px;overflow-y:auto">[00:00] ${escapeHtml(e.actor)}: Grüezi, danke für die Zeit.\n[02:15] …\n[05:30] ${escapeHtml(e.actor)}: ${escapeHtml(e.body.slice(0,80))}</pre><div class="muted" style="font-size:11px;margin-top:8px">Automatisch transkribiert · editierbar</div></div>`;
+    return;
+  }
+  if (id === 'ai') {
+    // v1.3: list-item + field-grid Pattern
+    let h = `<div class="drawer-section"><h4>KI-Kurzzusammenfassung</h4>`;
+    h += `<div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Action-Items</h4>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Nächsten Termin mit ${escapeHtml(e.actor)} vorbereiten <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">Fälligkeit typischerweise innert 48 h</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Stage-Status im Mandat aktualisieren <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">basierend auf besprochenen Inhalten</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Follow-up-Email verfassen <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">aus Gespräch extrahiert</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Signale</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Sentiment</dt><dd>${e.sentiment === 'positive' ? '😊 Positiv' : e.sentiment === 'negative' ? '😟 Negativ' : '😐 Neutral'}</dd>`;
+    h += `<dt>Mandats-Fortschritt</dt><dd>On Track</dd>`;
+    h += `<dt>Beziehungs-Temperatur</dt><dd>Warm</dd>`;
+    h += `<dt>Red-Flags</dt><dd class="muted">Keine kritischen Flags erkannt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Erkannte Schlagwörter</h4>`;
+    h += `<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px">`;
+    h += `<span class="chip">Honorar</span><span class="chip">Stage-Transition</span><span class="chip">Kandidat</span><span class="chip">Nächste Schritte</span>`;
+    h += `</div></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'classify') {
+    // v1.3 NEU: Klassifizierungs-Tab
+    let h = `<div class="drawer-section"><h4>AI-Vorschläge (Top 3)</h4>`;
+    const [sugName, sugConf] = (e.aiSuggestion || '|').split('|');
+    if (sugName) {
+      h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" checked style="margin-right:6px"><strong>${escapeHtml(sugName)}</strong> <span class="muted">· ${sugConf || '—'} %</span><div class="meta">Haupt-Vorschlag · automatisch erkannt</div></label></div>`;
+    }
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#50 Erreicht - Mandatsbesprechung</strong> <span class="muted">· 8 %</span><div class="meta">Strategische Mandats-Besprechung</div></label></div>`;
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#22 Emailverkehr - Allgemeine Kommunikation</strong> <span class="muted">· 3 %</span><div class="meta">Generische Kommunikation</div></label></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Manuell wählen</h4>`;
+    h += `<div style="display:flex;gap:8px;margin-bottom:8px">`;
+    h += `<input type="search" placeholder="🔍 Activity-Type suchen …" style="flex:1">`;
+    h += `<select><option>Alle Kategorien (18)</option><option>Kontaktberührung</option><option>Erreicht</option><option>Emailverkehr</option><option>Messaging</option><option>Interviewprozess</option><option>Placementprozess</option><option>Refresh Kandidatenpflege</option><option>Mandatsakquise</option><option>Erfolgsbasis</option><option>Assessment</option><option>System / Meta</option><option>Kalender &amp; Planung</option><option>Dokumenten-Pipeline</option><option>Garantie &amp; Schutzfrist</option><option>Scraper &amp; Intelligence</option><option>Pipeline-Transitions</option><option>Saga-Events</option><option>AI &amp; LLM</option></select>`;
+    h += `</div>`;
+    h += `<div class="muted" style="font-size:11px">117 Activity-Types verfügbar · Katalog v1.4 · Favoriten zuerst</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Verknüpfungen bestätigen</h4>`;
+    if (e.links.length) {
+      e.links.forEach(l => {
+        h += `<div class="list-item"><div class="name"><label><input type="checkbox" checked style="margin-right:6px"> ${escapeHtml(l)}</label></div><div class="meta">auto-erkannt</div></div>`;
+      });
+    } else {
+      h += `<div class="muted" style="font-size:12px">Keine Auto-Erkennung — manuell zuordnen.</div>`;
+    }
+    h += `<div class="list-item"><div class="name"><label><input type="checkbox" style="margin-right:6px"> Weitere Verknüpfung</label> <select style="float:right;font-size:11px"><option>— wählen —</option><option>Mandat · aktuell</option><option>Kandidat · in Prozess</option></select></div><div class="meta">optional</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section">`;
+    h += `<div class="flex gap-8"><button class="btn btn-sm btn-primary">✓ AI-Vorschlag akzeptieren &amp; klassifizieren</button>`;
+    h += `<button class="btn btn-sm">❌ Verwerfen (kein Log-Eintrag)</button></div>`;
+    h += `</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'history') {
+    // v1.3 NEU: Verlauf-Tab
+    let h = `<div class="drawer-section"><h4>Frühere Interaktionen <span class="muted" style="font-size:11px">(Demo · 4 Einträge)</span></h4>`;
+    h += `<div class="hist-timeline" style="margin-top:8px">`;
+    h += `<div class="hist-row"><div class="hist-time">10.04.2026 14:20</div><div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div><div class="hist-body"><div class="hist-title"><strong>Update Call · 42 min</strong></div><div class="hist-sub">Mandats-Status &amp; Zwischenfeedback</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">03.04.2026 09:15</div><div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div><div class="hist-body"><div class="hist-title"><strong>E-Mail versendet · Kandidaten-Shortlist</strong></div><div class="hist-sub">Shortlist mit 4 Profilen</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">27.03.2026 11:00</div><div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div><div class="hist-body"><div class="hist-title"><strong>Mandatsbesprechung · 60 min</strong></div><div class="hist-sub">Kick-off · Zielprofil · Honorar-Staffel fixiert</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">15.03.2026 16:30</div><div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div><div class="hist-body"><div class="hist-title"><strong>✓ Neues Mandat gewonnen</strong></div><div class="hist-sub">Target-Mandat · Honorar-Gesamt fixiert</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `</div>`;
+    h += `<button class="btn btn-sm" style="margin-top:10px">→ Komplette Mandats-History</button>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Interaktions-Rhythmus</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Frequenz</dt><dd>2.4 Interaktionen / Woche</dd>`;
+    h += `<dt>Kanal-Mix</dt><dd>55 % Phone · 38 % Email · 7 % In-Person</dd>`;
+    h += `<dt>Ø Antwort-Latenz</dt><dd>~3 h (werktags)</dd>`;
+    h += `</dl></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'briefing') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>AI → Briefing-Maske</h4><div style="padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:3px;font-size:13px;line-height:1.65"><strong>Briefing-Call erkannt.</strong> Extrahierte Informationen gehen in die Briefing-Maske.</div></div>`;
+    return;
+  }
+  if (id === 'reminders') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Verknüpfte Reminders</h4><div class="muted" style="font-size:12px">Aus diesem Event abgeleitete Reminders.</div></div>`;
+    return;
+  }
+}
+
+/* Reminder · + Button */
+function openReminderNew() {
+  const title = document.getElementById('remTitle');
+  const ctx = document.getElementById('remContext');
+  const due = document.getElementById('remDue');
+  if (title) title.value = '';
+  if (ctx) ctx.value = '';
+  if (due) {
+    const d = new Date(); d.setDate(d.getDate()+1); d.setHours(10,0,0,0);
+    const pad = n => String(n).padStart(2,'0');
+    due.value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  const dt = document.getElementById('remDrawTitle');
+  const ds = document.getElementById('remDrawSub');
+  const dc = document.getElementById('remDrawChips');
+  if (dt) dt.textContent = 'Neuer Reminder';
+  if (ds) ds.textContent = 'Erstelle einen Termin-, Follow-up- oder System-Reminder';
+  if (dc) dc.innerHTML = '<span class="chip chip-accent">neu</span>';
+  openDrawer('reminderDrawer', 0);
+}
+
+function saveReminder(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const title = document.getElementById('remTitle').value.trim();
+  const type = document.getElementById('remType').value;
+  const due = document.getElementById('remDue').value;
+  const owner = document.getElementById('remOwner').value;
+  const ctx = document.getElementById('remContext').value.trim();
+  const link = document.getElementById('remLink').value;
+  if (!title) { alert('Titel ist Pflicht.'); return false; }
+  if (!due) { alert('Fälligkeit muss gesetzt sein.'); return false; }
+  const dueDate = new Date(due);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dayDiff = Math.round((dueDate - now) / 86400000);
+  let group, dueLabel;
+  if (dayDiff < 0) { group = 'overdue'; dueLabel = `${-dayDiff} d überfällig`; }
+  else if (dayDiff === 0) { group = 'today'; dueLabel = dueDate.toTimeString().slice(0,5) + ' Uhr'; }
+  else if (dayDiff <= 6) { group = 'week'; dueLabel = formatDate(dueDate) + (dayDiff===1?' · morgen':' · in '+dayDiff+' d'); }
+  else { group = 'later'; dueLabel = formatDate(dueDate); }
+  const sec = document.querySelector('#tab-7 .rem-section[data-rem-group="'+group+'"] tbody');
+  if (!sec) { alert('Sektion '+group+' nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-rem', group);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td style="width:36px"><input type="checkbox"></td><td><strong>${escapeHtml(title)}</strong>${ctx?`<div class="muted" style="font-size:11px">${escapeHtml(ctx)}</div>`:''}${link?`<div class="muted" style="font-size:11px">→ ${escapeHtml(link)}</div>`:''}</td><td><span class="chip chip-accent">${escapeHtml(type)}</span></td><td${group==='overdue'?' style="color:var(--red);font-weight:600"':''}>${dueLabel}</td><td><span class="actor-chip">${escapeHtml(owner)}</span></td><td class="right"><button class="btn btn-sm">Erledigen</button></td>`;
+  sec.insertBefore(tr, sec.firstChild);
+  setTimeout(() => { tr.style.transition = 'background 0.6s'; tr.style.background = ''; }, 1500);
+  closeDrawer('reminderDrawer');
+  return false;
+}
+
+function formatDate(d) { return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }
+
+/* filterRemStatus: in layout.js (shared) · scoped to containing .tab-panel + done-section toggle */
+
+/* Upload-Drawer */
+function onUploadFile(input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  document.getElementById('uploadFileName').textContent = f.name;
+  document.getElementById('uploadFileMeta').textContent = prettySize(f.size) + ' · ' + (f.type || 'unbekannter Typ');
+}
+function handleDrop(ev) {
+  ev.preventDefault();
+  ev.target.style.borderColor = 'var(--border)';
+  ev.target.style.background = 'var(--bg)';
+  const f = ev.dataTransfer.files && ev.dataTransfer.files[0]; if (!f) return;
+  const input = document.getElementById('uploadFile');
+  const dt = new DataTransfer(); dt.items.add(f); input.files = dt.files;
+  onUploadFile(input);
+}
+function prettySize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+function extOf(name) { const m = (name||'').match(/\.([a-z0-9]+)$/i); return m ? m[1].toLowerCase() : ''; }
+function fileTypeLabel(ext) {
+  if (['pdf'].includes(ext)) return { label:'PDF', cls:'ft-pdf' };
+  if (['doc','docx'].includes(ext)) return { label:'DOCX', cls:'ft-docx' };
+  if (['xls','xlsx'].includes(ext)) return { label:'XLSX', cls:'ft-xlsx' };
+  if (['jpg','jpeg','png','gif'].includes(ext)) return { label:'IMG', cls:'ft-img' };
+  return { label:(ext||'FILE').toUpperCase(), cls:'' };
+}
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function doUpload(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const fileInput = document.getElementById('uploadFile');
+  const file = fileInput.files && fileInput.files[0];
+  const catKey = document.getElementById('uploadCat').value;
+  if (!catKey) { alert('Bitte Kategorie wählen.'); return false; }
+  if (!file) { alert('Bitte Datei auswählen.'); return false; }
+  const authorEl = document.getElementById('uploadAuthor');
+  const author = authorEl.dataset.value || authorEl.textContent.trim();
+  const title = (document.getElementById('uploadTitle').value || file.name.replace(/\.[^.]+$/, '')).trim();
+  const note = document.getElementById('uploadNote').value.trim();
+  const link = document.getElementById('uploadLink').value;
+  const ft = fileTypeLabel(extOf(file.name));
+  const today = new Date();
+  const dmy = String(today.getDate()).padStart(2,'0')+'.'+String(today.getMonth()+1).padStart(2,'0')+'.'+today.getFullYear();
+  const catLabels = { 'offerte-vertrag':'Offerte/Vertrag', 'rechnung':'Rechnung', 'stellenbriefing':'Stellenbriefing', 'assessment':'Assessment', 'scraper':'Scraper', 'sonstiges':'Sonstiges' };
+  const tbody = document.querySelector('#tab-6 .data-table tbody');
+  if (!tbody) { alert('Dokumente-Tabelle nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-cat', catKey);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td><span class="file-type ${ft.cls}">${ft.label}</span></td><td><strong>${escapeHtml(title)}</strong>${note?`<div class="muted" style="font-size:11px">${escapeHtml(note)}</div>`:''}</td><td><span class="chip chip-accent">${escapeHtml(catLabels[catKey]||catKey)}</span></td><td>${link?`<a href="#">${escapeHtml(link)}</a>`:'<span class="muted">Mandat-Level</span>'}</td><td>${dmy}</td><td><span class="actor-chip">${escapeHtml(author)}</span></td><td class="right">${prettySize(file.size)}</td><td class="right"><button class="row-icon-btn">›</button></td>`;
+  tbody.insertBefore(tr, tbody.firstChild);
+  setTimeout(() => { tr.style.transition='background 0.6s'; tr.style.background=''; }, 1500);
+  document.getElementById('uploadForm').reset();
+  document.getElementById('uploadFileName').textContent = 'Datei hierher ziehen oder klicken';
+  document.getElementById('uploadFileMeta').textContent = 'PDF, DOCX, XLSX, JPG, PNG · max. 20 MB';
+  closeDrawer('uploadDrawer');
+  return false;
+}
+
+/* Hist-Row Clicks + Default-Init */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#tab-5 .hist-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', e => {
+      if (e.target.tagName === 'A') return;
+      openHistDrawer(row);
+    });
+  });
+});
+</script>
+</body>
+</html>

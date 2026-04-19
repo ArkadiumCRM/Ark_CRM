@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Kandidaten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+</head>
+<body>
+
+
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Kandidaten</h1>
+    <span class="muted">8'400 Profile · 1'240 aktive Sourcing · 47 in Prozess</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">+ Kandidat</button>
+    <button class="btn btn-sm">📥 CV-Import</button>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Total Profile</div><div class="kpi-value">8'400</div><div class="kpi-sub muted">Datenbank gesamt</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--red)">🔥 Hot</div><div class="kpi-value" style="color:var(--red)">124</div><div class="kpi-sub muted">aktiv ansprechbar</div></div>
+    <div class="kpi-card"><div class="kpi-label">In Prozess</div><div class="kpi-value">47</div><div class="kpi-sub muted">über 31 Accounts</div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--gold)">Grade A</div><div class="kpi-value" style="color:var(--gold)">312</div><div class="kpi-sub muted">Top-Executives</div></div>
+    <div class="kpi-card"><div class="kpi-label">Neu 30 d</div><div class="kpi-value">84</div><div class="kpi-sub muted">CV-Parse + Scraper</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Datenfrische</div><div class="kpi-value">76 %</div><div class="kpi-sub muted">&lt; 1 Jahr aktuell</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche · Name, Funktion, Arbeitgeber, Skills …" style="flex:1 1 280px">
+    <select><option>Alle Funktionen</option><option>Bauleiter</option><option>Gesamtprojektleiter</option><option>Bauingenieur</option><option>Controlling</option><option>CFO / Finanzleitung</option></select>
+    <select><option>Alle Sparten</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select>
+    <select><option>Alle Cluster</option><option>Hochbau</option><option>Tiefbau</option><option>Immobilien-Investoren</option><option>Gebäudetechnik</option></select>
+    <select><option>Alle Stages</option><option>Check</option><option>Refresh</option><option>Premarket</option><option>Active Sourcing</option><option>GO schriftlich</option><option>Ghosting</option></select>
+    <select><option>Alle CMs</option><option>PW</option><option>JV</option><option>LR</option><option>MF</option></select>
+  </div>
+
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">8'400</span></div>
+      <div class="chip-tab">🔥 Hot <span class="count">124</span></div>
+      <div class="chip-tab">Active Sourcing <span class="count">1'240</span></div>
+      <div class="chip-tab">In Prozess <span class="count">47</span></div>
+      <div class="chip-tab">Grade A <span class="count">312</span></div>
+      <div class="chip-tab">Refresh fällig <span class="count">186</span></div>
+      <div class="chip-tab">Ghosting <span class="count">92</span></div>
+    </div>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active">Tabelle</div>
+      <div class="chip-tab">Karten</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead><tr><th></th><th>Kandidat</th><th>Funktion · Arbeitgeber</th><th>Sparte</th><th>Stage</th><th>Grade</th><th>Standort</th><th>CM</th><th>Ø Match (aktiv)</th><th>Letzter Kontakt</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer" onclick="location.href='../Vollansichten/candidates.html'">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%;border:2px solid var(--gold)">TF</div></td>
+          <td><strong>Tobias Furrer</strong> <span class="chip chip-red" style="font-size:9px;margin-left:4px">🔥</span><div class="muted" style="font-size:11px">47 J. · Zollikon</div></td>
+          <td>Gesamtbauleiter Spezialtiefbau · <strong>Implenia AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip chip-gold">GO schriftlich</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td>ZH</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td style="font-weight:600">94 % · CFO-Suche</td>
+          <td>vor 3 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">MS</div></td>
+          <td><strong>Martin Stucki</strong><div class="muted" style="font-size:11px">52 J. · Basel</div></td>
+          <td>Finanzleiter · <strong>ERNE AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip chip-green">CV IN</span></td>
+          <td><span class="chip">B</span></td>
+          <td>BS</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>82 %</td>
+          <td>vor 5 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">AK</div></td>
+          <td><strong>Andrea Koller</strong> <span class="chip chip-red" style="font-size:9px">🔥</span><div class="muted" style="font-size:11px">44 J. · Zürich</div></td>
+          <td>CFO · <strong>Eberhard Bau AG</strong></td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip chip-green">CV IN</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td>ZH</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>78 %</td>
+          <td>vor 1 Woche</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">PS</div></td>
+          <td><strong>Peter Stadler</strong><div class="muted" style="font-size:11px">49 J. · Winterthur</div></td>
+          <td>Head of Finance · <strong>Steiner Investment</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip chip-green">Briefing</span></td>
+          <td><span class="chip">B</span></td>
+          <td>ZH</td>
+          <td><span class="actor-chip">LR</span></td>
+          <td>85 %</td>
+          <td>vor 2 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">NB</div></td>
+          <td><strong>Nadine Berger</strong><div class="muted" style="font-size:11px">41 J. · Zug</div></td>
+          <td>CFO · <strong>Preinvest Group</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip chip-green">Briefing</span></td>
+          <td><span class="chip">B</span></td>
+          <td>ZG</td>
+          <td><span class="actor-chip">JV</span></td>
+          <td>74 %</td>
+          <td>vor 4 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">CZ</div></td>
+          <td><strong>Claudia Zehnder</strong> <span class="chip chip-red" style="font-size:9px">🔥</span><div class="muted" style="font-size:11px">51 J. · Zürich</div></td>
+          <td>CFO · <strong>Halter AG</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip">Research</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td>ZH</td>
+          <td><span class="actor-chip">LR</span></td>
+          <td>89 %</td>
+          <td>vor 6 Tagen</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">MG</div></td>
+          <td><strong>Markus Gerber</strong><div class="muted" style="font-size:11px">46 J. · Zollikon</div></td>
+          <td>Head of Finance · <strong>HRS Real Estate</strong></td>
+          <td><span class="chip chip-accent">REM</span></td>
+          <td><span class="chip">Research</span></td>
+          <td><span class="chip chip-gold">A</span></td>
+          <td>ZH</td>
+          <td><span class="actor-chip">LR</span></td>
+          <td>85 %</td>
+          <td>vor 1 Woche</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="11" style="text-align:center">+ 8'393 weitere · <button class="btn btn-sm">↓ Mehr laden</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+/* Auto-wire: jeder Row-Klick → Kandidaten-Detailmaske */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = '../Vollansichten/candidates.html');
+  });
+});
+</script>
+</body>
+</html>

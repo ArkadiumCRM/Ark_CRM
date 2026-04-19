@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><title>ARK CRM — Projekte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+</head>
+<body>
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Projekte</h1>
+    <span class="muted">42 getrackt · 18 in Planung · 16 in Ausführung · 8 abgeschlossen</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">+ Projekt</button>
+    <button class="btn btn-sm">📡 Scraper-Queue (baublatt · simap)</button>
+  </div>
+</div>
+<div class="content">
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Getrackte Projekte</div><div class="kpi-value">42</div><div class="kpi-sub muted">Total 2025–2028</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--gold)"><div class="kpi-label" style="color:var(--gold)">Top-Projekte</div><div class="kpi-value" style="color:var(--gold)">7</div><div class="kpi-sub muted">strategische Bedeutung</div></div>
+    <div class="kpi-card"><div class="kpi-label">Gesamtvolumen</div><div class="kpi-value" style="font-size:20px">CHF 2.8 B</div><div class="kpi-sub muted">getrackt</div></div>
+    <div class="kpi-card"><div class="kpi-label">Verknüpfte Firmen</div><div class="kpi-value">184</div><div class="kpi-sub muted">über BKP-Bridge</div></div>
+    <div class="kpi-card"><div class="kpi-label">Kandidaten-Refs</div><div class="kpi-value">412</div><div class="kpi-sub muted">aus Werdegängen</div></div>
+  </div>
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Projekt-Name, Bauherr, Adresse …" style="flex:1 1 280px">
+    <select><option>Alle Status</option><option>In Planung</option><option>Ausschreibung</option><option>In Ausführung</option><option>Fertig</option></select>
+    <select><option>Alle Sparten</option><option>ARC</option><option>ING</option><option>GT</option><option>REM</option></select>
+    <select><option>Alle Cluster</option><option>Wohnungsbau</option><option>Gewerbebau</option><option>Tiefbau</option><option>Infrastruktur</option></select>
+    <select><option>Alle Kantone</option><option>ZH</option><option>BE</option><option>ZG</option></select>
+    <select><option>Alle Volumina</option><option>&lt; 10 M</option><option>10–50 M</option><option>50–100 M</option><option>&gt; 100 M</option></select>
+  </div>
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">42</span></div>
+      <div class="chip-tab">🏗 In Ausführung <span class="count">16</span></div>
+      <div class="chip-tab">📐 In Planung <span class="count">18</span></div>
+      <div class="chip-tab">🏆 Top-Projekte <span class="count">7</span></div>
+      <div class="chip-tab">Fertig <span class="count">8</span></div>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead><tr><th>Projekt</th><th>Bauherr</th><th>Standort</th><th>Sparten</th><th>Status</th><th>Volumen</th><th>BGF</th><th>Beteiligte</th><th>Bauzeit</th><th class="right">›</th></tr></thead>
+      <tbody>
+        <tr style="cursor:pointer;background:var(--gold-soft)" onclick="location.href='../Vollansichten/projects.html'">
+          <td><strong>🏆 Wohnsiedlung Uetlihof</strong><div class="muted" style="font-size:11px">186 Wohnungen · MINERGIE-A-Eco</div></td>
+          <td><a href="../Vollansichten/accounts.html">Bauherr Muster AG</a></td>
+          <td>Zürich-Albisrieden</td>
+          <td><span class="chip chip-accent">ARC</span> <span class="chip">ING</span></td>
+          <td><span class="chip chip-green">In Planung</span></td>
+          <td>CHF 80–100 M</td>
+          <td>24'500 m²</td>
+          <td>14 Firmen</td>
+          <td>2026–2028</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Bürogebäude Prime Tower Erweiterung</strong></td>
+          <td>Swiss Prime Site</td>
+          <td>Zürich</td>
+          <td><span class="chip chip-accent">ARC</span></td>
+          <td><span class="chip">In Ausführung</span></td>
+          <td>CHF 180 M</td>
+          <td>42'000 m²</td>
+          <td>23 Firmen</td>
+          <td>2024–2027</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Tunnel A4 Thalwil-Horgen</strong></td>
+          <td>ASTRA</td>
+          <td>Thalwil ZH</td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip">In Ausführung</span></td>
+          <td>CHF 240 M</td>
+          <td class="muted">—</td>
+          <td>8 Firmen</td>
+          <td>2024–2029</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>🏆 Überbauung Stadtkrone Süd</strong></td>
+          <td>Steiner Investment</td>
+          <td>Zürich-Altstetten</td>
+          <td><span class="chip chip-accent">ARC</span> <span class="chip">REM</span></td>
+          <td><span class="chip chip-amber">Ausschreibung</span></td>
+          <td>CHF 320 M</td>
+          <td>68'000 m²</td>
+          <td>12 Firmen</td>
+          <td>2026–2030</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><strong>Bahnhof Zürich Erweiterung</strong></td>
+          <td>SBB AG</td>
+          <td>Zürich</td>
+          <td><span class="chip chip-accent">ING</span></td>
+          <td><span class="chip chip-gold">Fertig</span></td>
+          <td>CHF 48 M</td>
+          <td class="muted">—</td>
+          <td>6 Firmen</td>
+          <td>2023–2025</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="10" style="text-align:center">+ 37 weitere</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="../_shared/layout.js"></script>
+</body></html>
