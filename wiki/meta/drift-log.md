@@ -80,25 +80,28 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 | Befund | Schwere | Detail |
 |--------|---------|--------|
-| **REVERSE DRIFT: ERP Tools** | 🔴 HOCH | 16 Mockups in `mockups/ERP Tools/` (commission×6, hr×7, zeit×3) ohne korrespondierende Specs in `specs/ARK_COMMISSION_*/ARK_HR_*/ARK_ZEITERFASSUNG_*` |
-| Admin-Debug-Spec ohne Mockup | 🟡 MITTEL | `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` neu — kein `admin-debug.html` in Vollansichten (admin.html berührt, aber kein Debug-spezifisches Mockup) |
-| Stammdaten-Vollansicht Plan-only | 🟡 MITTEL | `ARK_STAMMDATEN_VOLLANSICHT_PLAN_v0_1.md` existiert, `stammdaten.html` berührt — aber kein SCHEMA oder INTERACTIONS Spec |
-| Pipeline-Component-Spec ohne Mockup | 🟢 NIEDRIG | `ARK_PIPELINE_COMPONENT_v1_0.md` ist Komponenten-Spec, kein dediziertes Mockup erwartet — ok |
-| Dashboard-Customization ohne Mockup | 🟢 NIEDRIG | `ARK_DASHBOARD_CUSTOMIZATION_SCHEMA_v1.md` — `dashboard.html` berührt ✓ |
-| Alle 13 Entity-/Tool-Masken | ✅ SYNCED | Kandidat · Account · Mandat · Projekt · Prozess · Assessment · Scraper · Email-Kalender · Reminders · Dok-Generator · Admin · Firmengruppe · Job — alle spec+mockup beide berührt |
+| **Git-Health: Detached-HEAD-Commit** | 🔴 HOCH | Commit `89b367b` (feat(erp-tools): HR/Commission/Zeit) war in detached HEAD State, nicht auf main verbunden. Wurde via Reflog recovered und via Merge-Commit in main integriert. Ursache prüfen. |
+| ERP-Specs in separatem Verzeichnis | 🟡 MITTEL | ERP-Tools-Specs liegen in `ERP Tools/specs/` statt `specs/` — 15 Spec-Dateien (Commission×2, HR×8, Zeiterfassung×2, Eval×2). Intentional (ERP-Phase-Trennung) oder Struktur-Drift? |
+| Admin-Debug-Spec ohne Mockup | 🟡 MITTEL | `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` in `specs/` — kein `admin-debug.html` in `mockups/Vollansichten/`. Admin.html berührt, aber kein Debug-spezifisches Mockup. |
+| Stammdaten-Vollansicht Plan-only | 🟡 MITTEL | `ARK_STAMMDATEN_VOLLANSICHT_PLAN_v0_1.md` vorhanden, `mockups/Vollansichten/stammdaten.html` existiert — aber kein SCHEMA/INTERACTIONS-Spec. |
+| Mockup-Reorganisation abgeschlossen | ✅ INFO | `mockups/` hat neue Subdirectory-Struktur: `Listen/` (8 Files) · `Vollansichten/` (16 Files) · `ERP Tools/` (16 Files). Root-Level nur noch 4 mobile/shell HTMLs. |
+| ERP-Tools-Specs vorhanden | ✅ SYNCED | Commission: `ARK_COMMISSION_ENGINE_SPEC_v0_1.md` ✓ · HR: `ARK_HR_TOOL_SCHEMA_v0_1.md` + 7 weitere ✓ · Zeiterfassung: `ARK_ZEITERFASSUNG_PLAN_v0_1.md` ✓ |
+| Alle 13 Entity-/Tool-Masken | ✅ SYNCED | Kandidat · Account · Mandat · Projekt · Prozess · Assessment · Scraper · Email-Kalender · Reminders · Dok-Generator · Admin · Firmengruppe · Job — alle spec+mockup vorhanden |
 | Grundlagen-Changelog | ✅ CLEAN | 0 unresolved entries |
 | Digests | ✅ CURRENT | Alle 5 Digests aktuell (letzter Clean 2026-04-17 18:18) |
 
 ### Action Items (für Peter)
 
-1. **🔴 ERP-Tools-Specs schreiben** — `ARK_COMMISSION_SCHEMA_v0_1.md`, `ARK_HR_SCHEMA_v0_1.md`, `ARK_ZEITERFASSUNG_SCHEMA_v0_1.md` erstellen, bevor ERP-Mockups weiter wachsen. Reverse-Drift schließt sich nur mit Spec-Erstellung.
+1. **🔴 Detached-HEAD-Ursache klären** — Commit `89b367b` war nicht auf main. Wiederholung verhindern: sicherstellen, dass Sessions immer `git checkout main` vor Commits machen. Scan-Routine funktioniert, Recovery war erfolgreich.
 
-2. **🔴 `ark-lint` auf ERP-Tools-Mockups** — 16 neue HTML-Files in `mockups/ERP Tools/` noch nie gelinted. Wahrscheinlich Hauptquelle der SNAKE-CASE=188 + UMLAUT=161 Kumulativ-Counts. Einen gezielten Lint-Pass starten.
+2. **🔴 `ark-lint` auf ERP-Tools-Mockups** — 16 HTML-Files in `mockups/ERP Tools/` noch nie gelinted. Wahrscheinlich Hauptquelle der SNAKE-CASE=188 + UMLAUT=161 Kumulativ-Counts. Gezielten Lint-Pass starten.
 
-3. **🟡 Stammdaten-Vollansicht vervollständigen** — Plan-Spec vorhanden, aber kein SCHEMA/INTERACTIONS-Spec. Entweder Spec erstellen oder Mockup als Draft markieren.
+3. **🟡 ERP-Specs-Verzeichnis klären** — Intentional in `ERP Tools/specs/` (ERP-Phase-Trennung) oder nach `specs/` migrieren? Entscheidung dokumentieren, dann konsistent halten.
 
-4. **🟡 Admin-Debug-Mockup** — `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` spezifiziert Debug-Ansicht, aber kein `admin-debug.html` existiert. Falls Feature geplant: Mockup anlegen oder in `admin.html` integrieren und Spec-Scope anpassen.
+4. **🟡 Stammdaten-Vollansicht vervollständigen** — Plan-Spec vorhanden, Mockup existiert (`stammdaten.html`) — SCHEMA + INTERACTIONS-Spec noch schreiben.
 
-5. **🟢 Powershell-Hook** — `ark-status.ps1` läuft nur im Windows-Env. Für Monday-Scans in Linux-Umgebung: Bash-Fallback oder Ergebnisse via Windows-Session vorbereiten.
+5. **🟡 Admin-Debug-Mockup** — `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` ohne Mockup. Mockup anlegen oder Scope in `admin.html` klären.
 
-6. **🟢 `/ark-sync-report`** — Nach ERP-Spec-Erstellung ein vollständiger Sync-Report empfohlen (13 Entity-Specs × 5 Grundlagen-Files).
+6. **🟢 Powershell-Hook** — `ark-status.ps1` läuft nur im Windows-Env. Für diesen Monday-Scan: N/A (Linux). Bash-Fallback oder Windows-Session verwenden.
+
+7. **🟢 `/ark-sync-report`** — ERP-Specs-Erstellung abgeschlossen (15 Specs). Vollständiger Sync-Report empfohlen.
