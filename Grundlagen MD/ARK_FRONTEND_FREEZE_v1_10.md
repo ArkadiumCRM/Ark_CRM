@@ -4094,3 +4094,82 @@ Compose-Drawer Verknüpfung-Tab verwendet ausschließlich die **11 offiziellen E
 - Arkadium-Rolle-Regel: Coaching = Arkadium↔Kandidat, Interview = extern (Kunde↔Kandidat, read-only)
 
 **Das System ist bereit für den nächsten Build-Zyklus.**
+
+---
+
+## v1.11 · Zeit-Modul UI-Pattern (Phase 3 ERP · 2026-04-19)
+
+**Quelle:** `specs/ARK_ZEIT_INTERACTIONS_v0_1.md`
+
+### Zeit-Shell (`zeit.html`)
+
+Shell-Pattern analog `crm.html` · iframe-basiert · Topbar (Arkadium/ERP) · Sidebar (Zeit-Brand) · Theme-Toggle + Sidebar-Pin via `ark-theme` / `ark-sidebar-pinned` localStorage (shared mit CRM/HR/Commission).
+
+### Sidebar-Module (7)
+
+| Modul | Route | RBAC |
+|-------|-------|------|
+| Dashboard | `/zeit/dashboard` | alle |
+| Meine Zeit | `/zeit/meine-zeit` | alle |
+| Abwesenheiten | `/zeit/abwesenheiten` | alle |
+| Team | `/zeit/team` | TL/GF/Admin |
+| Saldi | `/zeit/saldi` | alle (self) · TL+ (Team) |
+| Export | `/zeit/export` | GF/Backoffice/Admin |
+| Admin | `/zeit/admin` | GF/Admin |
+
+### Drawer-Inventory (540px Default)
+
+1. **Tages-Eintrag-Edit** · Scanner-Events read-only + Kategorien-Zuordnung · Pausen-Validation-Chips
+2. **Urlaubs-Antrag** · Auto-Calc Arbeitstage · Konflikt-Check · Saldo-Preview
+3. **Krank-Meldung** · DJ-gestaffelte Arztzeugnis-Info · Upload + Reminder-Chain
+4. **Korrektur-Antrag** · Diff-Preview Alt/Neu · bei Lock: Admin-Freigabe-Hinweis
+5. **Extra-Guthaben-Antrag** · Typ-Sub-Auswahl (Geburtstag/Joker/ZEG/GL) · Sperrfristen-Check
+
+### Modal-Inventory (420px · nur für irreversible Confirms)
+
+1. **Monat einreichen** · Hard-Block bei Pausen-Gesetzesverletzung (>9h ohne 60min Pause)
+2. **Lock-Override** (nur Admin) · Grund-Pflicht · Re-Export-Warnung
+
+### Timer-Widget (global sichtbar)
+
+- Sticky-Chip rechts unten für Home-Office/Remote-MA (Scanner-lose Arbeitsplätze)
+- Idle/Running/Paused States
+- Projekt-/Kategorie-Quickpick bei Start
+
+### Scanner-Integration-Anzeige
+
+- Tages-Eintrag-Drawer zeigt Scanner-Events (check_in/break_out/break_end/check_out) read-only
+- `raw_duration_min` vs. `counted_duration_min`-Differenz sichtbar ("nicht angerechnet: 1h 12min")
+- DSG-Audit: jeder Zugriff auf Scanner-Events loggt in `fact_scanner_access_audit`
+
+### State-Machines (visuell)
+
+Approval-Chain-Stepper in Monats-Übersicht:
+
+```
+○ Submitted → ○ TL-Approved → ○ GF-Approved → ○ Locked → ○ Exported
+```
+
+### 3-Konten-Saldi-Karten (zeit-saldi)
+
+4 parallele Cards: Ferien · OR-Überstunden · ArG-Überzeit · Extra-Guthaben. `credit_factor`-basierte Feiertagslogik für Teilzeit.
+
+### Design-System-Konformität (neue Regeln für Zeit-Modul)
+
+- **Scanner-Widget** · Chip-Pattern rechts unten (wie Outlook-Mini-Chat)
+- **Hard-Warning vs. Soft-Warning** Farb-Tokens: 🔴 rot = Gesetzesverletzung (ArG-Pausen), 🟠 amber = Firmen-Policy-Warnung (Ruhezeit, Cap), 🟡 gelb = Info
+- **Biometrie-Hinweis** im Admin-Scanner-Setup: "Biometrische Daten (Art. 5 Ziff. 4 revDSG) · Opt-out via Badge/PIN möglich"
+- **DJ-gestaffelte Arztzeugnis-Chips** in Krank-Drawer: dynamisch basierend auf `dienstjahr(user)`
+- **Editorial-Serif** für alle Zeit-Dashboard-Headlines + Hero-KPIs (Libre Baskerville)
+- **DM Sans** für Daten-Grids, Tages-Karten, Inline-Edits
+
+### Integration-UI zu bestehenden Modulen
+
+- **CRM** · Projekt-Dropdown in Tages-Eintrag-Drawer aus `fact_process_core WHERE status=active`
+- **Commission** · ZEG-Score-Card im Zeit-Dashboard mit Link zu Commission-Dashboard
+- **HR** · 73b-Vereinbarung + MA-Vertrag-Editor im Zeit-Admin-Modul verknüpft mit HR-Employment-Contract
+
+### Versions-Changelog
+
+- **v1.10:** Email/Outlook-UI-Freeze
+- **v1.11 (2026-04-19):** Zeit-Modul · 7 Screens + 5 Drawer + 2 Modals · Scanner-Widget · DSG-Hinweise · 3-Konten-Saldi · Approval-Chain-Stepper

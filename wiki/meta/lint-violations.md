@@ -1521,3 +1521,59 @@
 | UMLAUT \| 1240 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
 | UMLAUT \| 1241 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
 
+
+## [2026-04-19 23:08] session-13946034 | zeit-meine-zeit.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DB-TECH \| 402 \| <li>20.04. 18:10 — fact_time_entry erstellt (Worker · source=scanner)</li> \| -> use sprechenden Begriff |
+
+
+## [2026-04-19 23:09] session-13946034 | zeit-meine-zeit.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DB-TECH \| 402 \| <li>20.04. 18:10 — fact_time_entry erstellt (Worker · source=scanner)</li> \| -> use sprechenden Begriff |
+
+
+## [2026-04-19 23:09] session-13946034 | zeit-meine-zeit.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DB-TECH \| 402 \| <li>20.04. 18:10 — fact_time_entry erstellt (Worker · source=scanner)</li> \| -> use sprechenden Begriff |
+
+
+## [2026-04-20 07:46] session-13946034 | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-20 08:19] session-13946034 | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-20 08:19] session-13946034 | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-20 08:19] session-13946034 | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-20 08:34] session-13946034 | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+

@@ -2573,4 +2573,85 @@ Tabellen-Count: ~161 Tabellen + 4 Views (davon 10 deprecated)
   005_ui_addendum_changes:        3 Tabellen (+ 2 Schema-Änderungen)
   006_schema_cleanup:             0 Tabellen (Migration für Cleanup)
   007_v1_2_changes:               4 Tabellen + 1 View + Schema-Änderungen
+  008_v1_4_zeit_module:          15 Tabellen + 4 Views + 9 Enums (Phase 3 ERP)
 ```
+
+---
+
+## v1.4 · Zeit-Modul-Erweiterung (2026-04-19 · Phase 3 ERP)
+
+**Quelle:** `specs/ARK_ZEIT_SCHEMA_v0_1.md` · basiert auf [zeit-research-overview.md](../wiki/sources/phase3-research/zeit/zeit-research-overview.md) + Reglemente-Triade + Peter-Decisions.
+
+### Extensions neu
+
+```sql
+CREATE EXTENSION IF NOT EXISTS btree_gist;  -- GIST-Overlap-Constraints
+-- pgcrypto bereits vorhanden (gen_random_uuid)
+```
+
+### ENUM-Types neu (9)
+
+1. `time_entry_state` (draft · submitted · approved · locked · corrected · rejected)
+2. `absence_state` (draft · submitted · approved · active · completed · rejected · cancelled · corrected)
+3. `correction_state` (requested · tl_approved · gf_approved · applied · rejected)
+4. `period_close_state` (open · submitted · tl_approved · gf_approved · locked · exported · reopened)
+5. `work_time_model` (FLEX_CORE · FIXED · PARTTIME · SIMPLIFIED_73B · EXEMPT_EXEC)
+6. `scan_event_type` (check_in · check_out · break_start · break_end · override)
+7. `time_entry_source` (scanner · manual · timer · import · admin)
+8. `overtime_kind` (regular · ueberstunden_or · ueberzeit_arg · uncounted)
+9. `salary_scale_code` (ZURICH · BERN · BASEL · INSURANCE_EQUIV) + `salary_continuation_phase`
+
+### Dimension-Tabellen neu (4)
+
+1. `dim_absence_type` · 30 Codes · DJ-gestaffelte Arztzeugnis-Felder
+2. `dim_time_category` · 12 Codes · billable_default + zeg_relevant-Flags
+3. `dim_work_time_model` · 5 Codes
+4. `dim_salary_continuation_scale` · composite PK (scale_code, dienstjahr_from) · ZH + BE Seeds
+
+### Fact-Tabellen neu (11)
+
+1. `firm_settings` · 19 Global-Configs
+2. `fact_workday_target` · Arbeitszeit-Vertrag pro MA/Jahr · weekday_minutes_jsonb · core_hours * 3 Paare (AM/PM/Fr) · Salary-Scale per User
+3. `fact_holiday_cantonal` · 12 Seeds 2026 · `is_statutory` trennt gesetzl./lokal
+4. `fact_bridge_day` · GF-manuell pro Jahr (F11)
+5. `fact_time_scan_event` · Scanner-Roh (biometrie-sensitiv, DSG Art. 5 Ziff. 4)
+6. `fact_time_entry` · `raw_duration_min` vs `counted_duration_min` (10h-Cap-Trennung) · GIST-Overlap-Exclude
+7. `fact_time_correction` · mit tl_approved_by + admin_approved_by
+8. `fact_time_period_close` · Monats-Lock mit `tl_weekly_checks_done JSONB` (F12 Hybrid)
+9. `fact_absence` · GIST-Overlap-Exclude · DJ-gestaffelter Arztzeugnis-Reminder-Flag
+10. `fact_vacation_balance` · entitlement + carried_over + taken → remaining (computed) · `carryover_deadline DATE` (14d nach Ostern)
+11. `fact_overtime_balance` · 3-Konten: ueberstunden_or vs. ueberzeit_arg
+12. `fact_extra_leave_entitlement` · Extra-Guthaben (Geburtstag/Joker/ZEG/GL)
+13. `fact_salary_continuation_claim` · Krank-Anspruch nach Zürcher Skala
+14. `fact_simplified_agreement` · 73b-Vereinbarung (individual/collective)
+15. `fact_scanner_access_audit` · DSG-Audit für Biometrie-Zugriffe
+
+### Views neu (4)
+
+- `v_daily_saldo` · Ist vs. Soll pro User pro Tag
+- `v_monthly_saldo` · Aggregat
+- `v_time_per_mandate` · Commission-ZEG-Feed (FILTER zeg_relevant)
+- `v_weekly_approval_queue` · TL-Dashboard F12 Hybrid
+
+### Retention-Regeln neu
+
+| Entität | Retention | Grund |
+|---------|-----------|-------|
+| fact_time_entry | 5 J post Vertragsende | ArGV 1 Art. 73 Abs. 2 |
+| fact_absence (medical) | 5 J post Vertragsende | ArG 73 + revDSG Art. 5 |
+| doctor_cert_file | 5 J post Abwesenheit-Ende | revDSG Art. 5 Ziff. 2 |
+| fact_scanner_access_audit | 10 J | DSG-Nachweispflicht |
+| fact_time_correction | 10 J | Gerichtsbeweis |
+
+**Tabellen-Count aktualisiert:** ~176 Tabellen + 8 Views (davon 10 deprecated)
+
+### Integration-Hooks zu bestehenden Tabellen
+
+- `fact_time_entry.project_id` → FK auf `fact_process_core(id)` (nullable)
+- `fact_time_entry.user_id` → FK auf `dim_user(id)` (alle neuen Zeit-Tabellen)
+- Commission-Engine liest `v_time_per_mandate` für ZEG-Staffel
+
+### Version-Changelog
+
+- **v1.3 (2026-04-17):** Dok-Generator (dim_document_templates + fact_documents)
+- **v1.4 (2026-04-19):** Zeit-Modul (15 Tabellen + 4 Views + 9 Enums + btree_gist)

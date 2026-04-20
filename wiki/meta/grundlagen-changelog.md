@@ -28,6 +28,19 @@ Jede Änderung an einer der 5 Grundlagen-Dateien wird hier mit Timestamp + Sessi
 
 <!-- Neue Einträge werden nach diesem Kommentar appended. Älteste oben (chronologisch). -->
 
+### 2026-04-19 · Zeit-Modul v0.1 Grundlagen-Sync
+
+- **File:** `ARK_STAMMDATEN_EXPORT_v1_3.md` → v1.4 (append §90 Zeit-Modul-Stammdaten)
+- **File:** `ARK_DATABASE_SCHEMA_v1_3.md` → v1.4 (append 15 Tabellen + 4 Views + 9 Enums + btree_gist)
+- **File:** `ARK_BACKEND_ARCHITECTURE_v2_5.md` → v2.6 (append M. Zeit-Modul · 21 Endpoints · 12 Events · 9 Workers · 4 Sagas)
+- **File:** `ARK_FRONTEND_FREEZE_v1_10.md` → v1.11 (append Zeit-Modul UI-Pattern · 7 Screens + 5 Drawer + 2 Modals)
+- **Status:** resolved (Specs v0.1 + Decisions-Log + Grundlagen-Sync alle fertig)
+- **Resolved-In:** `specs/ARK_ZEIT_SCHEMA_v0_1.md` + `specs/ARK_ZEIT_INTERACTIONS_v0_1.md` + `wiki/meta/zeit-decisions-2026-04-19.md`
+- **Session:** Phase 3 ERP Zeit-Modul · Phase A (Q&A) + B (Specs) + C (Grundlagen-Sync)
+- **Digest-Status:** STALE · nach Commit regenerieren
+- **Sync-Kaskade zu Detailmasken:** N/A — Zeit-Modul ist NEUES Modul, tangiert keine der 9 existierenden Detailmasken (Kandidat/Account/Job/Mandat/Prozess/Firmengruppe/Projekt/Assessment/Dokgenerator)
+- **Next:** Phase D · 7 Mockups (zeit-meine-zeit · zeit-monat · zeit-abwesenheiten · zeit-team · zeit-saldi · zeit-export · zeit-admin)
+
 ## [2026-04-16 22:05] session-340bf0c3
 - **File:** ARK_STAMMDATEN_EXPORT_v1_3.md
 - **Tool:** Edit
@@ -420,3 +433,147 @@ Alle 3 Einträge aus Session 3131f2f7 (18:03–18:04) resolved im Rahmen der **M
 - **Sync-Check:** Datei-mtime 18:37:21 matcht Eintrag exakt. Drift-Scan §24b Responsive Policy zeigt Phase-3-Status „in Arbeit" dokumentiert. Kontext: parallele Arbeit an Admin-Vollansicht (`specs/ARK_ADMIN_VOLLANSICHT_SCHEMA_v0_1.md` 18:25 · `INTERACTIONS_v0_1.md` 18:28 · `mockups/admin.html` 18:37 · `mockups/admin-dashboard-templates.html` 18:37). Grep-Check: `/admin` als Route + Tool-Maske-Sidebar-Einträge konsistent; noch keine §4g-Admin-Sektion in FRONTEND_FREEZE (Admin-Vollansicht-Spec-Status: „Erstentwurf — Review ausstehend"). Kein konkreter Drift — Aufnahme in §4g erfolgt nach PO-Review der Admin-Vollansicht.
 - **Resolved-In:** Kein Drift in bestehenden Mockups/Specs. Offen: §4g-Admin-Aufnahme als Follow-Up nach Admin-Vollansicht-Review (separater Workflow, nicht Teil dieser Resolution).
 - **Digest-Stale:** frontend-freeze-digest.md wurde 18:43 regeneriert (post-edit) → aktuell.
+
+## [2026-04-19 22:59] session-13946034
+- **File:** ARK_STAMMDATEN_EXPORT_v1_3.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:00] session-13946034
+- **File:** ARK_DATABASE_SCHEMA_v1_3.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:01] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:01] session-13946034
+- **File:** ARK_FRONTEND_FREEZE_v1_10.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:37] session-13946034
+- **File:** ARK_STAMMDATEN_EXPORT_v1_3.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:45] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:45] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:45] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-19 23:46] session-13946034
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Zeit · Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .tm-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+  .tm-head { display:flex; align-items:center; gap:18px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:22px; }
+  .tm-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .tm-head .sub { font-size:13px; color:var(--text-light); }
+  .tm-head .actions { margin-left:auto; display:flex; gap:8px; }
+
+  .tabs { display:flex; gap:2px; border-bottom:2px solid var(--border); margin-bottom:20px; }
+  .tab { padding:10px 20px; cursor:pointer; font-size:13px; font-weight:500; color:var(--text-light); border-bottom:2px solid transparent; margin-bottom:-2px; }
+  .tab:hover { color:var(--accent); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab .count { background:var(--surface-alt, color-mix(in srgb,var(--text-light) 10%,var(--bg))); padding:1px 7px; border-radius:8px; font-size:10px; margin-left:6px; }
+  .tab.active .count { background:var(--accent); color:white; }
+
+  .panel { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:18px 22px; }
+  .panel-head { display:flex; align-items:center; gap:10px; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+  .panel-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); }
+  .panel-head .actions { margin-left:auto; display:flex; gap:8px; }
+
+  button { padding:8px 14px; font-size:12.5px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+  .btn-success { background:var(--green); color:white; border:1px solid var(--green); }
+  .btn-danger { background:var(--red); color:white; border:1px solid var(--red); }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  .queue-item { display:grid; grid-template-columns:auto 180px 110px 130px 1fr auto; gap:14px; padding:12px 14px; align-items:center; border-bottom:1px solid var(--border); font-size:13px; }
+  .queue-item:last-child { border-bottom:none; }
+  .queue-item:hover { background:var(--bg); }
+  .avatar { width:30px; height:30px; border-radius:50%; background:color-mix(in srgb,var(--accent) 15%,var(--bg)); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; font-family:'Libre Baskerville',serif; }
+  .q-name { font-weight:600; }
+  .q-meta { font-size:11.5px; color:var(--text-mid); }
+  .q-stats { font-size:12px; }
+  .q-stats .num { font-family:'Libre Baskerville',serif; font-weight:700; color:var(--accent); }
+  .q-warnings .w-chip { font-size:10.5px; padding:2px 7px; border-radius:10px; background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); font-weight:600; }
+  .q-warnings .w-chip.ok { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .q-actions { display:flex; gap:6px; }
+
+  .saldo-grid { width:100%; border-collapse:collapse; font-size:13px; }
+  .saldo-grid th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .saldo-grid td { padding:10px 12px; border-bottom:1px solid var(--border); }
+  .saldo-grid tr:hover td { background:var(--bg); }
+  .saldo-grid .num { font-family:'Libre Baskerville',serif; font-weight:500; text-align:right; }
+  .heat-ok { background:color-mix(in srgb,var(--green) 10%,transparent); }
+  .heat-warn { background:color-mix(in srgb,var(--amber) 10%,transparent); }
+  .heat-bad { background:color-mix(in srgb,var(--red) 10%,transparent); }
+
+  .bulk-bar { display:flex; gap:10px; align-items:center; padding:10px 14px; background:color-mix(in srgb,var(--accent) 5%,var(--bg)); border-radius:3px; margin-bottom:12px; font-size:12.5px; }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+  .day-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .day-table th { background:var(--bg); padding:8px 10px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .day-table td { padding:7px 10px; border-bottom:1px solid var(--border); }
+  .day-table td.num { font-family:'Libre Baskerville',serif; text-align:right; }
+
+  .warn-card { background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left:3px solid var(--amber); padding:10px 14px; border-radius:3px; font-size:12.5px; color:#8a5a00; margin-bottom:12px; }
+  .warn-card .w-title { font-weight:700; margin-bottom:3px; }
+  .info-card { background:color-mix(in srgb,var(--accent) 6%,var(--bg)); border-left:3px solid var(--accent); padding:10px 14px; border-radius:3px; font-size:12.5px; color:var(--text); margin-bottom:12px; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:var(--shadow-md); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.danger { border-left-color:var(--red); }
+
+  /* Modal */
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; z-index:95; }
+  .modal-backdrop.active { display:flex; align-items:center; justify-content:center; }
+  .modal { width:420px; background:var(--surface); border-radius:4px; box-shadow:0 10px 40px rgba(0,0,0,0.2); padding:22px; }
+  .modal h3 { margin:0 0 12px; font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); }
+  .modal .m-body { font-size:13px; color:var(--text); margin-bottom:16px; }
+  .modal .m-foot { display:flex; gap:10px; justify-content:flex-end; }
+
+  button.btn-sm.active-state { animation:pulse 0.4s ease; }
+  @keyframes pulse { 0% { transform:scale(1); } 50% { transform:scale(0.96); } 100% { transform:scale(1); } }
+
+  .reject-field { margin-top:10px; padding:10px 12px; background:var(--bg); border-radius:3px; font-size:12.5px; display:none; }
+  .reject-field.active { display:block; }
+  .reject-field textarea { width:100%; margin-top:6px; padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; font-family:inherit; min-height:60px; }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="tm-page">
+
+  <div class="tm-head">
+    <div>
+      <h1>Team · Zeit-Approvals</h1>
+      <div class="sub">Peter Wiederkehr (Head ING) · 5 direct reports</div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary">Export Team-Report</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('stempel')">Stempel-Anträge <span class="count">3</span></div>
+    <div class="tab" onclick="switchTab('month')">Monats-Approvals <span class="count">3</span></div>
+    <div class="tab" onclick="switchTab('saldi')">Team-Saldi <span class="count">10</span></div>
+  </div>
+
+  <!-- TAB: Stempel-Anträge (manuelle Stempel-Eingaben von MA) -->
+  <div class="panel" id="panel-stempel">
+    <div class="panel-head">
+      <h2>Offene Stempel-Anträge</h2>
+      <div class="actions">
+        <button class="btn-secondary btn-sm">Nach Datum</button>
+        <button class="btn-secondary btn-sm">Nach MA</button>
+      </div>
+    </div>
+
+    <div style="padding:10px 14px; background:color-mix(in srgb,var(--accent) 5%,var(--bg)); border-left:3px solid var(--accent); border-radius:3px; font-size:12.5px; color:var(--text-mid); margin-bottom:14px;">
+      ℹ MA stellt rückwirkende Stempel-Anträge bei Home-Office · vergessenem Scan · Scanner-Defekt. Approval fügt Stempel als <em>source=manual</em> zur Tages-Übersicht hinzu.
+    </div>
+
+    <div class="queue-item" data-stempel="stmp-1">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar">PW</div>
+        <div>
+          <div class="q-name">Peter Wiederkehr</div>
+          <div class="q-meta">Mo 20.04.2026 · <strong style="color:var(--accent);">09:00 · Check-In</strong></div>
+        </div>
+      </div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Grund</span><br>Vergessen zu scannen</div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Eingereicht</span><br>21.04. 08:15</div>
+      <div class="q-warnings">
+        <span class="w-chip ok">Plausibel · erster Scan des Tages</span>
+      </div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApproveStempel(this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openStempelDrawer('stmp-1')">Details</button>
+        <button class="btn-danger btn-sm" onclick="openStempelReject('stmp-1', this)">Reject</button>
+      </div>
+    </div>
+
+    <div class="queue-item" data-stempel="stmp-2">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar">LR</div>
+        <div>
+          <div class="q-name">Lisa Rüegg</div>
+          <div class="q-meta">Do 17.04.2026 · <strong style="color:var(--accent);">17:45 · Check-Out</strong></div>
+        </div>
+      </div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Grund</span><br>Home-Office · Scanner nicht vor Ort</div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Eingereicht</span><br>18.04. 09:30</div>
+      <div class="q-warnings">
+        <span class="w-chip ok">Plausibel · 3 vorherige Stempel OK</span>
+      </div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApproveStempel(this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openStempelDrawer('stmp-2')">Details</button>
+        <button class="btn-danger btn-sm" onclick="openStempelReject('stmp-2', this)">Reject</button>
+      </div>
+    </div>
+
+    <div class="queue-item" data-stempel="stmp-3">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar">JV</div>
+        <div>
+          <div class="q-name">Joaquin Vega</div>
+          <div class="q-meta">Fr 10.04.2026 · <strong style="color:var(--accent);">12:30 · Pause-Start</strong></div>
+        </div>
+      </div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Grund</span><br>Scanner-Defekt</div>
+      <div class="q-stats"><span style="font-size:11.5px; color:var(--text-mid);">Eingereicht</span><br>13.04. 14:00</div>
+      <div class="q-warnings">
+        <span class="w-chip">🟠 Rückwirkend 7 Tage · Plausibilität prüfen</span>
+      </div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApproveStempel(this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openStempelDrawer('stmp-3')">Details</button>
+        <button class="btn-danger btn-sm" onclick="openStempelReject('stmp-3', this)">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Monats-Approvals -->
+  <div class="panel" id="panel-month" style="display:none;">
+    <div class="panel-head">
+      <h2>Offene Monats-Submits · März 2026</h2>
+      <div class="actions">
+        <button class="btn-primary btn-sm">Alle approven</button>
+      </div>
+    </div>
+
+    <div class="queue-item">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;"><div class="avatar">PW</div><div><div class="q-name">Peter Wiederkehr</div><div class="q-meta">Submitted 31.03.2026 · Ist/Soll: 175h 45m / 180h</div></div></div>
+      <div class="q-stats">Diff: <span class="num" style="color:var(--red);">-4h 15m</span></div>
+      <div class="q-stats">Uncounted: 1h</div>
+      <div class="q-warnings"><span class="w-chip">1 Warning</span></div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApprove(event, this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openReviewDrawer(event, 'month')">Review</button>
+        <button class="btn-danger btn-sm">Reject</button>
+      </div>
+    </div>
+
+    <div class="queue-item">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;"><div class="avatar">LR</div><div><div class="q-name">Lisa Rüegg</div><div class="q-meta">Submitted 01.04.2026 · Ist/Soll: 182h 30m / 180h</div></div></div>
+      <div class="q-stats">Diff: <span class="num" style="color:var(--green);">+2h 30m</span></div>
+      <div class="q-stats">Uncounted: 0h</div>
+      <div class="q-warnings"><span class="w-chip ok">0 Warnings</span></div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApprove(event, this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openReviewDrawer(event, 'month')">Review</button>
+      </div>
+    </div>
+
+    <div class="queue-item">
+      <input type="checkbox">
+      <div style="display:flex; align-items:center; gap:10px;"><div class="avatar">JV</div><div><div class="q-name">Joaquin Vega</div><div class="q-meta">Submitted 02.04.2026 · Ist/Soll: 195h / 180h</div></div></div>
+      <div class="q-stats">Diff: <span class="num" style="color:var(--green);">+15h</span></div>
+      <div class="q-stats" style="color:var(--amber);">ArG-Überzeit aktiv</div>
+      <div class="q-warnings"><span class="w-chip">3 Warnings</span></div>
+      <div class="q-actions">
+        <button class="btn-success btn-sm" onclick="handleApprove(event, this)">Approve</button>
+        <button class="btn-secondary btn-sm" onclick="openReviewDrawer(event, 'month')">Review</button>
+        <button class="btn-danger btn-sm">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Team-Saldi -->
+  <div class="panel" id="panel-saldi" style="display:none;">
+    <div class="panel-head">
+      <h2>Team-Saldi-Übersicht (Stand 19.04.2026)</h2>
+      <div class="actions">
+        <button class="btn-secondary btn-sm">CSV-Export</button>
+      </div>
+    </div>
+
+    <table class="saldo-grid">
+      <thead>
+        <tr>
+          <th>MA</th>
+          <th>Rolle</th>
+          <th class="num">Wochen-Saldo</th>
+          <th class="num">Monat Ist/Soll</th>
+          <th class="num">Ferien Rest</th>
+          <th class="num">Extra-Guthaben</th>
+          <th class="num">Jahres-Überzeit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">NB</div>Nenad Brunner</div></td><td>Admin</td><td class="num">+0:45</td><td class="num">168/180</td><td class="num heat-ok">18/25</td><td class="num">2/7</td><td class="num heat-ok">5/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">PW</div>Peter Wiederkehr</div></td><td>Head ING</td><td class="num">+2:15</td><td class="num">142/180</td><td class="num heat-ok">12/25</td><td class="num">1/7</td><td class="num heat-ok">8/170</td><td><span style="color:var(--accent);">Review</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">SP</div>Stefano Papes</div></td><td>Head ARC</td><td class="num">+0:00</td><td class="num">175/180</td><td class="num heat-ok">15/25</td><td class="num">0/7</td><td class="num heat-ok">3/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">LR</div>Lisa Rüegg</div></td><td>Senior-Researcher</td><td class="num">+0:30</td><td class="num">175/180</td><td class="num heat-ok">18/25</td><td class="num">3/7</td><td class="num heat-ok">0/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">JV</div>Joaquin Vega</div></td><td>CM/AM</td><td class="num heat-warn">+8:30</td><td class="num">195/180</td><td class="num heat-warn">5/25</td><td class="num">4/7</td><td class="num heat-warn">72/170</td><td><span style="color:var(--amber);">Alert</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">AH</div>Anna Huber</div></td><td>Researcher</td><td class="num">+0:00</td><td class="num">135/180</td><td class="num heat-ok">22/25</td><td class="num">0/7</td><td class="num heat-ok">0/170</td><td>Militär</td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">HM</div>Hannah Meier</div></td><td>Researcher</td><td class="num">-0:15</td><td class="num">178/180</td><td class="num heat-ok">16/25</td><td class="num">1/7</td><td class="num heat-ok">2/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">ST</div>Sabrina Tanner</div></td><td>Backoffice</td><td class="num">+0:00</td><td class="num">160/180</td><td class="num heat-ok">10/25</td><td class="num">2/7</td><td class="num heat-ok">0/170</td><td>Ferien 16.–23.04.</td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">MW</div>Maria Weber</div></td><td>Researcher</td><td class="num">+0:45</td><td class="num">176/180</td><td class="num heat-ok">13/25</td><td class="num">0/7</td><td class="num heat-ok">1/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+        <tr><td><div style="display:flex; align-items:center; gap:8px;"><div class="avatar">TK</div>Thomas Koch</div></td><td>CM</td><td class="num">-1:00</td><td class="num">174/180</td><td class="num heat-ok">20/25</td><td class="num">1/7</td><td class="num heat-ok">0/170</td><td><span style="color:var(--green);">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Review-Drawer (shared container, content swapped per click) -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+<div class="drawer" id="reviewDrawer">
+  <div class="drawer-head">
+    <div style="font-size:26px;">⌹</div>
+    <h2 id="drTitle">Wochen-Review</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body" id="drBody">
+    <!-- Dynamic Content -->
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-secondary btn-sm" onclick="closeAllDrawers()">Schliessen</button>
+    <button class="btn-danger btn-sm" onclick="handleRejectFromDrawer()">Ablehnen</button>
+    <button class="btn-success btn-sm" onclick="handleApproveFromDrawer()">Approve</button>
+  </div>
+</div>
+
+<!-- Bulk-Approve-Modal -->
+<div class="modal-backdrop" id="bulkModal" onclick="closeBulkModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Bulk-Approve bestätigen</h3>
+    <div class="m-body">
+      Du bist im Begriff, <strong id="bulkCount">5</strong> Einträge gleichzeitig zu approven. Weiter?
+      <div style="margin-top:10px; font-size:11.5px; color:var(--text-mid);">Alle markierten Einträge gehen direkt in den Monats-Lock-Flow.</div>
+    </div>
+    <div class="m-foot">
+      <button class="btn-secondary btn-sm" onclick="closeBulkModal()">Abbrechen</button>
+      <button class="btn-success btn-sm" onclick="confirmBulkApprove()">Ja, alle approven</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Approved</div>
+
+<script>
+function switchTab(key) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^=panel-]').forEach(p => p.style.display = 'none');
+  event.target.classList.add('active');
+  document.getElementById('panel-' + key).style.display = 'block';
+}
+
+let pendingAction = null;
+
+function showToast(msg, danger) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('danger', !!danger);
+  t.classList.add('active');
+  setTimeout(() => t.classList.remove('active'), 2400);
+}
+
+const stempelData = {
+  'stmp-1': {
+    ma: 'Peter Wiederkehr', date: 'Mo, 20.04.2026', time: '09:00', type: 'Check-In',
+    reason: 'Vergessen zu scannen',
+    reasonCode: 'forgot_scan',
+    submitted: '21.04.2026 08:15 · von Peter (selbst)',
+    scansBefore: [],
+    scansAfter: [
+      { t: '12:00', type: 'Pause-Start', src: 'scanner' },
+      { t: '13:28', type: 'Pause-Ende', src: 'scanner' },
+      { t: '17:45', type: 'Check-Out', src: 'scanner' }
+    ],
+    note: 'Plausibilität: Erste Stempel-Event an diesem Tag. Andere Scans Mo 20.04. (Pause-Start 12:00, Pause-Ende 13:28, Check-Out 17:45) vorhanden. Check-In 09:00 passt zur normalen Arbeitszeit.'
+  },
+  'stmp-2': {
+    ma: 'Lisa Rüegg', date: 'Do, 17.04.2026', time: '17:45', type: 'Check-Out',
+    reason: 'Home-Office · Scanner nicht vor Ort',
+    reasonCode: 'home_office',
+    submitted: '18.04.2026 09:30 · von Lisa (selbst)',
+    scansBefore: [
+      { t: '08:45', type: 'Check-In', src: 'scanner' },
+      { t: '12:00', type: 'Pause-Start', src: 'scanner' },
+      { t: '12:30', type: 'Pause-Ende', src: 'scanner' }
+    ],
+    scansAfter: [],
+    note: 'Plausibilität: 3 vorherige Scanner-Events Do 17.04. Check-Out 17:45 konsistent mit normalen Arbeitszeit-Mustern. Home-Office ist in Reglement Locus Extra geregelt.'
+  },
+  'stmp-3': {
+    ma: 'Joaquin Vega', date: 'Fr, 10.04.2026', time: '12:30', type: 'Pause-Start',
+    reason: 'Scanner-Defekt',
+    reasonCode: 'scanner_defect',
+    submitted: '13.04.2026 14:00 · von Joaquin',
+    scansBefore: [
+      { t: '08:30', type: 'Check-In', src: 'scanner' }
+    ],
+    scansAfter: [
+      { t: '13:15', type: 'Pause-Ende', src: 'scanner' },
+      { t: '18:00', type: 'Check-Out', src: 'scanner' }
+    ],
+    note: 'Plausibilität: 7 Tage rückwirkend · zu spät nach Reglement-Deadline "Korrekturanträge bis Freitag". Scanner-Defekt 10.04. durch Admin dokumentiert (Incident-Ticket #SCNR-08). Approval trotz später Einreichung OK.'
+  }
+};
+
+function openStempelDrawer(id) {
+  const d = stempelData[id];
+  if (!d) return;
+  document.getElementById('drTitle').textContent = 'Stempel-Antrag: ' + d.ma;
+  const before = d.scansBefore.map(s => `<div class="row"><span>${s.t} · ${s.type}</span><span style="color:var(--text-light); font-size:11px;">${s.src}</span></div>`).join('') || '<div style="color:var(--text-light); font-size:12px; padding:6px 0; text-align:center; font-style:italic;">– keine –</div>';
+  const after = d.scansAfter.map(s => `<div class="row"><span>${s.t} · ${s.type}</span><span style="color:var(--text-light); font-size:11px;">${s.src}</span></div>`).join('') || '<div style="color:var(--text-light); font-size:12px; padding:6px 0; text-align:center; font-style:italic;">– keine –</div>';
+
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="info-card">
+        <strong>${d.ma}</strong><br>
+        ${d.date} · <strong style="color:var(--accent);">${d.time} · ${d.type}</strong>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Scan-Events an diesem Tag</h4>
+      <div style="background:var(--bg); padding:10px 12px; border-radius:3px; font-size:12.5px;">
+        <div style="font-weight:600; color:var(--text-light); font-size:10.5px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Vor beantragtem Stempel</div>
+        ${before}
+        <div style="margin-top:12px; padding:6px 10px; background:color-mix(in srgb,var(--accent) 10%,var(--bg)); border-radius:3px; font-weight:600; color:var(--accent); font-size:12px;">
+          ▸ Neu: ${d.time} · ${d.type} <span style="font-size:10.5px; color:var(--text-mid); font-weight:400;">(beantragt)</span>
+        </div>
+        <div style="font-weight:600; color:var(--text-light); font-size:10.5px; text-transform:uppercase; letter-spacing:1px; margin-top:8px; margin-bottom:4px;">Nach beantragtem Stempel</div>
+        ${after}
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Grund</h4>
+      <div style="padding:10px 12px; background:var(--bg); border-radius:3px; font-size:13px;">
+        <strong>${d.reason}</strong>
+        <div style="font-size:11.5px; color:var(--text-mid); margin-top:4px;">Eingereicht: ${d.submitted}</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Plausibilitäts-Check</h4>
+      <div class="info-card">${d.note}</div>
+    </div>
+  `;
+  pendingAction = { type:'stempel-approve', id };
+  document.getElementById('drBackdrop')?.classList.add('open') ?? document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('reviewDrawer').classList.add('open');
+}
+
+function handleApproveStempel(btn) {
+  const row = btn.closest('.queue-item');
+  const name = row.querySelector('.q-name')?.textContent || 'Eintrag';
+  row.style.transition = 'opacity 0.4s';
+  row.style.opacity = '0.4';
+  setTimeout(() => {
+    row.style.display = 'none';
+    showToast('✓ Stempel-Antrag ' + name + ' approved · Stempel-Event geschrieben (source=manual)');
+  }, 350);
+}
+
+function openStempelReject(id, btn) {
+  const row = btn.closest('.queue-item');
+  const name = row.querySelector('.q-name')?.textContent || 'Antrag';
+  document.getElementById('drTitle').textContent = 'Reject Stempel-Antrag · ' + name;
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="warn-card">
+        <div class="w-title">Ablehnung erfordert Grund</div>
+        Der MA wird benachrichtigt. Alternative Korrektur-Optionen kommunizieren (z.B. Admin-Override bei Scanner-Defekt mit Ticket).
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Reject-Grund</h4>
+      <select style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px;">
+        <option>Plausibilität nicht gegeben</option>
+        <option>Rückwirkend zu spät (über Reglement-Frist)</option>
+        <option>Scanner-Defekt nicht dokumentiert</option>
+        <option>Muster auffällig · mehrfach manuell</option>
+        <option>Grund nicht ausreichend</option>
+        <option>Sonstiges</option>
+      </select>
+      <textarea style="width:100%; margin-top:10px; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; min-height:70px; font-family:inherit;" placeholder="Zusätzlicher Kommentar an MA..."></textarea>
+    </div>
+  `;
+  pendingAction = { type:'stempel-reject', id, row };
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('reviewDrawer').classList.add('open');
+}
+
+function handleApprove(ev, btn) {
+  ev.stopPropagation();
+  const row = btn.closest('.queue-item');
+  const name = row.querySelector('.q-name')?.textContent || 'Eintrag';
+  btn.classList.add('active-state');
+  row.style.transition = 'opacity 0.4s, transform 0.4s';
+  row.style.opacity = '0.4';
+  setTimeout(() => {
+    row.style.display = 'none';
+    showToast('✓ ' + name + ' approved · Monats-Lock-Queue aktualisiert');
+  }, 350);
+}
+
+function handleReject(ev, btn) {
+  ev.stopPropagation();
+  const row = btn.closest('.queue-item');
+  const name = row.querySelector('.q-name')?.textContent || 'Eintrag';
+  openRejectDrawer(name, row);
+}
+
+function openRejectDrawer(name, row) {
+  document.getElementById('drTitle').textContent = 'Reject: ' + name;
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="warn-card">
+        <div class="w-title">Ablehnung erfordert Grund</div>
+        Der MA wird benachrichtigt, der Eintrag bleibt bis zur Korrektur im submitted-State.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Grund</h4>
+      <select style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px;">
+        <option>Kategorie-Zuordnung fehlt/falsch</option>
+        <option>Projekt fehlt</option>
+        <option>Zeitmenge implausibel</option>
+        <option>Pausen-Unterschreitung</option>
+        <option>Sonstiger Grund</option>
+      </select>
+      <textarea style="width:100%; margin-top:10px; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; min-height:80px; font-family:inherit;" placeholder="Kommentar an MA..."></textarea>
+    </div>
+  `;
+  pendingAction = { type:'reject', row };
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('reviewDrawer').classList.add('open');
+}
+
+function openReviewDrawer(ev, type) {
+  ev.stopPropagation();
+  const row = ev.target.closest('.queue-item');
+  const name = row.querySelector('.q-name')?.textContent || 'Eintrag';
+  document.getElementById('drTitle').textContent = (type === 'month' ? 'Monats-Review' : 'Wochen-Review') + ': ' + name;
+  document.getElementById('drBody').innerHTML = renderReviewContent(type, name);
+  pendingAction = { type:'approve', row };
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('reviewDrawer').classList.add('open');
+}
+
+function renderReviewContent(type, name) {
+  const period = type === 'month' ? 'März 2026' : 'KW 16 · 14.–18.04.2026';
+  return `
+    <div class="drawer-section">
+      <div class="info-card">
+        <strong>${name}</strong> · ${period}<br>
+        <span style="font-size:11.5px; color:var(--text-mid);">Summierte Daten aus Scanner-Events + manueller Kategorie-Zuordnung</span>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Tages-Übersicht</h4>
+      <table class="day-table">
+        <thead><tr><th>Tag</th><th class="num">Soll</th><th class="num">Ist</th><th class="num">Diff</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Mo 14.04.</td><td class="num">9:00</td><td class="num">8:45</td><td class="num" style="color:var(--amber);">-0:15</td><td>✓</td></tr>
+          <tr><td>Di 15.04.</td><td class="num">9:00</td><td class="num">9:15</td><td class="num" style="color:var(--green);">+0:15</td><td>✓</td></tr>
+          <tr><td>Mi 16.04.</td><td class="num">9:00</td><td class="num">10:30</td><td class="num" style="color:var(--green);">+1:30</td><td>🟠 Pausen 28m</td></tr>
+          <tr><td>Do 17.04.</td><td class="num">9:00</td><td class="num">9:00</td><td class="num">±0</td><td>✓</td></tr>
+          <tr><td>Fr 18.04.</td><td class="num">9:00</td><td class="num">8:30</td><td class="num" style="color:var(--amber);">-0:30</td><td>✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="drawer-section">
+      <h4>Warnungen</h4>
+      <div class="warn-card">
+        <div class="w-title">🟠 1 Pausen-Unterschreitung (16.04.)</div>
+        Bei 9h+ Arbeitszeit sind 60min Pause Pflicht. Gescannt: 28min. Korrektur-Option: Admin-Override via Scanner-Audit.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Kategorien-Verteilung</h4>
+      <div style="font-size:12.5px; line-height:1.9;">
+        <strong>Produktiv verrechenbar</strong> 32h (71%)<br>
+        <strong>Kunden-Termin</strong> 4h (9%)<br>
+        <strong>Administration</strong> 3h (7%)<br>
+        <strong>Team-Dev (Fr)</strong> 2.5h (6%)<br>
+        <strong>Training</strong> 2h (4%)<br>
+        <strong>Internes Meeting</strong> 1.5h (3%)
+      </div>
+    </div>
+  `;
+}
+
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('reviewDrawer').classList.remove('open');
+  pendingAction = null;
+}
+
+function handleApproveFromDrawer() {
+  if (pendingAction?.row) {
+    const name = pendingAction.row.querySelector('.q-name')?.textContent || 'Eintrag';
+    pendingAction.row.style.opacity = '0.4';
+    setTimeout(() => {
+      if (pendingAction) pendingAction.row.style.display = 'none';
+      showToast('✓ ' + name + ' approved');
+      closeDrawer();
+    }, 350);
+  }
+}
+
+function handleRejectFromDrawer() {
+  if (pendingAction?.row) {
+    const name = pendingAction.row.querySelector('.q-name')?.textContent || 'Eintrag';
+    showToast('✗ ' + name + ' zurückgewiesen · Mail an MA', true);
+    pendingAction.row.style.display = 'none';
+    closeDrawer();
+  }
+}
+
+function handleSelectAll(cb) {
+  document.querySelectorAll('.queue-item input[type=checkbox]').forEach(c => c.checked = cb.checked);
+  updateSelCount();
+}
+
+function updateSelCount() {
+  const n = document.querySelectorAll('.queue-item input[type=checkbox]:checked').length;
+  document.getElementById('selCount').textContent = '· ' + n + ' ausgewählt';
+}
+
+document.addEventListener('change', e => {
+  if (e.target.matches('.queue-item input[type=checkbox]')) updateSelCount();
+});
+
+function openBulkApproveModal() {
+  const n = document.querySelectorAll('.queue-item input[type=checkbox]:checked').length;
+  if (n === 0) { showToast('Keine Einträge ausgewählt', true); return; }
+  document.getElementById('bulkCount').textContent = n;
+  document.getElementById('bulkModal').classList.add('active');
+}
+
+function closeBulkModal() {
+  document.getElementById('bulkModal').classList.remove('active');
+}
+
+function confirmBulkApprove() {
+  const checked = document.querySelectorAll('.queue-item input[type=checkbox]:checked');
+  checked.forEach(cb => {
+    const row = cb.closest('.queue-item');
+    row.style.opacity = '0.4';
+    setTimeout(() => row.style.display = 'none', 300);
+  });
+  closeBulkModal();
+  showToast('✓ ' + checked.length + ' Einträge approved · Audit-Log aktualisiert');
+}
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>

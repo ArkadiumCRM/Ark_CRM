@@ -86,6 +86,9 @@
     padding:1px 4px; background:var(--surface); border:1px solid var(--border);
     border-radius:2px; font-family:monospace; font-size:10px;
   }
+  .role-switcher { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-mid); border:1px dashed var(--border-strong); }
+  .role-switcher .rs-label { font-weight:600; text-transform:uppercase; letter-spacing:0.8px; font-size:9.5px; color:var(--text-light); }
+  .role-switcher select { border:none; background:transparent; font-size:11.5px; color:var(--text); cursor:pointer; font-family:inherit; padding:0; }
 
   .breadcrumb-row {
     background:var(--surface); border-bottom:1px solid var(--border);
@@ -276,12 +279,63 @@
   }
   .profil-pop-item.danger { color:var(--red); }
   .profil-pop-item.danger:hover { background:color-mix(in srgb, var(--red) 10%, transparent); }
+
+  /* Shell-Level Drawer */
+  .shell-drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:110; }
+  .shell-drawer-backdrop.active { display:block; }
+  .shell-drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:120; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.15); }
+  .shell-drawer.active { right:0 !important; transform:translateX(0) !important; }
+  .shell-drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .shell-drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .shell-drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .shell-drawer-body { flex:1; overflow-y:auto; padding:20px 22px; font-size:13px; }
+  .shell-drawer-section { margin-bottom:20px; }
+  .shell-drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .shell-drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+  .cmd-palette-search { width:100%; padding:10px 14px; border:2px solid var(--accent); border-radius:6px; font-size:15px; font-family:inherit; background:var(--surface); }
+  .cmd-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:4px; cursor:pointer; font-size:13px; color:var(--text-mid); }
+  .cmd-item:hover { background:var(--bg); color:var(--accent); }
+  .cmd-item .c-ic { font-size:16px; width:22px; text-align:center; }
+  .cmd-item .c-key { margin-left:auto; font-family:monospace; font-size:10.5px; color:var(--text-light); padding:2px 6px; background:var(--bg); border-radius:2px; border:1px solid var(--border); }
+  .cmd-cat { padding:8px 14px 4px; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+
+  .kbd-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 20px; font-size:12.5px; }
+  .kbd-grid .row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dashed var(--border); }
+  .kbd-grid .row kbd { font-family:monospace; font-size:10.5px; color:var(--text-light); padding:2px 6px; background:var(--bg); border-radius:2px; border:1px solid var(--border); }
+
+  .profile-field { margin-bottom:12px; }
+  .profile-field label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:3px; }
+  .profile-field .v { font-family:'Libre Baskerville',serif; font-size:14px; color:var(--text); font-weight:500; }
+
+  .logout-warn { padding:12px 14px; background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left:3px solid var(--red); border-radius:3px; font-size:12.5px; color:#8a1010; }
+
+  /* CRM-Pattern drawer-foot btns */
+  .shell-drawer-foot button, .shell-drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .shell-drawer-foot button:hover, .shell-drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .shell-drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .shell-drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .shell-drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .shell-drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .shell-drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  .cmd-hint { cursor:pointer; }
+  .cmd-hint:hover { background:var(--bg); }
+  .user-chip { cursor:pointer; }
+  .user-chip:hover { background:var(--bg); }
+
+  /* Shell-Level Toast */
+  .shell-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.15); font-size:13px; z-index:250; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .shell-toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+  .shell-toast.danger { border-left-color:var(--red); }
+
+  .brand { cursor:pointer; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="brand">
+  <div class="brand" onclick="goToDashboard()" title="Zum Dashboard">
     <span class="topbar-burger" id="burger">☰</span>
     <div class="logo">A</div>
     <div>
@@ -300,9 +354,18 @@
   </div>
 
   <div class="right">
-    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
-    <span class="user-chip">Peter W. · Head CE &amp; BT</span>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+    <span class="cmd-hint" onclick="openCmdPalette()" title="Command-Palette"><kbd>⌘K</kbd>Suche</span>
+    <span class="role-switcher" title="Demo-Rolle umschalten (Mockup-Feature)">
+      <span class="rs-label">Rolle:</span>
+      <select id="roleSel" onchange="applyRole(this.value)">
+        <option value="MA">Mitarbeiter</option>
+        <option value="HEAD" selected>Head of</option>
+        <option value="BO">Backoffice</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </span>
+    <span class="user-chip" onclick="toggleProfilPop(event)" title="Profil-Menü">Peter W. · Head CE &amp; BT</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme" title="Light/Dark">☀</button>
   </div>
 </div>
 
@@ -319,25 +382,35 @@
       </div>
     </div>
 
-    <div class="sb-section">Zeit-Tool</div>
+    <div class="sb-section">Ich</div>
     <div class="sb-item active" data-src="zeit-dashboard.html" data-title="Dashboard">
       <span class="icon">📊</span><span class="label">Dashboard</span>
     </div>
-    <div class="sb-item" data-src="zeit-list.html" data-title="Zeit-Einträge">
-      <span class="icon">📋</span><span class="label">Zeit-Einträge</span>
+    <div class="sb-item" data-src="zeit-meine-zeit.html" data-title="Meine Zeit">
+      <span class="icon">⌚</span><span class="label">Meine Zeit</span>
+    </div>
+    <div class="sb-item" data-src="zeit-monat.html" data-title="Monat">
+      <span class="icon">📅</span><span class="label">Monat</span>
+    </div>
+    <div class="sb-item" data-src="zeit-abwesenheiten.html" data-title="Abwesenheiten">
+      <span class="icon">⊠</span><span class="label">Abwesenheiten</span>
+    </div>
+    <div class="sb-item" data-src="zeit-saldi.html" data-title="Saldi">
+      <span class="icon">⊘</span><span class="label">Saldi</span>
     </div>
 
-    <div class="sb-section">Meine Sicht</div>
-    <div class="sb-item disabled"><span class="icon">⏱</span><span class="label">Mein Monat</span></div>
-    <div class="sb-item disabled"><span class="icon">📅</span><span class="label">Wochen-Kalender</span></div>
+    <div class="sb-section role-section" data-visible-for="HEAD,ADMIN">Head of</div>
+    <div class="sb-item role-item" data-visible-for="HEAD,ADMIN" data-src="zeit-team.html" data-title="Team-Approvals">
+      <span class="icon">⌹</span><span class="label">Team-Approvals</span><span class="badge red" title="3 Stempel-Anträge + 3 Monats-Submits">6</span>
+    </div>
 
-    <div class="sb-section">Team / HR</div>
-    <div class="sb-item disabled"><span class="icon">👥</span><span class="label">Team-Zeit</span></div>
-    <div class="sb-item disabled"><span class="icon">🤒</span><span class="label">Absenzen-Sync (HR)</span></div>
-
-    <div class="sb-section">Später (Phase 3.1+)</div>
-    <div class="sb-item disabled"><span class="icon">📈</span><span class="label">Reports</span></div>
-    <div class="sb-item disabled"><span class="icon">⚙️</span><span class="label">Arbeitszeit-Regeln</span></div>
+    <div class="sb-section role-section" data-visible-for="BO,ADMIN">Backoffice / Admin</div>
+    <div class="sb-item role-item" data-visible-for="BO,ADMIN" data-src="zeit-export.html" data-title="Export Treuhand">
+      <span class="icon">⇱</span><span class="label">Export Treuhand</span>
+    </div>
+    <div class="sb-item role-item" data-visible-for="ADMIN" data-src="zeit-admin.html" data-title="Admin">
+      <span class="icon">⚙</span><span class="label">Admin</span>
+    </div>
 
     </div><!-- /sb-top -->
 
@@ -359,13 +432,13 @@
           </div>
         </div>
         <div class="profil-pop-cat">Team &amp; Mitarbeiter</div>
-        <div class="profil-pop-item"><span class="ic">👤</span>Mein Profil</div>
-        <div class="profil-pop-item"><span class="ic">👥</span>Team-Übersicht</div>
+        <div class="profil-pop-item" onclick="openProfileDrawer()"><span class="ic">👤</span>Mein Profil</div>
+        <div class="profil-pop-item" onclick="goToTeam()"><span class="ic">👥</span>Team-Übersicht</div>
         <div class="profil-pop-sep"></div>
         <div class="profil-pop-cat">Tools</div>
-        <div class="profil-pop-item"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
+        <div class="profil-pop-item" onclick="openShortcutsDrawer()"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
         <div class="profil-pop-sep"></div>
-        <div class="profil-pop-item danger"><span class="ic">⏻</span>Abmelden</div>
+        <div class="profil-pop-item danger" onclick="openLogoutDrawer()"><span class="ic">⏻</span>Abmelden</div>
       </div>
     </div>
 
@@ -375,29 +448,50 @@
 
 </div>
 
+<!-- Shell-Level Drawer + Toast -->
+<div class="shell-drawer-backdrop" id="shellBackdrop" onclick="closeShellDrawer()"></div>
+<div class="shell-drawer" id="shellDrawer">
+  <div class="shell-drawer-head">
+    <div id="shellDrIcon" style="font-size:26px;">⌨</div>
+    <h2 id="shellDrTitle">Shell</h2>
+    <button class="shell-drawer-close" onclick="closeShellDrawer()">×</button>
+  </div>
+  <div class="shell-drawer-body" id="shellDrBody"></div>
+  <div class="shell-drawer-foot" id="shellDrFoot"></div>
+</div>
+
+<div class="shell-toast" id="shellToast">OK</div>
+
 <script>
-  const frame = document.getElementById('mainFrame');
-  const crumb = null;
-  const sidebar = document.getElementById('sidebar');
-  const burger = document.getElementById('burger');
+  // ============ GLOBAL FUNCTIONS (available on topbar onclick=) ============
 
-  document.querySelectorAll('.sb-item').forEach(item => {
-    item.addEventListener('click', () => {
-      if (item.classList.contains('disabled')) return;
-      const src = item.dataset.src;
-      const title = item.dataset.title;
-      if (!src) return;
-      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      frame.src = src;
-      if (title) crumb.textContent = title;
-      sidebar.classList.remove('open');
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const glyph = theme === 'dark' ? '☾' : '☀';
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = glyph;
+    localStorage.setItem('ark-theme', theme);
+    const frame = document.getElementById('mainFrame');
+    try {
+      if (frame && frame.contentDocument && frame.contentDocument.documentElement) {
+        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) {}
+  }
+
+  function applyRole(role) {
+    document.querySelectorAll('.role-section, .role-item').forEach(el => {
+      const allowed = (el.dataset.visibleFor || '').split(',').map(s => s.trim());
+      el.style.display = allowed.includes(role) ? '' : 'none';
     });
-  });
+    localStorage.setItem('ark-zeit-role', role);
+  }
 
-  burger.addEventListener('click', () => sidebar.classList.toggle('open'));
-
-  // SIDEBAR EXPAND-TOGGLE (Pin via localStorage, icon wechselt wie crm.html)
   function toggleSidebarExpand() {
     const sb = document.getElementById('sidebar');
     if (!sb) return;
@@ -410,56 +504,248 @@
     }
     localStorage.setItem('ark-sidebar-pinned', pinned ? '1' : '0');
   }
-  (function() {
-    const sb = document.getElementById('sidebar');
-    if (sb && localStorage.getItem('ark-sidebar-pinned') === '1') {
-      sb.classList.add('expanded');
-      const btn = sb.querySelector('.sb-expand-toggle');
-      if (btn) { btn.textContent = '⇥'; btn.setAttribute('title', 'Sidebar entpinnen'); }
-    }
-  })();
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    const glyph = theme === 'dark' ? '☾' : '☀';
-    const btn = document.getElementById('themeBtn');
-    if (btn) btn.textContent = glyph;
-    localStorage.setItem('ark-theme', theme);
-    try {
-      if (frame && frame.contentDocument) {
-        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
-      }
-    } catch (e) {}
-  }
-
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme') || 'light';
-    applyTheme(current === 'light' ? 'dark' : 'light');
-  }
-
-  const savedTheme = localStorage.getItem('ark-theme') || 'light';
-  applyTheme(savedTheme);
-
-  frame.addEventListener('load', () => {
-    const theme = document.documentElement.getAttribute('data-theme') || 'light';
-    try {
-      if (frame.contentDocument && frame.contentDocument.documentElement) {
-        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
-      }
-    } catch (e) {}
-  });
-
-  // PROFIL-DROPDOWN (drop-up)
   function toggleProfilPop(e) {
     if (e) e.stopPropagation();
     const pop = document.getElementById('profilPop');
     if (pop) pop.classList.toggle('open');
   }
-  document.addEventListener('click', (e) => {
-    const pop = document.getElementById('profilPop');
-    if (pop && pop.classList.contains('open') && !e.target.closest('.sb-user, .profil-pop')) {
-      pop.classList.remove('open');
+
+  // ============ SHELL-LEVEL DRAWERS ============
+
+  function shellToast(msg, danger) {
+    const t = document.getElementById('shellToast');
+    t.textContent = msg;
+    t.classList.toggle('danger', !!danger);
+    t.classList.add('active');
+    setTimeout(() => t.classList.remove('active'), 2600);
+  }
+
+  function closeShellDrawer() {
+    document.getElementById('shellBackdrop').classList.remove('active');
+    document.getElementById('shellDrawer').classList.remove('active');
+  }
+
+  // Click outside any open drawer (sub-page iframe backdrop handles inner drawers)
+  // Shell backdrop is already wired via its onclick.
+
+  function openShellDrawer(icon, title, body, foot) {
+    document.getElementById('shellDrIcon').textContent = icon;
+    document.getElementById('shellDrTitle').textContent = title;
+    document.getElementById('shellDrBody').innerHTML = body;
+    document.getElementById('shellDrFoot').innerHTML = foot;
+    document.getElementById('shellBackdrop').classList.add('active');
+    document.getElementById('shellDrawer').classList.add('active');
+  }
+
+  function goToDashboard() {
+    const frame = document.getElementById('mainFrame');
+    if (frame) frame.src = 'zeit-dashboard.html';
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelector('.sb-item[data-src="zeit-dashboard.html"]')?.classList.add('active');
+  }
+
+  function goToTeam() {
+    const frame = document.getElementById('mainFrame');
+    if (frame) frame.src = 'zeit-team.html';
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelector('.sb-item[data-src="zeit-team.html"]')?.classList.add('active');
+    document.getElementById('profilPop')?.classList.remove('open');
+  }
+
+  function openCmdPalette() {
+    openShellDrawer('⌘', 'Command-Palette',
+      `<div class="shell-drawer-section">
+        <input class="cmd-palette-search" placeholder="Suche Aktion, Seite, Mitarbeiter..." autofocus>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Navigation</div>
+        <div class="cmd-item" onclick="goToDashboard(); closeShellDrawer();"><span class="c-ic">📊</span>Dashboard<span class="c-key">G D</span></div>
+        <div class="cmd-item" onclick="navigateTo('zeit-meine-zeit.html'); closeShellDrawer();"><span class="c-ic">⌚</span>Meine Zeit<span class="c-key">G M</span></div>
+        <div class="cmd-item" onclick="navigateTo('zeit-monat.html'); closeShellDrawer();"><span class="c-ic">📅</span>Monat<span class="c-key">G N</span></div>
+        <div class="cmd-item" onclick="navigateTo('zeit-abwesenheiten.html'); closeShellDrawer();"><span class="c-ic">⊠</span>Abwesenheiten<span class="c-key">G A</span></div>
+        <div class="cmd-item" onclick="navigateTo('zeit-saldi.html'); closeShellDrawer();"><span class="c-ic">⊘</span>Saldi<span class="c-key">G S</span></div>
+        <div class="cmd-item" onclick="goToTeam(); closeShellDrawer();"><span class="c-ic">⌹</span>Team-Approvals<span class="c-key">G T</span></div>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Aktionen</div>
+        <div class="cmd-item" onclick="shellToast('+ Manueller Eintrag · öffnet Drawer in Meine Zeit'); navigateTo('zeit-meine-zeit.html'); closeShellDrawer();"><span class="c-ic">✎</span>+ Manueller Zeit-Eintrag<span class="c-key">N T</span></div>
+        <div class="cmd-item" onclick="shellToast('+ Abwesenheits-Antrag · öffnet Drawer'); navigateTo('zeit-abwesenheiten.html'); closeShellDrawer();"><span class="c-ic">🏖️</span>+ Abwesenheits-Antrag<span class="c-key">N A</span></div>
+        <div class="cmd-item" onclick="shellToast('+ Extra-Guthaben-Antrag'); navigateTo('zeit-saldi.html'); closeShellDrawer();"><span class="c-ic">⭐</span>+ Extra-Guthaben<span class="c-key">N E</span></div>
+        <div class="cmd-item" onclick="toggleTheme(); closeShellDrawer();"><span class="c-ic">🌓</span>Theme umschalten<span class="c-key">⌘ K</span></div>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Tool wechseln</div>
+        <div class="cmd-item" onclick="location.href='../crm.html'"><span class="c-ic">🎯</span>CRM<span class="c-key">G 1</span></div>
+        <div class="cmd-item" onclick="location.href='hr.html'"><span class="c-ic">👥</span>HR<span class="c-key">G 2</span></div>
+        <div class="cmd-item" onclick="location.href='commission.html'"><span class="c-ic">💰</span>Commission<span class="c-key">G 3</span></div>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Schliessen (Esc)</button>');
+  }
+
+  function navigateTo(src) {
+    const frame = document.getElementById('mainFrame');
+    if (frame) frame.src = src;
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelector(`.sb-item[data-src="${src}"]`)?.classList.add('active');
+  }
+
+  function openProfileDrawer() {
+    document.getElementById('profilPop')?.classList.remove('open');
+    openShellDrawer('👤', 'Mein Profil',
+      `<div class="shell-drawer-section">
+        <div style="display:flex; align-items:center; gap:16px; padding:14px; background:var(--bg); border-radius:4px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; font-size:20px;">PW</div>
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-size:17px; font-weight:700; color:var(--accent);">Peter Wiederkehr</div>
+            <div style="font-size:12px; color:var(--text-mid); margin-top:2px;">Head of ING · Senior Partner</div>
+            <div style="font-size:11px; color:var(--text-light); margin-top:2px;">peter.wiederkehr@arkadium.ch</div>
+          </div>
+        </div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Arbeitszeit-Konfiguration</h4>
+        <div class="profile-field"><label>Modell</label><div class="v">Gleitzeit mit Kernzeit</div></div>
+        <div class="profile-field"><label>Pensum</label><div class="v">100 %</div></div>
+        <div class="profile-field"><label>Vertragsstart</label><div class="v">01.04.2022</div></div>
+        <div class="profile-field"><label>Lohnfortzahlung</label><div class="v">Zürcher Skala · Dienstjahr 4 · 67/70 Tage Rest</div></div>
+        <div class="profile-field"><label>Ferien-Anspruch 2026</label><div class="v">25 Tage · 12 Rest · 2 Übertrag</div></div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Benachrichtigungen</h4>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox" checked> Tägliche Zeit-Erinnerungen (17:00)</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox" checked> Monats-Submit-Reminder (Ende-Monat +3 Tage)</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox" checked> Ferien-Verfalls-Warnung (60 Tage vor Verfall)</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox"> Team-Abwesenheiten heute (Daily-Digest)</label>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Schliessen</button><button class="btn btn-sm btn-primary" onclick="shellToast(\'✓ Profil-Einstellungen gespeichert\'); closeShellDrawer();">Speichern</button>');
+  }
+
+  function openShortcutsDrawer() {
+    document.getElementById('profilPop')?.classList.remove('open');
+    openShellDrawer('⌨', 'Keyboard-Shortcuts',
+      `<div class="shell-drawer-section">
+        <h4>Navigation</h4>
+        <div class="kbd-grid">
+          <div class="row"><span>Command-Palette</span><kbd>⌘ K</kbd></div>
+          <div class="row"><span>Dashboard</span><kbd>G D</kbd></div>
+          <div class="row"><span>Meine Zeit</span><kbd>G M</kbd></div>
+          <div class="row"><span>Monat</span><kbd>G N</kbd></div>
+          <div class="row"><span>Abwesenheiten</span><kbd>G A</kbd></div>
+          <div class="row"><span>Saldi</span><kbd>G S</kbd></div>
+          <div class="row"><span>Team-Approvals</span><kbd>G T</kbd></div>
+          <div class="row"><span>Admin</span><kbd>G X</kbd></div>
+        </div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Aktionen</h4>
+        <div class="kbd-grid">
+          <div class="row"><span>Neuer Zeit-Eintrag</span><kbd>N T</kbd></div>
+          <div class="row"><span>Neuer Abwesenheits-Antrag</span><kbd>N A</kbd></div>
+          <div class="row"><span>Extra-Guthaben-Antrag</span><kbd>N E</kbd></div>
+          <div class="row"><span>Monat einreichen</span><kbd>⌘ ⏎</kbd></div>
+          <div class="row"><span>Timer Start/Stop</span><kbd>Space</kbd></div>
+          <div class="row"><span>Gestern kopieren</span><kbd>C Y</kbd></div>
+        </div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>System</h4>
+        <div class="kbd-grid">
+          <div class="row"><span>Theme umschalten</span><kbd>⌘ J</kbd></div>
+          <div class="row"><span>Sidebar fixieren</span><kbd>⌘ B</kbd></div>
+          <div class="row"><span>Schliessen (Drawer)</span><kbd>Esc</kbd></div>
+          <div class="row"><span>Speichern</span><kbd>⌘ S</kbd></div>
+        </div>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Schliessen</button>');
+  }
+
+  function openLogoutDrawer() {
+    document.getElementById('profilPop')?.classList.remove('open');
+    openShellDrawer('⏻', 'Abmelden',
+      `<div class="shell-drawer-section">
+        <div class="logout-warn">⚠ Bevor du dich abmeldest, stelle sicher dass alle Zeit-Einträge gespeichert sind.</div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Aktuelle Session</h4>
+        <div class="profile-field"><label>Benutzer</label><div class="v">Peter Wiederkehr</div></div>
+        <div class="profile-field"><label>Angemeldet seit</label><div class="v">21.04.2026 · 08:47 (via Scanner)</div></div>
+        <div class="profile-field"><label>Nicht gespeicherte Drafts</label><div class="v">0 (alle synchronisiert)</div></div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Optionen</h4>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox"> Auf diesem Gerät auch alle Cookies löschen</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;"><input type="checkbox"> Alle anderen aktiven Sessions ebenfalls beenden (Mobile, etc.)</label>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Abbrechen</button><button class="btn btn-sm btn-danger" onclick="shellToast(\'↻ Abmeldung simuliert · Weiterleitung zum Login\', true); closeShellDrawer();">Ja, abmelden</button>');
+  }
+
+  // Esc-Key schliesst Shell-Drawer
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeShellDrawer();
     }
+    if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      openCmdPalette();
+    }
+  });
+
+  // ============ INIT on DOMContentLoaded (robust event-delegation) ============
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const frame   = document.getElementById('mainFrame');
+    const sidebar = document.getElementById('sidebar');
+    const burger  = document.getElementById('burger');
+
+    // Sidebar-Item-Navigation via event-delegation
+    sidebar.addEventListener('click', (e) => {
+      const item = e.target.closest('.sb-item');
+      if (!item) return;
+      if (item.classList.contains('disabled')) return;
+      const src = item.dataset.src;
+      if (!src) return;
+      sidebar.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      frame.src = src;
+      sidebar.classList.remove('open');
+    });
+
+    // Burger (mobile)
+    if (burger) burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    // Sidebar default: immer collapsed on load (ignore persistent pin)
+    sidebar.classList.remove('expanded');
+    const expandBtn = sidebar.querySelector('.sb-expand-toggle');
+    if (expandBtn) { expandBtn.textContent = '⇔'; expandBtn.setAttribute('title', 'Sidebar fixieren'); }
+    localStorage.removeItem('ark-sidebar-pinned');
+
+    // Apply saved Theme
+    applyTheme(localStorage.getItem('ark-theme') || 'light');
+
+    // Restore Role
+    const savedRole = localStorage.getItem('ark-zeit-role') || 'HEAD';
+    const sel = document.getElementById('roleSel');
+    if (sel) sel.value = savedRole;
+    applyRole(savedRole);
+
+    // Theme-Sync bei iframe-load
+    frame.addEventListener('load', () => {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      try {
+        if (frame.contentDocument && frame.contentDocument.documentElement) {
+          frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+        }
+      } catch (e) {}
+    });
+
+    // Close profile-popup on outside-click
+    document.addEventListener('click', (e) => {
+      const pop = document.getElementById('profilPop');
+      if (pop && pop.classList.contains('open') && !e.target.closest('.sb-user, .profil-pop')) {
+        pop.classList.remove('open');
+      }
+    });
   });
 </script>
 

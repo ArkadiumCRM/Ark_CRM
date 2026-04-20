@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Zeit · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .ad-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+  .ad-head { display:flex; align-items:center; gap:18px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:22px; }
+  .ad-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .ad-head .sub { font-size:13px; color:var(--text-light); }
+
+  .tabs { display:flex; gap:2px; border-bottom:2px solid var(--border); margin-bottom:20px; }
+  .tab { padding:10px 18px; cursor:pointer; font-size:13px; font-weight:500; color:var(--text-light); border-bottom:2px solid transparent; margin-bottom:-2px; }
+  .tab:hover { color:var(--accent); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab .count { background:var(--bg); padding:1px 7px; border-radius:8px; font-size:10px; margin-left:6px; color:var(--text-mid); }
+  .tab.active .count { background:var(--accent); color:white; }
+
+  .panel { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:22px; }
+  .panel h2 { margin:0 0 14px; font-family:'Libre Baskerville',serif; font-size:17px; color:var(--accent); }
+  .panel h3 { margin:16px 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .sub-desc { font-size:12.5px; color:var(--text-mid); margin-bottom:14px; }
+
+  button { padding:8px 14px; font-size:12.5px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+  .btn-danger { background:var(--red); color:white; border:1px solid var(--red); }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  .data-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .data-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .data-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .data-table tr:hover td { background:var(--bg); }
+
+  .chip { font-size:10px; padding:2px 8px; border-radius:10px; display:inline-block; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; }
+  .chip-active { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip-pending { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip-expired { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+  .chip-info { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+
+  .info-box { background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left:3px solid var(--amber); padding:10px 14px; border-radius:3px; font-size:12.5px; margin-bottom:14px; color:#8a5a00; }
+  .info-box.green { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left-color:var(--green); color:#2a6a2a; }
+  .info-box.red { background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left-color:var(--red); color:#8a1010; }
+
+  .head-actions { display:flex; gap:8px; align-items:center; margin-bottom:14px; }
+  .head-actions .search { flex:1; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; }
+
+  .avatar { width:26px; height:26px; border-radius:50%; background:color-mix(in srgb,var(--accent) 15%,var(--bg)); color:var(--accent); display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:10.5px; font-family:'Libre Baskerville',serif; margin-right:8px; vertical-align:middle; }
+
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .field label { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .field input, .field select, .field textarea { width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; font-family:inherit; background:var(--surface); }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; font-size:13px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+  .diff-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:12.5px; }
+  .diff-col { padding:10px 12px; border-radius:3px; }
+  .diff-col.old { background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left:3px solid var(--red); }
+  .diff-col.new { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left:3px solid var(--green); }
+  .diff-col .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:6px; }
+  .diff-col .val { font-family:'Libre Baskerville',serif; font-weight:600; color:var(--text); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:var(--shadow-md); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.danger { border-left-color:var(--red); }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="ad-page">
+
+  <div class="ad-head">
+    <div>
+      <h1>Zeit-Admin</h1>
+      <div class="sub">Stammdaten · Policies · Korrekturen · 73b-Vereinbarungen · Scanner-Audit</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('models')">Arbeitszeit-Modelle <span class="count">10</span></div>
+    <div class="tab" onclick="switchTab('holidays')">Feiertage 2026 <span class="count">12</span></div>
+    <div class="tab" onclick="switchTab('agreements')">73b-Vereinbarungen <span class="count">2</span></div>
+    <div class="tab" onclick="switchTab('corrections')">Korrekturen-Queue <span class="count">3</span></div>
+  </div>
+
+  <!-- TAB: Arbeitszeit-Modelle -->
+  <div class="panel" id="panel-models">
+    <h2>Arbeitszeit-Modelle · Zuweisung pro Mitarbeiter</h2>
+    <p class="sub-desc">5 Modelle laut Reglement + ArGV 1. Default bei Neuanlage = FLEX_CORE (Gleitzeit mit Kernzeit).</p>
+
+    <div class="info-box">
+      🟠 <strong>1 Sonderfall:</strong> Nenad Brunner als "Leitend · Ausnahme" (höhere leitende Tätigkeit Art. 3 lit. d ArG) — benötigt dokumentierte Legal-Prüfung. Dokument hinterlegt 2024-01-15.
+    </div>
+
+    <div class="head-actions">
+      <input class="search" placeholder="MA suchen...">
+      <button class="btn-secondary btn-sm">Filter: Nur Vollzeit</button>
+      <button class="btn-primary btn-sm">+ Bulk-Zuweisung</button>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>MA</th><th>Rolle</th><th>Modell</th><th>Pensum</th><th>Wochen-Soll</th><th>Kernzeit</th><th>Vertrag</th><th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="avatar">NB</span>Nenad Brunner</td><td>Admin</td><td><span class="chip chip-info">Leitend · Ausnahme</span></td><td>100 %</td><td>—</td><td>—</td><td>01.01.2021 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">PW</span>Peter Wiederkehr</td><td>Head ING</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.04.2022 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">SP</span>Stefano Papes</td><td>Head ARC</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.06.2022 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">LR</span>Lisa Rüegg</td><td>Senior-Researcher</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.09.2022 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">JV</span>Joaquin Vega</td><td>CM/AM</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.01.2023 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">AH</span>Anna Huber</td><td>Researcher</td><td><span class="chip chip-active">Gleitzeit</span></td><td>60 %</td><td>27 h</td><td>Mo–Mi AM/PM</td><td>01.03.2025 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">HM</span>Hannah Meier</td><td>Researcher</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>15.02.2024 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">ST</span>Sabrina Tanner</td><td>Backoffice</td><td><span class="chip chip-active">Fix-Zeit</span></td><td>80 %</td><td>36 h</td><td>Mo–Fr 09:00–17:00</td><td>01.11.2024 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">MW</span>Maria Weber</td><td>Researcher</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.09.2024 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><span class="avatar">TK</span>Thomas Koch</td><td>CM</td><td><span class="chip chip-active">Gleitzeit</span></td><td>100 %</td><td>45 h</td><td>Mo–Fr AM/PM</td><td>01.05.2025 – offen</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TAB: Feiertage -->
+  <div class="panel" id="panel-holidays" style="display:none;">
+    <h2>Feiertage Kanton Zürich 2026</h2>
+    <p class="sub-desc">9 gesetzliche Feiertage (ArG 20a) + 1 Reglement-bezahlter + 2 Sperrfrist-Halbtage. Berchtoldstag ist in ZH <strong>nicht gesetzlich</strong>, wird aber gemäss Tempus Passio als bezahlter Feiertag gewährt.</p>
+
+    <div class="info-box green">
+      ✓ <strong>Aktueller Status:</strong> 12 / 12 Feiertage 2026 hinterlegt. Brückentag-Editor (F11) separat.
+    </div>
+
+    <div class="head-actions">
+      <button class="btn-secondary btn-sm">Jahr wechseln: 2027</button>
+      <button class="btn-primary btn-sm" onclick="openCustomHolidayDrawer()">+ Custom Feiertag</button>
+      <button class="btn-secondary btn-sm" style="margin-left:auto;" onclick="openBridgeEditorDrawer()">Brückentag-Editor →</button>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Datum</th><th>Tag</th><th>Bezeichnung</th><th>Typ</th><th>Credit</th><th>Quelle</th><th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>01.01.2026</strong></td><td>Do</td><td>Neujahr</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>02.01.2026</strong></td><td>Fr</td><td>Berchtoldstag</td><td><span class="chip chip-info">Reglement</span></td><td>1.000</td><td>Tempus Passio §2</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>03.04.2026</strong></td><td>Fr</td><td>Karfreitag</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>06.04.2026</strong></td><td>Mo</td><td>Ostermontag</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>20.04.2026</strong></td><td>Mo</td><td>Sechseläuten (Halbtag PM)</td><td><span class="chip chip-expired">Sperrfrist</span></td><td>0.500</td><td>Reglement Sperrfrist</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>01.05.2026</strong></td><td>Fr</td><td>Tag der Arbeit</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a (ZH)</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>14.05.2026</strong></td><td>Do</td><td>Auffahrt</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>25.05.2026</strong></td><td>Mo</td><td>Pfingstmontag</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>01.08.2026</strong></td><td>Sa</td><td>Bundesfeier (fällt auf Sa)</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>Bund</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>14.09.2026</strong></td><td>Mo</td><td>Knabenschiessen (Halbtag PM)</td><td><span class="chip chip-expired">Sperrfrist</span></td><td>0.500</td><td>Reglement Sperrfrist</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>25.12.2026</strong></td><td>Fr</td><td>Weihnachten</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>26.12.2026</strong></td><td>Sa</td><td>Stephanstag (fällt auf Sa)</td><td><span class="chip chip-active">Gesetzlich</span></td><td>1.000</td><td>ArG 20a</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Brückentage 2026 (Admin-Entscheidung)</h3>
+    <table class="data-table">
+      <thead><tr><th>Datum</th><th>Tag</th><th>Bezeichnung</th><th>Credit</th><th>Entschieden von</th><th>Am</th><th>Aktionen</th></tr></thead>
+      <tbody>
+        <tr><td><strong>24.12.2026</strong></td><td>Do</td><td>Heiligabend (Halbtag PM)</td><td>0.500</td><td>Nenad</td><td>15.01.2026</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+        <tr><td><strong>31.12.2026</strong></td><td>Do</td><td>Silvester (Halbtag PM)</td><td>0.500</td><td>Nenad</td><td>15.01.2026</td><td><button class="btn-secondary btn-sm" onclick="openEditDrawer(this)">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TAB: 73b-Vereinbarungen -->
+  <div class="panel" id="panel-agreements" style="display:none;">
+    <h2>Vereinbarungen nach ArGV 1 Art. 73b (vereinfachte Erfassung)</h2>
+    <p class="sub-desc">Für MA mit >50 % Zeit-Autonomie. Kollektive Vereinbarung (Mehrheit bei &lt;50 MA) oder individuelle Vereinbarung. Jährliches Endgespräch Pflicht.</p>
+
+    <div class="info-box">
+      🟠 Kollektiv-Vereinbarung aktuell <strong>nicht aktiviert</strong>. Alle 10 MA erfassen per Default vollständig. Leitend-Ausnahme für Nenad dokumentiert separat.
+    </div>
+
+    <h3>Kollektive Vereinbarung</h3>
+    <div style="background:var(--bg); padding:14px 16px; border-radius:3px; margin-bottom:14px; font-size:13px;">
+      <strong>Status:</strong> <span class="chip chip-expired">Nicht aktiviert</span><br>
+      <strong>Template:</strong> <a href="#" style="color:var(--accent);">DRUCK_Vereinbarung_73b_ArGV1_Tempus.docx</a><br>
+      <strong>Signatur-Schwelle:</strong> &gt;5 von 10 MA (&lt;50 MA-Betrieb nach ArGV)<br><br>
+      <button class="btn-primary btn-sm">Kollektiv aktivieren + Template generieren</button>
+    </div>
+
+    <h3>Individuelle Vereinbarungen</h3>
+    <table class="data-table">
+      <thead><tr><th>MA</th><th>Typ</th><th>Signiert am</th><th>Gültig bis</th><th>Jahresgespräch</th><th>Status</th><th>Aktionen</th></tr></thead>
+      <tbody>
+        <tr><td><span class="avatar">NB</span>Nenad Brunner</td><td>Leitend · Ausnahme (Legal-Prüfung)</td><td>15.01.2024</td><td>offen</td><td>10.01.2026 ✓</td><td><span class="chip chip-active">Aktiv</span></td><td><button class="btn-secondary btn-sm">PDF</button></td></tr>
+        <tr><td colspan="7" style="text-align:center; padding:14px; color:var(--text-mid); font-style:italic;">Keine individuelle Art. 73b-Vereinbarung aktiv.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TAB: Korrekturen -->
+  <div class="panel" id="panel-corrections" style="display:none;">
+    <h2>Korrekturen nach Lock (Admin-Queue)</h2>
+    <p class="sub-desc">Nur Admin-Rolle darf gesperrte Einträge nachträglich ändern.</p>
+
+    <div class="info-box red">
+      🔴 3 offene Anträge. Eine Korrektur wurde bereits an Treuhand Kunz exportiert — Re-Export erforderlich bei Approval.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Eintrag</th><th>Beantragt von</th><th>Am</th><th>Grund</th><th>Diff</th><th>Export-Impact</th><th>Aktionen</th></tr></thead>
+      <tbody>
+        <tr data-corr="pw-15-03">
+          <td><strong>15.03.2026</strong> · Peter Wiederkehr · 6 h</td>
+          <td><span class="avatar">PW</span>Peter</td>
+          <td>20.04. 10:15</td>
+          <td>Falsche Projekt-Zuordnung · Implenia → Arcoba</td>
+          <td>Projekt geändert</td>
+          <td><span class="chip chip-pending">Re-Export März</span></td>
+          <td>
+            <button class="btn-primary btn-sm" onclick="approveCorr(this)">Approve</button>
+            <button class="btn-secondary btn-sm" onclick="reviewCorr('pw-15-03')">Review</button>
+            <button class="btn-danger btn-sm" onclick="rejectCorr(this)">Reject</button>
+          </td>
+        </tr>
+        <tr data-corr="jv-08-03">
+          <td><strong>08.03.2026</strong> · Joaquin Vega · 4 h</td>
+          <td><span class="avatar">JV</span>Joaquin</td>
+          <td>18.04. 16:30</td>
+          <td>Kategorie falsch · Kunden-Termin → Kandidaten-Meeting</td>
+          <td>Kategorie geändert (nicht verrechenbar)</td>
+          <td><span class="chip chip-pending">Re-Export März</span></td>
+          <td>
+            <button class="btn-primary btn-sm" onclick="approveCorr(this)">Approve</button>
+            <button class="btn-secondary btn-sm" onclick="reviewCorr('jv-08-03')">Review</button>
+            <button class="btn-danger btn-sm" onclick="rejectCorr(this)">Reject</button>
+          </td>
+        </tr>
+        <tr data-corr="lr-22-02">
+          <td><strong>22.02.2026</strong> · Lisa Rüegg · 30 min</td>
+          <td><span class="avatar">LR</span>Lisa</td>
+          <td>19.04. 09:45</td>
+          <td>Pausen-Nachtrag · Admin-Scanner-Override</td>
+          <td>Pause 28 → 58 min</td>
+          <td><span class="chip chip-pending">Re-Export Februar</span></td>
+          <td>
+            <button class="btn-primary btn-sm" onclick="approveCorr(this)">Approve</button>
+            <button class="btn-secondary btn-sm" onclick="reviewCorr('lr-22-02')">Review</button>
+            <button class="btn-danger btn-sm" onclick="rejectCorr(this)">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:22px;">Scanner-Access-Audit (letzte 7 Tage)</h3>
+    <p class="sub-desc">DSG-Audit: jeder Zugriff auf Scanner-Events wird protokolliert (revDSG Art. 5 Ziff. 4 · biometrische Daten).</p>
+    <table class="data-table">
+      <thead><tr><th>Zugegriffen am</th><th>Benutzer</th><th>Typ</th><th>Ziel-MA</th><th>Grund</th><th>IP</th></tr></thead>
+      <tbody>
+        <tr><td>19.04.2026 14:22</td><td>Sabrina Tanner</td><td>read_entries</td><td>Peter Wiederkehr</td><td>Monats-Export-Vorbereitung</td><td>10.0.1.42</td></tr>
+        <tr><td>18.04.2026 09:15</td><td>Peter Wiederkehr</td><td>read_scans</td><td>Lisa Rüegg</td><td>Wochen-Check-Review</td><td>10.0.1.88</td></tr>
+        <tr><td>15.04.2026 11:30</td><td>Admin (system)</td><td>correction</td><td>Lisa Rüegg</td><td>Scanner-Override · Pausen-Nachtrag</td><td>localhost</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div id="drIcon" style="font-size:26px;">⚙</div>
+    <h2 id="drTitle">Edit</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body" id="drBody"></div>
+  <div class="drawer-foot" id="drFoot"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">OK</div>
+
+<script>
+function switchTab(key) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^=panel-]').forEach(p => p.style.display = 'none');
+  event.target.classList.add('active');
+  document.getElementById('panel-' + key).style.display = 'block';
+}
+
+const corrData = {
+  'pw-15-03': {
+    icon:'✎', title:'Korrektur-Review: Peter · 15.03.2026',
+    old:{ Projekt:'Implenia · Senior-Eng', Kategorie:'Produktiv verrechenbar', Dauer:'6h 00m', Verrechenbar:'Ja' },
+    new:{ Projekt:'Arcoba · Projektleiter', Kategorie:'Produktiv verrechenbar', Dauer:'6h 00m', Verrechenbar:'Ja' },
+    reason:'Bei Stundenbuchung falsches Projekt ausgewählt. Arbeit wurde für Arcoba geleistet.',
+    impact:'Commission-ZEG wird neu berechnet (Implenia -6h, Arcoba +6h). Re-Export März an Treuhand nötig.'
+  },
+  'jv-08-03': {
+    icon:'✎', title:'Korrektur-Review: Joaquin · 08.03.2026',
+    old:{ Kategorie:'Kunden-Termin', Verrechenbar:'Ja', Dauer:'4h 00m' },
+    new:{ Kategorie:'Kandidaten-Meeting', Verrechenbar:'Nein', Dauer:'4h 00m' },
+    reason:'Kategorie beim Submit übersehen. War kein Kunden-Termin, sondern Kandidaten-Interview (nicht verrechenbar).',
+    impact:'Billable-Hours des Mandats reduzieren sich um 4h. Commission-ZEG unverändert (beide zeg_relevant). Re-Export März.'
+  },
+  'lr-22-02': {
+    icon:'✎', title:'Korrektur-Review: Lisa · 22.02.2026',
+    old:{ Pause:'28 min', Netto:'8h 32m', 'Pausen-Status':'🔴 Unterschreitung (>9h erfordert 60min)' },
+    new:{ Pause:'58 min', Netto:'8h 02m', 'Pausen-Status':'✓ OK' },
+    reason:'Scanner-Defekt: Scan-in nach Mittag erst um 13:28 registriert, reale Rückkehr war 13:58. Admin-Scanner-Override.',
+    impact:'Netto-Zeit reduziert um 30min. Compliance-Verletzung behoben. Re-Export Februar.'
+  }
+};
+
+function reviewCorr(id) {
+  const d = corrData[id];
+  if (!d) return;
+  document.getElementById('drIcon').textContent = d.icon;
+  document.getElementById('drTitle').textContent = d.title;
+  const kvOld = Object.entries(d.old).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:var(--text-mid);font-size:11.5px;">${k}</span><span class="val">${v}</span></div>`).join('');
+  const kvNew = Object.entries(d.new).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:var(--text-mid);font-size:11.5px;">${k}</span><span class="val">${v}</span></div>`).join('');
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <h4>Diff-Preview</h4>
+      <div class="diff-grid">
+        <div class="diff-col old"><div class="lbl">Alt</div>${kvOld}</div>
+        <div class="diff-col new"><div class="lbl">Neu</div>${kvNew}</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung MA</h4>
+      <div style="background:var(--bg); padding:10px 12px; border-radius:3px; font-size:12.5px; font-style:italic;">${d.reason}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Impact</h4>
+      <div class="info-box">${d.impact}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Admin-Kommentar (optional)</h4>
+      <textarea placeholder="Notiz für Audit-Trail..." rows="3"></textarea>
+    </div>
+  `;
+  document.getElementById('drFoot').innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="closeAllDrawers()">Schliessen</button>
+    <button class="btn-danger btn-sm" onclick="rejectFromDrawer('${id}')">Ablehnen</button>
+    <button class="btn-primary btn-sm" onclick="approveFromDrawer('${id}')">Approve + Re-Export</button>
+  `;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function approveCorr(btn) {
+  const row = btn.closest('tr');
+  row.style.transition = 'opacity 0.4s';
+  row.style.opacity = '0.4';
+  setTimeout(() => { row.style.display = 'none'; showToast('✓ Korrektur approved · Original als `corrected` markiert · Re-Export-Flag gesetzt'); }, 350);
+}
+
+function rejectCorr(btn) {
+  const row = btn.closest('tr');
+  row.style.transition = 'opacity 0.4s';
+  row.style.opacity = '0.4';
+  setTimeout(() => { row.style.display = 'none'; showToast('✗ Korrektur abgelehnt · Mail an MA', true); }, 350);
+}
+
+function approveFromDrawer(id) {
+  const row = document.querySelector(`tr[data-corr="${id}"]`);
+  if (row) { row.style.opacity = '0.4'; setTimeout(() => row.style.display = 'none', 300); }
+  showToast('✓ Korrektur approved · Re-Export gescheduled');
+  closeDrawer();
+}
+
+function rejectFromDrawer(id) {
+  const row = document.querySelector(`tr[data-corr="${id}"]`);
+  if (row) { row.style.opacity = '0.4'; setTimeout(() => row.style.display = 'none', 300); }
+  showToast('✗ Korrektur abgelehnt · Mail an MA', true);
+  closeDrawer();
+}
+
+function openCustomHolidayDrawer() {
+  document.getElementById('drIcon').textContent = '🎉';
+  document.getElementById('drTitle').textContent = 'Custom Feiertag hinzufügen';
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="info-box">ℹ Custom-Feiertage sind nicht-gesetzliche Tage, die firmenintern als bezahlter Feiertag gelten (z.B. lokale/kantonale Sonderregelungen).</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Details</h4>
+      <div class="field"><label>Datum</label><input type="date" value="2026-12-24"></div>
+      <div class="field"><label>Bezeichnung</label><input type="text" placeholder="z.B. Heiligabend"></div>
+      <div class="form-grid">
+        <div class="field"><label>Kanton</label><select><option>ZH (Default)</option><option>Alle Kantone</option></select></div>
+        <div class="field"><label>Typ</label><select><option>Lokal / Reglement</option><option>Gesetzlich</option><option>Sperrfrist</option></select></div>
+      </div>
+      <div class="field"><label>Credit-Faktor</label>
+        <select><option value="1.0">Ganzer Tag (1.000)</option><option value="0.5" selected>Halbtag (0.500)</option></select>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Wirkung</h4>
+      <div class="info-box green">Reduziert Soll-Zeit aller MA an diesem Datum um Credit-Faktor · automatisch anteilig bei Teilzeit.</div>
+    </div>
+  `;
+  document.getElementById('drFoot').innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="closeAllDrawers()">Abbrechen</button>
+    <button class="btn-primary btn-sm" onclick="showToast('✓ Custom Feiertag hinzugefügt · alle MA-Monats-Sollzeiten rekalkuliert'); closeDrawer();">Hinzufügen</button>
+  `;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function openBridgeEditorDrawer() {
+  document.getElementById('drIcon').textContent = '🌉';
+  document.getElementById('drTitle').textContent = 'Brückentag-Editor 2026';
+  document.getElementById('drBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="info-box">Brückentage (F11) werden pro Jahr durch Admin festgelegt. Keine gesetzlichen Tage — firmeninterne Policy.</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Aktive Brückentage 2026</h4>
+      <div class="field"><label><input type="checkbox" checked> 24.12.2026 (Do) · Heiligabend PM · Halbtag (0.5)</label></div>
+      <div class="field"><label><input type="checkbox" checked> 31.12.2026 (Do) · Silvester PM · Halbtag (0.5)</label></div>
+      <div class="field"><label><input type="checkbox"> 15.05.2026 (Fr nach Auffahrt) · Brückenfreitag · ganzer Tag (1.0)</label></div>
+      <div class="field"><label><input type="checkbox"> 18.09.2026 (Fr nach Bettag) · Brückenfreitag · ganzer Tag (1.0)</label></div>
+    </div>
+    <div class="drawer-section">
+      <h4>Neuen Brückentag hinzufügen</h4>
+      <div class="form-grid">
+        <div class="field"><label>Datum</label><input type="date"></div>
+        <div class="field"><label>Typ</label><select><option>Halbtag (0.5)</option><option>Ganzer Tag (1.0)</option></select></div>
+      </div>
+      <div class="field"><label>Bezeichnung</label><input type="text" placeholder="z.B. Brückentag nach Auffahrt"></div>
+    </div>
+  `;
+  document.getElementById('drFoot').innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="closeAllDrawers()">Schliessen</button>
+    <button class="btn-primary btn-sm" onclick="showToast('✓ Brückentage 2026 gespeichert · MA werden informiert'); closeDrawer();">Speichern</button>
+  `;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function openEditDrawer(btn) {
+  const row = btn.closest('tr');
+  const name = row.querySelector('td')?.textContent?.trim() || 'Eintrag';
+  const activePanel = [...document.querySelectorAll('[id^=panel-]')].find(p => p.style.display !== 'none')?.id || 'panel-models';
+  const ctx = activePanel.replace('panel-', '');
+  let icon = '✎', title = 'Edit: ' + name, body = '';
+
+  if (ctx === 'models') {
+    icon = '⏱️'; title = 'Arbeitszeit-Modell · ' + name;
+    body = `
+      <div class="drawer-section">
+        <h4>Modell-Konfiguration</h4>
+        <div class="form-grid">
+          <div class="field"><label>Modell</label>
+            <select>
+              <option>Gleitzeit (FLEX_CORE)</option>
+              <option>Fix-Zeit (FIXED)</option>
+              <option>Teilzeit (PARTTIME)</option>
+              <option>Vereinfacht Art. 73b (SIMPLIFIED_73B)</option>
+              <option>Leitend · Ausnahme (EXEMPT_EXEC)</option>
+            </select>
+          </div>
+          <div class="field"><label>Pensum %</label><input type="number" value="100" min="10" max="100"></div>
+          <div class="field"><label>Wochen-Soll (h)</label><input type="number" value="45" step="0.5"></div>
+          <div class="field"><label>Default-Pause (min)</label><input type="number" value="30" min="0" max="240"></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Kernzeiten (Tempus Passio §2)</h4>
+        <div class="form-grid">
+          <div class="field"><label>Mo–Fr AM von</label><input type="time" value="08:45"></div>
+          <div class="field"><label>Mo–Fr AM bis</label><input type="time" value="12:00"></div>
+          <div class="field"><label>Mo–Do PM von</label><input type="time" value="13:30"></div>
+          <div class="field"><label>Mo–Do PM bis</label><input type="time" value="17:45"></div>
+          <div class="field"><label>Fr PM von</label><input type="time" value="13:30"></div>
+          <div class="field"><label>Fr PM bis</label><input type="time" value="16:00"></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Lohnfortzahlungs-Skala</h4>
+        <div class="field">
+          <select>
+            <option>Zürcher Skala (Reglement Default)</option>
+            <option>Berner Skala</option>
+            <option>Basler Skala</option>
+            <option>KTG-Versicherung ≥80 %</option>
+          </select>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Vertragsperiode</h4>
+        <div class="form-grid">
+          <div class="field"><label>Start</label><input type="date" value="2022-04-01"></div>
+          <div class="field"><label>Ende (optional)</label><input type="date"></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Audit-Notiz (Pflicht)</h4>
+        <textarea rows="2" placeholder="Grund der Änderung · z.B. Pensum-Reduktion nach Elternzeit"></textarea>
+      </div>
+    `;
+  } else if (ctx === 'holidays') {
+    icon = '🎉'; title = 'Feiertag · ' + name;
+    body = `
+      <div class="drawer-section">
+        <h4>Basis-Daten</h4>
+        <div class="form-grid">
+          <div class="field"><label>Datum</label><input type="date" value="2026-01-01"></div>
+          <div class="field"><label>Kanton</label><select><option>ZH (Default)</option><option>Alle Kantone</option></select></div>
+        </div>
+        <div class="field"><label>Bezeichnung</label><input type="text" value="Neujahr"></div>
+      </div>
+      <div class="drawer-section">
+        <h4>Typ + Credit</h4>
+        <div class="form-grid">
+          <div class="field"><label>Typ</label>
+            <select>
+              <option>Gesetzlich (ArG 20a)</option>
+              <option>Reglement-bezahlt (lokal/vertraglich)</option>
+              <option>Sperrfrist (Halbtag Extra-Guthaben)</option>
+              <option>Custom Firmen-Policy</option>
+            </select>
+          </div>
+          <div class="field"><label>Credit-Faktor</label>
+            <select>
+              <option value="1.0">Ganzer Tag (1.000)</option>
+              <option value="0.5">Halbtag (0.500)</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Quelle/Referenz</label><input type="text" value="ArG 20a"></div>
+      </div>
+      <div class="drawer-section">
+        <div class="info-box green">✓ Wirkt auf alle MA · Soll-Zeit anteilig reduziert · Teilzeit-Anteil via variant_percent.</div>
+      </div>
+    `;
+  } else if (ctx === 'agreements') {
+    icon = '📝'; title = '73b-Vereinbarung · ' + name;
+    body = `
+      <div class="drawer-section">
+        <h4>Vereinbarungs-Typ</h4>
+        <div class="field">
+          <select>
+            <option>Individuell (einzelne Person)</option>
+            <option>Kollektiv (Mehrheit &lt;50 MA)</option>
+            <option>Leitend · Ausnahme (EXEMPT_EXEC · Art. 3 lit. d ArG)</option>
+          </select>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Gültigkeit</h4>
+        <div class="form-grid">
+          <div class="field"><label>Signiert am</label><input type="date" value="2024-01-15"></div>
+          <div class="field"><label>Gültig bis</label><input type="date" placeholder="offen"></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Jährliches Endgespräch (Pflicht 73b)</h4>
+        <div class="form-grid">
+          <div class="field"><label>Letztes Gespräch</label><input type="date" value="2026-01-10"></div>
+          <div class="field"><label>Nächste Erinnerung</label><input type="date" value="2027-01-01"></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>PDF-Dokument</h4>
+        <div class="field"><input type="file" accept=".pdf"></div>
+        <div class="info-box">Bestehendes PDF: <a href="#" style="color:var(--accent);">DRUCK_Vereinbarung_73b_Nenad_2024.pdf</a> (aktuell aktiv)</div>
+      </div>
+      <div class="drawer-section">
+        <h4>Status</h4>
+        <div class="field">
+          <select>
+            <option>Aktiv</option>
+            <option>Widerrufen</option>
+            <option>Abgelaufen · Renewal nötig</option>
+          </select>
+        </div>
+      </div>
+    `;
+  } else {
+    body = `<div class="drawer-section"><div class="info-box">Für Korrekturen bitte "Review"-Button nutzen (Diff-Preview + Approve/Reject).</div></div>`;
+  }
+
+  document.getElementById('drIcon').textContent = icon;
+  document.getElementById('drTitle').textContent = title;
+  document.getElementById('drBody').innerHTML = body;
+  document.getElementById('drFoot').innerHTML = `
+    <button class="btn btn-sm" onclick="closeAllDrawers()">Abbrechen</button>
+    <button class="btn btn-sm btn-primary" onclick="showToast('✓ Gespeichert · Audit-Trail aktualisiert'); closeAllDrawers();">Speichern</button>
+  `;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+function showToast(msg, danger) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('danger', !!danger);
+  t.classList.add('active');
+  setTimeout(() => t.classList.remove('active'), 2600);
+}
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>
