@@ -3838,3 +3838,92 @@ Alte Endpoints bleiben backward-compatible, neue Implementation soll Master-Endp
 
 ---
 
+## M. Zeit-Modul-Erweiterung (v2.6 · 2026-04-19)
+
+**Quelle:** `specs/ARK_ZEIT_SCHEMA_v0_1.md` + `specs/ARK_ZEIT_INTERACTIONS_v0_1.md` · Peter-Decisions in `wiki/meta/zeit-decisions-2026-04-19.md`.
+
+### M.1 Endpoints
+
+| Endpoint | Scope | Authentication |
+|----------|-------|----------------|
+| `POST /api/v1/zeit/scan` | Scanner-Events eingehend (Fingerabdruck-Hash) | scanner-api-key (HMAC) |
+| `GET /api/v1/zeit/entries?user=&from=&to=` | Eigene/Team Zeiteinträge | user-token + RBAC |
+| `POST /api/v1/zeit/entries` | Manuelle Eintragung (MA) | user-token |
+| `PATCH /api/v1/zeit/entries/:id` | Edit im Draft/Submitted-State | user-token + state-check |
+| `POST /api/v1/zeit/entries/:id/submit` | Einreichen zur Head-Approval | user-token |
+| `POST /api/v1/zeit/entries/:id/approve` | Head-Approval (Week/Month) | user-token + rbac Head+ |
+| `POST /api/v1/zeit/corrections` | Korrektur-Antrag nach Lock | user-token |
+| `POST /api/v1/zeit/corrections/:id/approve` | Admin-Approval bei Lock (F13) | user-token + rbac Admin |
+| `GET /api/v1/zeit/absences` | Abwesenheits-Queries | user-token + RBAC |
+| `POST /api/v1/zeit/absences` | Abwesenheits-Antrag | user-token |
+| `POST /api/v1/zeit/absences/:id/approve` | Head/Admin-Approval je Typ | user-token + RBAC |
+| `POST /api/v1/zeit/absences/:id/cert` | Arztzeugnis-Upload | user-token (multipart) |
+| `POST /api/v1/zeit/period-close/:period/submit` | Monats-Submit MA | user-token |
+| `POST /api/v1/zeit/period-close/:period/approve` | Head/Admin Monats-Approval | rbac-gated |
+| `POST /api/v1/zeit/period-close/:period/lock` | Monats-Lock | rbac Admin/Backoffice |
+| `POST /api/v1/zeit/period-close/:period/reopen` | Admin-Override (F13) | rbac Admin |
+| `POST /api/v1/zeit/export/treuhand` | Bexio-CSV / ELM 5.0 generieren | rbac Admin/Backoffice |
+| `GET /api/v1/zeit/balances/:user_id` | Ferien/Überzeit/Extra-Guthaben | user-token + RBAC |
+| `POST /api/v1/zeit/extra-leave` | Extra-Guthaben-Antrag | user-token |
+| `POST /api/v1/zeit/extra-leave/:id/unlock` | ZEG/GL-Freigabe (Admin) | rbac Admin |
+| `GET /api/v1/zeit/admin/audit/scanner` | Scanner-Access-Audit | rbac Admin |
+
+### M.2 Events
+
+| Event | Trigger | Payload | Consumers |
+|-------|---------|---------|-----------|
+| `time_entry.approved.v1` | `entry_state → approved` | `{entry_id, user_id, project_id?, duration_min, category, billable, date}` | Commission-Engine (ZEG-Queue) |
+| `time_entry.locked.v1` | `entry_state → locked` | `{entry_id, ...}` | Commission-Engine (final ZEG-Calc) |
+| `time_entry.corrected.v1` | Admin-Korrektur applied | `{old_entry_id, new_entry_id, diff}` | Commission-Engine (Recalc) |
+| `absence.approved.v1` | `absence_state → approved` | `{absence_id, user_id, type, from, to, paid}` | Kalender-Sync (Team-Cal), Mail-Worker |
+| `absence.active.v1` | Start-Datum erreicht | `{absence_id, ...}` | Notifications |
+| `absence.completed.v1` | End-Datum vorbei | `{absence_id, ...}` | Vacation-Balance-Update |
+| `period.locked.v1` | `period_close_state → locked` | `{user_id, period_month}` | Treuhand-Export-Worker |
+| `period.exported.v1` | Export erfolgreich | `{user_id, period_month, batch_ref}` | Audit-Log |
+| `period.reopen.v1` | Admin-Override | `{user_id, period_month, reason}` | Audit-Log, Commission-Recalc-Alert |
+| `scan_event.received.v1` | Scanner-API-Call | `{scan_event_id, user_id, scan_type}` | Scan-Event-Processor |
+| `extra_leave.unlocked.v1` | ZEG/GL-Freigabe | `{entitlement_id, user_id, type, days}` | MA-Notification |
+| `doctor_cert.required.v1` | Tag N erreicht ohne Cert | `{absence_id, deadline}` | Doctor-Cert-Reminder |
+
+### M.3 Workers
+
+| Worker | Trigger | Aufgabe |
+|--------|---------|---------|
+| `scan-event-processor` | nightly 02:00 UTC + on `scan_event.received` | Scan-Events zu `fact_time_entry draft` aggregieren · Pausen aus break_start/break_end · 10h-Cap anwenden |
+| `doctor-cert-reminder` | daily 08:00 | Prüft DJ-gestaffelt: 1.DJ ab Tag 1, 2.DJ ab Tag 2, 3+DJ ab Tag 3 → Mail an MA + Head of |
+| `treuhand-export-worker` | on `period.locked` | Generiert Bexio-CSV + (Phase 2) ELM 5.0 XML · legt nach SFTP/Download-Ordner · sendet Mail |
+| `vacation-expiry-reminder` | daily 06:00 ab 14d vor `carryover_deadline` | Mail an MA + Head of bei ablaufender Restferien |
+| `overtime-jahrescap-alert` | weekly sunday 22:00 | Prüft `jahres_ueberzeit > 170h` Annäherung (>150h) → Alert Head+Admin |
+| `period-close-reminder` | monthly day-3 08:00 | Mail an MA ohne submit für vergangenen Monat |
+| `zeg-recalc-trigger` | on `time_entry.approved/locked/corrected` | Published Event an Commission-Engine-Queue |
+| `scanner-access-audit` | on Scanner-Data-Read | Schreibt `fact_scanner_access_audit` |
+| `retention-purge` | nightly 03:00 | Löscht `doctor_cert_file` nach 5J post Abwesenheit · pseudonymisiert PD nach 5J |
+
+### M.4 Sagas
+
+| Saga | Schritte |
+|------|----------|
+| `zeit.monthly-close` | 1. MA-Submit · 2. Validation (keine offenen Drafts, keine Hard-Block-Pausen-Fehler) · 3. Head-Approve · 4. Admin-Approve · 5. Lock · 6. Export-Worker-Trigger · 7. Mail-Notify |
+| `zeit.correction-after-lock` | 1. MA-Antrag · 2. Admin-Approve (F13) · 3. Original `entry_state=corrected` · 4. Neuer Eintrag · 5. `fact_time_period_close.export_needs_redo=true` · 6. Backoffice-Mail · 7. Commission-Recalc-Event |
+| `zeit.absence-request` | 1. MA-Antrag · 2. Validation (Saldo, Konflikte, Sperrfristen bei Extra-Guthaben) · 3. Head-Approve (oder Admin bei MAT/ADOPT/UNPAID/>10d) · 4. Kalender-Sync · 5. Mail-Notify · 6. Vacation-Balance-Planned-Update |
+| `zeit.scan-aggregation` | 1. Scan-Events empfangen · 2. Nightly-Aggregation zu fact_time_entry · 3. Overlap-Check GIST · 4. Draft-Entries für MA sichtbar |
+
+### M.5 WebSocket-Channels
+
+| Channel | Events | Subscribers |
+|---------|--------|-------------|
+| `ws:zeit:user:{user_id}` | draft-updates, approval-status-changes | eigene UI |
+| `ws:zeit:team:{head_id}` | approval-queue-updates | Head-Dashboard |
+| `ws:zeit:admin` | scanner-audit, correction-requests | Admin-Dashboard |
+
+### M.6 Settings-Keys
+
+Neue `firm_settings` (19) · siehe `ARK_STAMMDATEN_EXPORT_v1_3.md` §90.8.
+
+### M.7 Versions-Changelog
+
+- **v2.5 (Outlook-Update 2026-04-17):** Individuelle User-Tokens (Shared-Mailbox verworfen)
+- **v2.6 (2026-04-19):** Zeit-Modul · 21 Endpoints · 12 Events · 9 Workers · 4 Sagas · 3 WS-Channels · Scanner-Integration · DSG-Audit-Worker
+
+---
+

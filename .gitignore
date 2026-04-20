@@ -78,3 +78,9 @@ Unbenannt.canvas
 
 # HR raw sources (local-only · too large for git · contains videos/InDesign/GoPro)
 raw/HR/
+
+# E-Learning raw sources (local-only · ~32GB Videos/Schulungsunterlagen)
+raw/E-Learning/
+
+# Claude Preview launch config (local-only)
+.claude/launch.json

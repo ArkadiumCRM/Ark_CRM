@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Zeit · Monats-Übersicht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .mo-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+  .mo-head { display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:22px; }
+  .mo-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .mo-head .sub { font-size:13px; color:var(--text-light); }
+  .mo-head .actions { margin-left:auto; display:flex; gap:8px; }
+  .mo-head button { padding:9px 16px; font-size:13px; font-weight:500; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+
+  .chain-stepper { display:flex; gap:0; background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:16px 22px; margin-bottom:20px; align-items:center; }
+  .step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; padding:0 8px; }
+  .step .dot { width:32px; height:32px; border-radius:50%; background:var(--border); color:var(--text-light); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; margin-bottom:6px; }
+  .step.done .dot { background:var(--green); color:white; }
+  .step.current .dot { background:var(--accent); color:white; box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent); }
+  .step.pending .dot { background:var(--bg); color:var(--text-light); border:2px solid var(--border); }
+  .step .lbl { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-mid); font-weight:600; text-align:center; }
+  .step .meta { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+  .step:not(:last-child)::after { content:""; position:absolute; top:16px; right:-50%; width:100%; height:2px; background:var(--border); z-index:-1; }
+  .step.done:not(:last-child)::after { background:var(--green); }
+
+  .table-wrap { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; margin-bottom:20px; }
+  .data-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .data-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .data-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .data-table tbody tr { cursor:pointer; }
+  .data-table tbody tr:hover { background:var(--bg); }
+  .data-table tbody tr.weekend td { background:color-mix(in srgb,var(--text-light) 5%,var(--surface)); color:var(--text-mid); }
+  .data-table tbody tr.absence td { background:color-mix(in srgb,var(--accent) 5%,var(--surface)); }
+  .num { font-family:'Libre Baskerville',serif; font-weight:500; text-align:right; }
+  .pos { color:var(--green); }
+  .neg { color:var(--red); }
+  .chip { font-size:10px; padding:2px 8px; border-radius:10px; display:inline-block; text-transform:uppercase; letter-spacing:0.8px; font-weight:600; }
+  .chip-ok { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip-warn { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip-err { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .chip-info { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip-muted { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+
+  .mo-footer { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:18px 22px; display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:20px; align-items:center; }
+  .mf-block .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .mf-block .val { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); margin-top:4px; }
+  .mf-block .val.neg { color:var(--red); } .mf-block .val.pos { color:var(--green); }
+  .mf-block .sub { font-size:11.5px; color:var(--text-mid); margin-top:3px; }
+
+  .warn-card { background:color-mix(in srgb,var(--amber) 8%,var(--surface)); border-left:3px solid var(--amber); border-radius:3px; padding:10px 14px; margin-bottom:14px; font-size:12.5px; }
+  .warn-card .title { font-weight:600; margin-bottom:4px; color:#b06100; }
+
+  /* Modal 420px */
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; z-index:90; }
+  .modal-backdrop.active { display:flex; align-items:center; justify-content:center; }
+  .modal { width:420px; background:var(--surface); border-radius:4px; box-shadow:0 10px 40px rgba(0,0,0,0.2); padding:22px; }
+  .modal h3 { margin:0 0 12px; font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); }
+  .modal .row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+  .modal .row strong { font-family:'Libre Baskerville',serif; }
+  .modal .confirm { margin-top:14px; padding:10px 12px; background:var(--bg); border-radius:3px; font-size:12.5px; }
+  .modal-foot { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+
+  .data-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 4%,var(--surface)); }
+  .data-table tbody tr.selected td { background:color-mix(in srgb,var(--accent) 6%,var(--surface)); }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; font-size:13px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+  .kv-box { background:var(--bg); padding:12px 14px; border-radius:3px; }
+  .kv-box .row { display:flex; justify-content:space-between; padding:3px 0; font-size:12.5px; }
+  .kv-box .row.sep { border-top:1px solid var(--border); margin-top:4px; padding-top:6px; font-weight:600; color:var(--accent); }
+  .info-box { padding:10px 14px; border-radius:3px; font-size:12.5px; border-left:3px solid; }
+  .info-box.amber { background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left-color:var(--amber); color:#8a5a00; }
+  .info-box.green { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left-color:var(--green); color:#2a6a2a; }
+  .info-box.red { background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left-color:var(--red); color:#8a1010; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:var(--shadow-md); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.danger { border-left-color:var(--red); }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="mo-page">
+
+  <div class="mo-head">
+    <div>
+      <h1>März 2026 · Monats-Übersicht</h1>
+      <div class="sub">Peter Wiederkehr · Review + Submit für Lohnbuchhaltung</div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary">← Februar</button>
+      <button class="btn-secondary">CSV-Export</button>
+      <button class="btn-primary" onclick="openModal()">Monat einreichen</button>
+    </div>
+  </div>
+
+  <!-- Approval-Chain-Stepper -->
+  <div class="chain-stepper">
+    <div class="step current">
+      <div class="dot">1</div>
+      <div class="lbl">Submit</div>
+      <div class="meta">Du · pending</div>
+    </div>
+    <div class="step pending">
+      <div class="dot">2</div>
+      <div class="lbl">Head-Approval</div>
+      <div class="meta">Peter · pending</div>
+    </div>
+    <div class="step pending">
+      <div class="dot">3</div>
+      <div class="lbl">Admin-Approval</div>
+      <div class="meta">Nenad · pending</div>
+    </div>
+    <div class="step pending">
+      <div class="dot">4</div>
+      <div class="lbl">Lock</div>
+      <div class="meta">Backoffice</div>
+    </div>
+    <div class="step pending">
+      <div class="dot">5</div>
+      <div class="lbl">Export</div>
+      <div class="meta">Treuhand Kunz</div>
+    </div>
+  </div>
+
+  <div class="warn-card">
+    <div class="title">🟠 1 Warnung</div>
+    Pausen-Unterschreitung am 04.03. · gescannt 28 Min · Pflicht 60 Min (bei 9h+ Arbeitszeit). Korrektur-Option via Admin.
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Tag</th><th>WoTag</th><th class="num">Soll</th><th class="num">Ist</th><th class="num">Diff</th>
+          <th>Kategorien</th><th>Pausen</th><th>Ruhezeit</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="weekend"><td>01</td><td>So</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td>–</td><td>–</td><td>✓</td><td><span class="chip chip-muted">Wochenende</span></td></tr>
+        <tr onclick="openDayDrawer('02-Mo')"><td>02</td><td>Mo</td><td class="num">9:00</td><td class="num">8:45</td><td class="num neg">-0:15</td><td>Produktiv 6h · Admin 2:45</td><td><span class="chip chip-ok">30m</span></td><td>✓</td><td><span class="chip chip-ok">Genehmigt</span></td></tr>
+        <tr><td>03</td><td>Di</td><td class="num">9:00</td><td class="num">9:15</td><td class="num pos">+0:15</td><td>Produktiv 9:15</td><td><span class="chip chip-ok">32m</span></td><td>✓</td><td><span class="chip chip-ok">Genehmigt</span></td></tr>
+        <tr onclick="openDayDrawer('04-Mi')"><td>04</td><td>Mi</td><td class="num">9:00</td><td class="num">10:30</td><td class="num pos">+1:30</td><td>Produktiv 10:30</td><td><span class="chip chip-warn">28m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr class="absence"><td>05</td><td>Do</td><td class="num">9:00</td><td class="num">0:00</td><td class="num">–</td><td><span class="chip chip-info">Ferien</span></td><td>–</td><td>✓</td><td><span class="chip chip-info">Abwesenheit</span></td></tr>
+        <tr><td>06</td><td>Fr</td><td class="num">9:00</td><td class="num">8:30</td><td class="num neg">-0:30</td><td>Produktiv 6h · Team-Dev 2:30</td><td><span class="chip chip-ok">30m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr class="weekend"><td>07</td><td>Sa</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td>–</td><td>–</td><td>✓</td><td><span class="chip chip-muted">Wochenende</span></td></tr>
+        <tr class="weekend"><td>08</td><td>So</td><td class="num">–</td><td class="num">–</td><td class="num">–</td><td>–</td><td>–</td><td>✓</td><td><span class="chip chip-muted">Wochenende</span></td></tr>
+        <tr><td>09</td><td>Mo</td><td class="num">9:00</td><td class="num">9:00</td><td class="num">0:00</td><td>Produktiv 7:30 · Client 1:30</td><td><span class="chip chip-ok">60m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr><td>10</td><td>Di</td><td class="num">9:00</td><td class="num">9:15</td><td class="num pos">+0:15</td><td>Produktiv 9:15</td><td><span class="chip chip-ok">30m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr><td>11</td><td>Mi</td><td class="num">9:00</td><td class="num">9:30</td><td class="num pos">+0:30</td><td>Produktiv 9:30</td><td><span class="chip chip-ok">45m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr><td>12</td><td>Do</td><td class="num">9:00</td><td class="num">9:00</td><td class="num">0:00</td><td>Produktiv 8h · Training 1h</td><td><span class="chip chip-ok">30m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr><td>13</td><td>Fr</td><td class="num">9:00</td><td class="num">8:45</td><td class="num neg">-0:15</td><td>Produktiv 6:15 · Team-Dev 2:30</td><td><span class="chip chip-ok">30m</span></td><td>✓</td><td><span class="chip chip-info">Eingereicht</span></td></tr>
+        <tr style="background:color-mix(in srgb,var(--text-light) 5%,var(--surface)); color:var(--text-mid);"><td colspan="9" style="text-align:center; font-style:italic; padding:8px;">… 14.–30. gleiche Struktur · Gesamt-Monat siehe Footer …</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mo-footer">
+    <div class="mf-block">
+      <div class="lbl">Monats-Ist</div>
+      <div class="val">175h 45m</div>
+      <div class="sub">22 Arbeitstage · 0 Überzeit</div>
+    </div>
+    <div class="mf-block">
+      <div class="lbl">Monats-Soll</div>
+      <div class="val">180h 00m</div>
+      <div class="sub">22 × 9h · 2 Ferientage (18h) bereits abgezogen</div>
+    </div>
+    <div class="mf-block">
+      <div class="lbl">Differenz</div>
+      <div class="val neg">-4h 15m</div>
+      <div class="sub">1 Warnung · 0 Errors</div>
+    </div>
+    <div>
+      <button class="btn-primary" style="padding:10px 18px; font-size:13px;" onclick="openModal()">Monat einreichen →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal: Confirm Submit -->
+<div class="modal-backdrop" id="drawerBackdrop" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>März 2026 einreichen?</h3>
+    <div class="row"><span>Ist</span><strong>175h 45m</strong></div>
+    <div class="row"><span>Soll</span><strong>180h 00m</strong></div>
+    <div class="row"><span>Differenz</span><strong style="color:var(--red);">-4h 15m</strong></div>
+    <div class="row"><span>Warnings</span><strong>1 (Pausen 04.03.)</strong></div>
+    <div class="row"><span>ArG-Überzeit-Verletzung</span><strong>Keine</strong></div>
+    <div class="confirm">
+      <label><input type="checkbox"> Ich bestätige, dass die erfasste Zeit korrekt und vollständig ist.</label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn-primary" onclick="submitMonth()">Einreichen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Day-Drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+<div class="drawer" id="dayDrawer">
+  <div class="drawer-head">
+    <div style="font-size:26px;">⌚</div>
+    <h2 id="dayTitle">Tages-Detail</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body" id="dayBody"></div>
+  <div class="drawer-foot" id="dayFoot"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">OK</div>
+
+<script>
+function genericDayData(day, wday) {
+  const isWeekend = wday === 'Sa' || wday === 'So';
+  const isAbs = false;
+  if (isWeekend) {
+    return {
+      title: `${wday}, ${day}.03.2026 · Wochenende`,
+      state: 'weekend',
+      scans: [],
+      summary: { 'Status': 'Wochenende', 'Soll': '0h', 'Ist': '0h' },
+      cats: [],
+      warn: null
+    };
+  }
+  return {
+    title: `${wday}, ${day}.03.2026 · Eingereicht`,
+    state: 'submitted',
+    scans: [
+      ['08:45', 'Check-In'],
+      ['12:00', 'Pause-Start'],
+      ['12:30', 'Pause-Ende'],
+      ['17:45', 'Check-Out']
+    ],
+    summary: { 'Brutto': '9h 00m', 'Pause': '30m', 'Netto': '8h 30m', 'Gezählt': '8h 30m', 'Soll': '9h 00m', 'Diff': '-30m' },
+    cats: [['Produktiv verrechenbar', '6h', 'Implenia'], ['Administration', '2h 30m', '-']],
+    warn: null
+  };
+}
+
+const dayData = {
+  '02-Mo': {
+    title:'Montag, 02.03.2026 · Genehmigt',
+    state:'approved',
+    scans:[['08:45','Check-In'],['12:00','Pause-Start'],['12:30','Pause-Ende'],['17:45','Check-Out']],
+    summary:{ 'Brutto':'9h 00m', 'Pause':'30m (gescannt)', 'Netto':'8h 30m', 'Gezählt':'8h 30m', 'Soll':'9h 00m', 'Diff':'-30m' },
+    cats:[['Produktiv verrechenbar','6h','Implenia'],['Administration','2h 30m','-']],
+    warn:null
+  },
+  '04-Mi': {
+    title:'Mittwoch, 04.03.2026 · Eingereicht · ⚠ 1 Warnung',
+    state:'submitted',
+    scans:[['08:30','Check-In'],['12:30','Pause-Start'],['12:58','Pause-Ende'],['18:30','Check-Out']],
+    summary:{ 'Brutto':'10h 00m', 'Pause':'28m (gescannt)', 'Netto':'9h 32m', 'Gezählt':'9h 32m (unter 10h-Cap)', 'Soll':'9h 00m', 'Diff':'+32m' },
+    cats:[['Produktiv verrechenbar','8h','Arcoba'],['Kunden-Termin','1h 32m','Implenia']],
+    warn:'Pausen-Unterschreitung bei >9h Arbeit: 28m statt gesetzlich geforderter 60m (ArG Art. 15). Admin-Scanner-Override nötig, falls Pause länger war.'
+  }
+};
+
+function openDayDrawer(id) {
+  // Fallback: build generic data if day not in dayData
+  let d = dayData[id];
+  if (!d) {
+    const [day, wday] = id.split('-');
+    d = genericDayData(day, wday);
+  }
+  document.getElementById('dayTitle').textContent = d.title;
+  const scans = d.scans.map(([t,type]) => `<div class="row"><span>${t} · ${type}</span><span style="color:var(--text-light); font-size:11px;">SCANNER-01</span></div>`).join('');
+  const summary = Object.entries(d.summary).map(([k,v],i,a) => `<div class="row${i === a.length-1 ? ' sep' : ''}"><span>${k}</span><strong>${v}</strong></div>`).join('');
+  const cats = d.cats.map(([c,h,p]) => `<div class="row"><span>${c} · ${p}</span><strong>${h}</strong></div>`).join('');
+  const warnHtml = d.warn ? `<div class="drawer-section"><h4>🟠 Warnung</h4><div class="info-box amber">${d.warn}</div></div>` : '';
+  document.getElementById('dayBody').innerHTML = `
+    <div class="drawer-section">
+      <h4>Scanner-Events</h4>
+      <div class="kv-box">${scans}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Zusammenfassung</h4>
+      <div class="kv-box">${summary}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Kategorien</h4>
+      <div class="kv-box">${cats}</div>
+    </div>
+    ${warnHtml}
+  `;
+  const foot = d.state === 'approved'
+    ? `<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-secondary" onclick="openCorrectionDrawer('${id}')">Korrektur beantragen</button>`
+    : `<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-secondary" onclick="showToast('→ Eintrag in Meine-Zeit zum Bearbeiten'); closeDrawer();">Bearbeiten</button>`;
+  document.getElementById('dayFoot').innerHTML = foot;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('dayDrawer').classList.add('open');
+}
+
+function openCorrectionDrawer(id) {
+  document.getElementById('dayTitle').textContent = 'Korrektur-Antrag · ' + id;
+  document.getElementById('dayBody').innerHTML = `
+    <div class="drawer-section">
+      <div class="info-box amber">Dieser Eintrag ist genehmigt. Korrekturen erfordern Head-Approval (vor Monats-Lock) oder Admin-Approval (nach Lock).</div>
+    </div>
+    <div class="drawer-section">
+      <h4>Änderungs-Felder</h4>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div><label style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Feld</label>
+          <select style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; margin-top:3px;">
+            <option>Projekt-Zuordnung</option>
+            <option>Kategorie</option>
+            <option>Verrechenbar-Flag</option>
+            <option>Pause (nur mit Scanner-Override)</option>
+          </select>
+        </div>
+        <div><label style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Neuer Wert</label>
+          <input type="text" value="Arcoba · Projektleiter" style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; margin-top:3px;">
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung (Pflicht)</h4>
+      <textarea rows="4" style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; font-family:inherit;" placeholder="Warum ist diese Korrektur nötig?"></textarea>
+    </div>
+  `;
+  document.getElementById('dayFoot').innerHTML = `
+    <button class="btn-secondary" onclick="closeAllDrawers()">Abbrechen</button>
+    <button class="btn-primary" onclick="showToast('✓ Korrektur-Antrag gesendet · Admin-Approval ausstehend'); closeDrawer();">Antrag senden</button>
+  `;
+}
+
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('dayDrawer').classList.remove('open');
+}
+
+function openModal() { document.getElementById('drawerBackdrop').classList.add('open'); }
+function closeModal() { document.getElementById('drawerBackdrop').classList.remove('open'); }
+
+function submitMonth() {
+  const cb = document.querySelector('.modal input[type=checkbox]');
+  if (!cb || !cb.checked) { showToast('⚠ Bestätigungs-Checkbox erforderlich', true); return; }
+  closeModal();
+  showToast('✓ März 2026 eingereicht · Head-Approval-Queue aktualisiert');
+  setTimeout(() => {
+    document.querySelector('.step.current .dot').style.background = 'var(--green)';
+    document.querySelector('.step.current .dot').textContent = '✓';
+    document.querySelectorAll('.step')[1].classList.remove('pending');
+    document.querySelectorAll('.step')[1].classList.add('current');
+  }, 500);
+}
+
+function showToast(msg, danger) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('danger', !!danger);
+  t.classList.add('active');
+  setTimeout(() => t.classList.remove('active'), 2600);
+}
+
+// Bind click to all day-rows (jede tr mit 2-stelliger Tages-Nr als erste td)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.data-table tbody tr').forEach(tr => {
+    const firstTd = tr.querySelector('td:first-child');
+    if (!firstTd) return;
+    const day = firstTd.textContent.trim();
+    if (!/^\d{2}$/.test(day)) return;
+    const wday = tr.querySelector('td:nth-child(2)')?.textContent?.trim() || 'Mo';
+    if (tr.hasAttribute('onclick')) return;
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => openDayDrawer(day + '-' + wday);
+  });
+});
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>

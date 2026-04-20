@@ -355,17 +355,14 @@
 
   <!-- QUICK-ACTIONS -->
   <div class="quick-actions">
-    <button class="qa-btn primary" onclick="openDrawer('drawer-vacation')">
-      <span class="icon">✈️</span> Ferien beantragen
-    </button>
-    <button class="qa-btn" onclick="openDrawer('drawer-sickness')">
-      <span class="icon">🤒</span> Krankmeldung
-    </button>
-    <button class="qa-btn" onclick="openDrawer('drawer-homeoffice')">
+    <button class="qa-btn primary" onclick="openDrawer('drawer-homeoffice')">
       <span class="icon">🏠</span> Home-Office-Antrag
     </button>
     <button class="qa-btn" onclick="openDrawer('drawer-training')">
       <span class="icon">🎓</span> Schulung anfordern
+    </button>
+    <button class="qa-btn" onclick="openDrawer('drawer-cert')">
+      <span class="icon">🎖️</span> Zertifikat erfassen
     </button>
   </div>
 
@@ -387,7 +384,7 @@
 
     <!-- FERIEN-SALDO -->
     <div class="widget">
-      <h3>Ferien-Saldo 2026 <span class="small-link" onclick="openDrawer('drawer-vacation')">Beantragen →</span></h3>
+      <h3>Ferien-Saldo 2026 <span class="small-link" style="color:var(--text-light);">Nur Info · Anträge im Zeit-Modul</span></h3>
       <div class="vac-main">
         <span class="big">18.0</span>
         <span class="unit">Tage Rest</span>
@@ -650,76 +647,7 @@
 
 </div>
 
-<!-- DRAWER: Ferienantrag -->
 <div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer-vacation">
-  <div class="drawer-head">
-    <h2>Ferien beantragen</h2>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="drawer-body">
-    <div class="sidebar-info">
-      <strong>Dein Saldo 2026:</strong> 18.0 Tage + 4.0 Extra-Guthaben<br>
-      Min. Vorlauf: 2 Werktage → 2 Wo · 3+ Tage → 1 Mt · Team-Abdeckung ≥ 50%
-    </div>
-    <div class="field">
-      <label>Zeitraum</label>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <input type="date" value="2026-07-15">
-        <input type="date" value="2026-07-19">
-      </div>
-    </div>
-    <div class="field">
-      <label>Stellvertretung (Team-Pick)</label>
-      <select><option>Wählen…</option><option>Sonja Bee Spiess</option><option>Aysun Yilmaz</option></select>
-    </div>
-    <div class="field" style="display:flex; gap:10px; align-items:center;">
-      <input type="checkbox" id="autoreply" checked>
-      <label for="autoreply" style="margin:0;">Outlook Auto-Reply aktivieren</label>
-    </div>
-    <div class="field">
-      <label>Notizen (optional)</label>
-      <textarea rows="3"></textarea>
-    </div>
-  </div>
-  <div class="drawer-foot">
-    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
-    <button class="btn-primary">Beantragen</button>
-  </div>
-</div>
-
-<!-- DRAWER: Krankmeldung -->
-<div class="drawer" id="drawer-sickness">
-  <div class="drawer-head">
-    <h2>Krankmeldung</h2>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="drawer-body">
-    <div class="sidebar-info">
-      <strong>Dein Dienstjahr 7 → Arztzeugnis ab Tag 3 Pflicht</strong><br>
-      Vor 08:00 Uhr Meldung telefonisch an Vorgesetzten · ab 08:45 — schlecht.
-    </div>
-    <div class="field">
-      <label>Zeitraum</label>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <input type="date">
-        <input type="date">
-      </div>
-    </div>
-    <div class="field">
-      <label>Arztzeugnis (bei ≥ 3 Tagen)</label>
-      <input type="file" accept=".pdf,.jpg,.png">
-    </div>
-    <div class="field">
-      <label>Notiz (optional)</label>
-      <textarea rows="2"></textarea>
-    </div>
-  </div>
-  <div class="drawer-foot">
-    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
-    <button class="btn-primary">Krankmelden</button>
-  </div>
-</div>
 
 <!-- DRAWER: Home-Office-Antrag -->
 <div class="drawer" id="drawer-homeoffice">

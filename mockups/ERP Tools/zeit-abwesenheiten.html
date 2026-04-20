@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Zeit · Abwesenheiten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .ab-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+  .ab-head { display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  .ab-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .ab-head .actions { margin-left:auto; display:flex; gap:8px; }
+  .ab-head button { padding:9px 16px; font-size:13px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+
+  .filter-bar { display:flex; gap:10px; align-items:center; padding:12px 18px; background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:18px; }
+  .filter-bar select { padding:6px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; }
+
+  .legend { display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--text-mid); }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .legend .swatch { width:14px; height:14px; border-radius:2px; }
+
+  .sw-ferien { background:color-mix(in srgb,var(--accent) 60%, var(--bg)); }
+  .sw-krank { background:color-mix(in srgb,var(--amber) 55%, var(--bg)); }
+  .sw-unfall { background:color-mix(in srgb,var(--red) 50%, var(--bg)); }
+  .sw-militar { background:color-mix(in srgb,var(--green) 55%, var(--bg)); }
+  .sw-mat { background:color-mix(in srgb,#c7b9e0 65%, var(--bg)); }
+  .sw-extra { background:color-mix(in srgb,#8a6d3b 50%, var(--bg)); }
+  .sw-ft { background:var(--text-light); opacity:0.25; }
+
+  .cal-wrap { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:auto; }
+  .cal { display:grid; grid-template-columns:170px repeat(30, 1fr); min-width:1400px; }
+  .cal .h { background:var(--bg); padding:8px 6px; border-bottom:1px solid var(--border); font-size:10.5px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-light); font-weight:600; text-align:center; }
+  .cal .h.weekend { background:color-mix(in srgb,var(--text-light) 12%, var(--bg)); }
+  .cal .h.holiday { background:color-mix(in srgb,var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .cal .ma { padding:10px 12px; border-bottom:1px solid var(--border); font-size:12.5px; display:flex; align-items:center; gap:8px; background:var(--surface); position:sticky; left:0; z-index:2; }
+  .cal .ma .avatar { width:26px; height:26px; border-radius:50%; background:color-mix(in srgb,var(--accent) 15%, var(--bg)); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:10.5px; font-family:'Libre Baskerville',serif; }
+  .cal .ma .name { font-weight:500; }
+  .cal .c { border-bottom:1px solid var(--border); border-right:1px solid color-mix(in srgb,var(--border) 50%, transparent); height:42px; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--text-mid); }
+  .cal .c:hover { outline:2px solid var(--accent); outline-offset:-2px; z-index:1; }
+  .cal .c.weekend { background:color-mix(in srgb,var(--text-light) 6%, var(--surface)); }
+  .cal .c.holiday { background:color-mix(in srgb,var(--accent) 6%, var(--surface)); }
+  .cal .c.today { box-shadow:inset 0 0 0 2px var(--accent); }
+  .cal .c.ferien { background:var(--sw-ferien-col, color-mix(in srgb,var(--accent) 60%, var(--bg))); color:white; }
+  .cal .c.krank { background:color-mix(in srgb,var(--amber) 55%, var(--bg)); color:#8a5a00; }
+  .cal .c.unfall { background:color-mix(in srgb,var(--red) 50%, var(--bg)); color:#8a1010; }
+  .cal .c.militar { background:color-mix(in srgb,var(--green) 55%, var(--bg)); color:#2a6a2a; }
+  .cal .c.mat { background:color-mix(in srgb,#c7b9e0 65%, var(--bg)); color:#4a3a7a; }
+  .cal .c.extra { background:color-mix(in srgb,#8a6d3b 50%, var(--bg)); color:white; }
+  .cal .c.ferien, .cal .c.krank, .cal .c.unfall, .cal .c.militar, .cal .c.mat, .cal .c.extra { justify-content:center; align-items:center; }
+
+  .summary-row { display:grid; grid-template-columns:repeat(6, 1fr); gap:12px; margin-top:20px; }
+  .sum-card { background:var(--surface); padding:14px 16px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .sum-card.amber { border-left-color:var(--amber); }
+  .sum-card.green { border-left-color:var(--green); }
+  .sum-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .sum-card .big { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); margin-top:4px; }
+  .sum-card .sub { font-size:11.5px; color:var(--text-mid); margin-top:3px; }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:20px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .field input, .field select, .field textarea { width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; font-family:inherit; background:var(--surface); }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .calc-box { background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12.5px; margin-top:10px; }
+  .calc-box .line { display:flex; justify-content:space-between; padding:3px 0; }
+  .calc-box .line.highlight { border-top:1px solid var(--border); padding-top:6px; margin-top:4px; font-weight:600; }
+
+  .info-chip { font-size:11.5px; padding:7px 10px; border-radius:3px; margin-top:8px; border-left:3px solid; }
+  .info-chip.amber { background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left-color:var(--amber); color:#8a5a00; }
+  .info-chip.green { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left-color:var(--green); color:#2a6a2a; }
+  .info-chip.red { background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left-color:var(--red); color:#8a1010; }
+
+  /* Detail-Drawer Patterns */
+  .kv { display:grid; grid-template-columns:130px 1fr; gap:8px 14px; font-size:13px; padding:10px 0; }
+  .kv .k { color:var(--text-mid); font-weight:600; }
+  .kv .v { color:var(--text); }
+  .status-chip { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; }
+  .status-chip.active { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .status-chip.pending { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .status-chip.done { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+
+  .cert-zone { padding:14px; background:var(--bg); border-radius:3px; text-align:center; border:2px dashed var(--border-strong); font-size:12.5px; color:var(--text-mid); }
+  .cert-zone.uploaded { border-style:solid; border-color:var(--green); background:color-mix(in srgb,var(--green) 6%,var(--bg)); color:var(--green); }
+  .cert-zone.missing { border-color:var(--red); background:color-mix(in srgb,var(--red) 6%,var(--bg)); color:var(--red); }
+
+  .tl-mini { font-size:12px; }
+  .tl-mini .e { display:grid; grid-template-columns:90px 1fr; gap:8px; padding:5px 0; border-bottom:1px dashed var(--border); }
+  .tl-mini .e:last-child { border-bottom:none; }
+  .tl-mini .d { color:var(--text-light); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:var(--shadow-md); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.danger { border-left-color:var(--red); }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="ab-page">
+
+  <div class="ab-head">
+    <div>
+      <h1>Abwesenheiten · April 2026</h1>
+      <div style="font-size:13px; color:var(--text-light);">Team-Kalender · 10 Mitarbeiter · Klick auf Zelle für Details</div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary">← März</button>
+      <button class="btn-secondary">Mai →</button>
+      <button class="btn-primary" onclick="openDrawer('new')">+ Antrag</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <select>
+      <option>Alle Typen</option>
+      <option>Ferien</option>
+      <option>Krankheit</option>
+      <option>Militär</option>
+      <option>Extra-Guthaben</option>
+    </select>
+    <select>
+      <option>Alle MA</option>
+      <option>Nur Team-Hochbau</option>
+      <option>Nur Team-Research</option>
+    </select>
+    <div class="legend" style="margin-left:auto;">
+      <span><span class="swatch sw-ferien"></span> Ferien</span>
+      <span><span class="swatch sw-krank"></span> Krank</span>
+      <span><span class="swatch sw-unfall"></span> Unfall</span>
+      <span><span class="swatch sw-militar"></span> Militär</span>
+      <span><span class="swatch sw-mat"></span> Mutterschaft</span>
+      <span><span class="swatch sw-extra"></span> Extra</span>
+      <span><span class="swatch sw-ft"></span> Feiertag</span>
+    </div>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="cal">
+      <!-- Header -->
+      <div class="h">MA</div>
+      <div class="h">1</div><div class="h">2</div><div class="h weekend">3</div><div class="h weekend">4</div>
+      <div class="h">5</div><div class="h">6</div><div class="h">7</div><div class="h">8</div><div class="h">9</div>
+      <div class="h weekend">10</div><div class="h weekend">11</div><div class="h">12</div><div class="h">13</div>
+      <div class="h">14</div><div class="h">15</div><div class="h">16</div><div class="h weekend">17</div>
+      <div class="h weekend">18</div><div class="h">19</div><div class="h holiday">20</div><div class="h">21</div>
+      <div class="h">22</div><div class="h">23</div><div class="h weekend">24</div><div class="h weekend">25</div>
+      <div class="h">26</div><div class="h">27</div><div class="h">28</div><div class="h">29</div><div class="h">30</div>
+
+      <!-- Nenad -->
+      <div class="ma"><div class="avatar">NB</div><span class="name">Nenad Brunner</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c extra" onclick="openDetailDrawer('extra-nb')">E</div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <!-- Peter -->
+      <div class="ma"><div class="avatar">PW</div><span class="name">Peter Wiederkehr</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c today"></div>
+      <div class="c"></div><div class="c ferien" onclick="openDetailDrawer('ferien-pw')">F</div><div class="c weekend ferien">F</div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <!-- Lisa -->
+      <div class="ma"><div class="avatar">LR</div><span class="name">Lisa Rüegg</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c krank" onclick="openDetailDrawer('krank-lr')">K</div><div class="c krank">K</div>
+      <div class="c weekend krank">K</div><div class="c weekend krank">K</div><div class="c krank">K</div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <!-- Anna -->
+      <div class="ma"><div class="avatar">AH</div><span class="name">Anna Huber</span></div>
+      <div class="c militar" onclick="openDetailDrawer('mil-ah')">M</div><div class="c militar">M</div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c militar">M</div><div class="c militar">M</div><div class="c militar">M</div><div class="c"></div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <!-- Joaquin -->
+      <div class="ma"><div class="avatar">JV</div><span class="name">Joaquin Vega</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c extra" onclick="openDetailDrawer('extra-jv')">J</div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <!-- Mehr MA (5) -->
+      <div class="ma"><div class="avatar">ST</div><span class="name">Sabrina Tanner</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c ferien">F</div><div class="c weekend ferien">F</div>
+      <div class="c weekend ferien">F</div><div class="c ferien">F</div><div class="c holiday ferien">F</div><div class="c ferien">F</div>
+      <div class="c ferien">F</div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+      <div class="ma"><div class="avatar">HM</div><span class="name">Hannah Meier</span></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+      <div class="c weekend"></div><div class="c weekend"></div><div class="c"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c weekend"></div>
+      <div class="c weekend"></div><div class="c"></div><div class="c holiday"></div><div class="c"></div>
+      <div class="c"></div><div class="c"></div><div class="c weekend"></div><div class="c weekend"></div>
+      <div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div>
+
+    </div>
+  </div>
+
+  <div class="summary-row">
+    <div class="sum-card">
+      <div class="lbl">Aktive Abwesenheiten</div>
+      <div class="big">3</div>
+      <div class="sub">Ferien (1) · Krank (1) · Militär (1)</div>
+    </div>
+    <div class="sum-card amber">
+      <div class="lbl">Arztzeugnis fehlt</div>
+      <div class="big">1</div>
+      <div class="sub">Lisa · Tag 2 · Reminder morgen</div>
+    </div>
+    <div class="sum-card green">
+      <div class="lbl">Approved April</div>
+      <div class="big">4</div>
+      <div class="sub">2 Ferien · 1 Militär · 1 Extra</div>
+    </div>
+    <div class="sum-card">
+      <div class="lbl">Pending April</div>
+      <div class="big">2</div>
+      <div class="sub">Joaquin Extra · Peter Ferien</div>
+    </div>
+    <div class="sum-card">
+      <div class="lbl">Team heute anwesend</div>
+      <div class="big">8 / 10</div>
+      <div class="sub">Lisa krank · Anna Militär</div>
+    </div>
+    <div class="sum-card">
+      <div class="lbl">Feiertage April</div>
+      <div class="big">1</div>
+      <div class="sub">20.04. Sechseläuten PM (Sperrfrist)</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DRAWER: Detail (dynamisch) -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+
+<div class="drawer" id="drawerDetail">
+  <div class="drawer-head">
+    <div id="detailIcon" style="font-size:26px;">⊠</div>
+    <h2 id="detailTitle">Abwesenheits-Detail</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body" id="detailBody"></div>
+  <div class="drawer-foot" id="detailFoot"></div>
+</div>
+
+<div class="drawer" id="drawerNew">
+  <div class="drawer-head">
+    <div style="font-size:26px;">⊠</div>
+    <h2>Neuer Antrag</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="field">
+        <label>Typ</label>
+        <select id="typeSel" onchange="onTypeChange(this)">
+          <option value="VACATION">Ferien</option>
+          <option value="SICK_PAID">Krankheit (bezahlt)</option>
+          <option value="ACCIDENT_NOCC">Unfall (Nichtberuf)</option>
+          <option value="MILITARY">Militärdienst</option>
+          <option value="CARE_RELATIVE">Pflege Angehörige</option>
+          <option value="EXTRA_BIRTHDAY_SELF">Extra: Geburtstag MA</option>
+          <option value="EXTRA_JOKER">Extra: Jokertag (Me Time)</option>
+          <option value="UNPAID_LEAVE">Unbezahlter Urlaub</option>
+        </select>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Von</label>
+          <input type="date" value="2026-04-22">
+        </div>
+        <div class="field">
+          <label>Bis</label>
+          <input type="date" value="2026-04-24">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field"><label>&nbsp;</label><label style="text-transform:none; font-weight:400;"><input type="checkbox"> Halbtag Beginn (PM)</label></div>
+        <div class="field"><label>&nbsp;</label><label style="text-transform:none; font-weight:400;"><input type="checkbox"> Halbtag Ende (AM)</label></div>
+      </div>
+
+      <div class="field" id="stellvertreterField">
+        <label>Stellvertretung <span style="color:var(--text-light); font-weight:400; text-transform:none; font-size:11px;">(Pflicht bei Ferien ≥ 3 Tage · Tempus Passio §2)</span></label>
+        <select>
+          <option>— Wählen —</option>
+          <option>Lisa Rüegg · LR</option>
+          <option>Joaquin Vega · JV</option>
+          <option>Hannah Meier · HM</option>
+          <option>Maria Weber · MW</option>
+          <option>Thomas Koch · TK</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Grund (optional)</label>
+        <textarea rows="3" placeholder="z.B. Familienbesuch..."></textarea>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Auto-Calc Arbeitstage</h4>
+      <div class="calc-box">
+        <div class="line"><span>Periode</span><span>22.04 – 24.04 (3 Tage)</span></div>
+        <div class="line"><span>Wochenenden</span><span>0 Tage</span></div>
+        <div class="line"><span>Feiertage</span><span>0 Tage</span></div>
+        <div class="line highlight"><span>Arbeitstage abgezogen</span><span>3 Tage</span></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Ferien-Saldo nach Antrag</h4>
+      <div class="calc-box">
+        <div class="line"><span>Entitlement 2026</span><span>25 Tage</span></div>
+        <div class="line"><span>Bereits bezogen</span><span>10 Tage</span></div>
+        <div class="line"><span>Dieser Antrag</span><span>-3 Tage</span></div>
+        <div class="line highlight"><span>Rest</span><span>12 Tage</span></div>
+      </div>
+      <div class="info-chip green">✓ Rest reicht aus. Verfalls-Stichtag: 13.04.2027 (14d nach Ostern).</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Team-Konflikte</h4>
+      <div class="info-chip green">✓ Keine Team-Konflikte im Zeitraum 22.–24.04.</div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-secondary" onclick="closeAllDrawers()">Abbrechen</button>
+    <button class="btn-primary" onclick="sendNewRequest()">Antrag senden</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Antrag gesendet</div>
+
+<script>
+const details = {
+  'ferien-pw': {
+    icon: '🏖️',
+    title: 'Ferien · Peter Wiederkehr',
+    body: `
+      <div class="drawer-section">
+        <div class="kv">
+          <div class="k">Typ</div><div class="v">Ferien (VACATION)</div>
+          <div class="k">Status</div><div class="v"><span class="status-chip active">Genehmigt</span></div>
+          <div class="k">Von</div><div class="v">22.04.2026 · Mi</div>
+          <div class="k">Bis</div><div class="v">24.04.2026 · Fr</div>
+          <div class="k">Arbeitstage</div><div class="v">3 (minus Wochenende + 1 Sperrfrist-Halbtag Sechseläuten)</div>
+          <div class="k">Beantragt</div><div class="v">15.04.2026 · Peter Wiederkehr</div>
+          <div class="k">Genehmigt</div><div class="v">16.04.2026 · Nenad Brunner (Admin)</div>
+          <div class="k">Grund</div><div class="v">Kurztrip Mailand</div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Ferien-Saldo nach Bezug</h4>
+        <div style="background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12.5px;">
+          <div style="display:flex; justify-content:space-between; padding:3px 0;"><span>Vorher</span><span>15 Tage</span></div>
+          <div style="display:flex; justify-content:space-between; padding:3px 0;"><span>Dieser Bezug</span><span style="color:var(--red);">-3</span></div>
+          <div style="display:flex; justify-content:space-between; padding:3px 0; border-top:1px solid var(--border); margin-top:4px; padding-top:6px; font-weight:700; color:var(--accent);"><span>Nachher</span><span>12 Tage</span></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Kalender-Sync</h4>
+        <div class="info-chip green">✓ Eingetragen im Team-Kalender (iCal) · Team wurde per Mail informiert.</div>
+      </div>
+    `,
+    foot: '<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-secondary" onclick="showToast(\'Antrag storniert · Mail an Admin\', true); closeDrawer();">Stornieren</button>'
+  },
+  'krank-lr': {
+    icon: '🤒',
+    title: 'Krankheit · Lisa Rüegg',
+    body: `
+      <div class="drawer-section">
+        <div class="kv">
+          <div class="k">Typ</div><div class="v">Krankheit (bezahlt)</div>
+          <div class="k">Status</div><div class="v"><span class="status-chip active">Aktiv · Tag 4</span></div>
+          <div class="k">Von</div><div class="v">18.04.2026</div>
+          <div class="k">Bis</div><div class="v">voraussichtlich offen</div>
+          <div class="k">Gemeldet</div><div class="v">18.04.2026 08:15 · Selbstmeldung</div>
+          <div class="k">Dienstjahr</div><div class="v">4. DJ · Arztzeugnis ab Tag 3 Pflicht</div>
+          <div class="k">Anspruchs-Saldo</div><div class="v">67 / 70 Tage Zürcher Skala</div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Arztzeugnis</h4>
+        <div class="cert-zone missing">
+          🔴 Arztzeugnis fehlt seit heute · Reminder-Mail gestern 08:00 versendet
+          <div style="margin-top:8px;">
+            <button class="btn-primary" onclick="showToast('Upload simuliert · Datei angenommen'); closeDrawer();">Zeugnis hochladen</button>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Lohnfortzahlung (Zürcher Skala)</h4>
+        <div style="background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12.5px;">
+          <div class="kv" style="padding:0;">
+            <div class="k">DJ 4</div><div class="v">10 Wochen = 70 Tage 100 % Lohn</div>
+            <div class="k">Verbraucht YTD</div><div class="v">3 Tage (KW 3 Grippe)</div>
+            <div class="k">Rest</div><div class="v">67 Tage</div>
+            <div class="k">Bei Überschreitung</div><div class="v">KTG-Versicherung 80 %</div>
+          </div>
+        </div>
+      </div>
+    `,
+    foot: '<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-secondary" onclick="showToast(\'Reminder manuell erneut versendet\'); ">Reminder erneut</button>'
+  },
+  'mil-ah': {
+    icon: '⚔️',
+    title: 'Militärdienst · Anna Huber',
+    body: `
+      <div class="drawer-section">
+        <div class="kv">
+          <div class="k">Typ</div><div class="v">Militärdienst (EO 80 %)</div>
+          <div class="k">Status</div><div class="v"><span class="status-chip active">Aktiv</span></div>
+          <div class="k">Von</div><div class="v">01.04.2026 · Mi</div>
+          <div class="k">Bis</div><div class="v">17.04.2026 · Fr</div>
+          <div class="k">Arbeitstage</div><div class="v">15 (3 Wochen WK)</div>
+          <div class="k">Aufgebot</div><div class="v">hochgeladen · PDF</div>
+          <div class="k">EO-Anspruch</div><div class="v">80 % des Durchschnittslohnes · Arbeitgeber zahlt Differenz auf 100 %</div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>EO-Meldung</h4>
+        <div class="info-chip green">✓ EO-Formular bei Ausgleichskasse eingereicht · 28.03.2026 · Sabrina Tanner (Backoffice)</div>
+      </div>
+      <div class="drawer-section">
+        <h4>Rückkehr</h4>
+        <div class="info-chip">Erste Arbeitswoche nach WK: KW 17 (20.-24.04.) · keine On-Call am 20.04. empfohlen</div>
+      </div>
+    `,
+    foot: '<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-secondary" onclick="showToast(\'Aufgebot-Dokument geöffnet\'); ">Aufgebot anzeigen</button>'
+  },
+  'extra-jv': {
+    icon: '⭐',
+    title: 'Jokertag · Joaquin Vega',
+    body: `
+      <div class="drawer-section">
+        <div class="kv">
+          <div class="k">Typ</div><div class="v">Extra-Guthaben · Jokertag (Me Time)</div>
+          <div class="k">Status</div><div class="v"><span class="status-chip pending">Pending</span></div>
+          <div class="k">Datum</div><div class="v">07.04.2026 · Di</div>
+          <div class="k">Beantragt</div><div class="v">05.04.2026</div>
+          <div class="k">Jahres-Anspruch</div><div class="v">1 Tag / Jahr (Reglement Tempus Passio §2)</div>
+          <div class="k">Bezogen</div><div class="v">0 / 1 (dieser würde Rest 0 machen)</div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Sperrfristen-Check</h4>
+        <div class="info-chip green">✓ 07.04. nicht in Sperrfrist-Fenster (24.12.-01.01., Sechseläuten-Halbtag, Brückentage)</div>
+      </div>
+    `,
+    foot: '<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn-danger btn-sm" onclick="showToast(\'Antrag abgelehnt · Mail an MA\', true); closeDrawer();">Ablehnen</button><button class="btn-primary" onclick="showToast(\'✓ Jokertag genehmigt · Kalender-Sync\'); closeDrawer();">Genehmigen</button>'
+  },
+  'extra-nb': {
+    icon: '🎂',
+    title: 'Geburtstag · Nenad Brunner',
+    body: `
+      <div class="drawer-section">
+        <div class="kv">
+          <div class="k">Typ</div><div class="v">Extra-Guthaben · Geburtstag MA</div>
+          <div class="k">Status</div><div class="v"><span class="status-chip active">Genehmigt</span></div>
+          <div class="k">Datum</div><div class="v">27.04.2026 · Mo</div>
+          <div class="k">Geburtstag</div><div class="v">25.04. (Sa) · Fenster 20.-24.04. oder 27.-28.04.</div>
+          <div class="k">Jahres-Anspruch</div><div class="v">1 Tag / Jahr · im Geburtstags-Fenster zu beziehen</div>
+        </div>
+      </div>
+    `,
+    foot: '<button class="btn-secondary" onclick="closeAllDrawers()">Schliessen</button>'
+  }
+};
+
+function openDetailDrawer(key) {
+  const d = details[key];
+  if (!d) return;
+  document.getElementById('detailIcon').textContent = d.icon;
+  document.getElementById('detailTitle').textContent = d.title;
+  document.getElementById('detailBody').innerHTML = d.body;
+  document.getElementById('detailFoot').innerHTML = d.foot;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawerDetail').classList.add('open');
+}
+
+function openNewDrawer(preDate) {
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawerNew').classList.add('open');
+  if (preDate) {
+    const inputs = document.querySelectorAll('#drawerNew input[type="date"]');
+    if (inputs[0]) inputs[0].value = preDate;
+    if (inputs[1]) inputs[1].value = preDate;
+  }
+}
+
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('drawerDetail').classList.remove('open');
+  document.getElementById('drawerNew').classList.remove('open');
+}
+
+function sendNewRequest() {
+  showToast('✓ Antrag gesendet · Mail an Head of');
+  closeDrawer();
+}
+
+function showToast(msg, danger) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('danger', !!danger);
+  t.classList.add('active');
+  setTimeout(() => t.classList.remove('active'), 2400);
+}
+
+function toggleCertHint() {}
+
+function onTypeChange(sel) {
+  const stv = document.getElementById('stellvertreterField');
+  if (stv) stv.style.display = sel.value.startsWith('VACATION') ? '' : 'none';
+}
+
+// Click on empty own-cell → Neuer Antrag mit vorbelegtem Datum
+document.addEventListener('DOMContentLoaded', () => {
+  // Finde die Zeile mit "Peter Wiederkehr" (Own-Row)
+  document.querySelectorAll('.cal .ma').forEach(maCell => {
+    if (maCell.textContent.includes('Peter Wiederkehr')) {
+      // Zähle Tag 1-30 durch
+      let el = maCell.nextElementSibling;
+      let dayNum = 1;
+      while (el && el.classList.contains('c') && dayNum <= 30) {
+        if (!el.classList.contains('ferien') && !el.classList.contains('krank') && !el.classList.contains('militar') && !el.classList.contains('mat') && !el.classList.contains('extra') && !el.classList.contains('weekend') && !el.classList.contains('today')) {
+          const date = '2026-04-' + String(dayNum).padStart(2, '0');
+          el.style.cursor = 'pointer';
+          el.title = 'Antrag für ' + dayNum + '.04.';
+          el.addEventListener('click', () => openNewDrawer(date));
+        }
+        el = el.nextElementSibling;
+        dayNum++;
+      }
+    }
+  });
+});
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>

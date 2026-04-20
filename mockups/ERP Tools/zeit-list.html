@@ -29,10 +29,9 @@
     <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Zeiterfassung · Team</h1>
     <span class="muted">KW 17 / 2026 · 18 Mitarbeitende · 14 / 18 Wochen erfasst</span>
     <span class="spacer"></span>
-    <button class="btn btn-sm btn-primary" onclick="location.href='zeit.html'">Meine Woche öffnen</button>
-    <button class="btn btn-sm">📊 Utilization-Report</button>
-    <button class="btn btn-sm">💰 Time-Mandat-Billing</button>
-    <button class="btn btn-sm">↓ Export Payroll</button>
+    <button class="btn btn-sm btn-primary" onclick="location.href='zeit-meine-zeit.html'">Meine Woche öffnen</button>
+    <button class="btn btn-sm" onclick="openUtilDrawer()">📊 Utilization-Report</button>
+    <button class="btn btn-sm" onclick="location.href='zeit-export.html'">↓ Export Payroll</button>
   </div>
 </div>
 
@@ -45,7 +44,7 @@
     <div class="kpi-card" style="border-left:3px solid var(--green)"><div class="kpi-label" style="color:var(--green)">Billable-Ratio</div><div class="kpi-value" style="color:var(--green)">71 %</div><div class="kpi-sub muted">Team-Durchschnitt YTD</div></div>
     <div class="kpi-card" style="border-left:3px solid var(--amber)"><div class="kpi-label" style="color:var(--amber)">Wochen offen</div><div class="kpi-value" style="color:var(--amber)">4</div><div class="kpi-sub muted">noch nicht abgeschlossen</div></div>
     <div class="kpi-card"><div class="kpi-label">Überstunden &gt; 40 h</div><div class="kpi-value">2</div><div class="kpi-sub muted">MA über 80 % Schwelle</div></div>
-    <div class="kpi-card"><div class="kpi-label">Time-Umsatz April</div><div class="kpi-value">CHF 68k</div><div class="kpi-sub muted">nur Time-Mandate</div></div>
+    <div class="kpi-card"><div class="kpi-label">ArG-Überzeit YTD Team</div><div class="kpi-value">47 h</div><div class="kpi-sub muted">von 1'700 h Cap · 2.8 %</div></div>
   </div>
 
   <!-- Filter-Bar -->
@@ -330,19 +329,55 @@
     </div>
   </div>
 
-  <!-- Footer: Billing-Ready -->
-  <div class="card" style="margin-top:18px">
-    <div class="card-head"><div class="card-title">💰 Time-Mandat-Billing · April 2026</div></div>
-    <div class="list-item">
-      <div class="name"><strong>Interim Controller · Bauherr Muster AG</strong> · 32 h × CHF 165 = <strong>CHF 5'280</strong></div>
-      <div class="meta">MAN-2026-021 · CM Lara Roth · monatliche Abrechnung · nächste Rechnung 01.05.</div>
-      <button class="btn btn-sm btn-primary">Rechnung erstellen</button>
+
+</div>
+
+<!-- Utilization-Report-Drawer -->
+<div id="utilBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90;" onclick="closeUtilDrawer()"></div>
+<div id="utilDrawer" style="position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1);">
+  <div style="padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;">
+    <div style="font-size:26px;">📊</div>
+    <h2 style="margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1;">Utilization-Report · April 2026</h2>
+    <button style="background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light);" onclick="closeUtilDrawer()">×</button>
+  </div>
+  <div style="flex:1; overflow-y:auto; padding:20px 22px; font-size:13px;">
+    <div style="margin-bottom:20px;">
+      <h4 style="margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent);">Team-Billable-Ratio (YTD)</h4>
+      <div style="background:var(--bg); padding:14px; border-radius:3px;">
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Produktiv verrechenbar</span><strong>2'140 h (71 %)</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Produktiv nicht verrechenbar</span><strong>312 h (10 %)</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Administration</span><strong>240 h (8 %)</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Internes Meeting + Team-Dev</span><strong>228 h (8 %)</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Training</span><strong>90 h (3 %)</strong></div>
+      </div>
     </div>
-    <div class="list-item">
-      <div class="name"><strong>BIM-Manager · Implenia</strong> · Taskforce · 54 h / 80 h Cap · <strong>CHF 8'910 (54 × 165)</strong></div>
-      <div class="meta">MAN-2026-008 · CM JV · 68 % ausgeschöpft · Abrechnung nach Mandat-Abschluss</div>
-      <button class="btn btn-sm">Vorschau</button>
+    <div style="margin-bottom:20px;">
+      <h4 style="margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent);">Top-Performer (Ratio)</h4>
+      <div style="background:var(--bg); padding:14px; border-radius:3px;">
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Joaquin Vega</span><strong style="color:var(--green);">82 %</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Peter Wiederkehr</span><strong style="color:var(--green);">78 %</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Lisa Rüegg</span><strong>74 %</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Thomas Koch</span><strong>70 %</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Anna Huber</span><strong>65 %</strong></div>
+      </div>
     </div>
+    <div style="margin-bottom:20px;">
+      <h4 style="margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent);">Filter</h4>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <select style="padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; font-family:inherit;"><option>Zeitraum: April 2026</option><option>Q1 2026</option><option>YTD</option></select>
+        <select style="padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; font-family:inherit;"><option>Alle MA</option><option>Nur Researcher</option><option>Nur CM/AM</option></select>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent);">ZEG-Impact</h4>
+      <div style="padding:10px 14px; background:color-mix(in srgb,var(--accent) 5%,var(--bg)); border-left:3px solid var(--accent); border-radius:3px; font-size:12.5px;">
+        Billable-Ratio wirkt direkt auf ZEG-Score → Commission-Berechnung. Warnungen bei &lt; 60 %.
+      </div>
+    </div>
+  </div>
+  <div style="padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end;">
+    <button class="btn btn-sm" onclick="closeUtilDrawer()">Schliessen</button>
+    <button class="btn btn-sm btn-primary">CSV-Export</button>
   </div>
 </div>
 
@@ -350,9 +385,18 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'zeit.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'zeit-meine-zeit.html');
   });
 });
+
+function openUtilDrawer() {
+  document.getElementById('utilBackdrop').style.display = 'block';
+  document.getElementById('utilDrawer').style.right = '0';
+}
+function closeUtilDrawer() {
+  document.getElementById('utilBackdrop').style.display = 'none';
+  document.getElementById('utilDrawer').style.right = '-560px';
+}
 </script>
 </body>
 </html>

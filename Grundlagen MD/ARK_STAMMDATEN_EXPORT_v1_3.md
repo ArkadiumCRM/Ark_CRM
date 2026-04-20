@@ -2633,3 +2633,114 @@ RPO ist separate Dienstleistung mit eigenem Prozess-Flow — kein Template im Do
 | dim_eq_dimensions | Kandidat Assessment EQ + Account Teamrad §V |
 | dim_motivator_dimensions | Kandidat Assessment Motivatoren + Account Teamrad §IV |
 | dim_assess_competencies + dim_assess_standard_profiles | Kandidat Assessment ASSESS 5.0 + Account Teamrad §VI |
+| **dim_absence_type** (neu 2026-04-19 · v1.4) | ARK_ZEIT_SCHEMA_v0_1 + ARK_ZEIT_INTERACTIONS_v0_1 |
+| **dim_time_category** (neu 2026-04-19 · v1.4) | ARK_ZEIT_SCHEMA_v0_1 |
+| **dim_work_time_model** (neu 2026-04-19 · v1.4) | ARK_ZEIT_SCHEMA_v0_1 |
+| **dim_salary_continuation_scale** (neu 2026-04-19 · v1.4) | ARK_ZEIT_SCHEMA_v0_1 |
+| **fact_holiday_cantonal** Seeds (neu 2026-04-19 · v1.4) | ARK_ZEIT_SCHEMA_v0_1 |
+
+---
+
+## 90. Zeit-Modul-Stammdaten (Phase 3 ERP · v1.4 · 2026-04-19)
+
+**Quellen:** `specs/ARK_ZEIT_SCHEMA_v0_1.md` · `wiki/sources/hr-reglemente.md` (Tempus Passio 365 · Generalis Provisio · Locus Extra) · `wiki/meta/zeit-decisions-2026-04-19.md`
+
+**Legal-Basis:** ArG Art. 9/12/15/46 · ArGV 1 Art. 73/73b · OR Art. 321c/324a/329a · revDSG Art. 5 · BGE 4A_227/2017
+
+### 90.1 `dim_absence_type` (30 Codes)
+
+**Kategorien:**
+- **medical:** SICK_PAID · SICK_UNPAID · ACCIDENT_OCC · ACCIDENT_NOCC
+- **civic:** MILITARY · CIVIL_SERVICE · CIVIL_PROTECTION · FIREFIGHTER · REDCROSS · OFFICIAL_DUTY
+- **family:** MATERNITY (16 Wo) · OTHER_PARENT (10 AT) · ADOPTION (10 AT) · CARE_RELATIVE · CARE_CHILD_LONG
+- **policy:** VACATION · VACATION_HALF_AM · VACATION_HALF_PM · COMP_TIME · UNPAID_LEAVE · BEREAVEMENT · WEDDING · MOVE · EDUCATION_PAID · SABBATICAL
+- **extra:** EXTRA_BIRTHDAY_SELF (1 T/J) · EXTRA_BIRTHDAY_CLOSE (1 T/J) · EXTRA_JOKER (1 T/J) · EXTRA_ZEG (1 T je Halbjahr bei ≥100%) · EXTRA_GL (bis 3 T)
+
+**DJ-gestaffelte Arztzeugnis-Schwelle** (Reglement §3.5.2): 1.DJ→Tag 1 · 2.DJ→Tag 2 · 3+DJ→Tag 3.
+
+### 90.2 `dim_time_category` (12 Codes)
+
+PROD_BILL · PROD_NONBILL · CLIENT_MEETING · CANDIDATE_MEETING · RESEARCH · BD_SALES · TEAM_DEV · ADMIN · INTERNAL_MEETING · TRAINING · TRAVEL_WORK · BREAK.
+
+**ZEG-relevant** (für Commission-Engine): PROD_BILL · PROD_NONBILL · CLIENT_MEETING · CANDIDATE_MEETING · RESEARCH.
+
+### 90.3 `dim_work_time_model` (5 Codes)
+
+FLEX_CORE (Default · Gleitzeit mit Kernzeit) · FIXED · PARTTIME · SIMPLIFIED_73B (ArGV 1 Art. 73b · schriftliche Vereinbarung) · EXEMPT_EXEC (höhere leitende Tätigkeit · enge Legal-Prüfung).
+
+### 90.4 Kernzeiten (Reglement Tempus Passio 365 §2)
+
+- Mo–Fr 08:45–12:00
+- Mo–Do 13:30–17:45
+- Fr 13:30–16:00
+- Fr 15:30–18:00: 2.5h Team-/Persönlichkeitsentwicklung (aggregierbar, zählt zur 45h-Normalarbeitszeit)
+
+### 90.5 Normalarbeitszeit
+
+**45h/Woche** (Reglement Tempus Passio §2 · entspricht gesetzlicher Höchstarbeitszeit ArG Art. 9). Teilzeit pro-rata via `variant_percent`.
+
+### 90.6 `dim_salary_continuation_scale` (Zürcher + Berner)
+
+Default laut Reglement Generalis Provisio §6.2.1 = **Zürcher Skala**. Alternative: Berner / Basler / INSURANCE_EQUIV.
+
+**Zürcher Skala (nach 3 Mt Dienstzeit):**
+
+| DJ | Dauer |
+|----|-------|
+| 1 | 3 Wo |
+| 2 | 8 Wo |
+| 3 | 9 Wo |
+| 4 | 10 Wo |
+| 5–9 | 11 Wo |
+| 10–14 | 16 Wo |
+| 15–19 | 21 Wo |
+| 20–24 | 26 Wo |
+| ab 25 | 31 Wo |
+
+### 90.7 `fact_holiday_cantonal` ZH 2026 Seeds (12 Einträge)
+
+**9 gesetzliche Feiertage** (ArG 20a):
+- 01.01. Neujahr · 03.04. Karfreitag · 06.04. Ostermontag · 01.05. Tag der Arbeit · 14.05. Auffahrt · 25.05. Pfingstmontag · 01.08. Bundesfeier (Sa) · 25.12. Weihnachten · 26.12. Stephanstag (Sa)
+
+**1 Reglement-bezahlter Nicht-Gesetzlicher** (Tempus Passio): 02.01. Berchtoldstag
+
+**2 Sperrfrist-Halbtage** (Reglement Sperrfristen für Extra-Guthaben, nicht statutory): 20.04. Sechseläuten PM · 14.09. Knabenschiessen PM
+
+**WICHTIG:** Berchtoldstag + Sechseläuten + Knabenschiessen sind in ZH **nicht gesetzlich**. Reglement behandelt Berchtoldstag als bezahlten Feiertag (Firmenpolicy), die zwei Halbtage nur als Sperrfristen. `fact_holiday_cantonal.is_statutory` Flag unterscheidet.
+
+### 90.8 `firm_settings` (19 Keys)
+
+| Key | Default | Quelle |
+|-----|---------|--------|
+| max_daily_hours | 10.0 | F7 Peter-Decision |
+| normal_weekly_hours | 45.0 | Reglement §2 |
+| team_dev_weekly_hours | 2.5 | Reglement §2 |
+| default_break_threshold_5h | 15 | ArG + Reglement |
+| default_break_threshold_7h | 30 | ArG + Reglement |
+| default_break_threshold_9h | 60 | ArG + Reglement |
+| vacation_default_days | 25 | Reglement §2 |
+| vacation_carryover_deadline_rule | 14d_after_easter | Reglement §2 |
+| doctor_cert_1dj/2dj/3dj_plus | 1 / 2 / 3 | Reglement §3.5.2 |
+| salary_continuation_scale_default | ZURICH | Reglement §6.2.1 |
+| salary_continuation_waiting_period_months | 3 | Reglement §6.2.1 |
+| monthly_payroll_cutoff_day | 25 | Tempus Passio |
+| extra_leave_birthday_days | 1 | Reglement §2 |
+| extra_leave_birthday_close_days | 1 | Reglement §2 |
+| extra_leave_joker_days | 1 | Reglement §2 |
+| extra_leave_zeg_days_per_halfyear | 1 | Reglement §2 |
+| extra_leave_gl_max_days | 3 | Reglement §2 |
+| jahres_ueberzeit_cap | 170 | ArG Art. 12 |
+| overtime_compensation_policy | paid_with_salary | **Arkadium-Policy**: Überstunden + Überzeit mit Grundlohn abgegolten · keine Kompensation/Auszahlung · Tracking nur für Compliance (ArG-Cap). Alternative Values für andere Tenants: `time_off` (nur Zeitausgleich) · `pay_25pct` (25% Zuschlag Auszahlung) · `hybrid` (MA-Wahl) |
+
+### 90.9 Scanner-Integration (Fingerabdruck)
+
+**F4-Decision:** Pausen manuell via Fingerabdruck-Scanner (Scan-Out/Scan-In). `fact_time_scan_event` speichert Roh-Scans, Worker aggregiert nightly zu `fact_time_entry`.
+
+**DSG-Risk:** Biometrische Daten (Template-Hash) = besondere Personendaten nach Art. 5 Ziff. 4 revDSG. DSFA vor Go-Live · Opt-out-Alternative (Badge/PIN) · Zweckbindung + Audit-Log `fact_scanner_access_audit`.
+
+---
+
+## Version-Changelog
+
+- **v1.3 (2026-04-17):** dim_document_templates + RPO-Offerte-Exklusion
+- **v1.4 (2026-04-19):** Zeit-Modul-Stammdaten (§90) · 30 Abwesenheitstypen · 12 Zeit-Kategorien · 5 Arbeitszeit-Modelle · ZH-Feiertage 2026 · Zürcher/Berner Skala · Scanner-Integration · 19 firm_settings

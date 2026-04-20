@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Zeit · Saldi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .sa-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+  .sa-head { display:flex; align-items:center; gap:18px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:22px; }
+  .sa-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .sa-head .sub { font-size:13px; color:var(--text-light); }
+
+  .konten { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px; }
+  .konto { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:20px 22px; border-top:3px solid var(--accent); }
+  .konto.or { border-top-color:var(--amber); }
+  .konto.arg { border-top-color:var(--red); }
+  .konto.extra { border-top-color:#8a6d3b; }
+  .konto h3 { margin:0 0 6px; font-family:'Libre Baskerville',serif; font-size:15px; font-weight:700; color:var(--accent); }
+  .konto.or h3 { color:var(--amber); }
+  .konto.arg h3 { color:var(--red); }
+  .konto.extra h3 { color:#8a6d3b; }
+  .konto .sub { font-size:11.5px; color:var(--text-mid); margin-bottom:14px; }
+  .konto .big { font-family:'Libre Baskerville',serif; font-size:36px; font-weight:700; color:var(--accent); line-height:1; margin-bottom:4px; }
+  .konto.or .big { color:var(--amber); }
+  .konto.arg .big { color:var(--red); }
+  .konto.extra .big { color:#8a6d3b; }
+  .konto .unit { font-size:12px; color:var(--text-mid); margin-bottom:14px; }
+  .lines .line { display:flex; justify-content:space-between; padding:5px 0; font-size:12.5px; border-bottom:1px dashed var(--border); }
+  .lines .line:last-child { border-bottom:none; }
+  .lines .line .v { font-family:'Libre Baskerville',serif; font-weight:500; }
+  .deadline { margin-top:10px; padding:8px 10px; background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left:3px solid var(--amber); font-size:11.5px; border-radius:3px; color:#8a5a00; }
+  .deadline.green { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left-color:var(--green); color:#2a6a2a; }
+  .konto .actions { margin-top:14px; display:flex; gap:8px; }
+  .btn { padding:7px 12px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+
+  /* Timeline / History */
+  .tl-section { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:22px; margin-bottom:24px; }
+  .tl-section h2 { margin:0 0 16px; font-family:'Libre Baskerville',serif; font-size:18px; color:var(--accent); }
+  .tl-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+  .tl-block { }
+  .tl-block h4 { margin:0 0 10px; font-size:13px; color:var(--accent); font-family:'Libre Baskerville',serif; }
+  .tl-entry { display:grid; grid-template-columns:80px 110px 1fr 80px; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .tl-entry:last-child { border-bottom:none; }
+  .tl-date { color:var(--text-mid); font-size:11.5px; }
+  .tl-type { font-weight:600; color:var(--accent); }
+  .tl-desc { color:var(--text); }
+  .tl-amount { font-family:'Libre Baskerville',serif; font-weight:700; text-align:right; }
+  .tl-amount.pos { color:var(--green); }
+  .tl-amount.neg { color:var(--red); }
+
+  /* Chart */
+  .chart-mock { height:90px; background:linear-gradient(180deg, color-mix(in srgb,var(--accent) 20%,transparent) 0%, transparent 100%); border-bottom:2px solid var(--accent); border-radius:3px 3px 0 0; margin:12px 0; position:relative; }
+  .chart-mock::after { content:""; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--accent); }
+
+  /* Extra-Guthaben detail list */
+  .extra-list { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:10px; }
+  .extra-item { padding:10px; background:var(--bg); border-radius:3px; text-align:center; font-size:11.5px; }
+  .extra-item .icon { font-size:18px; margin-bottom:4px; }
+  .extra-item .label { color:var(--text-mid); margin-bottom:2px; }
+  .extra-item .val { font-family:'Libre Baskerville',serif; font-weight:700; color:var(--accent); }
+  .extra-item.full .val { color:var(--green); }
+  .extra-item.empty { opacity:0.5; }
+  .extra-item { cursor:pointer; transition:background 0.15s; }
+  .extra-item:hover { background:var(--surface); }
+
+  .btn { transition:all 0.15s; }
+  .btn-primary:hover { filter:brightness(1.1); }
+  .btn-secondary:hover { background:var(--bg); }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:100; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; font-size:13px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+  .field { margin-bottom:12px; }
+  .field label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .field input, .field select, .field textarea { width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; font-family:inherit; background:var(--surface); }
+  .calc-box { background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12.5px; }
+  .calc-box .line { display:flex; justify-content:space-between; padding:3px 0; }
+  .calc-box .line.highlight { border-top:1px solid var(--border); padding-top:6px; margin-top:4px; font-weight:600; color:var(--accent); }
+  .info-chip { font-size:11.5px; padding:7px 10px; border-radius:3px; border-left:3px solid; margin-top:8px; }
+  .info-chip.green { background:color-mix(in srgb,var(--green) 8%,var(--bg)); border-left-color:var(--green); color:#2a6a2a; }
+  .info-chip.amber { background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left-color:var(--amber); color:#8a5a00; }
+  .info-chip.red { background:color-mix(in srgb,var(--red) 8%,var(--bg)); border-left-color:var(--red); color:#8a1010; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:var(--shadow-md); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="sa-page">
+
+  <div class="sa-head">
+    <div>
+      <h1>Meine Saldi 2026</h1>
+      <div class="sub">Peter Wiederkehr · Stand 19.04.2026 · 3-Konten-Modell + Ferien + Extra-Guthaben</div>
+    </div>
+  </div>
+
+  <div class="konten">
+
+    <!-- Ferien -->
+    <div class="konto">
+      <h3>Ferien</h3>
+      <div class="sub">25 Tage Jahresanspruch (Reglement Tempus Passio §2)</div>
+      <div class="big">12</div>
+      <div class="unit">Tage Rest</div>
+      <div class="lines">
+        <div class="line"><span>Entitlement</span><span class="v">25.0</span></div>
+        <div class="line"><span>Übertrag aus 2025</span><span class="v">2.0</span></div>
+        <div class="line"><span>Bezogen</span><span class="v">-10.0</span></div>
+        <div class="line"><span>Geplant (approved)</span><span class="v">-5.0</span></div>
+        <div class="line" style="font-weight:700; color:var(--accent);"><span>Verfügbar</span><span class="v">12.0</span></div>
+      </div>
+      <div class="deadline">⏰ Übertrag 2.0 Tage verfällt am 13.04.2027 (14 d nach Ostern)</div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="openDrawer('antrag')">Antrag stellen</button>
+        <button class="btn btn-secondary" onclick="openDrawer('historie-ferien')">Historie</button>
+      </div>
+    </div>
+
+    <!-- OR-Überstunden (Info-Modus bei Arkadium) -->
+    <div class="konto or">
+      <h3>OR-Überstunden</h3>
+      <div class="sub">Art. 321c OR · Vertragszeit überschritten</div>
+      <div class="big">0</div>
+      <div class="unit">Stunden offen</div>
+      <div class="lines">
+        <div class="line"><span>Akkumuliert YTD (Tracking)</span><span class="v">0h</span></div>
+        <div class="line" style="font-weight:700; color:var(--amber);"><span>Saldo</span><span class="v">0h</span></div>
+      </div>
+      <div class="deadline">ℹ Bei Arkadium sind Überstunden mit dem Grundlohn abgegolten (Arbeitsvertrag). Kein Zeitausgleich, keine Auszahlung.</div>
+    </div>
+
+    <!-- ArG-Überzeit (Tracking only bei Arkadium) -->
+    <div class="konto arg">
+      <h3>ArG-Überzeit</h3>
+      <div class="sub">Art. 12 ArG · über 45h/Woche · Jahres-Cap 170h</div>
+      <div class="big">8</div>
+      <div class="unit">Stunden YTD (Tracking)</div>
+      <div class="lines">
+        <div class="line"><span>Akkumuliert YTD</span><span class="v">8h</span></div>
+        <div class="line"><span>Rest</span><span class="v">8h</span></div>
+        <div class="line" style="font-weight:700; color:var(--red);"><span>Jahres-Cap</span><span class="v">170h</span></div>
+      </div>
+      <div class="chart-mock" title="Überzeit-Verlauf Q1 2026"></div>
+      <div class="deadline">ℹ Bei Arkadium mit Lohn abgegolten (Vertragsklausel). Tracking aus Compliance-Gründen (ArG Art. 12 · Jahres-Cap 170h). Warning bei Annäherung 150h.</div>
+    </div>
+
+    <!-- Extra-Guthaben -->
+    <div class="konto extra">
+      <h3>Extra-Guthaben</h3>
+      <div class="sub">Reglement Tempus Passio §2 · 5 Kategorien</div>
+      <div class="big">2 / 7</div>
+      <div class="unit">Tage bezogen</div>
+      <div class="extra-list">
+        <div class="extra-item full"><div class="icon">🎂</div><div class="label">Geburtstag MA</div><div class="val">1/1</div></div>
+        <div class="extra-item empty"><div class="icon">🎁</div><div class="label">Angehörige</div><div class="val">0/1</div></div>
+        <div class="extra-item empty"><div class="icon">🃏</div><div class="label">Jokertag</div><div class="val">0/1</div></div>
+        <div class="extra-item full"><div class="icon">🎯</div><div class="label">ZEG Q1</div><div class="val">1/1</div></div>
+        <div class="extra-item empty"><div class="icon">⭐</div><div class="label">GL-Ermessen</div><div class="val">0/3</div></div>
+      </div>
+      <div class="deadline">⏰ Geburtstagswoche 12.–16.04. war · Joker-/Angehörige-Bezug frei bis 31.12.2026</div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="openDrawer('extra')">Extra beantragen</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Timeline / Buchungslogik -->
+  <div class="tl-section">
+    <h2>Buchungshistorie Q1 + Q2 2026</h2>
+    <div class="tl-grid">
+
+      <div class="tl-block">
+        <h4>Ferien-Konto</h4>
+        <div class="tl-entry">
+          <div class="tl-date">01.01.</div>
+          <div class="tl-type">Entitlement</div>
+          <div class="tl-desc">Jahres-Anspruch 2026</div>
+          <div class="tl-amount pos">+25.0</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">01.01.</div>
+          <div class="tl-type">Übertrag</div>
+          <div class="tl-desc">Aus 2025 (Rest nach Ostern-Verfall)</div>
+          <div class="tl-amount pos">+2.0</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">12.–16.02.</div>
+          <div class="tl-type">Bezogen</div>
+          <div class="tl-desc">Skiurlaub Saas-Fee</div>
+          <div class="tl-amount neg">-5.0</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">04.–08.04.</div>
+          <div class="tl-type">Bezogen</div>
+          <div class="tl-desc">Osterferien Südfrankreich</div>
+          <div class="tl-amount neg">-5.0</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">22.–24.04.</div>
+          <div class="tl-type">Geplant</div>
+          <div class="tl-desc">Kurztrip Mailand (approved)</div>
+          <div class="tl-amount neg">-3.0</div>
+        </div>
+        <div class="tl-entry" style="background:var(--bg); font-weight:700;">
+          <div class="tl-date">19.04.</div>
+          <div class="tl-type">Saldo</div>
+          <div class="tl-desc">Verfügbar</div>
+          <div class="tl-amount pos">14.0</div>
+        </div>
+      </div>
+
+      <div class="tl-block">
+        <h4>ArG-Überzeit-Tracking (Lohn-abgegolten)</h4>
+        <div class="tl-entry">
+          <div class="tl-date">KW 5</div>
+          <div class="tl-type">Überzeit</div>
+          <div class="tl-desc">Angeordnet: Deadline Implenia-Prozess · Lohn-abgegolten</div>
+          <div class="tl-amount">+3h</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">KW 9</div>
+          <div class="tl-type">Überzeit</div>
+          <div class="tl-desc">Messe-Woche Swissbau · Lohn-abgegolten</div>
+          <div class="tl-amount">+5h</div>
+        </div>
+        <div class="tl-entry" style="background:var(--bg); font-weight:700;">
+          <div class="tl-date">19.04.</div>
+          <div class="tl-type">Tracking</div>
+          <div class="tl-desc">Rest Jahres-Cap (ArG-Compliance)</div>
+          <div class="tl-amount">8 / 170h</div>
+        </div>
+      </div>
+
+      <div class="tl-block">
+        <h4>Extra-Guthaben-Konto</h4>
+        <div class="tl-entry">
+          <div class="tl-date">14.04.</div>
+          <div class="tl-type">Geburtstag</div>
+          <div class="tl-desc">Eigener Geburtstag (Fenster 12.–16.04.)</div>
+          <div class="tl-amount neg">-1</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">31.03.</div>
+          <div class="tl-type">ZEG-Q1</div>
+          <div class="tl-desc">ZEG-Zielerreichung 102 % · freigegeben von Admin</div>
+          <div class="tl-amount pos">+1</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">31.03.</div>
+          <div class="tl-type">ZEG-Q1</div>
+          <div class="tl-desc">Bezogen: Langes Wochenende</div>
+          <div class="tl-amount neg">-1</div>
+        </div>
+      </div>
+
+      <div class="tl-block">
+        <h4>Krank-Anspruch Zürcher Skala</h4>
+        <div class="tl-entry" style="background:var(--bg);">
+          <div class="tl-date">Dienstjahr</div>
+          <div class="tl-type">4. DJ</div>
+          <div class="tl-desc">Anspruch 10 Wochen (Zürcher Skala)</div>
+          <div class="tl-amount">70 Tage</div>
+        </div>
+        <div class="tl-entry">
+          <div class="tl-date">KW 3</div>
+          <div class="tl-type">Krank</div>
+          <div class="tl-desc">Grippe (3 Tage · mit Zeugnis)</div>
+          <div class="tl-amount neg">-3</div>
+        </div>
+        <div class="tl-entry" style="background:var(--bg); font-weight:700;">
+          <div class="tl-date">19.04.</div>
+          <div class="tl-type">Saldo</div>
+          <div class="tl-desc">Rest DJ 4 (bis 31.12.2026)</div>
+          <div class="tl-amount pos">67 Tage</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div id="drIcon" style="font-size:26px;">⊠</div>
+    <h2 id="drTitle">Antrag</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+  <div class="drawer-body" id="drBody"></div>
+  <div class="drawer-foot" id="drFoot"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">OK</div>
+
+<script>
+const drContent = {
+  antrag: {
+    icon:'🏖️', title:'Ferien-Antrag',
+    body:`
+      <div class="drawer-section">
+        <div class="field"><label>Von</label><input type="date" value="2026-04-28"></div>
+        <div class="field"><label>Bis</label><input type="date" value="2026-05-02"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="field"><label style="text-transform:none;"><input type="checkbox"> Halbtag Beginn (PM)</label></div>
+          <div class="field"><label style="text-transform:none;"><input type="checkbox"> Halbtag Ende (AM)</label></div>
+        </div>
+        <div class="field"><label>Grund (optional)</label><textarea rows="3" placeholder="z.B. Familienbesuch..."></textarea></div>
+      </div>
+      <div class="drawer-section">
+        <h4>Saldo-Vorschau</h4>
+        <div class="calc-box">
+          <div class="line"><span>Verfügbar heute</span><span>12.0 T</span></div>
+          <div class="line"><span>Dieser Antrag</span><span>-5.0 T</span></div>
+          <div class="line"><span>Feiertag (1. Mai)</span><span>-0 T (abgezogen automatisch)</span></div>
+          <div class="line highlight"><span>Rest nach Bezug</span><span>7.0 T</span></div>
+        </div>
+        <div class="info-chip green">✓ Keine Team-Konflikte im Zeitraum.</div>
+      </div>
+    `,
+    foot:`<button class="btn btn-secondary" onclick="closeAllDrawers()">Abbrechen</button><button class="btn btn-primary" onclick="showToast('✓ Ferien-Antrag gesendet · Mail an Head of'); closeDrawer();">Antrag senden</button>`
+  },
+  'historie-ferien': {
+    icon:'📜', title:'Ferien-Historie 2026',
+    body:`
+      <div class="drawer-section">
+        <div class="calc-box">
+          <div class="line"><span><strong>01.01.</strong> Entitlement</span><span style="color:var(--green);">+25.0</span></div>
+          <div class="line"><span><strong>01.01.</strong> Übertrag 2025</span><span style="color:var(--green);">+2.0</span></div>
+          <div class="line"><span><strong>12.-16.02.</strong> Skiurlaub Saas-Fee</span><span style="color:var(--red);">-5.0</span></div>
+          <div class="line"><span><strong>04.-08.04.</strong> Osterferien Südfrankreich</span><span style="color:var(--red);">-5.0</span></div>
+          <div class="line"><span><strong>22.-24.04.</strong> Kurztrip Mailand (approved)</span><span style="color:var(--red);">-3.0</span></div>
+          <div class="line highlight"><span>Rest</span><span>14.0 T</span></div>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Übertrag-Policy</h4>
+        <div class="info-chip amber">⏰ 2.0 Tage Übertrag aus 2025 müssen bis 13.04.2027 (14d nach Ostern) bezogen werden · sonst Verfall</div>
+      </div>
+    `,
+    foot:`<button class="btn btn-secondary" onclick="closeAllDrawers()">Schliessen</button><button class="btn btn-secondary" onclick="showToast('CSV-Export erstellt')">CSV-Export</button>`
+  },
+  extra: {
+    icon:'⭐', title:'Extra-Guthaben beantragen',
+    body:`
+      <div class="drawer-section">
+        <div class="field">
+          <label>Typ</label>
+          <select>
+            <option>Geburtstag nahestehende Person (1/1 verfügbar)</option>
+            <option>Jokertag (1/1 verfügbar)</option>
+            <option>ZEG Q2 (pending · Freigabe Ende August)</option>
+            <option>GL-Ermessen (3/3 verfügbar · Admin-Freigabe nötig)</option>
+          </select>
+        </div>
+        <div class="field"><label>Datum</label><input type="date" value="2026-05-08"></div>
+        <div class="field"><label style="text-transform:none;"><input type="checkbox"> Halbtag</label></div>
+        <div class="field"><label>Begründung (bei GL-Ermessen Pflicht)</label><textarea rows="3"></textarea></div>
+      </div>
+      <div class="drawer-section">
+        <h4>Sperrfristen-Check</h4>
+        <div class="info-chip green">✓ 08.05.2026 liegt ausserhalb aller Sperrfrist-Fenster (24.12.-01.01., Sechseläuten, Knabenschiessen, Brückentage)</div>
+      </div>
+    `,
+    foot:`<button class="btn btn-secondary" onclick="closeAllDrawers()">Abbrechen</button><button class="btn btn-primary" onclick="showToast('✓ Extra-Guthaben-Antrag gesendet'); closeDrawer();">Antrag senden</button>`
+  }
+};
+
+function openDrawer(key) {
+  const d = drContent[key];
+  if (!d) return;
+  document.getElementById('drIcon').textContent = d.icon;
+  document.getElementById('drTitle').textContent = d.title;
+  document.getElementById('drBody').innerHTML = d.body;
+  document.getElementById('drFoot').innerHTML = d.foot;
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('active');
+  setTimeout(() => t.classList.remove('active'), 2400);
+}
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>

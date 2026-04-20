@@ -16,3 +16,7 @@
 ## Hinweis
 
 Für volle Regeneration (statt targeted Updates) Agent mit Task: „Regenerate digest X from `Grundlagen MD/ARK_<FILE>_v<VERSION>.md` · verlustfrei alle Enums/Kataloge · lossy Prosa". Targeted Updates sind schneller, aber bei grösseren Grundlagen-Refactors volle Regeneration bevorzugen.
+- [2026-04-19 2026-04-19 22:59] `stammdaten-digest.md` stale -- source `ARK_STAMMDATEN_EXPORT_v1_3.md` edited (session-13946034)
+- [2026-04-19 2026-04-19 23:00] `database-schema-digest.md` stale -- source `ARK_DATABASE_SCHEMA_v1_3.md` edited (session-13946034)
+- [2026-04-19 2026-04-19 23:01] `backend-architecture-digest.md` stale -- source `ARK_BACKEND_ARCHITECTURE_v2_5.md` edited (session-13946034)
+- [2026-04-19 2026-04-19 23:01] `frontend-freeze-digest.md` stale -- source `ARK_FRONTEND_FREEZE_v1_10.md` edited (session-13946034)
