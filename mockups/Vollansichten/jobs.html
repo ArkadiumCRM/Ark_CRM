@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK CRM — Job · CFO · Bauherr Muster AG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+</head>
+<body>
+
+
+<!-- ═══ SCRAPER-PROPOSAL-BANNER (conditional, nur bei status=scraper_proposal) ═══ -->
+<!-- Demo: dismissed-Zustand für diesen Job (wurde am 02.04.2026 bestätigt) -->
+<div id="scraperBanner" style="display:none;background:color-mix(in srgb,var(--red) 8%,var(--surface));border-bottom:2px solid var(--red);padding:14px 28px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1600px;margin:0 auto">
+    <div style="font-size:22px">⚠</div>
+    <div style="flex:1 1 300px">
+      <strong style="font-family:'Libre Baskerville',serif;font-size:15px;color:var(--red)">Scraper-Vorschlag · noch unbestätigt</strong>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Vakanz wurde automatisch aus LinkedIn-Job-Post #LI-4823 erkannt (15.01.2026 · 06:45). Bitte mit Kunde validieren und Status auf „Aktiv" setzen oder ablehnen.</div>
+    </div>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="confirmScraper()">✓ Vakanz bestätigen</button>
+    <button class="btn btn-sm btn-danger" onclick="rejectScraper()">✕ Ablehnen (kein echter Job)</button>
+    <button class="btn btn-sm" onclick="document.getElementById('scraperBanner').style.display='none'">Später</button>
+  </div>
+</div>
+
+<!-- Demo-Toggle: zeigt wie der Scraper-Banner aussieht (nur für Mockup-Zwecke) -->
+<div style="background:color-mix(in srgb,var(--amber) 6%,var(--surface));border-bottom:1px solid var(--border);padding:6px 28px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:10px">
+  <span>ℹ <strong>Mockup-Demo:</strong> Dieser Job ist „Aktiv". Scraper-Proposal-Banner als Header-Pattern für Status-„Scraper-Vorschlag"-Jobs (z.B. Losinger-Lausanne in der Liste) —</span>
+  <button class="btn btn-sm" style="padding:2px 8px;font-size:11px" onclick="document.getElementById('scraperBanner').style.display='flex' === 'flex' ? 'none' : 'flex'; const el=document.getElementById('scraperBanner'); el.style.display = el.style.display==='none' ? 'block' : 'none';">Banner anzeigen / ausblenden</button>
+</div>
+
+<div class="page-banner">
+  <div class="banner-top">
+    <div class="entity-logo" style="background:var(--accent-soft);color:var(--accent);font-size:22px">💼</div>
+    <div class="banner-title">
+      <h1>CFO / Finanzleitung <span class="muted" style="font-size:13px;font-weight:400;margin-left:10px">Bauherr Muster AG</span></h1>
+      <div class="banner-meta">
+        <span>Owner AM <strong>PW</strong></span>
+        <span class="dot"></span><span>Eröffnet 14.01.2026 · offen seit 91 Tagen</span>
+        <span class="dot"></span><span>Ehem. Scraper-Proposal · am 02.04.2026 bestätigt</span>
+      </div>
+      <div class="banner-actions" style="margin-top:12px">
+        <button class="btn btn-sm btn-primary" onclick="openDrawer('proposeDrawer',0)">📤 Kandidat vorschlagen</button>
+        <button class="btn btn-sm">📞 Ansprechperson</button>
+        <button class="btn btn-sm">✉ Email</button>
+        <button class="btn btn-sm" onclick="genJobAd()">📄 Stellenausschreibung</button>
+        <button class="btn btn-sm" onclick="switchTab(2); runRecompute(this)">🔁 Matching neu</button>
+        <button class="btn btn-sm btn-danger">✕ Schliessen</button>
+      </div>
+    </div>
+    <div class="banner-chips" style="flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">
+        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Status</label>
+        <select class="status-dropdown" onchange="onStatusChange(this.value)" style="padding:4px 10px;font-weight:600;color:var(--accent);border:1px solid var(--border);background:var(--surface);cursor:pointer">
+          <option value="scraper_proposal">⚠ Scraper-Vorschlag</option>
+          <option value="aktiv" selected>● Aktiv</option>
+          <option value="on_hold">⏸ On Hold</option>
+          <option value="besetzt">✓ Besetzt</option>
+          <option value="geschlossen">✕ Geschlossen</option>
+          <option value="abgelehnt">⊘ Abgelehnt</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <a href="mandates.html" class="chip chip-accent" style="text-decoration:none;cursor:pointer" title="Zum Mandat CFO-Suche">🎯 Mandat: CFO-Suche</a>
+        <a href="#" class="chip" style="text-decoration:none" title="Stellenplan-Kontext">📋 Stellenplan #PLN-2026-01</a>
+        <span class="chip">🔒 verdeckt</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SNAPSHOT-BAR (Operative Job-Metriken, 6 Slots, sticky über Tabbar; keine Dupes mit Header) -->
+<div class="snapshot-bar" style="position:sticky;top:0;z-index:50">
+  <div class="snapshot-item">
+    <span class="lbl">🎯 Matches ≥ 70 %</span>
+    <span class="val">124</span>
+    <span class="delta up">+7 seit 7 d · Top 94 %</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🧺 Im Jobbasket</span>
+    <span class="val">12</span>
+    <span class="delta">4 Prelead · 3 Versandt</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">⚙ Aktive Prozesse</span>
+    <span class="val">6</span>
+    <span class="delta">5 Mandat · 1 EB</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">📍 Standort</span>
+    <span class="val">Zürich</span>
+    <span class="delta">80–100 % · hybrid</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">💰 TC-Range</span>
+    <span class="val">CHF 220–270k</span>
+    <span class="delta">inkl. Bonus</span>
+  </div>
+  <div class="snapshot-item">
+    <span class="lbl">🌡 Ø Match-Score</span>
+    <span class="val">76 %</span>
+    <span class="delta up">über 124 Matches</span>
+  </div>
+</div>
+
+<nav class="tabbar" style="position:sticky;top:64px;z-index:49">
+  <div class="tab active" data-tab="1" onclick="switchTab(1)"><span class="num">1</span>Übersicht</div>
+  <div class="tab" data-tab="2" onclick="switchTab(2)"><span class="num">2</span>Matching</div>
+  <div class="tab" data-tab="3" onclick="switchTab(3)"><span class="num">3</span>Jobbasket</div>
+  <div class="tab" data-tab="4" onclick="switchTab(4)"><span class="num">4</span>Prozesse</div>
+  <div class="tab" data-tab="5" onclick="switchTab(5)"><span class="num">5</span>Dokumente</div>
+  <div class="tab" data-tab="6" onclick="switchTab(6)"><span class="num">6</span>History</div>
+  <div class="tab" data-tab="7" onclick="switchTab(7)"><span class="num">7</span>Reminders</div>
+</nav>
+
+<div class="content">
+
+<!-- TAB 1 · ÜBERSICHT -->
+<div id="tab-1" class="tab-panel active">
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Matching-Vorschläge</div><div class="kpi-value">124</div><div class="kpi-sub muted">Score ≥ 70</div></div>
+    <div class="kpi-card"><div class="kpi-label">Im Basket</div><div class="kpi-value">38</div><div class="kpi-sub muted">Longlist-Status</div></div>
+    <div class="kpi-card"><div class="kpi-label">Aktive Prozesse</div><div class="kpi-value">5</div><div class="kpi-sub muted">Stage V–VIII</div></div>
+    <div class="kpi-card amber"><div class="kpi-label">Offen seit</div><div class="kpi-value">91 d</div><div class="kpi-sub muted">von 140 d Ziel</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placed</div><div class="kpi-value">0 / 1</div><div class="kpi-sub muted">Ziel 1</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">1 · Stammdaten</div><a href="#" class="card-link" onclick="event.stopPropagation()">Bearbeiten</a></div>
+        <dl class="field-grid">
+          <dt>Titel</dt><dd>CFO / Finanzleitung</dd>
+          <dt>Funktion</dt><dd>CFO · Executive</dd>
+          <dt>Sparte</dt><dd>
+            <div class="toggle-group">
+              <div class="toggle-tag" data-code="ARC">ARC</div>
+              <div class="toggle-tag" data-code="GT">GT</div>
+              <div class="toggle-tag active" data-code="ING">ING</div>
+              <div class="toggle-tag" data-code="PUR">PUR</div>
+              <div class="toggle-tag active" data-code="REM">REM</div>
+            </div>
+          </dd>
+          <dt>Cluster</dt><dd>Hochbau · Immobilien-Investoren</dd>
+          <dt>Standort</dt><dd>Zürich Hauptsitz</dd>
+          <dt>Status</dt><dd><span class="chip chip-green">Aktiv</span></dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">2 · Verknüpfungen</div></div>
+        <dl class="field-grid">
+          <dt>Account</dt><dd><a href="accounts.html">Bauherr Muster AG</a></dd>
+          <dt>Mandat</dt><dd><a href="mandates.html">🎯 CFO-Suche (Target)</a></dd>
+          <dt>Stellenplan-Position</dt><dd><a href="accounts.html">CFO · GL-Mitglied</a></dd>
+          <dt>Owner AM</dt><dd><span class="actor-chip">PW</span></dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">3 · Stellenbeschreibung</div></div>
+        <dl class="field-grid">
+          <dt>Sprache</dt><dd>Deutsch</dd>
+          <dt>Beschreibung</dt><dd class="muted">Gesucht wird ein erfahrener CFO mit Bau- und Industrie-Hintergrund, der als GL-Mitglied den Finanz-Bereich neu aufstellt und das Wachstum der nächsten 3 Jahre strategisch begleitet. …</dd>
+          <dt>Verantwortung</dt><dd class="muted">Finanzstrategie · Reporting · Controlling · M&amp;A · IR · ESG</dd>
+          <dt>Anforderungen</dt><dd class="muted">10+ J. Finanz-Leadership · CH-Steuern/Recht · Bau/Industrie · DE/EN</dd>
+          <dt>Nice-to-have</dt><dd class="muted">Wachstums-/Sanierungs-Erfahrung · IPO/Investor-Exposure</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">4 · Konditionen</div></div>
+        <dl class="field-grid">
+          <dt>Gehalt (TC)</dt><dd><strong style="font-family:'Libre Baskerville',serif">CHF 220'000 – 270'000</strong></dd>
+          <dt>Pensum</dt><dd>80–100 %</dd>
+          <dt>Vertrag</dt><dd>Unbefristet</dd>
+          <dt>Startdatum</dt><dd>Q2/2026 · erwartet 30.06.2026</dd>
+          <dt>Urlaubstage</dt><dd>28 Tage</dd>
+          <dt>Home-Office</dt><dd>20 %</dd>
+          <dt>Benefits</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag">LTI</span>
+              <span class="tag">GA 1. Kl.</span>
+              <span class="tag">Bonus bis 30 %</span>
+              <span class="tag">Kaderstock</span>
+            </div>
+          </dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">5 · Matching-Kriterien</div></div>
+        <dl class="field-grid">
+          <dt>Pflicht-Skills</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag">Finanz-Leadership</span>
+              <span class="tag">Controlling</span>
+              <span class="tag">CH-Steuern</span>
+              <span class="tag">Konsolidierung</span>
+            </div>
+          </dd>
+          <dt>Wünschenswert</dt><dd>
+            <div class="tag-cloud">
+              <span class="tag">M&amp;A</span>
+              <span class="tag">ESG-Reporting</span>
+              <span class="tag">IPO-Erfahrung</span>
+            </div>
+          </dd>
+          <dt>Min. Erfahrung</dt><dd>10 Jahre</dd>
+          <dt>EDV</dt><dd>SAP · Excel · Power BI</dd>
+          <dt>No-Go-Arbeitgeber</dt><dd><span class="muted">— keine —</span></dd>
+          <dt>Standort-Radius</dt><dd>30 km um Zürich</dd>
+        </dl>
+      </div>
+
+      <div class="card collapsible">
+        <div class="card-head" onclick="toggleCollapse(this)"><div class="card-title">6 · Ausschreibung</div></div>
+        <dl class="field-grid">
+          <dt>Öffentlich?</dt><dd><span class="chip">Nein · verdeckt</span></dd>
+          <dt>Verdeckte Suche</dt><dd>✓ (Default bei Führungsrollen)</dd>
+          <dt>URL</dt><dd class="muted">—</dd>
+          <dt>Publiziert auf</dt><dd class="muted">— keine öffentliche Publikation —</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3 · JOBBASKET (Read-mostly Job-Sicht; operative Verwaltung in Kandidat Tab 5) -->
+<div id="tab-3" class="tab-panel">
+
+  <!-- Info-Banner -->
+  <div class="card" style="padding:10px 14px;margin-bottom:12px;background:color-mix(in srgb,var(--amber) 6%,var(--surface));border-left:3px solid var(--amber);font-size:12px">
+    <strong>ℹ Jobbasket-Sicht pro Job</strong> — read-mostly. Kandidaten werden hier nicht bearbeitet. Stage-Änderungen, Exposé-Versand und Gate-Logik passieren im <strong>Kandidat-Briefing Tab 5 · Jobbasket</strong>. Neue Kandidaten via <em>Tab 2 Matching → + In Jobbasket</em>.
+  </div>
+
+  <!-- KPI-Strip Jobbasket -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Im Basket total</div><div class="kpi-value">12</div><div class="kpi-sub muted">aktive Briefings</div></div>
+    <div class="kpi-card"><div class="kpi-label">Prelead</div><div class="kpi-value">4</div><div class="kpi-sub muted">noch kein GO</div></div>
+    <div class="kpi-card"><div class="kpi-label">GO schriftlich</div><div class="kpi-value">3</div><div class="kpi-sub muted">versand-ready</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Versandt</div><div class="kpi-value">3</div><div class="kpi-sub muted">Exposé gesendet</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Gate offen</div><div class="kpi-value">2</div><div class="kpi-sub muted">Bearbeitung nötig</div></div>
+  </div>
+
+  <!-- Stage-Pipeline-Bar (read-mostly) -->
+  <div class="card" style="padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Jobbasket-Stages · 12 Kandidaten</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+      <div style="padding:10px;background:color-mix(in srgb,var(--muted) 8%,var(--surface));border-radius:4px;text-align:center">
+        <div style="font-size:11px;color:var(--muted)">Prelead</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">4</div>
+        <div style="font-size:10px;color:var(--muted)">Matching → Basket</div>
+      </div>
+      <div style="padding:10px;background:color-mix(in srgb,var(--amber) 10%,var(--surface));border-radius:4px;text-align:center">
+        <div style="font-size:11px;color:var(--muted)">GO mündlich</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">2</div>
+        <div style="font-size:10px;color:var(--muted)">Briefing gehabt</div>
+      </div>
+      <div style="padding:10px;background:color-mix(in srgb,var(--accent) 10%,var(--surface));border-radius:4px;text-align:center">
+        <div style="font-size:11px;color:var(--muted)">GO schriftlich</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">3</div>
+        <div style="font-size:10px;color:var(--muted)">Dokumente OK</div>
+      </div>
+      <div style="padding:10px;background:color-mix(in srgb,var(--gold) 12%,var(--surface));border-radius:4px;text-align:center;border-left:2px solid var(--gold)">
+        <div style="font-size:11px;color:var(--gold)">Versandt</div>
+        <div style="font-size:22px;font-weight:700;color:var(--gold)">3</div>
+        <div style="font-size:10px;color:var(--muted)">Exposé weg</div>
+      </div>
+      <div style="padding:10px;background:color-mix(in srgb,var(--red) 8%,var(--surface));border-radius:4px;text-align:center">
+        <div style="font-size:11px;color:var(--red)">⚠ Gate offen</div>
+        <div style="font-size:22px;font-weight:700;color:var(--red)">2</div>
+        <div style="font-size:10px;color:var(--muted)">CV/Assess fehlt</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter + Search -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Kandidat suchen …" style="flex:1 1 240px">
+    <select>
+      <option>Alle Stages</option>
+      <option>Prelead</option>
+      <option>GO mündlich</option>
+      <option>GO schriftlich</option>
+      <option>Versandt</option>
+    </select>
+    <select><option>Alle Gates</option><option>Gate OK</option><option>Gate offen</option></select>
+    <select><option>Alle AM</option><option>PW</option><option>JV</option><option>MF</option></select>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active" onclick="switchJbView(this,'liste')">Liste</div>
+      <div class="chip-tab" onclick="switchJbView(this,'kanban')">Kanban</div>
+    </div>
+  </div>
+
+  <!-- View · Liste (default) -->
+  <div id="jb-view-liste" class="jb-view">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead><tr><th>Kandidat</th><th>Stage</th><th>Gate</th><th>Score</th><th>Im Basket seit</th><th>Letzter Touch</th><th>Exposé-Sprache</th><th>AM</th><th class="right">›</th></tr></thead>
+        <tbody>
+          <tr style="cursor:pointer" onclick="location.href='candidates.html'">
+            <td><strong>Tobias Furrer</strong><div class="muted" style="font-size:11px">Finanzleiter · Züblin AG</div></td>
+            <td><span class="chip chip-gold">Versandt</span></td>
+            <td><span class="chip chip-accent" style="font-size:10px">✓ Gate OK</span></td>
+            <td><span class="chip chip-gold">94 %</span></td>
+            <td>04.04.2026 · 12 d</td>
+            <td>15.04. Exposé (JV)</td>
+            <td>DE</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Claudia Zehnder</strong><div class="muted" style="font-size:11px">CFO · Halter AG</div></td>
+            <td><span class="chip chip-accent">GO schriftlich</span></td>
+            <td><span class="chip chip-accent" style="font-size:10px">✓ Gate OK</span></td>
+            <td><span class="chip chip-gold">89 %</span></td>
+            <td>07.04.2026 · 9 d</td>
+            <td>14.04. Briefing-Call (PW)</td>
+            <td>DE</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Markus Gerber</strong><div class="muted" style="font-size:11px">Head of Finance · HRS</div></td>
+            <td><span class="chip chip-accent">GO schriftlich</span></td>
+            <td><span class="chip chip-red" style="font-size:10px">⚠ CV ≥ 60 d</span></td>
+            <td><span class="chip chip-accent">85 %</span></td>
+            <td>09.04.2026 · 7 d</td>
+            <td>12.04. CV-Request (PW)</td>
+            <td>DE</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Nina Brunner</strong><div class="muted" style="font-size:11px">Head of Finance · Losinger</div></td>
+            <td><span class="chip chip-amber">GO mündlich</span></td>
+            <td><span class="chip chip-red" style="font-size:10px">⚠ Assessment ≥ 9 Mon.</span></td>
+            <td><span class="chip chip-accent">82 %</span></td>
+            <td>11.04.2026 · 5 d</td>
+            <td>13.04. Phone (MF)</td>
+            <td>DE / FR</td>
+            <td><span class="actor-chip">MF</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Stefan Meier</strong><div class="muted" style="font-size:11px">Finanzchef · Priora</div></td>
+            <td><span class="chip chip-amber">GO mündlich</span></td>
+            <td><span class="chip chip-accent" style="font-size:10px">✓ Gate OK</span></td>
+            <td><span class="chip chip-accent">78 %</span></td>
+            <td>13.04.2026 · 3 d</td>
+            <td>15.04. Briefing-Call (JV)</td>
+            <td>DE</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Andrea Hofer</strong><div class="muted" style="font-size:11px">Controllerin · HRS</div></td>
+            <td><span class="chip">Prelead</span></td>
+            <td class="muted" style="font-size:10px">— noch nicht gebrieft —</td>
+            <td><span class="chip">73 %</span></td>
+            <td>15.04.2026 · 1 d</td>
+            <td>15.04. Matching-Import</td>
+            <td class="muted">—</td>
+            <td><span class="actor-chip">LR</span></td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr><td class="muted" colspan="9" style="text-align:center">+ 6 weitere im Basket</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- View · Kanban -->
+  <div id="jb-view-kanban" class="jb-view" style="display:none">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div class="card" style="padding:10px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px">Prelead · 4</div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">Andrea Hofer</strong><div class="muted" style="font-size:11px">73 % · 15.04.</div></div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">+ 3 weitere</strong><div class="muted" style="font-size:11px">Matching-Import</div></div>
+      </div>
+      <div class="card" style="padding:10px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--amber);padding-bottom:8px;border-bottom:1px solid var(--amber);margin-bottom:8px">GO mündlich · 2</div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">Nina Brunner</strong><div class="muted" style="font-size:11px">82 % · ⚠ Gate</div></div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">Stefan Meier</strong><div class="muted" style="font-size:11px">78 % · ✓</div></div>
+      </div>
+      <div class="card" style="padding:10px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);padding-bottom:8px;border-bottom:1px solid var(--accent);margin-bottom:8px">GO schriftlich · 3</div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">Claudia Zehnder</strong><div class="muted" style="font-size:11px">89 % · ✓</div></div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">Markus Gerber</strong><div class="muted" style="font-size:11px">85 % · ⚠ CV</div></div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border)"><strong style="font-size:13px">+ 1 weitere</strong></div>
+      </div>
+      <div class="card" style="padding:10px;border-left:2px solid var(--gold)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);padding-bottom:8px;border-bottom:1px solid var(--gold);margin-bottom:8px">Versandt · 3</div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border);background:color-mix(in srgb,var(--gold) 4%,var(--surface))"><strong style="font-size:13px">Tobias Furrer</strong><div class="muted" style="font-size:11px">94 % · 15.04.</div></div>
+        <div class="card" style="padding:8px;margin-bottom:6px;box-shadow:none;border:1px solid var(--border);background:color-mix(in srgb,var(--gold) 4%,var(--surface))"><strong style="font-size:13px">+ 2 weitere</strong></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB 2 · MATCHING -->
+<div id="tab-2" class="tab-panel">
+
+  <!-- Recompute-Banner + KPI-Strip -->
+  <div class="card" style="padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:color-mix(in srgb,var(--accent) 4%,var(--surface));border-left:3px solid var(--accent)">
+    <div>
+      <strong style="font-family:'Libre Baskerville',serif">🎯 Matching-Tool</strong>
+      <span class="muted" style="margin-left:8px;font-size:12px">Async-Recompute über alle 8'400 Kandidaten · Gewichtung aus Tab 1 §5 Matching-Kriterien</span>
+    </div>
+    <span class="spacer"></span>
+    <span class="muted" style="font-size:12px">Zuletzt berechnet: <strong style="color:var(--text)">2026-04-16 02:14</strong> (vor 12 h)</span>
+    <button class="btn btn-sm" onclick="runRecompute(this)">🔁 Matching neu berechnen</button>
+  </div>
+
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Matches ≥ Schwelle</div><div class="kpi-value" id="mtKpiCount">124</div><div class="kpi-sub muted">aus 8'400 Kandidaten</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Top-Score</div><div class="kpi-value">94 %</div><div class="kpi-sub muted">Tobias Furrer</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Score</div><div class="kpi-value">76 %</div><div class="kpi-sub muted">über Matches ≥ 70</div></div>
+    <div class="kpi-card"><div class="kpi-label">Neu seit 7 d</div><div class="kpi-value">7</div><div class="kpi-sub muted">Score-Sprünge</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Sector-Exclude</div><div class="kpi-value">3</div><div class="kpi-sub muted">geblockte Arbeitgeber</div></div>
+  </div>
+
+  <!-- Filter + Slider -->
+  <div class="filter-bar" style="flex-wrap:wrap;gap:12px">
+    <div style="display:flex;align-items:center;gap:10px;min-width:260px">
+      <label style="font-size:12px;font-weight:600;color:var(--muted)">Schwelle</label>
+      <input type="range" min="50" max="95" value="70" id="mtSlider" oninput="onScoreSlider(this.value)" style="flex:1">
+      <span id="mtSliderVal" style="font-size:13px;font-weight:700;color:var(--accent);min-width:34px">70 %</span>
+    </div>
+    <span style="width:1px;height:22px;background:var(--border)"></span>
+    <select><option>Alle Sparten</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select>
+    <select><option>Alle Availability</option><option>🟢 Aktiv suchend</option><option>🟡 Passiv offen</option><option>🔴 Nicht offen</option></select>
+    <select><option>Alle Basket-States</option><option>nicht im Basket</option><option>im Basket</option><option>in Prozess</option></select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox" checked> Sector-Exclude aktiv</label>
+    <span class="spacer"></span>
+    <button class="btn btn-sm" id="mtBulkBtn" disabled onclick="bulkToJobbasket()">+ In Jobbasket <span class="muted" id="mtBulkCount" style="margin-left:4px">(0)</span></button>
+  </div>
+
+  <!-- Matching-Tabelle mit 7 Sub-Scores + Radar -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width:28px"><input type="checkbox" onchange="toggleAllMatches(this)"></th>
+          <th>Kandidat</th>
+          <th class="right">Score</th>
+          <th style="text-align:center">Radar</th>
+          <th class="right" title="Sparte-Match">Sp.</th>
+          <th class="right" title="Funktion-Match">Fkt.</th>
+          <th class="right" title="Gehalts-Fit">Geh.</th>
+          <th class="right" title="Standort-Fit">Loc.</th>
+          <th class="right" title="Skills-Match">Skl.</th>
+          <th class="right" title="Verfügbarkeit">Verf.</th>
+          <th class="right" title="Seniorität/Erfahrung">Sen.</th>
+          <th>Aktueller AG</th>
+          <th>Basket</th>
+          <th class="right">›</th>
+        </tr>
+      </thead>
+      <tbody id="mtBody">
+        <tr data-score="94" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Tobias Furrer</strong><div class="muted" style="font-size:11px">40 J · Zürich</div></td>
+          <td class="right"><span class="chip chip-gold">94 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini" aria-label="Radar 94">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,14 85,30 84,70 63,90 37,90 16,70 15,30" fill="none" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2 2"/>
+              <polygon points="50,8 89,29 87,71 64,94 36,94 13,71 11,29" fill="color-mix(in srgb,var(--gold) 20%,transparent)" stroke="var(--gold)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">9</td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">9</td>
+          <td class="right">7</td>
+          <td class="right"><strong>10</strong></td>
+          <td>Finanzleiter · Züblin AG</td>
+          <td><span class="chip chip-accent">in Prozess</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="89" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Claudia Zehnder</strong><div class="muted" style="font-size:11px">45 J · Zürich</div></td>
+          <td class="right"><span class="chip chip-gold">89 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,14 82,31 80,68 62,87 38,92 18,72 18,32" fill="color-mix(in srgb,var(--gold) 18%,transparent)" stroke="var(--gold)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">9</td>
+          <td class="right">8</td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">8</td>
+          <td class="right">9</td>
+          <td class="right">9</td>
+          <td>CFO · Halter AG</td>
+          <td><span class="chip">Research</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="85" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Markus Gerber</strong><div class="muted" style="font-size:11px">48 J · Zug</div></td>
+          <td class="right"><span class="chip chip-accent">85 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,18 78,34 76,66 60,84 40,86 22,68 22,36" fill="color-mix(in srgb,var(--accent) 18%,transparent)" stroke="var(--accent)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right">8</td>
+          <td class="right">9</td>
+          <td class="right">8</td>
+          <td class="right">7</td>
+          <td class="right">8</td>
+          <td class="right">9</td>
+          <td class="right">9</td>
+          <td>Head of Finance · HRS Real Estate</td>
+          <td><span class="chip">Research</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="82" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Nina Brunner</strong><div class="muted" style="font-size:11px">38 J · Winterthur</div></td>
+          <td class="right"><span class="chip chip-accent">82 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,20 76,36 75,64 58,82 42,84 25,66 24,36" fill="color-mix(in srgb,var(--accent) 18%,transparent)" stroke="var(--accent)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">8</td>
+          <td class="right">8</td>
+          <td class="right">8</td>
+          <td class="right">8</td>
+          <td class="right"><strong>10</strong></td>
+          <td class="right">6</td>
+          <td>Head of Finance · Losinger Marazzi</td>
+          <td><span class="chip chip-accent">CV Expected</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="78" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Stefan Meier</strong><div class="muted" style="font-size:11px">52 J · Baar</div></td>
+          <td class="right"><span class="chip chip-accent">78 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,22 74,38 72,62 56,80 44,82 28,64 28,38" fill="color-mix(in srgb,var(--accent) 15%,transparent)" stroke="var(--accent)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right">9</td>
+          <td class="right">7</td>
+          <td class="right">7</td>
+          <td class="right">8</td>
+          <td class="right">8</td>
+          <td class="right">7</td>
+          <td class="right">9</td>
+          <td>Finanzchef · Priora AG</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="73" class="mt-row">
+          <td><input type="checkbox" class="mt-chk" onchange="updateBulkBtn()"></td>
+          <td><strong>Andrea Hofer</strong><div class="muted" style="font-size:11px">42 J · Luzern</div></td>
+          <td class="right"><span class="chip">73 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,25 72,40 70,60 55,78 45,78 30,60 30,40" fill="color-mix(in srgb,var(--muted) 15%,transparent)" stroke="var(--muted)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right">7</td>
+          <td class="right">8</td>
+          <td class="right">7</td>
+          <td class="right">6</td>
+          <td class="right">7</td>
+          <td class="right">8</td>
+          <td class="right">8</td>
+          <td>Controllerin · HRS</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr data-score="68" class="mt-row" style="opacity:.55">
+          <td><input type="checkbox" class="mt-chk" disabled></td>
+          <td><strong>Lukas Müller</strong> <span class="chip chip-red" style="font-size:9px">⛔ Sector-Exclude</span><div class="muted" style="font-size:11px">Arbeitgeber auf Block-Liste</div></td>
+          <td class="right" class="muted"><span class="chip">68 %</span></td>
+          <td style="text-align:center">
+            <svg width="44" height="44" viewBox="0 0 100 100" class="radar-mini" style="opacity:.45">
+              <polygon points="50,6 90,28 88,72 65,96 35,96 12,72 10,28" fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="50,28 70,42 68,58 54,76 46,76 32,58 32,42" fill="color-mix(in srgb,var(--muted) 10%,transparent)" stroke="var(--muted)" stroke-width="1.5"/>
+            </svg>
+          </td>
+          <td class="right">7</td>
+          <td class="right">7</td>
+          <td class="right">7</td>
+          <td class="right">7</td>
+          <td class="right">6</td>
+          <td class="right">7</td>
+          <td class="right">7</td>
+          <td>CFO · Implenia (Competitor)</td>
+          <td class="muted">—</td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="14" style="text-align:center">+ 117 weitere ≥ Schwelle</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legende -->
+  <div class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">
+    <strong>7-Sub-Score-Matrix (je 0–10):</strong>
+    Sp. = Sparte-Match · Fkt. = Funktion · Geh. = Gehalts-Fit · Loc. = Standort-Fit · Skl. = Skills-Match · Verf. = Verfügbarkeit · Sen. = Seniorität.
+    Radar visualisiert die 7 Dimensionen. Gewichtung via Tab 1 §5 (Matching-Kriterien).
+  </div>
+</div>
+
+<!-- TAB 4 · PROZESSE (Job-gefiltert: nur Prozesse WHERE job_id = dieser Job) -->
+<div id="tab-4" class="tab-panel">
+
+  <!-- Job-Kontext-Banner -->
+  <div class="card" style="padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:color-mix(in srgb,var(--accent) 4%,var(--surface));border-left:3px solid var(--accent);font-size:12px">
+    <strong>🔗 Job-Filter aktiv</strong>
+    <span>Prozesse <em>WHERE job_id = CFO-Finanzleitung @ Bauherr Muster AG</em></span>
+    <span class="spacer"></span>
+    <span class="muted">Job-übergreifende Sicht → <a href="processes.html">alle Prozesse</a></span>
+  </div>
+
+  <!-- KPI-Leiste (job-scoped) -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Open (dieser Job)</div><div class="kpi-value">6</div><div class="kpi-sub muted">5 Mandat · 1 Erfolgsbasis</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Stale</div><div class="kpi-value">1</div><div class="kpi-sub muted">&gt; 14 Tage ohne Bewegung</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Placed (hist.)</div><div class="kpi-value">0</div><div class="kpi-sub muted">Job offen seit 91 d</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ø Stage-Dauer</div><div class="kpi-value">14 d</div><div class="kpi-sub muted">Median</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversion</div><div class="kpi-value">22 %</div><div class="kpi-sub muted">CV Sent → Placement</div></div>
+  </div>
+
+  <!-- View-Switch + Filter -->
+  <div class="filter-bar">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="switchProcView(this,'pipe')">Pipeline</div>
+      <div class="chip-tab" onclick="switchProcView(this,'tab')">Tabelle</div>
+    </div>
+    <span style="width:1px;height:22px;background:var(--border);margin:0 6px"></span>
+    <select>
+      <option>Alle Quellen (Mandat + Erfolgsbasis)</option>
+      <optgroup label="Mandate">
+        <option>Mandat · CFO-Suche</option>
+        <option>Mandat · PL Hochbau Taskforce</option>
+        <option>Mandat · Bauleiter Tiefbau</option>
+      </optgroup>
+      <optgroup label="Ohne Mandat">
+        <option>Erfolgsbasis (Best Effort)</option>
+      </optgroup>
+    </select>
+    <select><option>Alle Owner (CM)</option><option>JV</option><option>LR</option><option>MF</option></select>
+    <select><option>Alle Temperaturen</option><option>🔥 Hot</option><option>🟡 Warm</option><option>🔵 Cold</option></select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox"> nur stale</label>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <!-- MODUS 1: PIPELINE -->
+  <div id="proc-view-pipe" style="display:block">
+    <div class="proc-pipeline" style="display:grid;grid-template-columns:repeat(9,minmax(180px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px">
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">I · Expose</span><span class="count">5 <span class="muted" style="font-size:10px">(4 M · 1 EB)</span></span></div>
+        <div class="proc-card" onclick="openDrawer('procDrawer',0)">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot" title="Hot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta muted">seit 6 d · JV</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Martin Stucki</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta muted">seit 4 d · JV</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Jan Brunner</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">PL Hochbau</span></div>
+          <div class="pc-meta muted">seit 2 d · LR</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Lukas Rüegg</strong><span class="temp-dot cold"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">Bauleiter</span></div>
+          <div class="pc-meta muted">seit 1 d · MF</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Nico Jäger</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="chip" style="background:var(--bg);color:var(--text-mid);border:1px dashed var(--border-strong)">Erfolgsbasis</span></div>
+          <div class="pc-meta muted">seit 3 d · PW · Controller</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">II · CV Sent</span><span class="count">3 <span class="muted" style="font-size:10px">(2 M · 1 EB)</span></span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta muted">02.04 · JV</div>
+        </div>
+        <div class="proc-card stale">
+          <div class="pc-top"><strong>Andrea Koller</strong><span class="temp-dot warm"></span><span class="chip chip-red" style="margin-left:auto;font-size:9px">STALE</span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta" style="color:var(--red)">18 d ohne Bewegung</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Corinne Zäch</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip" style="background:var(--bg);color:var(--text-mid);border:1px dashed var(--border-strong)">Erfolgsbasis</span></div>
+          <div class="pc-meta muted">04.04 · PW · HR-Business-Partner</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">III · TI</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Peter Stadler</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">PL Hochbau</span></div>
+          <div class="pc-meta muted">12.04 · LR</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">IV · 1st</span><span class="count">2</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Martin Stucki</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta muted">📅 15.04 10:00</div>
+        </div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Silvan Hug</strong><span class="temp-dot warm"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">Bauleiter</span></div>
+          <div class="pc-meta muted">📅 16.04 14:00</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">V · 2nd</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta muted">📅 22.04 09:00</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VI · 3rd</span><span class="count">0</span></div>
+        <div class="proc-col-empty muted">—</div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VII · Assessment</span><span class="count">1</span></div>
+        <div class="proc-card stale">
+          <div class="pc-top"><strong>Nadine Berger</strong><span class="temp-dot warm"></span><span class="chip chip-red" style="margin-left:auto;font-size:9px">STALE</span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta" style="color:var(--red)">16 d wartet auf Report</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">VIII · Offer</span><span class="count">1</span></div>
+        <div class="proc-card">
+          <div class="pc-top"><strong>Tobias Furrer</strong><span class="temp-dot"></span></div>
+          <div class="pc-sub"><span class="chip chip-accent">CFO-Suche</span></div>
+          <div class="pc-meta" style="font-family:'Libre Baskerville',serif">CHF 245'000</div>
+        </div>
+      </div>
+
+      <div class="proc-col">
+        <div class="proc-col-head"><span class="st-label">IX · Placement</span><span class="count">3</span></div>
+        <div class="proc-card" style="background:var(--gold-soft);border-left:2px solid var(--gold)">
+          <div class="pc-top"><strong style="color:var(--gold)">✓ Julian Egger</strong></div>
+          <div class="pc-sub"><span class="chip chip-accent">PL Hochbau</span></div>
+          <div class="pc-meta muted">Start 01.05.2026</div>
+        </div>
+        <div class="proc-card" style="background:var(--gold-soft);border-left:2px solid var(--gold)">
+          <div class="pc-top"><strong style="color:var(--gold)">✓ Reto Weber</strong></div>
+          <div class="pc-sub"><span class="chip chip-accent">PL Hochbau</span></div>
+          <div class="pc-meta muted">Start 01.06.2026</div>
+        </div>
+        <div class="proc-card" style="background:var(--gold-soft);border-left:2px solid var(--gold)">
+          <div class="pc-top"><strong style="color:var(--gold)">✓ Sandra Keller</strong></div>
+          <div class="pc-sub"><span class="chip chip-accent">HR-Leitung</span></div>
+          <div class="pc-meta muted">Start 06.2025</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODUS 2: TABELLE -->
+  <div id="proc-view-tab" style="display:none">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kandidat</th>
+            <th>Mandat</th>
+            <th>Stage</th>
+            <th>Temp</th>
+            <th>Stage seit</th>
+            <th>Next Step</th>
+            <th>CM</th>
+            <th class="right">›</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="cursor:pointer" onclick="openDrawer('procDrawer',0)">
+            <td><strong>Tobias Furrer</strong></td>
+            <td><a href="#">CFO-Suche</a></td>
+            <td><span class="chip chip-accent">V · 2nd</span></td>
+            <td><span class="temp-dot"></span> Hot</td>
+            <td>3 d</td>
+            <td>📅 22.04 09:00 (2nd Interview)</td>
+            <td>JV</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Martin Stucki</strong></td>
+            <td><a href="#">CFO-Suche</a></td>
+            <td><span class="chip chip-accent">IV · 1st</span></td>
+            <td><span class="temp-dot"></span> Hot</td>
+            <td>2 d</td>
+            <td>📅 15.04 10:00 (1st Interview)</td>
+            <td>JV</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 6%, var(--surface));border-left:3px solid var(--red)">
+            <td><strong>⚠ Andrea Koller</strong></td>
+            <td><a href="#">CFO-Suche</a></td>
+            <td><span class="chip chip-accent">II · CV Sent</span></td>
+            <td><span class="temp-dot warm"></span> Warm</td>
+            <td style="color:var(--red)"><strong>18 d</strong> (stale)</td>
+            <td class="muted">— Rückmeldung HM offen</td>
+            <td>JV</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer;background:color-mix(in srgb, var(--red) 6%, var(--surface));border-left:3px solid var(--red)">
+            <td><strong>⚠ Nadine Berger</strong></td>
+            <td><a href="#">CFO-Suche</a></td>
+            <td><span class="chip chip-accent">VII · Assessment</span></td>
+            <td><span class="temp-dot warm"></span> Warm</td>
+            <td style="color:var(--red)"><strong>16 d</strong> (stale)</td>
+            <td class="muted">— Report ausstehend (ASSESS 5.0)</td>
+            <td>JV</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Tobias Furrer</strong></td>
+            <td><a href="#">CFO-Suche</a></td>
+            <td><span class="chip chip-accent">VIII · Offer</span></td>
+            <td><span class="temp-dot"></span> Hot</td>
+            <td>1 d</td>
+            <td>Offer CHF 245'000 versandt</td>
+            <td>JV</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Peter Stadler</strong></td>
+            <td><a href="#">PL Hochbau</a></td>
+            <td><span class="chip chip-accent">III · TI</span></td>
+            <td><span class="temp-dot"></span> Hot</td>
+            <td>1 d</td>
+            <td>TI-Termin offen</td>
+            <td>LR</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Silvan Hug</strong></td>
+            <td><a href="#">Bauleiter Tiefbau</a></td>
+            <td><span class="chip chip-accent">IV · 1st</span></td>
+            <td><span class="temp-dot warm"></span> Warm</td>
+            <td>2 d</td>
+            <td>📅 16.04 14:00</td>
+            <td>MF</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Nico Jäger</strong><div class="muted" style="font-size:11px">Controller</div></td>
+            <td class="muted">— Erfolgsbasis —</td>
+            <td><span class="chip chip-accent">I · Expose</span></td>
+            <td><span class="temp-dot warm"></span> Warm</td>
+            <td>3 d</td>
+            <td>Exposé in Vorbereitung</td>
+            <td>PW</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+          <tr style="cursor:pointer">
+            <td><strong>Corinne Zäch</strong><div class="muted" style="font-size:11px">HR-Business-Partner</div></td>
+            <td class="muted">— Erfolgsbasis —</td>
+            <td><span class="chip chip-accent">II · CV Sent</span></td>
+            <td><span class="temp-dot"></span> Hot</td>
+            <td>4 d</td>
+            <td>Rückmeldung HM ausstehend</td>
+            <td>PW</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Abgeschlossene Prozesse -->
+  <div class="section-head collapsed" onclick="toggleSection(this)" style="margin-top:18px">
+    <span class="caret">▾</span>
+    <h3>Abgeschlossene Prozesse</h3>
+    <span class="count">3 Placements · 11 Rejections</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <thead><tr><th>Kandidat</th><th>Mandat</th><th>Ergebnis</th><th>Stage-Ausstieg</th><th>Begründung</th><th>Datum</th><th class="right"></th></tr></thead>
+        <tbody>
+          <tr><td><strong>Julian Egger</strong></td><td><a href="#">PL Hochbau</a></td><td><span class="chip chip-gold">✓ Placement</span></td><td>IX · Placement</td><td class="muted">Offer angenommen</td><td>12.04.2026</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td><strong>Reto Weber</strong></td><td><a href="#">PL Hochbau</a></td><td><span class="chip chip-gold">✓ Placement</span></td><td>IX · Placement</td><td class="muted">Offer angenommen</td><td>28.03.2026</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td><strong>Sven Aebi</strong></td><td class="muted">— Erfolgsbasis —</td><td><span class="chip chip-gold">✓ Placement</span></td><td>IX · Placement</td><td class="muted">Offer angenommen · Staffel 23 %</td><td>15.02.2026</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td>Markus Bolli</td><td><a href="#">CFO-Suche</a></td><td><span class="chip chip-red">Rejected (Kunde)</span></td><td>V · 2nd</td><td>Fit zu Kultur nicht gegeben</td><td>05.04.2026</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td>Laura Meier</td><td><a href="#">CFO-Suche</a></td><td><span class="chip chip-red">Rejected (Kandidat)</span></td><td>VIII · Offer</td><td>Gegenangebot beim aktuellen AG</td><td>20.03.2026</td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td class="muted">+ 9 weitere</td><td colspan="5"></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Stages gemäss Stammdaten-Katalog §13. Stale-Detection ≥ 14 Tage ohne Stage-Transition. Row-Click → Prozess-Drawer, Pfeil-Icon → Prozess-Vollansicht.
+  </div>
+
+</div>
+
+<!-- TAB 5 · DOKUMENTE (Profile „Job" — 5 Kategorien) -->
+<div id="tab-5" class="tab-panel">
+
+  <!-- Generator-Banner: Stellenausschreibung -->
+  <div class="card" style="padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:color-mix(in srgb,var(--gold) 6%,var(--surface));border-left:3px solid var(--gold)">
+    <div>
+      <strong style="font-family:'Libre Baskerville',serif">📤 Stellenausschreibung-Generator</strong>
+      <div class="muted" style="font-size:12px;margin-top:2px">Aus Tab 1 §3 Stellenbeschreibung + §4 Konditionen · PDF + optionale Portal-Publikation</div>
+    </div>
+    <span class="spacer"></span>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px">Sprache
+      <select id="jobGenLang" style="padding:4px 8px">
+        <option value="de">Deutsch</option>
+        <option value="fr">Français</option>
+        <option value="it">Italiano</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox" checked> Logo ARK</label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox"> Verdeckt (ohne AG-Name)</label>
+    <button class="btn btn-sm btn-primary" onclick="genJobAd()">🎯 Generieren</button>
+  </div>
+
+  <!-- KPI-Leiste (Job-Profile) -->
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value">14</div><div class="kpi-sub muted">dieser Job</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Stellenausschreibung</div><div class="kpi-value">4</div><div class="kpi-sub muted">DE/FR/IT/EN Versionen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Briefing</div><div class="kpi-value">2</div><div class="kpi-sub muted">v3 aktuell</div></div>
+    <div class="kpi-card"><div class="kpi-label">Matching-Export</div><div class="kpi-value">3</div><div class="kpi-sub muted">CSV/PDF</div></div>
+    <div class="kpi-card"><div class="kpi-label">Zuletzt hochgeladen</div><div class="kpi-value" style="font-size:14px;padding-top:8px">14.04.2026</div><div class="kpi-sub muted">von JV</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Dateinamen, Tags …" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Alle Sprachen</option>
+      <option>Deutsch</option><option>Français</option><option>Italiano</option><option>English</option>
+    </select>
+    <select>
+      <option>Alle Versionen</option>
+      <option>aktuell (v-latest)</option><option>historisch</option>
+    </select>
+    <select>
+      <option>Alle Urheber</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option>
+      <option>— Doc-Generator —</option>
+      <option>— Upload —</option>
+    </select>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active" onclick="switchDocView(this,'list')">Liste</div>
+      <div class="chip-tab" onclick="switchDocView(this,'grid')">Kacheln</div>
+    </div>
+    <button class="btn btn-sm btn-primary" onclick="openDrawer('uploadDrawer',0)">+ Upload</button>
+  </div>
+
+  <!-- Kategorie-Chips (Job-Profile: 5) -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterDocCat(this,'all')">Alle <span class="count">14</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'stellenausschreibung')">Stellenausschreibung <span class="count">4</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'briefing')">Briefing <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'matching-export')">Matching-Export <span class="count">3</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'organigramm')">Organigramm-Position <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterDocCat(this,'sonstiges')">Sonstiges <span class="count">4</span></div>
+    </div>
+  </div>
+
+  <!-- MODUS 1: LISTE (default) -->
+  <div id="doc-view-list" style="display:block">
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:44px"></th>
+            <th>Name</th>
+            <th>Kategorie</th>
+            <th>Verknüpfung</th>
+            <th>Erstellt</th>
+            <th>Urheber</th>
+            <th class="right">Grösse</th>
+            <th class="right">›</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr data-cat="stellenausschreibung" style="cursor:pointer" onclick="openDrawer('docDrawer',0)">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Stellenausschreibung · CFO Bauherr Muster AG · DE</strong><div class="muted" style="font-size:11px">v4 · aktuell · Logo + Portal-Publikation</div></td>
+            <td><span class="chip chip-gold">Stellenausschreibung</span></td>
+            <td>DE · v4</td>
+            <td>15.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">284 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="stellenausschreibung" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Stellenausschreibung · CFO · FR</strong><div class="muted" style="font-size:11px">v2 · Romandie-Version</div></td>
+            <td><span class="chip chip-gold">Stellenausschreibung</span></td>
+            <td>FR · v2</td>
+            <td>15.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">268 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="stellenausschreibung" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Stellenausschreibung · CFO · EN</strong><div class="muted" style="font-size:11px">v1 · für LinkedIn International</div></td>
+            <td><span class="chip chip-gold">Stellenausschreibung</span></td>
+            <td>EN · v1</td>
+            <td>15.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">272 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="stellenausschreibung" style="cursor:pointer;opacity:.7">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Stellenausschreibung · CFO · DE (v3)</strong> <span class="chip" style="font-size:9px">historisch</span><div class="muted" style="font-size:11px">Superseded von v4</div></td>
+            <td><span class="chip">Stellenausschreibung</span></td>
+            <td>DE · v3</td>
+            <td>02.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen</span></td>
+            <td class="right">280 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="briefing" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Stellenbriefing CFO · Bauherr Muster AG</strong><div class="muted" style="font-size:11px">9 Sektionen · v3 · Kunden-Briefing</div></td>
+            <td><span class="chip chip-accent">Briefing</span></td>
+            <td>intern</td>
+            <td>14.01.2026</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right">186 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="briefing" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Kultur-Briefing Bauherr Muster AG</strong><div class="muted" style="font-size:11px">Werte, Entscheidungskultur, 360°-Feedback</div></td>
+            <td><span class="chip chip-accent">Briefing</span></td>
+            <td>Account-Level</td>
+            <td>03.2025</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">580 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="matching-export" style="cursor:pointer">
+            <td><span class="file-type ft-xlsx">XLSX</span></td>
+            <td><strong>Matching-Export · 124 Kandidaten ≥ 70 %</strong><div class="muted" style="font-size:11px">Snapshot 15.04.2026 · 7 Sub-Scores</div></td>
+            <td><span class="chip">Matching-Export</span></td>
+            <td>Tab 2 Snapshot</td>
+            <td>15.04.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">112 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="matching-export" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Longlist-PDF · Top 20 Matches</strong><div class="muted" style="font-size:11px">Anonymisiert, für Kunden-Vorbesprechung</div></td>
+            <td><span class="chip">Matching-Export</span></td>
+            <td>Tab 2 Snapshot</td>
+            <td>10.04.2026</td>
+            <td><span class="actor-chip">Doc-Gen · JV</span></td>
+            <td class="right">480 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="matching-export" style="cursor:pointer;opacity:.7">
+            <td><span class="file-type ft-xlsx">XLSX</span></td>
+            <td><strong>Matching-Export · Baseline 08.04.2026</strong> <span class="chip" style="font-size:9px">historisch</span></td>
+            <td><span class="chip">Matching-Export</span></td>
+            <td>Tab 2 Snapshot</td>
+            <td>08.04.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">98 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="organigramm" style="cursor:pointer">
+            <td><span class="file-type ft-img">IMG</span></td>
+            <td><strong>Organigramm-Position · CFO in Bauherr Muster AG</strong><div class="muted" style="font-size:11px">Snapshot aus Account Tab 8 · Pos. direkt unter CEO</div></td>
+            <td><span class="chip">Organigramm</span></td>
+            <td>Account-Snapshot</td>
+            <td>10.04.2026</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right">124 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Interview-Leitfaden CFO Hochbau</strong><div class="muted" style="font-size:11px">Kompetenz-basiert · 12 Fragen</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>Template</td>
+            <td>03.04.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">52 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Arbeitgeber-Portrait · Bauherr Muster AG</strong><div class="muted" style="font-size:11px">Beilage für Kandidaten</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>Account-Level</td>
+            <td>01.04.2026</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right">1.8 MB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-docx">DOCX</span></td>
+            <td><strong>Anforderungsprofil · Intern-Draft</strong><div class="muted" style="font-size:11px">Vorstufe zum Stellenbriefing</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>intern</td>
+            <td>05.01.2026</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right">64 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+          <tr data-cat="sonstiges" style="cursor:pointer">
+            <td><span class="file-type ft-pdf">PDF</span></td>
+            <td><strong>Vergütungs-Benchmark CFO Hochbau CH</strong><div class="muted" style="font-size:11px">Peer-Analyse · 18 CH-Firmen</div></td>
+            <td><span class="chip">Sonstiges</span></td>
+            <td>Benchmark</td>
+            <td>18.01.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right">420 KB</td>
+            <td class="right"><button class="row-icon-btn">›</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODUS 2: KACHELN -->
+  <div id="doc-view-grid" style="display:none">
+    <div class="file-grid">
+      <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">PDF</div><div class="file-name">Ausschreibung CFO · DE v4</div><div class="file-meta">15.04.2026 · 284 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">PDF</div><div class="file-name">Ausschreibung CFO · FR</div><div class="file-meta">15.04.2026 · 268 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--gold-soft);color:var(--gold)">PDF</div><div class="file-name">Ausschreibung CFO · EN</div><div class="file-meta">15.04.2026 · 272 KB</div></div>
+      <div class="file-card"><div class="file-icon" style="background:var(--accent-soft);color:var(--accent)">DOCX</div><div class="file-name">Stellenbriefing CFO</div><div class="file-meta">14.01.2026 · 186 KB</div></div>
+      <div class="file-card"><div class="file-icon">XLSX</div><div class="file-name">Matching-Export 124</div><div class="file-meta">15.04.2026 · 112 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Longlist-PDF Top 20</div><div class="file-meta">10.04.2026 · 480 KB</div></div>
+      <div class="file-card"><div class="file-icon">IMG</div><div class="file-name">Organigramm-Position CFO</div><div class="file-meta">10.04.2026 · 124 KB</div></div>
+      <div class="file-card"><div class="file-icon">PDF</div><div class="file-name">Benchmark CFO Hochbau</div><div class="file-meta">18.01.2026 · 420 KB</div></div>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Job-Profile-Dokumente (5 Kategorien): <strong>Stellenausschreibung</strong> (Generator, PDF, Mehrsprachig) · <strong>Briefing</strong> (intern, 9-Sektionen, versioniert) · <strong>Matching-Export</strong> (Tab-2-Snapshots CSV/PDF) · <strong>Organigramm-Position</strong> (Account-Tab-8-Snapshot) · <strong>Sonstiges</strong>. Kandidat-Dokumente (ARK-CV/Exposé) leben am Kandidat, Mandat-Dokumente (Offerte/Vertrag/Rechnung) am Mandat.
+  </div>
+
+</div>
+
+<!-- TAB 6 · HISTORY -->
+<div id="tab-6" class="tab-panel">
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suchen in History (Detail, Akteur, Entity)" style="flex:1 1 280px;min-width:220px">
+    <select>
+      <option>Alle Kategorien (18)</option>
+      <optgroup label="User-Aktionen">
+        <option>Kontaktberührung</option>
+        <option>Erreicht</option>
+        <option>Emailverkehr</option>
+        <option>Messaging</option>
+        <option>Interviewprozess</option>
+        <option>Placementprozess</option>
+        <option>Refresh Kandidatenpflege</option>
+        <option>Mandatsakquise</option>
+        <option>Erfolgsbasis</option>
+        <option>Assessment</option>
+      </optgroup>
+      <optgroup label="System &amp; Automation (NEU v1.4)">
+        <option>System / Meta</option>
+        <option>Kalender &amp; Planung</option>
+        <option>Dokumenten-Pipeline</option>
+        <option>Garantie &amp; Schutzfrist</option>
+        <option>Scraper &amp; Intelligence</option>
+        <option>Pipeline-Transitions</option>
+        <option>Saga-Events</option>
+        <option>AI &amp; LLM</option>
+      </optgroup>
+    </select>
+    <select>
+      <option>Alle Akteure</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option><option>NP</option><option>NS</option>
+      <option>— System (automatisch) —</option>
+    </select>
+    <select>
+      <option>Alle Bezüge</option>
+      <option>Nur Account-Level</option>
+      <option>Kontakte</option>
+      <option>Mandate</option>
+      <option>Prozesse / Kandidaten</option>
+      <option>Schutzfristen</option>
+      <option>Assessment-Orders</option>
+    </select>
+    <select>
+      <option>Letzte 30 Tage</option>
+      <option>Letzte 90 Tage</option>
+      <option>Letzte 12 Monate</option>
+      <option>Alle</option>
+      <option>Benutzerdefiniert …</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">↓ Export</button>
+  </div>
+
+  <!-- Kategorie-Chip-Legende (toggle) -->
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">51</span></div>
+      <div class="chip-tab">Job-Lifecycle <span class="count">14</span></div>
+      <div class="chip-tab">Interviewprozess <span class="count">12</span></div>
+      <div class="chip-tab">Placementprozess <span class="count">8</span></div>
+      <div class="chip-tab">Emailverkehr <span class="count">9</span></div>
+      <div class="chip-tab">Erreicht <span class="count">4</span></div>
+      <div class="chip-tab">System <span class="count">14</span></div>
+    </div>
+  </div>
+
+  <!-- Timeline (Job-Lifecycle-Events) -->
+  <div class="card" style="padding:24px 28px">
+    <div class="hist-timeline">
+
+      <!-- HEUTE · 16.04.2026 -->
+      <div class="hist-day">
+        <div class="hist-day-head">Heute · 16.04.2026</div>
+
+        <!-- DEMO pending-Row (v1.3) — zeigt Klassifizierungs-Tab im Drawer -->
+        <div class="hist-row hist-pending" data-cls="pending" data-ai-suggest="#22 Emailverkehr - Allgemeine Kommunikation|79" style="border-left:3px solid #fbbf24;padding-left:10px;background:color-mix(in srgb, #fbbf24 4%, transparent)">
+          <div class="hist-time">07:58</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>E-Mail erhalten · Bewerbung auf Stelle</strong> <span class="muted" style="font-weight:400">— ⏳ noch nicht klassifiziert</span></div>
+            <div class="hist-sub">Outlook-Auto-Import (Initiativ-Bewerbung via Stellenanzeige). AI-Vorschlag: „Allgemeine Kommunikation" mit 79 % Konfidenz. Click öffnet Klassifizierungs-Drawer.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Stelle · aktuell</a> · <a href="#">Kandidat · Neu</a> · <span class="chip" style="background:#fef3c7;color:#92400e;margin-left:4px">⏳ pending Klassifizierung</span></div>
+          </div>
+        </div>
+
+        <div class="hist-row hist-system">
+          <div class="hist-time">02:14</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>⚙ Matching berechnet · 124 Kandidaten ≥ 70 %</strong></div>
+            <div class="hist-sub">Nightly Recompute · 7 Neueinträge · Top-Score 94 % (T. Furrer). Gewichtung: Funktion 25 · Sparte 20 · Gehalt 15 · Location 15 · Skills 15 · Verfügb. 5 · Sen. 5.</div>
+            <div class="hist-meta"><span class="actor actor-system">automation</span><span class="src-badge">event-worker</span> · Activity-Type: Matching berechnet · <a href="#">Tab 2 Matching</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">Gestern · 15.04.2026</div>
+
+        <div class="hist-row hist-ok">
+          <div class="hist-time">14:22</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-placement">Placementprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>📤 Exposé versandt · Tobias Furrer an Eva Studer</strong></div>
+            <div class="hist-sub">ARK-CV v3 + Exposé als PDF · Vorstellungs-Typ = Dossier per E-Mail · Schutzfrist bis 15.04.2027 aktiviert. Jobbasket-Stage → „Versandt".</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Jobbasket Tab 3</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">11:05</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>🎯 Stellenausschreibung generiert · DE/FR/EN v4</strong></div>
+            <div class="hist-sub">Doc-Generator · 3 Sprachen · Ablage in Tab 5 Dokumente · Kategorie „Stellenausschreibung".</div>
+            <div class="hist-meta"><span class="actor">Doc-Gen · PW</span> · Activity-Type: Stellenausschreibung generiert · <a href="#">Tab 5 Dokumente</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row">
+          <div class="hist-time">09:30</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>+ Job in Jobbasket aufgenommen · Jobbasket von Andrea Hofer</strong></div>
+            <div class="hist-sub">Aus Matching (73 %) via Bulk-Aktion „+ In Jobbasket" → Stage „Prelead".</div>
+            <div class="hist-meta"><span class="actor">LR</span> · Activity-Type: Job in Jobbasket aufgenommen · <a href="#">Kandidat · A. Hofer</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">13.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">16:08</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>2nd Interview geplant · T. Furrer</strong></div>
+            <div class="hist-sub">Termin 22.04 09:00 · Teilnehmer: Hans Müller, Eva Studer, Peter Keller (VR).</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess · Stage V</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">10.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">15:40</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>Longlist-PDF versandt an Kunde</strong></div>
+            <div class="hist-sub">Top 20 Matches anonymisiert · Kunden-Vorbesprechung am 17.04. · Rückmeldung erwartet.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row hist-system">
+          <div class="hist-time">10:15</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>⚙ Prozess erstellt · Tobias Furrer</strong></div>
+            <div class="hist-sub">Longlist → Stage II (Contacted) · aus Jobbasket-Stage „Versandt" automatisch generiert.</div>
+            <div class="hist-meta"><span class="actor actor-system">automation</span><span class="src-badge">event-worker</span> · Activity-Type: Prozess erstellt · <a href="#">Prozess · T. Furrer</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">08.04.2026</div>
+
+        <div class="hist-row">
+          <div class="hist-time">14:05</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-interview">Interviewprozess</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>1st Interview durchgeführt · T. Furrer</strong></div>
+            <div class="hist-sub">Teams-Call 70 min mit H. Müller &amp; E. Studer. Feedback positiv (Rating 4/5).</div>
+            <div class="hist-meta"><span class="actor">JV</span> · <a href="#">Kandidat · T. Furrer</a> · <a href="#">Prozess</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02.04. -->
+      <div class="hist-day">
+        <div class="hist-day-head">02.04.2026</div>
+
+        <div class="hist-row hist-ok">
+          <div class="hist-time">14:12</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>↻ Status geändert · „aktiv" (von Scraper-Vorschlag)</strong></div>
+            <div class="hist-sub">Vakanz bestätigt durch Hans Müller (CEO) im Briefing-Call. Job offiziell in Mandat „CFO-Suche" aufgenommen.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · Activity-Type: Status geändert · <a href="#">Mandat · CFO-Suche</a></div>
+          </div>
+        </div>
+
+        <div class="hist-row hist-ok">
+          <div class="hist-time">13:50</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>✓ Vakanz bestätigt · Stellenbriefing mit H. Müller</strong> <span class="muted" style="font-weight:400">— 48 min</span></div>
+            <div class="hist-sub">Kunde bestätigt Vakanz + Bedingungen: 80–100 % ZH, TC 220–270k, verdeckte Suche. Stellenbriefing v3 finalisiert.</div>
+            <div class="hist-meta"><span class="actor">PW</span> · <a href="#">Kontakt · H. Müller</a> · Activity-Type: Vakanz bestätigt</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15.01. -->
+      <div class="hist-day">
+        <div class="hist-day-head">15.01.2026</div>
+
+        <div class="hist-row hist-warn hist-system">
+          <div class="hist-time">06:45</div>
+          <div class="hist-cat"><span class="hist-cat-chip cat-system">System</span></div>
+          <div class="hist-body">
+            <div class="hist-title"><strong>⚠ Scraper-Vorschlag erstellt · CFO / Finanzleitung</strong></div>
+            <div class="hist-sub">Scraper hat LinkedIn-Job-Post bei Bauherr Muster AG erkannt. Automatisch als Vakanz-Vorschlag erfasst — noch unbestätigt. → Prüfung durch AM.</div>
+            <div class="hist-meta"><span class="actor actor-system">integration</span><span class="src-badge src-scraper">scraper</span> · Activity-Type: Scraper-Vorschlag · Quelle: LinkedIn Job Post #LI-4823</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-sm">↓ Weitere laden (42 von 51)</button>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    History-Einträge gemäss Activity-Types §14. Job-Lifecycle-Events: Scraper-Vorschlag · Vakanz bestätigt · Status geändert · Matching berechnet · Job in Jobbasket aufgenommen · Prozess erstellt · Platziert · Geschlossen. System-Events = automatisch, farblich gedämpft.
+  </div>
+
+</div>
+
+<!-- TAB 7 · REMINDERS -->
+<div id="tab-7" class="tab-panel">
+
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Offen</div><div class="kpi-value">5</div><div class="kpi-sub muted">alle offenen Reminders</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Überfällig</div><div class="kpi-value">1</div><div class="kpi-sub muted">sofortiges Handeln</div></div>
+    <div class="kpi-card"><div class="kpi-label">Heute</div><div class="kpi-value">1</div><div class="kpi-sub muted">fällig am 16.04.2026</div></div>
+    <div class="kpi-card"><div class="kpi-label">Diese Woche</div><div class="kpi-value">2</div><div class="kpi-sub muted">bis 20.04.2026</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Erledigt (30 d)</div><div class="kpi-value">8</div><div class="kpi-sub muted">seit 16.03.2026</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche in Reminder-Titel, Kontext …" style="flex:1 1 260px;min-width:220px">
+    <select>
+      <option>Alle Typen</option>
+      <option>Stage-Deadline</option>
+      <option>Vakanz-Bestätigung</option>
+      <option>Matching-Refresh</option>
+      <option>Schließungs-Check</option>
+      <option>Stellenausschreibung-Update</option>
+      <option>Follow-up</option>
+      <option>Custom</option>
+    </select>
+    <select>
+      <option>Alle Zuständigen</option>
+      <option>PW</option><option>JV</option><option>LR</option><option>MF</option>
+      <option>Backoffice</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="openReminderNew()">+ Reminder</button>
+  </div>
+
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active" onclick="filterRemStatus(this,'all')">Alle offenen <span class="count">5</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'overdue')"><span style="color:var(--red)">●</span> Überfällig <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'today')">Heute <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'week')">Diese Woche <span class="count">2</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'later')">Später <span class="count">1</span></div>
+      <div class="chip-tab" onclick="filterRemStatus(this,'done')">Erledigt <span class="count">8</span></div>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="overdue">
+    <div class="rem-section-head" style="border-left:3px solid var(--red)">
+      <h3 style="color:var(--red)">⚠ Überfällig</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0;border-left:3px solid var(--red)">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="overdue" style="cursor:pointer" onclick="openDrawer('reminderDrawer',0)">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Schließungs-Check · Job offen seit 91 d</strong><div class="muted" style="font-size:11px">Target-Deadline 140 d — Pipeline nochmal auffüllen oder Status anpassen</div></td>
+            <td><span class="chip chip-accent">Schließungs-Check</span></td>
+            <td style="color:var(--red);font-weight:600">9 d überfällig</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="today">
+    <div class="rem-section-head">
+      <h3>Heute · 16.04.2026</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="today" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Matching-Refresh · nach Kriterien-Update</strong><div class="muted" style="font-size:11px">Mindest-Erfahrung von 8 auf 10 Jahre angepasst — Async-Recompute triggern</div></td>
+            <td><span class="chip chip-accent">Matching-Refresh</span></td>
+            <td>14:00 Uhr</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="week">
+    <div class="rem-section-head">
+      <h3>Diese Woche · bis 20.04.2026</h3>
+      <span class="count">2</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Stage-Deadline · 3rd Interview mit T. Furrer</strong><div class="muted" style="font-size:11px">Termin 22.04 · Vorbereitung mit CM</div></td>
+            <td><span class="chip chip-accent">Stage-Deadline</span></td>
+            <td>22.04.2026 · in 6 d</td>
+            <td><span class="actor-chip">JV</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+          <tr data-rem="week" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Stellenausschreibung-Update · FR-Version</strong><div class="muted" style="font-weight:400;font-size:11px">Bisher nur DE publiziert · FR-Übersetzung ausstehend</div></td>
+            <td><span class="chip chip-accent">Stellenausschreibung-Update</span></td>
+            <td>19.04.2026 · in 3 d</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rem-section" data-rem-group="later">
+    <div class="rem-section-head">
+      <h3>Später</h3>
+      <span class="count">1</span>
+    </div>
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr data-rem="later" style="cursor:pointer">
+            <td style="width:36px"><input type="checkbox"></td>
+            <td><strong>Vakanz-Status-Review nach 120 d</strong><div class="muted" style="font-size:11px">Auto-Alert bei Überschreitung Target-Deadline</div></td>
+            <td><span class="chip chip-accent">Vakanz-Bestätigung</span></td>
+            <td>12.05.2026</td>
+            <td><span class="actor-chip">PW</span></td>
+            <td class="right"><button class="btn btn-sm">Erledigen</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-head collapsed" onclick="toggleSection(this)" style="margin-top:18px">
+    <span class="caret">▾</span>
+    <h3>Erledigt (letzte 30 Tage)</h3>
+    <span class="count">8</span>
+  </div>
+  <div class="section-body">
+    <div class="card" style="padding:0">
+      <table class="data-table">
+        <tbody>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Stellenausschreibung DE finalisieren</s></td><td><span class="chip">Stellenausschreibung-Update</span></td><td class="muted">erledigt 10.04</td><td><span class="actor-chip">PW</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td style="width:36px"><input type="checkbox" checked disabled></td><td class="muted"><s>Matching-Refresh nach Gehalts-Anpassung</s></td><td><span class="chip">Matching-Refresh</span></td><td class="muted">erledigt 05.04</td><td><span class="actor-chip">JV</span></td><td class="right"><button class="row-icon-btn">›</button></td></tr>
+          <tr><td class="muted" colspan="6" style="text-align:center">+ 6 weitere</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:11px;margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:3px">
+    Reminders auf Job-Ebene: Stage-Deadlines für Interviews, Matching-Refresh bei Kriterien-Änderung, Vakanz-Bestätigung nach Target-Deadline, Stellenausschreibung-Updates (Mehrsprachigkeit), Schließungs-Check. Auto-Trigger bei Days-Open &gt; Target.
+  </div>
+
+</div>
+
+</div>
+
+<div class="kb-bar">
+  <span><kbd>1</kbd>–<kbd>7</kbd> Tabs</span>
+  <span><kbd>M</kbd> Matching neu</span>
+  <span><kbd>T</kbd> Theme</span>
+  <span style="margin-left:auto"><kbd>⌘K</kbd></span>
+</div>
+
+<!-- DRAWER BACKDROP -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- ============= UPLOAD-DRAWER (Job-Profile Kategorien) ============= -->
+<div class="drawer" id="uploadDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">↑</div>
+    <div class="info">
+      <h2>Dokument hochladen</h2>
+      <div class="sub">Stellenausschreibung, Briefing oder Matching-Export</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('uploadDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <form id="uploadForm" onsubmit="return doUpload(event)">
+      <div class="drawer-section">
+        <h4>Datei</h4>
+        <div id="uploadDropzone" onclick="document.getElementById('uploadFile').click()" style="border:2px dashed var(--border);border-radius:4px;padding:28px;text-align:center;cursor:pointer;background:var(--bg);transition:all 0.15s" ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-soft)'" ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'" ondrop="handleDrop(event)">
+          <div style="font-size:32px;color:var(--text-light);margin-bottom:8px">📄</div>
+          <div style="font-size:13px;font-weight:600" id="uploadFileName">Datei hierher ziehen oder klicken</div>
+          <div class="muted" style="font-size:11px;margin-top:4px" id="uploadFileMeta">PDF, DOCX, XLSX, JPG, PNG · max. 20 MB</div>
+        </div>
+        <input type="file" id="uploadFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" style="display:none" onchange="onUploadFile(this)">
+      </div>
+      <div class="drawer-section">
+        <h4>Metadaten</h4>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+          <label>Kategorie <span style="color:var(--red)">*</span></label>
+          <select id="uploadCat" required>
+            <option value="">— wählen —</option>
+            <option value="stellenausschreibung">Stellenausschreibung</option>
+            <option value="briefing">Briefing-Protokoll</option>
+            <option value="matching-export">Matching-Export</option>
+            <option value="organigramm-position">Organigramm-Position</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+          <label>Titel</label>
+          <input type="text" id="uploadTitle" placeholder="(leer = Dateiname übernehmen)">
+          <label>Notiz</label>
+          <textarea id="uploadNote" rows="2" style="resize:vertical" placeholder="Kurz-Hinweis (optional)"></textarea>
+          <label>Sprache</label>
+          <select id="uploadLang">
+            <option value="de">Deutsch</option>
+            <option value="fr">Französisch</option>
+            <option value="it">Italienisch</option>
+            <option value="en">Englisch</option>
+          </select>
+          <label>Urheber</label>
+          <div style="font-size:13px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text-mid)">
+            <span id="uploadAuthor" data-value="Upload · PW">Upload · PW</span>
+            <span class="muted" style="font-size:11px;margin-left:6px">(aktueller User · automatisch)</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="drawer-foot">
+    <button type="button" class="btn btn-sm" onclick="closeDrawer('uploadDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button type="button" class="btn btn-sm btn-primary" onclick="doUpload(event)">↑ Hochladen</button>
+  </div>
+</div>
+
+<!-- ============= HISTORY-DRAWER (kontextabhängige Tabs) ============= -->
+<div class="drawer drawer-wide" id="historyDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0" id="histDrawIcon">💬</div>
+    <div class="info">
+      <h2 id="histDrawTitle">Event-Detail</h2>
+      <div class="sub" id="histDrawSub">—</div>
+      <div style="margin-top:6px" id="histDrawChips"></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('historyDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs" id="histDrawTabs"></div>
+  <div class="drawer-body" id="histDrawBodyWrap"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('historyDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✎ Bearbeiten</button>
+    <button class="btn btn-sm btn-primary">🔗 Zur Quell-Entity</button>
+  </div>
+</div>
+
+<!-- ============= REMINDER-DRAWER ============= -->
+<div class="drawer" id="reminderDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⏰</div>
+    <div class="info">
+      <h2 id="remDrawTitle">Neuer Reminder</h2>
+      <div class="sub" id="remDrawSub">Job-Reminder anlegen (Stage-Deadline, Matching-Refresh, etc.)</div>
+      <div style="margin-top:6px" id="remDrawChips"><span class="chip chip-accent">neu</span></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('reminderDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Reminder</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+        <label>Titel <span style="color:var(--red)">*</span></label>
+        <input type="text" id="remTitle" placeholder="z.B. Stage-Deadline 3rd Interview">
+        <label>Typ <span style="color:var(--red)">*</span></label>
+        <select id="remType">
+          <option>Stage-Deadline</option>
+          <option>Vakanz-Bestätigung</option>
+          <option>Matching-Refresh</option>
+          <option>Schließungs-Check</option>
+          <option>Stellenausschreibung-Update</option>
+          <option>Follow-up</option>
+          <option>Custom</option>
+        </select>
+        <label>Fällig am <span style="color:var(--red)">*</span></label>
+        <input type="datetime-local" id="remDue">
+        <label>Zuständig <span style="color:var(--red)">*</span></label>
+        <select id="remOwner">
+          <option selected>PW</option>
+          <option>JV</option><option>LR</option><option>MF</option>
+          <option>Backoffice</option>
+        </select>
+        <label>Kontext</label>
+        <textarea id="remContext" rows="3" style="resize:vertical" placeholder="Hintergrund, Personen, Agenda"></textarea>
+        <label>Verknüpfung</label>
+        <select id="remLink">
+          <option value="">Job-Level (keine Verknüpfung)</option>
+          <option>Kandidat · Tobias Furrer</option>
+          <option>Prozess · Stage V</option>
+          <option>Mandat · CFO-Suche</option>
+          <option>Stellenausschreibung DE</option>
+        </select>
+        <label>Wiederholen</label>
+        <select id="remRecur">
+          <option value="none">Einmalig</option>
+          <option value="weekly">Wöchentlich</option>
+          <option value="monthly">Monatlich</option>
+        </select>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Benachrichtigung</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;font-size:13px">
+        <label>Vorlaufzeit</label>
+        <select id="remLead">
+          <option value="0">Zum Fälligkeitstermin</option>
+          <option value="1h">1 h vorher</option>
+          <option value="1d">1 Tag vorher</option>
+          <option value="3d" selected>3 Tage vorher</option>
+          <option value="1w">1 Woche vorher</option>
+        </select>
+        <label>Eskalation</label>
+        <div class="muted" style="font-size:12px">3 d nach Fälligkeit → Eskalations-Mail an Zuständigen · 10 d → zusätzlich an Team-Lead</div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('reminderDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="saveReminder(event)">💾 Reminder anlegen</button>
+  </div>
+</div>
+
+<!-- ============= PROPOSE-DRAWER (Kandidat vorschlagen → Jobbasket) ============= -->
+<div class="drawer" id="proposeDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📤</div>
+    <div class="info">
+      <h2>Kandidat vorschlagen</h2>
+      <div class="sub">Kandidat manuell in den Jobbasket dieses Jobs aufnehmen (Stage: Prelead)</div>
+      <div style="margin-top:6px"><span class="chip chip-accent">CFO · Bauherr Muster AG</span></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('proposeDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Kandidaten-Auswahl</h4>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px 16px;align-items:center;font-size:13px">
+        <label>Kandidat <span style="color:var(--red)">*</span></label>
+        <input type="search" placeholder="🔍 Kandidat suchen (Name, Aktueller AG, Funktion) …" list="candList">
+        <datalist id="candList">
+          <option value="Tobias Furrer — Finanzleiter · Züblin AG">
+          <option value="Claudia Zehnder — CFO · Halter AG">
+          <option value="Markus Gerber — Head of Finance · HRS">
+          <option value="Andrea Hofer — Controllerin · HRS">
+          <option value="Stefan Meier — Finanzchef · Priora">
+        </datalist>
+        <label>Source</label>
+        <select>
+          <option>Manuelle AM-Empfehlung</option>
+          <option>Bestehender Kandidat (outside Matching)</option>
+          <option>Referral</option>
+          <option>Ex-Kandidat re-aktiviert</option>
+        </select>
+        <label>Start-Stage</label>
+        <select>
+          <option>Prelead (Default)</option>
+          <option>GO mündlich (direkt, falls schon gesprochen)</option>
+        </select>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung (optional)</h4>
+      <textarea rows="4" placeholder="z.B. Ex-Kollege von H. Müller, bekannt aus früherem Mandat, passt auch ohne Matching-Hit …"></textarea>
+    </div>
+    <div class="drawer-section" style="background:color-mix(in srgb,var(--amber) 6%,var(--surface));padding:10px 14px;border-radius:4px;font-size:12px;color:var(--muted)">
+      ℹ Nach dem Anlegen erscheint der Kandidat in <strong>Tab 3 Jobbasket</strong>. Stage-Wechsel und Gate-Logik (Expose, TI, etc.) werden im <strong>Kandidat-Briefing Tab 5 Jobbasket</strong> verwaltet — nicht hier.
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('proposeDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="submitPropose()">+ In Jobbasket aufnehmen</button>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+/* ============================================================
+   Parity mit accounts/candidates/mandates/groups: Upload · History · Reminder
+   ============================================================ */
+
+const HIST_CHAN_MAP = {
+  'cat-erreicht':   { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-kontakt':    { kanal:'Phone',  label:'Phone',  icon:'📞' },
+  'cat-interview':  { kanal:'Phone',  label:'Phone',  icon:'👔' },
+  'cat-placement':  { kanal:'Phone',  label:'Phone',  icon:'🏆' },
+  'cat-mandat':     { kanal:'Phone',  label:'Phone',  icon:'📋' },
+  'cat-assessment': { kanal:'System', label:'System', icon:'📊' },
+  'cat-email':      { kanal:'Email',  label:'Email',  icon:'✉' },
+  'cat-system':     { kanal:'System', label:'System', icon:'⚙' },
+};
+let HIST_CURRENT = null;
+
+function openHistDrawer(rowEl) {
+  const cat = rowEl.querySelector('.hist-cat-chip');
+  const catText = cat ? cat.textContent.trim() : '—';
+  const catCls = cat ? (Array.from(cat.classList).find(c => HIST_CHAN_MAP.hasOwnProperty(c)) || '') : '';
+  const chan = HIST_CHAN_MAP[catCls] || { kanal:'System', label:'System', icon:'💬' };
+  const time = rowEl.querySelector('.hist-time')?.textContent.trim() || '—';
+  const titleRaw = rowEl.querySelector('.hist-title')?.textContent || '—';
+  const titleClean = titleRaw.replace(/—\s*(\d+\s*min|nicht erreicht).*/,'').trim();
+  const durMatch = titleRaw.match(/—\s*(\d+\s*min|nicht erreicht)/);
+  const durationRaw = durMatch ? durMatch[1] : '';
+  const isNE = /nicht erreicht/i.test(titleRaw);
+  const isBriefingCall = /briefing/i.test(titleClean) && chan.kanal === 'Phone';
+  const isSystemAuto = chan.kanal === 'System';
+  const isAnswered = chan.kanal === 'Phone' && !isNE && !isSystemAuto;
+  const sub = rowEl.querySelector('.hist-sub')?.textContent.trim() || '';
+  const meta = rowEl.querySelector('.hist-meta');
+  const actor = meta?.querySelector('.actor')?.textContent.trim() || '—';
+  const dayHead = rowEl.closest('.hist-day')?.querySelector('.hist-day-head')?.textContent.trim() || '';
+  const dateOnly = dayHead.replace(/^.*·\s*/, '');
+  const links = meta ? Array.from(meta.querySelectorAll('a')).map(a => a.textContent.trim()) : [];
+  const isWarn = rowEl.classList.contains('hist-warn');
+  const isOk = rowEl.classList.contains('hist-ok');
+
+  // v1.3: pending-Erkennung
+  const isPending = rowEl.classList.contains('hist-pending') || rowEl.getAttribute('data-cls') === 'pending';
+  const aiSuggestion = rowEl.getAttribute('data-ai-suggest') || '';
+
+  HIST_CURRENT = { title:titleClean, cat:catText, catCls, chan, date:dateOnly, time, actor, duration:durationRaw, isNE, isAnswered, isBriefingCall, isSystemAuto, body:sub, links, sentiment:isWarn?'negative':(isOk?'positive':''), cls: isPending ? 'pending' : 'confirmed', aiSuggestion };
+
+  document.getElementById('histDrawIcon').textContent = chan.icon;
+  document.getElementById('histDrawTitle').textContent = titleClean;
+  document.getElementById('histDrawSub').textContent = dateOnly + ' · ' + time + ' · ' + chan.label;
+  const chipsWrap = document.getElementById('histDrawChips');
+  let chips = `<span class="hist-cat-chip ${catCls}">${catText}</span>`;
+  chips += ` <span class="chip" style="margin-left:4px">${actor}</span>`;
+  if (isPending) {
+    chips += ` <span class="chip" style="margin-left:4px;background:#fef3c7;color:#92400e">⏳ pending Klassifizierung</span>`;
+    if (aiSuggestion) {
+      const [sugName, sugConf] = aiSuggestion.split('|');
+      chips += ` <span class="chip" style="margin-left:4px;background:#ede9fe;color:#6d28d9">AI: ${escapeHtml(sugName)} · ${sugConf}%</span>`;
+    }
+  } else {
+    chips += ` <span class="chip chip-green" style="margin-left:4px">✓ Bestätigt</span>`;
+  }
+  if (isSystemAuto) chips += ` <span class="chip" style="margin-left:4px">⚡ Auto</span>`;
+  chipsWrap.innerHTML = chips;
+
+  const tabs = [{ id:'overview', label:'Übersicht' }];
+  if (chan.kanal === 'Email') tabs.push({ id:'email', label:'Email-Thread' });
+  if (isAnswered) tabs.push({ id:'transcript', label:'Transkript' });
+  if (isAnswered && !isBriefingCall) tabs.push({ id:'ai', label:'AI-Summary' });
+  if (isAnswered && isBriefingCall) tabs.push({ id:'briefing', label:'AI → Briefing' });
+  if (isPending) tabs.push({ id:'classify', label:'🏷 Klassifizierung' });  // NEU v1.3
+  tabs.push({ id:'history', label:'📜 Verlauf' });  // NEU v1.3 — immer
+  tabs.push({ id:'reminders', label:'Reminders' });
+
+  const tabsEl = document.getElementById('histDrawTabs');
+  tabsEl.innerHTML = tabs.map((t,i) => `<div class="drawer-tab${i===0?' active':''}" onclick="histSwitchTab('${t.id}', this)">${t.label}</div>`).join('');
+  histRenderPane(tabs[0].id);
+  openDrawer('historyDrawer');
+}
+
+function histSwitchTab(id, el) {
+  el.parentElement.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  histRenderPane(id);
+}
+
+function histRenderPane(id) {
+  const e = HIST_CURRENT; if (!e) return;
+  const wrap = document.getElementById('histDrawBodyWrap');
+  if (id === 'overview') {
+    let h = `<div class="drawer-section"><h4>Details</h4><dl class="field-grid">`;
+    h += `<dt>Kategorie</dt><dd>${escapeHtml(e.cat)}</dd>`;
+    h += `<dt>Activity-Type</dt><dd>${escapeHtml(e.title)}</dd>`;
+    h += `<dt>Kanal</dt><dd>${escapeHtml(e.chan.label)}</dd>`;
+    h += `<dt>Datum &amp; Uhrzeit</dt><dd>${escapeHtml(e.date)} · ${escapeHtml(e.time)} Uhr</dd>`;
+    h += `<dt>Erfasst von</dt><dd>${escapeHtml(e.actor)}</dd>`;
+    if (e.duration) h += `<dt>Dauer</dt><dd>${escapeHtml(e.duration)}</dd>`;
+    h += `<dt>Status</dt><dd>✓ Bestätigt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Notizen</h4><div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div></div>`;
+    if (e.links.length) h += `<div class="drawer-section"><h4>Verknüpfungen</h4>${e.links.map(l => `<div class="list-item"><div class="name">🔗 ${escapeHtml(l)}</div><span class="chip">›</span></div>`).join('')}</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'email') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Email-Thread</h4><div style="border:1px solid var(--border);border-radius:3px;padding:14px;background:var(--surface)"><div style="font-size:11px;color:var(--text-light);margin-bottom:6px">↙ Eingehend · ${escapeHtml(e.date+' '+e.time)}</div><div style="font-size:13px;font-weight:600;margin:8px 0;padding-bottom:6px;border-bottom:1px solid var(--border)">${escapeHtml(e.title)}</div><div style="font-size:12.5px;line-height:1.6;color:var(--text-mid)">${escapeHtml(e.body)}</div></div><div class="flex gap-8" style="margin-top:10px"><button class="btn btn-sm btn-primary">↩ Antworten</button><button class="btn btn-sm">↪ Weiterleiten</button></div></div>`;
+    return;
+  }
+  if (id === 'transcript') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Transkript</h4><pre style="font-size:12px;line-height:1.7;background:var(--bg);border-radius:3px;padding:14px;white-space:pre-wrap;font-family:'Courier New',monospace;color:var(--text-mid);max-height:340px;overflow-y:auto">[00:00] ${escapeHtml(e.actor)}: Grüezi, danke für die Zeit.\n[02:15] …\n[05:30] ${escapeHtml(e.actor)}: ${escapeHtml(e.body.slice(0,80))}</pre><div class="muted" style="font-size:11px;margin-top:8px">Automatisch transkribiert · editierbar</div></div>`;
+    return;
+  }
+  if (id === 'ai') {
+    // v1.3: list-item + field-grid Pattern
+    let h = `<div class="drawer-section"><h4>KI-Kurzzusammenfassung</h4>`;
+    h += `<div style="font-size:13px;line-height:1.65;padding:12px 14px;background:var(--bg);border-radius:3px;color:var(--text-mid)">${escapeHtml(e.body)}</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Action-Items</h4>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Nächsten Termin mit ${escapeHtml(e.actor)} vorbereiten <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">Fälligkeit typischerweise innert 48 h</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Kandidat in Prozess nachfassen <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">aus Gespräch extrahiert</div></div>`;
+    h += `<div class="list-item"><div class="name"><input type="checkbox" style="margin-right:6px"> Matching-Kriterien anpassen <button class="btn btn-sm" style="float:right">⏰ Als Reminder</button></div><div class="meta">basierend auf besprochenen Inhalten</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Signale</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Sentiment</dt><dd>${e.sentiment === 'positive' ? '😊 Positiv' : e.sentiment === 'negative' ? '😟 Negativ' : '😐 Neutral'}</dd>`;
+    h += `<dt>Dringlichkeit</dt><dd>Mittel</dd>`;
+    h += `<dt>Talent-Pool-Fit</dt><dd>Solid</dd>`;
+    h += `<dt>Red-Flags</dt><dd class="muted">Keine kritischen Flags erkannt</dd>`;
+    h += `</dl></div>`;
+    h += `<div class="drawer-section"><h4>Erkannte Schlagwörter</h4>`;
+    h += `<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px">`;
+    h += `<span class="chip">Anforderungsprofil</span><span class="chip">Gehalt</span><span class="chip">Standort</span><span class="chip">Matching</span>`;
+    h += `</div></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'classify') {
+    // v1.3 NEU: Klassifizierungs-Tab
+    let h = `<div class="drawer-section"><h4>AI-Vorschläge (Top 3)</h4>`;
+    const [sugName, sugConf] = (e.aiSuggestion || '|').split('|');
+    if (sugName) {
+      h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" checked style="margin-right:6px"><strong>${escapeHtml(sugName)}</strong> <span class="muted">· ${sugConf || '—'} %</span><div class="meta">Haupt-Vorschlag · automatisch erkannt</div></label></div>`;
+    }
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#50 Erreicht - Mandatsbesprechung</strong> <span class="muted">· 6 %</span><div class="meta">Strategische Mandats-Besprechung</div></label></div>`;
+    h += `<div class="list-item"><label style="cursor:pointer;display:block"><input type="radio" name="histcls" style="margin-right:6px"><strong>#22 Emailverkehr - Allgemeine Kommunikation</strong> <span class="muted">· 2 %</span><div class="meta">Generische Kommunikation</div></label></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Manuell wählen</h4>`;
+    h += `<div style="display:flex;gap:8px;margin-bottom:8px">`;
+    h += `<input type="search" placeholder="🔍 Activity-Type suchen …" style="flex:1">`;
+    h += `<select><option>Alle Kategorien (18)</option><option>Kontaktberührung</option><option>Erreicht</option><option>Emailverkehr</option><option>Messaging</option><option>Interviewprozess</option><option>Placementprozess</option><option>Refresh Kandidatenpflege</option><option>Mandatsakquise</option><option>Erfolgsbasis</option><option>Assessment</option><option>System / Meta</option><option>Kalender &amp; Planung</option><option>Dokumenten-Pipeline</option><option>Garantie &amp; Schutzfrist</option><option>Scraper &amp; Intelligence</option><option>Pipeline-Transitions</option><option>Saga-Events</option><option>AI &amp; LLM</option></select>`;
+    h += `</div>`;
+    h += `<div class="muted" style="font-size:11px">117 Activity-Types verfügbar · Katalog v1.4 · Favoriten zuerst</div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Verknüpfungen bestätigen</h4>`;
+    if (e.links.length) {
+      e.links.forEach(l => {
+        h += `<div class="list-item"><div class="name"><label><input type="checkbox" checked style="margin-right:6px"> ${escapeHtml(l)}</label></div><div class="meta">auto-erkannt</div></div>`;
+      });
+    } else {
+      h += `<div class="muted" style="font-size:12px">Keine Auto-Erkennung — manuell zuordnen.</div>`;
+    }
+    h += `<div class="list-item"><div class="name"><label><input type="checkbox" style="margin-right:6px"> Weitere Verknüpfung</label> <select style="float:right;font-size:11px"><option>— wählen —</option><option>Stelle · offen</option><option>Kandidat · in Prozess</option></select></div><div class="meta">optional</div></div>`;
+    h += `</div>`;
+    h += `<div class="drawer-section">`;
+    h += `<div class="flex gap-8"><button class="btn btn-sm btn-primary">✓ AI-Vorschlag akzeptieren &amp; klassifizieren</button>`;
+    h += `<button class="btn btn-sm">❌ Verwerfen (kein Log-Eintrag)</button></div>`;
+    h += `</div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'history') {
+    // v1.3 NEU: Verlauf-Tab
+    let h = `<div class="drawer-section"><h4>Frühere Interaktionen <span class="muted" style="font-size:11px">(Demo · 4 Einträge)</span></h4>`;
+    h += `<div class="hist-timeline" style="margin-top:8px">`;
+    h += `<div class="hist-row"><div class="hist-time">10.04.2026 14:20</div><div class="hist-cat"><span class="hist-cat-chip cat-erreicht">Erreicht</span></div><div class="hist-body"><div class="hist-title"><strong>Update Call · 42 min</strong></div><div class="hist-sub">Stelle &amp; Pipeline-Status</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">03.04.2026 09:15</div><div class="hist-cat"><span class="hist-cat-chip cat-email">Emailverkehr</span></div><div class="hist-body"><div class="hist-title"><strong>E-Mail versendet · Stellenbriefing</strong></div><div class="hist-sub">Finales Briefing-Dokument</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">27.03.2026 11:00</div><div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div><div class="hist-body"><div class="hist-title"><strong>Mandatsbesprechung · 60 min</strong></div><div class="hist-sub">Kick-off · Anforderungsprofil</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `<div class="hist-row"><div class="hist-time">15.03.2026 16:30</div><div class="hist-cat"><span class="hist-cat-chip cat-mandat">Mandatsakquise</span></div><div class="hist-body"><div class="hist-title"><strong>✓ Stelle aufgenommen</strong></div><div class="hist-sub">Neue Stelle intake · Profil definiert</div><div class="hist-meta"><span class="actor">${escapeHtml(e.actor)}</span></div></div></div>`;
+    h += `</div>`;
+    h += `<button class="btn btn-sm" style="margin-top:10px">→ Komplette Stellen-History</button>`;
+    h += `</div>`;
+    h += `<div class="drawer-section"><h4>Interaktions-Rhythmus</h4>`;
+    h += `<dl class="field-grid">`;
+    h += `<dt>Frequenz</dt><dd>1.8 Interaktionen / Woche</dd>`;
+    h += `<dt>Kanal-Mix</dt><dd>52 % Phone · 40 % Email · 8 % System</dd>`;
+    h += `<dt>Ø Antwort-Latenz</dt><dd>~4 h (werktags)</dd>`;
+    h += `</dl></div>`;
+    wrap.innerHTML = h;
+    return;
+  }
+  if (id === 'briefing') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>AI → Briefing-Maske</h4><div style="padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:3px;font-size:13px;line-height:1.65"><strong>Briefing-Call erkannt.</strong> Extrahierte Informationen gehen in die Briefing-Maske.</div></div>`;
+    return;
+  }
+  if (id === 'reminders') {
+    wrap.innerHTML = `<div class="drawer-section"><h4>Verknüpfte Reminders</h4><div class="muted" style="font-size:12px">Aus diesem Event abgeleitete Reminders.</div></div>`;
+    return;
+  }
+}
+
+/* Reminder Neu-Handler */
+function openReminderNew() {
+  const title = document.getElementById('remTitle');
+  const ctx = document.getElementById('remContext');
+  const due = document.getElementById('remDue');
+  if (title) title.value = '';
+  if (ctx) ctx.value = '';
+  if (due) {
+    const d = new Date(); d.setDate(d.getDate()+1); d.setHours(10,0,0,0);
+    const pad = n => String(n).padStart(2,'0');
+    due.value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  const dt = document.getElementById('remDrawTitle');
+  const ds = document.getElementById('remDrawSub');
+  const dc = document.getElementById('remDrawChips');
+  if (dt) dt.textContent = 'Neuer Reminder';
+  if (ds) ds.textContent = 'Job-Reminder anlegen (Stage-Deadline, Matching-Refresh, etc.)';
+  if (dc) dc.innerHTML = '<span class="chip chip-accent">neu</span>';
+  openDrawer('reminderDrawer', 0);
+}
+
+function saveReminder(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const title = document.getElementById('remTitle').value.trim();
+  const type = document.getElementById('remType').value;
+  const due = document.getElementById('remDue').value;
+  const owner = document.getElementById('remOwner').value;
+  const ctx = document.getElementById('remContext').value.trim();
+  const link = document.getElementById('remLink').value;
+  if (!title) { alert('Titel ist Pflicht.'); return false; }
+  if (!due) { alert('Fälligkeit muss gesetzt sein.'); return false; }
+  const dueDate = new Date(due);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dayDiff = Math.round((dueDate - now) / 86400000);
+  let group, dueLabel;
+  if (dayDiff < 0) { group = 'overdue'; dueLabel = `${-dayDiff} d überfällig`; }
+  else if (dayDiff === 0) { group = 'today'; dueLabel = dueDate.toTimeString().slice(0,5) + ' Uhr'; }
+  else if (dayDiff <= 6) { group = 'week'; dueLabel = formatDate(dueDate) + (dayDiff===1?' · morgen':' · in '+dayDiff+' d'); }
+  else { group = 'later'; dueLabel = formatDate(dueDate); }
+  const sec = document.querySelector('#tab-7 .rem-section[data-rem-group="'+group+'"] tbody');
+  if (!sec) { alert('Sektion '+group+' nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-rem', group);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td style="width:36px"><input type="checkbox"></td><td><strong>${escapeHtml(title)}</strong>${ctx?`<div class="muted" style="font-size:11px">${escapeHtml(ctx)}</div>`:''}${link?`<div class="muted" style="font-size:11px">→ ${escapeHtml(link)}</div>`:''}</td><td><span class="chip chip-accent">${escapeHtml(type)}</span></td><td${group==='overdue'?' style="color:var(--red);font-weight:600"':''}>${dueLabel}</td><td><span class="actor-chip">${escapeHtml(owner)}</span></td><td class="right"><button class="btn btn-sm">Erledigen</button></td>`;
+  sec.insertBefore(tr, sec.firstChild);
+  setTimeout(() => { tr.style.transition = 'background 0.6s'; tr.style.background = ''; }, 1500);
+  closeDrawer('reminderDrawer');
+  return false;
+}
+
+function formatDate(d) { return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }
+
+/* Upload */
+function onUploadFile(input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  document.getElementById('uploadFileName').textContent = f.name;
+  document.getElementById('uploadFileMeta').textContent = prettySize(f.size) + ' · ' + (f.type || 'unbekannter Typ');
+}
+function handleDrop(ev) {
+  ev.preventDefault();
+  ev.target.style.borderColor = 'var(--border)';
+  ev.target.style.background = 'var(--bg)';
+  const f = ev.dataTransfer.files && ev.dataTransfer.files[0]; if (!f) return;
+  const input = document.getElementById('uploadFile');
+  const dt = new DataTransfer(); dt.items.add(f); input.files = dt.files;
+  onUploadFile(input);
+}
+function prettySize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+function extOf(name) { const m = (name||'').match(/\.([a-z0-9]+)$/i); return m ? m[1].toLowerCase() : ''; }
+function fileTypeLabel(ext) {
+  if (['pdf'].includes(ext)) return { label:'PDF', cls:'ft-pdf' };
+  if (['doc','docx'].includes(ext)) return { label:'DOCX', cls:'ft-docx' };
+  if (['xls','xlsx'].includes(ext)) return { label:'XLSX', cls:'ft-xlsx' };
+  if (['jpg','jpeg','png','gif'].includes(ext)) return { label:'IMG', cls:'ft-img' };
+  return { label:(ext||'FILE').toUpperCase(), cls:'' };
+}
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function doUpload(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const fileInput = document.getElementById('uploadFile');
+  const file = fileInput.files && fileInput.files[0];
+  const catKey = document.getElementById('uploadCat').value;
+  if (!catKey) { alert('Bitte Kategorie wählen.'); return false; }
+  if (!file) { alert('Bitte Datei auswählen.'); return false; }
+  const authorEl = document.getElementById('uploadAuthor');
+  const author = authorEl.dataset.value || authorEl.textContent.trim();
+  const title = (document.getElementById('uploadTitle').value || file.name.replace(/\.[^.]+$/, '')).trim();
+  const note = document.getElementById('uploadNote').value.trim();
+  const lang = document.getElementById('uploadLang').value;
+  const ft = fileTypeLabel(extOf(file.name));
+  const today = new Date();
+  const dmy = String(today.getDate()).padStart(2,'0')+'.'+String(today.getMonth()+1).padStart(2,'0')+'.'+today.getFullYear();
+  const catLabels = { 'stellenausschreibung':'Stellenausschreibung', 'briefing':'Briefing', 'matching-export':'Matching-Export', 'organigramm-position':'Organigramm-Position', 'sonstiges':'Sonstiges' };
+  const langLabels = { de:'DE', fr:'FR', it:'IT', en:'EN' };
+  const tbody = document.querySelector('#tab-5 .data-table tbody');
+  if (!tbody) { alert('Dokumente-Tabelle nicht gefunden.'); return false; }
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-cat', catKey);
+  tr.style.cursor = 'pointer';
+  tr.style.background = 'color-mix(in srgb, var(--gold) 6%, var(--surface))';
+  tr.innerHTML = `<td><span class="file-type ${ft.cls}">${ft.label}</span></td><td><strong>${escapeHtml(title)}</strong>${note?`<div class="muted" style="font-size:11px">${escapeHtml(note)}</div>`:''} <span class="chip" style="margin-left:4px;font-size:10px">${langLabels[lang]||'DE'}</span></td><td><span class="chip chip-accent">${escapeHtml(catLabels[catKey]||catKey)}</span></td><td>${dmy}</td><td><span class="actor-chip">${escapeHtml(author)}</span></td><td class="right">${prettySize(file.size)}</td><td class="right"><button class="row-icon-btn">›</button></td>`;
+  tbody.insertBefore(tr, tbody.firstChild);
+  setTimeout(() => { tr.style.transition='background 0.6s'; tr.style.background=''; }, 1500);
+  document.getElementById('uploadForm').reset();
+  document.getElementById('uploadFileName').textContent = 'Datei hierher ziehen oder klicken';
+  document.getElementById('uploadFileMeta').textContent = 'PDF, DOCX, XLSX, JPG, PNG · max. 20 MB';
+  closeDrawer('uploadDrawer');
+  return false;
+}
+
+/* Hist-Row Klicks wiring (Tab 6 = History) */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#tab-6 .hist-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', e => {
+      if (e.target.tagName === 'A') return;
+      openHistDrawer(row);
+    });
+  });
+});
+
+/* ============================================================
+   Tab 2 · Matching-Tool
+   ============================================================ */
+function onScoreSlider(v) {
+  document.getElementById('mtSliderVal').textContent = v + ' %';
+  const thr = parseInt(v, 10);
+  let visible = 0;
+  document.querySelectorAll('#mtBody .mt-row').forEach(tr => {
+    const s = parseInt(tr.dataset.score || '0', 10);
+    tr.style.display = (s >= thr) ? '' : 'none';
+    if (s >= thr) visible++;
+  });
+  document.getElementById('mtKpiCount').textContent = visible >= 7 ? '124' : visible;
+}
+
+function toggleAllMatches(cb) {
+  document.querySelectorAll('#mtBody .mt-chk:not([disabled])').forEach(c => {
+    if (c.closest('tr').style.display !== 'none') c.checked = cb.checked;
+  });
+  updateBulkBtn();
+}
+
+function updateBulkBtn() {
+  const n = document.querySelectorAll('#mtBody .mt-chk:checked').length;
+  const btn = document.getElementById('mtBulkBtn');
+  document.getElementById('mtBulkCount').textContent = '(' + n + ')';
+  btn.disabled = n === 0;
+  btn.classList.toggle('btn-primary', n > 0);
+}
+
+function bulkToJobbasket() {
+  const n = document.querySelectorAll('#mtBody .mt-chk:checked').length;
+  if (!n) return;
+  alert(n + ' Kandidaten in Jobbasket eingefügt (Stage: Prelead). Siehe Tab 3 Jobbasket.');
+  document.querySelectorAll('#mtBody .mt-chk:checked').forEach(c => c.checked = false);
+  updateBulkBtn();
+}
+
+/* ============================================================
+   Phase D · Header-Specials
+   ============================================================ */
+function confirmScraper() {
+  if (!confirm('Vakanz-Vorschlag bestätigen und Status auf „Aktiv" setzen?')) return;
+  document.getElementById('scraperBanner').style.display = 'none';
+  const sel = document.querySelector('.status-dropdown');
+  if (sel) sel.value = 'aktiv';
+  alert('✓ Vakanz bestätigt. Status → Aktiv. History-Events „Vakanz bestätigt" + „Status geändert" angelegt.');
+}
+
+function rejectScraper() {
+  const reason = prompt('Ablehnungs-Grund (wird in History gespeichert):');
+  if (!reason) return;
+  document.getElementById('scraperBanner').style.display = 'none';
+  alert('⊘ Scraper-Vorschlag abgelehnt. Grund: „' + reason + '". Job wurde archiviert (Status: abgelehnt).');
+}
+
+function onStatusChange(val) {
+  const labels = {
+    'scraper_proposal':'⚠ Scraper-Vorschlag',
+    'aktiv':'● Aktiv',
+    'on_hold':'⏸ On Hold',
+    'besetzt':'✓ Besetzt',
+    'geschlossen':'✕ Geschlossen',
+    'abgelehnt':'⊘ Abgelehnt'
+  };
+  if (!confirm('Status auf „' + labels[val] + '" ändern? History-Event „Status geändert" wird erzeugt.')) return;
+  const snap = document.querySelector('.snapshot-bar div:first-child div:last-child');
+  if (snap) snap.textContent = labels[val];
+}
+
+function submitPropose() {
+  alert('Job in Jobbasket des Kandidaten aufgenommen (Stage: Prelead). Siehe Tab 3 Jobbasket.');
+  closeDrawer('proposeDrawer');
+}
+
+function genJobAd() {
+  const lang = document.getElementById('jobGenLang').value;
+  const map = {de:'Deutsch',fr:'Français',it:'Italiano',en:'English'};
+  alert('Stellenausschreibung generiert (' + map[lang] + ', PDF). Abgelegt unter Dokumente · Kategorie „Stellenausschreibung" · v5.');
+}
+
+function switchJbView(chip, which) {
+  chip.parentElement.querySelectorAll('.chip-tab').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  document.getElementById('jb-view-liste').style.display = (which === 'liste') ? '' : 'none';
+  document.getElementById('jb-view-kanban').style.display = (which === 'kanban') ? '' : 'none';
+}
+
+function runRecompute(btn) {
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ Matching läuft …';
+  setTimeout(() => {
+    btn.textContent = '✓ Matching neu berechnet';
+    setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 1500);
+  }, 1400);
+}
+</script>
+</body>
+</html>

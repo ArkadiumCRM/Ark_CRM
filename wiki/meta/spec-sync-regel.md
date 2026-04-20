@@ -34,7 +34,7 @@ Kandidat · Account · Firmengruppe · Mandat · Job · Prozess · Assessment ·
 
 **System-Vollansichten (1 Admin + zukünftig HR):**
 - **Admin-Vollansicht** (`/admin`) — `specs/ARK_ADMIN_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (als Tab 9 eingebunden) — neu 2026-04-17
-- **HR-Tool** (Phase 2) — noch nicht spezifiziert, Feature-Flag `feature_hr_tool` locked
+- **HR-Tool** (Phase 3) — **Plan v0.2 (po-reviewed)** + **Schema v0.1 (draft)** + **Interactions v0.1 (draft)** in `ERP Tools/specs/ARK_HR_TOOL_*` (2026-04-19) · 28 Tabellen · 4 Views · 19 Drawer · 13 Worker · 29 Event-Codes · 5 Lifecycle-Sagas · Feature-Flag `feature_hr_tool` locked bis Go-Live · **Mockup-Build ausstehend**
 
 **Sonder-Specs (nicht Entity, nicht Tool):**
 - `ARK_PIPELINE_COMPONENT_v1_0.md` — Shared UI-Komponente (9-Dot-Pipeline), referenziert von mehreren Detailmasken

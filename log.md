@@ -1,3 +1,220 @@
+## [2026-04-19] ingest | HR-Tier-2 (Einführungsordner + Academy-Module + Mitarbeiter-Tools)
+
+**Kontext:** Nach Spec-Triade Plan-v0.2 + Schema-v0.1 + Interactions-v0.1 Tier-2-Ingest zur Content-Erweiterung.
+
+**Ingestiert (~9'500 Zeilen):**
+- Einführungsordner: Hausordnung ZH Tödistrasse (DOCX) + Maneggstrasse (PDF) · Arkadium am Markt · Glossary · Communication Edge I/II/Anhang (DOCX) · M4 Modell + 16 M-Module (PDFs)
+- Mitarbeiter-Ordner: Personalstammdaten-Formular · Smarttime-Anleitung · Abwesenheitsantrag · Spesen-Vorlage
+
+**Key-Fund — Treuhand Kunz:**
+Aus `Personalstammdaten_Arkadium.docx` identifiziert: Arkadium-Payroll-Treuhänder = **Treuhand Kunz** · Email `office@treuhand-kunz.ch` · Memory `reference_treuhand_kunz.md` geschrieben · Plan-§11B-2-Entscheidung (Bexio-CSV + Swissdec-ELM) bleibt kompatibel.
+
+**Pages created (sources, 4):**
+- `wiki/sources/hr-einfuehrungsordner-starterinfo.md` — 30 operative Themen (Arbeitszeit · Krankheit · Dresscode · Reporting-Di-Mo · Kandidaten-Empfang · etc.)
+- `wiki/sources/hr-academy-communication-edge.md` — CE Part I + II + Anhang (Hamburger · 7 Grundsätze · VAKOG · Pacing/Leading · 20 Einwandbehandlungs-Techniken · Nutzenargumentation)
+- `wiki/sources/hr-academy-m4-modell.md` — M4-Modell · 4 Hauptprozesse (MEET/MATCH/MARKET/MONEY) · 16 Teilprozesse mit Rolle-Zuordnung CM/AM/Research · Mapping zu CRM-Prozess-Stages + Praemium-Victoria §6.2
+- `wiki/sources/hr-mitarbeiterordner-tools.md` — Personalstammdaten-Formular-Felder mit HR-Tool-Mapping · Smarttime-Kontext (wird durch Phase-3-Zeiterfassung abgelöst) · Abwesenheits-Flow · Spesen-Pauschale vs Extra-Spesen (separates Modul)
+
+**Pages created (memory, 1):**
+- `memory/reference_treuhand_kunz.md`
+- `memory/MEMORY.md` Index erweitert
+
+**Schema-Deltas für v0.2** (noch nicht eingebaut):
+- `dim_mitarbeiter` Erweiterungen: `email_private` · `heirat_datum` · `partner_erwerbstaetig` · `kinder JSONB` · `konfession` · `quellensteuer_pflichtig` · `quellensteuer_kanton`
+- `fact_hr_documents.document_type` Erweiterung: `personalstammdaten_formular` · `spesenabrechnung_monat` · `smarttime_export` · `hausordnung_akzeptiert_signatur` · `schluesselquittung` · `glossary_acknowledged`
+- Zusätzliche Config-Keys in `dim_automation_settings`: `arbeitsbeginn_spaetestens_uhrzeit` · `feiertags_vorabend_arbeitsschluss` · `mittagspause_von_bis` · `reportingwoche_start_dow` · `dresscode_client_default`
+
+**Key Onboarding-Template-Konkretisierung:**
+Consultant-14-Wochen-Template aus Starterinfo + M-Module + Communication Edge rekonstruiert (siehe `hr-einfuehrungsordner-starterinfo.md` §Onboarding-Template-Tasks). Researcher-8-Wochen reduziert.
+
+**Nicht eingebaut (Tier-3+ · andere Session):**
+- Schulungen-Alt-Ordner (40+ PDFs historische Schulungen + GoPro-Videos · Tier 5)
+- 3_Assessements (Leitfaden Hunt · Mental Health · Senior Consultant · Speed Recruiting · Tier 4)
+- 5_Ausbildungsplan · Severina-Ordner (Tier 2+)
+
+**Schema-Updates eingebaut 2026-04-19 (in-place):**
+- §2 `dim_mitarbeiter` +7 Felder (email_private · heirat_datum · partner_erwerbstaetig · kinder JSONB · konfession · quellensteuer_pflichtig · quellensteuer_kanton)
+- §11.1 `fact_hr_documents.document_type` +6 Enum-Werte (personalstammdaten_formular · spesenabrechnung_monat · smarttime_export · hausordnung_akzeptiert_signatur · schluesselquittung · glossary_acknowledged)
+- §13 Config-Keys +10 (Arbeitsbeginn-Uhrzeit · Mittagspausen · Reportingwoche-DOW · Dresscode-Defaults · Treuhand-Kunz-Email · Payroll-Export-Formats)
+- §14.7b neu: Onboarding-Template-Seeds für Consultant-14-Wochen (6 Phasen · 35+ Tasks mit Academy-Module-Codes) + Researcher-8-Wochen (5 Phasen · 20+ Tasks)
+- Changelog §18 ergänzt · keine Breaking Changes · nur ADD-Operationen
+
+**Next:** Mockup-Iteration · Commit aller HR-Arbeit · oder Tier-3/4-Ingest (Assessments-Leitfäden · Schulungen-Alt).
+
+---
+
+## [2026-04-19] create | HR-Tool-Interactions v0.1 (UI-Flows + Saga + Events)
+
+**Kontext:** Nach Schema v0.1 → Interactions v0.1 als UI-Definitions-Spec.
+
+**Pages created:**
+- `ERP Tools/specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` — 10 Sections · 19 Drawer-Defs · 5 Lifecycle-Saga-Flows · 13 Worker · 29 Event-Codes mit Subscriber-Matrix · RBAC-UI-Gates
+
+**Scope:**
+- **§1 Global Patterns:** Drawer-Breiten (540/760/Sheet) · Sensible-Daten-Masking-Flow mit `reveal_sensitive`-Audit · Optimistic-Update · kein Drag-Rückwärts (Annullierung via Kontext-Menü)
+- **§2 Dashboard:** Header · Alert-Cards (8 aus `v_hr_alerts`) · Action-Queue · Team-Matrix 18 MA × 7 Tage · Kanban 7 Spalten · MA-Liste
+- **§3 MA-Side-Panel:** 8 Accordion-Sektionen (Stammdaten · Vertrag · Absenzen · Academy · Zertifikate · Dokumente · Warnings · Provisionsvertrag)
+- **§4 Drawer-Inventar (19):** Neuer MA 4-Tab · Vertrag-Edit · Ferienantrag (mit Extra-Guthaben-Saldo-Sidebar) · Krankmeldung (Arzt-Staffel-Anzeige) · HO-Antrag (48h + Quota + Team-Coverage) · Schulung · Zertifikat · Weiterbildungsvereinbarung · Dokument · Probezeit-Abschluss · Verwarnung · Disziplinar (mit GL-Gate + MA-Notification-Constraint) · Provisionsvertrag-Renewal · Kündigung · Annullierung · Aufhebungsvereinbarung · Reglement-Signatur · Extra-Guthaben-Bezug · Arbeitszeugnis via Dok-Generator
+- **§5 Lifecycle-Saga:** Happy-Path · Verwarnungs-Eskalation · Offboarding-Branches · Role-Transition (Grace-Period) · Annullierung
+- **§6 Worker + Events:** 13 Worker + 29 Event-Codes mit Subscriber-Matrix
+- **§7 Self-Service-UI:** `/hr/me` · erlaubte vs nicht-erlaubte Actions · DSG-Auskunft-Export
+- **§8 Mobile-Support:** P0/P1/P2-Priorisierung · Full-Screen-Sheet-Pattern · Desktop-Only für CRUD-heavy
+- **§9 RBAC-UI-Gates:** Tabellarische Berechtigungs-Matrix pro UI-Element
+
+**Key-Interaction-Features:**
+- Ferienantrag-Drawer zeigt Saldo-Sidebar mit allen 5 Extra-Guthaben-Kategorien inkl. Verfügbarkeits-Constraints (Geburtstagswoche, ZEG-Sperrfristen)
+- Disziplinar-Drawer enforcet §11C-4-Constraint UI-seitig: Offset-Toggle nur wenn `gl_approved_at` + `ma_notified_at + 1 Mt` vorhanden
+- Neuer-MA-Drawer (4 Tabs) schließt mit Bündel-PDF-Generate + Signatur-Flow (MA + Head + Founder)
+- Kündigungs-Drawer enthält §11C-11-Override-Toggle "Extra-Guthaben trotz Kündigung gewähren"
+- Arbeitszeugnis-Generator ist Link zu `/operations/dok-generator` (nicht eigenes Drawer)
+
+**Offene Punkte für Interactions v0.2:**
+- UI-Wireframes einbinden (derzeit nur Text-Struktur)
+- WebSocket-Channel-Definition
+- Validation-Rules Zod/Yup-Schemas
+- Accessibility-Audit WCAG AA
+- Performance-Targets
+
+**Sync-Scope:** keine Grundlagen-Änderung · HR-Tool bleibt Phase-3-ERP-standalone.
+
+**Next:** Mockup-Iteration (hr.html + neue: hr-warnings-disciplinary.html, hr-provisionsvertrag-editor.html, hr-academy-dashboard.html, hr-mitarbeiter-self.html) · oder Commit aller HR-Arbeit heute.
+
+---
+
+## [2026-04-19] create | HR-Tool-Schema v0.1 (DDL)
+
+**Kontext:** Nach PO-Review-Abschluss Plan v0.2 → Schema v0.1 als komplettes DDL.
+
+**Pages created:**
+- `ERP Tools/specs/ARK_HR_TOOL_SCHEMA_v0_1.md` — 18 Sections · alle 18 PO-Entscheidungen eingearbeitet
+
+**Scope:**
+- **28 Tabellen:** 12 dim · 15 fact · 1 audit (`audit_hr_access`)
+- **4 Views:** `v_hr_alerts` (8 Alert-Typen inkl. Jubiläums-Alert · Scheelen-Cert-Missing) · `v_next_lohn_payment_date` · `v_training_repayment_obligations` · (erweiterbar)
+- **11 Config-Keys** in `dim_automation_settings` (Lohnlauf-Kalender · HO-Coverage · Scheelen-Threshold etc.)
+- **7 Seed-Blöcke:** Scheelen-Zertifikate (alle 4 Pflicht) · Reglemente (3 Themen 2024-01-01) · Job-Descriptions (11 Rollen) · Academy-Module (21 Module M/Comm-Edge/Lernkarteien) · Absence-Types (17 inkl. Extra-Guthaben) · Feiertage ZH 2026 · Disziplinar-Typen (8 während + post-AV)
+- **29-Schritt-Migration** mit Rollback-Pfad
+- **RBAC-Matrix** HR-Erweiterung (HR_Manager · Team_Lead · Employee_Self · Academy_Trainer)
+
+**Key Schema-Features:**
+- `dim_mitarbeiter.commission_rate` als DEPRECATED kommentiert (ersetzt durch `fact_provisionsvertrag_versions`) · kein DROP in v0.1 für Rückwärtskompatibilität
+- `fact_employment_contracts.kuendigungsfristen_jsonb` als JSONB statt fixem INT (Dienstjahr-Staffelung)
+- `dim_absence_types.certificate_rule_type = 'staffelung_by_dienstjahr'` + `certificate_staffelung_jsonb` für Krankheits-Staffelung
+- `fact_vacation_balances` mit 5 Extra-Guthaben-Kategorien (Geburtstag-Self · Geburtstag-Close · Joker · ZEG-H1 · ZEG-H2) + GL-Discretionary + Override-Felder für §11C-11-Kulanzregel
+- `fact_disciplinary_incidents` CHECK-Constraint erzwingt GL-Approval + 1 Mt MA-Vorankündigung vor Payroll-Offset
+- `fact_provisionsvertrag_versions.is_active` GENERATED erfordert alle 3 Signaturen (MA + Head + Founder)
+- `fact_role_transitions.grace_period_ends_at` GENERATED für §5.3-Praemium-Victoria-3-Mt-Clock
+
+**Offene Punkte für Schema v0.2:**
+- Trigger-Definitionen für `fact_absences.certificate_required` (computed)
+- Ostern-Worker für jährliche `carry_deadline_date`
+- Partitioning-Strategie bei Wachstum (>100k Rows)
+- RLS-Policies ausformulieren
+- Test-Data-Fixtures
+
+**Sync-Scope:** HR-Tool bleibt Phase-3-ERP-standalone (Memory `project_phase3_erp_standalone.md`) · keine direkten Grundlagen-Änderungen (STAMMDATEN/DB-SCHEMA/BACKEND/FRONTEND/GESAMTSYSTEM). Nach Go-Live werden relevante Teile in Grundlagen zurückgeführt (dann Spec-Sync mit 5 CRM-Grundlagen).
+
+**Next:** `ARK_HR_TOOL_INTERACTIONS_v0_1.md` (UI-Flows · Drawer-Interaktionen · Use-Case-Workflows aus Plan §5 + §7).
+
+---
+
+## [2026-04-19] update | HR-Tool-Plan v0.2 · PO-Review abgeschlossen (18/18 Fragen beantwortet)
+
+**Kontext:** 1-to-1-Review mit Peter direkt nach Plan-v0.2-Create. Alle 18 offene Fragen aus §11B (6) + §11C (12) beantwortet.
+
+**Key-Entscheidungen (Abweichungen vom Plan-v0.2-Vorschlag):**
+- Arbeitszeugnis-Generator ist **kein eigenes HR-Feature** → läuft über globalen Dok-Generator (analog ARK CV/Abstract/Exposé)
+- Scheelen-Zertifikate: **alle 4 (MDI · Relief · ASSESS · EQ) Pflicht für alle Rollen** (nicht rollen-selektives Mapping)
+- Praemium-Victoria-Zyklus **Kalenderjahr fix** (nicht Geschäftsjahr · Vorlagen-Beispiel 01.04.–31.12. war Übergangs-Fall)
+- Disziplinar-Lohn-Verrechnung: **GL-Approval + 1 Mt MA-Vorankündigung** (strenger als 2-Augen-Prinzip)
+- Extra-Guthaben-Verfall: Default **ab Kündigungs-Einreichung** mit **HR-Override-Toggle** für Kulanzfälle
+- Academy-Trainer: **Multiple Trainer je Modul** (keine eigene RBAC-Rolle `Academy_Lead`)
+- Alumni-Konkurrenzverbot-Monitor: **GF-Ermessen**, kein automatisierter Flow
+- Reglement-Versionierung: **Fall-zu-Fall-HR-Entscheidung** (nicht semver-Automatik)
+- Honorarstreitigkeit: **manuell durch Backoffice** (keine dedizierte Tabelle)
+- Annullierung der Kündigung: **Kontext-Menü + Drawer** (kein Kanban-Drag-Rückwärts)
+
+**Vorschläge bestätigt (10/18):** Payroll-Formate · Lohnausweis-Auto-Import · Notfallkontakt max 2 · Dienstjubiläum-Alert · Geburtstag Opt-in · Annullierung-UI · Scheelen-Alle-Pflicht · Lohnkalender-Config · Head-Signatur-Pflicht · Provisionsvertrag-Kalenderjahr.
+
+**Pages updated:**
+- `ERP Tools/specs/ARK_HR_TOOL_PLAN_v0_2.md` Status `draft` → `po-reviewed` · §11 komplett überschrieben mit Entscheidungen + Schema-Impact pro Frage · Next-Steps aktualisiert · PO-Review-Log ergänzt
+
+**Next:** `ARK_HR_TOOL_SCHEMA_v0_1.md` + `ARK_HR_TOOL_INTERACTIONS_v0_1.md` schreiben mit allen finalisierten Entscheidungen. Parallel Mockup-Iteration (hr.html · neue: hr-warnings-disciplinary.html · hr-provisionsvertrag-editor.html · hr-academy-dashboard.html).
+
+---
+
+## [2026-04-19] create | HR-Tool-Plan v0.2 (supersedes v0.1)
+
+**Kontext:** Peter-Antwort "A" zu Next-Step-Frage nach Ingest. Konsolidierung Plan v0.1 + Schema-Deltas + Sprach-Policy-Klarstellung.
+
+**Peter-Feedback:**
+- Sprachen: **DE only** · EN-Anforderung im Progressus-Template ist Legacy, real kaum gebraucht · Memory `project_sprache_policy.md` geschrieben
+- Option A gewählt (Plan v0.2 konsolidieren) statt B/C/D
+
+**Pages created:**
+- `ERP Tools/specs/ARK_HR_TOOL_PLAN_v0_2.md` — 14 Sections · v0.1 supersedet · 6/12 v0.1-Fragen beantwortet · 8 neue Entitäten integriert · 2 neue Phasen (3.7 Disziplinar · 3.8 Praemium-Renewal) · 12 neue offene Fragen
+
+**Pages updated:**
+- `C:\Users\PeterWiederkehr\.claude\projects\C--ARK-CRM\memory\project_sprache_policy.md` (neu)
+- `C:\Users\PeterWiederkehr\.claude\projects\C--ARK-CRM\memory\MEMORY.md` (+1 Eintrag)
+- `wiki/analyses/hr-schema-deltas-2026-04-19.md` (§1 Frage 7 DE-only-Antwort)
+- `wiki/sources/hr-stellenbeschreibung-progressus.md` (Template-Drift-Hinweis)
+
+**Plan-v0.2-Key-Deltas vs v0.1:**
+- `dim_mitarbeiter.commission_rate` **deprecated** → ersetzt durch `fact_provisionsvertrag_versions`
+- `fact_employment_contracts` erweitert: Karenzentschädigung · Kündigungsfristen-JSONB · Konkurrenzverbot-Region statt km-Radius · Disziplinarstrafen-Referenz
+- Neue Tabellen: `dim_reglemente` · `fact_contract_attachments` · `dim_job_descriptions` · `fact_provisionsvertrag_versions` · `fact_role_transitions` · `dim_academy_modules` · `fact_academy_progress` · `fact_training_agreements` · `fact_warnings` · `dim_disciplinary_penalty_types` · `fact_disciplinary_incidents` · `fact_homeoffice_requests` · `fact_homeoffice_quota_usage`
+- `dim_absence_types` Seeds erweitert: Arztzeugnis-Dienstjahr-Staffelung · CH-spezifische Dienste (Zivilschutz/Rotkreuz/Feuerwehr) · 5 Extra-Guthaben-Kategorien (Geburtstag/nahestehend/Joker/ZEG/GL-Ermessen)
+- `fact_vacation_balances` erweitert: 5 Extra-Kategorien + Ostern+14-Deadline
+- Lifecycle-Stages erweitert: Bewerber raus · 3 Offboarding-Branches · Under-Watch + Final-Watch
+- Events +18 neue Codes · `v_hr_alerts`-View erweitert
+- UI-Scope: 3 neue Mockups + 7 neue Drawer
+
+**Next:** PO-Review mit Peter → §11B (6 v0.1-offen) + §11C (12 neu) beantworten → dann `ARK_HR_TOOL_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` schreiben.
+
+---
+
+## [2026-04-19] ingest | HR-Vertragswerk Tier-1 (Arbeitsverträge · Reglemente · Provisionsverträge · Zeugnisse · Weiterbildung · Stellenbeschreibung · Kündigung · Austritts-Merkblätter)
+
+**Kontext:** Peter hat HR-Ordner in `raw/HR/` abgelegt. Tier-1 (schema-relevant) ingestiert: 26 DOCX + 2 AXA-PDFs. Tier 2–5 (Mitarbeiter-Ordner, Methodik-Schulungen, Assessments, Historisch) ausgelassen für spätere Session.
+
+**Pages created (sources, 8):**
+- `wiki/sources/hr-arbeitsvertraege.md` — 4 Arbeitsvertrags-Vorlagen (2 Consultant · 2 Researcher-Varianten), 13 Ziffern, Konkurrenzverbot 18 Mt, Kündigungs-Staffelung (3 Tage Probezeit · 1/2/3 Mt ab Dienstjahr)
+- `wiki/sources/hr-reglemente.md` — DRUCK-Varianten der 3 Reglemente: Generalis Provisio (Allg. Anstellung, §4 Academy) · Tempus Passio 365 (45h/Wo · 25 Ferientage · Extra-Guthaben Geburtstag/Joker/ZEG) · Locus Extra (HO 20 + Remote 10 Tage/Jahr)
+- `wiki/sources/hr-provisionsvertraege.md` — "Praemium Victoria" (CM + Team Leader + Entwurf), ZEG-Staffel 30–150%+, 80/20-Vorschuss-Split, Halbpunkt-System (CM · AM), §5.3 Rollenwechsel-Regel 3 Mt
+- `wiki/sources/hr-arbeitszeugnisse.md` — 3 Templates (Arbeitsbestätigung + Consultant + Researcher) mit Academy-Intro-Boilerplate + Checkliste-PDF (leer extrahiert, OCR nötig)
+- `wiki/sources/hr-weiterbildungsvereinbarung.md` — Pensum-Reduktion + CHF 2'500/Semester Arbeitgeber-Anteil + Rückzahlungs-Staffel 100/50/25% bei Austritt 12/18/24 Mt nach Abschluss
+- `wiki/sources/hr-stellenbeschreibung-progressus.md` — 2 Progressus-Vorlagen Consultant + Research Analyst, 9-Feld-Header, Tätigkeits-Deltas (Debitoren/Onboarding-Kunden nur Consultant)
+- `wiki/sources/hr-kuendigung-aufhebung.md` — 4 Sonderfall-Vorlagen: Annullierung seitens AG · Aufhebungsvereinbarung Freistellung · Aufhebung nach Kündigung · Letzte Verwarnung
+- `wiki/sources/hr-austritt-versicherung-merkblaetter.md` — AXA-KKV (14739DE) + AXA-Abredeversicherung (16747DE) Pflicht-Merkblätter mit Unterschriften-Rückläufer
+
+**Pages created (concepts, 4):**
+- `wiki/concepts/hr-vertragswerk.md` — 5-Schicht-Modell (Arbeitsvertrag + 3 Reglemente + Progressus + Praemium Victoria) mit lateinischen Eigennamen, Widerspruchs-Regel
+- `wiki/concepts/hr-academy.md` — Ausbildungssystem: 3 Fachgebiete (A/B/C), 3 Teile, Communication Edge 1-3, M4 Modell, M 1-4 Module, Geschäftsgeheimnis-Schutz nach Art. 321a OR
+- `wiki/concepts/hr-konkurrenz-abwerbeverbot.md` — 18 Mt Deutschschweiz · Karenzentschädigung CHF 500/350 als Kompensation · Konventionalstrafen CHF 80k min / CHF 20k Disziplinar / CHF 20k Geheimhaltung
+- `wiki/concepts/hr-ma-rollen-matrix.md` — MA-Rollen aus Arbeitsrecht-Sicht (Researcher · Consultant · CM · AM · Team Leader · Head · Founder), Delta-Analyse Consultant vs Researcher, Organigramm-Seeds
+
+**Pages created (analyses, 1):**
+- `wiki/analyses/hr-schema-deltas-2026-04-19.md` — Plan-v0.1-Erweiterungen: 12 Plan-§11-Fragen beantwortet · 8 neue Entitäten (`dim_reglemente`, `dim_academy_modules`, `dim_disciplinary_penalty_types`, `fact_warnings`, `fact_provisionsvertrag_versions`, `fact_training_agreements`, `dim_job_descriptions`, `fact_role_transitions`) · 2 neue Phasen (3.7 Disziplinar + 3.8 Provisionsvertrag-Renewal) · 12 neue offene Fragen
+
+**Pages updated:**
+- `index.md` — Neue Sources-Sektion "HR & Vertragswerk" (+8), Concepts-Sektion "HR & Anstellung" (+4), Analyses +1 · Counts 50→58 / 41→45 / 7→8
+- `log.md` — diese Entry
+
+**Key Findings (Plan-kritisch):**
+- Arztzeugnis-Pflicht: Dienstjahr-Staffelung (1 DJ → Tag 1, 2 DJ → Tag 2, 3+ DJ → Tag 3), nicht fester Threshold
+- Ferien: 25 Tage + 5+ Extra-Guthaben-Kategorien (nicht als eine `allocated_days`-Zahl modellierbar)
+- Kündigungsfristen als JSONB statt einzelner INT (Dienstjahr-Staffelung)
+- Karenzentschädigung = monatliches Gehalt-Addon (CHF 500/350), nicht nachvertragliche Zahlung
+- Reglemente + Provisionsvertrag brauchen eigene versionierte Tabellen (jährliche Erneuerung Praemium Victoria)
+- Disziplinar-Katalog (6 während AV + 3 post-AV) fehlt komplett in Plan v0.1
+
+**Sync-Scope:** Keine Grundlagen-Änderung · keine Spec-Änderung. `ARK_HR_TOOL_PLAN_v0_1.md` als Nächstes zu v0.2 weiter­entwickeln (Optional — Peter entscheidet).
+
+**Tier-2+ offen (nicht diese Session):** Einführungsordner (22 Schulungs-PDFs · M 1-4 Module · Communication Edge · Glossary) · Mitarbeiter-Ordner-Struktur · Assessments-Leitfaden · Smarttimes.
+
+---
+
 ## [2026-04-18] update | Admin-Vollansicht Komplettisierung (P3-Restpunkte)
 
 **Kontext:** Restpunkte aus Sync-Report abgearbeitet (Inventar-Eintrag, Konzept-Doku, Wiederverwendungs-Patterns, Mobile-Edge-Case).

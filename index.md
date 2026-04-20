@@ -2,12 +2,12 @@
 title: "Wiki Index"
 type: meta
 created: 2026-04-08
-updated: 2026-04-17
+updated: 2026-04-19
 ---
 
 # Wiki Index
 
-## Sources (50)
+## Sources (62)
 
 - [[gesamtsystem-uebersicht]] — Gesamtsystem-Übersicht v1.3, Kernspezifikation + TEIL 20/20b/20c/21
 - [[database-schema]] — Datenbank-Schema v1.3, ~161 Tabellen + 13 Views
@@ -60,6 +60,21 @@ updated: 2026-04-17
 - [[provisionssheet-joaquin]] — CM-Beispielsheet (nicht-echte Daten), Quartals-Kummulation + Punkt-Zuteilung
 - [[provisionssheet-peter]] — Head-of-Beispielsheet (nicht-echte Daten), Teambudget + Mandats-Stage-Einträge
 
+### HR & Vertragswerk (Phase 3, ingestiert 2026-04-19)
+
+- [[hr-arbeitsvertraege]] — 4 Arbeitsvertrags-Vorlagen (Consultant + Researcher-Varianten), 13 Ziffern, Konkurrenzverbot 18 Mt, Kündigungsstaffel
+- [[hr-reglemente]] — Reglemente-Triade: Generalis Provisio (Allg. Anstellung) · Tempus Passio 365 (Arbeitszeit + 25 Ferientage + Extra-Guthaben) · Locus Extra (Home-Office + Remote)
+- [[hr-provisionsvertraege]] — "Praemium Victoria" (CM + Team Leader), ZEG-Staffel 30–150%+, 80/20-Vorschuss, Halbpunkt-System
+- [[hr-arbeitszeugnisse]] — 3 Templates (Arbeitsbestätigung + Consultant + Research Analyst), Academy-Intro-Boilerplate
+- [[hr-weiterbildungsvereinbarung]] — Pensum-Reduktion + Kostenbeteiligung (CHF 2'500/Semester) + Rückzahlungs-Staffel (100/50/25% in 12/18/24 Mt)
+- [[hr-stellenbeschreibung-progressus]] — Consultant + Research Analyst Progressus-Templates, 9-Feld-Header, Aufgaben-Deltas
+- [[hr-kuendigung-aufhebung]] — 4 Vorlagen: Annullierung · Aufhebungsvereinbarung (Freistellung + nach Kündigung) · Letzte Verwarnung
+- [[hr-austritt-versicherung-merkblaetter]] — AXA Merkblätter KKV-Übertrittsrecht (3 Mt) + Abredeversicherung (max 6 Mt, CHF 40/Mt)
+- [[hr-einfuehrungsordner-starterinfo]] — Starterinfos ZH + Hausordnung + Arkadium am Markt + Glossary (30 operative Themen: Arbeitszeit 08:45 · Krankheit · Firmenhandy · Dresscode · Reporting Di–Mo · CRM-Datenpflege)
+- [[hr-academy-communication-edge]] — Academy-Rhetorik-Kern: Hamburger Konzept · 7 Grundsätze · AITDA · VAKOG · Pacing/Leading · 20 Einwandbehandlungs-Techniken · Nutzenargumentation
+- [[hr-academy-m4-modell]] — M4-Modell mit 4 Hauptprozessen × 4 Teilprozessen = 16 Standardschritte (Ident · Hunt · Briefing · Akquise · CV sent · TI · Offer · Placement) · matcht CRM-Prozess-Stages
+- [[hr-mitarbeiterordner-tools]] — Personalstammdaten-Formular (Treuhand Kunz) · Smarttime-Webinterface · Abwesenheitsantrag · Spesen-Vorlage
+
 ## Entities (7)
 
 - [[kandidat]] — Zentrale Entity: Profil, 8 Stages, Kompetenzen, 10 Tabs
@@ -70,7 +85,7 @@ updated: 2026-04-17
 - [[prozess]] — Interview-Pipeline: Exposé → Placement (9 Stages)
 - [[projekt]] — Bauprojekt · 3-Tier (Projekt → Gewerk → Beteiligungen) · 6-Tab-Detailmaske (Phase A–I komplett, projekttyp-agnostisch)
 
-## Concepts (41)
+## Concepts (45)
 
 ### Business Logic
 - [[rekrutierungsprozess]] — End-to-End: Sourcing → Placement, zwei Geschäftsmodelle
@@ -124,7 +139,13 @@ updated: 2026-04-17
 - [[websocket-channels]] — Realtime-Channel-Konvention `<entity>:<scope>:<id>`, Event-Payload-Struktur
 - [[audit-log-retention]] — Hot/Archiv/Löschung nach Kategorie, Legal Hold, DSGVO-Hashing
 
-## Analyses (7)
+### HR & Anstellung (Phase 3)
+- [[hr-vertragswerk]] — Arkadium-Anstellungs-Stack: Hauptvertrag + 3 Reglemente + Progressus + Praemium Victoria mit lateinischen Marken
+- [[hr-academy]] — Internes Ausbildungssystem (Communication Edge 1-3 · M4 Modell · Lernkarteien · A/B/C-Fachgebiete), Geschäftsgeheimnis-Schutz
+- [[hr-konkurrenz-abwerbeverbot]] — 18 Mt Deutschschweiz + Karenzentschädigung (CHF 500/350) + Konventionalstrafen (CHF 80k min) + Disziplinar-Katalog
+- [[hr-ma-rollen-matrix]] — MA-Rollen aus Vertrags-Sicht (Researcher · Consultant · CM · AM · Team Leader · Head), Progressus-Mapping, §5.3-Praemium-Grace-Period
+
+## Analyses (8)
 
 - [[sync-report-2026-04-17]] — Drift-Scan nach Admin-Vollansicht-Specs · 9 unresolved Changelog · 2 stale Digests · 10 Sync-Schulden Admin ↔ Grundlagen
 - [[ungereimtheiten-report]] — Systematische Prüfung aller Widersprüche, Entscheidungen, Schema-Deltas, offene Specs
@@ -133,6 +154,7 @@ updated: 2026-04-17
 - [[audit-2026-04-13-komplett]] — Komplett-Audit aller 5 Grundlagen + 18 Specs, 97 Findings, 14 Klärungs-Fragen
 - [[audit-entscheidungen-2026-04-14]] — Alle 14 Fragen beantwortet + Credits-Typen-Revision + Implementierungs-Priorisierung
 - [[audit-final-2026-04-14]] — Konsolidierter Final-Audit nach 7-Agent-Review, P0/P1/P2 Roadmap
+- [[hr-schema-deltas-2026-04-19]] — HR-Tool-Plan-v0.1-Erweiterungen aus Tier-1-Vertragswerk-Ingest (12 Plan-Fragen beantwortet + 12 neue offene Fragen + 8 neue Entitäten + 2 neue Phasen)
 
 ## Meta
 

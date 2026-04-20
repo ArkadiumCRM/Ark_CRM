@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Zeiterfassung · Team-Übersicht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .util-bar {
+    display:inline-block; width:80px; height:8px; background:var(--border);
+    border-radius:2px; position:relative; vertical-align:middle;
+  }
+  .util-bar .fill {
+    position:absolute; left:0; top:0; height:100%; border-radius:2px;
+    background:var(--accent);
+  }
+  .util-bar.low .fill { background:var(--red); }
+  .util-bar.mid .fill { background:var(--amber); }
+  .util-bar.high .fill { background:var(--green); }
+</style>
+</head>
+<body>
+
+
+<div class="page-banner" style="padding:24px 28px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Libre Baskerville',serif;font-size:26px;color:var(--accent)">Zeiterfassung · Team</h1>
+    <span class="muted">KW 17 / 2026 · 18 Mitarbeitende · 14 / 18 Wochen erfasst</span>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary" onclick="location.href='zeit.html'">Meine Woche öffnen</button>
+    <button class="btn btn-sm">📊 Utilization-Report</button>
+    <button class="btn btn-sm">💰 Time-Mandat-Billing</button>
+    <button class="btn btn-sm">↓ Export Payroll</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">FTE aktiv</div><div class="kpi-value">16.6</div><div class="kpi-sub muted">18 Köpfe · 2 Teilzeit</div></div>
+    <div class="kpi-card"><div class="kpi-label">Team-Stunden KW 17</div><div class="kpi-value">582 h</div><div class="kpi-sub muted">bei 14 erfassten</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--green)"><div class="kpi-label" style="color:var(--green)">Billable-Ratio</div><div class="kpi-value" style="color:var(--green)">71 %</div><div class="kpi-sub muted">Team-Durchschnitt YTD</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--amber)"><div class="kpi-label" style="color:var(--amber)">Wochen offen</div><div class="kpi-value" style="color:var(--amber)">4</div><div class="kpi-sub muted">noch nicht abgeschlossen</div></div>
+    <div class="kpi-card"><div class="kpi-label">Überstunden &gt; 40 h</div><div class="kpi-value">2</div><div class="kpi-sub muted">MA über 80 % Schwelle</div></div>
+    <div class="kpi-card"><div class="kpi-label">Time-Umsatz April</div><div class="kpi-value">CHF 68k</div><div class="kpi-sub muted">nur Time-Mandate</div></div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <input type="search" placeholder="🔍 Suche MA / Mandat …" style="flex:1 1 280px">
+    <select>
+      <option>KW 17 (aktuell)</option>
+      <option>KW 16</option>
+      <option>KW 15</option>
+      <option>KW 14</option>
+      <option>April 2026</option>
+      <option>Q1 2026</option>
+    </select>
+    <select>
+      <option>Alle Teams</option>
+      <option>Team ING &amp; BT</option>
+      <option>Team ARC &amp; REM</option>
+      <option>Team PUR</option>
+      <option>GL / Backoffice</option>
+    </select>
+    <select>
+      <option>Alle Mandat-Typen</option>
+      <option>Target (Fixhonorar)</option>
+      <option>Erfolgsbasis (Best-Effort · ohne Mandat)</option>
+      <option>Taskforce (Stundenbasis + Cap)</option>
+      <option>Time (pure Stundenbasis)</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>in Arbeit</option>
+      <option>abgeschlossen</option>
+      <option>nicht erfasst</option>
+    </select>
+  </div>
+
+  <div class="filter-bar" style="padding-top:0">
+    <div class="chip-group">
+      <div class="chip-tab active">Alle <span class="count">18</span></div>
+      <div class="chip-tab">Wochen abgeschlossen <span class="count">14</span></div>
+      <div class="chip-tab" style="color:var(--amber)">⏳ in Arbeit <span class="count">4</span></div>
+      <div class="chip-tab" style="color:var(--red)">⚠ Überstunden-Alert <span class="count">2</span></div>
+      <div class="chip-tab">Billable &lt; 60 % <span class="count">3</span></div>
+    </div>
+    <span class="spacer"></span>
+    <div class="chip-group" style="gap:2px">
+      <div class="chip-tab active">Tabelle</div>
+      <div class="chip-tab">Wochen-Grid</div>
+      <div class="chip-tab">Mandat-Sicht</div>
+    </div>
+  </div>
+
+  <!-- Tabelle Team-Übersicht -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Mitarbeitende:r</th>
+          <th>Team</th>
+          <th>Soll KW 17</th>
+          <th>Ist</th>
+          <th>Delta</th>
+          <th>Billable %</th>
+          <th>Utilization YTD</th>
+          <th>Überstunden</th>
+          <th>Status</th>
+          <th class="right">›</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer" onclick="location.href='zeit.html'">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">PW</div></td>
+          <td><strong>Peter Wiederkehr</strong><div class="muted" style="font-size:11px">Managing Partner</div></td>
+          <td>GL</td>
+          <td>40.0 h</td>
+          <td>41.5 h</td>
+          <td style="color:var(--green)">+1.5</td>
+          <td>82 %</td>
+          <td>78 %<br><span class="util-bar high"><span class="fill" style="width:78%"></span></span></td>
+          <td style="color:var(--amber)"><strong>+38 h</strong> · 76 %</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer" onclick="location.href='zeit.html'">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%;border:2px solid var(--gold)">LR</div></td>
+          <td><strong>Lara Roth</strong><div class="muted" style="font-size:11px">Senior Consultant</div></td>
+          <td>ING &amp; BT</td>
+          <td>40.0 h</td>
+          <td>38.5 h</td>
+          <td style="color:var(--red)">−1.5</td>
+          <td>74 %</td>
+          <td>68 %<br><span class="util-bar mid"><span class="fill" style="width:68%"></span></span></td>
+          <td>+24 h</td>
+          <td><span class="chip chip-amber">⏳ in Arbeit</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">JV</div></td>
+          <td><strong>Jana Vogel</strong><div class="muted" style="font-size:11px">Senior Consultant · 80 %</div></td>
+          <td>ING &amp; BT</td>
+          <td>32.0 h</td>
+          <td>34.0 h</td>
+          <td style="color:var(--green)">+2.0</td>
+          <td>78 %</td>
+          <td>74 %<br><span class="util-bar high"><span class="fill" style="width:74%"></span></span></td>
+          <td>+18 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">MF</div></td>
+          <td><strong>Marc Feller</strong><div class="muted" style="font-size:11px">Consultant</div></td>
+          <td>ING &amp; BT</td>
+          <td>40.0 h</td>
+          <td>43.0 h</td>
+          <td style="color:var(--green)">+3.0</td>
+          <td>68 %</td>
+          <td>72 %<br><span class="util-bar high"><span class="fill" style="width:72%"></span></span></td>
+          <td style="color:var(--red)"><strong>+42 h</strong> · 84 % ⚠</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">SK</div></td>
+          <td><strong>Sarah Keller</strong> <span class="chip" style="font-size:9px">🏖</span><div class="muted" style="font-size:11px">Researcher · 80 %</div></td>
+          <td>ING &amp; BT</td>
+          <td>0 h</td>
+          <td class="muted">—</td>
+          <td class="muted">— (Ferien)</td>
+          <td class="muted">—</td>
+          <td>66 %<br><span class="util-bar mid"><span class="fill" style="width:66%"></span></span></td>
+          <td>+8 h</td>
+          <td><span class="chip chip-muted">Ferien bis 25.04.</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">TB</div></td>
+          <td><strong>Tim Berger</strong> <span class="chip chip-red" style="font-size:9px">🤒</span><div class="muted" style="font-size:11px">Junior Researcher</div></td>
+          <td>ING &amp; BT</td>
+          <td>40.0 h</td>
+          <td>0 h</td>
+          <td style="color:var(--red)">− (krank)</td>
+          <td class="muted">—</td>
+          <td>62 %<br><span class="util-bar mid"><span class="fill" style="width:62%"></span></span></td>
+          <td>+4 h</td>
+          <td><span class="chip chip-muted">Krank bis 22.04.</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">ME</div></td>
+          <td><strong>Michael Egger</strong><div class="muted" style="font-size:11px">Senior Consultant</div></td>
+          <td>ARC &amp; REM</td>
+          <td>40.0 h</td>
+          <td>39.0 h</td>
+          <td style="color:var(--red)">−1.0</td>
+          <td>76 %</td>
+          <td>74 %<br><span class="util-bar high"><span class="fill" style="width:74%"></span></span></td>
+          <td>+20 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">AM</div></td>
+          <td><strong>Anna Meyer</strong><div class="muted" style="font-size:11px">Consultant · 80 %</div></td>
+          <td>ARC &amp; REM</td>
+          <td>32.0 h</td>
+          <td>32.5 h</td>
+          <td style="color:var(--green)">+0.5</td>
+          <td>72 %</td>
+          <td>70 %<br><span class="util-bar high"><span class="fill" style="width:70%"></span></span></td>
+          <td>+6 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">DH</div></td>
+          <td><strong>Daniel Huber</strong><div class="muted" style="font-size:11px">Senior Consultant</div></td>
+          <td>ARC &amp; REM</td>
+          <td>40.0 h</td>
+          <td>42.0 h</td>
+          <td style="color:var(--green)">+2.0</td>
+          <td>70 %</td>
+          <td>75 %<br><span class="util-bar high"><span class="fill" style="width:75%"></span></span></td>
+          <td style="color:var(--red)"><strong>+45 h</strong> · 90 % ⚠</td>
+          <td><span class="chip chip-amber">⏳ in Arbeit</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">NP</div></td>
+          <td><strong>Nina Preisig</strong><div class="muted" style="font-size:11px">Consultant</div></td>
+          <td>ING &amp; BT</td>
+          <td>40.0 h</td>
+          <td>40.0 h</td>
+          <td>0</td>
+          <td>80 %</td>
+          <td>76 %<br><span class="util-bar high"><span class="fill" style="width:76%"></span></span></td>
+          <td>+12 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">KF</div></td>
+          <td><strong>Karin Frei</strong><div class="muted" style="font-size:11px">Consultant</div></td>
+          <td>PUR</td>
+          <td>40.0 h</td>
+          <td>41.0 h</td>
+          <td style="color:var(--green)">+1.0</td>
+          <td>74 %</td>
+          <td>72 %<br><span class="util-bar high"><span class="fill" style="width:72%"></span></span></td>
+          <td>+22 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">RS</div></td>
+          <td><strong>Roman Schmid</strong><div class="muted" style="font-size:11px">Researcher</div></td>
+          <td>PUR</td>
+          <td>40.0 h</td>
+          <td>38.0 h</td>
+          <td style="color:var(--red)">−2.0</td>
+          <td>56 %</td>
+          <td>58 %<br><span class="util-bar mid"><span class="fill" style="width:58%"></span></span></td>
+          <td>+4 h</td>
+          <td><span class="chip chip-amber">⏳ in Arbeit</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr style="cursor:pointer">
+          <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%">CD</div></td>
+          <td><strong>Claudia Denzler</strong><div class="muted" style="font-size:11px">Backoffice-Lead · 60 %</div></td>
+          <td>Backoffice</td>
+          <td>24.0 h</td>
+          <td>24.5 h</td>
+          <td style="color:var(--green)">+0.5</td>
+          <td>0 %</td>
+          <td class="muted">— Overhead</td>
+          <td>+2 h</td>
+          <td><span class="chip chip-green">✓ abgeschlossen</span></td>
+          <td class="right"><button class="row-icon-btn">›</button></td>
+        </tr>
+        <tr><td class="muted" colspan="11" style="text-align:center">+ 5 weitere Mitarbeitende · <button class="btn btn-sm">↓ Mehr laden</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer: Alerts -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><div class="card-title">⚠ Überstunden-Alerts</div></div>
+    <div class="list-item">
+      <div class="name"><strong>Daniel Huber</strong> · Saldo +45 h · 90 % der Jahres-Schwelle (50 h)</div>
+      <div class="meta">Bei weiteren 5 h wird Überstunden-Konto aktiv · Auszahlung 125 % oder Zeit-Ausgleich</div>
+      <button class="btn btn-sm">Details · Gespräch mit Vorgesetztem</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Marc Feller</strong> · Saldo +42 h · 84 % der Jahres-Schwelle</div>
+      <div class="meta">Empfehlung: Ferien-Planung Q3 prüfen oder Mandat-Auslastung reduzieren</div>
+      <button class="btn btn-sm">Details</button>
+    </div>
+  </div>
+
+  <!-- Footer: Offene Erfassungen -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><div class="card-title">⏳ Noch nicht abgeschlossen · KW 17</div></div>
+    <div class="list-item">
+      <div class="name"><strong>Lara Roth</strong> · 38.5 h erfasst · Status „in Arbeit"</div>
+      <div class="meta">Abschluss-Frist: Montag 28.04. · 09:00</div>
+      <button class="btn btn-sm">Reminder senden</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Daniel Huber</strong> · 42.0 h erfasst · Status „in Arbeit"</div>
+      <div class="meta">Abschluss-Frist: Montag 28.04. · 09:00</div>
+      <button class="btn btn-sm">Reminder senden</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Roman Schmid</strong> · 38.0 h erfasst · Status „in Arbeit"</div>
+      <div class="meta">Abschluss-Frist: Montag 28.04. · 09:00</div>
+      <button class="btn btn-sm">Reminder senden</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>Elias Brunner</strong> · 0 h erfasst · nicht begonnen</div>
+      <div class="meta">Abschluss-Frist: Montag 28.04. · 09:00 · in Kündigung (Austritt 30.06.)</div>
+      <button class="btn btn-sm">Kontaktieren</button>
+    </div>
+  </div>
+
+  <!-- Footer: Billing-Ready -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><div class="card-title">💰 Time-Mandat-Billing · April 2026</div></div>
+    <div class="list-item">
+      <div class="name"><strong>Interim Controller · Bauherr Muster AG</strong> · 32 h × CHF 165 = <strong>CHF 5'280</strong></div>
+      <div class="meta">MAN-2026-021 · CM Lara Roth · monatliche Abrechnung · nächste Rechnung 01.05.</div>
+      <button class="btn btn-sm btn-primary">Rechnung erstellen</button>
+    </div>
+    <div class="list-item">
+      <div class="name"><strong>BIM-Manager · Implenia</strong> · Taskforce · 54 h / 80 h Cap · <strong>CHF 8'910 (54 × 165)</strong></div>
+      <div class="meta">MAN-2026-008 · CM JV · 68 % ausgeschöpft · Abrechnung nach Mandat-Abschluss</div>
+      <button class="btn btn-sm">Vorschau</button>
+    </div>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'zeit.html');
+  });
+});
+</script>
+</body>
+</html>

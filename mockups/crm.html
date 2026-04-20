@@ -12,10 +12,95 @@
 <style>
   html, body { height:100%; margin:0; overflow:hidden; }
   body {
-    display:grid; grid-template-columns:56px 1fr; font-family:'DM Sans',sans-serif;
+    display:grid;
+    grid-template-rows:52px 1fr;
+    grid-template-columns:56px 1fr;
+    font-family:'DM Sans',sans-serif;
     /* iOS-Safe-Area */
     padding-top:env(safe-area-inset-top,0);
     padding-bottom:env(safe-area-inset-bottom,0);
+  }
+
+  /* === TOOL-TOPBAR (shell-level, spans full width) === */
+  .tool-topbar {
+    grid-column:1 / -1;
+    position:relative;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 20px; background:var(--surface);
+    border-bottom:1px solid var(--border);
+    height:52px; z-index:101;
+  }
+  .tool-topbar .brand { display:flex; align-items:center; gap:10px; }
+  .tool-topbar .logo {
+    width:28px; height:28px; border-radius:6px;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700;
+  }
+  .tool-topbar .brand-text {
+    font-size:14px; font-weight:600; color:var(--text); line-height:1.1;
+  }
+  .tool-topbar .brand-sub {
+    font-size:11px; color:var(--text-light); font-weight:500;
+  }
+  .tool-topbar .tool-tabs {
+    display:flex; gap:2px; align-items:center;
+    background:var(--bg); padding:3px; border-radius:22px;
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+  }
+  .tool-topbar .tool-tab {
+    padding:6px 14px; font-size:12px; font-weight:500;
+    color:var(--text-light); cursor:pointer;
+    border-radius:18px; text-decoration:none;
+    display:inline-flex; align-items:center; gap:5px;
+    transition:all 0.15s; white-space:nowrap;
+  }
+  .tool-topbar .tool-tab:hover {
+    background:var(--surface); color:var(--accent);
+  }
+  .tool-topbar .tool-tab.active {
+    background:var(--accent); color:white; font-weight:600;
+  }
+  .tool-topbar .tool-tab.disabled {
+    opacity:0.4; cursor:not-allowed; pointer-events:none;
+  }
+  .tool-topbar .tool-tab .icon { font-size:13px; }
+  .tool-topbar .right { display:flex; align-items:center; gap:10px; }
+  .tool-topbar .user-chip {
+    padding:4px 10px; border-radius:14px;
+    background:var(--bg); font-size:11px;
+    color:var(--text); font-weight:500;
+  }
+  .tool-topbar .theme-toggle {
+    border:1px solid var(--border);
+    background:var(--surface); color:var(--text);
+    cursor:pointer; font-size:14px;
+    padding:4px 10px; border-radius:14px;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.15s;
+  }
+  .tool-topbar .theme-toggle:hover {
+    background:var(--bg); border-color:var(--accent);
+  }
+  .tool-topbar .cmd-hint {
+    padding:4px 10px; border-radius:14px; background:var(--bg);
+    font-size:11px; color:var(--text-light);
+    display:flex; align-items:center; gap:4px; cursor:pointer;
+    border:1px solid var(--border);
+  }
+  .tool-topbar .cmd-hint kbd {
+    padding:1px 4px; background:var(--surface); border:1px solid var(--border);
+    border-radius:2px; font-family:monospace; font-size:10px;
+  }
+
+  @media (max-width:1100px) {
+    .tool-topbar .tool-tab .label { display:none; }
+    .tool-topbar .tool-tab { padding:6px 10px; }
+    .tool-topbar .user-chip { display:none; }
+  }
+  @media (max-width:780px) {
+    .tool-topbar .tool-tabs { display:none; }
   }
 
   /* === DESKTOP SIDEBAR (> 960px) === */
@@ -105,17 +190,32 @@
     .sb-item { padding:14px 16px; font-size:14px; }
   }
 
-  /* Tablet-Expand-Toggle (Pin-Knopf) — nur Tablet sichtbar */
+  /* Sidebar-Pin-Knopf (Desktop + Tablet sichtbar) */
   .sb-expand-toggle {
-    display:none;
+    display:flex; align-items:center; justify-content:center;
     position:absolute; top:12px; right:8px; z-index:10;
     background:transparent; border:none; cursor:pointer;
     font-size:14px; color:var(--text-light); padding:4px; border-radius:3px;
+    opacity:0; transition:opacity 0.15s, background 0.15s, color 0.15s;
   }
+  .sidebar:hover .sb-expand-toggle { opacity:1; }
+  .sidebar.expanded .sb-expand-toggle { opacity:1; color:var(--accent); }
   .sb-expand-toggle:hover { background:var(--bg); color:var(--accent); }
 
+  /* Desktop: wenn .expanded, Hover-Collapse überschreiben */
+  @media (min-width:961px) {
+    .sidebar.expanded { width:240px !important; box-shadow:var(--shadow); }
+    body:has(.sidebar.expanded) { grid-template-columns:240px 1fr; }
+    .sidebar.expanded .sb-label,
+    .sidebar.expanded .sb-section,
+    .sidebar.expanded .sb-badge,
+    .sidebar.expanded .sb-user-info,
+    .sidebar.expanded .sb-brand .brand-text { opacity:1; }
+  }
+
   .sb-brand {
-    display:flex; align-items:center; gap:10px; padding:16px;
+    display:flex; align-items:center; gap:10px;
+    padding:16px 36px 16px 16px;
     border-bottom:1px solid var(--border); flex-shrink:0;
   }
   .sb-brand .logo-mark {
@@ -208,12 +308,215 @@
   .profil-pop-item .ic { font-size:14px; width:18px; text-align:center; }
   .profil-pop-item .right { margin-left:auto; font-size:10px; color:var(--text-light); }
   .profil-pop-sep { height:1px; background:var(--border); margin:4px 0; }
+  .profil-pop-cat {
+    padding:6px 14px 2px; font-size:9.5px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--text-light); font-weight:600;
+  }
   .profil-pop-item.danger { color:var(--red); }
   .profil-pop-item.danger:hover { background:var(--red-soft); }
 
+  /* Profile / Team / Shortcuts Drawer */
+  .pp-drawer {
+    position:fixed; top:0; right:-560px; width:540px; max-width:92vw;
+    height:100vh; background:var(--surface); box-shadow:var(--shadow-lg);
+    z-index:500; transition:right 0.25s ease; overflow-y:auto;
+    border-left:1px solid var(--border);
+  }
+  .pp-drawer.open { right:0; }
+  .pp-drawer-backdrop {
+    position:fixed; inset:0; background:rgba(0,0,0,0.4);
+    z-index:490; opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .pp-drawer-backdrop.open { opacity:1; pointer-events:auto; }
+  .pp-drawer-head {
+    padding:18px 24px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:12px; position:sticky; top:0;
+    background:var(--surface); z-index:1;
+  }
+  .pp-drawer-head h2 {
+    font-family:'Libre Baskerville',serif; font-size:18px;
+    color:var(--accent); margin:0; flex:1;
+  }
+  .pp-drawer-close {
+    background:transparent; border:none; cursor:pointer; font-size:20px;
+    color:var(--text-light); padding:4px 10px; border-radius:3px;
+  }
+  .pp-drawer-close:hover { background:var(--bg); color:var(--accent); }
+  .pp-drawer-body { padding:20px 24px; }
+  .pp-section { margin-bottom:24px; }
+  .pp-section h3 {
+    font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--text-light); font-weight:600; margin:0 0 10px;
+    padding-bottom:6px; border-bottom:1px solid var(--border);
+  }
+  .pp-field-grid {
+    display:grid; grid-template-columns:140px 1fr; gap:8px 14px;
+    font-size:12.5px;
+  }
+  .pp-field-grid dt { color:var(--text-light); font-weight:500; }
+  .pp-field-grid dd { color:var(--text); margin:0; }
+  .pp-kbd-list { display:flex; flex-direction:column; gap:2px; }
+  .pp-kbd-row {
+    display:grid; grid-template-columns:120px 1fr; gap:14px;
+    padding:6px 10px; border-radius:3px; align-items:center;
+    font-size:12.5px;
+  }
+  .pp-kbd-row:hover { background:var(--bg); }
+  .pp-kbd-row .keys {
+    display:flex; gap:4px; align-items:center; flex-wrap:wrap;
+  }
+  .pp-kbd-row kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:2px 7px; font-family:monospace; font-size:11px; color:var(--text);
+    min-width:22px; text-align:center;
+  }
+  .pp-team-row {
+    display:grid; grid-template-columns:40px 1fr auto; gap:12px;
+    padding:10px 12px; border-radius:3px; align-items:center;
+    border-bottom:1px solid var(--border); font-size:12.5px;
+  }
+  .pp-team-row:last-child { border-bottom:none; }
+  .pp-team-row:hover { background:var(--bg); }
+  .pp-team-avatar {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex;
+    align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:13px;
+  }
+  .pp-team-info .name { font-weight:600; color:var(--text); }
+  .pp-team-info .meta { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+  .pp-badge {
+    padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600;
+    letter-spacing:0.3px;
+  }
+  .pp-badge.online { background:var(--green-soft,#d1fae5); color:var(--green,#065f46); }
+  .pp-badge.offline { background:var(--bg); color:var(--text-light); }
+  .pp-badge.ferien { background:var(--amber-soft,#fef3c7); color:var(--amber,#92400e); }
+
+  /* === COMMAND PALETTE === */
+  .cmd-palette-backdrop {
+    position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:600; opacity:0; pointer-events:none; transition:opacity 0.15s;
+  }
+  .cmd-palette-backdrop.open { opacity:1; pointer-events:auto; }
+  .cmd-palette {
+    position:fixed; top:80px; left:50%; transform:translateX(-50%) scale(0.96);
+    width:640px; max-width:92vw; max-height:70vh;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; box-shadow:var(--shadow-lg);
+    z-index:601; opacity:0; pointer-events:none;
+    transition:opacity 0.15s, transform 0.15s; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .cmd-palette.open { opacity:1; transform:translateX(-50%) scale(1); pointer-events:auto; }
+  .cmd-palette-input-wrap {
+    display:flex; align-items:center; gap:10px;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+  }
+  .cmd-palette-input-wrap .icon { font-size:18px; color:var(--text-light); }
+  .cmd-palette-input {
+    flex:1; border:none; outline:none; background:transparent;
+    font-family:inherit; font-size:15px; color:var(--text);
+  }
+  .cmd-palette-input::placeholder { color:var(--text-light); }
+  .cmd-palette-hint {
+    font-size:10.5px; color:var(--text-light); font-family:monospace;
+  }
+  .cmd-palette-body {
+    flex:1; overflow-y:auto; padding:6px 0;
+  }
+  .cmd-palette-cat {
+    padding:8px 18px 4px; font-size:9.5px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--text-light); font-weight:600;
+  }
+  .cmd-palette-item {
+    display:flex; align-items:center; gap:12px;
+    padding:8px 18px; cursor:pointer; font-size:13px; color:var(--text);
+    border-left:3px solid transparent;
+  }
+  .cmd-palette-item:hover,
+  .cmd-palette-item.selected {
+    background:var(--accent-soft,color-mix(in srgb,var(--accent) 8%,var(--surface)));
+    border-left-color:var(--accent); color:var(--accent);
+  }
+  .cmd-palette-item .ic {
+    font-size:15px; width:22px; text-align:center; flex-shrink:0;
+  }
+  .cmd-palette-item .label { flex:1; }
+  .cmd-palette-item .sub {
+    font-size:10.5px; color:var(--text-light);
+  }
+  .cmd-palette-item.selected .sub { color:var(--accent); opacity:0.8; }
+  .cmd-palette-empty {
+    padding:24px 18px; text-align:center; color:var(--text-light); font-size:12.5px;
+  }
+  .cmd-palette-foot {
+    border-top:1px solid var(--border); padding:8px 18px;
+    display:flex; gap:14px; font-size:10.5px; color:var(--text-light);
+    flex-wrap:wrap;
+  }
+  .cmd-palette-foot kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:1px 6px; font-family:monospace; font-size:10px; color:var(--text);
+  }
+
+  /* KI-Suche (RAG) */
+  .cmd-ai-btn {
+    background:color-mix(in srgb, var(--accent) 88%, #000); color:#fff;
+    border:1px solid var(--accent); border-radius:3px;
+    padding:5px 12px; font-size:11.5px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:inherit; transition:background 0.15s;
+  }
+  .cmd-ai-btn:hover { background:var(--accent); }
+  .cmd-ai-btn:disabled { background:var(--text-light); border-color:var(--text-light); cursor:wait; }
+  .cmd-ai-section {
+    border-top:2px solid var(--accent); background:color-mix(in srgb, var(--accent) 4%, var(--surface));
+    padding:14px 18px; display:none;
+  }
+  .cmd-ai-section.open { display:block; }
+  .cmd-ai-head {
+    display:flex; align-items:center; gap:8px;
+    font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin-bottom:8px;
+  }
+  .cmd-ai-answer {
+    font-size:13px; color:var(--text); line-height:1.6; margin-bottom:10px;
+  }
+  .cmd-ai-answer strong { color:var(--accent); }
+  .cmd-ai-sources {
+    display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;
+  }
+  .cmd-ai-chip {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:3px 10px; border:1px solid var(--border); border-radius:12px;
+    background:var(--surface); font-size:11px; color:var(--text-mid);
+    cursor:pointer; transition:all 0.12s;
+  }
+  .cmd-ai-chip:hover { border-color:var(--accent); color:var(--accent); }
+  .cmd-ai-chip .rel { font-size:9.5px; color:var(--text-light); font-family:monospace; }
+  .cmd-ai-loading {
+    display:flex; align-items:center; gap:10px; color:var(--text-light);
+    font-size:12.5px; padding:6px 0;
+  }
+  .cmd-ai-loading::before {
+    content:''; width:12px; height:12px; border-radius:50%;
+    border:2px solid var(--border); border-top-color:var(--accent);
+    animation:spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .cmd-ai-meta {
+    font-size:10px; color:var(--text-light); margin-top:8px;
+    display:flex; gap:12px;
+  }
+  .cmd-ai-meta kbd {
+    background:var(--bg); border:1px solid var(--border); border-radius:3px;
+    padding:1px 5px; font-family:monospace; font-size:9.5px;
+  }
+
   /* === MAIN IFRAME === */
   .main-frame {
-    border:none; width:100%; height:100vh; background:var(--bg); display:block;
+    border:none; width:100%; height:calc(100vh - 52px); background:var(--bg); display:block;
   }
 
   /* === COMMAND BAR (top of iframe area) === */
@@ -232,6 +535,39 @@
   /* Scrollbar styling */
   .sb-nav::-webkit-scrollbar { width:4px; }
   .sb-nav::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:2px; }
+
+  /* === TOOL-TABS (übergreifend zwischen Tools) === */
+  .cmd-bar .tool-tabs {
+    display:flex; gap:1px; align-items:center;
+    background:var(--bg); padding:2px;
+    border-radius:14px;
+    margin-right:6px;
+  }
+  .cmd-bar .tool-tab {
+    padding:4px 10px; font-size:11px; font-weight:500;
+    color:var(--text-light); cursor:pointer;
+    border-radius:12px; text-decoration:none;
+    display:inline-flex; align-items:center; gap:4px;
+    transition:all 0.15s; white-space:nowrap;
+  }
+  .cmd-bar .tool-tab:hover {
+    background:var(--surface); color:var(--accent);
+  }
+  .cmd-bar .tool-tab.active {
+    background:var(--accent); color:white; font-weight:600;
+  }
+  .cmd-bar .tool-tab.disabled {
+    opacity:0.4; cursor:not-allowed; pointer-events:none;
+  }
+  .cmd-bar .tool-tab .icon { font-size:12px; }
+
+  @media (max-width:1100px) {
+    .cmd-bar .tool-tab .label { display:none; }
+    .cmd-bar .tool-tab { padding:4px 8px; }
+  }
+  @media (max-width:780px) {
+    .cmd-bar .tool-tabs { display:none; }
+  }
 </style>
 </head>
 <body>
@@ -253,42 +589,65 @@
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
+<!-- TOOL-TOPBAR (durchgehend · shell-level) -->
+<header class="tool-topbar">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+  <div class="tool-tabs">
+    <a class="tool-tab active" href="crm.html"><span class="icon">🎯</span><span class="label">CRM</span></a>
+    <a class="tool-tab" href="ERP%20Tools/hr.html"><span class="icon">👥</span><span class="label">HR</span></a>
+    <a class="tool-tab" href="ERP%20Tools/commission.html"><span class="icon">💰</span><span class="label">Commission</span></a>
+    <a class="tool-tab" href="ERP%20Tools/zeit.html"><span class="icon">⏱</span><span class="label">Zeit</span></a>
+    <span class="tool-tab disabled"><span class="icon">📄</span><span class="label">Billing</span></span>
+    <span class="tool-tab disabled"><span class="icon">📊</span><span class="label">Performance</span></span>
+  </div>
+  <div class="right">
+    <span class="cmd-hint" onclick="openCmdPalette && openCmdPalette()"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · HR-Manager</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+  </div>
+</header>
+
 <aside class="sidebar" id="sidebar">
   <!-- Tablet-Pin-Toggle (nur 640–960px sichtbar) -->
   <button class="sb-expand-toggle" onclick="toggleSidebarExpand()" aria-label="Sidebar fixieren">⇔</button>
   <div class="sb-brand">
     <div class="logo-mark">A</div>
     <div class="brand-text">
-      <div class="brand-name">ARKADIUM</div>
-      <div class="brand-sub">CRM · Executive Search</div>
+      <div class="brand-name">CRM</div>
     </div>
   </div>
 
   <nav class="sb-nav">
     <div class="sb-section">Übersicht</div>
-    <div class="sb-item active" data-src="dashboard.html"><span class="sb-icon">◈</span><span class="sb-label">Dashboard</span></div>
+    <div class="sb-item active" data-src="Vollansichten/dashboard.html"><span class="sb-icon">◈</span><span class="sb-label">Dashboard</span></div>
 
     <div class="sb-section">Entities</div>
-    <div class="sb-item" data-src="candidates-list.html"><span class="sb-icon">👤</span><span class="sb-label">Kandidaten</span><span class="sb-badge">8 400</span></div>
-    <div class="sb-item" data-src="accounts-list.html"><span class="sb-icon">🏢</span><span class="sb-label">Accounts</span><span class="sb-badge">124</span></div>
-    <div class="sb-item" data-src="groups-list.html"><span class="sb-icon">🏛</span><span class="sb-label">Firmengruppen</span><span class="sb-badge">18</span></div>
-    <div class="sb-item" data-src="jobs-list.html"><span class="sb-icon">💼</span><span class="sb-label">Jobs</span><span class="sb-badge">86</span></div>
-    <div class="sb-item" data-src="projects-list.html"><span class="sb-icon">🏗</span><span class="sb-label">Projekte</span><span class="sb-badge">42</span></div>
+    <div class="sb-item" data-src="Listen/candidates-list.html"><span class="sb-icon">👤</span><span class="sb-label">Kandidaten</span><span class="sb-badge">8 400</span></div>
+    <div class="sb-item" data-src="Listen/accounts-list.html"><span class="sb-icon">🏢</span><span class="sb-label">Accounts</span><span class="sb-badge">124</span></div>
+    <div class="sb-item" data-src="Listen/groups-list.html"><span class="sb-icon">🏛</span><span class="sb-label">Firmengruppen</span><span class="sb-badge">18</span></div>
+    <div class="sb-item" data-src="Listen/jobs-list.html"><span class="sb-icon">💼</span><span class="sb-label">Jobs</span><span class="sb-badge">86</span></div>
+    <div class="sb-item" data-src="Listen/projects-list.html"><span class="sb-icon">🏗</span><span class="sb-label">Projekte</span><span class="sb-badge">42</span></div>
 
     <div class="sb-section">Workflow</div>
-    <div class="sb-item" data-src="mandates-list.html"><span class="sb-icon">🎯</span><span class="sb-label">Mandate</span><span class="sb-badge accent">14</span></div>
-    <div class="sb-item" data-src="processes-list.html"><span class="sb-icon">→</span><span class="sb-label">Prozesse</span><span class="sb-badge accent">47</span></div>
-    <div class="sb-item" data-src="assessments-list.html"><span class="sb-icon">🧭</span><span class="sb-label">Assessments</span><span class="sb-badge">5</span></div>
+    <div class="sb-item" data-src="Listen/mandates-list.html"><span class="sb-icon">🎯</span><span class="sb-label">Mandate</span><span class="sb-badge accent">14</span></div>
+    <div class="sb-item" data-src="Listen/processes-list.html"><span class="sb-icon">→</span><span class="sb-label">Prozesse</span><span class="sb-badge accent">47</span></div>
+    <div class="sb-item" data-src="Listen/assessments-list.html"><span class="sb-icon">🧭</span><span class="sb-label">Assessments</span><span class="sb-badge">5</span></div>
 
     <div class="sb-section">Operations</div>
-    <div class="sb-item" data-src="dok-generator.html"><span class="sb-icon">📝</span><span class="sb-label">Dok-Generator</span><span class="sb-badge">38</span></div>
-    <div class="sb-item" data-src="email-kalender.html"><span class="sb-icon">✉</span><span class="sb-label">Email & Kalender</span><span class="sb-badge red">7</span></div>
-    <div class="sb-item" data-src="reminders.html"><span class="sb-icon">🔔</span><span class="sb-label">Reminders</span><span class="sb-badge red">3</span></div>
-    <div class="sb-item" data-src="scraper.html"><span class="sb-icon">🤖</span><span class="sb-label">Scraper</span><span class="sb-badge">18</span></div>
+    <div class="sb-item" data-src="Vollansichten/dok-generator.html"><span class="sb-icon">📝</span><span class="sb-label">Dok-Generator</span><span class="sb-badge">38</span></div>
+    <div class="sb-item" data-src="Vollansichten/email-kalender.html"><span class="sb-icon">✉</span><span class="sb-label">Email & Kalender</span><span class="sb-badge red">7</span></div>
+    <div class="sb-item" data-src="Vollansichten/reminders.html"><span class="sb-icon">🔔</span><span class="sb-label">Reminders</span><span class="sb-badge red">3</span></div>
+    <div class="sb-item" data-src="Vollansichten/scraper.html"><span class="sb-icon">🤖</span><span class="sb-label">Scraper</span><span class="sb-badge">18</span></div>
 
     <div class="sb-section">System</div>
-    <div class="sb-item" data-src="#"><span class="sb-icon">🗂</span><span class="sb-label">Stammdaten</span></div>
-    <div class="sb-item" data-src="admin.html"><span class="sb-icon">🔧</span><span class="sb-label">Admin</span><span class="sb-badge red">3</span></div>
+    <div class="sb-item" data-src="Vollansichten/stammdaten.html"><span class="sb-icon">📚</span><span class="sb-label">Stammdaten</span><span class="sb-badge">67</span></div>
+    <div class="sb-item" data-src="Vollansichten/admin.html"><span class="sb-icon">🔧</span><span class="sb-label">Admin</span><span class="sb-badge red">3</span></div>
   </nav>
 
   <div class="sb-footer">
@@ -310,30 +669,219 @@
           <div class="email">peter.wiederkehr@arkadium.ch</div>
         </div>
       </div>
-      <div class="profil-pop-item" onclick="alert('Mein Profil — Phase 1')"><span class="ic">👤</span>Mein Profil</div>
-      <div class="profil-pop-item" onclick="alert('Notifikationen — Opt-In/Out')"><span class="ic">🔔</span>Notifikationen<span class="right">3 Kanäle</span></div>
-      <div class="profil-pop-item" onclick="alert('Email-Signatur Opt-In · CodeTwo')"><span class="ic">✍</span>Email-Signatur<span class="right">CodeTwo</span></div>
+      <div class="profil-pop-cat">Team &amp; Mitarbeiter</div>
+      <div class="profil-pop-item" onclick="openMeinProfil()"><span class="ic">👤</span>Mein Profil</div>
+      <div class="profil-pop-item" onclick="openTeamUebersicht()"><span class="ic">👥</span>Team-Übersicht</div>
       <div class="profil-pop-sep"></div>
-      <div class="profil-pop-item" onclick="toggleTheme();closeProfilPop()"><span class="ic">☀</span>Theme wechseln<span class="right">Hell/Dunkel</span></div>
-      <div class="profil-pop-item" onclick="alert('Keyboard-Shortcuts ·  ?  drücken')"><span class="ic">⌨</span>Keyboard-Shortcuts<span class="right">?</span></div>
-      <div class="profil-pop-sep"></div>
-      <div class="profil-pop-item" onclick="alert('Team-Übersicht öffnet — Phase 1: ⌘K-Search nutzen, Phase 2: HR-Tool')"><span class="ic">👥</span>Team-Übersicht<span class="right">⌘K</span></div>
-      <div class="profil-pop-item" onclick="alert('Hilfe / Support')"><span class="ic">❔</span>Hilfe &amp; Support</div>
+      <div class="profil-pop-cat">Tools</div>
+      <div class="profil-pop-item" onclick="openKeyboardShortcuts()"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
       <div class="profil-pop-sep"></div>
       <div class="profil-pop-item danger" onclick="alert('Abmelden')"><span class="ic">⏻</span>Abmelden</div>
     </div>
   </div>
 </aside>
 
-<!-- COMMAND BAR -->
-<div class="cmd-bar">
-  <kbd>⌘K</kbd><span>Suche</span>
-  <span style="width:1px;height:12px;background:var(--border)"></span>
-  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" style="border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-size:14px;padding:4px 10px;border-radius:14px">☀</button>
-</div>
 
 <!-- MAIN IFRAME -->
-<iframe id="mainFrame" class="main-frame" src="dashboard.html"></iframe>
+<iframe id="mainFrame" class="main-frame" src="Vollansichten/dashboard.html"></iframe>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-palette-backdrop" id="cmdBackdrop" onclick="closeCmdPalette()"></div>
+<div class="cmd-palette" id="cmdPalette" role="dialog" aria-label="Command-Palette">
+  <div class="cmd-palette-input-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" class="cmd-palette-input" id="cmdInput" placeholder="Suchen: Kandidaten · Accounts · Mandate · Seiten · Aktionen …" autocomplete="off">
+    <span class="cmd-palette-hint">Esc</span>
+  </div>
+  <div class="cmd-palette-body" id="cmdBody"></div>
+  <div class="cmd-ai-section" id="cmdAiSection">
+    <div class="cmd-ai-head">🤖 KI-Antwort <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-light);font-size:10px;margin-left:auto">Local LLM · RAG · DSG-konform</span></div>
+    <div id="cmdAiContent"></div>
+  </div>
+  <div class="cmd-palette-foot">
+    <span><kbd>↑</kbd><kbd>↓</kbd> Navigieren</span>
+    <span><kbd>Enter</kbd> Öffnen</span>
+    <span><kbd>Esc</kbd> Schliessen</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="cmd-ai-btn" id="cmdAiBtn" onclick="runCmdAiSearch()" title="Mit KI suchen (RAG · Local LLM)">🤖 Mit KI suchen</button>
+      <span><kbd>⌘</kbd><kbd>K</kbd></span>
+    </span>
+  </div>
+</div>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Mein Profil -->
+<div class="pp-drawer-backdrop" id="ppBackdrop" onclick="closePpDrawer()"></div>
+<div class="pp-drawer" id="ppDrawerProfil">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">👤</span>
+    <h2>Mein Profil</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Stammdaten</h3>
+      <dl class="pp-field-grid">
+        <dt>Avatar-Kürzel</dt><dd><span class="pp-team-avatar" style="width:26px;height:26px;font-size:11px;display:inline-flex">PW</span> PW</dd>
+        <dt>Name</dt><dd>Peter Wiederkehr</dd>
+        <dt>Email (SSO)</dt><dd>peter.wiederkehr@arkadium.ch</dd>
+        <dt>Funktion</dt><dd>Senior Partner · AM</dd>
+        <dt>Telefon (3CX)</dt><dd>+41 44 123 45 67 · DW 101</dd>
+        <dt>Tenant</dt><dd>Arkadium AG (Haupt-Tenant)</dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Verfügbarkeit</h3>
+      <dl class="pp-field-grid">
+        <dt>Status</dt><dd><span class="pp-badge online">● Online</span></dd>
+        <dt>Out-of-Office</dt><dd>Nicht aktiv · <a href="#" style="color:var(--accent)">Abwesenheit eintragen</a></dd>
+        <dt>Vertretung</dt><dd>— <span class="muted" style="color:var(--text-light);font-size:11px">(keine hinterlegt)</span></dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Meine Ownerschaften</h3>
+      <dl class="pp-field-grid">
+        <dt>Accounts</dt><dd><strong>42</strong> als AM · <a href="#" style="color:var(--accent)">Liste</a></dd>
+        <dt>Mandate</dt><dd><strong>14</strong> offen · 6 Target · 4 Taskforce · 2 Time · 2 Placement-Follow</dd>
+        <dt>Prozesse</dt><dd><strong>47</strong> aktiv · über 31 Kandidaten</dd>
+        <dt>Placements YTD</dt><dd><strong>18</strong> · CHF 1.2 M Honorar-YTD</dd>
+      </dl>
+    </div>
+    <div class="pp-section">
+      <h3>Session</h3>
+      <dl class="pp-field-grid">
+        <dt>Letzter Login</dt><dd>Heute 08:12 · Windows 11 · Chrome 143</dd>
+        <dt>Aktive Sessions</dt><dd>2 (Desktop · iPhone) · <a href="#" style="color:var(--accent)">Alle beenden</a></dd>
+        <dt>MFA</dt><dd>Aktiv via Microsoft Authenticator</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Team-Übersicht -->
+<div class="pp-drawer" id="ppDrawerTeam">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">👥</span>
+    <h2>Team-Übersicht</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Arkadium-Team · 7 aktiv</h3>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">PW</div>
+        <div class="pp-team-info">
+          <div class="name">Peter Wiederkehr</div>
+          <div class="meta">Senior Partner · AM · peter.wiederkehr@arkadium.ch · DW 101</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">JV</div>
+        <div class="pp-team-info">
+          <div class="name">Jonas Vogel</div>
+          <div class="meta">CM · jonas.vogel@arkadium.ch · DW 102</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">LR</div>
+        <div class="pp-team-info">
+          <div class="name">Lena Richter</div>
+          <div class="meta">Lead Researcher · lena.richter@arkadium.ch · DW 103</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">MF</div>
+        <div class="pp-team-info">
+          <div class="name">Marco Frei</div>
+          <div class="meta">Researcher · marco.frei@arkadium.ch · DW 104</div>
+        </div>
+        <span class="pp-badge ferien">🌴 Ferien bis 25.04.</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">NP</div>
+        <div class="pp-team-info">
+          <div class="name">Nora Pfister</div>
+          <div class="meta">CM · nora.pfister@arkadium.ch · DW 105</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">NS</div>
+        <div class="pp-team-info">
+          <div class="name">Nils Stadler</div>
+          <div class="meta">Hunter · nils.stadler@arkadium.ch · DW 106</div>
+        </div>
+        <span class="pp-badge offline">Offline</span>
+      </div>
+      <div class="pp-team-row">
+        <div class="pp-team-avatar">BT</div>
+        <div class="pp-team-info">
+          <div class="name">Bianca Trüb</div>
+          <div class="meta">Assistenz / Admin · bianca.truebe@arkadium.ch · DW 100</div>
+        </div>
+        <span class="pp-badge online">● Online</span>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Ownership-Verteilung</h3>
+      <dl class="pp-field-grid">
+        <dt>Accounts</dt><dd>PW 42 · JV 31 · LR 25 · MF 18 · NP 8 · NS — · BT —</dd>
+        <dt>Offene Mandate</dt><dd>PW 14 · JV 9 · LR 6 · MF 4 · NP 3</dd>
+        <dt>Placements YTD</dt><dd>PW 18 · JV 12 · LR 8 · MF 5 · NP 2</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- PROFIL-DROPDOWN-DRAWER · Keyboard-Shortcuts -->
+<div class="pp-drawer" id="ppDrawerKbd">
+  <div class="pp-drawer-head">
+    <span style="font-size:22px">⌨</span>
+    <h2>Keyboard-Shortcuts</h2>
+    <button class="pp-drawer-close" onclick="closePpDrawer()">✕</button>
+  </div>
+  <div class="pp-drawer-body">
+    <div class="pp-section">
+      <h3>Global</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd><kbd>K</kbd></span><span>Command-Palette / Globale Suche</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Esc</kbd></span><span>Drawer / Dropdown schliessen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd><kbd>/</kbd></span><span>Sidebar pin/entpinnen</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Detail-Masken (Kandidat · Account · Mandat · …)</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd></span><span>Tab wechseln (1–10)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>E</kbd></span><span>Edit-Mode aktivieren</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>S</kbd></span><span>Save</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>+</kbd></span><span>Neuer Eintrag (kontext-abhängig)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>F</kbd></span><span>Filter-Panel öffnen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>G</kbd></span><span>Dokument generieren</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Listen &amp; Tabellen</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>↑</kbd><kbd>↓</kbd></span><span>Zeile auf / ab</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Enter</kbd></span><span>Zeile öffnen</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>Shift</kbd>+Click</span><span>Bulk-Select-Range</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>⌘</kbd>+Click</span><span>Einzelne zu Selection hinzufügen</span></div>
+      </div>
+    </div>
+    <div class="pp-section">
+      <h3>Spezial (kontext-abhängig)</h3>
+      <div class="pp-kbd-list">
+        <div class="pp-kbd-row"><span class="keys"><kbd>M</kbd></span><span>Neues Mandat (in Account-Maske)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>A</kbd></span><span>Neues Assessment (in Account Tab 8)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>I</kbd></span><span>Info-Request (in Schutzfrist-Row)</span></div>
+        <div class="pp-kbd-row"><span class="keys"><kbd>V</kbd></span><span>Versions-Dropdown (in Kandidat Tab 4)</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // Theme sync between parent and iframe
@@ -411,10 +959,43 @@ document.querySelectorAll('.sb-item').forEach(el => {
   });
 });
 
-// === TABLET SIDEBAR EXPAND-PIN ===
-function toggleSidebarExpand() {
-  document.getElementById('sidebar').classList.toggle('expanded');
+// === PROFIL-POP-DRAWER ===
+function openPpDrawer(id) {
+  closePpDrawer();
+  document.getElementById(id)?.classList.add('open');
+  document.getElementById('ppBackdrop').classList.add('open');
+  closeProfilPop();
 }
+function closePpDrawer() {
+  document.querySelectorAll('.pp-drawer').forEach(d => d.classList.remove('open'));
+  document.getElementById('ppBackdrop')?.classList.remove('open');
+}
+function openMeinProfil()       { openPpDrawer('ppDrawerProfil'); }
+function openTeamUebersicht()   { openPpDrawer('ppDrawerTeam'); }
+function openKeyboardShortcuts() { openPpDrawer('ppDrawerKbd'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePpDrawer(); });
+
+// === SIDEBAR EXPAND-PIN (Desktop + Tablet) ===
+function toggleSidebarExpand() {
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('expanded');
+  const btn = sb.querySelector('.sb-expand-toggle');
+  const pinned = sb.classList.contains('expanded');
+  if (btn) {
+    btn.textContent = pinned ? '⇥' : '⇔';
+    btn.setAttribute('title', pinned ? 'Sidebar entpinnen' : 'Sidebar fixieren');
+  }
+  localStorage.setItem('ark-sidebar-pinned', pinned ? '1' : '0');
+}
+// Restore pin-state on load
+(function() {
+  if (localStorage.getItem('ark-sidebar-pinned') === '1') {
+    const sb = document.getElementById('sidebar');
+    sb.classList.add('expanded');
+    const btn = sb.querySelector('.sb-expand-toggle');
+    if (btn) { btn.textContent = '⇥'; btn.setAttribute('title', 'Sidebar entpinnen'); }
+  }
+})();
 function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme');
   applyTheme(cur === 'dark' ? 'light' : 'dark');
@@ -480,11 +1061,229 @@ document.getElementById('mainFrame').addEventListener('load', function() {
 })();
 
 // Keyboard: Ctrl/Cmd + K
+// === COMMAND PALETTE ===
+const CMD_ITEMS = [
+  // Seiten — System
+  { cat:'Seiten', ic:'◈', label:'Dashboard',           sub:'Übersicht · KPIs · Fokus diese Woche', src:'Vollansichten/dashboard.html' },
+  { cat:'Seiten', ic:'🔧', label:'Admin',               sub:'System-Konfiguration · 10 Bereiche',   src:'Vollansichten/admin.html' },
+  { cat:'Seiten', ic:'📚', label:'Stammdaten',          sub:'67 Kataloge · 5 247 Einträge',         src:'Vollansichten/stammdaten.html' },
+  // Seiten — Entities/Listen
+  { cat:'Seiten', ic:'👤', label:'Kandidaten-Liste',    sub:'8 400 Kandidaten',                     src:'Listen/candidates-list.html' },
+  { cat:'Seiten', ic:'🏢', label:'Accounts-Liste',      sub:'124 Accounts',                         src:'Listen/accounts-list.html' },
+  { cat:'Seiten', ic:'🏛', label:'Firmengruppen',       sub:'18 Gruppen',                           src:'Listen/groups-list.html' },
+  { cat:'Seiten', ic:'💼', label:'Jobs',                sub:'86 offene Stellen',                    src:'Listen/jobs-list.html' },
+  { cat:'Seiten', ic:'🏗', label:'Projekte',            sub:'42 Projekte',                          src:'Listen/projects-list.html' },
+  { cat:'Seiten', ic:'🎯', label:'Mandate',             sub:'14 offene Mandate',                    src:'Listen/mandates-list.html' },
+  { cat:'Seiten', ic:'→', label:'Prozesse',             sub:'47 aktive Prozesse',                   src:'Listen/processes-list.html' },
+  { cat:'Seiten', ic:'🧭', label:'Assessments',         sub:'5 laufende Aufträge',                  src:'Listen/assessments-list.html' },
+  // Seiten — Operations
+  { cat:'Seiten', ic:'📝', label:'Dok-Generator',       sub:'38 Templates',                         src:'Vollansichten/dok-generator.html' },
+  { cat:'Seiten', ic:'✉', label:'Email & Kalender',    sub:'7 ungeklassifiziert',                  src:'Vollansichten/email-kalender.html' },
+  { cat:'Seiten', ic:'🔔', label:'Reminders',           sub:'3 überfällig · 12 offen',              src:'Vollansichten/reminders.html' },
+  { cat:'Seiten', ic:'🤖', label:'Scraper',             sub:'18 Findings · 2 Alerts',               src:'Vollansichten/scraper.html' },
+  // Kandidaten Beispiele
+  { cat:'Kandidaten', ic:'👤', label:'Max Muster',       sub:'Bauführer Tiefbau · CHF 130k · Stage TI', src:'Vollansichten/candidates.html' },
+  { cat:'Kandidaten', ic:'👤', label:'Tobias Furrer',    sub:'CFO · CHF 180k · Stage 2nd Interview',    src:'Vollansichten/candidates.html' },
+  { cat:'Kandidaten', ic:'👤', label:'Anna Beispiel',    sub:'Projektleiterin Hochbau · CHF 145k',      src:'Vollansichten/candidates.html' },
+  // Accounts Beispiele
+  { cat:'Accounts',   ic:'🏢', label:'Volare Group AG',  sub:'A-Kunde · Zürich · 12 Placements YTD',    src:'Vollansichten/accounts.html' },
+  { cat:'Accounts',   ic:'🏢', label:'Bauherr Muster AG', sub:'A-Kunde · Teil Muster Holding',           src:'Vollansichten/accounts.html' },
+  // Mandate Beispiele
+  { cat:'Mandate',    ic:'🎯', label:'CFO-Suche · Bauherr Muster', sub:'Target · Kickoff 15.03. · 5 Prozesse', src:'Vollansichten/mandates.html' },
+  { cat:'Mandate',    ic:'🎯', label:'PL Hochbau Taskforce',        sub:'Taskforce · 3 Positionen offen',       src:'Vollansichten/mandates.html' },
+  // Aktionen
+  { cat:'Aktionen', ic:'➕', label:'Neuen Kandidaten anlegen',  sub:'Drawer öffnen', action:() => alert('Neuer Kandidat — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'➕', label:'Neuen Account anlegen',      sub:'Drawer öffnen', action:() => alert('Neuer Account — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'➕', label:'Neues Mandat starten',       sub:'Drawer öffnen', action:() => alert('Neues Mandat — Phase 1 Placeholder') },
+  { cat:'Aktionen', ic:'✎', label:'Mein Profil öffnen',          sub:'Drawer',        action:() => openMeinProfil() },
+  { cat:'Aktionen', ic:'👥', label:'Team-Übersicht öffnen',      sub:'Drawer',        action:() => openTeamUebersicht() },
+  { cat:'Aktionen', ic:'⌨', label:'Keyboard-Shortcuts',          sub:'Drawer',        action:() => openKeyboardShortcuts() },
+];
+
+let cmdFiltered = CMD_ITEMS.slice();
+let cmdSelected = 0;
+
+function openCmdPalette() {
+  const p = document.getElementById('cmdPalette');
+  const b = document.getElementById('cmdBackdrop');
+  if (!p) return;
+  p.classList.add('open'); b.classList.add('open');
+  const inp = document.getElementById('cmdInput');
+  inp.value = '';
+  cmdFiltered = CMD_ITEMS.slice();
+  cmdSelected = 0;
+  renderCmdResults();
+  // KI-Bereich reset
+  document.getElementById('cmdAiSection')?.classList.remove('open');
+  document.getElementById('cmdAiContent').innerHTML = '';
+  setTimeout(() => inp.focus(), 50);
+}
+
+function closeCmdPalette() {
+  document.getElementById('cmdPalette')?.classList.remove('open');
+  document.getElementById('cmdBackdrop')?.classList.remove('open');
+}
+
+// === KI-Suche (RAG Demo) ===
+function runCmdAiSearch() {
+  const query = document.getElementById('cmdInput')?.value?.trim() || '';
+  if (!query) { document.getElementById('cmdInput')?.focus(); return; }
+
+  const section = document.getElementById('cmdAiSection');
+  const content = document.getElementById('cmdAiContent');
+  const btn = document.getElementById('cmdAiBtn');
+  section.classList.add('open');
+  content.innerHTML = '<div class="cmd-ai-loading">Embedde Query · durchsuche 8 400 Kandidaten + 124 Accounts · generiere Antwort …</div>';
+  btn.disabled = true;
+  btn.textContent = '⏳ Läuft…';
+  section.scrollIntoView({ block:'end', behavior:'smooth' });
+
+  // Demo-Antwort nach 1.8s Simulation
+  setTimeout(() => {
+    const answer = buildDemoAiAnswer(query);
+    content.innerHTML = answer;
+    btn.disabled = false;
+    btn.textContent = '🤖 Mit KI suchen';
+  }, 1800);
+}
+
+function buildDemoAiAnswer(query) {
+  // Demo-Logik: statische Antwort passend zur häufigsten Query-Kategorie
+  const q = query.toLowerCase();
+  let answer, sources;
+
+  if (q.includes('cfo') || q.includes('finanz') || q.includes('chief financial')) {
+    answer = `Ich habe <strong>3 Kandidaten</strong> gefunden, die zu einem CFO-Profil passen. <strong>Tobias Furrer</strong> hat eine sehr starke Übereinstimmung (Match 92%) — 15 Jahre CFO-Erfahrung bei Schweizer Bauunternehmen, aktuell im Prozess Stage 2nd Interview bei Bauherr Muster AG. <strong>Anna Beispiel</strong> ist eine Alternative (Match 78%) mit Projektleitungs-Background und Controlling-Kompetenz. Drittkandidat ist ein neuer Fund aus dem Scraper vom 14.04., noch nicht kontaktiert.`;
+    sources = [
+      { icon:'👤', label:'Tobias Furrer', sub:'Kandidat', rel:0.92, src:'Vollansichten/candidates.html' },
+      { icon:'👤', label:'Anna Beispiel', sub:'Kandidat', rel:0.78, src:'Vollansichten/candidates.html' },
+      { icon:'🎯', label:'CFO-Suche · Bauherr Muster', sub:'Mandat', rel:0.88, src:'Vollansichten/mandates.html' },
+      { icon:'🏢', label:'Bauherr Muster AG', sub:'Account', rel:0.85, src:'Vollansichten/accounts.html' }
+    ];
+  } else if (q.includes('bauführer') || q.includes('bauleit') || q.includes('tiefbau') || q.includes('hochbau')) {
+    answer = `Es gibt <strong>14 aktive Kandidaten</strong> im Bauführer/Bauleitungs-Segment. <strong>Max Muster</strong> (Bauführer Tiefbau, CHF 130k, Stage TI) passt am besten zum aktuellen Mandat von Volare Group. <strong>3 weitere Idents</strong> aus dem Scraper der letzten 7 Tage sind noch in Review-Queue. Im Jobbasket liegen 6 Kandidaten für Hochbau-Positionen bei Implenia.`;
+    sources = [
+      { icon:'👤', label:'Max Muster', sub:'Kandidat · Tiefbau', rel:0.94, src:'Vollansichten/candidates.html' },
+      { icon:'💼', label:'Bauführer Tiefbau · Volare', sub:'Job', rel:0.91, src:'Vollansichten/jobs.html' },
+      { icon:'🏢', label:'Volare Group AG', sub:'Account', rel:0.82, src:'Vollansichten/accounts.html' },
+      { icon:'🤖', label:'3 Scraper-Findings · BauAG', sub:'Review-Queue', rel:0.70, src:'Vollansichten/scraper.html' }
+    ];
+  } else if (q.includes('stale') || q.includes('überfällig') || q.includes('blocker') || q.includes('offen')) {
+    answer = `Aktuell <strong>3 Blocker</strong> im System: (1) <strong>1 Claim-Fall</strong> offen bei Stefan Keller (Schutzfrist-Verletzung bei Muster Immobilien, 13 Monate nach Vorstellung angestellt). (2) <strong>2 stale Prozesse</strong> ohne Activity > 30 Tage: Peter Stadler (Stage 1st IV seit 32 d, Kunde-Feedback ausstehend) und Laura Meier (Stage TI seit 45 d). (3) <strong>7 pending AGB-Bestätigungen</strong> für CV-Versand (rechtliches Risiko bei Erfolgsbasis-Mandaten).`;
+    sources = [
+      { icon:'⚠', label:'Claim: Stefan Keller × Muster Immobilien', sub:'Schutzfrist', rel:0.96, src:'Vollansichten/accounts.html' },
+      { icon:'→', label:'Prozess Peter Stadler · Stage 1st IV', sub:'stale 32d', rel:0.82, src:'Vollansichten/processes.html' },
+      { icon:'→', label:'Prozess Laura Meier · Stage TI', sub:'stale 45d', rel:0.80, src:'Vollansichten/processes.html' }
+    ];
+  } else {
+    // Generic fallback
+    answer = `Deine Frage "${query}" habe ich gegen <strong>8 400 Kandidaten · 124 Accounts · 14 offene Mandate · 47 aktive Prozesse</strong> analysiert. Die Top-Treffer unten sind nach semantischer Relevanz sortiert. Für präzisere Ergebnisse nenne Funktion (z.B. "CFO"), Branche ("Tiefbau"), Region ("Zürich") oder Einschränkung ("stale > 30d").`;
+    sources = [
+      { icon:'◈', label:'Dashboard', sub:'Gesamtübersicht', rel:0.50, src:'Vollansichten/dashboard.html' },
+      { icon:'👤', label:'Kandidaten-Liste', sub:'8 400 Einträge', rel:0.45, src:'Listen/candidates-list.html' },
+      { icon:'🎯', label:'Mandate-Liste', sub:'14 offen', rel:0.42, src:'Listen/mandates-list.html' }
+    ];
+  }
+
+  const sourcesHtml = sources.map(s =>
+    `<span class="cmd-ai-chip" onclick="closeCmdPalette();document.getElementById('mainFrame').src='${s.src}';window.location.hash='#/${s.src.replace('.html','')}'">
+      ${s.icon} ${s.label}
+      <span class="rel">· ${s.sub} · ${(s.rel*100).toFixed(0)}%</span>
+    </span>`
+  ).join('');
+
+  return `
+    <div class="cmd-ai-answer">${answer}</div>
+    <div style="font-size:10.5px;color:var(--text-light);margin-top:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600">Quellen</div>
+    <div class="cmd-ai-sources">${sourcesHtml}</div>
+    <div class="cmd-ai-meta">
+      <span>⏱ 1.8 s</span>
+      <span>🧠 Llama 3.1 8B local</span>
+      <span>📊 4 Quellen aus Top-20 RAG-Hits</span>
+      <span style="margin-left:auto;cursor:pointer" onclick="runCmdAiSearch()"><kbd>↻</kbd> Erneut fragen</span>
+    </div>`;
+}
+
+function renderCmdResults() {
+  const body = document.getElementById('cmdBody');
+  if (!body) return;
+  if (cmdFiltered.length === 0) {
+    body.innerHTML = '<div class="cmd-palette-empty">Keine Treffer. Probiere andere Begriffe …</div>';
+    return;
+  }
+  let html = '';
+  let currentCat = '';
+  cmdFiltered.forEach((item, i) => {
+    if (item.cat !== currentCat) {
+      currentCat = item.cat;
+      html += `<div class="cmd-palette-cat">${currentCat}</div>`;
+    }
+    const sel = i === cmdSelected ? ' selected' : '';
+    html += `<div class="cmd-palette-item${sel}" data-idx="${i}" onmouseover="cmdSelected=${i};cmdUpdateSelection()" onclick="cmdRunItem(${i})">
+      <span class="ic">${item.ic}</span>
+      <span class="label">${item.label}</span>
+      <span class="sub">${item.sub}</span>
+    </div>`;
+  });
+  body.innerHTML = html;
+}
+
+function cmdUpdateSelection() {
+  document.querySelectorAll('.cmd-palette-item').forEach((el, i) => {
+    el.classList.toggle('selected', i === cmdSelected);
+  });
+  const sel = document.querySelector('.cmd-palette-item.selected');
+  if (sel) sel.scrollIntoView({ block:'nearest' });
+}
+
+function cmdRunItem(i) {
+  const item = cmdFiltered[i];
+  if (!item) return;
+  closeCmdPalette();
+  if (item.action) { item.action(); return; }
+  if (item.src) {
+    const f = document.getElementById('mainFrame');
+    if (f) f.src = item.src;
+    // Sidebar-Active-Sync
+    document.querySelectorAll('.sb-item').forEach(it => it.classList.toggle('active', it.dataset.src === item.src));
+    window.location.hash = '#/' + item.src.replace('.html','');
+  }
+}
+
+function cmdFilterResults(q) {
+  const query = (q || '').toLowerCase().trim();
+  if (!query) {
+    cmdFiltered = CMD_ITEMS.slice();
+  } else {
+    cmdFiltered = CMD_ITEMS.filter(it =>
+      it.label.toLowerCase().includes(query) ||
+      it.sub.toLowerCase().includes(query) ||
+      it.cat.toLowerCase().includes(query)
+    );
+  }
+  cmdSelected = 0;
+  renderCmdResults();
+}
+
+document.getElementById('cmdInput')?.addEventListener('input', e => cmdFilterResults(e.target.value));
+document.getElementById('cmdInput')?.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdSelected+1, cmdFiltered.length-1); cmdUpdateSelection(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(cmdSelected-1, 0); cmdUpdateSelection(); }
+  else if (e.key === 'Enter') { e.preventDefault(); cmdRunItem(cmdSelected); }
+  else if (e.key === 'Escape') { e.preventDefault(); closeCmdPalette(); }
+});
+
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
     e.preventDefault();
-    alert('Command Palette — Demo (in echter App: globale Suche über alle Entities)');
+    openCmdPalette();
   }
+});
+
+// Cmd-Bar + Mobile-Search-Button + Command-Bar ⌘K-Hint alle öffnen Palette
+document.addEventListener('click', e => {
+  const trg = e.target.closest('.cmd-bar, [data-open-cmd]');
+  if (trg) { e.preventDefault(); openCmdPalette(); }
 });
 
 // === PROFIL-DROPDOWN ===
