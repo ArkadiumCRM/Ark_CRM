@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Zahlungseingang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* KPI-Strip */
+  .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .strip-card { background:var(--surface); padding:14px 16px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .strip-card.green { border-left-color:var(--green); }
+  .strip-card.amber { border-left-color:var(--amber); }
+  .strip-card.red { border-left-color:var(--red); }
+  .strip-card .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .strip-card .cnt { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:6px 0 3px; }
+  .strip-card.green .cnt { color:var(--green); }
+  .strip-card.amber .cnt { color:var(--amber); }
+  .strip-card.red .cnt { color:var(--red); }
+  .strip-card .amt { font-size:11.5px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
+  .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+
+  /* Import-Dropzone */
+  .dropzone { background:var(--surface); border:2px dashed var(--border); border-radius:6px; padding:26px 20px; text-align:center; margin-bottom:18px; transition:border 0.12s, background 0.12s; cursor:pointer; }
+  .dropzone:hover { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 4%,var(--surface)); }
+  .dropzone .icon { font-size:32px; color:var(--accent); margin-bottom:6px; }
+  .dropzone .title { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--text); }
+  .dropzone .sub { font-size:12px; color:var(--text-mid); margin-top:4px; }
+  .dropzone .formats { font-size:11px; color:var(--text-light); margin-top:8px; }
+
+  /* Parser-Result-Preview */
+  .parser-card { background:var(--surface); border-radius:4px; padding:18px 20px; box-shadow:var(--shadow-sm); margin-bottom:14px; }
+  .parser-card .head { font-family:'Libre Baskerville',serif; font-size:15px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+  .parser-card .file-meta { font-size:11.5px; color:var(--text-mid); margin-bottom:12px; font-variant-numeric:tabular-nums; }
+  .parser-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
+  .stat-box { background:var(--bg); padding:10px 12px; border-radius:3px; text-align:center; border-top:3px solid var(--border); }
+  .stat-box.high { border-top-color:var(--green); }
+  .stat-box.mid { border-top-color:var(--amber); }
+  .stat-box.low { border-top-color:var(--red); }
+  .stat-box.err { border-top-color:#7c2d12; }
+  .stat-box .cnt { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; color:var(--text); }
+  .stat-box .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-top:3px; }
+
+  .commit-actions { display:flex; gap:10px; justify-content:flex-end; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+
+  /* Tabelle */
+  .list-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; margin-bottom:18px; }
+  .list-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .list-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .list-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .list-table tbody tr:last-child td { border-bottom:none; }
+  .list-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%, var(--bg)); }
+  .list-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .list-table .nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .list-table .kunde { font-weight:600; color:var(--text); }
+
+  /* Confidence-Badges */
+  .conf { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:10px; }
+  .conf.high  { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .conf.mid   { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:color-mix(in srgb,var(--amber) 95%,#000); }
+  .conf.low   { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .conf.auto  { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .conf .pct { font-variant-numeric:tabular-nums; }
+
+  .row-action { background:var(--surface); border:1px solid var(--accent); color:var(--accent); border-radius:3px; padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; }
+  .row-action:hover { background:var(--accent); color:#fff; }
+  .row-action.secondary { border-color:var(--border); color:var(--text); }
+
+  .ref-box { font-size:11.5px; color:var(--text-mid); font-family:monospace; padding:2px 6px; background:var(--bg); border-radius:2px; display:inline-block; }
+  .suggestions { font-size:11px; color:var(--text-light); margin-top:4px; line-height:1.5; }
+  .suggestions strong { color:var(--text-mid); font-weight:600; }
+  .suggestions a { color:var(--accent); text-decoration:none; font-weight:600; }
+  .suggestions a:hover { text-decoration:underline; }
+
+  /* Drawer 540px · Zahlung manuell erfassen */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:flex-end; gap:8px; }
+
+  .fg { margin-bottom:12px; }
+  .fg label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-light); font-weight:600; margin-bottom:5px; }
+  .fg input, .fg select, .fg textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); box-sizing:border-box; }
+  .fg-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  .bank-raw { background:var(--bg); padding:10px 12px; border-radius:3px; font-family:monospace; font-size:11px; color:var(--text-mid); white-space:pre-wrap; line-height:1.6; margin-bottom:14px; max-height:150px; overflow-y:auto; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Zahlungseingang</h1>
+      <div class="sub">CAMT.054-Import Kantonalbank · Auto-Match via QRR / SCOR · MVP manueller Upload (EBICS-API vertagt)</div>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="strip">
+    <div class="strip-card green">
+      <div class="lbl">Auto-matched 30d</div>
+      <div class="cnt">42</div>
+      <div class="amt">CHF 148'260 · ∅ Confidence 97 %</div>
+    </div>
+    <div class="strip-card amber">
+      <div class="lbl">Review erforderlich</div>
+      <div class="cnt">3</div>
+      <div class="amt">CHF 18'700 · Confidence 70 – 94 %</div>
+    </div>
+    <div class="strip-card red">
+      <div class="lbl">Unmatched</div>
+      <div class="cnt">1</div>
+      <div class="amt">CHF 3'840 · manuelle Zuordnung nötig</div>
+    </div>
+    <div class="strip-card">
+      <div class="lbl">Letzter Import</div>
+      <div class="cnt" style="font-size:17px;">heute 07:24</div>
+      <div class="amt">camt054_2026-04-21.xml · 47 Bookings</div>
+    </div>
+  </div>
+
+  <!-- Dropzone -->
+  <div class="dropzone">
+    <div class="icon">⇅</div>
+    <div class="title">CAMT.054-Datei hier ablegen</div>
+    <div class="sub">oder klicken zum Auswählen · Kantonalbank Tages-Debit/Credit-Notification</div>
+    <div class="formats">Unterstützt: .xml (CAMT.054 primär · CAMT.053 Fallback) · .csv Fallback</div>
+  </div>
+
+  <!-- Parser-Result Preview -->
+  <div class="parser-card">
+    <div class="head">Import-Vorschau · camt054_2026-04-21.xml</div>
+    <div class="file-meta">Datei-Grösse 42.3 KB · 47 Bookings · 23 Credits · 24 Debits · Periode 20.04.2026 06:00 – 21.04.2026 06:00</div>
+    <div class="parser-stats">
+      <div class="stat-box high">
+        <div class="cnt">18</div>
+        <div class="lbl">Auto-Match · ≥ 95 %</div>
+      </div>
+      <div class="stat-box mid">
+        <div class="cnt">3</div>
+        <div class="lbl">Review · 70 – 94 %</div>
+      </div>
+      <div class="stat-box low">
+        <div class="cnt">1</div>
+        <div class="lbl">Manuell · &lt; 70 %</div>
+      </div>
+      <div class="stat-box err">
+        <div class="cnt">1</div>
+        <div class="lbl">Debit-Return · Abbuchung</div>
+      </div>
+    </div>
+    <div class="commit-actions">
+      <button class="btn btn-secondary" type="button">Vorschau-Details</button>
+      <button class="btn btn-secondary" type="button">Abbrechen</button>
+      <button class="btn btn-primary" type="button">22 Zahlungen buchen</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab">Auto-matched <span class="cnt">18</span></div>
+    <div class="tab active">Review erforderlich <span class="cnt">3</span></div>
+    <div class="tab">Unmatched <span class="cnt">1</span></div>
+    <div class="tab">Historie 30d</div>
+  </div>
+
+  <!-- Review-Tab · Mittlere Confidence -->
+  <div class="list-card">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th style="text-align:right;">Betrag</th>
+          <th>Absender</th>
+          <th>Referenz (aus Bank)</th>
+          <th>Confidence</th>
+          <th>Vorgeschlagene Rechnung</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-variant-numeric:tabular-nums;">20.04.2026</td>
+          <td class="num">CHF 8'700.00</td>
+          <td class="kunde">Sutter + Partner AG<br><small style="color:var(--text-light);font-weight:normal;">CH93 0076 2011 6238 5295 7</small></td>
+          <td><span class="ref-box">RF18 5390 2664 8842 1530</span><div style="font-size:11px;color:var(--text-light);margin-top:2px;">SCOR-Referenz nicht in Stammdaten</div></td>
+          <td><span class="conf mid"><span class="pct">86 %</span></span></td>
+          <td>
+            <strong>FN2026.02.0558</strong> · CHF 8'700.00 · Sutter + Partner
+            <div class="suggestions">Match über: <strong>Betrag + IBAN + Kunde-Fuzzy</strong> · <a href="#">andere Kandidaten anzeigen</a></div>
+          </td>
+          <td><button class="row-action" type="button" onclick="openManual()">✓ Bestätigen</button></td>
+        </tr>
+        <tr>
+          <td style="font-variant-numeric:tabular-nums;">20.04.2026</td>
+          <td class="num">CHF 3'500.00</td>
+          <td class="kunde">Emch Berger<br><small style="color:var(--text-light);font-weight:normal;">CH62 0900 0000 4563 2917 8</small></td>
+          <td><span class="ref-box">—</span><div style="font-size:11px;color:var(--text-light);margin-top:2px;">keine strukturierte Referenz · Verwendungszweck: "Teilzahlung März"</div></td>
+          <td><span class="conf mid"><span class="pct">74 %</span></span></td>
+          <td>
+            <strong>FN2026.03.0917</strong> · Teilzahlung CHF 3'500 von CHF 36'083
+            <div class="suggestions">Teilzahlung erkannt · Rest CHF 32'583 bleibt offen · Status würde "Teilbezahlt" · <a href="#">alternative Zuordnungen</a></div>
+          </td>
+          <td>
+            <button class="row-action" type="button">✓ Bestätigen</button>
+            <button class="row-action secondary" type="button" style="margin-top:4px;">Manuell</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-variant-numeric:tabular-nums;">21.04.2026</td>
+          <td class="num">CHF 6'500.00</td>
+          <td class="kunde">Morell Immo AG<br><small style="color:var(--text-light);font-weight:normal;">CH12 0024 5120 0021 5533 C</small></td>
+          <td><span class="ref-box">FN 2026 04 1024</span><div style="font-size:11px;color:var(--text-light);margin-top:2px;">Referenz im Verwendungszweck (nicht QRR) · Rechnung bereits voll bezahlt!</div></td>
+          <td><span class="conf mid"><span class="pct">72 %</span></span></td>
+          <td>
+            <span style="color:var(--red);font-weight:700;">Überzahlung</span> · FN2026.04.1024 ist bereits bezahlt (CHF 14'650)
+            <div class="suggestions"><strong style="color:var(--red);">GF-Alert: Überzahlung CHF 6'500</strong> · Vorschlag: offene Rechnungen selber Kunde prüfen · <a href="#">Morell Immobilien Debitor-Konto</a></div>
+          </td>
+          <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">⚑ Klären</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Unmatched Section -->
+  <div class="tabs">
+    <div class="tab">Unmatched <span class="cnt">1</span></div>
+  </div>
+
+  <div class="list-card">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th style="text-align:right;">Betrag</th>
+          <th>Absender</th>
+          <th>Referenz</th>
+          <th>Verwendungszweck</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-variant-numeric:tabular-nums;">21.04.2026</td>
+          <td class="num">CHF 3'840.00</td>
+          <td class="kunde">Walder Bauconsulting<br><small style="color:var(--text-light);font-weight:normal;">CH44 0483 5188 1234 5678 9 · kein Match in Stammdaten</small></td>
+          <td><span class="ref-box">—</span></td>
+          <td style="font-size:11.5px;color:var(--text-mid);">"Rechnung Consulting März 26"</td>
+          <td><button class="row-action" type="button" onclick="openManual()">Zahlung erfassen</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Zahlung manuell erfassen
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="overlay" onclick="closeManual()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Zahlung manuell erfassen</h3>
+    </div>
+    <button class="close" type="button" onclick="closeManual()">×</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Bank-Booking-Raw -->
+    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1.1px;color:var(--text-light);font-weight:700;margin-bottom:6px;">Bank-Booking · Raw (CAMT.054)</div>
+    <div class="bank-raw">&lt;Ntry&gt;
+  &lt;Amt Ccy="CHF"&gt;3840.00&lt;/Amt&gt;
+  &lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;
+  &lt;BookgDt&gt;&lt;Dt&gt;2026-04-21&lt;/Dt&gt;&lt;/BookgDt&gt;
+  &lt;ValDt&gt;&lt;Dt&gt;2026-04-21&lt;/Dt&gt;&lt;/ValDt&gt;
+  &lt;DbtrAcct&gt;&lt;IBAN&gt;CH44 0483 5188 1234 5678 9&lt;/IBAN&gt;&lt;/DbtrAcct&gt;
+  &lt;Dbtr&gt;&lt;Nm&gt;Walder Bauconsulting&lt;/Nm&gt;&lt;/Dbtr&gt;
+  &lt;RmtInf&gt;&lt;Ustrd&gt;Rechnung Consulting März 26&lt;/Ustrd&gt;&lt;/RmtInf&gt;
+&lt;/Ntry&gt;</div>
+
+    <div class="fg">
+      <label>Rechnung zuordnen *</label>
+      <input type="text" placeholder="Suche FN-Nr, Kunde, Betrag …">
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Tipp: neuer Kunde? Stammdaten zuerst anlegen, dann Rechnung erstellen, dann Zahlung zuordnen.</div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Betrag</label>
+        <input type="text" value="CHF 3'840.00" readonly style="background:var(--surface);color:var(--text-mid);">
+      </div>
+      <div class="fg">
+        <label>Valuta-Datum</label>
+        <input type="date" value="2026-04-21">
+      </div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Zahlungs-Datum</label>
+        <input type="date" value="2026-04-21">
+      </div>
+      <div class="fg">
+        <label>Zahlungsmittel</label>
+        <select>
+          <option selected>Bank-Überweisung</option>
+          <option>QR-Überweisung</option>
+          <option>Kreditkarte</option>
+          <option>TWINT Business</option>
+          <option>Manuelle Buchung</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Referenz (optional)</label>
+      <input type="text" placeholder="QRR / SCOR / Freitext">
+    </div>
+
+    <div class="fg">
+      <label>Match-Confidence (Auto-Berechnung · editierbar)</label>
+      <input type="number" value="50" min="0" max="100">
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Manuell erfasste Zahlung: Default 50 % · Audit-Trail speichert "is_manual=true"</div>
+    </div>
+
+    <div class="fg">
+      <label>Interne Notiz</label>
+      <textarea placeholder="z.B. Kunde telefonisch bestätigt · neue IBAN zu Stammdaten nachtragen …"></textarea>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-secondary" type="button" onclick="closeManual()">Abbrechen</button>
+    <button class="btn btn-primary" type="button">Zahlung buchen</button>
+  </div>
+</div>
+
+<script>
+  function openManual(){
+    document.getElementById('drawer').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+  }
+  function closeManual(){
+    document.getElementById('drawer').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+</script>
+
+</body>
+</html>

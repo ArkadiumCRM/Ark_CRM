@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Refund-Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* KPI-Strip */
+  .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .strip-card { background:var(--surface); padding:14px 16px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); cursor:pointer; }
+  .strip-card.warn { border-left-color:var(--amber); }
+  .strip-card.urgent { border-left-color:var(--red); }
+  .strip-card.done { border-left-color:var(--green); }
+  .strip-card .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .strip-card .cnt { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:6px 0 3px; }
+  .strip-card .amt { font-size:11.5px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
+  .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+
+  /* Cockpit-Tabelle */
+  .cockpit-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .cockpit-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .cockpit-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .cockpit-table td { padding:12px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .cockpit-table tbody tr:last-child td { border-bottom:none; }
+  .cockpit-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%, var(--bg)); cursor:pointer; }
+  .cockpit-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .cockpit-table .kunde { font-weight:600; color:var(--text); }
+  .cockpit-table .kunde small { display:block; font-weight:normal; color:var(--text-light); font-size:11px; margin-top:2px; }
+
+  /* Probezeit-Phase-Chip */
+  .phase-chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
+  .phase-chip.pre   { background:color-mix(in srgb,var(--red) 18%,var(--bg)); color:var(--red); }
+  .phase-chip.m1    { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .phase-chip.m2    { background:color-mix(in srgb,var(--amber) 18%,var(--bg)); color:color-mix(in srgb,var(--amber) 95%,#000); }
+  .phase-chip.m3    { background:color-mix(in srgb,var(--amber) 12%,var(--bg)); color:color-mix(in srgb,var(--amber) 85%,#000); }
+  .phase-chip.post  { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+
+  .status-chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
+  .status-chip.aktiv   { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .status-chip.exit    { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .status-chip.draft   { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:color-mix(in srgb,var(--amber) 95%,#000); }
+  .status-chip.issued  { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .status-chip.paid    { background:color-mix(in srgb,var(--text-light) 18%,var(--bg)); color:var(--text-mid); }
+  .status-chip.denied  { background:color-mix(in srgb,#7c2d12 20%,var(--bg)); color:#7c2d12; }
+
+  .days-left { font-size:11px; font-weight:600; }
+  .days-left.urgent { color:var(--red); }
+  .days-left.warn { color:var(--amber); }
+  .days-left.ok { color:var(--green); }
+
+  .row-action { background:var(--surface); border:1px solid var(--accent); color:var(--accent); border-radius:3px; padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; }
+  .row-action:hover { background:var(--accent); color:#fff; }
+  .row-action.urgent { border-color:var(--red); color:var(--red); }
+  .row-action.urgent:hover { background:var(--red); color:#fff; }
+
+  /* Drawer 540px */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .drawer-foot .totals { font-size:12px; color:var(--text-mid); }
+  .drawer-foot .totals strong { font-family:'Libre Baskerville',serif; color:var(--text); font-size:15px; display:block; }
+  .drawer-foot .actions { display:flex; gap:8px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+  .btn-danger { background:var(--red); color:#fff; border-color:var(--red); }
+
+  /* Section-Box im Drawer */
+  .sec { margin-bottom:18px; }
+  .sec .sec-head { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:700; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .kv { display:grid; grid-template-columns:140px 1fr; gap:6px 12px; font-size:12.5px; }
+  .kv .k { color:var(--text-light); }
+  .kv .v { color:var(--text); font-weight:500; }
+  .kv .v.highlight { font-weight:700; color:var(--accent); font-family:'Libre Baskerville',serif; }
+  .kv .v.red { color:var(--red); font-weight:700; }
+
+  /* Staffel-Bar */
+  .staffel { background:var(--bg); padding:12px 14px; border-radius:4px; margin-top:10px; }
+  .staffel-row { display:grid; grid-template-columns:100px 1fr 90px 60px; gap:8px; padding:6px 0; font-size:12px; align-items:center; }
+  .staffel-row.active { background:color-mix(in srgb,var(--accent) 10%,var(--surface)); border-radius:3px; padding:8px 8px; margin:2px -4px; font-weight:700; }
+  .staffel-row .ph { color:var(--text-mid); }
+  .staffel-row .rng { color:var(--text-light); font-size:11px; }
+  .staffel-row .pct { text-align:right; font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px; color:var(--text); }
+  .staffel-row.active .pct { color:var(--accent); }
+  .staffel-row .amt { text-align:right; font-variant-numeric:tabular-nums; color:var(--text-mid); font-size:11px; }
+
+  .warn-inline { background:color-mix(in srgb,var(--red) 10%,var(--surface)); border-left:3px solid var(--red); padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text); border-radius:2px; }
+  .warn-inline.ok { background:color-mix(in srgb,var(--green) 10%,var(--surface)); border-left-color:var(--green); }
+  .warn-inline.amber { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left-color:var(--amber); }
+  .warn-inline .title { font-weight:700; margin-bottom:2px; }
+
+  .gf-box { background:color-mix(in srgb,var(--accent) 6%,var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:12px 14px; margin:10px 0; font-size:12.5px; }
+  .gf-box .head { font-weight:700; color:var(--accent); margin-bottom:4px; }
+
+  .fg { margin-bottom:12px; }
+  .fg label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-light); font-weight:600; margin-bottom:5px; }
+  .fg input, .fg select, .fg textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); box-sizing:border-box; }
+
+  .pill-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .pill-row .pill { background:var(--surface); border:1px solid var(--border); padding:3px 9px; border-radius:10px; font-size:11px; color:var(--text-mid); }
+  .pill-row .pill.denial { color:#7c2d12; border-color:#7c2d12; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Refund-Cockpit</h1>
+      <div class="sub">Garantie-Fälle nach AGB §8 · Staffel 100 / 50 / 25 / 10 % · immer GF-Approval-Pflicht</div>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="strip">
+    <div class="strip-card">
+      <div class="lbl">Aktiv in Garantie</div>
+      <div class="cnt">14</div>
+      <div class="amt">Placements innerhalb 3-Mt-Fenster</div>
+    </div>
+    <div class="strip-card warn">
+      <div class="lbl">Exit-Risiko ≤ 14d</div>
+      <div class="cnt">3</div>
+      <div class="amt">Probezeit endet bald · Garantie läuft ab</div>
+    </div>
+    <div class="strip-card urgent">
+      <div class="lbl">Refund im Entstehen</div>
+      <div class="cnt">2</div>
+      <div class="amt">CHF 22'785 · Draft / GF-Review</div>
+    </div>
+    <div class="strip-card done">
+      <div class="lbl">Abgeschlossen 2026</div>
+      <div class="cnt">4</div>
+      <div class="amt">CHF 41'350 · Refund ausbezahlt</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active">Offen &amp; Exit-Risiko <span class="cnt">17</span></div>
+    <div class="tab">Im Entstehen <span class="cnt">2</span></div>
+    <div class="tab">Refund-Denied <span class="cnt">1</span></div>
+    <div class="tab">Abgeschlossen</div>
+  </div>
+
+  <!-- Cockpit-Liste -->
+  <div class="cockpit-card">
+    <table class="cockpit-table">
+      <thead>
+        <tr>
+          <th>Prozess-Nr</th>
+          <th>Kandidat · Kunde</th>
+          <th>Stellenantritt</th>
+          <th>Probezeit-Ende</th>
+          <th>Phase heute</th>
+          <th>Staffel-%</th>
+          <th>Original-Rechnung</th>
+          <th style="text-align:right;">Potentieller Refund</th>
+          <th>Status</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Urgent · Monat 3 endet in 8 Tagen -->
+        <tr onclick="openDrawer()">
+          <td><strong>PR-2026-0412</strong></td>
+          <td class="kunde">Manuel Haller<small>Volare Group AG · REM · AM JV</small></td>
+          <td>01.02.2026</td>
+          <td>01.05.2026 <div class="days-left urgent">in 10 T</div></td>
+          <td><span class="phase-chip m3">Monat 3</span></td>
+          <td><strong style="font-family:'Libre Baskerville',serif;font-size:14px;">10 %</strong></td>
+          <td>FN2026.02.0412 · CHF 38'750</td>
+          <td class="num" style="color:var(--amber);">CHF 3'875</td>
+          <td><span class="status-chip aktiv">Aktiv</span></td>
+          <td><button class="row-action" type="button" onclick="event.stopPropagation();openDrawer();">Refund prüfen</button></td>
+        </tr>
+        <tr>
+          <td><strong>PR-2026-0558</strong></td>
+          <td class="kunde">Elena Gaspari<small>Sutter + Partner AG · ARC · AM YB</small></td>
+          <td>15.02.2026</td>
+          <td>15.05.2026 <div class="days-left warn">in 24 T</div></td>
+          <td><span class="phase-chip m2">Monat 2</span></td>
+          <td><strong style="font-family:'Libre Baskerville',serif;font-size:14px;">25 %</strong></td>
+          <td>FN2026.02.0558 · CHF 29'325</td>
+          <td class="num" style="color:var(--amber);">CHF 7'331</td>
+          <td><span class="status-chip aktiv">Aktiv</span></td>
+          <td><button class="row-action" type="button">Refund prüfen</button></td>
+        </tr>
+        <tr>
+          <td><strong>PR-2026-0917</strong></td>
+          <td class="kunde">Tobias Fischer<small>Emch+Berger Gruppe · ING · AM PW</small></td>
+          <td>15.04.2026</td>
+          <td>15.07.2026 <div class="days-left ok">in 85 T</div></td>
+          <td><span class="phase-chip m1">Monat 1</span></td>
+          <td><strong style="font-family:'Libre Baskerville',serif;font-size:14px;">50 %</strong></td>
+          <td>FN2026.03.0917 · CHF 36'083</td>
+          <td class="num" style="color:var(--amber);">CHF 18'041</td>
+          <td><span class="status-chip aktiv">Aktiv</span></td>
+          <td><button class="row-action" type="button">Refund prüfen</button></td>
+        </tr>
+        <!-- Exit gemeldet -->
+        <tr style="background:color-mix(in srgb,var(--red) 4%,var(--surface));">
+          <td><strong>PR-2026-0318</strong></td>
+          <td class="kunde">Sandra Moser<small>Frauenfelder Holding · GT · AM PW</small></td>
+          <td>20.02.2026</td>
+          <td>20.05.2026 <div class="days-left warn">in 29 T</div></td>
+          <td><span class="phase-chip m2">Exit Monat 2</span></td>
+          <td><strong style="font-family:'Libre Baskerville',serif;font-size:14px;color:var(--red);">25 %</strong></td>
+          <td>FN2026.02.0318 · CHF 28'500</td>
+          <td class="num" style="color:var(--red);">CHF 7'125</td>
+          <td><span class="status-chip exit">Exit gemeldet</span></td>
+          <td><button class="row-action urgent" type="button" onclick="event.stopPropagation();openDrawer();">Refund anlegen</button></td>
+        </tr>
+        <tr style="background:color-mix(in srgb,var(--red) 4%,var(--surface));">
+          <td><strong>PR-2026-0224</strong></td>
+          <td class="kunde">Julien Berger<small>Morell Immobilien · REM · AM JV</small></td>
+          <td>10.03.2026</td>
+          <td>10.06.2026 <div class="days-left warn">in 50 T</div></td>
+          <td><span class="phase-chip m1">Exit Monat 1</span></td>
+          <td><strong style="font-family:'Libre Baskerville',serif;font-size:14px;color:var(--red);">50 %</strong></td>
+          <td>FN2026.03.0224 · CHF 31'320</td>
+          <td class="num" style="color:var(--red);">CHF 15'660</td>
+          <td><span class="status-chip exit">Exit gemeldet</span></td>
+          <td><button class="row-action urgent" type="button">Refund anlegen</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
+    <strong>Legende Staffel (AGB §8 · Kulanzrückvergütung):</strong>
+    <span class="phase-chip pre">vor Start</span> 100 % ·
+    <span class="phase-chip m1">Monat 1 Probezeit</span> 50 % ·
+    <span class="phase-chip m2">Monat 2</span> 25 % ·
+    <span class="phase-chip m3">Monat 3</span> 10 % ·
+    <span class="phase-chip post">nach Probezeit</span> 0 %.
+    Ausschluss bei: Kunden-Gründen · Kunde-Kündigung · 3-Tage-Meldepflicht-Verletzung · nach Probezeit.
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Refund-Berechnung · PR-2026-0412 · Manuel Haller
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Refund-Berechnung · PR-2026-0412</h3>
+      <span class="status-chip draft" style="margin-left:6px;">Draft</span>
+    </div>
+    <button class="close" type="button" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Placement-Kontext -->
+    <div class="sec">
+      <div class="sec-head">Placement-Kontext</div>
+      <div class="kv">
+        <div class="k">Kandidat</div><div class="v">Manuel Haller · Property Manager REM</div>
+        <div class="k">Kunde</div><div class="v">Volare Group AG · Zürich</div>
+        <div class="k">AM / CM</div><div class="v">JV / NP · Sparte REM</div>
+        <div class="k">Stellenantritt</div><div class="v">01.02.2026</div>
+        <div class="k">Probezeit</div><div class="v">3 Monate (Standard · AGB)</div>
+        <div class="k">Probezeit-Ende</div><div class="v highlight">01.05.2026 · in 10 Tagen</div>
+        <div class="k">Original-Rechnung</div><div class="v">FN2026.02.0412 · CHF 38'750 netto · bezahlt 05.03.2026</div>
+      </div>
+    </div>
+
+    <!-- Exit-Daten -->
+    <div class="sec">
+      <div class="sec-head">Exit-Daten (manuell erfassen)</div>
+      <div class="fg">
+        <label>Exit-Datum</label>
+        <input type="date" value="2026-04-18">
+      </div>
+      <div class="fg">
+        <label>Wer hat gekündigt?</label>
+        <select>
+          <option selected>Kandidat (Eigen-Kündigung)</option>
+          <option>Kunde (Arbeitgeber-Kündigung)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Kündigungs-Datum Kandidat (falls abweichend)</label>
+        <input type="date" value="2026-04-15">
+      </div>
+      <div class="fg">
+        <label>Kunden-Meldung Arkadium · Datum</label>
+        <input type="date" value="2026-04-17">
+      </div>
+    </div>
+
+    <!-- 3-Tage-Meldepflicht-Check -->
+    <div class="sec">
+      <div class="sec-head">3-Tage-Meldepflicht (AGB §8)</div>
+      <div class="warn-inline ok">
+        <div class="title">✓ Meldepflicht erfüllt · 2 Tage nach Kandidat-Kündigung</div>
+        Kandidat-Kündigung 15.04. → Kunden-Meldung 17.04. = 2 Tage. Refund-Anspruch aktiv.
+      </div>
+    </div>
+
+    <!-- Ausschluss-Prüfung -->
+    <div class="sec">
+      <div class="sec-head">Ausschluss-Prüfung (AGB §8)</div>
+      <div class="fg">
+        <label>Ausschluss-Grund (wenn zutreffend)</label>
+        <select>
+          <option selected value="">— kein Ausschluss —</option>
+          <option>Kandidat kann wegen Kunden-Gründen Stelle nicht antreten</option>
+          <option>Kunde kündigt Kandidat während Probezeit</option>
+          <option>Austritt nach Probezeit-Ende</option>
+          <option>3-Tage-Meldepflicht verletzt (GF-Override möglich)</option>
+          <option>Kunde meldete keine Gründe (GF-Override möglich)</option>
+        </select>
+      </div>
+      <div class="pill-row">
+        <span class="pill">kein Customer-Caused</span>
+        <span class="pill">kein Dismissal</span>
+        <span class="pill">innerhalb Probezeit</span>
+        <span class="pill">Meldung rechtzeitig</span>
+        <span class="pill">Gründe gemeldet</span>
+      </div>
+    </div>
+
+    <!-- Staffel-Berechnung -->
+    <div class="sec">
+      <div class="sec-head">Staffel-Berechnung · AGB §8 Kulanzrückvergütung</div>
+      <div style="font-size:12px;color:var(--text-mid);margin-bottom:6px;">Exit-Datum 18.04.2026 · Tage seit Stellenantritt: 76 Tage = <strong>Probezeit-Monat 3</strong></div>
+      <div class="staffel">
+        <div class="staffel-row">
+          <div class="ph">vor Start</div>
+          <div class="rng">bis 31.01.2026</div>
+          <div class="pct">100 %</div>
+          <div class="amt">CHF 38'750</div>
+        </div>
+        <div class="staffel-row">
+          <div class="ph">Monat 1</div>
+          <div class="rng">01.02. – 28.02.</div>
+          <div class="pct">50 %</div>
+          <div class="amt">CHF 19'375</div>
+        </div>
+        <div class="staffel-row">
+          <div class="ph">Monat 2</div>
+          <div class="rng">01.03. – 31.03.</div>
+          <div class="pct">25 %</div>
+          <div class="amt">CHF 9'687</div>
+        </div>
+        <div class="staffel-row active">
+          <div class="ph">Monat 3 · <em>heute</em></div>
+          <div class="rng">01.04. – 30.04.</div>
+          <div class="pct">10 %</div>
+          <div class="amt">CHF 3'875</div>
+        </div>
+        <div class="staffel-row">
+          <div class="ph">nach Probezeit</div>
+          <div class="rng">ab 01.05.2026</div>
+          <div class="pct" style="color:var(--text-light);">0 %</div>
+          <div class="amt">CHF 0</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-light);margin-top:8px;">
+        Refund-% <strong style="color:var(--amber);">10 %</strong> auf Netto-Honorar CHF 38'750 = <strong>CHF 3'875</strong> netto + MwSt 8.1 % (CHF 313.88) = <strong>CHF 4'188.88</strong> Brutto-Refund.
+      </div>
+    </div>
+
+    <!-- Commission-Clawback-Preview -->
+    <div class="sec">
+      <div class="sec-head">Commission-Clawback-Preview</div>
+      <div class="warn-inline amber">
+        <div class="title">Clawback: CHF 968.75 aus Rücklage</div>
+        10 % Refund × 25 % Commission-Satz = CHF 968.75 Clawback · Rücklage Q1 2026 JV/NP (je 50 %) · aktuell noch nicht freigegeben (Garantie endet 01.05.) → Rücklage-Reduktion möglich, keine Negativ-Buchung nötig.
+      </div>
+      <div class="kv" style="margin-top:8px;">
+        <div class="k">Betroffene MA</div><div class="v">JV (AM · 50 %) · NP (CM · 50 %)</div>
+        <div class="k">Clawback-Quelle</div><div class="v">Rücklage Q1 2026 · offen</div>
+        <div class="k">Status nach Saga</div><div class="v">commission_clawback_triggered · automatisch</div>
+      </div>
+    </div>
+
+    <!-- GF-Approval -->
+    <div class="gf-box">
+      <div class="head">GF-Approval-Pflicht</div>
+      Alle Refunds erfordern GF-Genehmigung (PO-Decision Batch 2 Q8). Nenad Stoparanovic muss freigeben bevor Refund-Rechnung ausgestellt wird.
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <button class="btn btn-secondary" type="button">Zur GF-Review senden</button>
+      </div>
+    </div>
+
+    <!-- Auszahlung -->
+    <div class="sec">
+      <div class="sec-head">Auszahlung (nach GF-Approval)</div>
+      <div class="fg">
+        <label>Kunden-IBAN (aus Stammdaten)</label>
+        <input type="text" value="CH45 0023 4500 1122 3344 5" readonly style="background:var(--surface);color:var(--text-mid);">
+      </div>
+      <div class="fg">
+        <label>Valuta-Datum (gewünschtes Buchungsdatum)</label>
+        <input type="date" value="2026-04-25">
+      </div>
+      <div class="fg">
+        <label>Interne Notiz</label>
+        <textarea placeholder="z.B. Kulanz-Ausnahme, spezielle Begründung …"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div class="totals">
+      Refund · <strong>CHF 4'188.88</strong>
+      <span style="color:var(--amber);font-size:11px;">pending GF-Approval</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-secondary" type="button">Entwurf speichern</button>
+      <button class="btn btn-danger" type="button">✕ Ablehnen</button>
+      <button class="btn btn-primary" type="button">▸ GF-Approval</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDrawer(){
+    document.getElementById('drawer').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+  }
+  function closeDrawer(){
+    document.getElementById('drawer').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+</script>
+
+</body>
+</html>

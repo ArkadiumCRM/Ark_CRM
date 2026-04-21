@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Rechnungen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1600px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* Filter-Bar */
+  .filter-bar { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .filter-bar .grp { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .filter-bar label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .filter-bar select, .filter-bar input { font-family:'DM Sans',sans-serif; font-size:12.5px; padding:6px 8px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+  .filter-bar input[type=date] { min-width:130px; }
+  .filter-bar .sep { width:1px; background:var(--border); align-self:stretch; margin:4px 4px; }
+  .filter-bar .search { flex:1; min-width:200px; position:relative; }
+  .filter-bar .search input { width:100%; padding-left:28px; }
+  .filter-bar .search::before { content:"⌕"; position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:14px; }
+
+  /* Bulk-Actions-Bar (sichtbar wenn Selektion) */
+  .bulk-bar { background:color-mix(in srgb,var(--accent) 8%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:12.5px; }
+  .bulk-bar .count { font-weight:700; color:var(--accent); }
+  .bulk-bar .actions { display:flex; gap:8px; margin-left:auto; }
+  .bulk-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--text); }
+  .bulk-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .bulk-btn.danger:hover { border-color:var(--red); color:var(--red); }
+
+  /* Tabelle */
+  .list-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .list-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .list-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .list-table td { padding:10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .list-table tbody tr:last-child td { border-bottom:none; }
+  .list-table tbody tr { cursor:pointer; transition:background 0.08s; }
+  .list-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 4%, var(--bg)); }
+  .list-table tbody tr.selected { background:color-mix(in srgb,var(--accent) 8%, var(--bg)); }
+  .list-table tbody tr.selected td:first-child { border-left:3px solid var(--accent); padding-left:7px; }
+  .list-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .list-table .nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .list-table .nr:hover { text-decoration:underline; }
+  .list-table .cb { width:24px; }
+  .list-table input[type=checkbox] { cursor:pointer; accent-color:var(--accent); }
+
+  /* Status-Chips */
+  .chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+  .chip.ok     { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip.draft  { background:color-mix(in srgb,var(--text-light) 20%,var(--bg)); color:var(--text-mid); }
+  .chip.sent   { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip.partial{ background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip.overdue{ background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .chip.dispute{ background:color-mix(in srgb,#c2410c 18%,var(--bg)); color:#c2410c; }
+  .chip.refund { background:color-mix(in srgb,var(--text-light) 16%,var(--bg)); color:var(--text-mid); }
+  .chip.cancel { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-light); text-decoration:line-through; }
+
+  .dunning-badge { font-size:9.5px; padding:2px 6px; border-radius:3px; font-weight:700; background:var(--bg); color:var(--amber); letter-spacing:0.4px; }
+  .dunning-badge.l1 { color:var(--amber); }
+  .dunning-badge.l2 { color:var(--red); }
+  .dunning-badge.l3 { color:var(--red); background:color-mix(in srgb,var(--red) 12%,var(--bg)); }
+
+  /* Footer-Pagination */
+  .list-footer { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:var(--bg); font-size:11.5px; color:var(--text-light); }
+  .list-footer .pager { display:flex; gap:6px; }
+  .pager-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:4px 10px; cursor:pointer; font-size:11px; }
+  .pager-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* Drawer · 540px · Slide-in from right */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-head .close:hover { color:var(--text); }
+  .drawer-sub { padding:4px 20px 12px; font-size:12px; color:var(--text-light); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .drawer-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 14px; background:var(--bg); overflow-x:auto; }
+  .drawer-tab { padding:10px 14px; font-size:12px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .drawer-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .drawer-foot .totals { font-size:12px; color:var(--text-mid); }
+  .drawer-foot .totals strong { font-family:'Libre Baskerville',serif; color:var(--text); font-size:15px; display:block; }
+  .drawer-foot .actions { display:flex; gap:8px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-primary:hover { opacity:0.9; }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+  .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:var(--surface); border-color:var(--red); color:var(--red); }
+  .btn-danger:hover { background:var(--red); color:#fff; }
+
+  /* Drawer · Positionen-Liste */
+  .pos-row { display:grid; grid-template-columns:20px 1fr 80px 90px 90px; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); align-items:start; font-size:12.5px; }
+  .pos-row:last-child { border-bottom:none; }
+  .pos-row .idx { color:var(--text-light); font-weight:600; font-variant-numeric:tabular-nums; }
+  .pos-row .desc { color:var(--text); }
+  .pos-row .desc small { display:block; color:var(--text-light); font-size:11px; margin-top:2px; }
+  .pos-row .pct, .pos-row .amt { text-align:right; font-variant-numeric:tabular-nums; }
+  .pos-row .amt { font-weight:600; }
+  .pos-row.open-posten .desc { color:var(--text-light); font-style:italic; }
+  .pos-row.open-posten .amt { color:var(--text-light); font-style:italic; }
+
+  /* Drawer · Kunde-Snapshot */
+  .customer-box { background:var(--bg); padding:12px 14px; border-radius:3px; margin-bottom:14px; font-size:12.5px; line-height:1.55; }
+  .customer-box .name { font-weight:700; color:var(--text); }
+  .customer-box .meta { font-size:11px; color:var(--text-light); margin-top:4px; display:flex; gap:6px; flex-wrap:wrap; }
+  .customer-box .meta .pill { background:var(--surface); padding:2px 8px; border-radius:10px; border:1px solid var(--border); }
+
+  /* Drawer · Warning-Inline */
+  .warn-inline { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left:3px solid var(--amber); padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text); border-radius:2px; }
+  .warn-inline.error { background:color-mix(in srgb,var(--red) 10%,var(--surface)); border-left-color:var(--red); }
+  .warn-inline .title { font-weight:700; margin-bottom:2px; }
+
+  /* Drawer · Zahlung-Row */
+  .pay-row { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .pay-row:last-child { border-bottom:none; }
+  .pay-row .date { color:var(--text-light); min-width:80px; font-variant-numeric:tabular-nums; }
+  .pay-row .body { flex:1; }
+  .pay-row .body .main { color:var(--text); font-weight:600; }
+  .pay-row .body small { color:var(--text-light); font-size:11px; }
+  .pay-row .amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--green); }
+
+  /* Drawer · Audit-Row */
+  .audit-row { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:12px; }
+  .audit-row:last-child { border-bottom:none; }
+  .audit-row .ts { color:var(--text-light); min-width:110px; font-variant-numeric:tabular-nums; font-size:11px; }
+  .audit-row .body { flex:1; color:var(--text-mid); }
+  .audit-row .body .action { font-weight:600; color:var(--text); }
+
+  /* Drawer · Wizard-Steps */
+  .wizard-steps { display:flex; gap:4px; padding:12px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .wizard-step { flex:1; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); font-weight:600; padding:6px 8px; text-align:center; background:var(--surface); border-radius:2px; border-top:2px solid var(--border); }
+  .wizard-step.active { color:var(--accent); border-top-color:var(--accent); font-weight:700; }
+  .wizard-step.done { color:var(--green); border-top-color:var(--green); }
+
+  /* Drawer · Form-Group */
+  .fg { margin-bottom:14px; }
+  .fg label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-light); font-weight:600; margin-bottom:5px; }
+  .fg input, .fg select, .fg textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); box-sizing:border-box; }
+  .fg textarea { min-height:60px; resize:vertical; }
+  .fg .hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+  .fg-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  .toggle-row { display:flex; align-items:center; gap:10px; padding:10px 0; font-size:12.5px; }
+  .toggle-row .lbl { flex:1; }
+  .toggle-row .lbl small { display:block; font-size:10.5px; color:var(--text-light); margin-top:1px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Rechnungen</h1>
+      <div class="sub">22 offene · 8 überfällig · 165 total 2026 · RLS-Filter aktiv (Backoffice-Ansicht · alle Kunden)</div>
+    </div>
+    <div>
+      <button class="btn btn-primary" type="button" onclick="document.getElementById('createDrawer').classList.add('active');document.getElementById('createOverlay').classList.add('active');">＋ Neue Rechnung</button>
+    </div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <div class="search"><input type="text" placeholder="Suche nach Rechnungs-Nr, Kunde, Kandidat …"></div>
+    <div class="sep"></div>
+    <div class="grp"><label>Status</label><select><option>alle offen</option><option>alle</option><option>Entwurf</option><option>Versendet</option><option>Überfällig</option><option>Mahnung 1/2/3</option><option>Honorarstreit</option><option>Bezahlt</option></select></div>
+    <div class="grp"><label>Typ</label><select><option>alle</option><option>Erfolg</option><option>Akonto</option><option>Zwischen</option><option>Schluss</option><option>Time-Mandat</option><option>Assessment</option><option>Rückerstattung</option><option>Gutschrift</option></select></div>
+    <div class="grp"><label>Sparte</label><select><option>alle</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select></div>
+    <div class="grp"><label>AM</label><select><option>alle</option><option>PW</option><option>YB</option><option>SP</option><option>JV</option><option>NP</option></select></div>
+    <div class="grp"><label>Datum von</label><input type="date" value="2026-01-01"></div>
+    <div class="grp"><label>bis</label><input type="date" value="2026-04-21"></div>
+    <div class="grp"><label>Export-Status</label><select><option>alle</option><option>Treuhand offen</option><option>Treuhand exportiert</option><option>Treuhand bestätigt</option></select></div>
+  </div>
+
+  <!-- Bulk-Bar (nur sichtbar wenn >=1 selektiert) -->
+  <div class="bulk-bar">
+    <span class="count">2</span> Rechnungen ausgewählt · CHF 65'370 gesamt
+    <div class="actions">
+      <button class="bulk-btn" type="button">⎙ PDF-Export (ZIP)</button>
+      <button class="bulk-btn" type="button">✉ Mahnung vorbereiten</button>
+      <button class="bulk-btn" type="button">◰ CSV-Export</button>
+      <button class="bulk-btn danger" type="button">⌫ Storno vorbereiten · GF-Pflicht</button>
+    </div>
+  </div>
+
+  <!-- Liste -->
+  <div class="list-card">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th class="cb"><input type="checkbox"></th>
+          <th>Rechnungs-Nr</th>
+          <th>Typ</th>
+          <th>Kunde</th>
+          <th>Referenz</th>
+          <th>Sparte</th>
+          <th style="text-align:right;">Brutto</th>
+          <th style="text-align:right;">Offen</th>
+          <th>Issue</th>
+          <th>Fälligkeit</th>
+          <th>Status</th>
+          <th>Mahnstufe</th>
+          <th>AM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected" onclick="openDetail()">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.03.0917</td>
+          <td><span class="chip ok">Erfolg</span></td>
+          <td>Emch+Berger Gruppe</td>
+          <td>Tobias Fischer · Projektleiter ING</td>
+          <td>ING</td>
+          <td class="num">CHF 36'083</td>
+          <td class="num" style="color:var(--red);">CHF 36'083</td>
+          <td>22.03.2026</td>
+          <td>21.04.2026</td>
+          <td><span class="chip overdue">Überfällig</span></td>
+          <td><span class="dunning-badge l1">Mahnung 1 fällig</span></td>
+          <td>PW</td>
+        </tr>
+        <tr class="selected">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.03.0924</td>
+          <td><span class="chip ok">Akonto</span></td>
+          <td>Volare Group AG</td>
+          <td>Mandat MA-2026-018 · Stage 1</td>
+          <td>REM</td>
+          <td class="num">CHF 10'810</td>
+          <td class="num" style="color:var(--red);">CHF 10'810</td>
+          <td>15.03.2026</td>
+          <td>25.03.2026</td>
+          <td><span class="chip overdue">Überfällig</span></td>
+          <td><span class="dunning-badge l2">Mahnung 2</span></td>
+          <td>JV</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1012</td>
+          <td><span class="chip ok">Schluss</span></td>
+          <td>Sutter + Partner AG</td>
+          <td>Elena Gaspari · Head of Architecture · Mandat Stage 3</td>
+          <td>ARC</td>
+          <td class="num">CHF 29'325</td>
+          <td class="num">CHF 29'325</td>
+          <td>10.04.2026</td>
+          <td>20.04.2026</td>
+          <td><span class="chip sent">Versendet</span></td>
+          <td>—</td>
+          <td>YB</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1024</td>
+          <td><span class="chip ok">Erfolg</span></td>
+          <td>Morell Immobilien</td>
+          <td>Sven Lötscher · Property Manager REM</td>
+          <td>REM</td>
+          <td class="num">CHF 14'650</td>
+          <td class="num">CHF 0</td>
+          <td>12.04.2026</td>
+          <td>12.05.2026</td>
+          <td><span class="chip ok">Bezahlt</span></td>
+          <td>—</td>
+          <td>JV</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1037</td>
+          <td><span class="chip ok">Time-Mandat</span></td>
+          <td>Arcanum Architekten</td>
+          <td>März 2026 · 4.3 Wochen × CHF 2'500</td>
+          <td>ARC</td>
+          <td class="num">CHF 11'620</td>
+          <td class="num" style="color:var(--amber);">CHF 5'810</td>
+          <td>01.04.2026</td>
+          <td>11.04.2026</td>
+          <td><span class="chip partial">Teilbezahlt</span></td>
+          <td>—</td>
+          <td>YB</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1048</td>
+          <td><span class="chip ok">Assessment</span></td>
+          <td>Horizont Bauleitung GmbH</td>
+          <td>Scheelen MDI · 3 Kandidaten</td>
+          <td>ING</td>
+          <td class="num">CHF 4'860</td>
+          <td class="num">CHF 4'860</td>
+          <td>15.04.2026</td>
+          <td>15.05.2026</td>
+          <td><span class="chip sent">Versendet</span></td>
+          <td>—</td>
+          <td>SP</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1055</td>
+          <td><span class="chip ok">Erfolg</span></td>
+          <td>Frauenfelder Holding</td>
+          <td>Marco Steiner · Gesamtleiter GT</td>
+          <td>GT</td>
+          <td class="num">CHF 22'500</td>
+          <td class="num" style="color:var(--red);">CHF 22'500</td>
+          <td>14.02.2026</td>
+          <td>16.03.2026</td>
+          <td><span class="chip overdue">Überfällig</span></td>
+          <td><span class="dunning-badge l2">Mahnung 2</span></td>
+          <td>PW</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.02.0558</td>
+          <td><span class="chip ok">Erfolg</span></td>
+          <td>Sievert &amp; Co.</td>
+          <td>Yannick Bühler · Bauleiter GT</td>
+          <td>GT</td>
+          <td class="num">CHF 18'900</td>
+          <td class="num" style="color:var(--red);">CHF 18'900</td>
+          <td>18.02.2026</td>
+          <td>20.03.2026</td>
+          <td><span class="chip dispute">Honorarstreit</span></td>
+          <td>—</td>
+          <td>SP</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1062</td>
+          <td><span class="chip ok">Zwischen</span></td>
+          <td>Volare Group AG</td>
+          <td>Mandat MA-2026-018 · Stage 2 · Shortlist-Start</td>
+          <td>REM</td>
+          <td class="num">CHF 10'810</td>
+          <td class="num">CHF 10'810</td>
+          <td>18.04.2026</td>
+          <td>28.04.2026</td>
+          <td><span class="chip sent">Versendet</span></td>
+          <td>—</td>
+          <td>JV</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.03.0881</td>
+          <td><span class="chip refund">Rückerstattung</span></td>
+          <td>Arcanum Architekten</td>
+          <td>Ref FN2026.01.0142 · Refund Probezeit Monat 2</td>
+          <td>ARC</td>
+          <td class="num">−CHF 7'350</td>
+          <td class="num">CHF 0</td>
+          <td>05.03.2026</td>
+          <td>—</td>
+          <td><span class="chip refund">Ausbezahlt</span></td>
+          <td>—</td>
+          <td>YB</td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="nr">FN2026.04.1008</td>
+          <td><span class="chip draft">Erfolg · Entwurf</span></td>
+          <td>Emch+Berger Gruppe</td>
+          <td>Lukas Wanner · Projektleiter ING (Placement 10.04.)</td>
+          <td>ING</td>
+          <td class="num">CHF 34'830</td>
+          <td class="num">—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="chip draft">Entwurf</span></td>
+          <td>—</td>
+          <td>PW</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="list-footer">
+      <span>11 von 165 Rechnungen · Seite 1 von 15</span>
+      <div class="pager">
+        <button class="pager-btn" type="button">‹</button>
+        <button class="pager-btn active" type="button">1</button>
+        <button class="pager-btn" type="button">2</button>
+        <button class="pager-btn" type="button">3</button>
+        <span style="padding:4px 6px;">…</span>
+        <button class="pager-btn" type="button">15</button>
+        <button class="pager-btn" type="button">›</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Rechnung-Detail · FN2026.03.0917 · Emch+Berger · Fischer
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay active" id="detailOverlay" onclick="closeDetail()"></div>
+<div class="drawer active" id="detailDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>FN2026.03.0917</h3>
+      <span class="chip overdue" style="margin-left:6px;">Überfällig</span>
+      <span class="chip ok" style="margin-left:4px;">Erfolg</span>
+    </div>
+    <button class="close" type="button" onclick="closeDetail()">×</button>
+  </div>
+  <div class="drawer-sub">
+    <span>Emch+Berger Gruppe · Bern</span>
+    <span>·</span>
+    <span>z.Hd. Buchhaltung Finanzen</span>
+    <span>·</span>
+    <span>Issue 22.03.2026 · fällig 21.04.2026 · <strong style="color:var(--red);">3 Tage überfällig</strong></span>
+  </div>
+
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Positionen</div>
+    <div class="drawer-tab">Zahlungen</div>
+    <div class="drawer-tab">Mahnungen · 0</div>
+    <div class="drawer-tab">Audit</div>
+    <div class="drawer-tab">PDF-Vorschau</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Kunde-Snapshot -->
+    <div class="customer-box">
+      <div class="name">Emch+Berger Gruppe</div>
+      <div>Gartenstrasse 1 · 3001 Bern · Schweiz</div>
+      <div class="meta">
+        <span class="pill">Kadenz: Key-Account</span>
+        <span class="pill">Anrede: Sie</span>
+        <span class="pill">Blind-Copy: aktiv</span>
+        <span class="pill">AGB: FEB 2023</span>
+      </div>
+    </div>
+
+    <!-- Positionen -->
+    <div class="pos-row" style="font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+      <div class="idx">#</div>
+      <div>Beschreibung</div>
+      <div class="pct">Satz</div>
+      <div class="amt">Basis</div>
+      <div class="amt">Netto</div>
+    </div>
+    <div class="pos-row">
+      <div class="idx">1</div>
+      <div class="desc">
+        Honorar Kandidaten-Vermittlung
+        <small>Tobias Fischer · Eintritt 15.04.2026 · Projektleiter ING · Sparte ING · Total-Compensation CHF 133'640 (Basis 125k + 13. ML + Fringe Benefits · AGB §4 Stufe ≥130k)</small>
+      </div>
+      <div class="pct">27 %</div>
+      <div class="amt">CHF 133'640</div>
+      <div class="amt">CHF 36'083</div>
+    </div>
+    <div class="pos-row" style="background:var(--bg);">
+      <div class="idx"></div>
+      <div class="desc" style="color:var(--text-mid);">Subtotal netto</div>
+      <div class="pct"></div>
+      <div class="amt"></div>
+      <div class="amt">CHF 33'410</div>
+    </div>
+    <div class="pos-row">
+      <div class="idx"></div>
+      <div class="desc" style="color:var(--text-mid);">MwSt 8.1 % (Normalsatz CH)</div>
+      <div class="pct"></div>
+      <div class="amt"></div>
+      <div class="amt">CHF 2'706</div>
+    </div>
+
+    <div class="warn-inline">
+      <div class="title">Rechnung 3 Tage überfällig</div>
+      Standard-Kadenz (Key-Account): Mahnung 1 fällig ab T+30 = 21.04.2026 (heute). Vorschlag: Soft-Reminder vor Mahnung. Dispute: keiner aktiv.
+    </div>
+
+    <!-- Verjährungs-Warnung nicht aktiv (noch 4 Jahre Zeit) · UI würde bei <90d zeigen -->
+
+  </div>
+
+  <div class="drawer-foot">
+    <div class="totals">
+      Brutto · <strong>CHF 36'083.40</strong>
+      <span style="color:var(--red);font-size:11px;">offen: CHF 36'083.40</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-secondary" type="button">✉ Mahnung 1</button>
+      <button class="btn btn-secondary" type="button">⎙ PDF</button>
+      <button class="btn btn-primary" type="button">⚠ Zahlung erfassen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Rechnung-Erstellen · Multi-Step-Wizard (7 Steps)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="createOverlay" onclick="closeCreate()"></div>
+<div class="drawer" id="createDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Neue Rechnung</h3>
+      <span class="chip draft" style="margin-left:6px;">Entwurf</span>
+    </div>
+    <button class="close" type="button" onclick="closeCreate()">×</button>
+  </div>
+
+  <div class="wizard-steps">
+    <div class="wizard-step done">1 · Kunde</div>
+    <div class="wizard-step done">2 · Quelle</div>
+    <div class="wizard-step active">3 · Positionen</div>
+    <div class="wizard-step">4 · MwSt &amp; Rabatt</div>
+    <div class="wizard-step">5 · Anschreiben</div>
+    <div class="wizard-step">6 · QR-Vorschau</div>
+    <div class="wizard-step">7 · Freigabe</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Step 3 Content: Positionen (nach Auto-Fill aus Process) -->
+    <div class="customer-box">
+      <div class="name">Emch+Berger Gruppe · Lukas Wanner</div>
+      <div>Prozess PR-2026-0142 · Placement bestätigt 10.04.2026 · Sparte ING · AM PW</div>
+      <div class="meta">
+        <span class="pill">Best-Effort</span>
+        <span class="pill">Standard-Rabatt 0 %</span>
+        <span class="pill">Probezeit: 3 Monate</span>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Kandidat · Funktion</label>
+      <input type="text" value="Lukas Wanner · Projektleiter ING" readonly style="background:var(--surface);color:var(--text-mid);">
+      <div class="hint">Auto-Fill aus Prozess · bei Blind-Copy auf Seite 3 verdeckt</div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Stellenantritt</label>
+        <input type="date" value="2026-05-01">
+      </div>
+      <div class="fg">
+        <label>Probezeit (Monate)</label>
+        <input type="number" value="3" min="1" max="6">
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Total Compensation (CHF · Basis für Honorar-Staffel)</label>
+      <input type="number" value="129000">
+      <div class="hint">Jahreslohn 120'000 + 13. ML 10'000 − Zielbonus / Fringe Benefits 0. AGB §4 Stufe: < CHF 130'000 = <strong>25 %</strong>.</div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Honorarsatz (Staffel-Auto)</label>
+        <input type="number" value="25" readonly style="background:var(--surface);color:var(--text-mid);">
+      </div>
+      <div class="fg">
+        <label>Rabatt (aus Prozess · GF bei &gt; 20 %)</label>
+        <input type="number" value="0" readonly style="background:var(--surface);color:var(--text-mid);">
+      </div>
+    </div>
+
+    <div class="warn-inline" style="background:color-mix(in srgb,var(--green) 10%,var(--surface));border-left-color:var(--green);">
+      <div class="title">Berechnung live</div>
+      Netto-Honorar <strong>CHF 32'250</strong> (129'000 × 25 % × (1 − 0 %)) · MwSt 8.1 % = <strong>CHF 2'612.25</strong> · Brutto <strong>CHF 34'862.25</strong> (gerundet auf 5 Rappen: <strong>CHF 34'862.25</strong>)
+    </div>
+
+    <div class="fg">
+      <label>Sparte</label>
+      <select>
+        <option>ING · Civil Engineering</option>
+        <option>ARC · Architecture</option>
+        <option>GT · Gebäudetechnik</option>
+        <option>REM · Real Estate Management</option>
+        <option>PUR · Purchase &amp; Supply</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>Interne Notiz (optional)</label>
+      <textarea placeholder="z.B. Sonderkondition verhandelt durch …"></textarea>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div class="totals">
+      Brutto · <strong>CHF 34'862.25</strong>
+      <span style="color:var(--text-light);font-size:11px;">Entwurf — nicht versendet</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-secondary" type="button">‹ Zurück</button>
+      <button class="btn btn-primary" type="button">Weiter: MwSt &amp; Rabatt ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDetail(){
+    document.getElementById('detailDrawer').classList.add('active');
+    document.getElementById('detailOverlay').classList.add('active');
+  }
+  function closeDetail(){
+    document.getElementById('detailDrawer').classList.remove('active');
+    document.getElementById('detailOverlay').classList.remove('active');
+  }
+  function closeCreate(){
+    document.getElementById('createDrawer').classList.remove('active');
+    document.getElementById('createOverlay').classList.remove('active');
+  }
+</script>
+
+</body>
+</html>
