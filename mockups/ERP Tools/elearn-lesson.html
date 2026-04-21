@@ -106,14 +106,14 @@
     <a class="tool-tab" href="hr.html" title="HR"><span class="icon">👥</span> HR</a>
     <a class="tool-tab" href="commission.html" title="Commission"><span class="icon">💰</span> Commission</a>
     <a class="tool-tab" href="zeit.html" title="Zeit"><span class="icon">⏱</span> Zeit</a>
-    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
     <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
     <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
   </div>
   <div class="right">
     <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
     <span class="user-chip">Peter W. · Researcher</span>
-    <button class="theme-toggle" aria-label="Theme">☀</button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
   </div>
 </div>
 
@@ -225,6 +225,23 @@
   </div>
   <button class="btn done" onclick="location.href='elearn-lesson.html'">Erledigt ✓ &amp; Nächste Lesson →</button>
 </div>
+
+<script>
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const c = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(c === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+function openSearch() { alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog.'); }
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } });
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
+</script>
 
 </body>
 </html>

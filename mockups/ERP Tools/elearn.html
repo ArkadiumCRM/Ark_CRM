@@ -131,15 +131,15 @@
     <a class="tool-tab" href="zeit.html" title="Zeiterfassung">
       <span class="icon">⏱</span> Zeit
     </a>
-    <a class="tool-tab active" href="elearn.html" title="E-Learning">
-      <span class="icon">🎓</span> E-Learning
-    </a>
     <span class="tool-tab disabled" title="Noch nicht verfuegbar">
       <span class="icon">📄</span> Billing
     </span>
-    <span class="tool-tab disabled">
+    <span class="tool-tab disabled" title="Noch nicht verfuegbar">
       <span class="icon">📊</span> Performance
     </span>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning">
+      <span class="icon">🎓</span> E-Learning
+    </a>
   </div>
 
   <div class="right">
@@ -330,12 +330,38 @@
 </div>
 
 <script>
+// Mode-Switch (Onboarding / Bestehend)
 function setMode(mode) {
   document.getElementById('view-onboarding').style.display = mode === 'onboarding' ? 'block' : 'none';
   document.getElementById('view-bestehend').style.display = mode === 'bestehend' ? 'block' : 'none';
   document.querySelectorAll('.mode-switch button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
 }
+
+// Theme-Toggle (ARK-Pattern wie hr.html / crm.html)
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+
+// Cmd+K Suche (Placeholder-Modal bis Quick-Command gebaut)
+function openSearch() {
+  alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog (Kandidaten, Accounts, Kurse, etc. anspringen).');
+}
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+});
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
 </script>
 
 </body>
