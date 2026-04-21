@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ARK ERP — Commission</title>
+<title>ARK ERP — HR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../_shared/editorial.css">
+<link rel="stylesheet" href="../../_shared/editorial.css">
 <style>
   html, body { height:100%; margin:0; overflow:hidden; }
   body {
@@ -16,22 +16,36 @@
     background:var(--bg);
   }
 
+  /* TOPBAR */
   .topbar {
     position:relative;
     display:flex; justify-content:space-between; align-items:center;
     padding:0 20px; background:var(--surface);
-    border-bottom:1px solid var(--border); height:52px;
+    border-bottom:1px solid var(--border);
+    height:52px;
   }
-  .topbar .brand { display:flex; align-items:center; gap:10px; }
+  .topbar .brand {
+    display:flex; align-items:center; gap:10px;
+  }
   .topbar .logo {
     width:28px; height:28px; border-radius:6px;
     background:var(--accent); color:white;
     display:flex; align-items:center; justify-content:center;
     font-family:'Libre Baskerville',serif; font-weight:700;
   }
-  .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
-  .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
-
+  .topbar .brand-text {
+    font-size:14px; font-weight:600; color:var(--text);
+  }
+  .topbar .brand-sub {
+    font-size:11px; color:var(--text-light);
+    font-weight:500;
+  }
+  .topbar .crumb {
+    font-size:13px; color:var(--text-light);
+  }
+  .topbar .crumb .current {
+    color:var(--text); font-weight:600;
+  }
   .topbar .right {
     display:flex; align-items:center; gap:10px;
     font-size:12px; color:var(--text-light);
@@ -53,15 +67,19 @@
     transition:all 0.15s;
     white-space:nowrap;
   }
-  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab:hover {
+    background:var(--surface); color:var(--accent);
+  }
   .tool-tab.active {
     background:var(--accent); color:white; font-weight:600;
   }
   .tool-tab.disabled {
-    opacity:0.45; cursor:not-allowed; pointer-events:none;
+    opacity:0.45; cursor:not-allowed;
+    pointer-events:none;
   }
   .tool-tab .icon { font-size:13px; }
 
+  /* THEME-TOGGLE */
   .theme-toggle {
     border:1px solid var(--border);
     background:var(--surface); color:var(--text);
@@ -71,8 +89,10 @@
     transition:all 0.15s;
   }
   .theme-toggle:hover {
-    background:var(--surface-alt); border-color:var(--accent);
+    background:var(--surface-alt);
+    border-color:var(--accent);
   }
+
   .user-chip {
     padding:4px 10px; border-radius:14px;
     background:var(--surface-alt); font-size:11px;
@@ -89,14 +109,7 @@
     border-radius:2px; font-family:monospace; font-size:10px;
   }
 
-  /* Breadcrumb */
-  .breadcrumb-row {
-    background:var(--surface); border-bottom:1px solid var(--border);
-    padding:8px 20px; font-size:12px; color:var(--text-light);
-  }
-  .breadcrumb-row .current { color:var(--text); font-weight:600; }
-
-  /* SHELL */
+  /* LAYOUT */
   .shell {
     display:grid;
     grid-template-columns:56px 1fr;
@@ -106,6 +119,7 @@
   body:has(.sidebar:hover) .shell { grid-template-columns:240px 1fr; }
   body:has(.sidebar.expanded) .shell { grid-template-columns:240px 1fr; }
 
+  /* SIDEBAR */
   .sidebar {
     background:var(--surface); border-right:1px solid var(--border);
     overflow-x:hidden; overflow-y:auto; font-size:13px;
@@ -190,11 +204,13 @@
   .sidebar .sb-item .badge.red { background:var(--red); }
   .sidebar .sb-item.disabled .badge { background:var(--text-light); opacity:0.5; }
 
+  /* MAIN IFRAME */
   .main-frame {
     border:none; width:100%; height:100%;
     background:var(--bg);
   }
 
+  /* MOBILE */
   @media (max-width:960px) {
     .shell { grid-template-columns:1fr; }
     body:has(.sidebar:hover) .shell,
@@ -295,26 +311,31 @@
     </div>
   </div>
 
+  <!-- TOOL-TABS (tool-übergreifende Navigation) -->
   <div class="tool-tabs">
-    <a class="tool-tab" href="../crm.html">
+    <a class="tool-tab" href="../../crm.html" title="CRM">
       <span class="icon">🎯</span> CRM
     </a>
-    <a class="tool-tab" href="hr.html">
+    <a class="tool-tab active" href="../hr/hr.html">
       <span class="icon">👥</span> HR
     </a>
-    <a class="tool-tab active" href="commission.html">
+    <a class="tool-tab" href="../commission/commission.html" title="Commission-Engine">
       <span class="icon">💰</span> Commission
     </a>
-    <a class="tool-tab" href="zeit.html">
+    <a class="tool-tab" href="../zeit/zeit.html" title="Zeiterfassung">
       <span class="icon">⏱</span> Zeit
     </a>
-    <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
-    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab" href="../billing/billing.html" title="Billing">
+      <span class="icon">📄</span> Billing
+    </a>
+    <span class="tool-tab disabled">
+      <span class="icon">📊</span> Performance
+    </span>
   </div>
 
   <div class="right">
     <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
-    <span class="user-chip">Peter W. · Head CE &amp; BT</span>
+    <span class="user-chip">Peter W. · HR-Manager</span>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
   </div>
 </div>
@@ -323,6 +344,7 @@
 <!-- SHELL -->
 <div class="shell">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-top">
 
@@ -330,54 +352,52 @@
     <div class="sb-brand">
       <div class="logo-mark">A</div>
       <div class="brand-text">
-        <div class="brand-name">Commission</div>
+        <div class="brand-name">HR</div>
       </div>
     </div>
 
-    <div class="sb-section">Überblick</div>
-    <div class="sb-item active" data-src="commission-dashboard.html" data-title="Dashboard">
+    <div class="sb-section">HR-Tool</div>
+    <div class="sb-item active" data-src="hr-dashboard.html" data-title="Dashboard">
       <span class="icon">📊</span><span class="label">Dashboard</span>
     </div>
-
-    <div class="sb-section">Meine Sicht</div>
-    <div class="sb-item" data-src="commission-my.html" data-title="Mein Sheet (CM/AM)">
-      <span class="icon">👤</span><span class="label">Mein Sheet (CM/AM)</span>
+    <div class="sb-item" data-src="hr-mitarbeiter-self.html" data-title="Mein Profil">
+      <span class="icon">👤</span><span class="label">Mein Profil</span>
     </div>
-    <div class="sb-item" data-src="commission-my-researcher.html" data-title="Mein Sheet (Researcher)">
-      <span class="icon">🔬</span><span class="label">Researcher-Sheet</span>
-    </div>
-    <div class="sb-item" data-src="commission-team.html" data-title="Team-Übersicht">
-      <span class="icon">👥</span><span class="label">Team (Head/TL)</span>
+    <div class="sb-item" data-src="hr-list.html" data-title="Mitarbeiter-Liste">
+      <span class="icon">👥</span><span class="label">Mitarbeiter</span> <span class="badge">12</span>
     </div>
 
-    <div class="sb-section">Admin / Backoffice</div>
-    <div class="sb-item" data-src="commission-admin.html" data-title="Backoffice-Admin">
-      <span class="icon">🔧</span><span class="label">Backoffice-Admin</span>
+    <div class="sb-section">Prozesse</div>
+    <div class="sb-item" data-src="hr-warnings-disciplinary.html" data-title="Verwarnungen">
+      <span class="icon">⚠️</span><span class="label">Verwarnungen</span> <span class="badge red">3</span>
     </div>
-    <div class="sb-item disabled">
-      <span class="icon">📈</span><span class="label">ZEG-Report (global)</span>
+    <div class="sb-item" data-src="hr-provisionsvertrag-editor.html" data-title="Provisionsverträge">
+      <span class="icon">💰</span><span class="label">Provisionsverträge</span>
     </div>
-
-    <div class="sb-section">Verträge (Cross-Tool)</div>
-    <div class="sb-item" data-external="hr.html#provisionsvertrag">
-      <span class="icon">📝</span><span class="label">Provisionsverträge (HR) ↗</span>
+    <div class="sb-item" data-src="hr-academy-dashboard.html" data-title="Academy">
+      <span class="icon">🎓</span><span class="label">Academy</span>
     </div>
 
-    <div class="sb-section">Später (Phase 3.7+)</div>
-    <div class="sb-item disabled">
-      <span class="icon">💼</span><span class="label">Pool-Distribution</span>
+    <div class="sb-section">Operativ (Phase 3.1+)</div>
+    <div class="sb-item disabled" title="Noch nicht verfügbar">
+      <span class="icon">📅</span><span class="label">Absenz-Kalender</span>
     </div>
     <div class="sb-item disabled">
-      <span class="icon">📅</span><span class="label">Quartals-Vorschuss</span>
+      <span class="icon">📄</span><span class="label">Dokumente-Admin</span>
     </div>
     <div class="sb-item disabled">
-      <span class="icon">🏁</span><span class="label">Jahres-Abrechnung</span>
+      <span class="icon">📖</span><span class="label">Onboarding-Editor</span>
+    </div>
+
+    <div class="sb-section">Später (Phase 3.6)</div>
+    <div class="sb-item disabled">
+      <span class="icon">📈</span><span class="label">Reports</span>
     </div>
     <div class="sb-item disabled">
-      <span class="icon">⚖️</span><span class="label">Honorarstreit (Einmalzahlung)</span>
+      <span class="icon">🌳</span><span class="label">Organigramm</span>
     </div>
     <div class="sb-item disabled">
-      <span class="icon">⚙️</span><span class="label">ZEG-Staffel-Config</span>
+      <span class="icon">⚙️</span><span class="label">Einstellungen</span>
     </div>
 
     </div><!-- /sb-top -->
@@ -412,23 +432,20 @@
 
   </aside>
 
-  <iframe id="mainFrame" class="main-frame" src="commission-dashboard.html"></iframe>
+  <!-- IFRAME -->
+  <iframe id="mainFrame" class="main-frame" src="hr-dashboard.html"></iframe>
 
 </div>
 
 <script>
   const frame = document.getElementById('mainFrame');
-  const crumb = null;
+  const crumb = null; // breadcrumb entfernt
   const sidebar = document.getElementById('sidebar');
   const burger = document.getElementById('burger');
 
   document.querySelectorAll('.sb-item').forEach(item => {
     item.addEventListener('click', () => {
       if (item.classList.contains('disabled')) return;
-      if (item.dataset.external) {
-        window.location.href = item.dataset.external;
-        return;
-      }
       const src = item.dataset.src;
       const title = item.dataset.title;
       if (!src) return;
@@ -439,6 +456,7 @@
       frame.src = src;
       if (title) crumb.textContent = title;
 
+      // close mobile sidebar
       sidebar.classList.remove('open');
     });
   });
@@ -469,6 +487,7 @@
     }
   })();
 
+  // THEME-TOGGLE (wie crm.html)
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const glyph = theme === 'dark' ? '☾' : '☀';
@@ -481,7 +500,7 @@
         const ifBtn = frame.contentDocument.getElementById('themeBtn');
         if (ifBtn) ifBtn.textContent = glyph;
       }
-    } catch (e) {}
+    } catch (e) { /* cross-origin safe-fail */ }
   }
 
   function toggleTheme() {
@@ -489,16 +508,18 @@
     applyTheme(current === 'light' ? 'dark' : 'light');
   }
 
+  // Initial: aus localStorage oder default light
   const savedTheme = localStorage.getItem('ark-theme') || 'light';
   applyTheme(savedTheme);
 
+  // Sync theme zu iframe beim Seitenwechsel
   frame.addEventListener('load', () => {
     const theme = document.documentElement.getAttribute('data-theme') || 'light';
     try {
       if (frame.contentDocument && frame.contentDocument.documentElement) {
         frame.contentDocument.documentElement.setAttribute('data-theme', theme);
       }
-    } catch (e) {}
+    } catch (e) { /* cross-origin safe-fail */ }
   });
 
   // PROFIL-DROPDOWN (drop-up)
