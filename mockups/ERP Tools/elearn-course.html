@@ -17,6 +17,16 @@
   .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
   .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
   .topbar .right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-light); }
+  .tool-tabs { display:flex; gap:2px; align-items:center; background:var(--surface-alt); padding:3px; border-radius:22px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:all 0.15s; white-space:nowrap; }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
+  .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
 
   .crumb-row { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 32px; font-size:12px; color:var(--text-light); }
   .crumb-row a { color:var(--accent); text-decoration:none; }
@@ -74,16 +84,28 @@
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">
     <div class="logo">A</div>
     <div>
-      <div class="brand-text">ARK ERP</div>
-      <div class="brand-sub">E-Learning · Marktwissen ARC</div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
     </div>
   </div>
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../crm.html" title="CRM"><span class="icon">🎯</span> CRM</a>
+    <a class="tool-tab" href="hr.html" title="HR"><span class="icon">👥</span> HR</a>
+    <a class="tool-tab" href="commission.html" title="Commission"><span class="icon">💰</span> Commission</a>
+    <a class="tool-tab" href="zeit.html" title="Zeit"><span class="icon">⏱</span> Zeit</a>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
+    <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
+    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+  </div>
   <div class="right">
-    <span>PW · Peter Wiederkehr</span>
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · Researcher</span>
+    <button class="theme-toggle" aria-label="Theme">☀</button>
   </div>
 </div>
 

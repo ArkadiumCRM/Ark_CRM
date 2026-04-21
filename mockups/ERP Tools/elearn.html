@@ -17,16 +17,18 @@
   .topbar .logo { width:28px; height:28px; border-radius:6px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; }
   .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
   .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
-  .topbar .crumb { font-size:13px; color:var(--text-light); }
-  .topbar .crumb .current { color:var(--text); font-weight:600; }
   .topbar .right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-light); }
-  .workspace-toggle { display:flex; gap:2px; background:var(--surface-alt); padding:3px; border-radius:18px; margin-right:12px; }
-  .workspace-toggle .ws { padding:4px 12px; font-size:12px; font-weight:500; color:var(--text-light); border-radius:14px; cursor:pointer; text-decoration:none; }
-  .workspace-toggle .ws.active { background:var(--accent); color:white; font-weight:600; }
   .tool-tabs { display:flex; gap:2px; align-items:center; background:var(--surface-alt); padding:3px; border-radius:22px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
-  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:all 0.15s; white-space:nowrap; }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
   .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
   .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+  .theme-toggle:hover { background:var(--surface-alt); border-color:var(--accent); }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
 
   .layout { display:grid; grid-template-columns:240px 1fr 320px; overflow:hidden; }
   .sidebar { background:var(--surface); border-right:1px solid var(--border); padding:16px 12px; overflow-y:auto; }
@@ -105,27 +107,45 @@
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">
     <div class="logo">A</div>
     <div>
-      <div class="brand-text">ARK ERP</div>
-      <div class="brand-sub">E-Learning</div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
     </div>
   </div>
-  <div class="workspace-toggle" style="position:absolute; left:220px; top:50%; transform:translateY(-50%);">
-    <a href="../crm.html" class="ws">CRM</a>
-    <a href="#" class="ws active">ERP</a>
-  </div>
+
+  <!-- TOOL-TABS (tool-uebergreifende Navigation) -->
   <div class="tool-tabs">
-    <a href="hr.html" class="tool-tab"><span class="icon">👥</span> HR</a>
-    <a href="zeit.html" class="tool-tab"><span class="icon">⏱</span> Zeit</a>
-    <a href="commission.html" class="tool-tab"><span class="icon">💰</span> Commission</a>
-    <a href="#" class="tool-tab active"><span class="icon">🎓</span> E-Learning</a>
+    <a class="tool-tab" href="../crm.html" title="CRM">
+      <span class="icon">🎯</span> CRM
+    </a>
+    <a class="tool-tab" href="hr.html" title="HR">
+      <span class="icon">👥</span> HR
+    </a>
+    <a class="tool-tab" href="commission.html" title="Commission-Engine">
+      <span class="icon">💰</span> Commission
+    </a>
+    <a class="tool-tab" href="zeit.html" title="Zeiterfassung">
+      <span class="icon">⏱</span> Zeit
+    </a>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning">
+      <span class="icon">🎓</span> E-Learning
+    </a>
+    <span class="tool-tab disabled" title="Noch nicht verfuegbar">
+      <span class="icon">📄</span> Billing
+    </span>
+    <span class="tool-tab disabled">
+      <span class="icon">📊</span> Performance
+    </span>
   </div>
+
   <div class="right">
-    <span>🔔 <span style="background:var(--amber); color:white; padding:1px 6px; border-radius:10px; font-size:10px;">2</span></span>
-    <span>PW</span>
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · Researcher</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
   </div>
 </div>
 
