@@ -437,143 +437,166 @@ Alle 3 Einträge aus Session 3131f2f7 (18:03–18:04) resolved im Rahmen der **M
 ## [2026-04-19 22:59] session-13946034
 - **File:** ARK_STAMMDATEN_EXPORT_v1_3.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:00] session-13946034
 - **File:** ARK_DATABASE_SCHEMA_v1_3.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:01] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:01] session-13946034
 - **File:** ARK_FRONTEND_FREEZE_v1_10.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:37] session-13946034
 - **File:** ARK_STAMMDATEN_EXPORT_v1_3.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:45] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:45] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:45] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-19 23:46] session-13946034
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved
+- **Sync-Check:** Siehe Zusammenfassung 2026-04-20 (Zeit-Modul PR #2).
+- **Resolved-In:** siehe 2026-04-20-Resolution-Block.
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-20] session-prime-ark | RESOLUTION ✓ (Sammel-Resolution Zeit-Modul Grundlagen-Sync)
+
+Alle 18 Einträge aus Session 13946034 (2026-04-19 22:59–23:46) in Sammel-Pass resolved. Kontext: Hook-Log-Artefakte der iterativen Grundlagen-Edits während Zeit-Modul-Build. Eigentlicher Sammel-Resolution-Block steht bereits oben (2026-04-19 · "Zeit-Modul v0.1 Grundlagen-Sync").
+
+**Scope:** Phase-3 ERP Zeit-Modul v0.1 · komplett (Research → Specs → Mockups · Phase A–D).
+
+**Grundlagen-Edits (resolved via PR #2 / commit d0828ba):**
+- `ARK_STAMMDATEN_EXPORT_v1_3.md` → v1.4 (§90 Zeit-Modul-Stammdaten)
+- `ARK_DATABASE_SCHEMA_v1_3.md` → v1.4 (15 Tabellen · 4 Views · 9 Enums · btree_gist)
+- `ARK_BACKEND_ARCHITECTURE_v2_5.md` → v2.6 (M. Zeit-Modul · 21 Endpoints · 12 Events · 9 Workers · 4 Sagas)
+- `ARK_FRONTEND_FREEZE_v1_10.md` → v1.11 (Zeit-Modul UI-Pattern · 7 Screens + 5 Drawer + 2 Modals)
+
+**Resolved-In (PR #2 merged in main):**
+- `specs/ARK_ZEIT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md`
+- `wiki/meta/zeit-decisions-2026-04-19.md`
+- `mockups/zeit-*.html` (7 Mockups)
+
+**Sync-Kaskade zu Detailmasken:** N/A — Zeit-Modul ist neues Modul, tangiert keine der 9 existierenden Entity-Detailmasken.
+
+**Digest-Stale:** alle 4 Digests regenerieren nach nächstem Commit.
+
+**Hinweis:** Die 18 Einzel-Einträge bleiben als Audit-Trail sichtbar; Status über diese Zusammenfassung auf `resolved` gesetzt.
