@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Kurs-Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; overflow:hidden; }
+  body { display:grid; grid-template-rows:52px 1fr; font-family:'DM Sans', sans-serif; background:var(--bg); }
+  .topbar { display:flex; justify-content:space-between; align-items:center; padding:0 20px; background:var(--surface); border-bottom:1px solid var(--border); height:52px; position:relative; }
+  .topbar .brand { display:flex; align-items:center; gap:10px; }
+  .topbar .logo { width:28px; height:28px; border-radius:6px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; }
+  .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
+  .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
+  .topbar .right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-light); }
+  .tool-tabs { display:flex; gap:2px; align-items:center; background:var(--surface-alt); padding:3px; border-radius:22px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:all 0.15s; white-space:nowrap; }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
+  .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+
+  .crumb-row { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 32px; font-size:12px; color:var(--text-light); }
+  .crumb-row a { color:var(--accent); text-decoration:none; }
+  .crumb-row a:hover { text-decoration:underline; }
+
+  .layout { display:grid; grid-template-columns:240px 1fr; overflow:hidden; }
+  .sidebar { background:var(--surface); border-right:1px solid var(--border); padding:16px 12px; overflow-y:auto; }
+  .sidebar-title { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-light); font-weight:600; padding:0 8px 8px; }
+  .sidebar-item { display:flex; align-items:center; gap:8px; padding:8px 10px; font-size:13px; color:var(--text); text-decoration:none; border-radius:6px; margin-bottom:2px; }
+  .sidebar-item:hover { background:var(--surface-alt); }
+  .sidebar-item.active { background:var(--accent); color:white; font-weight:600; }
+
+  .main { overflow-y:auto; padding:24px 32px; }
+
+  /* Hero */
+  .course-hero { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px 28px; margin-bottom:24px; }
+  .course-hero .chips { display:flex; gap:6px; margin-bottom:10px; }
+  .chip { display:inline-block; padding:3px 8px; border-radius:10px; font-size:11px; font-weight:500; background:var(--accent-soft); color:var(--accent); }
+  .chip.sparte-arc { background:#FCE4E4; color:#B42525; }
+  .course-hero h1 { font-family:'Libre Baskerville', serif; font-size:26px; color:var(--accent); margin:0 0 6px; font-weight:700; }
+  .course-hero .desc { font-size:14px; color:var(--text-light); line-height:1.5; margin-bottom:16px; }
+  .course-hero .meta-row { display:flex; gap:24px; font-size:13px; color:var(--text-light); border-top:1px solid var(--border); padding-top:14px; }
+  .course-hero .meta-row strong { color:var(--text); font-weight:600; }
+  .course-hero .actions { display:flex; gap:10px; margin-top:14px; }
+  .btn { padding:8px 16px; font-size:13px; font-weight:600; border:none; border-radius:6px; cursor:pointer; background:var(--accent); color:white; }
+  .btn:hover { background:var(--accent-mid); }
+  .btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--border-strong); }
+
+  /* Module-Liste */
+  .module-list { display:flex; flex-direction:column; gap:10px; }
+  .module-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px; display:grid; grid-template-columns:40px 1fr auto auto; gap:16px; align-items:center; }
+  .module-card .mnum { width:32px; height:32px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Libre Baskerville', serif; }
+  .module-card.done .mnum { background:#2F7D2F; color:white; }
+  .module-card.current { border:2px solid var(--accent); }
+  .module-card .title { font-weight:600; color:var(--text); margin-bottom:2px; }
+  .module-card .sub { font-size:12px; color:var(--text-light); }
+  .module-card .status { font-size:12px; }
+  .status.done { color:#2F7D2F; font-weight:600; }
+  .status.current { color:var(--accent); font-weight:600; }
+  .status.locked { color:var(--text-light); }
+  .progress-ring-sm { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; }
+  .progress-ring-sm .inner { width:26px; height:26px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--accent); position:relative; z-index:1; }
+
+  /* Side-info */
+  .two-col { display:grid; grid-template-columns:1fr 300px; gap:24px; }
+  .side-info { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; height:fit-content; }
+  .side-info h4 { font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-light); font-weight:600; margin:0 0 10px; }
+  .side-info .row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; }
+  .side-info .row .label { color:var(--text-light); }
+  .side-info .row .val { font-weight:600; color:var(--text); }
+
+  .pretest-banner { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border:1px solid var(--accent); border-radius:10px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+  .pretest-banner .icon { font-size:22px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../crm.html" title="CRM"><span class="icon">🎯</span> CRM</a>
+    <a class="tool-tab" href="hr.html" title="HR"><span class="icon">👥</span> HR</a>
+    <a class="tool-tab" href="commission.html" title="Commission"><span class="icon">💰</span> Commission</a>
+    <a class="tool-tab" href="zeit.html" title="Zeit"><span class="icon">⏱</span> Zeit</a>
+    <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
+    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
+  </div>
+  <div class="right">
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · Researcher</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+  </div>
+</div>
+
+<div class="crumb-row">
+  <a href="elearn.html">Meine Kurse</a> <span style="margin:0 6px;">›</span> <span style="color:var(--text);">Marktwissen ARC</span>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">Mein Bereich</div>
+    <a href="elearn.html" class="sidebar-item">📚 Meine Kurse</a>
+    <a href="elearn-newsletter.html" class="sidebar-item">📬 Mein Newsletter</a>
+    <a href="elearn-certificates.html" class="sidebar-item">🏆 Zertifikate</a>
+    <a href="elearn-my-compliance.html" class="sidebar-item">✓ Compliance-Status</a>
+  </aside>
+
+  <main class="main">
+    <div class="two-col">
+      <div>
+        <!-- Hero -->
+        <div class="course-hero">
+          <div class="chips">
+            <span class="chip sparte-arc">ARC</span>
+            <span class="chip">Researcher</span>
+            <span class="chip">AM</span>
+            <span class="chip">CM</span>
+            <span class="chip" style="background:var(--amber); color:white;">Aktuell im Onboarding</span>
+          </div>
+          <h1>Marktwissen ARC</h1>
+          <p class="desc">Hauptakteure, Preise und Regulatoren der Sparte ARC. Erarbeite dir ein solides Fundament, um Projekte richtig einschätzen zu können.</p>
+          <div class="meta-row">
+            <span><strong>Dauer</strong> ca. 180 Minuten</span>
+            <span><strong>Module</strong> 4</span>
+            <span><strong>Lessons</strong> 14</span>
+            <span><strong>Version</strong> 1.2</span>
+            <span><strong>Refresher</strong> jährlich</span>
+          </div>
+          <div class="actions">
+            <button class="btn">Weiterlernen ab Modul 2</button>
+            <button class="btn ghost">Pre-Test versuchen</button>
+          </div>
+        </div>
+
+        <!-- Pre-Test-Banner -->
+        <div class="pretest-banner">
+          <div class="icon">⚡</div>
+          <div style="flex:1; font-size:13px;">
+            <strong>Pre-Test verfügbar</strong> — falls du das Wissen schon hast, kannst du den Kurs mit einem Pre-Test (≥ 90 % Bestehen) überspringen. <em>1 Versuch erlaubt.</em>
+          </div>
+          <button class="btn ghost">Pre-Test starten</button>
+        </div>
+
+        <!-- Module-Liste -->
+        <h3 style="font-family:'Libre Baskerville', serif; color:var(--accent); font-size:18px; margin:20px 0 14px;">Module</h3>
+        <div class="module-list">
+          <div class="module-card done">
+            <div class="mnum">✓</div>
+            <div>
+              <div class="title">1. Hauptakteure der Schweizer Planerszene</div>
+              <div class="sub">4 Lessons · Quiz bestanden (88 %)</div>
+            </div>
+            <div class="status done">Abgeschlossen</div>
+            <a href="elearn-lesson.html" class="btn ghost">Ansehen</a>
+          </div>
+          <div class="module-card current">
+            <div class="mnum">2</div>
+            <div>
+              <div class="title">2. Preise &amp; Honorarmodelle</div>
+              <div class="sub">3 Lessons · Lesson 2 / 3</div>
+            </div>
+            <div class="progress-ring-sm" style="background:conic-gradient(var(--accent) 0 67%, var(--surface-alt) 67% 100%);">
+              <div class="inner">67%</div>
+            </div>
+            <a href="elearn-lesson.html" class="btn">Weiterlernen</a>
+          </div>
+          <div class="module-card">
+            <div class="mnum">3</div>
+            <div>
+              <div class="title">3. Regulatoren &amp; Verbände</div>
+              <div class="sub">4 Lessons · SIA, USIC, KBOB</div>
+            </div>
+            <div class="status locked">Gesperrt — nach Modul 2</div>
+            <span style="color:var(--text-light); font-size:18px;">🔒</span>
+          </div>
+          <div class="module-card">
+            <div class="mnum">4</div>
+            <div>
+              <div class="title">4. Marktentwicklung 2020-2026</div>
+              <div class="sub">3 Lessons · Trends, Herausforderungen</div>
+            </div>
+            <div class="status locked">Gesperrt</div>
+            <span style="color:var(--text-light); font-size:18px;">🔒</span>
+          </div>
+        </div>
+
+        <!-- Abschluss -->
+        <div style="margin-top:24px; padding:16px 18px; background:var(--surface-alt); border-radius:10px; font-size:13px; color:var(--text-light);">
+          Nach Abschluss aller Module: <strong style="color:var(--text);">PDF-Zertifikat</strong> + Badge „Marktwissen ARC".
+        </div>
+      </div>
+
+      <!-- Side-info -->
+      <aside>
+        <div class="side-info">
+          <h4>Meine Stats</h4>
+          <div class="row"><span class="label">Gestartet</span><span class="val">12.04.2026</span></div>
+          <div class="row"><span class="label">Letzte Aktivität</span><span class="val">heute</span></div>
+          <div class="row"><span class="label">Zeit investiert</span><span class="val">1 h 42 min</span></div>
+          <div class="row"><span class="label">Versuche</span><span class="val">1</span></div>
+          <div class="row"><span class="label">Ø Quiz-Score</span><span class="val">88 %</span></div>
+        </div>
+        <div class="side-info" style="margin-top:14px;">
+          <h4>Lernziele</h4>
+          <ul style="font-size:13px; color:var(--text); padding-left:18px; margin:0; line-height:1.6;">
+            <li>Hauptakteure nach Grösse und Fokus einordnen</li>
+            <li>Honorarmodelle nach SIA 102/103/108 erklären</li>
+            <li>Regulatorische Landschaft verstehen</li>
+            <li>Markttrends ARC interpretieren</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<script>
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const c = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(c === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+function openSearch() { alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog.'); }
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } });
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Lesson-Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; overflow:hidden; }
+  body { display:grid; grid-template-rows:52px 1fr 56px; font-family:'DM Sans', sans-serif; background:var(--bg); }
+  .topbar { position:relative; display:flex; justify-content:space-between; align-items:center; padding:0 20px; background:var(--surface); border-bottom:1px solid var(--border); height:52px; }
+  .topbar .brand { display:flex; align-items:center; gap:10px; }
+  .topbar .logo { width:28px; height:28px; border-radius:6px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; }
+  .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
+  .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
+  .topbar .right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-light); }
+  .tool-tabs { display:flex; gap:2px; align-items:center; background:var(--surface-alt); padding:3px; border-radius:22px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:all 0.15s; white-space:nowrap; }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
+  .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+
+  .reading-layout { display:grid; grid-template-columns:260px 1fr; overflow:hidden; }
+
+  /* Left: Lesson-Navigation */
+  .lesson-nav { background:var(--surface); border-right:1px solid var(--border); padding:20px 12px; overflow-y:auto; }
+  .lesson-nav .course-title { font-family:'Libre Baskerville', serif; font-size:14px; color:var(--accent); font-weight:700; margin-bottom:14px; padding:0 8px; }
+  .module-group { margin-bottom:16px; }
+  .module-group .mod-title { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-light); font-weight:600; padding:0 8px 6px; }
+  .lesson-item { display:flex; align-items:center; gap:8px; padding:8px 10px; font-size:13px; color:var(--text); text-decoration:none; border-radius:6px; margin-bottom:2px; line-height:1.3; }
+  .lesson-item:hover { background:var(--surface-alt); }
+  .lesson-item.active { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  .lesson-item .dot { width:18px; height:18px; border-radius:50%; border:2px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .lesson-item.done .dot { background:#2F7D2F; border-color:#2F7D2F; color:white; }
+  .lesson-item.active .dot { border-color:var(--accent); color:var(--accent); }
+  .quiz-item { background:var(--bg); border:1px dashed var(--border-strong); border-radius:6px; padding:10px 12px; margin-top:8px; font-size:12px; text-align:center; color:var(--text-light); }
+  .quiz-item.ready { background:var(--accent-soft); color:var(--accent); border-style:solid; border-color:var(--accent); font-weight:600; cursor:pointer; }
+
+  /* Main: Reading-Column */
+  .reading-main { overflow-y:auto; display:flex; justify-content:center; padding:32px 40px 60px; }
+  .reading-col { max-width:720px; width:100%; }
+
+  .lesson-head { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .lesson-head .meta { font-size:12px; color:var(--text-light); margin-bottom:8px; display:flex; gap:12px; }
+  .lesson-head h1 { font-family:'Libre Baskerville', serif; font-size:32px; color:var(--accent); margin:0 0 12px; font-weight:700; line-height:1.2; }
+  .lesson-head .intro { font-size:16px; color:var(--text-light); line-height:1.6; }
+
+  /* Markdown-Body */
+  .md-body { font-size:15px; color:var(--text); line-height:1.75; }
+  .md-body h2 { font-family:'Libre Baskerville', serif; font-size:22px; color:var(--accent); margin:32px 0 12px; font-weight:700; }
+  .md-body h3 { font-family:'DM Sans', sans-serif; font-size:17px; color:var(--text); margin:24px 0 8px; font-weight:600; }
+  .md-body p { margin:0 0 14px; }
+  .md-body ul { padding-left:22px; margin:0 0 14px; }
+  .md-body li { margin-bottom:4px; }
+  .md-body blockquote { border-left:3px solid var(--accent); background:var(--surface); padding:12px 18px; margin:18px 0; font-style:italic; color:var(--text-light); }
+  .md-body strong { color:var(--accent); }
+
+  /* Embed-Blocks */
+  .embed-image { display:block; max-width:100%; margin:24px auto; border-radius:8px; border:1px solid var(--border); background:var(--surface-alt); }
+  .embed-placeholder { background:var(--surface); border:2px dashed var(--border-strong); border-radius:8px; padding:48px 20px; text-align:center; color:var(--text-light); font-size:13px; margin:24px 0; }
+  .embed-pdf { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; margin:24px 0; display:flex; align-items:center; gap:14px; }
+  .embed-pdf .pdf-icon { width:44px; height:44px; background:#D32F2F; color:white; display:flex; align-items:center; justify-content:center; border-radius:6px; font-weight:700; font-size:13px; }
+  .embed-pdf .pdf-info { flex:1; }
+  .embed-pdf .pdf-title { font-weight:600; color:var(--text); font-size:14px; }
+  .embed-pdf .pdf-sub { font-size:12px; color:var(--text-light); }
+  .embed-youtube { background:#000; border-radius:8px; margin:24px 0; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; color:white; position:relative; }
+  .embed-youtube::before { content:'▶'; font-size:48px; background:rgba(0,0,0,0.7); width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  /* Sticky-Footer */
+  .reading-footer { background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 32px; gap:16px; }
+  .reading-footer .progress-info { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-light); }
+  .reading-footer .progress-info .pct { font-weight:600; color:var(--accent); }
+  .btn { padding:10px 20px; font-size:13px; font-weight:600; border:none; border-radius:6px; cursor:pointer; background:var(--accent); color:white; }
+  .btn:hover { background:var(--accent-mid); }
+  .btn:disabled { background:var(--surface-alt); color:var(--text-light); cursor:not-allowed; }
+  .btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--border-strong); }
+  .btn.done { background:#2F7D2F; }
+  .btn.done:hover { background:#266B26; }
+
+  .scroll-indicator { position:fixed; right:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:6px; }
+  .scroll-dot { width:8px; height:8px; border-radius:50%; background:var(--border); }
+  .scroll-dot.active { background:var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../crm.html" title="CRM"><span class="icon">🎯</span> CRM</a>
+    <a class="tool-tab" href="hr.html" title="HR"><span class="icon">👥</span> HR</a>
+    <a class="tool-tab" href="commission.html" title="Commission"><span class="icon">💰</span> Commission</a>
+    <a class="tool-tab" href="zeit.html" title="Zeit"><span class="icon">⏱</span> Zeit</a>
+    <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
+    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
+  </div>
+  <div class="right">
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · Researcher</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+  </div>
+</div>
+
+<div class="reading-layout">
+  <!-- Navigation -->
+  <aside class="lesson-nav">
+    <div class="course-title">Marktwissen ARC</div>
+
+    <div class="module-group">
+      <div class="mod-title">Modul 1 · Hauptakteure ✓</div>
+      <a href="#" class="lesson-item done"><span class="dot">✓</span> Grosse Planer</a>
+      <a href="#" class="lesson-item done"><span class="dot">✓</span> Bauherren</a>
+      <a href="#" class="lesson-item done"><span class="dot">✓</span> Regulatoren</a>
+      <a href="#" class="lesson-item done"><span class="dot">✓</span> Spezial-Büros</a>
+      <div class="quiz-item" style="background:#E3F5E3; color:#2F7D2F; border-style:solid; border-color:#2F7D2F;">Quiz bestanden · 88 %</div>
+    </div>
+
+    <div class="module-group">
+      <div class="mod-title">Modul 2 · Preise &amp; Honorare</div>
+      <a href="#" class="lesson-item done"><span class="dot">✓</span> SIA-102-Grundlagen</a>
+      <a href="#" class="lesson-item active"><span class="dot">2</span> Pauschale vs. Aufwand</a>
+      <a href="#" class="lesson-item"><span class="dot"></span> Honorarverhandlung</a>
+      <div class="quiz-item">Quiz · noch 1 Lesson</div>
+    </div>
+
+    <div class="module-group">
+      <div class="mod-title">Modul 3 · Regulatoren 🔒</div>
+      <a href="#" class="lesson-item" style="opacity:0.5;"><span class="dot"></span> SIA im Detail</a>
+      <a href="#" class="lesson-item" style="opacity:0.5;"><span class="dot"></span> USIC-Rolle</a>
+      <a href="#" class="lesson-item" style="opacity:0.5;"><span class="dot"></span> KBOB-Standards</a>
+      <a href="#" class="lesson-item" style="opacity:0.5;"><span class="dot"></span> Zertifizierungen</a>
+    </div>
+  </aside>
+
+  <!-- Reading Main -->
+  <main class="reading-main">
+    <div class="reading-col">
+      <div class="lesson-head">
+        <div class="meta">
+          <span>Modul 2 · Lesson 2</span>
+          <span>· ca. 6 Min Lesezeit</span>
+          <span>· Mindest-Lesezeit: 60 s</span>
+        </div>
+        <h1>Pauschale vs. Aufwand — die zwei Welten der Honorarmodelle</h1>
+        <p class="intro">In Projekten stehen Planer und Auftraggeber immer wieder vor der Wahl: fester Preis für ein klares Leistungspaket oder zeitlicher Aufwand mit offener Kostenrolle. Beide Modelle haben ihre Berechtigung — und ihre Fallen.</p>
+      </div>
+
+      <div class="md-body">
+        <h2>Das Pauschalmodell</h2>
+        <p>Beim <strong>Pauschalhonorar</strong> vereinbaren Planer und Bauherr einen Fixbetrag für einen klar umrissenen Leistungsumfang. Das Risiko liegt mehrheitlich beim Planer: Verbraucht er mehr Stunden als kalkuliert, verschlechtert sich seine Marge. Umgekehrt profitiert er, wenn er effizienter arbeitet als geplant.</p>
+
+        <p>Pauschalen eignen sich besonders, wenn der Leistungsumfang gut definiert ist — etwa bei Wettbewerbsbeiträgen, Vorprojekt-Studien oder standardisierten Teilphasen.</p>
+
+        <div class="embed-image" style="padding:32px; text-align:center; color:var(--text-light); font-size:13px;">
+          📊 [Bild: Vergleichsgrafik Pauschal- vs. Aufwandhonorar]
+        </div>
+
+        <h2>Das Aufwandsmodell</h2>
+        <p>Beim <strong>Honorar nach Aufwand</strong> (auch „Regiehonorar") wird die effektiv geleistete Arbeit nach festen Stundensätzen abgerechnet. Das Risiko liegt beim Bauherrn, die Kosten können offen steigen. Vorteil: keine Marge auf Basis optimistischer Schätzungen.</p>
+
+        <blockquote>
+          „Pauschalen funktionieren nur, wenn beide Seiten den Umfang gleich verstehen. Sobald Änderungswünsche kommen, wird's eng." — SIA-Leitfaden 2024
+        </blockquote>
+
+        <h2>Wann welches Modell?</h2>
+        <ul>
+          <li><strong>Pauschal:</strong> klare Phasen, feste Programmatik, standardisierte Aufgaben</li>
+          <li><strong>Aufwand:</strong> komplexe Machbarkeitsstudien, Umbauten, Bauherren-Wechsel</li>
+          <li><strong>Hybrid:</strong> Pauschale plus Aufwandsklausel für definierten Änderungsrahmen</li>
+        </ul>
+
+        <h3>Die SIA-Perspektive</h3>
+        <p>SIA 102 erlaubt beide Modelle, verlangt aber eine klare schriftliche Vereinbarung. In der Praxis sind Hybrid-Lösungen am häufigsten — der pauschale Anker plus Regie-Klausel für Anpassungen.</p>
+
+        <div class="embed-pdf">
+          <div class="pdf-icon">PDF</div>
+          <div class="pdf-info">
+            <div class="pdf-title">SIA-Leitfaden Honorar-Ordnung 2024</div>
+            <div class="pdf-sub">42 Seiten · Quelle: SIA Jahresbericht</div>
+          </div>
+          <button class="btn ghost">Öffnen</button>
+        </div>
+
+        <h2>Praxis-Beispiel</h2>
+        <p>Ein Generalplaner bietet einem Immobilien-Investor zwei Angebote für ein 40-Mio-Projekt: 3,8 % Pauschal-Honorar oder Abrechnung nach Aufwand mit geschätzten 250 Stunden zu CHF 195/h. Welche Variante ist wirtschaftlicher?</p>
+
+        <p>Die Antwort ist — wie so oft — „es kommt darauf an". Das Quiz am Ende dieses Moduls geht genauer darauf ein.</p>
+
+        <h3>Zusammenfassung</h3>
+        <ul>
+          <li>Pauschal = Planer trägt Risiko, klare Kostenrolle für Bauherr</li>
+          <li>Aufwand = Bauherr trägt Risiko, hohe Flexibilität</li>
+          <li>SIA-102 erlaubt beide, fordert schriftliche Vereinbarung</li>
+          <li>Hybrid-Modelle sind Standard bei mittleren und grossen Projekten</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Sticky-Footer -->
+<div class="reading-footer">
+  <button class="btn ghost">← Vorherige Lesson</button>
+  <div class="progress-info">
+    <span>Lesezeit: <span class="pct">4 min 02 s</span></span>
+    <span>·</span>
+    <span>Scroll: <span class="pct">67 %</span></span>
+    <span style="color:var(--text-light);">(Erledigt-Button aktiv ab 90 % Scroll &amp; 60 s Lesezeit)</span>
+  </div>
+  <button class="btn done" onclick="location.href='elearn-lesson.html'">Erledigt ✓ &amp; Nächste Lesson →</button>
+</div>
+
+<script>
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const c = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(c === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+function openSearch() { alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog.'); }
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } });
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
+</script>
+
+</body>
+</html>

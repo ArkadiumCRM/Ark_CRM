@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Quiz-Runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; overflow:hidden; }
+  body { display:grid; grid-template-rows:52px 36px 8px 1fr 72px; font-family:'DM Sans', sans-serif; background:var(--bg); }
+  .topbar { position:relative; display:flex; justify-content:space-between; align-items:center; padding:0 20px; background:var(--surface); border-bottom:1px solid var(--border); height:52px; }
+  .topbar .brand { display:flex; align-items:center; gap:10px; }
+  .topbar .logo { width:28px; height:28px; border-radius:6px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; }
+  .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
+  .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
+  .topbar .right { font-size:12px; color:var(--text-light); display:flex; gap:10px; align-items:center; }
+  .tool-tabs { display:flex; gap:2px; align-items:center; background:var(--surface-alt); padding:3px; border-radius:22px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .tool-tab { padding:6px 14px; font-size:12px; font-weight:500; color:var(--text-light); cursor:pointer; border-radius:18px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:all 0.15s; white-space:nowrap; }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
+  .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+
+  /* Quiz-Meta-Bar unter Topbar */
+  .quiz-meta-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:8px 24px; display:flex; justify-content:space-between; align-items:center; }
+  .quiz-meta-bar .quiz-title { font-size:12px; color:var(--text-light); }
+  .quiz-meta-bar .quiz-title strong { color:var(--text); }
+  .quiz-meta-bar .q-counter { font-family:'Libre Baskerville', serif; font-size:14px; color:var(--accent); font-weight:700; }
+
+  /* Progress-Bar */
+  .progress-bar { background:var(--surface-alt); height:8px; }
+  .progress-fill { background:var(--accent); height:100%; width:40%; transition:width 0.3s; }
+
+  /* Main Quiz-Area */
+  .quiz-main { overflow-y:auto; display:flex; justify-content:center; padding:40px 24px; }
+  .quiz-col { max-width:780px; width:100%; }
+
+  .q-type-badge { display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); background:var(--accent-soft); padding:4px 10px; border-radius:10px; font-weight:600; margin-bottom:14px; }
+
+  .q-text { font-family:'Libre Baskerville', serif; font-size:22px; color:var(--text); font-weight:400; line-height:1.5; margin:0 0 28px; }
+
+  /* Option-Cards (MC/Multi/TF) */
+  .options { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+  .option { background:var(--surface); border:2px solid var(--border); border-radius:10px; padding:14px 18px; cursor:pointer; display:flex; align-items:center; gap:14px; font-size:14px; color:var(--text); transition:all 0.15s; }
+  .option:hover { border-color:var(--accent-mid); }
+  .option.selected { border-color:var(--accent); background:var(--accent-soft); }
+  .option-mark { width:22px; height:22px; border-radius:50%; border:2px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .option.selected .option-mark { background:var(--accent); border-color:var(--accent); color:white; font-size:12px; }
+  .option-mark.square { border-radius:4px; }
+
+  /* True/False */
+  .tf-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .tf-option { background:var(--surface); border:2px solid var(--border); border-radius:12px; padding:24px; text-align:center; cursor:pointer; font-size:16px; font-weight:600; color:var(--text); }
+  .tf-option:hover { border-color:var(--accent-mid); }
+  .tf-option.selected { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+  .tf-option .icon { font-size:28px; display:block; margin-bottom:8px; }
+
+  /* Zuordnung (Drag-Drop) */
+  .zuordnung-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .z-col { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px; }
+  .z-col h4 { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-light); font-weight:600; margin:0 0 10px; }
+  .z-item { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px 12px; margin-bottom:6px; font-size:13px; cursor:move; display:flex; align-items:center; gap:8px; }
+  .z-item.matched { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); font-weight:500; }
+  .z-item::before { content:'⋮⋮'; color:var(--text-light); }
+
+  /* Reihenfolge */
+  .order-list { margin-bottom:24px; }
+  .order-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 16px; margin-bottom:6px; cursor:move; display:flex; align-items:center; gap:12px; font-size:14px; }
+  .order-item::before { content:'⋮⋮'; color:var(--text-light); font-size:16px; }
+  .order-item .num { width:28px; height:28px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Libre Baskerville', serif; }
+
+  /* Freitext */
+  .freitext-area { margin-bottom:24px; }
+  .freitext-area textarea { width:100%; min-height:140px; padding:14px 16px; font-family:'DM Sans', sans-serif; font-size:14px; border:2px solid var(--border); border-radius:10px; resize:vertical; background:var(--surface); color:var(--text); }
+  .freitext-area textarea:focus { outline:none; border-color:var(--accent); }
+  .char-counter { font-size:11px; color:var(--text-light); text-align:right; margin-top:4px; }
+  .freitext-hint { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:12px; color:var(--text-light); margin-top:8px; line-height:1.5; }
+
+  /* Footer-Navigation */
+  .quiz-footer { background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 32px; gap:16px; }
+  .btn { padding:10px 22px; font-size:13px; font-weight:600; border:none; border-radius:6px; cursor:pointer; }
+  .btn.primary { background:var(--accent); color:white; }
+  .btn.primary:hover { background:var(--accent-mid); }
+  .btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--border-strong); }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+  .q-type-switch { background:var(--surface-alt); padding:3px; border-radius:14px; display:flex; gap:2px; font-size:11px; }
+  .q-type-switch button { padding:4px 10px; border:none; background:transparent; cursor:pointer; border-radius:10px; font-size:11px; color:var(--text-light); }
+  .q-type-switch button.active { background:var(--accent); color:white; font-weight:600; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../crm.html" title="CRM"><span class="icon">🎯</span> CRM</a>
+    <a class="tool-tab" href="hr.html" title="HR"><span class="icon">👥</span> HR</a>
+    <a class="tool-tab" href="commission.html" title="Commission"><span class="icon">💰</span> Commission</a>
+    <a class="tool-tab" href="zeit.html" title="Zeit"><span class="icon">⏱</span> Zeit</a>
+    <span class="tool-tab disabled"><span class="icon">📄</span> Billing</span>
+    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab active" href="elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
+  </div>
+  <div class="right">
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · Researcher</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+  </div>
+</div>
+
+<!-- QUIZ-META-BAR -->
+<div class="quiz-meta-bar">
+  <div class="quiz-title">Quiz: <strong>Marktwissen ARC</strong> · Modul 2 — Preise &amp; Honorare · keine Zeitbegrenzung</div>
+  <div class="q-counter">Frage 4 / 10</div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" style="width:40%;"></div></div>
+
+<main class="quiz-main">
+  <div class="quiz-col">
+
+    <!-- Demo-Toggle zwischen Fragen-Typen -->
+    <div style="margin-bottom:20px; font-size:11px; color:var(--text-light);">
+      Demo — Fragen-Typen:
+      <div class="q-type-switch" style="display:inline-flex; margin-left:6px;">
+        <button class="active" onclick="showType('mc')">MC</button>
+        <button onclick="showType('multi')">Multi</button>
+        <button onclick="showType('tf')">T/F</button>
+        <button onclick="showType('zuordnung')">Zuordnung</button>
+        <button onclick="showType('reihenfolge')">Reihenfolge</button>
+        <button onclick="showType('freitext')">Freitext</button>
+      </div>
+    </div>
+
+    <!-- MC -->
+    <div id="q-mc" class="q-block">
+      <div class="q-type-badge">Single-Choice</div>
+      <div class="q-text">Welcher Generalplaner ist mit über 5000 Mitarbeitenden der grösste der Schweiz?</div>
+      <div class="options">
+        <div class="option"><div class="option-mark"></div>Basler &amp; Hofmann</div>
+        <div class="option selected"><div class="option-mark">✓</div>Itten+Brechbühl</div>
+        <div class="option"><div class="option-mark"></div>Burckhardt+Partner</div>
+        <div class="option"><div class="option-mark"></div>HRS Real Estate</div>
+      </div>
+    </div>
+
+    <!-- Multi-Select -->
+    <div id="q-multi" class="q-block" style="display:none;">
+      <div class="q-type-badge">Multi-Select</div>
+      <div class="q-text">Welche SIA-Normen regeln Planer-Honorare? (Mehrfach-Auswahl)</div>
+      <div class="options">
+        <div class="option selected"><div class="option-mark square">✓</div>SIA 102 — Architektur</div>
+        <div class="option selected"><div class="option-mark square">✓</div>SIA 103 — Bauingenieurwesen</div>
+        <div class="option"><div class="option-mark square"></div>SIA 110 — Privatrecht</div>
+        <div class="option selected"><div class="option-mark square">✓</div>SIA 108 — Gebäudetechnik</div>
+        <div class="option"><div class="option-mark square"></div>SIA 118 — Werkvertrag</div>
+      </div>
+    </div>
+
+    <!-- True/False -->
+    <div id="q-tf" class="q-block" style="display:none;">
+      <div class="q-type-badge">Ja / Nein</div>
+      <div class="q-text">Die SIA 103 regelt Honorare für Ingenieurleistungen.</div>
+      <div class="tf-options">
+        <div class="tf-option selected"><span class="icon">✓</span>Wahr</div>
+        <div class="tf-option"><span class="icon">✗</span>Falsch</div>
+      </div>
+    </div>
+
+    <!-- Zuordnung -->
+    <div id="q-zuordnung" class="q-block" style="display:none;">
+      <div class="q-type-badge">Zuordnung · Drag-Drop</div>
+      <div class="q-text">Ordne jedes Planungsbüro dem passenden Schwerpunkt zu.</div>
+      <div class="zuordnung-grid">
+        <div class="z-col">
+          <h4>Büros</h4>
+          <div class="z-item matched">Basler &amp; Hofmann</div>
+          <div class="z-item matched">Dr. Lüchinger + Meyer</div>
+          <div class="z-item">Amstein+Walthert</div>
+          <div class="z-item">HRS</div>
+        </div>
+        <div class="z-col">
+          <h4>Schwerpunkte</h4>
+          <div class="z-item matched">Gesamtplanung</div>
+          <div class="z-item matched">Tragwerk / Statik</div>
+          <div class="z-item">Gebäudetechnik</div>
+          <div class="z-item">Totalunternehmer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reihenfolge -->
+    <div id="q-reihenfolge" class="q-block" style="display:none;">
+      <div class="q-type-badge">Reihenfolge · Sortieren</div>
+      <div class="q-text">Sortiere die SIA-Projektphasen in chronologischer Reihenfolge (1 = erste Phase).</div>
+      <div class="order-list">
+        <div class="order-item"><div class="num">1</div>Vorprojekt</div>
+        <div class="order-item"><div class="num">2</div>Bauprojekt</div>
+        <div class="order-item"><div class="num">3</div>Ausführungsplanung</div>
+        <div class="order-item"><div class="num">4</div>Realisierung</div>
+        <div class="order-item"><div class="num">5</div>Inbetriebnahme &amp; Abschluss</div>
+      </div>
+    </div>
+
+    <!-- Freitext -->
+    <div id="q-freitext" class="q-block" style="display:none;">
+      <div class="q-type-badge">Freitext</div>
+      <div class="q-text">Erkläre in 2 Sätzen den wesentlichen Unterschied zwischen einem Generalplaner (GP) und einem Totalunternehmer (TU).</div>
+      <div class="freitext-area">
+        <textarea placeholder="Deine Antwort...">Der Generalplaner plant, koordiniert und überwacht die Ausführung. Der Totalunternehmer baut eigenverantwortlich zu einem vereinbarten Pauschalpreis.</textarea>
+        <div class="char-counter">148 / max 500 Zeichen</div>
+        <div class="freitext-hint">
+          🤖 <strong>Bewertung:</strong> Deine Antwort wird zuerst vom KI-Assistenten bewertet und anschliessend von deinem Head-of bestätigt. Du erhältst das Ergebnis nach dem Review (in der Regel innerhalb 3 Arbeitstagen).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="quiz-footer">
+  <button class="btn ghost">Zwischenspeichern &amp; Pause</button>
+  <div style="font-size:12px; color:var(--text-light);">
+    4 von 10 Fragen beantwortet · Keine Zwischenspeicherung (Anti-Copy-Paste)
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn ghost">← Zurück</button>
+    <button class="btn primary">Weiter →</button>
+  </div>
+</div>
+
+<script>
+function showType(t) {
+  document.querySelectorAll('.q-block').forEach(b => b.style.display='none');
+  document.getElementById('q-'+t).style.display='block';
+  document.querySelectorAll('.q-type-switch button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const c = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(c === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+function openSearch() { alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog.'); }
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } });
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
+</script>
+
+</body>
+</html>
