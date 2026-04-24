@@ -7595,7 +7595,8 @@ function genPdf() {
     body { margin:0; padding:20px; background:#eee; }
     .gen-canvas { margin:0 auto; }
     @media print { body { background:#fff; padding:0; } .gen-canvas { box-shadow:none; margin:0; } }
-  </style></head><body>${clone.outerHTML}<script>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+  </style></head><body>${clone.outerHTML}<script>setTimeout(()=>window.print(),500);<\/script><script>(function(){var t=localStorage.getItem("ark-theme")||"light";document.documentElement.setAttribute("data-theme",t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);var b=document.getElementById('themeBtn');if(b)b.textContent=e.data.value==='dark'?'☾':'☀';}});})();</script>
+</body></html>`);
   w.document.close();
 }
 
