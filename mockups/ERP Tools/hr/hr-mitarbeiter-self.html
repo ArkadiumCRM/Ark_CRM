@@ -210,9 +210,9 @@
     padding:2px 8px; border-radius:10px; font-size:10px;
     font-weight:600; text-transform:uppercase; letter-spacing:0.3px;
   }
-  .status-pill.pending { background:#fff4e0; color:#b06100; }
-  .status-pill.approved { background:#e0f5e0; color:#2a6a2a; }
-  .status-pill.rejected { background:#ffe0e0; color:#a02020; }
+  .status-pill.pending { background:var(--amber-soft); color:var(--amber); }
+  .status-pill.approved { background:var(--green-soft); color:var(--green); }
+  .status-pill.rejected { background:var(--red-soft); color:var(--red); }
 
   /* ZERTIFIKATE */
   .cert-grid {
@@ -224,7 +224,7 @@
     font-size:12px;
   }
   .cert-card.expiring { border-left-color:var(--amber); }
-  .cert-card.expired { border-left-color:var(--red); background:#fff4f4; }
+  .cert-card.expired { border-left-color:var(--red); background:var(--red-soft); }
   .cert-card.missing { border-left-color:var(--text-light); background:var(--surface); opacity:0.7; }
   .cert-card .name { font-weight:600; margin-bottom:3px; color:var(--text); }
   .cert-card .valid { font-size:10px; color:var(--text-light); }

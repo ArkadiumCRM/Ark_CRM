@@ -49,8 +49,8 @@
     font-size:32px; font-weight:700; color:var(--accent);
     font-family:'Libre Baskerville',serif; line-height:1;
   }
-  .kpi.amber .big { color:#b06100; }
-  .kpi.green .big { color:#2a6a2a; }
+  .kpi.amber .big { color:var(--amber); }
+  .kpi.green .big { color:var(--green); }
   .kpi .label {
     font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
     color:var(--text-light); margin-top:6px; font-weight:500;
@@ -146,8 +146,8 @@
     font-size:10px; line-height:20px; text-align:center;
     font-weight:700;
   }
-  .cell-status.done { background:#e0f5e0; color:#2a6a2a; }
-  .cell-status.inprogress { background:#fff4e0; color:#b06100; }
+  .cell-status.done { background:var(--green-soft); color:var(--green); }
+  .cell-status.inprogress { background:var(--amber-soft); color:var(--amber); }
   .cell-status.missing { background:var(--surface-alt); color:var(--text-light); }
   .cell-status.not_required { background:transparent; color:var(--text-light); opacity:0.3; }
   .cell-status.high-score { border:2px solid var(--accent); }
@@ -301,8 +301,8 @@
     width:16px; height:16px; border-radius:50%; text-align:center;
     line-height:16px; font-size:10px; font-weight:700;
   }
-  .phase-body .task-row .icon.done { background:#e0f5e0; color:#2a6a2a; }
-  .phase-body .task-row .icon.inprogress { background:#fff4e0; color:#b06100; }
+  .phase-body .task-row .icon.done { background:var(--green-soft); color:var(--green); }
+  .phase-body .task-row .icon.inprogress { background:var(--amber-soft); color:var(--amber); }
   .phase-body .task-row .icon.pending { background:var(--surface-alt); color:var(--text-light); border:1px solid var(--border-strong); }
   .phase-body .task-row .name { color:var(--text); }
   .phase-body .task-row .score {
@@ -704,7 +704,7 @@
         </div>
         <div>
           <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Ø Score Trainer</div>
-          <div style="font-size:22px; font-weight:700; color:#2a6a2a; font-family:'Libre Baskerville',serif;">7.4</div>
+          <div style="font-size:22px; font-weight:700; color:var(--green); font-family:'Libre Baskerville',serif;">7.4</div>
         </div>
         <div>
           <div style="font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.4px;">Buddy</div>
@@ -744,8 +744,8 @@
             <span class="phase-progress">4/4 ✓</span>
           </div>
         </div>
-        <div class="phase" style="border-color:#b06100;">
-          <div class="phase-head" style="background:#fff4e0;">
+        <div class="phase" style="border-color:var(--amber);">
+          <div class="phase-head" style="background:var(--amber-soft);">
             <div>
               <span class="phase-name">Woche 2–4</span>
               <span class="phase-week"> · Wk 2</span>

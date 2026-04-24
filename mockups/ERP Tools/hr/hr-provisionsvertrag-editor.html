@@ -50,9 +50,9 @@
     font-size:32px; font-weight:700; color:var(--accent);
     font-family:'Libre Baskerville',serif; line-height:1;
   }
-  .kpi.amber .big { color:#b06100; }
+  .kpi.amber .big { color:var(--amber); }
   .kpi.red .big { color:var(--red); }
-  .kpi.green .big { color:#2a6a2a; }
+  .kpi.green .big { color:var(--green); }
   .kpi .label {
     font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
     color:var(--text-light); margin-top:6px; font-weight:500;
@@ -85,7 +85,7 @@
     font-weight:600;
   }
   .quarter.upcoming {
-    background:#fff4e0; border-color:#f5d39b; color:#7a4a00;
+    background:var(--amber-soft); border-color:#f5d39b; color:#7a4a00;
     font-weight:600;
   }
   .quarter .q { font-weight:700; font-size:14px; margin-bottom:2px; display:block; }
@@ -157,8 +157,8 @@
   }
   .role-chip.researcher { background:#e8edf3; color:#6b7b8c; }
   .role-chip.consultant { background:#e0ecff; color:var(--accent); }
-  .role-chip.team-leader { background:#ffe8d0; color:#b06100; }
-  .role-chip.head { background:#fff4e0; color:#7a4a00; }
+  .role-chip.team-leader { background:#ffe8d0; color:var(--amber); }
+  .role-chip.head { background:var(--amber-soft); color:#7a4a00; }
 
   .budget-cell {
     font-variant-numeric:tabular-nums;
@@ -175,17 +175,17 @@
     display:flex; align-items:center; justify-content:center;
     font-size:10px; font-weight:700;
   }
-  .sig.signed { background:#e0f5e0; color:#2a6a2a; }
-  .sig.pending { background:#fff4e0; color:#b06100; }
+  .sig.signed { background:var(--green-soft); color:var(--green); }
+  .sig.pending { background:var(--amber-soft); color:var(--amber); }
 
   .status-cell .status-pill {
     padding:3px 10px; border-radius:10px; font-size:10px;
     font-weight:600; text-transform:uppercase; letter-spacing:0.3px;
   }
-  .status-pill.active { background:#e0f5e0; color:#2a6a2a; }
-  .status-pill.pending { background:#fff4e0; color:#b06100; }
+  .status-pill.active { background:var(--green-soft); color:var(--green); }
+  .status-pill.pending { background:var(--amber-soft); color:var(--amber); }
   .status-pill.draft { background:#e8edf3; color:#6b7b8c; }
-  .status-pill.overdue { background:#ffe0e0; color:#a02020; }
+  .status-pill.overdue { background:var(--red-soft); color:var(--red); }
 
   .zeg-bar {
     width:100px; height:6px; background:var(--border); border-radius:3px;
@@ -290,7 +290,7 @@
     font-size:12px;
   }
   .sig-row.signed { background:#f0faf0; border-color:#b5d8b5; }
-  .sig-row.pending { background:#fff4e0; border-color:#f5d39b; }
+  .sig-row.pending { background:var(--amber-soft); border-color:#f5d39b; }
 
   /* DRAWER */
   .drawer-backdrop {
@@ -662,7 +662,7 @@
               <div style="font-weight:600;">Mitarbeiter · Peter Wiederkehr</div>
               <div style="font-size:10px; color:var(--text-light);">Signiert 22.12.2025 · Skribble</div>
             </div>
-            <span style="color:#2a6a2a; font-weight:600; font-size:11px;">OK</span>
+            <span style="color:var(--green); font-weight:600; font-size:11px;">OK</span>
           </div>
           <div class="sig-row signed">
             <span style="font-size:16px;">✓</span>
@@ -670,7 +670,7 @@
               <div style="font-weight:600;">Founder · Nenad Stoparanovic</div>
               <div style="font-size:10px; color:var(--text-light);">Signiert 23.12.2025 · Skribble</div>
             </div>
-            <span style="color:#2a6a2a; font-weight:600; font-size:11px;">OK</span>
+            <span style="color:var(--green); font-weight:600; font-size:11px;">OK</span>
           </div>
         </div>
       </div>
@@ -746,7 +746,7 @@
       </select>
     </div>
 
-    <div class="info-box" style="border-left-color:#b06100; background:#fff4e0;">
+    <div class="info-box" style="border-left-color:var(--amber); background:var(--amber-soft);">
       <strong>Pro-rata-Berechnung bei Neu-Eintritt:</strong> Wenn Eintrittsdatum &gt; 01.01.2027, werden Budget-Ziel + Fix + Variabel anteilig berechnet. Spesenpauschale bleibt fix pro Monat.
     </div>
 
