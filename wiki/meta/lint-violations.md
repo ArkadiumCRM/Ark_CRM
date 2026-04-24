@@ -1577,3 +1577,126 @@
 |-------|-------|---------|-----|
 | DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
 
+
+## [2026-04-21 12:57] session-d89e54ef | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-21 12:58] session-b6948717 | elearn.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 137 \| <span class="tool-tab disabled" title="Noch nicht verfuegbar"> \| -> verfügb |
+
+
+## [2026-04-21 13:16] session-b6948717 | elearn.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 134 \| <span class="tool-tab disabled" title="Noch nicht verfuegbar"> \| -> verfügb |
+| UMLAUT \| 137 \| <span class="tool-tab disabled" title="Noch nicht verfuegbar"> \| -> verfügb |
+
+
+## [2026-04-21 13:16] session-b6948717 | elearn.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 134 \| <span class="tool-tab disabled" title="Noch nicht verfuegbar"> \| -> verfügb |
+| UMLAUT \| 137 \| <span class="tool-tab disabled" title="Noch nicht verfuegbar"> \| -> verfügb |
+
+
+## [2026-04-24 11:08] session-13804474 | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:08] session-13804474 | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:09] session-13804474 | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:09] session-13804474 | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:10] session-b6948717 | handover-latest.md (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 28 \| 2. Pattern von Batch 1 uebernehmen: Topbar identisch, Sidebar links, Drawer 540p... \| -> für |
+| UMLAUT \| 35 \| - ARK-Regeln kritisch: echte Umlaute UTF-8, keine DB-Tech-Begriffe in UI, Drawer... \| -> für |
+
+
+## [2026-04-24 11:48] session-3d93503e | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:48] session-3d93503e | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 5 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 11:48] session-3d93503e | billing-mahnwesen.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 1 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 13:06] session-707f03f9 | elearn-freitext-queue.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 13:12] session-3d93503e | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 13:12] session-3d93503e | commission-team.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 958 \| function openMemberDrawer(kuerzel, name) { \| -> Kürzel |
+| UMLAUT \| 959 \| if (kuerzel) document.getElementById('memDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
+
+## [2026-04-24 13:18] session-3d93503e | zeit-monat.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| DRAWER-DEFAULT \| -- \| 3 Modal-Patterns gefunden \| -> Drawer 540px verwenden fuer CRUD (CLAUDE.md Drawer-Default-Regel) |
+
+
+## [2026-04-24 13:27] session-707f03f9 | elearn-admin-curriculum.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| SNAKE-CASE \| 123 \| <strong>Wie Curricula wirken:</strong> Beim MA-Einstellen zieht der Worker <code... \| -> sprechenden Begriff statt snake_case-Identifier |
+

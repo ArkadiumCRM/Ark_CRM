@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARK ERP — Quiz-Ergebnis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow-y:auto; }
+
+  .main { padding:40px 24px 60px; display:flex; justify-content:center; }
+  .result-col { max-width:820px; width:100%; }
+
+  /* Score-Hero */
+  .score-hero { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:32px; text-align:center; margin-bottom:28px; position:relative; overflow:hidden; }
+  .score-hero.pass { border-color:#2F7D2F; }
+  .score-hero.fail { border-color:#D32F2F; }
+  .score-hero.pending { border-color:var(--amber); }
+  .score-hero .state-badge { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; padding:4px 14px; border-radius:12px; display:inline-block; margin-bottom:12px; }
+  .score-hero.pass .state-badge { background:#E3F5E3; color:#2F7D2F; }
+  .score-hero.fail .state-badge { background:#FCE4E4; color:#D32F2F; }
+  .score-hero.pending .state-badge { background:color-mix(in srgb, var(--amber) 20%, var(--surface)); color:var(--amber); }
+  .score-hero h1 { font-family:'Libre Baskerville', serif; font-size:28px; color:var(--accent); margin:0 0 4px; font-weight:700; }
+  .score-hero .sub { font-size:13px; color:var(--text-light); margin-bottom:24px; }
+  .score-circle { width:160px; height:160px; margin:0 auto 20px; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; }
+  .score-hero.pass .score-circle { background:conic-gradient(#2F7D2F 0 88%, var(--surface-alt) 88% 100%); }
+  .score-hero.fail .score-circle { background:conic-gradient(#D32F2F 0 62%, var(--surface-alt) 62% 100%); }
+  .score-hero.pending .score-circle { background:conic-gradient(var(--amber) 0 70%, var(--surface-alt) 70% 100%); }
+  .score-circle .inner { width:130px; height:130px; background:var(--surface); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-circle .pct { font-family:'Libre Baskerville', serif; font-size:42px; color:var(--accent); font-weight:700; }
+  .score-circle .label { font-size:11px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.08em; }
+  .score-hero .actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .btn { padding:10px 22px; font-size:13px; font-weight:600; border:none; border-radius:6px; cursor:pointer; }
+  .btn.primary { background:var(--accent); color:white; }
+  .btn.primary:hover { background:var(--accent-mid); }
+  .btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--border-strong); }
+  .btn.success { background:#2F7D2F; color:white; }
+
+  /* Pending-Review-Notice */
+  .pending-notice { background:color-mix(in srgb, var(--amber) 12%, var(--surface)); border:1px solid var(--amber); border-radius:10px; padding:16px 20px; margin-bottom:24px; display:flex; gap:14px; align-items:flex-start; }
+  .pending-notice .icon { font-size:24px; }
+  .pending-notice strong { color:var(--text); }
+  .pending-notice .meta { font-size:12px; color:var(--text-light); margin-top:6px; }
+
+  /* Question-Review */
+  .q-review-list { display:flex; flex-direction:column; gap:14px; }
+  .q-review { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 22px; }
+  .q-review.correct { border-left:4px solid #2F7D2F; }
+  .q-review.incorrect { border-left:4px solid #D32F2F; }
+  .q-review.pending { border-left:4px solid var(--amber); }
+  .q-review .q-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:12px; color:var(--text-light); }
+  .q-review .q-head .status.correct { color:#2F7D2F; font-weight:600; }
+  .q-review .q-head .status.incorrect { color:#D32F2F; font-weight:600; }
+  .q-review .q-head .status.pending { color:var(--amber); font-weight:600; }
+  .q-review .q-text { font-size:14px; color:var(--text); margin-bottom:12px; font-weight:500; }
+  .q-review .answer-row { display:grid; grid-template-columns:120px 1fr; gap:10px; font-size:13px; margin-bottom:6px; }
+  .q-review .answer-row .label { color:var(--text-light); }
+  .q-review .answer-row .val { color:var(--text); }
+  .q-review .answer-row.correct .val { color:#2F7D2F; font-weight:500; }
+  .q-review .answer-row.user .val { color:var(--text); }
+  .q-review .explain { margin-top:10px; padding:10px 14px; background:var(--surface-alt); border-radius:6px; font-size:12px; color:var(--text-light); line-height:1.5; }
+  .q-review .explain strong { color:var(--text); }
+
+  .summary-row { display:flex; gap:24px; justify-content:center; margin-top:16px; padding:14px 20px; background:var(--surface); border:1px solid var(--border); border-radius:10px; font-size:13px; }
+  .summary-row .stat strong { font-family:'Libre Baskerville', serif; font-size:18px; color:var(--accent); display:block; }
+</style>
+</head>
+<body>
+
+<main class="main">
+  <div class="result-col">
+
+    <!-- Score Hero - Pass Demo -->
+    <div class="score-hero pass">
+      <div class="state-badge">Bestanden</div>
+      <h1>Quiz abgeschlossen</h1>
+      <div class="sub">Marktwissen ARC · Modul 2 — Preise &amp; Honorare</div>
+      <div class="score-circle">
+        <div class="inner">
+          <div class="pct">88%</div>
+          <div class="label">8 / 10 richtig</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn success" onclick="location.href='elearn-course.html'">Weiter zu Modul 3 →</button>
+        <button class="btn ghost">Ergebnisse exportieren</button>
+      </div>
+    </div>
+
+    <!-- Pending-Review-Notice (Demo: zeigt wie's aussieht wenn Freitext-Review noch offen) -->
+    <div class="pending-notice">
+      <div class="icon">⏳</div>
+      <div>
+        <strong>1 Freitext-Frage wird von Peter Wiederkehr (Head) geprüft</strong>
+        <div class="meta">KI-Vorbewertung liegt vor. Final-Score inklusive Freitext folgt nach Head-Review — in der Regel binnen 3 Arbeitstagen. Du erhältst eine Benachrichtigung.</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Libre Baskerville', serif; color:var(--accent); font-size:17px; margin:0 0 14px;">Detail pro Frage</h3>
+
+    <div class="q-review-list">
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 1 · Single-Choice</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">Welcher Generalplaner ist mit über 5000 MA der grösste der Schweiz?</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val">Itten+Brechbühl</span></div>
+        <div class="answer-row correct"><span class="label">Richtige Antwort</span><span class="val">Itten+Brechbühl</span></div>
+        <div class="explain"><strong>Erklärung:</strong> Laut SIA-Jahresbericht 2025 hat Itten+Brechbühl mit über 5000 Mitarbeitenden Basler &amp; Hofmann (ca. 1200) in der Grösse überholt.</div>
+      </div>
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 2 · Multi-Select</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">Welche SIA-Normen regeln Planer-Honorare?</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val">SIA 102, 103, 108</span></div>
+        <div class="answer-row correct"><span class="label">Richtige Antwort</span><span class="val">SIA 102, 103, 108</span></div>
+      </div>
+
+      <div class="q-review incorrect">
+        <div class="q-head"><span>Frage 3 · Ja / Nein</span><span class="status incorrect">✗ Falsch</span></div>
+        <div class="q-text">Ein Pauschalhonorar kann ohne schriftliche Vereinbarung vereinbart werden.</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val" style="color:#D32F2F;">Wahr</span></div>
+        <div class="answer-row correct"><span class="label">Richtige Antwort</span><span class="val">Falsch</span></div>
+        <div class="explain"><strong>Erklärung:</strong> SIA 102 verlangt eine schriftliche Vereinbarung über Honorarmodell und -höhe. Mündliche Absprachen sind rechtlich schwer durchsetzbar.</div>
+      </div>
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 4 · Zuordnung</span><span class="status correct">✓ Richtig (4 / 4)</span></div>
+        <div class="q-text">Ordne Büro → Schwerpunkt zu.</div>
+        <div class="answer-row user"><span class="label">Deine Zuordnung</span><span class="val">Alle 4 Paare korrekt</span></div>
+      </div>
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 5 · Reihenfolge</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">Sortiere die SIA-Projektphasen chronologisch.</div>
+        <div class="answer-row user"><span class="label">Deine Sortierung</span><span class="val">Vorprojekt → Bauprojekt → Ausführungsplanung → Realisierung → Abschluss</span></div>
+      </div>
+
+      <div class="q-review pending">
+        <div class="q-head"><span>Frage 6 · Freitext</span><span class="status pending">⏳ Wird geprüft</span></div>
+        <div class="q-text">Erkläre in 2 Sätzen den wesentlichen Unterschied zwischen GP und TU.</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val">Der Generalplaner plant, koordiniert und überwacht die Ausführung. Der Totalunternehmer baut eigenverantwortlich zu einem vereinbarten Pauschalpreis.</span></div>
+        <div class="explain"><strong>KI-Vorbewertung:</strong> 85 % — „Alle Keywords getroffen, Kernaussage korrekt. ‚Koordiniert‘ explizit, ‚überwacht‘ explizit. Volle Punktzahl möglich." Finale Bewertung nach Head-Review.</div>
+      </div>
+
+      <!-- Kurzform für Frage 7-10 -->
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 7 · Single-Choice</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">SIA 102 gilt primär für …</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val">Architektur-Leistungen</span></div>
+      </div>
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 8 · Multi-Select</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">Welche Akteure prägen den Schweizer Planer-Markt?</div>
+      </div>
+
+      <div class="q-review incorrect">
+        <div class="q-head"><span>Frage 9 · Ja / Nein</span><span class="status incorrect">✗ Falsch</span></div>
+        <div class="q-text">USIC ist Dachverband der Gesamtplaner.</div>
+        <div class="answer-row user"><span class="label">Deine Antwort</span><span class="val" style="color:#D32F2F;">Wahr</span></div>
+        <div class="answer-row correct"><span class="label">Richtige Antwort</span><span class="val">Falsch</span></div>
+        <div class="explain"><strong>Erklärung:</strong> USIC ist Dachverband der Ingenieur-Unternehmungen (nicht der Gesamtplaner — die sind beim SIA organisiert).</div>
+      </div>
+
+      <div class="q-review correct">
+        <div class="q-head"><span>Frage 10 · Single-Choice</span><span class="status correct">✓ Richtig</span></div>
+        <div class="q-text">Welche Honorar-Variante passt zu Machbarkeitsstudien?</div>
+      </div>
+
+    </div>
+
+    <!-- Summary-Row -->
+    <div class="summary-row">
+      <div class="stat"><strong>8 / 10</strong>Richtig</div>
+      <div class="stat"><strong>88 %</strong>Final-Score</div>
+      <div class="stat"><strong>14 min</strong>Dauer</div>
+      <div class="stat"><strong>1</strong>Versuch</div>
+      <div class="stat"><strong>1</strong>Freitext offen</div>
+    </div>
+
+    <!-- Retry-Demo (wenn failed) -->
+    <div style="margin-top:32px; padding:18px 22px; background:var(--surface); border:1px dashed var(--border-strong); border-radius:10px; font-size:12px; color:var(--text-light);">
+      <strong style="color:var(--text);">Demo-Varianten:</strong> Bei Score &lt; 80 % erscheint ein <em>„Nochmal versuchen"</em>-Button, der einen neuen Attempt startet und andere Fragen aus dem Pool zieht. Bei Pre-Test-Modus wird nach Fail ein Standard-Modul-Durchlauf gestartet.
+    </div>
+
+  </div>
+</main>
+
+<script>
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+  localStorage.setItem('ark-theme', theme);
+}
+function toggleTheme() {
+  const c = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(c === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('ark-theme') || 'light');
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){applyTheme(e.data.value);}});
+window.addEventListener('message', function(e){ if(e.data && e.data.type === 'ark-theme'){ applyTheme(e.data.value); } });
+function openSearch() { alert('Suche · Cmd+K\n\nHier kommt der Quick-Command-Dialog.'); }
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); } });
+document.querySelectorAll('.cmd-hint').forEach(el => el.addEventListener('click', openSearch));
+</script>
+
+</body>
+</html>

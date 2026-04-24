@@ -351,6 +351,7 @@
     <a class="tool-tab active" href="zeit.html"><span class="icon">⏱</span> Zeit</a>
     <a class="tool-tab" href="../billing/billing.html"><span class="icon">📄</span> Billing</a>
     <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab" href="../elearn/elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
   </div>
 
   <div class="right">
@@ -480,6 +481,11 @@
     try {
       if (frame && frame.contentDocument && frame.contentDocument.documentElement) {
         frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) { /* cross-origin safe-fail */ }
+    try {
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({type:'ark-theme', value:theme}, '*');
       }
     } catch (e) {}
   }

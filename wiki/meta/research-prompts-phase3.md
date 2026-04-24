@@ -205,31 +205,160 @@ die 10 Sections. Tabellen wo sinnvoll.
 
 ## PROMPT 2 · BILLING
 
-**Attach (alle aus `raw/General/1_ Rechnungen & -sheets/`):**
-
-- `Best Effort/*` — Best-Effort-Rechnungsvorlagen
-- `Mandat/*` — Mandat-Rechnungsvorlagen
-- `Rechnungssheet/*` — historische Rechnungssheets
-- `Rückerstattung/*` — Refund-Beispiele
-- Optional: `Provisionssheet Joaquin Vega.xlsx` + `Provisionssheet Peter Wiederkehr.xlsx` (für Commission↔Billing-Verknüpfung)
+**Keine Attachments nötig.** Alle Template-Inhalte sind im Prompt inline beschrieben.
 
 **Prompt-Text:**
 
 ```
 Du bist Product-Designer + Business-Analyst für ein Schweizer CRM/ERP-System
-einer Headhunting-Boutique. Wir bauen ein vollständiges Billing-Modul mit
-UI-Design, Rollen und Integrationen. Anbei echte Rechnungen + Vorlagen.
+einer Headhunting-Boutique namens Arkadium AG (8041 Zürich · Maneggstrasse 45).
+Wir bauen ein vollständiges Billing-Modul mit UI-Design, Rollen und
+Integrationen. Die folgenden Abschnitte fassen die aktuelle Rechnungspraxis
+zusammen — keine Attachments nötig.
 
-Kontext:
-- 2 Business-Models:
-  * Erfolgsbasis (Best Effort) — Honorar nur bei Platzierung
-  * Mandat (Target / Taskforce / Time) — Anzahlung + Erfolgshonorar
-- AGB §6: Schutzfrist 12 Mt (16 Mt bei Nicht-Kooperation) bei Direkteinstellung
-- Garantiefrist 3 Mt post-Placement (Ersatz oder Refund bei Kündigung)
-- MwSt 8.1%, Default-Zahlungsziel 30 Tage
-- 3-Stufen-Mahnwesen intern, dann Inkasso
-- Treuhand-Partner Treuhand Kunz (office@treuhand-kunz.ch) für Buchhaltung
-- Bestehende CRM-Mockups: Editorial-Style, 540px-Drawer-Default
+=== KONTEXT · Firma ===
+
+- Arkadium AG · Headhunting-Boutique · 10 MA · Zürich
+- MwSt-Nr: CHE-463.920.799 · MwSt 8.1% (ab 2024)
+- Bank: Kantonalbank · Konto 906447-4514 · IBAN CH07 0077 7009 0644 7451 4
+- Branchen-Fokus: Architecture · Real Estate Management · Civil Engineering ·
+  Building Technology (Baubranche)
+- Rechnungs-Sprache: Deutsch (DE) · Sie + Du-Varianten für verschiedene
+  Kunden-Beziehungen
+- Treuhand-Partner: Treuhand Kunz (office@treuhand-kunz.ch) für Buchhaltung
+  + Bexio-CSV + Swissdec-ELM Export
+- Bestehende CRM-Mockups: Editorial-Style Libre Baskerville + DM Sans,
+  540px-Drawer-Default
+
+=== KONTEXT · Rechnungs-Template-Struktur ===
+
+Alle Rechnungen, Mahnungen und Rückerstattungen sind **3-seitige PDFs**:
+
+SEITE 1: ANSCHREIBEN
+- Header: Logo + "FUTURE BUILT ON POTENTIAL" + MwSt-Nr + Rechnungs-Nr
+- Kunde (Firma, z.Hd. Kontakt, Adresse)
+- Titel: RECHNUNG / MAHNUNG / RÜCKERSTATTUNG
+- Anschreiben-Text (verschieden je Typ/Kontext)
+- Datum + Signaturen (Nenad Stoparanovic Founder + 2. Signer je nach Bereich:
+  Peter Wiederkehr Head CE&BT / Joaquin Vega Stv.Head CE&BT / ...)
+- Footer: Kontakt + Social-Links
+
+SEITE 2: RECHNUNGS-TABELLE
+- Kandidat + Startdatum + Funktion (bei Best Effort) ODER
+  Zahlung + Zahlungsgrund + Funktion (bei Mandat)
+- Bereich (Sparten-Code) + Dienstleistung + Form
+- Beschreibungs-Tabelle mit Preis-Spalten (CHF exkl. MwSt)
+- Summe + MwSt (8.1%) + Rechnungsbetrag
+- Zahlungs-Deadline (fett)
+- Zahlungsverbindung (Konto-Info)
+
+SEITE 3: BLIND COPY + QR-ZAHLTEIL
+- Identisch zu Seite 2 aber **Kandidaten-Daten ersetzt durch "Blind Copy"**
+  (Diskretion Kandidat gegenüber Kunden-Buchhaltung)
+- Swiss QR-Bill (Empfangsschein + Zahlteil mit QR-Code) · Pflicht ab 30.09.2022
+- Betrag in QR-Code encoded für automatische Überweisung
+
+Rechnungs-Nummer-Format: FN{YYYY}.{MM}.{####} · z.B. FN2026.03.0917
+
+=== KONTEXT · Business-Models (2 Flows) ===
+
+### FLOW 1: BEST EFFORT (Erfolgsbasis · Honorar nur bei Placement)
+
+- EINE Rechnung bei erfolgreicher Platzierung
+- Honorar-Berechnung: HONORARSATZ × TOTAL COMPENSATION
+- Total Compensation = Jahressalär + Lohnbestandteile (Boni, 13. ML, etc.)
+- Beispiel:
+  * Jahressalär: 123'500 CHF
+  * Lohnbestandteile: keine
+  * Total Compensation: 123'500 CHF
+  * Honorarsatz: 25%
+  * Honorar: 30'875 CHF
+  * MwSt 8.1%: 2'500.90 CHF
+  * Rechnungsbetrag: 33'375.90 CHF
+- Zahlungsziel: 30 Tage
+- Varianten:
+  * Mit Rabatt (Honorarsatz reduziert · z.B. für Second-Placement)
+  * Ohne Rabatt (Standard)
+
+### FLOW 2: MANDAT (Target / Taskforce / Time · Anzahlung + Stages)
+
+- DREI Rechnungen in Stages:
+  * Stage 1 "Suchstrategie, Identifikation und Pooling" — bei
+    Vertragsunterzeichnung (Akonto)
+  * Stage 2 "Ansprache, Selektion, Briefing und Dossier" — bei Shortlist-Start
+    (Zwischen-Rechnung)
+  * Stage 3 "Vertragswesen, Abschluss, Off- und Onboarding" — bei Placement
+    (Schluss-Rechnung)
+- In jeder Stage-Rechnung stehen alle 3 Stages, aber nur die gerade fällige
+  hat einen Betrag — die anderen zeigen "OFFENER POSTEN"
+- Beispiel Mandat Stage 1:
+  * 1. Stage: 10'000 CHF
+  * 2. Stage: OFFENER POSTEN
+  * 3. Stage: OFFENER POSTEN
+  * Summe: 10'000 + 8.1% MwSt = 10'810 CHF
+- Zahlungsziel Mandat: ~10 Tage (kürzer als Best Effort)
+- "Optionale Stage" als separate Vorlage (4. Stage bei Sonder-Aufwand)
+
+=== KONTEXT · Sondertypen ===
+
+### Kündigung Mandat
+- Vorlage: "Vorlage_Rechnung_Kündigung Mandat.pdf"
+- Wenn Kunde Mandat abbricht — Abschlusszahlung nach bereits geleistetem
+  Aufwand, Rest wird nicht mehr fakturiert
+
+### Rückerstattung (Full-Refund bei Garantie-Fall)
+- Titel "RÜCKERSTATTUNG" statt "RECHNUNG"
+- Anschreiben verweist auf AGB Ziffer 8 (Rückerstattungsklausel)
+- Referenziert Original-Rechnungsnr (FN2024.03.0371)
+- Tabelle: "Bezahlte Honorarsumme ohne MwSt" + "Rückvergütung (100%)"
+- Valuta-Datum (= Buchungsdatum) statt Zahlungsziel
+- Reverse-Flow: Zahlung an Kunden-Konto (Arkadium zahlt zurück)
+- Staffel nicht gesehen · scheint immer 100% · Schemalogik für
+  Teil-Refund (z.B. nach 30/60/90 Tagen) zu definieren
+
+### Mahnung
+- Titel "MAHNUNG" statt "RECHNUNG"
+- Anschreiben höflich Stufe 1: "sicherlich in der Hektik untergegangen"
+- Neue Frist: 5 Tage ab Mahnungs-Datum
+- Stufen: 1/2/3 (separate Vorlagen) · Ton wird schärfer
+- KEINE separate Mahngebühr in Arkadium-Templates (reine Zahlungserinnerung
+  · Gebühren-Modell ist offen und zu definieren)
+- Nach Mahnstufe 3: Inkasso-Übergabe
+
+### Duzen-Vorlagen ("Du"-Prefix)
+- Parallele Vorlagen für vertraute Kunden-Beziehung (z.B. langjährige Kunden
+  im Du-Verhältnis)
+- Inhaltlich identisch, nur Sie→Du
+
+=== KONTEXT · AGB-Referenzen ===
+
+AGB-Version FEB 2023 · Arkadium_AGB_FEB_2023.pdf
+
+- §6: Schutzfrist 12 Mt (16 Mt bei Kunde-Nicht-Kooperation) bei Direkt-
+  einstellung durch Kunde ohne Arkadium-Vermittlung
+- §8: Rückerstattungsklausel (Basis für Refund-Rechnung)
+- Garantiefrist 3 Mt post-Placement (Ersatzkandidat ODER Refund bei
+  Kündigung durch MA in Garantie-Zeit)
+
+=== KONTEXT · Rechnungssheet (interne Tracking-XLSX) ===
+
+Interne Excel-Sheets pro Rechnungs-Typ:
+- Rechnungssheet_Best Effort.xlsx (mit/ohne Rabatt getrennt)
+- Rechnungssheet_Mandat.xlsx
+- Rechnungssheet_S. Burri.xlsx (personalisiert pro Backoffice-MA)
+- Tracking: Rechnungs-Nr, Kunde, Kandidat, Beträge, Zahlungs-Eingang,
+  Offen-Posten, Mahnstatus
+
+=== KONTEXT · Commission-Billing-Kopplung ===
+
+Billing ist eng mit Commission-Engine verknüpft:
+- Bei Placement wird Commission berechnet (50/50 AM↔CM Split bei
+  Erfolgsbasis, Pauschale bei Researcher)
+- Provisionssheets Excel pro MA (Joaquin Vega.xlsx, Peter Wiederkehr.xlsx)
+  werden monatlich aktualisiert
+- Commission-Auszahlung folgt NACH Zahlungseingang (nicht bei Rechnungsstellung)
+- Rückerstattung invalidiert Commission retroaktiv (Clawback-Szenario)
+- Mandat-Stages haben keine direkte Commission (nur Placement → Commission)
 
 Liefere strukturiert 10 Sections:
 

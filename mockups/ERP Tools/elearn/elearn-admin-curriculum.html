@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Curriculum-Templates (Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:14px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+  .page-head .admin-badge { display:inline-block; padding:2px 8px; background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; border-radius:2px; margin-right:8px; }
+
+  .info-box { background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:12px 16px; margin-bottom:18px; font-size:12.5px; color:var(--text); line-height:1.5; }
+  .info-box strong { color:var(--accent); }
+
+  /* Matrix: Rolle × Sparte */
+  .matrix-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; margin-bottom:22px; }
+  .matrix-head { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .matrix-head h2 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0; font-weight:700; }
+
+  .matrix-grid { display:grid; grid-template-columns:120px repeat(5, 1fr) 1fr; gap:1px; background:var(--border); padding:1px; }
+  .matrix-cell { background:var(--surface); padding:14px 10px; text-align:center; font-size:12px; position:relative; min-height:78px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:background 0.1s; }
+  .matrix-cell:hover { background:var(--bg); }
+  .matrix-cell.header { background:var(--bg); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); cursor:default; }
+  .matrix-cell.row-header { font-weight:700; text-align:left; padding-left:16px; justify-content:flex-start; align-items:flex-start; color:var(--text); font-size:13px; cursor:default; font-family:'Libre Baskerville', serif; }
+  .matrix-cell.row-header .note { font-size:11px; color:var(--text-light); font-family:'DM Sans', sans-serif; font-weight:400; margin-top:4px; }
+  .matrix-cell .count { font-family:'Libre Baskerville', serif; font-size:22px; font-weight:700; color:var(--accent); line-height:1; }
+  .matrix-cell .label { font-size:10.5px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); margin-top:5px; font-weight:600; }
+  .matrix-cell.empty .count { color:var(--text-light); opacity:0.4; }
+  .matrix-cell.empty .label { color:var(--text-light); opacity:0.6; }
+  .matrix-cell.selected { background:color-mix(in srgb, var(--accent) 10%, var(--surface)); box-shadow:inset 0 0 0 2px var(--accent); }
+  .matrix-cell.cross .count { color:#6B4E9F; }
+
+  .sparte-chip-inline { display:inline-block; padding:2px 7px; border-radius:10px; font-size:11px; font-weight:700; }
+  .sparte-chip-inline.arc { background:#FCE4E4; color:#B42525; }
+  .sparte-chip-inline.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .sparte-chip-inline.ing { background:#E3F5E3; color:#2F7D2F; }
+  .sparte-chip-inline.pur { background:#F0E3F8; color:#6B2B8E; }
+  .sparte-chip-inline.rem { background:#FFE8CC; color:#A85A0F; }
+
+  /* History */
+  .history-head { display:flex; justify-content:space-between; align-items:baseline; margin:22px 0 12px; }
+  .history-head h2 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0; font-weight:700; }
+  .history-head .sub { font-size:12px; color:var(--text-light); }
+
+  .history-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .history-row { padding:12px 18px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:auto 1fr auto auto; gap:14px; align-items:center; font-size:12.5px; }
+  .history-row:last-child { border-bottom:none; }
+  .history-row .kind-chip { padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .history-row .kind-chip.override { background:color-mix(in srgb, var(--amber) 20%, var(--bg)); color:var(--amber); }
+  .history-row .txt { color:var(--text); }
+  .history-row .txt strong { color:var(--text); }
+  .history-row .date { font-size:11.5px; color:var(--text-light); }
+  .history-row .actor { font-size:11.5px; color:var(--text-light); font-weight:600; }
+
+  /* Buttons */
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  /* DRAWER */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:1; transition:opacity 0.18s; z-index:100; }
+  .drawer-overlay.hidden { opacity:0; pointer-events:none; }
+  .drawer { position:fixed; top:0; right:0; width:540px; height:100%; background:var(--surface); border-left:1px solid var(--border); box-shadow:-6px 0 20px rgba(0,0,0,0.12); z-index:101; display:flex; flex-direction:column; transition:transform 0.2s; }
+  .drawer.hidden { transform:translateX(100%); }
+  .drawer-head { padding:18px 24px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+  .drawer-head .meta { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:4px; display:flex; gap:8px; align-items:center; }
+  .drawer-head .name { font-family:'Libre Baskerville', serif; font-size:19px; color:var(--accent); font-weight:700; }
+  .drawer-head .sub { font-size:12.5px; color:var(--text-light); margin-top:4px; }
+  .drawer-head .close-btn { background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-light); padding:4px 8px; border-radius:3px; }
+  .drawer-head .close-btn:hover { background:var(--bg); color:var(--text); }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 24px 24px; }
+  .drawer-section { margin-bottom:22px; }
+  .drawer-section h4 { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin:0 0 10px; }
+
+  /* Drag-Drop Course-Order */
+  .dd-list { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:6px; }
+  .dd-item { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:10px 12px; margin-bottom:5px; display:grid; grid-template-columns:24px 28px 1fr auto; gap:10px; align-items:center; cursor:move; transition:all 0.1s; }
+  .dd-item:hover { border-color:var(--accent); }
+  .dd-item .handle { color:var(--text-light); font-size:16px; cursor:grab; }
+  .dd-item .order-num { font-family:'Libre Baskerville', serif; font-weight:700; color:var(--accent); width:24px; height:24px; background:var(--accent-soft); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11.5px; }
+  .dd-item .name { font-weight:600; color:var(--text); font-size:13px; }
+  .dd-item .meta { font-size:11px; color:var(--text-light); }
+  .dd-item .remove { background:transparent; border:none; color:var(--text-light); cursor:pointer; padding:4px 6px; font-size:14px; border-radius:2px; }
+  .dd-item .remove:hover { background:color-mix(in srgb, var(--red) 10%, transparent); color:var(--red); }
+  .dd-add { margin-top:6px; padding:8px 12px; border:1px dashed var(--border-strong); border-radius:3px; text-align:center; font-size:12px; color:var(--text-light); cursor:pointer; background:transparent; width:100%; font-family:'DM Sans', sans-serif; }
+  .dd-add:hover { border-color:var(--accent); color:var(--accent); }
+
+  .config-grid { display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:12.5px; align-items:center; }
+  .config-grid .lbl { color:var(--text-light); font-size:11.5px; }
+  .config-grid .val { color:var(--text); font-weight:500; }
+  .config-grid input[type="number"] { width:80px; border:1px solid var(--border); border-radius:3px; padding:4px 8px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+
+  .drawer-foot { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:space-between; background:var(--surface); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <span class="admin-badge">Admin</span>
+      <h1 style="display:inline-block; vertical-align:middle;">Curriculum-Templates</h1>
+      <div class="sub" style="margin-top:6px;">Onboarding-Pfade pro (Rolle × Sparte) — werden beim MA-Einstellen automatisch zugewiesen</div>
+    </div>
+    <button class="btn btn-primary">➕ Neues Template</button>
+  </div>
+
+  <!-- Info -->
+  <!-- ark-lint-skip:begin reason=admin-worker-name -->
+  <div class="info-box">
+    <strong>Wie Curricula wirken:</strong> Beim MA-Einstellen zieht der Worker <code>elearn_onboarding_initializer</code> das Template für (Rolle, Sparte) und erzeugt pro Kurs eine Assignment mit Default-Deadline 90 Tagen. Fallback: <strong>(Rolle, —)</strong> falls kein Sparten-spezifisches Template existiert. Heads können beim Einstellen per <em>Override</em> pro MA einzeln anpassen.
+  </div>
+  <!-- ark-lint-skip:end -->
+
+  <!-- Matrix: Rolle × Sparte -->
+  <div class="matrix-card">
+    <div class="matrix-head">
+      <h2>Template-Matrix · Rolle × Sparte</h2>
+      <span style="font-size:12px; color:var(--text-light);">Klick auf Zelle öffnet Template</span>
+    </div>
+    <div class="matrix-grid">
+      <!-- Header-Row -->
+      <div class="matrix-cell header"></div>
+      <div class="matrix-cell header"><span class="sparte-chip-inline arc">ARC</span></div>
+      <div class="matrix-cell header"><span class="sparte-chip-inline gt">GT</span></div>
+      <div class="matrix-cell header"><span class="sparte-chip-inline ing">ING</span></div>
+      <div class="matrix-cell header"><span class="sparte-chip-inline pur">PUR</span></div>
+      <div class="matrix-cell header"><span class="sparte-chip-inline rem">REM</span></div>
+      <div class="matrix-cell header">Fallback (—)</div>
+
+      <!-- Researcher -->
+      <div class="matrix-cell row-header">Researcher<div class="note">Entry-Level Recruiting</div></div>
+      <div class="matrix-cell selected" onclick="selectCell(this, 'researcher-arc')">
+        <div class="count">6</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'researcher-gt')">
+        <div class="count">5</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'researcher-ing')">
+        <div class="count">5</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell empty" onclick="selectCell(this, 'researcher-pur')">
+        <div class="count">—</div><div class="label">Fallback aktiv</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'researcher-rem')">
+        <div class="count">4</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell cross" onclick="selectCell(this, 'researcher-fallback')">
+        <div class="count">4</div><div class="label">Default</div>
+      </div>
+
+      <!-- CM -->
+      <div class="matrix-cell row-header">CM<div class="note">Consultant · Mandats-Ebene</div></div>
+      <div class="matrix-cell" onclick="selectCell(this, 'cm-arc')">
+        <div class="count">8</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'cm-gt')">
+        <div class="count">7</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell empty" onclick="selectCell(this, 'cm-ing')">
+        <div class="count">—</div><div class="label">Fallback aktiv</div>
+      </div>
+      <div class="matrix-cell empty" onclick="selectCell(this, 'cm-pur')">
+        <div class="count">—</div><div class="label">Fallback aktiv</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'cm-rem')">
+        <div class="count">6</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell cross" onclick="selectCell(this, 'cm-fallback')">
+        <div class="count">6</div><div class="label">Default</div>
+      </div>
+
+      <!-- AM -->
+      <div class="matrix-cell row-header">AM<div class="note">Account-Manager</div></div>
+      <div class="matrix-cell" onclick="selectCell(this, 'am-arc')">
+        <div class="count">9</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'am-gt')">
+        <div class="count">8</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'am-ing')">
+        <div class="count">7</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell empty" onclick="selectCell(this, 'am-pur')">
+        <div class="count">—</div><div class="label">Fallback aktiv</div>
+      </div>
+      <div class="matrix-cell" onclick="selectCell(this, 'am-rem')">
+        <div class="count">7</div><div class="label">Kurse</div>
+      </div>
+      <div class="matrix-cell cross" onclick="selectCell(this, 'am-fallback')">
+        <div class="count">7</div><div class="label">Default</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-head">
+    <h2>Änderungs-Historie</h2>
+    <span class="sub">letzte 30 Tage · alle Template-Edits + MA-Overrides</span>
+  </div>
+  <div class="history-card">
+    <div class="history-row">
+      <span class="kind-chip">Template</span>
+      <div class="txt"><strong>Researcher × ARC</strong> · Kurs „Technik-Grundlagen ARC" hinzugefügt · Reihenfolge: nach Marktwissen ARC</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">Heute · 11:04</span>
+    </div>
+    <div class="history-row">
+      <span class="kind-chip">Template</span>
+      <div class="txt"><strong>CM × GT</strong> · Refresher-Zyklus von 18 auf 12 Monate geändert</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">Gestern</span>
+    </div>
+    <div class="history-row">
+      <span class="kind-chip override">Override</span>
+      <div class="txt">MA <strong>Marc B.</strong> (Researcher · PUR) · Curriculum-Override bei Einstellung · Standard-Template + „Marktwissen GT"</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">18.04.2026</span>
+    </div>
+    <div class="history-row">
+      <span class="kind-chip">Template</span>
+      <div class="txt"><strong>Researcher × REM</strong> · Neues Template erstellt · 4 Kurse</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">15.04.2026</span>
+    </div>
+    <div class="history-row">
+      <span class="kind-chip override">Override</span>
+      <div class="txt">MA <strong>Thomas G.</strong> (AM · ARC) · Kurs „Kommunikation" zusätzlich bei Rollen-Wechsel</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">12.04.2026</span>
+    </div>
+    <div class="history-row">
+      <span class="kind-chip">Template</span>
+      <div class="txt"><strong>AM × ARC</strong> · Deadline-Default von 120 auf 90 Tage reduziert</div>
+      <span class="actor">Peter W.</span>
+      <span class="date">08.04.2026</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- DRAWER: Template-Editor -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer hidden" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div class="meta"><span>Template</span></div>
+      <div class="name">Researcher × <span class="sparte-chip-inline arc">ARC</span></div>
+      <div class="sub">6 Kurse · aktiv seit 01.03.2026 · Default-Deadline 90 Tage</div>
+    </div>
+    <button class="close-btn" onclick="closeDrawer()" aria-label="Schliessen">×</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Kurs-Reihenfolge (Drag-Drop) -->
+    <div class="drawer-section">
+      <h4>Kurs-Reihenfolge (Drag &amp; Drop)</h4>
+      <div class="dd-list">
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">1</span>
+          <div>
+            <div class="name">Onboarding Arkadium</div>
+            <div class="meta">Cross-Sparte · 2 Module · Pflicht</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">2</span>
+          <div>
+            <div class="name">Recruiting-Grundlagen</div>
+            <div class="meta">Cross-Sparte · 3 Module · Pflicht</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">3</span>
+          <div>
+            <div class="name">Marktwissen ARC</div>
+            <div class="meta">ARC · 4 Module · Pre-Test möglich</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">4</span>
+          <div>
+            <div class="name">Technik-Grundlagen ARC</div>
+            <div class="meta">ARC · 3 Module · Neu hinzugefügt heute</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">5</span>
+          <div>
+            <div class="name">Kommunikation &amp; Interview</div>
+            <div class="meta">Cross-Sparte · 2 Module</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+        <div class="dd-item">
+          <span class="handle">⋮⋮</span>
+          <span class="order-num">6</span>
+          <div>
+            <div class="name">Verhaltenspsychologie</div>
+            <div class="meta">Cross-Sparte · 3 Module</div>
+          </div>
+          <button class="remove" title="Entfernen">✕</button>
+        </div>
+      </div>
+      <button class="dd-add">➕ Kurs hinzufügen</button>
+    </div>
+
+    <!-- Config -->
+    <div class="drawer-section">
+      <h4>Template-Konfiguration</h4>
+      <div class="config-grid">
+        <span class="lbl">Default-Deadline</span>
+        <span class="val"><input type="number" value="90"> Tage nach Einstellung</span>
+        <span class="lbl">Step-Lock</span>
+        <span class="val"><input type="checkbox" checked> Sequenziell (Kurs N+1 erst nach N abgeschlossen)</span>
+        <span class="lbl">Refresher-Zyklus</span>
+        <span class="val"><input type="number" value="12"> Monate (pro Kurs im Catalog konfigurierbar)</span>
+        <span class="lbl">Pre-Test erlaubt</span>
+        <span class="val"><input type="checkbox" checked> für Kurse mit <code>pretest_enabled=true</code></span>
+        <span class="lbl">Status</span>
+        <span class="val"><span class="kind-chip" style="background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green);">Aktiv</span></span>
+        <span class="lbl">Aktiv seit</span>
+        <span class="val">01.03.2026 · v3 (2 Edits in letzten 30 Tagen)</span>
+      </div>
+    </div>
+
+    <!-- Betroffene MA -->
+    <div class="drawer-section">
+      <h4>Aktuell betroffene Mitarbeiter (3 Onboarding)</h4>
+      <div class="config-grid">
+        <span class="lbl">JV · Jürgen V.</span>
+        <span class="val">45% Fortschritt · Deadline 15.05.2026</span>
+        <span class="lbl">NK · Nadine K.</span>
+        <span class="val">8% Fortschritt · Deadline 01.06.2026</span>
+        <span class="lbl">Ausblick ab 01.05.2026</span>
+        <span class="val">2 neue Einstellungen automatisch in diesem Template</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn" onclick="closeDrawer()">Abbrechen</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn">Deaktivieren</button>
+      <button class="btn btn-primary">✓ Änderungen speichern</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function selectCell(cell, id) {
+    document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('selected'));
+    cell.classList.add('selected');
+    openDrawer();
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.remove('hidden');
+    document.getElementById('drawerOverlay').classList.remove('hidden');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.add('hidden');
+    document.getElementById('drawerOverlay').classList.add('hidden');
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+
+</body>
+</html>

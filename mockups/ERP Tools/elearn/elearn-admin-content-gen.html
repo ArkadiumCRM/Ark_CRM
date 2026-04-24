@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Content-Generator (Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:14px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; display:inline-block; vertical-align:middle; }
+  .page-head .sub { font-size:13px; color:var(--text-light); margin-top:6px; }
+  .page-head .admin-badge { display:inline-block; padding:2px 8px; background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; border-radius:2px; margin-right:8px; }
+
+  /* KPI */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .kpi-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi-card.green { border-left-color:var(--green); }
+  .kpi-card.amber { border-left-color:var(--amber); }
+  .kpi-card.red { border-left-color:var(--red); }
+  .kpi-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .kpi-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .kpi-card.green .big { color:var(--green); }
+  .kpi-card.amber .big { color:var(--amber); }
+  .kpi-card.red .big { color:var(--red); }
+  .kpi-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  /* Sec-head */
+  .sec-head { display:flex; justify-content:space-between; align-items:baseline; margin:22px 0 12px; }
+  .sec-head h2 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0; font-weight:700; }
+  .sec-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* Pipeline-Flow */
+  .pipeline-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:18px 20px; margin-bottom:14px; }
+  .pipeline-flow { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; position:relative; }
+  .runner-box { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:10px 12px; position:relative; }
+  .runner-box.running { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 5%, var(--surface)); }
+  .runner-box.done { border-color:var(--green); }
+  .runner-box.idle { border-color:var(--border); }
+  .runner-box .rcode { font-family:'Libre Baskerville', serif; font-size:11px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:1.5px; }
+  .runner-box .rname { font-size:13px; font-weight:600; color:var(--text); margin-top:2px; }
+  .runner-box .rcount { font-size:11.5px; color:var(--text-light); margin-top:4px; }
+  .runner-box .pulse { position:absolute; top:8px; right:8px; width:8px; height:8px; background:var(--accent); border-radius:50%; animation:pulse 1.5s infinite; }
+  .runner-box.done .pulse { background:var(--green); animation:none; }
+  .runner-box.idle .pulse { background:var(--border); animation:none; }
+  @keyframes pulse { 0%, 100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* Sources-Grid */
+  .sources-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:14px; }
+  .source-card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:14px 16px; cursor:pointer; transition:all 0.1s; }
+  .source-card:hover { border-color:var(--accent); }
+  .source-card .icon { font-size:20px; margin-bottom:6px; }
+  .source-card .name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .source-card .meta { font-size:11px; color:var(--text-light); line-height:1.5; }
+  .source-card .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .source-card .status-dot.green { background:var(--green); }
+  .source-card .status-dot.amber { background:var(--amber); }
+  .source-card .status-dot.red { background:var(--red); }
+
+  /* Cost-Bar */
+  .cost-bar { display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:10px 16px; margin-bottom:18px; font-size:12.5px; }
+  .cost-bar .cost-label { color:var(--text-light); font-size:11.5px; }
+  .cost-bar .cost-val { font-family:'Libre Baskerville', serif; font-weight:700; color:var(--accent); font-size:14px; }
+  .cost-bar .cost-track { flex:1; height:8px; background:var(--surface-alt); border-radius:4px; overflow:hidden; min-width:160px; }
+  .cost-bar .cost-fill { height:100%; background:var(--green); }
+  .cost-bar .cost-fill.warn { background:var(--amber); }
+  .cost-bar .cost-fill.crit { background:var(--red); }
+
+  /* Buttons */
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+  .btn-success { background:var(--green); color:white; border-color:var(--green); }
+  .btn-success:hover { filter:brightness(1.08); color:white; }
+  .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; background:var(--surface); padding:10px 14px; border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:14px; flex-wrap:wrap; }
+  .toolbar select { border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+  .toolbar input[type="search"] { flex:1; min-width:180px; border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+  .toolbar .shortcuts-hint { font-size:11px; color:var(--text-light); display:flex; gap:10px; }
+  .toolbar .shortcuts-hint kbd { padding:1px 5px; background:var(--bg); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+
+  /* Review-Table */
+  .table-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .review-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .review-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .review-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .review-table tbody tr { cursor:pointer; transition:background 0.1s; }
+  .review-table tbody tr:hover { background:var(--bg); }
+  .review-table tbody tr.selected { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border-left:3px solid var(--accent); }
+  .review-table tbody tr:last-child td { border-bottom:none; }
+
+  .type-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .type-chip.lesson { background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .type-chip.quiz { background:color-mix(in srgb, #6B4E9F 15%, var(--bg)); color:#6B4E9F; }
+  .type-chip.module { background:color-mix(in srgb, var(--amber) 15%, var(--bg)); color:var(--amber); }
+
+  .status-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .status-chip.draft { background:color-mix(in srgb, var(--amber) 15%, var(--bg)); color:var(--amber); }
+  .status-chip.approved { background:color-mix(in srgb, var(--green) 15%, var(--bg)); color:var(--green); }
+  .status-chip.published { background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+
+  .cost-cell { font-family:'Libre Baskerville', serif; font-weight:700; color:var(--accent); font-size:13px; }
+
+  /* DRAWER */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:1; transition:opacity 0.18s; z-index:100; }
+  .drawer-overlay.hidden { opacity:0; pointer-events:none; }
+  .drawer { position:fixed; top:0; right:0; width:540px; height:100%; background:var(--surface); border-left:1px solid var(--border); box-shadow:-6px 0 20px rgba(0,0,0,0.12); z-index:101; display:flex; flex-direction:column; transition:transform 0.2s; }
+  .drawer.hidden { transform:translateX(100%); }
+  .drawer-head { padding:18px 24px 12px; border-bottom:1px solid var(--border); }
+  .drawer-head .meta { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:4px; display:flex; gap:8px; align-items:center; }
+  .drawer-head .name { font-family:'Libre Baskerville', serif; font-size:18px; color:var(--accent); font-weight:700; }
+  .drawer-head .target { font-size:12px; color:var(--text-light); font-family:monospace; margin-top:4px; }
+  .drawer-head .job-info { font-size:11.5px; color:var(--text-mid); margin-top:6px; line-height:1.5; }
+  .drawer-head .close-btn { position:absolute; top:18px; right:18px; background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-light); padding:4px 8px; border-radius:3px; }
+  .drawer-head .close-btn:hover { background:var(--bg); color:var(--text); }
+
+  /* Tab-Nav */
+  .tab-nav { display:flex; gap:2px; border-bottom:1px solid var(--border); padding:0 24px; background:var(--surface); }
+  .tab-btn { padding:10px 14px; font-size:12.5px; font-weight:500; color:var(--text-light); border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; font-family:'DM Sans', sans-serif; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 24px 24px; }
+
+  /* Tab-Content */
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* Preview (rendered MD) */
+  .md-preview { font-size:13.5px; line-height:1.65; color:var(--text); }
+  .md-preview h1, .md-preview h2, .md-preview h3 { font-family:'Libre Baskerville', serif; color:var(--accent); margin-top:18px; margin-bottom:8px; font-weight:700; }
+  .md-preview h1 { font-size:18px; }
+  .md-preview h2 { font-size:16px; }
+  .md-preview h3 { font-size:14px; }
+  .md-preview p { margin:0 0 10px; }
+  .md-preview ul { padding-left:22px; margin:0 0 10px; }
+  .md-preview strong { color:var(--text); }
+  .md-preview em { color:var(--text-mid); }
+  .md-preview blockquote { border-left:3px solid var(--accent); padding-left:12px; color:var(--text-mid); margin:10px 0; font-style:italic; }
+
+  /* Source (raw MD) */
+  .md-source { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:14px; font-family:monospace; font-size:11.5px; line-height:1.6; color:var(--text); white-space:pre-wrap; max-height:460px; overflow-y:auto; }
+  .md-source textarea { width:100%; min-height:460px; border:none; background:transparent; color:var(--text); font-family:monospace; font-size:11.5px; line-height:1.6; resize:vertical; outline:none; }
+
+  /* Chunks */
+  .chunk-row { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:10px 12px; margin-bottom:6px; font-size:12px; }
+  .chunk-row .chunk-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .chunk-row .src { font-family:monospace; font-size:11.5px; color:var(--accent); font-weight:600; }
+  .chunk-row .sim { font-family:'Libre Baskerville', serif; font-weight:700; font-size:13px; }
+  .chunk-row .sim.high { color:var(--green); }
+  .chunk-row .sim.mid { color:var(--amber); }
+  .chunk-row .body { color:var(--text); line-height:1.5; font-size:12px; max-height:3.2em; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+
+  /* Comment-Textarea */
+  .comment-box { margin-top:14px; }
+  .comment-box label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:6px; }
+  .comment-box textarea { width:100%; box-sizing:border-box; border:1px solid var(--border); border-radius:3px; padding:8px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; resize:vertical; min-height:64px; }
+
+  .drawer-foot { padding:12px 24px; border-top:1px solid var(--border); display:flex; gap:6px; justify-content:space-between; background:var(--surface); flex-wrap:wrap; }
+  .drawer-foot > div { display:flex; gap:6px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <span class="admin-badge">Admin · Sub B</span>
+      <h1>Content-Generator</h1>
+      <div class="sub">Pipeline R1–R5 · Quellen-Ingest → Chunking → LLM-Generation → Review → Publish</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn">↻ Alle Sources refreshen</button>
+      <button class="btn btn-primary">▶ Generation-Job starten</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-strip">
+    <div class="kpi-card amber">
+      <div class="lbl">Pending Reviews</div>
+      <div class="big">7</div>
+      <div class="sub">3 Lessons · 3 Quiz · 1 Modul</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">Jobs laufen</div>
+      <div class="big">1</div>
+      <div class="sub">R3 Chunking · 42% done</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Cost · Monat</div>
+      <div class="big">47€</div>
+      <div class="sub">von 200€ Cap · 24%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">Published Monat</div>
+      <div class="big">14</div>
+      <div class="sub">Ø 2 pro Tag · 0 Rollbacks</div>
+    </div>
+  </div>
+
+  <!-- Cost-Bar -->
+  <div class="cost-bar">
+    <span class="cost-label">Tenant-Monats-Cap:</span>
+    <span class="cost-val">47 € / 200 €</span>
+    <div class="cost-track"><div class="cost-fill" style="width:24%;"></div></div>
+    <span class="cost-label">153 € verbleibend · Cap-Reset 01.05.2026</span>
+  </div>
+
+  <!-- Pipeline-Flow -->
+  <div class="sec-head">
+    <h2>Pipeline-Status</h2>
+    <span class="sub">R1 Ingest → R2 Extract → R3 Chunk → R4 Generate → R5 Publish</span>
+  </div>
+  <div class="pipeline-card">
+    <div class="pipeline-flow">
+      <div class="runner-box done">
+        <span class="pulse"></span>
+        <div class="rcode">R1</div>
+        <div class="rname">Ingest</div>
+        <div class="rcount">4 Sources · letzter Run vor 2h</div>
+      </div>
+      <div class="runner-box done">
+        <span class="pulse"></span>
+        <div class="rcode">R2</div>
+        <div class="rname">Extract</div>
+        <div class="rcount">312 Pages extrahiert</div>
+      </div>
+      <div class="runner-box running">
+        <span class="pulse"></span>
+        <div class="rcode">R3</div>
+        <div class="rname">Chunk + Embed</div>
+        <div class="rcount">132 / 312 Chunks · läuft</div>
+      </div>
+      <div class="runner-box idle">
+        <span class="pulse"></span>
+        <div class="rcode">R4</div>
+        <div class="rname">Generate</div>
+        <div class="rcount">wartet auf R3</div>
+      </div>
+      <div class="runner-box idle">
+        <span class="pulse"></span>
+        <div class="rcode">R5</div>
+        <div class="rname">Publish</div>
+        <div class="rcount">auf Approvals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Source-Overview -->
+  <div class="sec-head">
+    <h2>Quellen (4)</h2>
+    <a href="#" style="color:var(--accent); font-size:12px; font-weight:600; text-decoration:none;">Source-Config →</a>
+  </div>
+  <div class="sources-grid">
+    <div class="source-card" onclick="alert('Source-Detail: PDF-Uploads (Mockup)');">
+      <div class="icon">📄</div>
+      <div class="name">PDFs · Uploads</div>
+      <div class="meta">
+        <span class="status-dot green"></span>8 Dokumente · 184 Seiten<br>
+        Letzte: SIA-Leitfaden 2024.pdf<br>
+        Vor 5 Tagen
+      </div>
+    </div>
+    <div class="source-card" onclick="alert('Source-Detail: Bücher + Notizen');">
+      <div class="icon">📚</div>
+      <div class="name">Bücher + Notizen</div>
+      <div class="meta">
+        <span class="status-dot green"></span>12 Text-Files · Obsidian<br>
+        Sync alle 24h (cron)<br>
+        Heute · 03:00
+      </div>
+    </div>
+    <div class="source-card" onclick="alert('Source-Detail: Web-Scraper');">
+      <div class="icon">🌐</div>
+      <div class="name">Web-Scraper</div>
+      <div class="meta">
+        <span class="status-dot amber"></span>7 Sources · SIA/ETH/Baublatt<br>
+        Wöchentlich Mo 03:00<br>
+        1 Source 404
+      </div>
+    </div>
+    <div class="source-card" onclick="alert('Source-Detail: CRM-Daten');">
+      <div class="icon">📊</div>
+      <div class="name">CRM-Daten</div>
+      <div class="meta">
+        <span class="status-dot green"></span>3 Queries · anonymisiert<br>
+        Aktivitäts-Historie · letzte 30 Tage<br>
+        Täglich 04:00
+      </div>
+    </div>
+  </div>
+
+  <!-- Review-Queue -->
+  <div class="sec-head">
+    <h2>Review-Queue</h2>
+    <span class="sub">7 Drafts warten auf Human-Review</span>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" placeholder="Suche nach Titel oder Kurs-Slug…">
+    <select>
+      <option>Alle Typen</option>
+      <option>Lesson</option>
+      <option>Quiz</option>
+      <option>Modul</option>
+    </select>
+    <select>
+      <option>Alle Kurse</option>
+      <option>Marktwissen ARC</option>
+      <option>Technik-Grundlagen ARC</option>
+      <option>Verhaltenspsychologie</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>Draft</option>
+      <option>Approved</option>
+      <option>Published</option>
+    </select>
+    <span class="shortcuts-hint">
+      <span><kbd>J</kbd>/<kbd>K</kbd> nav</span>
+      <span><kbd>A</kbd> Freigeben</span>
+      <span><kbd>R</kbd> Ablehnen</span>
+      <span><kbd>E</kbd> Edit</span>
+    </span>
+  </div>
+
+  <div class="table-card">
+    <table class="review-table">
+      <thead>
+        <tr>
+          <th>Typ</th>
+          <th>Titel</th>
+          <th>Target (Kurs › Modul)</th>
+          <th>Job</th>
+          <th>Modell · Cost</th>
+          <th>Chunks</th>
+          <th>Erstellt</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected" onclick="selectRow(this)">
+          <td><span class="type-chip lesson">Lesson</span></td>
+          <td>Grosse Planer der Schweiz</td>
+          <td>arc-marktwissen › hauptakteure</td>
+          <td>#42</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">1.23€</span></td>
+          <td>7</td>
+          <td>Heute · 14:30</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip quiz">Quiz</span></td>
+          <td>Quiz · Hauptakteure (18 Fragen)</td>
+          <td>arc-marktwissen › hauptakteure</td>
+          <td>#42</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">2.41€</span></td>
+          <td>12</td>
+          <td>Heute · 14:32</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip lesson">Lesson</span></td>
+          <td>SIA-Normen · Grundlagen 2026</td>
+          <td>arc-technik-grundlagen › sia-normen</td>
+          <td>#41</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">0.98€</span></td>
+          <td>5</td>
+          <td>Gestern</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip lesson">Lesson</span></td>
+          <td>BIM · Einführung für Projektmanager</td>
+          <td>arc-marktwissen › markt-trends</td>
+          <td>#40</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">1.45€</span></td>
+          <td>9</td>
+          <td>Gestern</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip quiz">Quiz</span></td>
+          <td>Quiz · SIA-Normen (12 Fragen)</td>
+          <td>arc-technik-grundlagen › sia-normen</td>
+          <td>#41</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">1.82€</span></td>
+          <td>8</td>
+          <td>Gestern</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip module">Modul</span></td>
+          <td>Modul-Struktur · Markt-Trends 2026</td>
+          <td>arc-marktwissen › markt-trends</td>
+          <td>#40</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">0.47€</span></td>
+          <td>—</td>
+          <td>Gestern</td>
+          <td><span class="status-chip draft">draft</span></td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td><span class="type-chip quiz">Quiz</span></td>
+          <td>Quiz · EQ-Dimensionen (20 Fragen)</td>
+          <td>verhaltenspsychologie › eq-model</td>
+          <td>#39</td>
+          <td>Sonnet 4.6 · <span class="cost-cell">3.12€</span></td>
+          <td>14</td>
+          <td>2 Tage</td>
+          <td><span class="status-chip approved">approved</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- DRAWER: Artefakt-Detail -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer hidden" id="drawer">
+  <div class="drawer-head" style="position:relative;">
+    <button class="close-btn" onclick="closeDrawer()" aria-label="Schliessen">×</button>
+    <div class="meta">
+      <span class="type-chip lesson">Lesson</span>
+      <span class="status-chip draft">draft</span>
+    </div>
+    <div class="name">Grosse Planer der Schweiz</div>
+    <div class="target">arc-marktwissen › hauptakteure › 01-grosse-planer.md</div>
+    <div class="job-info">
+      Job <strong>#42</strong> · generiert <strong>Heute · 14:30</strong> · <strong>Claude Sonnet 4.6</strong> · Cost <strong>1.23 €</strong> · 3'240 Input + 1'820 Output Tokens · 7 Quell-Chunks
+    </div>
+  </div>
+
+  <!-- Tab-Nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('preview', this)">Preview</button>
+    <button class="tab-btn" onclick="showTab('source', this)">Source (MD)</button>
+    <button class="tab-btn" onclick="showTab('chunks', this)">Chunks (7)</button>
+    <button class="tab-btn" onclick="showTab('diff', this)">Diff</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- PREVIEW -->
+    <div class="tab-content active" id="tab-preview">
+      <div class="md-preview">
+        <h1>Grosse Planer der Schweiz</h1>
+        <p>In der Schweizer Baubranche dominieren einige wenige <strong>Generalplaner-Büros</strong> den Markt für komplexe Infrastruktur- und Hochbauprojekte. Diese Büros zeichnen sich durch integrierte Leistungspakete aus — von Architektur über Tragwerksplanung bis zur Bauleitung.</p>
+
+        <h2>Die Top-5</h2>
+        <ul>
+          <li><strong>Itten+Brechbühl AG</strong> — 700 MA, spezialisiert auf Hochbau/Gesundheit</li>
+          <li><strong>Basler &amp; Hofmann</strong> — 1'000 MA, Infrastruktur + Hochbau Cross</li>
+          <li><strong>Amstein+Walthert</strong> — 850 MA, Gebäudetechnik-Fokus</li>
+          <li><strong>Emch+Berger</strong> — 600 MA, Verkehrsbau-Spezialist</li>
+          <li><strong>Pöyry Schweiz</strong> — 420 MA, Energie + Umwelt</li>
+        </ul>
+
+        <h2>Marktanteil und Positionierung</h2>
+        <p>Die Top-5 GP-Büros halten zusammen ca. <strong>38%</strong> des Marktes für Projekte &gt; 20 Mio. CHF. Ihre Stärke liegt in langjährigen Kunden-Beziehungen zu Kantonen und grossen Corporates.</p>
+
+        <blockquote>
+          „Bei Projekten über 100 Mio. CHF wird ohne einen der Top-5 praktisch nichts mehr vergeben." — Baublatt-Analyse 2025
+        </blockquote>
+
+        <h2>Relevanz für Recruiting</h2>
+        <p>GP-Büros sind <em>primäre Kunden-Zielgruppe</em> der ARC-Sparte. Kandidaten aus GP-Kontexten bringen häufig Mehrwert durch Projekt-Koordinations-Erfahrung und breites Netzwerk.</p>
+      </div>
+    </div>
+
+    <!-- SOURCE -->
+    <div class="tab-content" id="tab-source">
+      <div class="md-source"># Grosse Planer der Schweiz
+
+In der Schweizer Baubranche dominieren einige wenige **Generalplaner-Büros** den Markt für komplexe Infrastruktur- und Hochbauprojekte. Diese Büros zeichnen sich durch integrierte Leistungspakete aus — von Architektur über Tragwerksplanung bis zur Bauleitung.
+
+## Die Top-5
+
+- **Itten+Brechbühl AG** — 700 MA, spezialisiert auf Hochbau/Gesundheit
+- **Basler &amp; Hofmann** — 1'000 MA, Infrastruktur + Hochbau Cross
+- **Amstein+Walthert** — 850 MA, Gebäudetechnik-Fokus
+- **Emch+Berger** — 600 MA, Verkehrsbau-Spezialist
+- **Pöyry Schweiz** — 420 MA, Energie + Umwelt
+
+## Marktanteil und Positionierung
+
+Die Top-5 GP-Büros halten zusammen ca. **38%** des Marktes für Projekte &gt; 20 Mio. CHF.
+Ihre Stärke liegt in langjährigen Kunden-Beziehungen zu Kantonen und grossen Corporates.
+
+&gt; „Bei Projekten über 100 Mio. CHF wird ohne einen der Top-5 praktisch nichts mehr vergeben."
+&gt; — Baublatt-Analyse 2025
+
+## Relevanz für Recruiting
+
+GP-Büros sind *primäre Kunden-Zielgruppe* der ARC-Sparte. Kandidaten aus GP-Kontexten bringen häufig Mehrwert durch Projekt-Koordinations-Erfahrung und breites Netzwerk.</div>
+    </div>
+
+    <!-- CHUNKS -->
+    <div class="tab-content" id="tab-chunks">
+      <div style="font-size:11.5px; color:var(--text-light); margin-bottom:10px;">Die 7 Quell-Chunks mit höchster Similarity zum Prompt · sortiert nach Score</div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">baublatt-analyse-2025.pdf · S. 14</span>
+          <span class="sim high">0.92</span>
+        </div>
+        <div class="body">Die fünf grössten Generalplaner-Büros der Schweiz verteilen sich gut auf die Sparten Hochbau, Infrastruktur und Gebäudetechnik. Itten+Brechbühl führt mit Fokus Hochbau/Gesundheit, während Basler &amp; Hofmann als Cross-Sparten-Allrounder agiert…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">sia-leitfaden-2024.pdf · S. 42</span>
+          <span class="sim high">0.89</span>
+        </div>
+        <div class="body">Generalplaner integrieren Leistungen der Phasen 31–53 nach SIA 102 und tragen die Gesamtverantwortung für die Koordination aller Fachplaner. Die Rolle ist vertraglich als GP-Mandat geregelt mit Pauschal- oder Aufwandsentschädigung…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">eth-baustudium-2024.pdf · S. 8</span>
+          <span class="sim high">0.86</span>
+        </div>
+        <div class="body">Die Top-Planungsbüros in der Schweiz rekrutieren vorwiegend Absolventen der ETH Zürich und EPFL. Die Einstiegsgehälter liegen bei 85-95k CHF für Hochschulabgänger mit Bauing-Hintergrund…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">crm-query-gp-kandidaten-2026.json</span>
+          <span class="sim mid">0.78</span>
+        </div>
+        <div class="body">Letzte 30 Tage: 23 Kandidaten aus GP-Kontexten in Pipeline · 12 mit Itten+Brechbühl-Hintergrund · 7 mit Amstein+Walthert · 4 mit Emch+Berger…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">peter-notizen-gp-markt.md</span>
+          <span class="sim mid">0.74</span>
+        </div>
+        <div class="body">Bei Projekten &gt;100 Mio. CHF praktisch nur Top-5 · Kantone vergeben fast ausschliesslich an diese · Kunden-Beziehungen historisch gewachsen…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">baublatt-analyse-2025.pdf · S. 7</span>
+          <span class="sim mid">0.71</span>
+        </div>
+        <div class="body">Kleinere GP-Büros (50-200 MA) konkurrieren im Mittelfeld der Projekt-Volumina (2-20 Mio. CHF) mit regionalem Fokus…</div>
+      </div>
+      <div class="chunk-row">
+        <div class="chunk-head">
+          <span class="src">usic-mitgliederliste-2025.pdf</span>
+          <span class="sim mid">0.68</span>
+        </div>
+        <div class="body">USIC (Schweizerische Vereinigung Beratender Ingenieurunternehmen) zählt 900 Mitgliedsbüros. Die Top-5 GP-Büros sind alle USIC-Mitglieder…</div>
+      </div>
+    </div>
+
+    <!-- DIFF -->
+    <div class="tab-content" id="tab-diff">
+      <div style="background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:1px dashed var(--accent); border-radius:3px; padding:20px; text-align:center; font-size:12.5px; color:var(--text-light);">
+        <strong style="color:var(--accent);">Neue Lesson</strong> · kein Vorgänger im Content-Repo vorhanden.
+        <div style="margin-top:6px;">Diff wäre nur sichtbar, falls diese Lesson eine bestehende ersetzt.</div>
+      </div>
+    </div>
+
+    <!-- Kommentar -->
+    <div class="comment-box">
+      <label>Kommentar (optional · bei Ablehnung Pflicht)</label>
+      <textarea placeholder="z.B. „Amstein+Walthert-Zahl stimmt nicht · laut 2025 Report 920 MA"></textarea>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div>
+      <button class="btn btn-danger">R · Ablehnen</button>
+      <button class="btn">E · Bearbeiten</button>
+    </div>
+    <div>
+      <button class="btn btn-success">A · Freigeben</button>
+      <button class="btn btn-primary">P · Direkt publishen</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function selectRow(row) {
+    document.querySelectorAll('.review-table tbody tr').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    openDrawer();
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.remove('hidden');
+    document.getElementById('drawerOverlay').classList.remove('hidden');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.add('hidden');
+    document.getElementById('drawerOverlay').classList.add('hidden');
+  }
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea, select')) return;
+    if (e.key === 'Escape') closeDrawer();
+    if (e.key.toLowerCase() === 'a') alert('Freigeben (Mockup)');
+    if (e.key.toLowerCase() === 'r') alert('Ablehnen · Grund Pflicht (Mockup)');
+    if (e.key.toLowerCase() === 'e') showTab('source', document.querySelectorAll('.tab-btn')[1]);
+    if (e.key.toLowerCase() === 'p') alert('Direkt publishen (Mockup)');
+  });
+</script>
+
+</body>
+</html>

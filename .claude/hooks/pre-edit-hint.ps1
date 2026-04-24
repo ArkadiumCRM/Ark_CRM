@@ -1,7 +1,6 @@
 # Pre-Edit-Hint Hook (PreToolUse)
-# Emits a non-blocking reminder of relevant skills/rules before Edit/Write
-# on critical paths (mockups/*.html, specs/ARK_*.md, Grundlagen MD/ARK_*.md).
-# Output goes to additionalContext so assistant sees it in-turn.
+# KRITISCHE PFADE: blockiert Edit wenn kein frisches Backup (<30 Min) in backups/ existiert.
+# UNKRITISCHE PFADE: nur Reminder (non-blocking).
 
 $ErrorActionPreference = 'Stop'
 
@@ -18,7 +17,42 @@ try {
 
     $hints = @()
 
-    # Mockups -- full lint/drift checks apply
+    # ─── KRITISCHE PFADE (Backup-Block-Logik) ────────────────────────────────
+    $isCritical = $false
+    if ($pathNorm -match '/mockups/.+\.html$')              { $isCritical = $true }
+    if ($pathNorm -match '/specs/ARK_.+\.md$')              { $isCritical = $true }
+    if ($pathNorm -match 'Grundlagen[\s_]MD/ARK_.+\.md$')  { $isCritical = $true }
+
+    if ($isCritical -and (Test-Path $path)) {
+        $fileName = [System.IO.Path]::GetFileName($path)
+        $backupDir = 'C:\ARK CRM\backups'
+        $recentBackup = $null
+
+        if (Test-Path $backupDir) {
+            $recentBackup = Get-ChildItem -Path $backupDir -Filter "$fileName.*" |
+                Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-30) } |
+                Sort-Object LastWriteTime -Descending |
+                Select-Object -First 1
+        }
+
+        if (-not $recentBackup) {
+            # BLOCK — kein frisches Backup gefunden
+            $blockMsg = "Kein Backup fuer '$fileName' in den letzten 30 Min. " +
+                        "Erstelle zuerst: Copy-Item '$path' '$backupDir\$fileName.<YYYY-MM-DD-HHMM>.bak'"
+            @{
+                decision = "block"
+                reason   = $blockMsg
+            } | ConvertTo-Json -Compress
+            exit 0
+        }
+        else {
+            $hints += "**Backup OK** ($($recentBackup.Name)) — Edit darf fortfahren."
+        }
+    }
+
+    # ─── PFAD-SPEZIFISCHE HINTS ───────────────────────────────────────────────
+
+    # Mockups
     if ($pathNorm -match '/mockups/.+\.html$') {
         $hints += '**Mockup-Edit** -> pruefe: Drawer 540px (nicht Modal), Stage-Pipeline 9 Dots, Umlaute echt, keine dim_*/fact_*/bridge_* in UI-Texten, Stammdaten-Begriffe aus STAMMDATEN v1.3'
         $hints += '**Baseline-Snippets:** ``wiki/meta/mockup-baseline.md`` -- copy-paste ready statt neu erfinden'
@@ -46,11 +80,11 @@ try {
         $hints += '**Memory-Edit** -> Frontmatter (name/description/type). MEMORY.md-Index aktualisieren wenn neue Datei.'
     }
 
-    # Large-file backup reminder
-    if (Test-Path $path) {
+    # Unkritische grosse Dateien (hooks, wiki/meta, etc.) -- nur Reminder
+    if (-not $isCritical -and (Test-Path $path)) {
         $size = (Get-Item $path).Length
         if ($size -gt 5000) {
-            $hints += "**Datei >5KB ($([Math]::Round($size/1024,1))KB)** -> VOR Edit Backup nach ``backups/`` (Datei-Schutz-Regel CLAUDE.md)."
+            $hints += "**Datei >5KB ($([Math]::Round($size/1024,1))KB)** -> VOR Edit Backup nach ``backups/`` empfohlen (Datei-Schutz-Regel CLAUDE.md)."
         }
     }
 
@@ -65,7 +99,7 @@ try {
 
     $output = @{
         hookSpecificOutput = @{
-            hookEventName = 'PreToolUse'
+            hookEventName     = 'PreToolUse'
             additionalContext = $sb.ToString()
         }
     }

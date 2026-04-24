@@ -194,6 +194,7 @@
     <a class="tool-tab" href="../zeit/zeit.html"><span class="icon">⏱</span> Zeit</a>
     <a class="tool-tab active" href="billing.html"><span class="icon">📄</span> Billing</a>
     <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+    <a class="tool-tab" href="../elearn/elearn.html" title="E-Learning"><span class="icon">🎓</span> E-Learning</a>
   </div>
 
   <div class="right">
@@ -323,7 +324,16 @@
     if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
     localStorage.setItem('ark-theme', theme);
     const frame = document.getElementById('mainFrame');
-    try { if (frame && frame.contentDocument) frame.contentDocument.documentElement.setAttribute('data-theme', theme); } catch (e) {}
+    try {
+      if (frame && frame.contentDocument) {
+        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) { /* cross-origin safe-fail */ }
+    try {
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({type:'ark-theme', value:theme}, '*');
+      }
+    } catch (e) {}
   }
   function applyRole(role) {
     document.querySelectorAll('.role-section, .role-item').forEach(el => {

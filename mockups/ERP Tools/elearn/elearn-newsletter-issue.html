@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Newsletter · KW 17/2026 ARC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); }
+  body { display:grid; grid-template-rows:auto 1fr auto; }
+
+  /* Sticky Progress-Bar */
+  .progress-top { position:sticky; top:0; z-index:10; background:var(--surface); border-bottom:1px solid var(--border); padding:10px 28px; display:flex; align-items:center; gap:14px; }
+  .progress-top .kw-tag { font-family:'Libre Baskerville', serif; font-size:13px; font-weight:700; color:var(--accent); }
+  .progress-top .sep { color:var(--border-strong); }
+  .progress-top .meta { font-size:12px; color:var(--text-light); }
+  .progress-top .progress-bar { flex:1; height:6px; background:var(--surface-alt); border-radius:3px; overflow:hidden; min-width:200px; }
+  .progress-top .progress-fill { height:100%; background:var(--accent); transition:width 0.3s; }
+  .progress-top .pct { font-family:'Libre Baskerville', serif; font-size:12.5px; font-weight:700; color:var(--accent); min-width:36px; text-align:right; }
+
+  /* Article */
+  .article { max-width:760px; margin:0 auto; padding:40px 40px 60px; overflow-y:auto; }
+
+  /* Header */
+  .article-head { margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+  .article-head .kw-hero { font-family:'Libre Baskerville', serif; font-size:13px; color:var(--accent); text-transform:uppercase; letter-spacing:3px; font-weight:700; margin-bottom:8px; }
+  .article-head h1 { font-family:'Libre Baskerville', serif; font-size:32px; line-height:1.25; color:var(--text); font-weight:700; margin:0 0 14px; letter-spacing:-0.01em; }
+  .article-head .lede { font-size:15px; line-height:1.6; color:var(--text-light); margin-bottom:16px; font-style:italic; }
+  .article-head .meta-row { display:flex; gap:14px; align-items:center; font-size:12px; color:var(--text-light); flex-wrap:wrap; }
+  .article-head .meta-row .chip-sparte { padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+
+  /* Sections */
+  .section { margin-bottom:32px; }
+  .section h2 { font-family:'Libre Baskerville', serif; font-size:22px; color:var(--accent); font-weight:700; margin:0 0 12px; line-height:1.3; }
+  .section .byline { font-size:11.5px; color:var(--text-light); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; font-weight:600; }
+  .section p { font-size:14.5px; line-height:1.7; color:var(--text); margin:0 0 14px; }
+  .section p strong { color:var(--text); }
+  .section ul { padding-left:22px; margin:0 0 14px; font-size:14.5px; line-height:1.7; }
+  .section ul li { margin-bottom:6px; }
+  .section blockquote { border-left:3px solid var(--accent); padding:8px 0 8px 16px; margin:14px 0; font-family:'Libre Baskerville', serif; font-style:italic; color:var(--text-mid); font-size:15px; line-height:1.6; }
+  .section blockquote .cite { display:block; font-style:normal; font-family:'DM Sans', sans-serif; font-size:12px; color:var(--text-light); margin-top:6px; text-align:right; }
+
+  /* Image-Placeholder */
+  .img-placeholder { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:40px 20px; text-align:center; color:var(--text-light); font-size:13px; margin:14px 0; }
+
+  /* CRM-Insight (aus eigenen Daten) */
+  .crm-insight { background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:16px 20px; margin:16px 0; }
+  .crm-insight .label { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--accent); font-weight:700; margin-bottom:8px; }
+  .crm-insight h3 { font-family:'Libre Baskerville', serif; font-size:15px; margin:0 0 8px; color:var(--text); font-weight:700; }
+  .crm-insight p { font-size:13px; line-height:1.5; color:var(--text); margin:0; }
+
+  /* Sources-Box */
+  .sources { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:16px 20px; margin:28px 0; }
+  .sources h3 { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin:0 0 10px; }
+  .sources .src-list { display:flex; flex-direction:column; gap:6px; font-size:12.5px; }
+  .sources .src-list a { color:var(--accent); text-decoration:none; }
+  .sources .src-list a:hover { text-decoration:underline; }
+  .sources .src-list .date { color:var(--text-light); font-size:11px; margin-left:6px; }
+
+  /* QUIZ Section */
+  .quiz-section { background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:2px solid var(--accent); border-radius:8px; padding:28px 32px; margin:36px 0 20px; }
+  .quiz-head { text-align:center; margin-bottom:20px; }
+  .quiz-head .label { font-size:11px; text-transform:uppercase; letter-spacing:2.5px; color:var(--accent); font-weight:700; margin-bottom:6px; }
+  .quiz-head h2 { font-family:'Libre Baskerville', serif; font-size:22px; color:var(--text); font-weight:700; margin:0 0 8px; }
+  .quiz-head .sub { font-size:13px; color:var(--text-light); }
+
+  .quiz-question { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:18px 22px; margin-bottom:12px; }
+  .quiz-question .q-num { font-family:'Libre Baskerville', serif; font-size:11px; color:var(--accent); font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+  .quiz-question .q-text { font-family:'Libre Baskerville', serif; font-size:15px; color:var(--text); font-weight:500; line-height:1.45; margin:6px 0 14px; }
+  .quiz-question .options { display:flex; flex-direction:column; gap:6px; }
+  .quiz-question .option { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:4px; cursor:pointer; font-size:13px; transition:all 0.1s; }
+  .quiz-question .option:hover { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+  .quiz-question .option input { cursor:pointer; }
+  .quiz-question .option.selected { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 8%, var(--bg)); font-weight:600; }
+
+  /* Sticky Footer */
+  .sticky-foot { position:sticky; bottom:0; background:var(--surface); border-top:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; gap:14px; z-index:10; }
+  .sticky-foot .note { flex:1; font-size:12px; color:var(--text-light); }
+  .sticky-foot .note strong { color:var(--text); }
+
+  .btn { padding:9px 18px; font-size:13px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); padding:10px 22px; }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-primary:disabled { opacity:0.45; cursor:not-allowed; filter:none; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<!-- Progress-Bar -->
+<div class="progress-top">
+  <span class="kw-tag">KW 17/2026</span>
+  <span class="sep">·</span>
+  <span class="chip-sparte arc" style="padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:700;">ARC</span>
+  <span class="sep">·</span>
+  <span class="meta">Pflicht · ca. 8 Min · Quiz am Ende</span>
+  <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:20%"></div></div>
+  <span class="pct" id="ppct">20%</span>
+</div>
+
+<!-- Article -->
+<article class="article" id="article">
+
+  <header class="article-head">
+    <div class="kw-hero">KW 17 · 2026 · Ausgabe Architektur (ARC)</div>
+    <h1>GP-Markt im Umbruch · SIA-Update · 3 neue Hauptakteure</h1>
+    <p class="lede">Diese Woche: Grössenverschiebungen bei den Top-5 Generalplaner-Büros, SIA 102 Revision mit Auswirkung auf Honorarmodelle, plus neue Player im Hochbau-Segment. Und: was unsere CRM-Daten der letzten Woche über den Markt verraten.</p>
+    <div class="meta-row">
+      <span class="chip-sparte arc">ARC</span>
+      <span>Veröffentlicht Montag 21.04.2026 · 06:00</span>
+      <span>·</span>
+      <span>4 Artikel · 5 Quiz-Fragen</span>
+      <span>·</span>
+      <span>Deadline 26.04.2026</span>
+    </div>
+  </header>
+
+  <!-- Artikel 1 -->
+  <section class="section">
+    <div class="byline">Artikel 1 · Markt-Analyse</div>
+    <h2>Basler &amp; Hofmann übernimmt Emch+Berger — die neue Nr. 1 in Infrastruktur</h2>
+    <p>Die Woche brachte die grösste Marktbewegung des Jahres: <strong>Basler &amp; Hofmann</strong> hat die Übernahme von <strong>Emch+Berger</strong> angekündigt. Die kombinierte Einheit überholt damit Itten+Brechbühl in absoluten Mitarbeiterzahlen und wird zur klaren Nummer 1 im Infrastruktur-Segment.</p>
+    <p>Was das für Recruiting bedeutet: Die <strong>Integrations-Phase</strong> in den nächsten 6-12 Monaten wird eine <strong>höhere Fluktuation</strong> mit sich bringen. Erfahrung zeigt — bei M&amp;A-Events wandern 15-25% der Senior-MA binnen 18 Monaten ab, oft zu direkten Konkurrenten oder in kleinere Spezial-Büros.</p>
+    <blockquote>
+      „Bei den letzten drei Bau-Fusionen haben wir 80+ Kandidaten aus den fusionierten Einheiten platziert. Das ist eine Pipeline-Goldgrube."
+      <span class="cite">— Peter W., Senior Partner ARC (intern)</span>
+    </blockquote>
+    <div class="img-placeholder">📊 [Grafik: Top-5 GP-Marktanteile vor/nach Übernahme]</div>
+  </section>
+
+  <!-- CRM-Insight -->
+  <div class="crm-insight">
+    <div class="label">⚡ Insight aus unseren CRM-Daten</div>
+    <h3>23 Kandidaten aus Emch+Berger aktuell in Pipeline</h3>
+    <p>Letzte 30 Tage: 23 aktive Kandidaten mit Emch+Berger-Hintergrund (vs. 8 im Q1). Davon 11 in Prozess-Stage „CV Sent" oder später. Ableitung: Direkter Outreach bei Emch+Berger-Senior-MA sinnvoll, besonders bei Projektleitern mit 10+ Jahren Erfahrung.</p>
+  </div>
+
+  <!-- Artikel 2 -->
+  <section class="section">
+    <div class="byline">Artikel 2 · Regulatorisches</div>
+    <h2>SIA 102 Revision 2026 — weg von Pauschale, hin zu Stunden-Pools</h2>
+    <p>Die neue <strong>SIA 102 Revision</strong> tritt per 01.07.2026 in Kraft und verändert die Honorar-Logik substantiell. Der Standard-Ansatz verschiebt sich von <em>pauschalen Werkvertrags-Honoraren</em> hin zu <em>Stunden-Pools mit Cap</em>.</p>
+    <ul>
+      <li><strong>Phase 31 (Vorprojekt):</strong> Stunden-Pool mit 110% Cap — Überschreitung nur mit Freigabe durch Bauherrn</li>
+      <li><strong>Phase 41 (Bauprojekt):</strong> Pauschal bleibt möglich, aber neu als Option, nicht Default</li>
+      <li><strong>Phase 51–53 (Ausführung):</strong> Komplett Stunden-basiert, Nachträge streng reglementiert</li>
+    </ul>
+    <p>Für Kandidaten-Matches heisst das: <strong>Planer mit Controlling-Erfahrung</strong> werden wichtiger. Wer nur „Pauschal-Preise kalkulieren" kann, ist ab Q3/2026 weniger gefragt.</p>
+  </section>
+
+  <!-- Artikel 3 -->
+  <section class="section">
+    <div class="byline">Artikel 3 · Neue Player</div>
+    <h2>3 neue Hauptakteure im Hochbau-Segment</h2>
+    <p>Diese Woche haben drei Büros substantielle Neu-Positionierungen angekündigt:</p>
+    <ul>
+      <li><strong>Aretas Planer AG</strong> (Winterthur) — 120 MA, neu fokussiert auf Gesundheitsbau, hat 3 Senior-Architekten von Itten+Brechbühl übernommen</li>
+      <li><strong>Nova Bau Consulting</strong> (Zug) — Spin-off aus Amstein+Walthert, 45 MA, spezialisiert auf digitale Zwillinge</li>
+      <li><strong>GreenLine Architekten</strong> (Bern) — 80 MA, neu auf Nachhaltigkeits-Zertifizierungen (Minergie-P/A)</li>
+    </ul>
+    <p>Alle drei sind <em>potentielle Neu-Kunden</em> und zugleich <em>Quellen für hochqualifizierte Kandidaten</em>.</p>
+  </section>
+
+  <!-- Artikel 4 -->
+  <section class="section">
+    <div class="byline">Artikel 4 · Salary-Benchmark</div>
+    <h2>Architektur-Gehälter 2026 · Update ETH-Schnittstelle</h2>
+    <p>Neue Zahlen aus der <strong>ETH-Karriereservice-Auswertung Q1 2026</strong>: Einstiegsgehälter für Bauing-Absolventen bei GP-Büros liegen bei <strong>88-96 k CHF</strong> (+3% vs. 2025). Senior-Projektleiter (10+ Jahre) verdienen <strong>145-175 k</strong>, Partner/Teamleiter <strong>190 k aufwärts</strong>.</p>
+    <p>Markt-Signal: Die Lücke zwischen Mid-Level und Senior-Bändern wächst — kleinere Büros zahlen zunehmend Senior-Prämien, um gegen die Top-5 zu konkurrieren.</p>
+  </section>
+
+  <!-- Sources -->
+  <div class="sources">
+    <h3>Quellen</h3>
+    <div class="src-list">
+      <a href="#">Baublatt-Marktanalyse 2026/17<span class="date">21.04.2026</span></a>
+      <a href="#">SIA 102 Revision Entwurf · Q2/2026<span class="date">publiziert 18.04.2026</span></a>
+      <a href="#">ETH Career Service · Gehaltsreport Q1<span class="date">15.04.2026</span></a>
+      <a href="#">Pressemeldung Basler &amp; Hofmann · Akquisition<span class="date">20.04.2026</span></a>
+      <a href="#">CRM · Aktivitäts-Historie · Kontakte mit Emch+Berger-Bezug (letzte 30T)<span class="date">21.04.2026</span></a>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <section class="quiz-section" id="quiz">
+    <div class="quiz-head">
+      <div class="label">Pflicht-Quiz · 80% Pass-Threshold</div>
+      <h2>5 Fragen zum Newsletter</h2>
+      <div class="sub">Lesen allein reicht nicht — der Pflicht-Lock öffnet sich erst nach bestandenem Quiz.</div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="q-num">Frage 1 · Multiple Choice</div>
+      <div class="q-text">Wer übernimmt Emch+Berger und wird damit zur neuen Nr. 1 im Infrastruktur-Segment?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q1"> Itten+Brechbühl AG</label>
+        <label class="option selected"><input type="radio" name="q1" checked> Basler &amp; Hofmann</label>
+        <label class="option"><input type="radio" name="q1"> Amstein+Walthert</label>
+        <label class="option"><input type="radio" name="q1"> Pöyry Schweiz</label>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="q-num">Frage 2 · Multiple Choice</div>
+      <div class="q-text">Wann tritt die SIA 102 Revision 2026 in Kraft?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q2"> 01.01.2026</label>
+        <label class="option"><input type="radio" name="q2"> 01.04.2026</label>
+        <label class="option"><input type="radio" name="q2"> 01.07.2026</label>
+        <label class="option"><input type="radio" name="q2"> 01.01.2027</label>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="q-num">Frage 3 · True/False</div>
+      <div class="q-text">Die neue SIA 102 Revision macht Pauschal-Honorare in Phase 51–53 (Ausführung) zum Standard.</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q3"> Wahr</label>
+        <label class="option"><input type="radio" name="q3"> Falsch</label>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="q-num">Frage 4 · Multi-Select</div>
+      <div class="q-text">Welche der folgenden Büros wurden als neue Hauptakteure im Hochbau-Segment genannt? (Mehrfachauswahl)</div>
+      <div class="options">
+        <label class="option"><input type="checkbox"> Itten+Brechbühl AG</label>
+        <label class="option"><input type="checkbox"> Aretas Planer AG</label>
+        <label class="option"><input type="checkbox"> Nova Bau Consulting</label>
+        <label class="option"><input type="checkbox"> Basler &amp; Hofmann</label>
+        <label class="option"><input type="checkbox"> GreenLine Architekten</label>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="q-num">Frage 5 · Freitext</div>
+      <div class="q-text">Was bedeutet die SIA-102-Revision für die Matching-Kriterien bei Kandidaten aus Architektur-Kontexten? Nenne 1–2 konkrete Kompetenzen, die an Bedeutung gewinnen.</div>
+      <div class="options">
+        <textarea style="width:100%; min-height:80px; padding:10px; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; resize:vertical;" placeholder="z.B. Controlling-Erfahrung, weil Honorar-Caps überwacht werden müssen…"></textarea>
+      </div>
+    </div>
+  </section>
+
+</article>
+
+<!-- Sticky Footer -->
+<div class="sticky-foot">
+  <div class="note"><strong>Noch 1 Frage offen.</strong> Beantworte alle Fragen um abzuschicken · Pass-Threshold 80% · Freitext wird von deinem Head reviewt.</div>
+  <button class="btn">Später</button>
+  <button class="btn btn-primary">✓ Quiz abschicken &amp; lesen</button>
+</div>
+
+<script>
+  // Scroll-Progress
+  const article = document.getElementById('article');
+  const pbar = document.getElementById('pbar');
+  const ppct = document.getElementById('ppct');
+  function updateProgress() {
+    const h = article.scrollHeight - window.innerHeight;
+    const s = window.scrollY;
+    const pct = Math.max(20, Math.min(100, Math.round((s / h) * 100 + 20)));
+    pbar.style.width = pct + '%';
+    ppct.textContent = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress);
+  updateProgress();
+
+  // Option-Select
+  document.querySelectorAll('.quiz-question .option').forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      const input = opt.querySelector('input');
+      if (!input) return;
+      if (input.type === 'radio') {
+        opt.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      } else if (input.type === 'checkbox') {
+        opt.classList.toggle('selected', input.checked);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

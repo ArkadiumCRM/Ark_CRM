@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Import-Log (Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:14px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; display:inline-block; vertical-align:middle; }
+  .page-head .sub { font-size:13px; color:var(--text-light); margin-top:6px; }
+  .page-head .admin-badge { display:inline-block; padding:2px 8px; background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; border-radius:2px; margin-right:8px; }
+
+  /* KPI-Strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .kpi-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi-card.green { border-left-color:var(--green); }
+  .kpi-card.amber { border-left-color:var(--amber); }
+  .kpi-card.red { border-left-color:var(--red); }
+  .kpi-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .kpi-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .kpi-card.green .big { color:var(--green); }
+  .kpi-card.amber .big { color:var(--amber); }
+  .kpi-card.red .big { color:var(--red); }
+  .kpi-card .sub { font-size:11.5px; color:var(--text-mid); font-family:monospace; }
+
+  /* Config-Box */
+  .config-box { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:14px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; font-size:12.5px; align-items:center; }
+  .config-box .row { display:flex; gap:10px; align-items:center; }
+  .config-box .lbl { color:var(--text-light); font-size:11.5px; font-weight:600; min-width:110px; }
+  .config-box .val { color:var(--text); font-family:monospace; font-size:12px; }
+  .config-box .val.ok { color:var(--green); font-weight:600; }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; background:var(--surface); padding:10px 14px; border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:14px; flex-wrap:wrap; }
+  .toolbar select { border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+  .toolbar input[type="search"] { flex:1; min-width:180px; border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+
+  /* Buttons */
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  /* Tabelle */
+  .table-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .imports-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .imports-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .imports-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .imports-table tbody tr:last-child td { border-bottom:none; }
+  .imports-table tbody tr { cursor:pointer; transition:background 0.1s; }
+  .imports-table tbody tr:hover { background:var(--bg); }
+  .imports-table tbody tr.selected { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border-left:3px solid var(--accent); }
+
+  .commit-sha { font-family:monospace; font-size:12px; color:var(--accent); font-weight:600; }
+  .commit-msg { font-size:11.5px; color:var(--text-light); margin-top:2px; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .counts-cell { display:flex; gap:10px; font-size:12px; }
+  .counts-cell .c-item { display:flex; gap:4px; align-items:baseline; }
+  .counts-cell .c-val { font-family:'Libre Baskerville', serif; font-size:14px; font-weight:700; }
+  .counts-cell .c-val.green { color:var(--green); }
+  .counts-cell .c-val.amber { color:var(--amber); }
+  .counts-cell .c-val.red { color:var(--red); }
+  .counts-cell .c-val.neutral { color:var(--text-light); }
+  .counts-cell .c-lbl { font-size:10.5px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.8px; }
+
+  .status-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .status-chip.success { background:color-mix(in srgb, var(--green) 15%, var(--bg)); color:var(--green); }
+  .status-chip.partial { background:color-mix(in srgb, var(--amber) 20%, var(--bg)); color:var(--amber); }
+  .status-chip.failed { background:color-mix(in srgb, var(--red) 15%, var(--bg)); color:var(--red); }
+
+  .trigger-chip { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10.5px; background:var(--surface-alt); color:var(--text-mid); font-weight:600; }
+
+  /* DRAWER */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:1; transition:opacity 0.18s; z-index:100; }
+  .drawer-overlay.hidden { opacity:0; pointer-events:none; }
+  .drawer { position:fixed; top:0; right:0; width:540px; height:100%; background:var(--surface); border-left:1px solid var(--border); box-shadow:-6px 0 20px rgba(0,0,0,0.12); z-index:101; display:flex; flex-direction:column; transition:transform 0.2s; }
+  .drawer.hidden { transform:translateX(100%); }
+  .drawer-head { padding:18px 24px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+  .drawer-head .meta { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:4px; display:flex; gap:8px; align-items:center; }
+  .drawer-head .name { font-family:monospace; font-size:18px; color:var(--accent); font-weight:700; }
+  .drawer-head .sub { font-size:12.5px; color:var(--text-light); margin-top:4px; line-height:1.5; }
+  .drawer-head .close-btn { background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-light); padding:4px 8px; border-radius:3px; }
+  .drawer-head .close-btn:hover { background:var(--bg); color:var(--text); }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 24px 24px; }
+  .drawer-section { margin-bottom:22px; }
+  .drawer-section h4 { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin:0 0 10px; }
+
+  .counts-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; }
+  .count-mini { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:10px 12px; text-align:center; }
+  .count-mini .val { font-family:'Libre Baskerville', serif; font-size:22px; font-weight:700; line-height:1; }
+  .count-mini .val.green { color:var(--green); }
+  .count-mini .val.amber { color:var(--amber); }
+  .count-mini .val.red { color:var(--red); }
+  .count-mini .val.neutral { color:var(--text-light); }
+  .count-mini .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-top:4px; font-weight:600; }
+
+  /* Changed-Entities List */
+  .entity-row { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:8px 12px; margin-bottom:4px; display:grid; grid-template-columns:60px 1fr auto; gap:10px; align-items:center; font-size:12.5px; }
+  .entity-row .action-chip { padding:2px 7px; border-radius:2px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; text-align:center; }
+  .entity-row .action-chip.added { background:color-mix(in srgb, var(--green) 15%, var(--bg)); color:var(--green); }
+  .entity-row .action-chip.updated { background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .entity-row .action-chip.archived { background:var(--surface-alt); color:var(--text-light); }
+  .entity-row .path { font-family:monospace; font-size:11.5px; color:var(--text); }
+  .entity-row .version { font-family:monospace; font-size:11px; color:var(--text-light); }
+
+  /* Error-Panel */
+  .error-panel { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border:1px solid var(--red); border-radius:3px; padding:12px 14px; }
+  .error-row { border-bottom:1px dashed color-mix(in srgb, var(--red) 30%, var(--border)); padding:8px 0; font-size:12.5px; }
+  .error-row:last-child { border-bottom:none; }
+  .error-row .path { font-family:monospace; font-size:11.5px; color:var(--red); font-weight:600; margin-bottom:2px; }
+  .error-row .msg { color:var(--text); line-height:1.45; }
+
+  .drawer-foot { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:space-between; background:var(--surface); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <span class="admin-badge">Admin</span>
+      <h1>Import-Log</h1>
+      <div class="sub">Git-Webhook-Importe des Content-Repos · Audit-Trail aller Kurs-Updates</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn">↻ Jetzt manuell importieren</button>
+      <button class="btn btn-primary">Webhook-Config →</button>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card green">
+      <div class="lbl">Letzter Import</div>
+      <div class="big">vor 2 h</div>
+      <div class="sub">a3f9c21 · 0 Errors</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Imports 30 Tage</div>
+      <div class="big">18</div>
+      <div class="sub">Ø 1.5× pro Woche</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="lbl">Teilweise fehlgeschlagen</div>
+      <div class="big">1</div>
+      <div class="sub">18.04.2026 · 2 Validation-Errors</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">Success-Rate</div>
+      <div class="big">94%</div>
+      <div class="sub">17 von 18 fehlerfrei</div>
+    </div>
+  </div>
+
+  <!-- Webhook-Config -->
+  <div class="config-box">
+    <div class="row">
+      <span class="lbl">Repo</span>
+      <span class="val">arkadium/ark-elearning-content</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Branch</span>
+      <span class="val">main</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Webhook-URL</span>
+      <span class="val">https://erp.arkadium.ch/api/elearn/admin/import</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Signatur</span>
+      <span class="val ok">HMAC-SHA256 · aktiv</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Auto-Import</span>
+      <span class="val ok">Aktiv bei Push auf main</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Letzte Validierung</span>
+      <span class="val">Heute · 10:02</span>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input type="search" placeholder="Suche nach Commit-SHA, Autor oder Nachricht…">
+    <select>
+      <option>Alle Status</option>
+      <option>Erfolgreich</option>
+      <option>Teilweise</option>
+      <option>Fehlgeschlagen</option>
+    </select>
+    <select>
+      <option>Letzte 30 Tage</option>
+      <option>Letzte 7 Tage</option>
+      <option>Letzte 90 Tage</option>
+      <option>Alle</option>
+    </select>
+    <button class="btn btn-sm">↓ CSV</button>
+  </div>
+
+  <!-- Imports-Tabelle -->
+  <div class="table-card">
+    <table class="imports-table">
+      <thead>
+        <tr>
+          <th>Commit</th>
+          <th>Trigger</th>
+          <th>Autor</th>
+          <th>Counts</th>
+          <th>Status</th>
+          <th>Dauer</th>
+          <th>Zeit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected" onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">a3f9c21</div>
+            <div class="commit-msg">feat: ARC Marktwissen v3.1 · Modul 4 Markt-Trends 2026 hinzugefügt</div>
+          </td>
+          <td><span class="trigger-chip">webhook</span></td>
+          <td>content@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val green">+3</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~8</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val red">0</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip success">erfolgreich</span></td>
+          <td>4.2s</td>
+          <td>Heute · 11:04</td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">e8b7f03</div>
+            <div class="commit-msg">fix: Datenschutz-Refresher · Quiz-Frage Typo korrigiert</div>
+          </td>
+          <td><span class="trigger-chip">webhook</span></td>
+          <td>content@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~1</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val red">0</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip success">erfolgreich</span></td>
+          <td>1.8s</td>
+          <td>Gestern · 15:22</td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">c12d4a7</div>
+            <div class="commit-msg">feat: REM-Marktwissen · neuer Kurs (v1.0)</div>
+          </td>
+          <td><span class="trigger-chip">webhook</span></td>
+          <td>peter.wiederkehr@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val green">+1</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~0</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val red">0</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip success">erfolgreich</span></td>
+          <td>3.5s</td>
+          <td>21.04.2026 · 09:15</td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">8a2f190</div>
+            <div class="commit-msg">feat: ARC-Marktwissen Refresh-Version für 2026</div>
+          </td>
+          <td><span class="trigger-chip">webhook</span></td>
+          <td>content@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val green">+1</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~4</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val amber">2</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip partial">teilweise</span></td>
+          <td>5.8s</td>
+          <td>18.04.2026 · 14:33</td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">b1c9e46</div>
+            <div class="commit-msg">chore: Legacy ARC-Marktwissen (2024) archivieren</div>
+          </td>
+          <td><span class="trigger-chip">webhook</span></td>
+          <td>peter.wiederkehr@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~0</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val amber">1</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val red">0</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip success">erfolgreich</span></td>
+          <td>0.9s</td>
+          <td>15.04.2026 · 11:02</td>
+        </tr>
+        <tr onclick="selectRow(this)">
+          <td>
+            <div class="commit-sha">f3e7521</div>
+            <div class="commit-msg">feat: Verhaltenspsychologie · Modul EQ-i Update</div>
+          </td>
+          <td><span class="trigger-chip">manual</span></td>
+          <td>peter.wiederkehr@arkadium.ch</td>
+          <td>
+            <div class="counts-cell">
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">neu</span></div>
+              <div class="c-item"><span class="c-val">~2</span><span class="c-lbl">upd</span></div>
+              <div class="c-item"><span class="c-val neutral">0</span><span class="c-lbl">arc</span></div>
+              <div class="c-item"><span class="c-val red">0</span><span class="c-lbl">err</span></div>
+            </div>
+          </td>
+          <td><span class="status-chip success">erfolgreich</span></td>
+          <td>2.1s</td>
+          <td>12.04.2026 · 16:50</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- DRAWER: Import-Detail -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer hidden" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div class="meta"><span>Import</span><span class="status-chip success">erfolgreich</span></div>
+      <div class="name">a3f9c21</div>
+      <div class="sub">feat: ARC Marktwissen v3.1 · Modul 4 Markt-Trends 2026 hinzugefügt</div>
+    </div>
+    <button class="close-btn" onclick="closeDrawer()" aria-label="Schliessen">×</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Meta-Grid -->
+    <div class="drawer-section">
+      <h4>Meta</h4>
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:12.5px;">
+        <span style="color:var(--text-light);">Commit-SHA</span><span style="font-family:monospace; color:var(--accent);">a3f9c21b8f2e4d5a9c7e1f0b6a3d8c4e2f1a9b7d</span>
+        <span style="color:var(--text-light);">Branch</span><span style="font-family:monospace;">main</span>
+        <span style="color:var(--text-light);">Autor</span><span>content@arkadium.ch</span>
+        <span style="color:var(--text-light);">Trigger</span><span>GitHub Webhook Push</span>
+        <span style="color:var(--text-light);">Signatur</span><span style="color:var(--green); font-weight:600;">✓ HMAC-SHA256 valide</span>
+        <span style="color:var(--text-light);">Import-Start</span><span>Heute · 11:04:12</span>
+        <span style="color:var(--text-light);">Dauer</span><span>4.2 Sekunden</span>
+        <span style="color:var(--text-light);">Tenant</span><span>arkadium-ch</span>
+      </div>
+    </div>
+
+    <!-- Counts -->
+    <div class="drawer-section">
+      <h4>Verarbeitete Entities</h4>
+      <div class="counts-grid">
+        <div class="count-mini"><div class="val green">+3</div><div class="lbl">Neu</div></div>
+        <div class="count-mini"><div class="val">~8</div><div class="lbl">Aktualisiert</div></div>
+        <div class="count-mini"><div class="val neutral">0</div><div class="lbl">Archiviert</div></div>
+        <div class="count-mini"><div class="val red">0</div><div class="lbl">Fehler</div></div>
+      </div>
+    </div>
+
+    <!-- Entity-Changes -->
+    <div class="drawer-section">
+      <h4>Änderungen im Detail (11)</h4>
+      <div class="entity-row">
+        <span class="action-chip added">Neu</span>
+        <span class="path">courses/arc-marktwissen/modules/04-markt-trends/module.yml</span>
+        <span class="version">v1.0</span>
+      </div>
+      <div class="entity-row">
+        <span class="action-chip added">Neu</span>
+        <span class="path">courses/arc-marktwissen/modules/04-markt-trends/lessons/01-bim.md</span>
+        <span class="version">v1.0</span>
+      </div>
+      <div class="entity-row">
+        <span class="action-chip added">Neu</span>
+        <span class="path">courses/arc-marktwissen/modules/04-markt-trends/quiz.yml</span>
+        <span class="version">v1.0</span>
+      </div>
+      <div class="entity-row">
+        <span class="action-chip updated">Upd</span>
+        <span class="path">courses/arc-marktwissen/course.yml</span>
+        <span class="version">v3.0 → v3.1</span>
+      </div>
+      <div class="entity-row">
+        <span class="action-chip updated">Upd</span>
+        <span class="path">courses/arc-marktwissen/modules/01-hauptakteure/lessons/02-bauherren.md</span>
+        <span class="version">v1.2 → v1.3</span>
+      </div>
+      <div class="entity-row">
+        <span class="action-chip updated">Upd</span>
+        <span class="path">courses/arc-marktwissen/modules/02-preise/quiz.yml</span>
+        <span class="version">v2.0 → v2.1</span>
+      </div>
+    </div>
+
+    <!-- Events -->
+    <div class="drawer-section">
+      <h4>Events emittiert</h4>
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:10px 12px; font-family:monospace; font-size:11.5px; color:var(--text-mid); line-height:1.8;">
+        <div>✓ <strong style="color:var(--accent);">elearn_content_imported</strong> {commit: "a3f9c21", counts: {imported: 3, updated: 8, errors: 0}}</div>
+        <div>✓ <strong style="color:var(--accent);">elearn_course_major_version_bumped</strong> {course_id: "arc-marktwissen", v: "3.0→3.1"}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn" onclick="closeDrawer()">Schliessen</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn">Commit auf GitHub öffnen ↗</button>
+      <button class="btn btn-primary">↻ Re-Import</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function selectRow(row) {
+    document.querySelectorAll('.imports-table tbody tr').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    openDrawer();
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.remove('hidden');
+    document.getElementById('drawerOverlay').classList.remove('hidden');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.add('hidden');
+    document.getElementById('drawerOverlay').classList.add('hidden');
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Freitext-Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+
+  /* HERO-STRIP */
+  .hero-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .hero-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .hero-card.green { border-left-color:var(--green); }
+  .hero-card.amber { border-left-color:var(--amber); }
+  .hero-card.red { border-left-color:var(--red); }
+  .hero-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .hero-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .hero-card.green .big { color:var(--green); }
+  .hero-card.amber .big { color:var(--amber); }
+  .hero-card.red .big { color:var(--red); }
+  .hero-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; background:var(--surface); padding:10px 14px; border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:14px; flex-wrap:wrap; }
+  .toolbar .batch-info { font-size:12px; color:var(--text-light); }
+  .toolbar .batch-info strong { color:var(--text); }
+  .toolbar .spacer { flex:1; }
+  .toolbar .shortcuts-hint { font-size:11px; color:var(--text-light); display:flex; gap:10px; align-items:center; }
+  .toolbar .shortcuts-hint kbd { padding:1px 5px; background:var(--bg); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+  .toolbar select { border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+
+  /* Queue-Tabelle */
+  .queue-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .queue-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .queue-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .queue-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .queue-table tbody tr:last-child td { border-bottom:none; }
+  .queue-table tbody tr { cursor:pointer; transition:background 0.1s; }
+  .queue-table tbody tr:hover { background:var(--bg); }
+  .queue-table tbody tr.selected { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); border-left:3px solid var(--accent); }
+  .queue-table .chk-col { width:34px; }
+  .queue-table input[type="checkbox"] { cursor:pointer; }
+
+  .ma-cell { display:flex; align-items:center; gap:9px; }
+  .ma-avatar { width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville', serif; font-size:10.5px; font-weight:700; flex-shrink:0; }
+  .ma-name { font-weight:600; color:var(--text); }
+
+  .llm-score { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-family:'Libre Baskerville', serif; font-size:13px; }
+  .llm-score .bar { width:70px; height:6px; border-radius:3px; background:var(--surface-alt); overflow:hidden; }
+  .llm-score .bar-fill { height:100%; }
+  .llm-score.green { color:var(--green); }
+  .llm-score.green .bar-fill { background:var(--green); }
+  .llm-score.amber { color:var(--amber); }
+  .llm-score.amber .bar-fill { background:var(--amber); }
+  .llm-score.red { color:var(--red); }
+  .llm-score.red .bar-fill { background:var(--red); }
+  .llm-score.pending { color:var(--text-light); font-style:italic; font-size:12px; }
+
+  .age-chip { font-size:11.5px; color:var(--text-light); }
+  .age-chip.warn { color:var(--amber); font-weight:600; }
+  .age-chip.urgent { color:var(--red); font-weight:700; }
+
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-ghost { background:transparent; border:1px solid var(--border-strong); }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+  .btn:disabled { opacity:0.45; cursor:not-allowed; }
+
+  /* DRAWER */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:1; transition:opacity 0.18s; z-index:100; }
+  .drawer-overlay.hidden { opacity:0; pointer-events:none; }
+  .drawer { position:fixed; top:0; right:0; width:540px; height:100%; background:var(--surface); border-left:1px solid var(--border); box-shadow:-6px 0 20px rgba(0,0,0,0.12); z-index:101; display:flex; flex-direction:column; transition:transform 0.2s; }
+  .drawer.hidden { transform:translateX(100%); }
+  .drawer-head { padding:18px 24px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+  .drawer-head .title-block .meta { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .drawer-head .title-block .name { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); font-weight:700; }
+  .drawer-head .nav-row { display:flex; gap:4px; align-items:center; }
+  .drawer-head .nav-btn { padding:4px 9px; font-size:13px; border:1px solid var(--border); background:var(--surface); cursor:pointer; border-radius:3px; color:var(--text-light); }
+  .drawer-head .nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-head .close-btn { background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-light); padding:4px 8px; border-radius:3px; }
+  .drawer-head .close-btn:hover { background:var(--bg); color:var(--text); }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 24px 24px; }
+  .review-block { margin-bottom:18px; }
+  .review-block h4 { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin:0 0 8px; }
+  .review-block .content-box { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:12px 14px; font-size:13px; line-height:1.5; color:var(--text); }
+  .review-block .content-box.quote { border-left:3px solid var(--accent); font-family:'Libre Baskerville', serif; font-size:13.5px; font-style:italic; }
+  .review-block .keywords { display:flex; gap:6px; flex-wrap:wrap; }
+  .review-block .kw-chip { padding:3px 10px; background:var(--accent-soft); color:var(--accent); border-radius:12px; font-size:11.5px; font-weight:600; }
+
+  /* LLM-Vorschlag-Box */
+  .llm-box { background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:14px 16px; }
+  .llm-box .llm-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .llm-box .llm-label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--accent); font-weight:700; }
+  .llm-box .llm-model { font-size:11px; color:var(--text-light); font-style:italic; }
+  .llm-box .score-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .llm-box .score-row .val { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--green); }
+  .llm-box .score-row .bar { flex:1; height:10px; background:var(--surface-alt); border-radius:5px; overflow:hidden; }
+  .llm-box .score-row .bar-fill { height:100%; background:var(--green); }
+  .llm-box .feedback { font-size:12.5px; color:var(--text); line-height:1.5; }
+
+  /* Head-Override */
+  .override-box { background:var(--bg); border:1px dashed var(--border-strong); border-radius:4px; padding:14px 16px; }
+  .override-box label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; margin-bottom:6px; }
+  .override-box .slider-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .override-box input[type="range"] { flex:1; }
+  .override-box .slider-val { font-family:'Libre Baskerville', serif; font-size:18px; font-weight:700; color:var(--accent); min-width:40px; text-align:right; }
+  .override-box textarea { width:100%; box-sizing:border-box; border:1px solid var(--border); border-radius:3px; padding:8px 10px; font-family:'DM Sans', sans-serif; font-size:12.5px; background:var(--surface); color:var(--text); resize:vertical; min-height:72px; }
+
+  /* Drawer-Foot Actions */
+  .drawer-foot { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; background:var(--surface); }
+
+  /* Confirm-Modal (für Batch-Confirm) */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; display:flex; align-items:center; justify-content:center; }
+  .modal-overlay.hidden { display:none; }
+  .modal { background:var(--surface); border-radius:6px; padding:24px 28px; max-width:440px; width:90%; box-shadow:var(--shadow-lg); }
+  .modal h3 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0 0 10px; }
+  .modal p { font-size:13px; color:var(--text); line-height:1.5; margin:0 0 18px; }
+  .modal .modal-foot { display:flex; gap:8px; justify-content:flex-end; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Freitext-Queue</h1>
+      <div class="sub">Pending-Reviews · LLM-Vorschlag + Head-Bestätigung · 4 offen</div>
+    </div>
+  </div>
+
+  <!-- HERO-STRIP -->
+  <div class="hero-strip">
+    <div class="hero-card red">
+      <div class="lbl">Pending (gesamt)</div>
+      <div class="big">4</div>
+      <div class="sub">1 seit &gt; 7 Tagen (Eskalation)</div>
+    </div>
+    <div class="hero-card green">
+      <div class="lbl">LLM-Vorschlag ≥ 80</div>
+      <div class="big">3</div>
+      <div class="sub">batch-confirmable</div>
+    </div>
+    <div class="hero-card amber">
+      <div class="lbl">LLM-Vorschlag 50–79</div>
+      <div class="big">1</div>
+      <div class="sub">Manuelle Review nötig</div>
+    </div>
+    <div class="hero-card">
+      <div class="lbl">Auto-Confirm in</div>
+      <div class="big">7T</div>
+      <div class="sub">ältester Pending · 14T Deadline</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <span class="batch-info">Ausgewählt: <strong id="selCount">0</strong> von 4</span>
+    <button class="btn btn-sm" onclick="selectAllHighScore()">✓ Alle mit LLM ≥ 80</button>
+    <button class="btn btn-primary btn-sm" id="batchBtn" onclick="openConfirm()" disabled>Batch-Bestätigen</button>
+    <select>
+      <option>Alle Module</option>
+      <option>Marktwissen ARC</option>
+      <option>Recruiting-Grundlagen</option>
+      <option>Kommunikation</option>
+    </select>
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC</option>
+      <option>GT</option>
+      <option>ING</option>
+      <option>PUR</option>
+      <option>REM</option>
+    </select>
+    <span class="spacer"></span>
+    <span class="shortcuts-hint">
+      <span><kbd>J</kbd>/<kbd>K</kbd> nav</span>
+      <span><kbd>Enter</kbd> bestätigen</span>
+      <span><kbd>O</kbd> override</span>
+      <span><kbd>Esc</kbd> schliessen</span>
+    </span>
+  </div>
+
+  <!-- Queue-Tabelle -->
+  <div class="queue-card">
+    <table class="queue-table">
+      <thead>
+        <tr>
+          <th class="chk-col"><input type="checkbox" onclick="toggleAll(this)"></th>
+          <th>Mitarbeiter</th>
+          <th>Kurs · Modul</th>
+          <th>Sparte</th>
+          <th>LLM-Score</th>
+          <th>Alter</th>
+          <th>Eingereicht</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected" onclick="selectRow(this, event)" data-score="85">
+          <td class="chk-col"><input type="checkbox" class="row-chk" onclick="event.stopPropagation(); updateBatch();" checked></td>
+          <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">Jürgen V.</span></div></td>
+          <td>Marktwissen ARC · Modul 2</td>
+          <td><span class="chip-sparte arc">ARC</span></td>
+          <td><span class="llm-score green">85% <div class="bar"><div class="bar-fill" style="width:85%;"></div></div></span></td>
+          <td><span class="age-chip">2 Std</span></td>
+          <td>Heute · 12:40</td>
+        </tr>
+        <tr onclick="selectRow(this, event)" data-score="92">
+          <td class="chk-col"><input type="checkbox" class="row-chk" onclick="event.stopPropagation(); updateBatch();"></td>
+          <td><div class="ma-cell"><div class="ma-avatar">MB</div><span class="ma-name">Marc B.</span></div></td>
+          <td>Recruiting-Grundlagen · Modul 1</td>
+          <td><span class="chip-sparte pur">PUR</span></td>
+          <td><span class="llm-score green">92% <div class="bar"><div class="bar-fill" style="width:92%;"></div></div></span></td>
+          <td><span class="age-chip">1 Tag</span></td>
+          <td>Gestern · 16:12</td>
+        </tr>
+        <tr onclick="selectRow(this, event)" data-score="64">
+          <td class="chk-col"><input type="checkbox" class="row-chk" onclick="event.stopPropagation(); updateBatch();"></td>
+          <td><div class="ma-cell"><div class="ma-avatar">AK</div><span class="ma-name">Anna K.</span></div></td>
+          <td>Verhaltenspsychologie · Modul 3</td>
+          <td><span class="chip-sparte ing">ING</span></td>
+          <td><span class="llm-score amber">64% <div class="bar"><div class="bar-fill" style="width:64%;"></div></div></span></td>
+          <td><span class="age-chip warn">3 Tage</span></td>
+          <td>21.04.2026</td>
+        </tr>
+        <tr onclick="selectRow(this, event)" data-score="81">
+          <td class="chk-col"><input type="checkbox" class="row-chk" onclick="event.stopPropagation(); updateBatch();"></td>
+          <td><div class="ma-cell"><div class="ma-avatar">EM</div><span class="ma-name">Eva M.</span></div></td>
+          <td>Onboarding Arkadium · Modul 2</td>
+          <td><span class="chip-sparte gt">GT</span></td>
+          <td><span class="llm-score green">81% <div class="bar"><div class="bar-fill" style="width:81%;"></div></div></span></td>
+          <td><span class="age-chip urgent">8 Tage</span></td>
+          <td>16.04.2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- DRAWER (Spec §13.3) -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer hidden" id="drawer">
+  <div class="drawer-head">
+    <div class="title-block">
+      <div class="meta">Jürgen V. · Researcher · Modul 2 · Frage 7 / 12</div>
+      <div class="name">Marktwissen ARC · Preise &amp; Honorare</div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" title="Vorherige (K)">◂</button>
+      <button class="nav-btn" title="Nächste (J)">▸</button>
+      <button class="close-btn" onclick="closeDrawer()" aria-label="Schliessen">×</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="review-block">
+      <h4>Frage</h4>
+      <div class="content-box quote">
+        Beschreibe den Unterschied zwischen Generalplaner (GP) und Totalunternehmer (TU) in 2 Sätzen.
+      </div>
+    </div>
+
+    <div class="review-block">
+      <h4>Musterlösung</h4>
+      <div class="content-box">
+        GP plant, koordiniert und überwacht das Bauprojekt im Auftrag des Bauherrn. TU übernimmt die gesamte Ausführung eigenverantwortlich zu einem vereinbarten Pauschalpreis.
+      </div>
+    </div>
+
+    <div class="review-block">
+      <h4>Keywords (Pflicht-Treffer)</h4>
+      <div class="keywords">
+        <span class="kw-chip">planen</span>
+        <span class="kw-chip">überwachen</span>
+        <span class="kw-chip">pauschalpreis</span>
+        <span class="kw-chip">eigenverantwortlich</span>
+      </div>
+    </div>
+
+    <div class="review-block">
+      <h4>MA-Antwort (Jürgen V.)</h4>
+      <div class="content-box">
+        „Der Generalplaner macht alle Pläne und schaut, dass alles stimmt beim Bau. Der Totalunternehmer baut dann für einen fixen Preis alles fertig und übernimmt auch die Verantwortung."
+      </div>
+    </div>
+
+    <!-- LLM-Vorschlag -->
+    <div class="review-block">
+      <h4>LLM-Vorschlag</h4>
+      <div class="llm-box">
+        <div class="llm-head">
+          <span class="llm-label">Claude Haiku 4.5 · Score</span>
+          <span class="llm-model">Latenz: 1.2s · 380 Tokens</span>
+        </div>
+        <div class="score-row">
+          <div class="bar"><div class="bar-fill" style="width:85%;"></div></div>
+          <div class="val">85%</div>
+        </div>
+        <div class="feedback">
+          Alle 4 Keywords sinngemäss getroffen: „planen" (Pläne), „überwachen" (schaut dass alles stimmt), „Pauschalpreis" (fixen Preis), „eigenverantwortlich" (übernimmt Verantwortung). Kernaussage ist korrekt. Minor: „koordiniert" nicht explizit erwähnt, aber über Aufsichtsfunktion abgedeckt. Volle Punktzahl vertretbar, leichte Abwertung wegen informeller Sprache möglich.
+        </div>
+      </div>
+    </div>
+
+    <!-- Head-Override -->
+    <div class="review-block">
+      <h4>Head-Override (optional)</h4>
+      <div class="override-box">
+        <label>Score (0–100)</label>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="85" oninput="document.getElementById('sliderVal').textContent = this.value + '%'">
+          <span class="slider-val" id="sliderVal">85%</span>
+        </div>
+        <label>Feedback (an MA sichtbar)</label>
+        <textarea>Alle Kern-Keywords korrekt getroffen, Aussage stimmt. Für mehr Klarheit in der Formulierung künftig technische Begriffe ("koordiniert", "Überwachung") direkt verwenden.</textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-primary">✓ LLM bestätigen (85%)</button>
+    <button class="btn">✎ Überschreiben &amp; speichern</button>
+    <button class="btn btn-ghost">Skip</button>
+  </div>
+</aside>
+
+<!-- Batch-Confirm-Modal -->
+<div class="modal-overlay hidden" id="confirmModal">
+  <div class="modal">
+    <h3>Batch-Bestätigung</h3>
+    <p id="confirmText">3 Reviews mit LLM-Score ≥ 80 werden übernommen. Score und Feedback des LLM werden 1:1 als Head-Review gespeichert. Aktion ist im Audit-Trail protokolliert.</p>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeConfirm()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="closeConfirm()">Bestätigen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectRow(row, e) {
+    if (e && e.target.type === 'checkbox') return;
+    document.querySelectorAll('.queue-table tbody tr').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    openDrawer();
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.remove('hidden');
+    document.getElementById('drawerOverlay').classList.remove('hidden');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.add('hidden');
+    document.getElementById('drawerOverlay').classList.add('hidden');
+  }
+  function toggleAll(master) {
+    document.querySelectorAll('.row-chk').forEach(c => c.checked = master.checked);
+    updateBatch();
+  }
+  function selectAllHighScore() {
+    document.querySelectorAll('.queue-table tbody tr').forEach(r => {
+      const chk = r.querySelector('.row-chk');
+      chk.checked = parseInt(r.dataset.score, 10) >= 80;
+    });
+    updateBatch();
+  }
+  function updateBatch() {
+    const selected = document.querySelectorAll('.row-chk:checked').length;
+    document.getElementById('selCount').textContent = selected;
+    document.getElementById('batchBtn').disabled = selected === 0;
+  }
+  function openConfirm() {
+    const n = document.querySelectorAll('.row-chk:checked').length;
+    document.getElementById('confirmText').textContent = n + ' Reviews werden mit LLM-Score als Head-Review übernommen. Feedback wird 1:1 gespeichert. Aktion ist im Audit-Trail protokolliert.';
+    document.getElementById('confirmModal').classList.remove('hidden');
+  }
+  function closeConfirm() { document.getElementById('confirmModal').classList.add('hidden'); }
+  updateBatch();
+
+  // Keyboard-Shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea, select')) return;
+    if (e.key === 'Escape') closeDrawer();
+    if (e.key === 'Enter' && !document.getElementById('drawer').classList.contains('hidden')) {
+      e.preventDefault();
+      alert('„LLM bestätigen" ausgelöst (Mockup)');
+    }
+  });
+</script>
+
+</body>
+</html>
