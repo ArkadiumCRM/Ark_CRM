@@ -1,15 +1,15 @@
 ---
-title: "Gesamtsystem-Übersicht v1.3.5 — Digest"
+title: "Gesamtsystem-Übersicht Digest v1.4"
 type: meta
 created: 2026-04-17
-updated: 2026-04-17
-sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md"]
-tags: [digest, gesamtsystem, architektur, changelog]
+updated: 2026-04-24
+sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md"]
+tags: [digest, gesamtsystem, architektur, changelog, elearning]
 ---
 
-# Gesamtsystem-Übersicht v1.3.5 — Digest (Stand 2026-04-17)
+# Gesamtsystem-Übersicht v1.4 — Digest (Stand 2026-04-24)
 
-Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md` (v1.3 + v1.3.4 Dok-Generator + v1.3.5 Reminders-Vollansicht 2026-04-17). Big Picture, Module, Changelog. Für Prosa-Details vollständige Quelle lesen.
+Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` (v1.3 + v1.3.4 Dok-Generator + v1.3.5 Reminders + v1.3.6 Mobile/Tablet + v1.4 E-Learning-Modul 2026-04-24). Big Picture, Module, Changelog. Für Prosa-Details vollständige Quelle lesen.
 
 ## TOC (Quell-Sektionen)
 
@@ -36,9 +36,10 @@ Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md` (v1.3 +
 - **TEIL 20b:** v1.3.2 Snapshot-Bar-Harmonisierung (5 Detailmasken)
 - **TEIL 20c:** v1.3.3 Projekt-Detailmaske Phase A–I
 - **TEIL 21:** Spec-Sync-Regel
-- **TEIL 22:** v1.3.4 Globaler Dok-Generator (NEU 2026-04-17)
-- **TEIL 23:** v1.3.5 Reminders-Vollansicht (NEU 2026-04-17)
-- **TEIL 24:** v1.3.6 Mobile/Tablet-Support Frontend-Rewrite (NEU 2026-04-17)
+- **TEIL 22:** v1.3.4 Globaler Dok-Generator (2026-04-17)
+- **TEIL 23:** v1.3.5 Reminders-Vollansicht (2026-04-17)
+- **TEIL 24 (alt):** v1.3.6 Mobile/Tablet-Support Frontend-Rewrite (2026-04-17)
+- **TEIL 24 (neu):** v1.4 E-Learning-Modul (Sub A/B/C/D) (NEU 2026-04-24)
 
 ---
 
@@ -90,7 +91,7 @@ Kandidat  ── Briefing ──▶ Jobbasket ──▶ Prozess ──▶ Placem
 | 8 | Projekte | `/projects/[id]` | Schema v0.2 + Interactions v0.1 |
 | 9 | Scraper | `/scraper` | v0.1 |
 
-**Nicht im CRM (→ ERP):** Mitarbeiter-HR, Performance-Reporting (nur Dashboard im CRM), Zeiterfassung, Buchhaltung, Payroll, Messaging (WhatsApp/LinkedIn), Publishing.
+**Phase-3-ERP-Module (eigenes Produkt, via Topbar-Toggle CRM↔ERP):** Zeiterfassung · Buchhaltung/Billing · Payroll · Performance/HR · Messaging · Publishing · Doc-Generator · **E-Learning (Sub A/B/C/D, v1.4)**.
 
 **Sparten (5):** ING (Civil Engineering) · GT (Building Technology) · ARC (Architecture) · REM (Real Estate Management) · PUR (Procurement). Jeder Kandidat/Account/Job primär einer Sparte zugeordnet.
 
@@ -102,7 +103,7 @@ Kandidat  ── Briefing ──▶ Jobbasket ──▶ Prozess ──▶ Placem
 - **Phase 1** (Launch-Blocker): 10-Tab-Masken Kandidat+Account, Jobs, Mandate, Prozesse, Jobbasket+GO-Flow, History+Activities, Reminders, Dokumente, Dashboard, Dark/Light, Suche
 - **Phase 1.5** (4 Wochen post-Launch): AI-Activity-Vorschläge, Transkript-Summaries, Email-Composer+Inbox (MS Graph), 3CX, Assessment-CSV-Import, Stale-Erkennung, Post-Placement-Kette, Account-Duplikate
 - **Phase 2** (3–6 Monate): RAG/Semantik, AI-Matching, WYSIWYG-Dok-Generator, Charts (D3), Kanban-D&D, Teamrad, Organigramm-Baum, Standorte-Karte, LinkedIn-Tracking, Mandate-Report-Generator
-- **Phase 3** (eigenes ERP-Produkt): Zeiterfassung, Buchhaltung (Periodenabschluss-Lock zuerst!), Payroll, Performance/HR, Messaging, Publishing
+- **Phase 3** (eigenes ERP-Produkt): Zeiterfassung, Buchhaltung (Periodenabschluss-Lock zuerst!), Payroll, Performance/HR, Messaging, Publishing, **E-Learning**
 
 ---
 
@@ -173,7 +174,7 @@ Alle operativen UI-Felder (Check-Ins, Debriefings, Coachings, Referenzauskünfte
 - **Prozess-Stages:** Expose · CV Sent · TI · 1st · 2nd · 3rd · Assessment · Offer · Placement
 - **Prozess-Status:** Open · On Hold · Rejected · Placed · Stale · Closed · Cancelled · Dropped
 - **Mandat-Status:** Entwurf → Aktiv/Abgelehnt → Abgeschlossen/Abgebrochen
-- **Activity-Types:** 61+ in 11 Kategorien (Kontaktberührung 6 · Erreicht 15 · Email 11 · Messaging 3 · Interviewprozess 9 · Placementprozess 3 · Refresh 3 · Mandatsakquise 4 · Erfolgsbasis 2 · Assessment 4 · System 6). Spalte `entity_relevance` (candidate/account/both).
+- **Activity-Types:** 61+ in 11 Kategorien (Kontaktberührung 6 · Erreicht 15 · Email 11 · Messaging 3 · Interviewprozess 9 · Placementprozess 3 · Refresh 3 · Mandatsakquise 4 · Erfolgsbasis 2 · Assessment 4 · System 6). Spalte `entity_relevance` (candidate/account/both). **v1.4 erweitert auf 19 Kategorien inkl. `elearning` (+40 E-Learning Activity-Types).**
 - **Kandidat-Stages:** Check · Refresh · Premarket · Active Sourcing · Market Now · Inactive · Blind · Datenschutz
 - **Kompetenz-Dimensionen (5):** Cluster/Subcluster · Functions (190+) · Focus (160+, ersetzt dim_skills) · EDV (120+) · Sector. Rating 1–10 + Primary-Flag.
 - **Wechselmotivation (8):** Arbeitslos · Will/muss wechseln · Wahrscheinlich wechseln · Bei gutem Angebot · Spekulativ · Intern & wartet · Absolut nicht · Nicht mit uns.
@@ -200,11 +201,11 @@ Pro Entity (Kandidat, Account, Job, Mandat, Prozess) kombinierte Timeline-Ansich
 | 9 | Sprachstandard & Routen | DB englisch · Status gemischt · alle Routen englisch |
 | 10 | Detailseiten-Inventar | 9 Detailseiten (siehe Tabelle Module). Mitarbeiter → ERP HR. Reporting → ERP, im CRM nur Dashboard. |
 
-**Referenz-Dokumente (v1.3-Stand):**
-- `ARK_DATABASE_SCHEMA_v1_3.md` — 28 neue Tabellen + 30+ Feld-Erweiterungen
-- `ARK_BACKEND_ARCHITECTURE_v2_5.md` — 30+ Events, 18 Worker, 46 Endpunkte, WebSocket, Rate-Limiting
-- `ARK_FRONTEND_FREEZE_v1_10.md` — 5 neue Detailseiten-Kap., Account-Tabs 10→13, Prozess-Mischform
-- `ARK_STAMMDATEN_EXPORT_v1_3.md` — 15 neue dim_*-Tabellen
+**Referenz-Dokumente (v1.4-Stand):**
+- `ARK_DATABASE_SCHEMA_v1_5.md` — 28 neue E-Learning-Tabellen (Sub A 15 · B 5 · C 4 · D 4) + Multi-Tenant
+- `ARK_BACKEND_ARCHITECTURE_v2_7.md` — 52 E-Learning-Events, 25 Worker, 80+ Endpoints, Gate-Middleware
+- `ARK_FRONTEND_FREEZE_v1_12.md` — Topbar-Toggle CRM↔ERP, 25+ E-Learning-Pages, Sidebar-Pattern
+- `ARK_STAMMDATEN_EXPORT_v1_5.md` — 25 neue Enums, 40 E-Learning-Activity-Types, Kategorie `elearning`
 
 ### Nachträge
 
@@ -212,8 +213,9 @@ Pro Entity (Kandidat, Account, Job, Mandat, Prozess) kombinierte Timeline-Ansich
 - **v1.3.2 (2026-04-16) — Snapshot-Bar-Harmonisierung:** 5 Detailmasken vereinheitlicht auf `.snapshot-bar`. Stacking Snapshot über Tabbar. Dupe-Regel (keine Header-Duplikate). Slot-Belegung pro Entity fixiert. Ausnahmen 7 Slots: Assessment, Scraper, Projekt.
 - **v1.3.3 (2026-04-16) — Projekt-Detailmaske Phase A–I:** `/projects/[id]` 676 → 2395 Zeilen. Tab-für-Tab-Ausbau (Übersicht/Gewerke-3-Tier-Akkordeon/Matching-6-Score/Galerie-Masonry/Dokumente-Profile „Projekt" 6 Kategorien/History 13 Events). 14 Drawers. Status-Dropdown 6 Werte. Projekttyp-agnostische Snapshot-Bar. Scraper-Source-Banner. `wiki/entities/projekt.md` neu.
 - **v1.3.4 (2026-04-17) — Globaler Dok-Generator + Assessment-Spec-Sync v0.3:** Siehe TEIL 22 unten.
-- **v1.3.5 (2026-04-17) — Reminders-Vollansicht (Tool-Maske 3):** Neue `/reminders`-Maske ergänzt Dashboard-Widget + Entity-Tabs (Kandidat §10, Account §13). Liste + Kalender, Scope `self/team/all` via `dim_mitarbeiter.vorgesetzter_id`, Saved-Views in `dashboard_config.reminders` (JSONB, max 10), Drag-to-Reschedule. DB v1.3.5: `fact_reminders.template_id` FK + `escalation_sent_at`. Backend v2.5.5: 2 Events (`reminder_reassigned`, `reminder_overdue_escalation`) + 1 Worker (`reminder-overdue-escalation.worker.ts` hourly) + 3 Endpoints (`reassign`, `GET/PATCH user-preferences/reminders`). Lifecycle-Events via `fact_audit_log` `entity_updated`-Pattern. Siehe TEIL 23 unten.
-- **v1.3.6 (2026-04-17) — Mobile/Tablet-Support Rewrite:** FRONTEND_FREEZE §24b neu — alte „Tablet Read-Only + Mobile Blocker"-Regel entfernt, voller Mobile-+-Tablet-Support. Breakpoints Desktop > 960 / Tablet 641–960 / Mobile ≤ 640. crm.html responsive-Shell (Top-Bar + Slide-Out), crm-mobile.html Device-Demo (3 iframes), editorial.css global Mobile-Rules, pro-Mockup-Fixes. Viewport-Meta in 22 Mockups. Keine DB-/Backend-Änderungen. Siehe TEIL 24 unten.
+- **v1.3.5 (2026-04-17) — Reminders-Vollansicht (Tool-Maske 3):** Neue `/reminders`-Maske ergänzt Dashboard-Widget + Entity-Tabs (Kandidat §10, Account §13). Liste + Kalender, Scope `self/team/all` via `dim_mitarbeiter.vorgesetzter_id`, Saved-Views in `dashboard_config.reminders` (JSONB, max 10), Drag-to-Reschedule. DB v1.3.5: `fact_reminders.template_id` FK + `escalation_sent_at`. Backend v2.5.5: 2 Events + 1 Worker + 3 Endpoints. Siehe TEIL 23 unten.
+- **v1.3.6 (2026-04-17) — Mobile/Tablet-Support Rewrite:** FRONTEND_FREEZE §24b neu — alte „Tablet Read-Only + Mobile Blocker"-Regel entfernt, voller Mobile-+-Tablet-Support. Breakpoints Desktop > 960 / Tablet 641–960 / Mobile ≤ 640. crm.html responsive-Shell (Top-Bar + Slide-Out), crm-mobile.html Device-Demo (3 iframes), editorial.css global Mobile-Rules, pro-Mockup-Fixes. Viewport-Meta in 22 Mockups. Keine DB-/Backend-Änderungen.
+- **v1.4 (2026-04-24) — E-Learning-Modul Sub A/B/C/D:** Siehe TEIL 24 (neu) unten.
 
 ### TEIL 22 — v1.3.4 Globaler Dok-Generator (2026-04-17)
 
@@ -232,67 +234,260 @@ Pro Entity (Kandidat, Account, Job, Mandat, Prozess) kombinierte Timeline-Ansich
 - **Stammdaten §56** — `dim_document_templates` Katalog mit 38+1 Templates
 - **Database §14.1** — `document_label` ENUM-Erweiterung (12 neue Labels inkl. 'Executive-Report')
 - **Database §14.2** — `dim_document_templates` Tabelle
-- **Database §14.3** — `fact_documents` Erweiterung (5 neue Felder: `generated_from_template_id`, `generated_by_doc_gen`, `params_jsonb`, `entity_refs_jsonb`, `delivery_mode`, `email_recipient_contact_id`)
-- **Backend §L** — 9 neue Endpoints unter `/api/v1/document-templates/*` + `/api/v1/documents/generate,resolve-placeholders,regenerate,email` + `/api/v1/document-generator/recent,drafts`; Wrapper-Mapping bestehender Endpoints
-- **Frontend §4e** — Neue Detailmaske-Spec `/operations/dok-generator` mit 5-Step-Workflow, 280px Sidebar, WYSIWYG-Editor
+- **Database §14.3** — `fact_documents` Erweiterung (5 neue Felder)
+- **Backend §L** — 9 neue Endpoints unter `/api/v1/document-templates/*` + Wrapper-Mapping
+- **Frontend §4e** — Neue Detailmaske-Spec `/operations/dok-generator` mit 5-Step-Workflow
 
 **22.3 Assessment-Spec-Sync v0.2 → v0.3**
+- **Order-Status `invoiced` entfernt** — Rechnungs-Bezahl-State lebt auf `fact_assessment_billing.status`
+- **Phase-1-Typen-Kommentar** in Assessment-Schema §0 — Mockup/Launch nutzt nur MDI/Relief/ASSESS 5.0/EQ (SCHEELEN)
 
-Parallel zur Dok-Generator-Spec wurde Assessment-Detailmaske-Spec gesynct:
-- **Order-Status `invoiced` entfernt** aus `fact_assessment_order.status` ENUM (`SCHEMA_v0_3` + `INTERACTIONS_v0_3`) — Rechnungs-Bezahl-State lebt auf `fact_assessment_billing.status`, nicht Order-Level
-- **Phase-1-Typen-Kommentar** in Assessment-Schema §0 ergänzt — Mockup/Launch nutzt nur MDI/Relief/ASSESS 5.0/EQ Test (SCHEELEN-Produkte)
-- **Database §14.3** — ENUM-Fix + Migration-Pfad (`UPDATE fact_assessment_order SET status='fully_used' WHERE status='invoiced';`)
+### TEIL 23 — v1.3.5 Reminders-Vollansicht (2026-04-17)
 
-**22.4 Spec-Sync-Status**
+**23.1 Neue Tool-Maske `/reminders`**
+- 3. Tool-Maske neben `/operations/dok-generator` und `/operations/email-kalender`
+- Ergänzt — ersetzt nicht — Dashboard-Widget + Entity-Reminder-Tabs
+- **Layout:** Banner · KPI-Strip (6) · Saved-Views-Chips · View-Toggle (Liste/Kalender) · Filter-Bar · Status-Chip-Tabs · Main · 2 Drawer (Detail 5-Tab, Neu)
+- **View-Modi:** Liste mit Section-Groups (Überfällig/Heute/Woche/Später/Erledigt-30d) + Kalender CRM-intern (Monat/Woche, Drag-to-Reschedule)
+- **Scope-Logik:** `self` / `team` / `all` via `dim_mitarbeiter.vorgesetzter_id`. Switcher nur Admin/HoD
+- **Saved Views:** System-Defaults + max 10 user-defined in `dashboard_config.reminders` (JSONB)
+- **Keine Bulk-Actions** (PO-Entscheidung)
+- **Auto-Regeln** separat unter `/admin/reminder-rules`
 
-| Datei | Vorher | Nachher | Änderung |
-|-------|--------|---------|----------|
-| `ARK_STAMMDATEN_EXPORT_v1_3.md` | v1.3 | v1.3.4 (append §56) | Template-Katalog |
-| `ARK_DATABASE_SCHEMA_v1_3.md` | v1.3 | v1.3.4 (append §14.1–14.3) | Neue Tabelle + Enum-Fixes |
-| `ARK_BACKEND_ARCHITECTURE_v2_5.md` | v2.5 | v2.5.4 (append §L) | 9 neue Endpoints |
-| `ARK_FRONTEND_FREEZE_v1_10.md` | v1.10 | v1.10.4 (append §4e) | Neue Detailmaske |
-| `ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md` | v1.3 | v1.3.4 | Dieser Eintrag |
-| `specs/ARK_ASSESSMENT_DETAILMASKE_SCHEMA_v0_2.md` | v0.2 | **v0.3** (renamed) | Invoiced raus + Phase-1-Kommentar |
-| `specs/ARK_ASSESSMENT_DETAILMASKE_INTERACTIONS_v0_2.md` | v0.2 | **v0.3** (renamed) | Invoiced raus aus State-Machine |
-| `specs/ARK_DOK_GENERATOR_SCHEMA_v0_1.md` | — | **v0.1 (neu)** | Dok-Generator-Spec |
-| `specs/ARK_DOK_GENERATOR_INTERACTIONS_v0_1.md` | — | **v0.1 (neu)** | Dok-Generator-Interactions |
+**23.2 DB/Backend-Deltas**
+- `fact_reminders.template_id` FK + `escalation_sent_at` (Idempotenz 48h)
+- 2 Events (`reminder_reassigned`, `reminder_overdue_escalation`) + 1 Worker (hourly 08–20h) + 3 Endpoints
 
-**22.5 Wiki-Einträge (ausstehend P1)**
-- `wiki/concepts/dok-generator.md` — Architektur-Konzept
-- `wiki/concepts/executive-report.md` — Arkadium-Assessment-Zusammenfassung
-- `wiki/concepts/template-versionierung.md` — Phase 2 Semver-Pattern
+---
 
-**22.6 Mockup-Scope Phase 1**
+# TEIL 24 (NEU) — v1.4 E-Learning-Modul (2026-04-24)
 
-5 Seed-Templates mit vollem Canvas-Content:
-1. `mandat_offerte_target` (Mandat-Offerte mit Honorar-Tabelle, Garantiefrist)
-2. `rechnung_mandat_teilzahlung_1_sie` (RE-2026-0118 Format)
-3. `assessment_offerte` (Credits-Tabelle mit Paket-Pauschale)
-4. `ark_cv` (Kandidaten-CV mit Werdegang)
-5. `executive_report` (Arkadium-Auswertung mit manuellen Feldern)
+**Quellen:** `specs/ARK_GESAMTSYSTEM_PATCH_ELEARNING_v0_1.md` (Sub A) + `SUB_B_v0_1.md` + `SUB_C_v0_1.md` + `SUB_D_v0_1.md`.
 
-33 weitere Templates als Library-Cards sichtbar, Canvas-Content Phase 2.
+## 24.1 Modul-Landkarte (final)
 
-**22.7 Offene Folge-Tasks**
+```
+Phase 1 · CRM-Core (9 Detailmasken)                   ← produktiv
+Phase 2 · ERP-Light                                    ← laufend
+  ├── HR-Tool
+  ├── Zeiterfassung (v1.4)
+  ├── Commission-Engine (Option D 2026-04-19)
+Phase 3 · ERP-Vollausbau                               ← aktuell
+  ├── Billing-Modul (v0.1 2026-04-22)
+  ├── E-Learning                                       ← NEU v1.4
+  │   ├── Sub A: Kurs-Katalog         (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   ├── Sub B: Content-Generator    (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   ├── Sub C: Wochen-Newsletter    (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   └── Sub D: Progress-Gate        (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  └── Doc-Generator                   (Mockup v1.3.4)
+Phase 4 · Automatisierung + AI
+Phase 5 · Enforcement + Gamification
+```
 
-| # | Task | Phase |
-|---|------|-------|
-| 1 | DOCX-Template-Parser (Placeholder-Auto-Extraktion aus Ursprungs-DOCX) | 1.5 |
-| 2 | PDF-Render-Engine-Wahl (WeasyPrint vs Chromium Headless) + Integration | 1.5 |
-| 3 | Template-Admin-UI (CRUD `dim_document_templates`) | 2 |
-| 4 | EN-Sprach-Support via LLM-Übersetzung | 2 |
-| 5 | Draft-Auto-Save mit `fact_document_drafts` Tabelle | 2 |
-| 6 | Template-Version-Management (Semver + Rollback) | 2 |
+**Status:** alle 4 Subs (A/B/C/D) specct und in Grundlagen (v1.5 Stammdaten + v1.5 DB + v2.7 Backend + v1.12 Frontend) eingearbeitet. Implementation-Plan-Start nach Merge.
 
-### Spec-Sync-Regel (TEIL 21)
+## 24.2 E-Learning Kern-Idee (cross-Sub)
 
-Bidirektional: Änderung an 1 der 5 Grundlagendateien ↔ alle 9 Detail-Specs prüfen. Umgekehrt ebenso. Trigger-Matrix z.B. „Neues Feld in UI" → DB-Schema+Backend · „Neue ENUM-Werte" → Stammdaten+DB-Schema(CHECK) · „UI-Pattern-Änderung" → Frontend-Freeze+Gesamtsystem-Changelog. Bei PR explizite Bestätigung: „Grundlagendateien synchron? ✓/✗". Details: `wiki/meta/spec-sync-regel.md`.
+**Arkadium-internes Lernsystem mit 4 Bausteinen:**
+
+- **Sub A Kurs-Katalog:** MA bearbeiten Pflicht-Kurse + Refresher (mit Zertifikaten + Badges), Head reviewt Freitext-Antworten (LLM-gescort), Admin verwaltet Kurse/Curriculum-Templates, Import via Git-Webhook aus Content-Repo
+- **Sub B Content-Generator:** LLM-basierte Pipeline R1-R5 aus PDF/DOCX/Bücher/Web-Scrapes/CRM-Queries → Entwurfs-Artefakte → Admin-Review → Publish ins Content-Repo (Loop zu Sub A). Port aus `C:\Linkedin_Automatisierung`
+- **Sub C Wochen-Newsletter:** wöchentlicher Newsletter pro Sparte mit Sections aus Sub B + Pflicht-Quiz (`attempt_kind='newsletter'`), Soft/Hard-Enforcement
+- **Sub D Progress-Gate:** Feature-granulare Rules + Override-System + Compliance-Dashboards · schützt CRM-Features bei Nicht-Bearbeitung
+
+## 24.3 Workspace-Struktur (neu)
+
+**Topbar-Toggle CRM ↔ ERP** (global, links von Avatar):
+- **CRM-Modus:** Sidebar zeigt CRM-Module (Kandidaten, Accounts, Mandate, Jobs, Prozesse, Assessments, Aktivitäten, Admin)
+- **ERP-Modus:** Sidebar zeigt ERP-Module (E-Learning, HR, Zeiterfassung, Commission, Billing, Doc-Generator)
+- Persistenz pro User in `localStorage`
+
+**Gemeinsame Infrastruktur beider Workspaces:** Authentifizierung (JWT, SSO) · User-Base (`dim_user`) · Event-Pipeline (`fact_event_queue`, `fact_history`, Event-Processor) · Notification-System · Audit-Logging · Design-System (Tokens, Components, Drawer-Pattern).
+
+**Getrennt:** DB-Namespaces (CRM Recruiting-Domain vs. ERP modulspezifisch `dim_elearn_*`, `dim_hr_*`, `dim_zeit_*`) · URL-Routing (`/crm/*` vs. `/erp/<modul>/*`) · Sidebar-Items.
+
+## 24.4 Multi-Tenant-Aspekt (neu)
+
+E-Learning ist das **erste ARK-Modul mit konsequenter Multi-Tenant-Architektur**:
+- Alle 28 neuen Tabellen tragen `tenant_id UUID NOT NULL`
+- RLS-Policies auf allen Tabellen (`tenant_id = app.current_tenant_id`)
+- Von Tag 1 an designt (nicht später nachgerüstet)
+
+**Begründung:** White-Label-Option für externe Recruiting-Boutiquen. Schema-Vorbereitung jetzt ist günstiger als spätere Migration.
+
+**Konsequenz für künftige ERP-Module:** Multi-Tenant-Pattern übernehmen (Pattern-Doku Sub-A-Backend-Patch §4).
+
+## 24.5 Datenflüsse
+
+### 24.5.1 Eingehende Events (E-Learning reagiert auf CRM)
+
+| Event | E-Learning-Reaktion |
+|---|---|
+| `user_created` | Sub A: `elearn-onboarding-initializer` erzeugt Curriculum; Sub C: `elearn-newsletter-subscription-initializer` |
+| `user_role_changed` | Sub A: `elearn-role-change-watcher` erzeugt Diff-Assignments; Sub C: Subscription-Syncer |
+| `user_sparte_changed` | dito |
+
+### 24.5.2 Ausgehende Events
+
+52 neue `elearn_*`-Events (Sub A 16 · Sub B 12 · Sub C 12 · Sub D 12). Erscheinen in `fact_history`-Timeline eines MA unter Activity-Category `elearning`.
+
+### 24.5.3 Inter-Sub-Daten-Flüsse
+
+- **Sub B → Sub A (Publish-Loop):** R5-Publish-Worker committed Artefakte ins Content-Repo (`arkadium/ark-elearning-content`) → GitHub-Webhook → Sub-A `POST /api/elearn/admin/import` → parse + upsert Kurse/Module/Lessons/Fragen.
+- **Sub B R1-R3 → Sub C R4b:** Newsletter-Generator nutzt Sub-B-Pipeline (Ingest/Chunk/Embed/Cluster) + eigener Runner `r4b_newsletter.py` für Newsletter-Struktur + Sections + Quiz.
+- **Sub A ↔ Sub C (Quiz):** Newsletter-Quiz nutzt identische `fact_elearn_quiz_attempt`-Logik mit `attempt_kind='newsletter'`. Sub-A-`elearn-attempt-finalizer` erkennt Newsletter-Attempts + emittiert Cross-Events.
+- **Sub A → Sub D (Major-Version):** `elearn-course-major-version-bumped`-Event löst `elearn-cert-revoker` aus → alle aktiven Certs dieses Kurses `status='revoked'` → Re-Cert-Assignment.
+- **Sub C → Sub D (Enforcement):** Gate-Middleware liest `fact_elearn_newsletter_assignment.enforcement_mode_applied='hard'` → Gate-Page bei CRM-Feature-Zugriff.
+
+## 24.6 Externe Integrationen (erweitert)
+
+| Integration | Zweck | Richtung |
+|---|---|---|
+| Git (Content-Repo `arkadium/ark-elearning-content`) | Kurs-Content via Webhook importieren | Eingehend (Webhook) + Ausgehend (clone/push) |
+| GitHub API | PR-Creation bei `publish_mode='pr'` | Ausgehend |
+| Anthropic API | LLM-Freitext-Scoring (Haiku 4.5) + Content-Generation (Sonnet 4.6) | Ausgehend HTTPS |
+| OpenAI API | Embeddings (`text-embedding-3-small`, 1536 dims) | Ausgehend |
+| Voyage AI API | Alt-Embeddings (`voyage-3`, 1024 dims) | Ausgehend (optional) |
+| S3/Blob | Zertifikat-PDFs `ark-elearn-certs/<tenant_id>/<cert_id>.pdf` | Ausgehend Upload + Eingehend Download |
+| Web-Scraping (SIA/ETH/Baublatt/Konkurrenten) | Source-Ingest Sub B | Ausgehend HTTP |
+| CRM-DB (eigene) | SQL-Queries für CRM-Source-Ingest | Intern read-only Role `elearn_content_gen_reader` |
+
+## 24.7 Phasen-Plan aktualisiert
+
+| Phase | Fokus | E-Learning-Stand |
+|---|---|---|
+| 1 | CRM-Core (9 Detailmasken) | — |
+| 2 | ERP-Light (HR, Zeit, Commission, Billing) | — |
+| 3 | ERP-Vollausbau | **Sub A/B/C/D Specs v0.1 + Patches in Grundlagen (v1.4)** |
+| 4 | Automatisierung + AI | Sub B produktiv + Newsletter-Generator Sub C |
+| 5 | Enforcement + Gamification | Sub D Gate aktiv + Badge-Engine erweitert |
+
+### Sub A Meilensteine (priorisiert)
+
+1. Spec-Freigabe (abgeschlossen)
+2. Grundlagen-Merge (aktueller Stand v1.4)
+3. Implementation-Plan via `superpowers:writing-plans` (konsolidiert A+B+C+D)
+4. DB-Migration (`migrations/NNN_elearn_*.sql` · 4 Dateien: sub_a / sub_b / sub_c / sub_d)
+5. MA-Flows (Dashboard, Lesson, Quiz)
+6. Head/Admin-Flows (Team, Freitext-Queue, Curriculum)
+7. Import-Pipeline + Seed-Content
+8. LLM-Freitext-Scorer + Head-Review-Workflow
+9. Cert-Generator + Badge-Engine
+10. Pilot mit 1-2 neuen MA
+11. Roll-out an bestehende MA
+12. Sub B/C/D iterativ darauf aufsetzen
+
+## 24.8 Team-Ownership
+
+| Rolle | E-Learning-Verantwortung |
+|---|---|
+| Peter | Produkt-Owner, Content-Definition, Quellen-Kuration (Bücher, Notizen, Prio-PDFs), Final-Review, Default-Rules-Policy, Enforcement-Mode-Entscheid |
+| Admin/Backoffice | Kurs-Publishing, Curriculum-Templates, Massen-Zuweisungen, Import-Monitoring, Analytics, Source-Verwaltung, Scheduler-Config, Cost-Monitoring, GitHub-PAT-Rotation, Rules-Verwaltung, Override-Requests, Cert-Manual-Revokes |
+| Head-of (pro Sparte) | Team-Onboarding-Kontrolle, Freitext-Review, Ad-hoc-Zuweisungen, Status-Switch Neu→Bestehend, Queue-Bearbeitung Newsletter (überfällige), Override-Setting für eigenes Team, Team-Compliance-Dashboard |
+| MA | Kurse bearbeiten, Quizzes absolvieren, Certs erhalten, Newsletter lesen+Quiz bestehen, Compliance-Status-Self-View |
+
+## 24.9 Sicherheit & Compliance
+
+- **Tenant-Isolation:** RLS auf DB-Ebene + App-Layer-Guards + Route-Scoping
+- **Audit:** alle Zuweisungen, Completions, Reviews, Revisions, Overrides in `fact_history` + `fact_elearn_import_log` + `fact_elearn_gate_event`
+- **Datenschutz:** Freitext-Antworten privat · Head sieht nur Team · Admin tenant-weit (operative Notwendigkeit)
+- **DSGVO-Löschung:** MA-Löschung kaskadiert Enrollments/Attempts · Certs bleiben als Audit bis Tenant-Retention (Default 10 Jahre)
+- **CRM-Daten in Newsletter:** strikt anonymisiert · Tenant-gescopt (kein Cross-Tenant-Leak via RAG)
+- **Rule-Engine Sub D:** keine freie SQL, nur fest-codierte Trigger-Evaluatoren → SQL-Injection-sicher
+- **Override-Audit:** Creation/End geloggt mit `created_by`+`reason`
+
+## 24.10 Kosten-Management (neu)
+
+**LLM-Kosten pro Tenant budgetierbar:**
+- Default: 200 €/Monat, 5 €/Job (Tenant-konfigurierbar `elearn_b.llm_cost_cap_*`)
+- `elearn-cost-monitor` (Cron täglich)
+- ≥ 95 % Monats-Cap → Admin-Notification
+- 100 % → Neue Jobs blockiert (manueller Reset oder Monats-Rollover)
+- Newsletter-Cost zählt gegen gleiches Budget (~6-30 €/Monat bei 5 Sparten × 4 Ausgaben)
+
+**Cost-Dashboard:** Monats-Verbrauch + Restbudget, Top-Jobs, Aggregation nach Source-Kind, separater Newsletter-Cost-Block.
+
+## 24.11 Compliance-Konzept (Sub D)
+
+**Simpel-Formel:**
+```
+score = (courses_completed + newsletters_passed + certs_active)
+        / NULLIF(courses_total + newsletters_total + (certs_active + certs_expired), 0)
+        * 100
+```
+
+**Interpretation:** 100 % alles erledigt · 80-99 % sehr gut · 50-79 % Handlungsbedarf · < 50 % kritisch (Head-Alarm).
+
+Tagesbasis-Snapshots in `fact_elearn_compliance_snapshot` ermöglichen Trend-Charts.
+
+## 24.12 Cert-Lifecycle
+
+```
+Course complete + passed → Cert issued (status='active')
+                                │
+                  (nach refresher_months)
+                                ▼
+                         status='expired'
+                                │
+               Automatisch neuer Refresher-Assignment
+                                │
+               ─────────────────────────────────
+               Alternativ: course version bump (major)
+                                ▼
+                         status='revoked'
+                                │
+               Automatischer Re-Cert-Assignment
+```
+
+## 24.13 Sub-Interop-Matrix (final)
+
+| Sub | Rolle |
+|---|---|
+| **Sub A Kurs-Katalog** | Liefert Assignments, Enrollments, Certs. Liest Events aus User-Admin. Emittiert `elearn_course_major_version_bumped` für Sub D |
+| **Sub B Content-Generator** | Nutzt pgvector + LLM. Publisht in Content-Repo → Webhook-Loop zu Sub A. Keine Sub-D-Interaktion |
+| **Sub C Newsletter** | Nutzt Sub-B-Pipeline (R1-R3) + eigenen R4b-Runner. Quiz via Sub-A-Engine (`attempt_kind='newsletter'`). Liefert `enforcement_mode_applied` für Sub D |
+| **Sub D Progress-Gate** | Gate-Middleware auf allen CRM-API-Routes. Liest State aus Sub A/C. Event `elearn_course_major_version_bumped` triggert Cert-Revoke |
+
+## 24.14 Referenz-Dokumente (28 Spec-Dateien total)
+
+**Pro Sub:** 1× SCHEMA + 1× INTERACTIONS + 5× Grundlagen-Patches = 7 Dateien. 4 Subs = 28 Spec-Dateien.
+
+- **Sub A:** `ARK_E_LEARNING_SUB_A_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub B:** `ARK_E_LEARNING_SUB_B_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub C:** `ARK_E_LEARNING_SUB_C_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub D:** `ARK_E_LEARNING_SUB_D_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+
+## 24.15 Statistik nach v1.4
+
+```
+E-Learning Tabellen:      28  (Sub A 15 · Sub B 5 · Sub C 4 · Sub D 4)
+E-Learning Events:        52  (Sub A 16 · Sub B 12 · Sub C 12 · Sub D 12)
+E-Learning Worker:        25  (Sub A 10 · Sub B 8 · Sub C 7 · Sub D 7)
+E-Learning API-Endpoints: 80+ (Sub A 30 · Sub B 15 · Sub C 15 · Sub D 12+Intern)
+E-Learning Pages:         25+ (Sub A 13 · Sub B 3 · Sub C 5 · Sub D 6)
+E-Learning Enums:         25  (Sub A 8 · Sub B 8 · Sub C 5 · Sub D 4)
+E-Learning Activity-Types:40  (Sub A 11 · Sub B 10 · Sub C 9 · Sub D 8 · +2 Doppel-Kategorisierung)
+Activity-Kategorien:      19  (18 v1.4 + 1 elearning)
+Tabellen total:          ~204 (176 v1.4 + 28 E-Learning)
+```
+
+## 24.16 Offene Punkte / Follow-ups
+
+- **Implementation-Plan:** konsolidiert für A+B+C+D via `superpowers:writing-plans`
+- **CRM-API-Refactor:** Gate-Middleware in ALLE bestehenden API-Routes einhängen (einmaliger Refactor-Effort)
+- **CI-Check:** jede neue Route muss `@gate_feature` oder `@gate_exempt` haben (Linting-Regel)
+- **Pilot-Strategie Sub D:** Soft-Enforcement 4-6 Wochen, Daten beobachten, dann selektiv Hard aktivieren
+- **Port-Entscheidung Sub B:** bleiben LinkedIn_Automatisierung-Files als eigenes Repo oder in ARK-CRM konsolidiert? Peter entscheidet vor Implementation-Start
+- **Sparte-Wert `uebergreifend`:** globaler Sparten-Katalog-Eintrag Phase-2 wenn cross-cutting Themen in anderen Modulen auftauchen
+- **Mobile-App-Gate:** falls später Mobile-App, Gate-Middleware dort ebenfalls (Phase-3)
+- **Override-Request-Workflow:** MA beantragt Override, Head approved? MVP: nur Head/Admin legt direkt an. Phase-2 Request-Flow
+- **Emergency-Bypass-SLA:** Admin setzt Bypass → wirksam mit nächstem Request (Cache-Invalidation sofort)
 
 ---
 
 ## Pointer to full source
 
-Für Prosa-Details jeweils Quelle lesen: `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md`:
+Für Prosa-Details jeweils Quelle lesen: `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md`:
 
 - **Consultant-Alltag + NIE/IMMER-manuell-Listen:** §1.4
 - **Longlist-Flow komplett (Research → Schriftl. GO) + Sperr-Regeln ab CV IN:** §2.3
@@ -316,6 +511,7 @@ Für Prosa-Details jeweils Quelle lesen: `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSI
 - **Projekt-Detailmaske alle 6 Tabs + 14 Drawers + Header-Specials:** TEIL 20c
 - **Snapshot-Bar-Harmonisierung Slot-Belegung pro Entity + Dupe-Regel:** TEIL 20b
 - **Spec-Sync-Trigger-Matrix (vollständige Tabelle):** TEIL 21
+- **E-Learning Sub A/B/C/D komplett (Modul-Landkarte, Datenflüsse, Cert-Lifecycle, Multi-Tenant, Sub-Interop):** TEIL 24 (neu)
 
 **Verwandte Wiki-Konzepte:**
 - [[status-enum-katalog]] · [[mandat-kuendigung]] · [[direkteinstellung-schutzfrist]] · [[optionale-stages]] · [[diagnostik-assessment]]
@@ -324,36 +520,3 @@ Für Prosa-Details jeweils Quelle lesen: `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSI
 - [[spec-sync-regel]]
 - [[grundlagen-changelog]]
 - [[rbac-matrix]]
-
----
-
-### TEIL 23 — v1.3.5 Reminders-Vollansicht (2026-04-17)
-
-**23.1 Neue Tool-Maske `/reminders`**
-- 3. Tool-Maske neben `/operations/dok-generator` und `/operations/email-kalender`
-- Ergänzt — ersetzt nicht — Dashboard-Widget + Entity-Reminder-Tabs (Kandidat §10, Account §13)
-- **Layout:** Banner · KPI-Strip (6) · Saved-Views-Chips · View-Toggle (Liste/Kalender) · Filter-Bar · Status-Chip-Tabs (Liste-only) · Main · 2 Drawer (Detail 5-Tab, Neu)
-- **View-Modi:** Liste mit Section-Groups (Überfällig/Heute/Woche/Später/Erledigt-30d) + Kalender CRM-intern (Monat/Woche, Drag-to-Reschedule)
-- **Scope-Logik:** `self` (eigene) / `team` (`vorgesetzter_id`-direkte Reports) / `all` (tenant-weit). Switcher nur Admin/HoD sichtbar, AM/CM/RA/BO fix `self`
-- **Saved Views:** rollen-spezifische System-Defaults + max 10 user-defined. Storage `dim_mitarbeiter.dashboard_config.reminders.saved_views[]` (JSONB, keine neue Tabelle)
-- **Keine Bulk-Actions** (PO-Entscheidung — Sales würde durch-snoozen)
-- **Auto-Regeln** separat unter `/admin/reminder-rules` (nicht in dieser Maske)
-
-**23.2 Neue Grundlagen-Entries**
-- **Database v1.3.5** — `fact_reminders.template_id uuid FK → dim_reminder_templates(id)` + `escalation_sent_at timestamptz` (Idempotenz 48-h-Eskalation). `dim_mitarbeiter.dashboard_config`-Kommentar mit JSONB-Substruktur für Reminders-Saved-Views
-- **Backend v2.5.5** — 2 Events (`reminder_reassigned`, `reminder_overdue_escalation`) + 1 Worker (`reminder-overdue-escalation.worker.ts`, hourly 08–20h) + 3 Endpoints (`POST /reminders/:id/reassign`, `GET/PATCH /user-preferences/reminders`). Lifecycle-Events (create/complete/snooze/update) via `fact_audit_log` `entity_updated`-Pattern
-- **Frontend v1.10.5** — §Reminders erweitert (Tool-Maske-Einordnung, Scope-Switcher, View-Modi, Saved-Views-Storage, Endpoints, Entity-Tab-Deep-Link-Kontrakt, Keyboard-Shortcuts N/V/E/S/R/J/K/1–6)
-- **Stammdaten v1.3 unverändert** (§64 `dim_reminder_templates` passt 1:1)
-
-**23.3 Neue Spec-Dokumente**
-- `specs/ARK_REMINDERS_VOLLANSICHT_PLAN_v0_1.md` — Ausarbeitungsplan Phase 0–5 + 7 Phase-0-Entscheidungen
-- `specs/ARK_REMINDERS_VOLLANSICHT_SCHEMA_v0_1.md` — Layout, Design-Tokens, Permissions, Empty-States (16 §)
-- `specs/ARK_REMINDERS_VOLLANSICHT_INTERACTIONS_v0_1.md` — Flows, Events, Permissions-Matrix, Keyboard (14 §)
-
-**23.4 Neuer Mockup**
-- `mockups/reminders.html` — Liste + Kalender (Monat + Woche), Drag-to-Reschedule live, 2 Drawer (Detail 5-Tab, Neu), Keyboard-Shortcuts
-
-**23.5 Entity-Tab-Harmonisierung (Deep-Link-Kontrakt)**
-- `candidates.html` Tab 10 + `accounts.html` Tab 13 Footer: `→ Alle Reminders` → `/reminders?entity=<type>&id=<uuid>`
-- `dashboard.html` Reminder-Widget-Link: `/reminders?scope=self&status=all`
-- `crm.html` Sidebar: Reminders-Link aktiviert (`reminders.html`)

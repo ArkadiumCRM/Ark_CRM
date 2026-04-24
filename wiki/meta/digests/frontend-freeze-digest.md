@@ -1,16 +1,16 @@
 ---
-title: "Frontend-Freeze v1.10.5 — Digest"
+title: "Frontend Freeze Digest v1.12"
 type: meta
 created: 2026-04-17
-updated: 2026-04-17
-last_regen: 2026-04-17T18:10
-sources: ["ARK_FRONTEND_FREEZE_v1_10.md"]
-tags: [digest, frontend, freeze, routing, design-system]
+updated: 2026-04-24
+last_regen: 2026-04-24T00:00
+sources: ["ARK_FRONTEND_FREEZE_v1_12.md"]
+tags: [digest, frontend, freeze, routing, design-system, elearn, erp]
 ---
 
-# Frontend-Freeze v1.10.5 — Kompakt-Digest (Stand 2026-04-17)
+# Frontend-Freeze v1.12 — Kompakt-Digest (Stand 2026-04-24)
 
-Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_10.md` (~4050 Zeilen; v1.10 + v1.10.4 Dok-Generator-Addendum §4e + v1.10.5 Email-Kalender-Addendum §4f, 2026-04-17). Dieser Digest gibt Routing, Detailmasken-Inventar, Design-System-Regeln, Komponenten und Interaction-Pattern-Referenzen verlustfrei wieder. Pixel-/Padding-/Animation-Details sind bewusst weggelassen — bei Bedarf Original-§ lesen.
+Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_12.md` (~4475 Zeilen; v1.10 + v1.10.4 Dok-Generator-Addendum §4e + v1.10.5 Email-Kalender-Addendum §4f + v1.11 Responsive-Rewrite + v1.12 E-Learning-Modul TEIL O, 2026-04-24). Dieser Digest gibt Routing, Detailmasken-Inventar, Design-System-Regeln, Komponenten und Interaction-Pattern-Referenzen verlustfrei wieder. Pixel-/Padding-/Animation-Details sind bewusst weggelassen — bei Bedarf Original-§ lesen.
 
 ## TOC (§-Sections der Quelle)
 
@@ -97,6 +97,7 @@ Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_10.md` (~4050 Zeilen; v1.10 + v1.1
 25   Developer Experience
 26   Build-Reihenfolge (Wellen 1–4)
 27   Fazit
+TEIL O  E-Learning-Modul Frontend (NEU v1.12, 2026-04-24)
 ```
 
 ---
@@ -129,11 +130,11 @@ Alle Routen sind englisch (Konvention v1.10). Detailansichten = Vollseite (Ausna
 | `/assessments` | Assessments-Liste |
 | `/assessments/[id]` | Assessments-Detailmaske (5 Tabs, typisierte Credits) |
 | `/scraper` | Scraper-Control-Center (6 Tabs, globales System-Modul, kein `[id]`) |
-| `/operations/dok-generator` | Globaler Dok-Generator (NEU v1.10.4, 5-Step-Workflow, Sibling zu Email & Kalender/Reminders/Scraper) |
-| `/operations/email-kalender` | Email & Kalender (NEU v1.10.5, Single-Page-Maske mit Mode-Toggle Email↔Kalender, 8 Drawer, MS-Graph User-Tokens, CodeTwo-Signatur) |
+| `/operations/dok-generator` | Globaler Dok-Generator (NEU v1.10.4, 5-Step-Workflow) |
+| `/operations/email-kalender` | Email & Kalender (NEU v1.10.5, Single-Page-Maske mit Mode-Toggle Email↔Kalender, 8 Drawer) |
 | `/documents` | Dokumente (Deep-Link, nicht in Sidebar) |
 | `/documents/[id]` | Dokument-Detail |
-| `/reminders` | Reminders-Vollansicht (NEU v1.10.5, 3. Tool-Maske) — Liste + Kalender, Scope-Switcher (self/team/all via `dim_mitarbeiter.vorgesetzter_id`), Saved-Views (Storage `dashboard_config.reminders`), Drag-to-Reschedule, Keyboard N/V/E/S |
+| `/reminders` | Reminders-Vollansicht (NEU v1.10.5, 3. Tool-Maske) |
 | `/notifications` | Notification-Vollseite (aus Bell-Icon) |
 | `/search` | Strukturierte Suche + RAG-Tab (Deep-Link) |
 | `/matching` | Matching-Modul (Deep-Link) |
@@ -141,11 +142,13 @@ Alle Routen sind englisch (Konvention v1.10). Detailansichten = Vollseite (Ausna
 | `/market-intelligence` | Market Intelligence |
 | `/settings` | Settings (Profil, Benachrichtigungen, Sessions, Locale) |
 | `/settings/appearance` | Theme-Toggle (Dark/Light/System) |
-| `/admin` | Admin-Bereich (User-Mgmt, Tenant-Config, Automation-Settings, Audit, Event-Chain Explorer) |
+| `/admin` | Admin-Bereich (User-Mgmt, Tenant-Config, Automation-Settings, Audit) |
 
-Renames v1.10: `/firmengruppen` → `/company-groups`, `/projekte` → `/projects`. Neu: `/assessments/[id]`, `/scraper`, `/company-groups/[id]`, `/jobs/[id]`, `/projects/[id]`.
+Renames v1.10: `/firmengruppen` → `/company-groups`, `/projekte` → `/projects`.
 
 Electron Protocol: `ark-crm://candidates/[uuid]`, `ark-crm://accounts/[uuid]`, `ark-crm://mandates/[uuid]`, `ark-crm://actions/call-log`.
+
+**ERP-Workspace-Routen (NEU v1.12)** — siehe TEIL O unten: `/erp/elearn/*`, `/erp/hr`, `/erp/zeit`, `/erp/commission`, `/erp/billing`.
 
 ---
 
@@ -175,41 +178,41 @@ Status-Matrix v1.10 (Stand 2026-04-14 — alle 9 Detailseiten Schema + Interacti
 Übersicht · Longlist (Kanban 10 Spalten + Durchcall-Funktion) · Prozesse · Billing · History · Dokumente.
 
 ### 4d.4 Jobs-Detailmaske — 6 Tabs
-Übersicht (Stammdaten, Stellenplan-Ref, Markdown-Beschreibung, Konditionen, Matching-Kriterien, Sichtbarkeit) · Jobbasket (Pipeline 6 Stages) · Matching (7-Sub-Score-Tabelle + Radar) · Prozesse · Dokumente (Stellenausschreibung-Generator DE/FR/IT/EN) · History. Lifecycle `scraper_proposal → vakanz → aktiv → besetzt → geschlossen`. 4 Erstellungs-Wege: Scraper, manuell, aus Mandat (Taskforce), aus Stellenplan.
+Übersicht (Stammdaten, Stellenplan-Ref, Markdown-Beschreibung, Konditionen, Matching-Kriterien, Sichtbarkeit) · Jobbasket (Pipeline 6 Stages) · Matching (7-Sub-Score-Tabelle + Radar) · Prozesse · Dokumente (Stellenausschreibung-Generator DE/FR/IT/EN) · History. Lifecycle `scraper_proposal → vakanz → aktiv → besetzt → geschlossen`.
 
 ### 4d.5 Firmengruppen-Detailmaske — 6 Tabs
-Übersicht · Kultur (6 Dimensionen + Gesellschafts-Vergleich) · Kontakte (aggregiert) · Mandate & Prozesse · Dokumente (Rahmenvertrag, Master-NDA, Konzern-AGB mit `applies_to_account_ids`) · History. Erstellung via UID-Match (Zefix, ≥85% auto) oder manuell durch Founder.
+Übersicht · Kultur (6 Dimensionen + Gesellschafts-Vergleich) · Kontakte (aggregiert) · Mandate & Prozesse · Dokumente (Rahmenvertrag, Master-NDA, Konzern-AGB) · History.
 
 ### 4d.6 Assessments-Detailmaske — 5 Tabs
-Übersicht (Credits-Tabelle pro Typ) · Durchführungen (Kern, Typ-Filter) · Billing (`full` Default) · Dokumente (Offerte, Summaries, Reports) · History. Credits-Modell typisiert, 11 Typen: MDI / Relief / ASSESS 5.0 / DISC / EQ / Scheelen 6HM / Driving Forces / Human Needs / Ikigai / AI-Analyse / Teamrad-Session. Umwidmung nur innerhalb gleichen Typs, kein Verfall. Versionierung via `fact_candidate_assessment_version`.
+Übersicht (Credits-Tabelle pro Typ) · Durchführungen (Kern, Typ-Filter) · Billing (`full` Default) · Dokumente · History. 11 Typen: MDI / Relief / ASSESS 5.0 / DISC / EQ / Scheelen 6HM / Driving Forces / Human Needs / Ikigai / AI-Analyse / Teamrad-Session.
 
 ### 4d.7 Projekte-Detailmaske — 6 Tabs
-Übersicht (Öffentlich + Arkadium-intern getrennt) · Gewerke (BKP, Kern-Arbeitsumgebung) · Matching · Galerie (Masonry) · Dokumente · History. 3-Tier: Projekt → Gewerk (BKP) → Beteiligungen (Firmen + Kandidaten mit SIA-Phasen, 6 Haupt + 12 Teilphasen). Klassifikation via `bridge_project_clusters` + `bridge_project_spartens`. 3 Erstellungs-Wege: manuell, aus Kandidat-Werdegang, Scraper (simap/Baublatt/TEC21).
+Übersicht (Öffentlich + Arkadium-intern getrennt) · Gewerke (BKP, Kern-Arbeitsumgebung) · Matching · Galerie (Masonry) · Dokumente · History. 3-Tier: Projekt → Gewerk (BKP) → Beteiligungen (Firmen + Kandidaten mit SIA-Phasen, 6 Haupt + 12 Teilphasen).
 
 ### 4d.8 Scraper-Control-Center — 6 Tabs
-Dashboard (Ampel-System, AI-Anomalie-Radar) · Review-Queue (Kern, 10 Finding-Typen, Bulk-Accept ≥80%) · Runs (Diff-View) · Configs (7 Scraper-Typen: Team-Page / Career-Page / Impressum / LinkedIn Phase 2 / Jobboards / PR-Reports / Handelsregister) · Alerts & Fehler (9 Alert-Typen, 4 Severities) · History. Confidence-Schwellen: ≥85% Auto, 60–84% Review, <60% `needs_am_review`. WebSocket-Live <2s. **Mockup:** `mockups/scraper.html` als Single-File mit 6 internen Tabs (konsistent zu `dok-generator.html`/`email-kalender.html`/`reminders.html`), Routing via `switchTab()`-JS, Keyboard 1–6. **Quick-Actions:** "▶ Jetzt scrapen (Bulk)" / "📊 Report" (Configs-Button entfernt 17.04.2026 — Redundanz zu Tab 4, Patch v0.2 P5).
+Dashboard (Ampel-System) · Review-Queue (Kern, 10 Finding-Typen, Bulk-Accept ≥80%) · Runs (Diff-View) · Configs (7 Scraper-Typen) · Alerts & Fehler (9 Alert-Typen) · History. Confidence: ≥85% Auto, 60–84% Review, <60% `needs_am_review`.
 
 ---
 
 ## Design-System Rules
 
 ### Drawer-Regel (CLAUDE.md Drawer-Default, §4)
-- **Drawer (540px Slide-in von rechts, Default)**: CRUD, Bestätigungen, Mehrschritt-Eingaben, Unterentitäten (Kontakte, History-Einträge, Projekt-Slide-In), Quick-Edits (1–5 Felder), Reminder/Notiz erstellen.
+- **Drawer (540px Slide-in von rechts, Default)**: CRUD, Bestätigungen, Mehrschritt-Eingaben, Unterentitäten, Quick-Edits (1–5 Felder), Reminder/Notiz erstellen.
 - **Modal nur für**: kurze Confirms, Blocker, Forced Reauth, System-Notifications, Placement-Modal (8-Step-TX, KEIN Optimistic Update).
 - **Vollseite**: Hauptdetailansichten Kandidat / Account / Job / Mandat / Prozess / Firmengruppe / Projekt / Assessment — immer. Kein Nested Drawer. Navigation zwischen Entitäten via `router.push()`.
 - **Im Slide-In: Tabs** zur Strukturierung — kein Slide-In im Slide-In.
 - Schliessen via X, Escape, Klick ausserhalb.
 
 ### Header-Layout (pro Detailseite)
-- Identität/Klassifizierung/Status oben (banner-meta + banner-chips + Status-Dropdown + Mandat-Badge/Package-Badge/etc.).
-- Quick-Actions rechts (entity-spezifisch, siehe Shortcuts-Katalog unten).
-- Breadcrumb-Konvention: **2-stufig** Default (Kandidat/Account/Mandat/Firmengruppe/Projekt), **4-stufig** bei Sub-Entitäten (Jobs unter Account, Prozesse aus Kandidat/Account, Assessments), **1-stufig** für System-Module (Scraper).
+- Identität/Klassifizierung/Status oben (banner-meta + banner-chips + Status-Dropdown + Mandat-Badge/Package-Badge).
+- Quick-Actions rechts.
+- Breadcrumb-Konvention: **2-stufig** Default, **4-stufig** bei Sub-Entitäten, **1-stufig** für System-Module.
 - "Zuletzt geändert"-Zeile (last_modified_at + last_modified_by + source_system) immer sichtbar.
 
 ### Snapshot-Bar (Fix 6 Slots, sticky unter Header)
-Vereinheitlicht 2026-04-16. Sticky `top:0, z-index:50` unter Page-Banner; Tabbar folgt sticky mit `top:64px, z-index:49`. Auf Tablet 3×2 statt 6×1. CSS-Classes `.snapshot-bar` + `.snapshot-item` (lbl/val/delta). Optional `.ms-progress > .bar[.green|.amber|.red]`.
+Sticky `top:0, z-index:50` unter Page-Banner; Tabbar folgt sticky mit `top:64px, z-index:49`. Auf Tablet 3×2 statt 6×1. CSS-Classes `.snapshot-bar` + `.snapshot-item`.
 
-**Dupe-Regel (CRITICAL):** Snapshot-Slots dürfen NICHT duplizieren, was in banner-meta / banner-chips / Status-Dropdown / Mandat-Badge steht. Header = Identität/Status, Snapshot = operative Zahlen.
+**Dupe-Regel (CRITICAL):** Snapshot-Slots dürfen NICHT duplizieren, was in banner-meta / banner-chips / Status-Dropdown / Mandat-Badge steht.
 
 Slot-Allokation:
 - Account: Mitarbeitende · Wachstum 3J · Umsatz · Gegründet · Standorte · Kulturfit
@@ -220,32 +223,30 @@ Slot-Allokation:
 - Projekt: Volumen · Zeitraum · BKP-Gewerke · Beteiligte Firmen · Beteiligte Kandidaten · Medien
 - Prozess: Stage-Alter · Nächstes Interview · Win-Probability · Pipeline-Wert · CM/AM · Garantie
 
-**Ausnahmen 7 Slots**: Assessment (Credits-Mix), Scraper (Live-KPIs via WebSocket), Projekt (Zeitraum-Sonderslot).
+**Ausnahmen 7 Slots**: Assessment, Scraper, Projekt.
 
 ### Tab-Structure
 - Klick auf Oberreiter öffnet Listen-/Suchansicht zuerst; erst Klick auf Eintrag → Detailansicht.
-- Tab-Zahlen pro Detailmaske: siehe Detailmasken-Tabelle oben.
-- Versionierung (Briefings, Assessments): **Pfeil-Navigation** `← [Datum] →`, aktuellste Version default, "Neue Version" legt neuen Datensatz an, ältere bleiben vollständig erhalten.
+- Versionierung (Briefings, Assessments): **Pfeil-Navigation** `← [Datum] →`, aktuellste default.
 
 ### Card-Pattern & Pipeline
-- **Process Stage Pipeline Component** (§9.8, shared): zwei Modi `detailed` (Prozess-Detailmaske, SVG-Linie + WinProb-Panel 280px rechts + Stage-Popover mit Pflicht-Grund) und `compact` (Listen-Karten, SVG inline oder CSS-only-Fallback ab 50 Karten). Ersetzt `.pst-step` (deprecated v1.1), `.pr-stage-track`/`.pr-stage-pop` → konsolidiert unter `.ark-pl-*`. Skip-Regeln V1-Saga-konform: Forward bis Angebot mit Grund erlaubt; Platzierung ausschliesslich via Placement-Drawer 8-Step-Saga. Single Source of Truth: `specs/ARK_PIPELINE_COMPONENT_v1_0.md`.
-- Single-Source-of-Truth: `specs/ARK_PIPELINE_COMPONENT_v1_0.md`.
+- **Process Stage Pipeline Component** (§9.8, shared): Modi `detailed` / `compact`. Konsolidiert unter `.ark-pl-*`. Single Source of Truth: `specs/ARK_PIPELINE_COMPONENT_v1_0.md`.
 
 ### Datum-Eingabe-Regel (CLAUDE.md Datum-Eingabe-Regel, §14)
 Alle Datum-/Zeit-Felder: natives `<input type="date">` / `datetime-local` / `time` — Kalender-Picker UND manuelle Tastatur-Eingabe Pflicht, kein Click-only-Picker.
 
 ### Density & Theme
-- **Density-Modi**: kompakt · normal (Default) · komfort (tenant-aware, Backend-persist).
-- **Dark Mode Default + Light Mode** (user-umschaltbar via `/settings/appearance`). `data-theme="dark|light"` auf `<html>`, geladen aus `dim_crm_users.theme_preference ENUM('dark','light','system')`. Komponenten referenzieren ausschliesslich CSS-Variablen. WCAG AA Pflicht.
-- **Motion**: nur funktional, `prefers-reduced-motion` respektieren.
+- **Density-Modi**: kompakt · normal (Default) · komfort (tenant-aware).
+- **Dark Mode Default + Light Mode** (user-umschaltbar via `/settings/appearance`). `data-theme="dark|light"` auf `<html>`. WCAG AA Pflicht.
+- **Motion**: `prefers-reduced-motion` respektieren.
 - **Zahlen**: `tabular-nums` überall (CHF, %, Datum dd.MM.yyyy).
 
-### Produkt-Navigation + Sidebar-Gruppierung
-- **Ober-Oberreiter (Produkt-Nav)**: CRM (aktiv) · Zeiterfassung · Billing · Analysen & Reporting · HR & Entwicklung (alle Phase 2, ausgegraut).
+### Produkt-Navigation + Sidebar-Gruppierung (CRM)
+- **Ober-Oberreiter (Produkt-Nav)**: CRM · Zeiterfassung · Billing · Analysen & Reporting · HR & Entwicklung. Ab v1.12 Topbar-Toggle CRM↔ERP (siehe TEIL O).
 - **Sidebar Gruppe 1 (9 Haupteinträge)**: Dashboard · Kandidaten · Accounts · Firmengruppen · Jobs · Mandate · Prozesse · Projekte · Scraper.
 - **Gruppe 2**: Market Intelligence.
 - **Gruppe 3 (System)**: Admin · Settings.
-- Nicht in Sidebar (nur Deep-Link): Dokumente, Suche (via Cmd+K primär), Matching, Reminders, Notifications.
+- Nicht in Sidebar (nur Deep-Link): Dokumente, Suche (via Cmd+K), Matching, Reminders, Notifications.
 
 ---
 
@@ -305,73 +306,76 @@ Will nicht mit uns zusammenarbeiten: #991b1b
 ★★★   (3): text-ark-gold, font-bold
 ```
 
-Implementierung: CSS-Variables in `globals.css` (HSL), Tailwind-Custom-Colors `ark-gold`, `ark-teal`, `surface-*`, `stage-*`, `temp-*`. Vollständige Token-Palette beider Themes: `wiki/concepts/design-tokens.md`.
+### Sparte-Chip (NEU v1.12, cross-Module)
+```
+ARC:            #D32F2F
+GT:             #1976D2
+ING:            #388E3C
+PUR:            #7B1FA2
+REM:            #F57C00
+uebergreifend:  #616161
+```
+
+Implementierung: CSS-Variables in `globals.css` (HSL). Vollständige Token-Palette: `wiki/concepts/design-tokens.md`.
 
 ---
 
 ## Components (lossless Namen)
 
 ### shadcn/ui-Basis (`components/ui/`)
-shadcn-Komponenten, angepasste Tokens, keine Logik. Einzige Komponenten-Basis (kein Wildwuchs, kein zweites Date-Picker / Select / Modal).
+Einzige Komponenten-Basis (kein Wildwuchs, kein zweites Date-Picker / Select / Modal).
 
 ### Shared (`components/shared/`)
-- **DataTable** (TanStack Table + TanStack Virtual, Pflicht für Hauptlisten)
+- **DataTable** (TanStack Table + TanStack Virtual)
 - **FilterBar** (Debounce 200ms Standard / 500ms Heavy)
-- **StatusBadge**
-- **EntityCard**
-- **Timeline**
-- **SearchPalette**
+- **StatusBadge** · **EntityCard** · **Timeline** · **SearchPalette**
 - **CommandPalette** (cmdk)
-- **EmptyState**
-- **Skeletons**
+- **EmptyState** · **Skeletons**
 - **PermissionGate** (show/hide · read-only · maskiert · disabled mit Tooltip)
-- **FeatureFlagGate** (show/hide für Feature-Availability)
-- **DetailDrawer**
-- **ErrorState**
-- **ErrorBoundary** (Route-/Drawer-/Widget-Level)
-- **ToastSystem**
-- **PresenceIndicator**
-- **BulkActionBar**
-- **ExportButton**
-- **MarkdownRenderer** (react-markdown + rehype-sanitize — NICHT DOMPurify direkt)
+- **FeatureFlagGate**
+- **DetailDrawer** · **ErrorState** · **ErrorBoundary** · **ToastSystem**
+- **PresenceIndicator** · **BulkActionBar** · **ExportButton**
+- **MarkdownRenderer** (react-markdown + rehype-sanitize)
 - **MarkdownEditor** (Textarea + Preview-Toggle)
 
-### Feature-Module (`components/candidates/`, `/accounts/`, `/contacts/`, `/jobs/`, `/mandates/`, `/processes/`, `/documents/`, `/reminders/`, `/notifications/`, `/matching/`, `/ai/`, `/analytics/`, `/dashboard/`)
+### Feature-Module
+`components/candidates/`, `/accounts/`, `/contacts/`, `/jobs/`, `/mandates/`, `/processes/`, `/documents/`, `/reminders/`, `/notifications/`, `/matching/`, `/ai/`, `/analytics/`, `/dashboard/`, `/elearn/` (NEU v1.12).
 
 ### Design-System-Komponenten v1.10 (neu/benannt)
-- **PipelineBar** / **ProcessStagePipeline** (§9.8, Modi `detailed` / `compact`, ersetzt `.pst-step`)
+- **PipelineBar** / **ProcessStagePipeline** (§9.8, Modi `detailed` / `compact`)
 - **SnapshotBar** (6 Slots fix, Dupe-Regel, `.snapshot-bar`)
 - **StageTransitionDrawer** (Placement-Modal, 8-Step-TX, kein Optimistic)
 - **ActivityTimeline** (mit `data-activity-id`-Anchor)
-- **Versionierungs-Pfeil-Nav** (Briefing/Assessment)
+- **Versionierungs-Pfeil-Nav**
 
 ### Hooks (`hooks/`)
-useAuth · usePermissions · useKeyboard · useDebounce · useNetworkStatus · useRealtimeChannel · useEntityDrawer · useUrlFilters · useTenant · usePresence · useErrorBoundary · useBulkAction · useFeatureFlag.
+useAuth · usePermissions · useKeyboard · useDebounce · useNetworkStatus · useRealtimeChannel · useEntityDrawer · useUrlFilters · useTenant · usePresence · useErrorBoundary · useBulkAction · useFeatureFlag · **useScrollTracker** (NEU v1.12).
 
 ### Stores (`stores/`) — alle tenant-aware (ausser sidebar, theme, toast)
 ui.store · filter-presets.store · command-palette.store · table-preferences.store · workspace.store · toast.store.
 
 ---
 
-## Interaction-Patterns Reference (§-numbers für CLAUDE.md Cross-Refs)
+## Interaction-Patterns Reference (§-numbers)
 
 Aus `wiki/concepts/interaction-patterns.md`:
 
 | § | Topic |
 |---|---|
-| §4 | **Drawer-Default-Regel** — CRUD / Bestätigungen / Mehrschritt als 540px-Drawer (zitiert in CLAUDE.md) |
-| §14 | **Datum-Eingabe-Regel** — native `<input type="date">` mit Kalender-Picker UND Tastatur-Eingabe (zitiert in CLAUDE.md) |
-| §14a | **Terminologie Briefing vs. Stellenbriefing** — Briefing = Kandidat-Seite (Eignungsgespräch); Stellenbriefing = Account-/Mandats-Seite (Kunde ↔ Stelle). Nicht vermischen. (zitiert in CLAUDE.md) |
+| §4 | **Drawer-Default-Regel** — CRUD / Bestätigungen / Mehrschritt als 540px-Drawer |
+| §14 | **Datum-Eingabe-Regel** — native `<input type="date">` |
+| §14a | **Terminologie Briefing vs. Stellenbriefing** |
 
-Weitere CLAUDE.md-Regeln mit Pattern-Bezug (nicht in interaction-patterns.md, aber Frontend-relevant):
+Weitere CLAUDE.md-Regeln:
 - **Datei-Schutz-Regel** — Backups vor Bulk-Edits >5 KB, Edits via Edit/Write, nie `open('w')`.
 - **Umlaute-Regel** — ä ö ü Ä Ö Ü ß UTF-8 Pflicht.
 - **Keine-DB-Technikdetails-im-UI-Regel** — keine `dim_*` / `fact_*` / `bridge_*` / `*_id` in User-facing Texten.
-- **Arkadium-Rolle-Regel** — Arkadium nicht-teilnehmend bei Interviews (TI/1st/2nd/3rd/Assessment = Kunde ↔ Kandidat); Arkadium-Touchpoints: Briefing / Coaching / Debriefing / Referenzauskunft.
-- **Activity-Linking-Regel** (§9.9 im Frontend-Freeze) — UI-Felder sind Projektionen von `fact_history`, mit `data-activity-id` + Click öffnet History-Drawer.
-- **Schutzfrist-Regel** — 12/16-Mt-Direkteinstellungs-Schutzfrist getrennt von 3-Mt-Post-Placement-Garantie; bei Placement Status `honored`.
-- **Stammdaten-Wording-Regel** — gegen `ARK_STAMMDATEN_EXPORT_v1_3.md` prüfen (Stages, Mandat-Typen, Activity-Types §14, Sparten, EQ-Dimensionen, Motivatoren).
-- **Spec-Sync-Regel** — 5 Grundlagen × 9 Detailmasken Sync-Matrix, siehe `wiki/meta/spec-sync-regel.md`.
+- **Arkadium-Rolle-Regel** — Arkadium nicht-teilnehmend bei Interviews; Touchpoints: Briefing / Coaching / Debriefing / Referenzauskunft.
+- **Activity-Linking-Regel** (§9.9) — UI-Felder sind Projektionen von `fact_history`, mit `data-activity-id`.
+- **Schutzfrist-Regel** — 12/16-Mt-Direkteinstellungs-Schutzfrist getrennt von 3-Mt-Post-Placement-Garantie.
+- **Stammdaten-Wording-Regel** — gegen `ARK_STAMMDATEN_EXPORT_v1_3.md` prüfen.
+- **Spec-Sync-Regel** — 5 Grundlagen × 9 Detailmasken Sync-Matrix.
+- **ark-lint-skip-Marker** — `<!-- ark-lint-skip:begin reason=admin-xxx -->…<!-- ark-lint-skip:end -->` zur Markierung legitimer Admin-/Debug-Flächen.
 
 ---
 
@@ -390,6 +394,8 @@ Entity-spezifisch v1.10:
 - Projekt: `G` Gewerk hinzufügen · `F`/`K` Firma/Kandidat in Gewerk
 - Firmengruppe: `+` Gesellschaft hinzufügen · `M` Neues Gruppen-Mandat
 
+E-Learning-Shortcuts siehe TEIL O unten.
+
 ---
 
 ## Sonstige lossless Kern-Listen
@@ -401,13 +407,13 @@ Entity-spezifisch v1.10:
 Stammdaten 30/60 min · Entitäts-Details 5/15 min · Listen 2/10 min · Dashboard KPIs 2/5 min · Notifications/Reminders 0/5 min · Matching/AI 1/10 min · Presence nie gecacht.
 
 ### Responsive Policy (§24b · v1.11 REWRITE 2026-04-17)
-**Voller Mobile-/Tablet-Support** (alte Blocker-Regel raus).
+**Voller Mobile-/Tablet-Support**.
 - **Desktop > 960 px:** primärer Power-User-Mode, Sidebar 56 px hover-expand 240 px, Keyboard-Shortcuts
 - **Tablet 641–960 px:** Sidebar 56 px + Pin-Toggle ⇔, Hover aus (Touch), KPI 3-col
-- **Mobile ≤ 640 px:** Top-Bar 52 px + ☰ Slide-Out-Drawer 280 px, KPI 2-col, DataTable → Card-Stack, Drawer → Full-Screen-Sheet 100vw×100vh, Tabs/Filter-Bar/Chip-Group horizontal scrollbar, 3-Pane-Layouts → Pane-Toggle `data-pane="folders/list/reader"`, Tool-Sidebars (Dok-Gen 280 px) → Slide-in-Drawer
-- **Safe-Area-Inset:** `<meta viewport-fit=cover>` + `env(safe-area-inset-top/bottom)` in allen 22 Mockup-HTMLs
+- **Mobile ≤ 640 px:** Top-Bar 52 px + ☰ Slide-Out-Drawer 280 px, KPI 2-col, DataTable → Card-Stack, Drawer → Full-Screen-Sheet 100vw×100vh, Tabs/Filter-Bar/Chip-Group horizontal scrollbar, 3-Pane-Layouts → Pane-Toggle
+- **Safe-Area-Inset:** `<meta viewport-fit=cover>` + `env(safe-area-inset-top/bottom)`
 - **Touch-Targets:** min 36×36 px, primär 44×44 px
-- **Test-Tool:** `mockups/crm-mobile.html` = 3-iframe-Device-Frames-Demo
+- **Test-Tool:** `mockups/crm-mobile.html`
 
 ### Bundle-Budget (§20)
 Initial ≤200 kB gzip · Per-Route-Chunk ≤100 kB · Recharts / Drawers / komplexe Forms lazy.
@@ -415,214 +421,370 @@ Initial ≤200 kB gzip · Per-Route-Chunk ≤100 kB · Recharts / Drawers / komp
 ### Build-Wellen (§26)
 - **Welle 1 Fundament**: Shell, Auth, Middleware, Query Provider, API-Client, Gates, DataTable, FilterBar, Candidate List+Detail, Locale, Toast.
 - **Welle 2 Kern-CRM**: Accounts, Contacts, Mandates, Processes (Stage-Change), History Timeline, Notifications, Reminders, Command Palette, Workspace, Dashboard.
-- **Welle 3 Erweitert**: Documents, Search (strukturiert+RAG), Matching, AI Review, Realtime Presence, Market Intelligence, Bulk, Export/Import, Auditability, Merge/DQ.
-- **Welle 4 Abschluss/Desktop**: Admin, Settings, Electron (Protocol Handler, Single Instance, Auto-Update, Code Signing), Error Boundaries, ESLint Boundaries, Storybook/Chromatic, Bundle-Budget-CI.
+- **Welle 3 Erweitert**: Documents, Search, Matching, AI Review, Realtime Presence, Market Intelligence, Bulk, Export/Import, Auditability, Merge/DQ.
+- **Welle 4 Abschluss/Desktop**: Admin, Settings, Electron, Error Boundaries, ESLint Boundaries, Storybook/Chromatic, Bundle-Budget-CI.
 
 ---
 
 ## §4e Operations · Dok-Generator (NEU v1.10.4, 2026-04-17)
 
-**Location:** `/operations/dok-generator` · Sidebar-Bereich Operations (Sibling zu Email-Inbox, Reminders, Scraper)
+**Location:** `/operations/dok-generator` · Sidebar-Bereich Operations
 **Spec:** `specs/ARK_DOK_GENERATOR_SCHEMA_v0_1.md` + `INTERACTIONS_v0_1.md`
-**Mockup:** `mockups/dok-generator.html` (1'321 Zeilen)
+**Mockup:** `mockups/dok-generator.html`
 
-### Zweck
-
-Zentrales Tool zur Generierung aller Dokumente, die Arkadium im Kundenkontakt erzeugt. Ersetzt verstreute CTAs in Entity-Detailmasken (Mandat „Offerte generieren", Assessment „Offerte generieren", Kandidat-Tab-9 „Dok-Generator" etc.) durch **ein zentrales Workflow-Tool** mit 5-Step-Flow.
-
-### Prinzipien (User-Entscheidungen 2026-04-17)
-
-- **1 Template pro Dokument-Variante** — separate Templates für Du/Sie, mit/ohne Rabatt, Mandat-Typ (keine Parameter)
-- **Auto-Pull aus Entity-Vollansichten** — DB-Felder live aufgelöst, kein Abtippen
-- **Multi-Entity nur bei `expose`** — Kandidat + optional Mandat-Kontext
-- **Bulk-Mode bei Rechnungs-/Mahnungs-Templates** — N Entities auf einmal
-- **Kein Admin-UI im Mockup** — Templates via DB-Seed (Admin-UI Phase 2)
-
-### Layout
-
-```
-HEADER (Titel + Counter)
-STEP-INDICATOR (horizontal, 5 Steps: Template → Entity → Ausfüllen → Preview → Ablage)
-├─ SIDEBAR 280px (Kategorien, Quick-Filter, Favoriten, Zuletzt)
-└─ MAIN (wechselt Inhalt je Step)
-KB-HINTS unten
-```
+Zentrales Tool zur Generierung aller Arkadium-Kundenkontakt-Dokumente. Ersetzt verstreute Entity-CTAs durch zentrales 5-Step-Workflow-Tool.
 
 ### 5 Workflow-Steps
 
 | Step | Main-Inhalt | Output |
 |------|-------------|--------|
-| 1 Template | Template-Grid (38 Cards · 7 Kategorien · Favoriten-Star) | `currentTemplate` gesetzt |
-| 2 Entity | Entity-Picker (9 Kinds, dynamisch gefiltert auf Template-Kinds, Multi/Bulk-Support) | `entityList` gefüllt |
-| 3 Ausfüllen | WYSIWYG-Editor (Sidebar-Sektionen + A4-Canvas mit ARKADIUM-Branding) | Content-Overrides |
-| 4 Preview | Read-only Canvas-Clone mit Zoom + Page-Break | — |
-| 5 Ablage | Delivery-Optionen (save_only / save_and_email / save_and_download) + History-Preview-Drawer | `fireGenerate()` → Success-Drawer |
-
-### Design-System-Konformität
-
-- Drawer-Default-Regel eingehalten: 540px `.drawer` + `#drawerBackdrop` (Standard editorial.css)
-- Kandidat-Tab-9 Editor-Styles generalisiert: Sidebar 260px + A4-Canvas 210mm
-- ARKADIUM-Branding im Canvas: navy #1a2540, gold #b99a5a
-- Step-Indicator sticky · Kategorie-Sidebar sticky
-- 5 Drawers im Mockup: Credit-Zuweisung, Run-Detail, Kandidat-Ersetzen, Report-Upload, Success
-
-### Kandidat-Tab-9 Migration
-
-- **Phase 1**: Tab bleibt, Redirect-Banner mit Link zum globalen Dok-Generator (`?template=ark_cv&entity=candidate:<id>`)
-- **Phase 2**: Tab-Layout wird zu Inline-Variante
-- **Phase 3** (React-Port): Tab entfernt, nur Deep-Link zum globalen Tool
-
-### Entity-CTA Deep-Link-Integration
-
-Bestehende Entity-CTAs bereits auf Deep-Links migriert:
-- `mandates.html` → Mandat-Report
-- `assessments.html` Tab 4 → Offerte generieren
-- `candidates.html` Tab 9 → Redirect-Banner
-
-Phase 1.5 Migration: Accounts (Factsheet), Mandate (Rechnung-Stage-N), Prozesse (Best-Effort-Rechnung).
-
-### RBAC
-
-| Aktion | AM | CM | Backoffice | Admin |
-|--------|----|----|-----------|-------|
-| Templates lesen | ✅ | ✅ | ✅ | ✅ |
-| Mandat-Offerten/Rechnungen generieren | ✅ | ⚠ | ✅ | ✅ |
-| Kandidat-Dokumente (ARK CV/Abstract/Exposé) | ⚠ | ✅ | ❌ | ✅ |
-| Assessment-Offerten/Rechnungen | ✅ | ⚠ | ✅ | ✅ |
-| Executive Report | ⚠ | ✅ | ❌ | ✅ |
-| Template-Admin-UI (Phase 2) | ❌ | ❌ | ❌ | ✅ |
+| 1 Template | Template-Grid (38 Cards · 7 Kategorien · Favoriten) | `currentTemplate` |
+| 2 Entity | Entity-Picker (9 Kinds, Multi/Bulk) | `entityList` |
+| 3 Ausfüllen | WYSIWYG-Editor (A4-Canvas + ARKADIUM-Branding) | Content-Overrides |
+| 4 Preview | Read-only Canvas-Clone | — |
+| 5 Ablage | Delivery (save_only / save_and_email / save_and_download) | `fireGenerate()` |
 
 ### Template-Katalog
+38 aktive Templates in 7 Kategorien: `mandat_offerte` (4) · `mandat_rechnung` (10) · `best_effort` (8) · `assessment` (3) · `rueckerstattung` (1) · `kandidat` (5) · `reporting` (7).
 
-38 aktive Templates (+ 1 ausstehend `mandat_offerte_time`) in 7 Kategorien:
-- `mandat_offerte` (4) · `mandat_rechnung` (10) · `best_effort` (8) · `assessment` (3) · `rueckerstattung` (1) · `kandidat` (5) · `reporting` (7)
-
-**Vollständiger Katalog:** `ARK_STAMMDATEN_EXPORT_v1_3.md` §56.
-
-### Dokument-Labels (12 neu)
-
-Neue `document_label` ENUM-Werte für Dok-Generator-Outputs: `'Mandat-Offerte'`, `'Mandat-Rechnung'`, `'Best-Effort-Rechnung'`, `'Assessment-Offerte'`, `'Assessment-Rechnung'`, `'Executive-Report'` (NEU), `'Mahnung'`, `'Referenzauskunft'`, `'Referral'`, `'Interviewguide'`, `'Reporting'`, `'Factsheet'`.
-
-Details: `ARK_DATABASE_SCHEMA_v1_3.md` §14.1.
-
-### Datenbank
-
-Neue Tabelle `dim_document_templates` (Stammdaten) + `fact_documents` Erweiterungen (5 neue Felder: `generated_from_template_id`, `generated_by_doc_gen`, `params_jsonb`, `entity_refs_jsonb`, `delivery_mode`, `email_recipient_contact_id`). Details: `ARK_DATABASE_SCHEMA_v1_3.md` §14.2.
+### Dokument-Labels (12)
+`'Mandat-Offerte'`, `'Mandat-Rechnung'`, `'Best-Effort-Rechnung'`, `'Assessment-Offerte'`, `'Assessment-Rechnung'`, `'Executive-Report'`, `'Mahnung'`, `'Referenzauskunft'`, `'Referral'`, `'Interviewguide'`, `'Reporting'`, `'Factsheet'`.
 
 ### Backend-Endpoints
-
-9 neue Endpoints unter `/api/v1/document-templates/*` + `/api/v1/documents/generate,resolve-placeholders,regenerate,email` + `/api/v1/document-generator/recent,drafts`. Details: `ARK_BACKEND_ARCHITECTURE_v2_5.md` §L.
-
-### Mockup-Scope Phase 1
-
-5 Seed-Templates mit vollem Canvas-Content: `mandat_offerte_target` · `rechnung_mandat_teilzahlung_1_sie` · `assessment_offerte` · `ark_cv` · `executive_report`. 33 weitere als Library-Cards sichtbar, Canvas-Content Phase 2.
+9 unter `/api/v1/document-templates/*` + `/api/v1/documents/generate,resolve-placeholders,regenerate,email` + `/api/v1/document-generator/recent,drafts`.
 
 ---
 
 ## §4f Operations · Email & Kalender (NEU v1.10.5, 2026-04-17)
 
-**Location:** `/operations/email-kalender` · Sidebar-Bereich Operations (Sibling zu Dok-Generator, Reminders, Scraper)
+**Location:** `/operations/email-kalender`
 **Spec:** `specs/ARK_EMAIL_KALENDER_DETAILMASKE_SCHEMA_v0_1.md` + `INTERACTIONS_v0_1.md`
-**Mockup:** `mockups/email-kalender.html` (~1700 Zeilen · Single-Page-Maske)
+**Mockup:** `mockups/email-kalender.html`
 
-### Zweck
-
-Vereint Email-Client und Kalender in einer Voll-Ansicht — Umsetzung des PO-Prinzips „nie das CRM verlassen". Ersetzt externe Outlook-Nutzung für Daily-Business-Kommunikation.
-
-### Architektur-Entscheidungen (PO, 2026-04-17)
-
-- **Layout A** — Segment-Toggle im Banner `[✉ Email | 📅 Kalender]`
-- **Individuelle User-Tokens** — jeder Mitarbeiter OAuth-verbindet sein persönliches Outlook-Postfach (kein Shared-Mailbox-Zwischenschritt, ursprüngliche „Phase 1" verworfen)
-- **CodeTwo für Signatur-Management** — server-seitig auf M365-Ebene, keine CRM-Signatur-Verwaltung
-- **Inline-Quick-Reply + Drawer für Compose-New/Reply-All/Forward** — Drawer-Default-Regel-Ausnahme für häufigsten Case (kurze Reply)
-- **Kalender-Team-Overlay zeigt nur frei/busy** — DSG-Datenschutz
-
-### Layout
-
-```
-HEADER (Brand + Breadcrumb + Theme)
-PAGE-BANNER (Titel + Meta + Mode-Segment + CTA)
-├─ EMAIL-MODE: 3-Pane (Folders 220px | Liste 340px | Reader flex)
-└─ KALENDER-MODE: 2-Pane (Sidebar 220px | Main flex, Tag/Woche/Monat-Views)
-DRAWERS (on-demand, 540px oder 760px)
-```
+Architektur-Entscheidungen: Layout A (Segment-Toggle `[✉ Email | 📅 Kalender]`) · individuelle User-Tokens (OAuth) · CodeTwo für Signatur · Inline-Quick-Reply + Drawer für Compose-New/Reply-All/Forward · Kalender-Team-Overlay nur frei/busy (DSG).
 
 ### 8 Drawer-Inventar
 
 | # | Drawer | Breite | Zweck |
 |---|--------|--------|-------|
 | 1 | Compose | 760px | Email schreiben · 3 Tabs |
-| 2 | Event | 760px | Termin öffnen/anlegen · 4 Tabs |
-| 3 | Create-Kandidat | 540px | Aus Email anlegen |
-| 4 | Create-Account | 540px | Aus Email anlegen |
-| 5 | Template-Picker | 540px | 38 Templates · 4 mit Automation |
-| 6 | Konten & Sync | 540px | OAuth · CodeTwo · Ignore-Liste |
+| 2 | Event | 760px | Termin · 4 Tabs |
+| 3 | Create-Kandidat | 540px | Aus Email |
+| 4 | Create-Account | 540px | Aus Email |
+| 5 | Template-Picker | 540px | 38 Templates · 4 Automation |
+| 6 | Konten & Sync | 540px | OAuth · CodeTwo · Ignore |
 | 7 | Entity-Match | 540px | Fuzzy-Scoring |
 | 8 | File-Attach | 760px | Dokumente aus CRM · 3 Tabs |
 
 ### Ordner-Modell
+Klassifiziert · Unbekannt · Inbox (Intern / Sonstige) · Ignoriert.
 
-| Ordner | Inhalt |
-|--------|--------|
-| Klassifiziert | Auto-Match auf Kandidat/Account via Adresse |
-| Unbekannt | Kein Match — wartet auf Labeling |
-| Inbox (Intern / Sonstige) | Manuell gelabelt (Team-intern, Dienstleister, Misc) |
-| Ignoriert | Ignore-Liste-Hits (Newsletter) |
+### Activity-Types (11 Emailverkehr-Einträge aus Stammdaten §14)
+Allgemeine Kommunikation · CV Chase · Absage Briefing · Absage Bewerbung · Absage vor GO Termin · Mündliche GOs versendet · Absage nach GO Termin · Schriftliche GOs · Eingangsbestätigung Bewerbung · Mandatskommunikation · AGB Verhandlungen.
 
-### Activity-Type-Katalog (verbindlich)
+### MS-Graph-Integration
+Endpoints `/api/v1/emails/*` + `/api/v1/email-templates/*` + `/api/v1/integrations/outlook/*`. Worker: `outlook.worker.ts` · `outlook-calendar-sync.worker.ts` · `email.worker.ts`. Events: `email.received|sent|bounced` · `interview_scheduled|rescheduled`. Idempotenz via `email_message_id`.
 
-Compose-Drawer Verknüpfung-Tab nutzt ausschliesslich die **11 Emailverkehr-Einträge** aus `ARK_STAMMDATEN_EXPORT_v1_3.md §14`: Allgemeine Kommunikation · CV Chase · Absage Briefing · Absage Bewerbung · Absage vor GO Termin · Mündliche GOs versendet · Absage nach GO Termin · Schriftliche GOs · Eingangsbestätigung Bewerbung · Mandatskommunikation · AGB Verhandlungen.
+---
 
-### Integration zu MS Graph
+## TEIL O — E-Learning-Modul Frontend (NEU v1.12, 2026-04-24)
 
-- Endpoints `/api/v1/emails/*` (send · send-with-template · inbox · drafts) + `/api/v1/email-templates/*` + `/api/v1/integrations/outlook/*`
-- Worker: `outlook.worker.ts` · `outlook-calendar-sync.worker.ts` · `email.worker.ts`
-- Events: `email.received` · `email.sent` · `email.bounced` · `interview_scheduled` · `interview_rescheduled`
-- Idempotenz via `email_message_id` (MS Graph)
+**Quellen-Specs:**
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_v0_1.md` (Sub A)
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_B_v0_1.md`
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_C_v0_1.md`
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_D_v0_1.md`
 
-### RBAC
+### O.1 Topbar-Toggle CRM ↔ ERP
 
-| Rolle | Email | Kalender | Konten | Templates |
-|-------|-------|----------|--------|-----------|
-| AM | full | eigen + Kollegen frei/busy | eigen | lesen |
-| CM | full | eigen + Kollegen frei/busy | eigen | lesen |
-| Researcher | read + reply | eigen | eigen | lesen |
-| Admin | alle User | alle User | alle | CRUD (nur Custom) |
-| Backoffice | read · Rechnungs-Thread | read | — | lesen |
+**Position:** links neben User-Avatar in globaler Topbar. Sichtbar auf allen Seiten (CRM + ERP).
 
-### Design-System-Konformität
+**Verhalten:**
+- Segmented-Control mit zwei Buttons: **CRM** | **ERP**
+- Aktiver Modus visuell hervorgehoben (Primärfarbe-Fill, weisser Text)
+- Klick wechselt Workspace: ändert Sidebar-Inhalt + Default-Route
+- Persistenz: letzter Modus pro User in `localStorage`
+- CRM-Default: `/crm/candidates.html` (bzw. letzte CRM-Route)
+- ERP-Default: `/erp/elearn/dashboard.html` (bzw. letzte ERP-Route)
 
-- Drawer-Default-Regel · Datum-Eingabe-Regel · Stammdaten-Wording-Regel · Keine-DB-Technikdetails-Regel · Umlaute-Regel · Arkadium-Rolle-Regel
-- Inline-Quick-Reply: dokumentierte Ausnahme der Drawer-Default-Regel (80/20 für kurze Reply)
+**Zugriffs-Rechte:** alle authentifizierten User sehen beide Modi; Sidebar-Items ohne Zugriff werden ausgeblendet.
+
+### O.2 ERP-Workspace-Struktur
+
+```
+/erp
+  /elearn        ← E-Learning (dieser Patch)
+  /hr            ← bestehender HR-ERP
+  /zeit          ← bestehender Zeit-ERP (v1.11)
+  /commission    ← bestehender Commission-ERP
+  /billing       ← bestehendes Billing-Modul
+```
+
+**ERP-Sidebar-Pattern** (identisch zu CRM-Sidebar): 240 px fixed-width links · Top-Logo Arkadium · Section-Header kollabierbar (Default offen) · Active-Item Primary-Fill · Icons aus `lucide-icons`.
+
+**ERP-Sidebar-Struktur E-Learning:**
+```
+── E-Learning
+   • Meine Kurse
+   • Mein Newsletter           (nach Sub C)
+   • Mein Compliance-Status    (nach Sub D)
+   ─ (Trenner, Head+Admin)
+   • Team-Übersicht
+   • Team-Compliance           (nach Sub D)
+   • Freitext-Queue
+   • Zuweisungen
+   ─ (Trenner, Admin only)
+   • Kurs-Katalog
+   • Curriculum-Templates
+   • Import-Dashboard
+   • Analytics
+   ─ (Trenner, Content-Gen)
+   • Content-Generator         (Sub B)
+   • Content-Sources
+   • Review-Queue
+   ─ (Trenner, Newsletter)
+   • Newsletter-Konfiguration  (Sub C)
+   • Newsletter-Archiv
+   • Newsletter-Queue
+   ─ (Trenner, Progress-Gate)
+   • Compliance-Dashboard      (Sub D)
+   • Gate-Rules
+   • Override-Verwaltung
+   • Gate-Audit-Log
+```
+
+### O.3 Neue Page-Templates (25+)
+
+Pfad: `mockups/erp/elearn/*.html`. Baseline-Styling = CRM (candidates.html).
+
+#### Sub A · MA-Pages (6)
+
+| Datei | Zweck |
+|---|---|
+| `dashboard.html` | Einstieg: Onboarding-Progress (neue MA) oder Tabs Pflicht/Empfohlen/Entdecken |
+| `course.html` | Kurs-Übersicht: Module-Liste, Progress-Ringe, Pre-Test-Button |
+| `lesson.html` | Markdown-Viewer + Embeds + Scroll-Tracker + Sticky-Footer |
+| `quiz.html` | Quiz-Runner mit 6 Fragen-Components |
+| `quiz-result.html` | Ergebnis + Feedback + Retry/Weiter |
+| `certificates.html` | Zertifikate-Grid + Badge-Wall |
+
+#### Sub A · Gemeinsame Pages (Head+Admin) (3)
+
+| Datei | Zweck |
+|---|---|
+| `team.html` | Team-Übersicht (Head: eigenes Team / Admin: tenant-weit) |
+| `freitext-queue.html` | Review-Queue + LLM-Vorschlag + Head-Override-Drawer |
+| `assignments.html` | Massen-Zuweisung (Sparte/Rolle/Kurs-Filter) |
+
+#### Sub A · Admin-only (4)
+`admin/courses.html` · `admin/curriculum.html` · `admin/imports.html` · `admin/analytics.html`
+
+#### Sub B · Admin-only (3)
+`admin/content-gen.html` (Job-Timeline + Cost-Widget) · `admin/content-gen-sources.html` (Upload/Web/CRM-Tabs) · `admin/content-gen-review.html` (Review-Queue + Drawer)
+
+#### Sub C · MA + Admin (5)
+`newsletter.html` (Aktuell/Archiv-Tabs) · `newsletter-issue.html` (Reader + Section-Timeline) · `admin/newsletter-config.html` · `admin/newsletter-archive.html` · `admin/newsletter-queue.html`
+
+#### Sub D · MA + Team + Admin (7)
+`gate.html` (Full-Screen-Gate bei Block) · `my/compliance.html` (MA-Self-View) · `team/compliance.html` (Head-Dashboard) · `admin/compliance.html` (Admin-Dashboard) · `admin/gate-rules.html` · `admin/gate-overrides.html` · `admin/gate-audit.html`
+
+### O.4 Neue Components
+
+#### O.4.1 Markdown-Renderer mit Embed-Blocks
+Lesson-Content + Newsletter-Sections. Standard-Markdown + Custom-Embed-Syntax:
+- `![[image.png]]` → `<img>` aus Content-Repo-Assets
+- `{% embed pdf="file.pdf" page=N %}` → embedded PDF-Viewer (PDF.js)
+- `{% embed youtube="ID" %}` → YouTube-iframe
+
+Server-side Markdown-to-HTML beim Import, Embed-Blocks zu Platzhaltern, Client-side Komponenten-Mount.
+
+#### O.4.2 Scroll-Tracker-Hook
+**API:** `useScrollTracker({ lessonId, minReadSeconds, onComplete })`
+- Trackt max `scroll_pct` pro Lesson/Section
+- Trackt aktive `time_sec` (pausiert bei Tab-Unfocus via `visibilitychange`)
+- Heartbeat alle 15 s via `POST /api/elearn/my/lessons/:lid/progress` (Sub A) bzw. 10 s für Newsletter-Sections (Sub C)
+- Callback `onComplete` bei `scroll_pct ≥ 90` UND `time_sec ≥ minReadSeconds`
+
+#### O.4.3 Quiz-Runner Components (6)
+
+| Component | Typ |
+|---|---|
+| `<QuizQuestionMC>` | Radio-Buttons |
+| `<QuizQuestionMulti>` | Checkboxes |
+| `<QuizQuestionTrueFalse>` | Zwei grosse Buttons |
+| `<QuizQuestionZuordnung>` | Drag-Drop Left→Right |
+| `<QuizQuestionReihenfolge>` | Drag-Drop Vertikal-Sort |
+| `<QuizQuestionFreitext>` | Textarea + Char-Counter |
+
+**Gemeinsame API:** `{ question, value, onChange, disabled }`.
+
+#### O.4.4 Freitext-Review-Drawer (Sub A)
+540 px Slide-in. Sections: Frage · Musterlösung (readonly) · Keywords (Chips) · MA-Antwort (readonly) · LLM-Vorschlag (Score-Bar farbkodiert + Feedback-Text) · Head-Override (Score-Slider 0-100 vorgefüllt + Feedback-Textarea) · Action-Buttons.
+
+**Shortcuts:** `J`/`K` next/prev · `Enter` LLM bestätigen · `O` Override-Fokus · `Esc` schliessen.
+
+#### O.4.5 Review-Drawer (Sub B)
+540 px. Tabs: **Preview** (rendered Markdown/YAML) · **Source** (raw, editierbar) · **Chunks** (Similarity-Score-Liste) · **Diff** (Side-by-Side).
+
+**Editor:** CodeMirror mit Markdown/YAML-Syntax-Highlighting + Schema-Validation. Live-Diff gegen Original-Draft.
+
+**Shortcuts:** `A` Freigeben · `R` Ablehnen · `E` Bearbeiten · `P` Direkt publishen · `J`/`K` next/prev · `Esc`.
+
+#### O.4.6 Newsletter-Reader (Sub C)
+Single-page scroll, Max-Width 720 px Reading-Column:
+- Hero-Titel + Subtitle mit Lese-Fortschritt (2/4 Sections)
+- Left-Rail Section-Timeline (IntersectionObserver + Scroll-Spy, Checkmark bei `read_at`)
+- Enforcement-Badge oben rechts (`soft`=orange „Erinnerung" / `hard`=rot „Pflicht-Lock")
+- Sticky-Footer mit Quiz-Button (disabled bis alle Sections `read_at`)
+- Quiz → `POST /quiz/start` → Weiterleitung zu Sub-A-Quiz-Runner
+
+**Shortcuts:** `Space`/`PageDown` nächste Section · `PageUp` vorherige · `Q` Quiz starten · `Esc` zurück.
+
+#### O.4.7 Countdown-Widget (Sub C)
+Zeigt „noch X Tage" bis Deadline. Farbcodierung: grün > 3 Tage · gelb 1-3 · rot < 1 Tag/überfällig. Tooltip mit konkretem Datum.
+
+#### O.4.8 Enforcement-Badge (Sub C)
+`soft` → orange Pill „Erinnerung" · `hard` → rote Pill „Pflicht-Lock".
+
+#### O.4.9 Sparte-Chip (Sub C)
+Cross-Module-Farbcodierung: ARC=#D32F2F · GT=#1976D2 · ING=#388E3C · PUR=#7B1FA2 · REM=#F57C00 · uebergreifend=#616161.
+
+#### O.4.10 State-spezifische Card-Visuals (Sub A Dashboard)
+
+| State | Visual |
+|---|---|
+| Gesperrt (Step-Lock) | Ausgegraut + Schloss-Icon + Tooltip |
+| Nicht gestartet | „Jetzt starten" + Progress-Ring 0 % |
+| In Arbeit | Progress-Ring X % + Modul-Stand |
+| Quiz in Prüfung | Badge „In Prüfung" + Progress eingefroren |
+| Abgeschlossen | Checkmark + „Erneut anschauen" |
+| Refresher fällig | Gelbes Badge „Refresher fällig" + Deadline |
+| Deadline überschritten | Rotes Badge „Überfällig" |
+
+#### O.4.11 Cost-Widget (Sub B)
+Progress-Bar Verbrauch/Cap · Farbcodierung: grün < 80 %, gelb 80-95 %, rot ≥ 95 % · Tooltip Top-5-Jobs · Klick → Cost-Detail-Modal (Aggregation nach Source-Kind).
+
+#### O.4.12 Global Components Sub D (CRM + ERP)
+
+**Login-Popup** (nach erfolgreichem Login):
+- 540 px, Fokus-Trap, `aria-modal="true"`
+- Trigger: `pending_items >= settings.login_popup_min_items` via `/api/elearn/my/gate-status`
+- Buttons: „Zu meinen Aufgaben" (primary, `Enter`) · „Später" (disabled wenn `blocks_active`, `Esc`)
+
+**Topbar-Gate-Badge:**
+- Icon: Checkliste mit Count-Badge (rot bei Pflicht, orange bei Soft)
+- Hover: Mini-Popover Top-5 pending Items
+- Klick: `/erp/elearn/dashboard.html` (MA) bzw. `/erp/elearn/admin/compliance.html` (Admin/Head)
+- Conditional: nur sichtbar wenn `pending_items > 0`
+
+**Dashboard-Banner (Sub A Dashboard):**
+- Gelb bei Soft, rot bei Hard
+- „Ausblenden" snoozt 30 Min (localStorage)
+- Klickbar pro Item → Direct Navigation
+
+#### O.4.13 HTTP-Interceptor (Sub D)
+
+Globaler Axios/Fetch-Interceptor:
+```ts
+interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 403 && error.response.data?.error === 'GATE_BLOCKED') {
+      const { rule_id, redirect_to } = error.response.data;
+      window.location.href = redirect_to;  // → /erp/elearn/gate.html?rules=<id>
+      return;
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+**Ausnahme:** eigene Gate-Status-Calls (`/api/elearn/my/gate-status`) fangen den Fehler selbst ab.
+
+### O.5 Design-System-Konformität (E-Learning-Regeln)
+
+- **Umlaute:** UTF-8 echte ä/ö/ü/Ä/Ö/Ü/ß (nie `ae`/`oe`/`ue`/`ss`)
+- **Drawer-Default-Regel:** 540 px Slide-in für CRUD / Bestätigungen / Mehrschritt. Modale nur für kurze Confirms / Blocker / System-Notifications
+- **Datum-Eingabe-Regel:** nativer `<input type="date">`/`datetime-local`/`time` (Picker UND Tastatur-Eingabe)
+- **Keine DB-Technikdetails** in User-facing-Texten: keine `dim_*`/`fact_*`/`_fk`/`_id`. UI-Label-Vocabulary aus Stammdaten-Patch
+- **Admin-/Debug-Ausnahmen:** wrappen mit `<!-- ark-lint-skip:begin reason=admin-elearn -->…<!-- ark-lint-skip:end -->`
+- **Gate-Page-Regel:** darf Gate-Rule-Namen (Admin-frei formulierbar) zeigen, aber keine Feature-Keys (technisch `create_candidate`). Stattdessen dynamische deutsche Labels
+- **Admin-Audit-Page** darf Feature-Keys und Rule-Namen zeigen (Admin-Kontext)
+
+### O.6 Base-Tokens (identisch CRM)
+
+- Primary: Arkadium-Blau
+- Score-Farbcodierung: rot < 50, gelb 50-79, grün ≥ 80 (cross-Module)
+- Lock-State: neutral-grey-400 + Schloss-Icon
+- Spacing: 8 px Grid
+- Component-Kits: Base wie CRM (Shadcn-basiert)
+
+### O.7 Responsive-Breakpoints
+
+- **Desktop (≥ 1280 px):** Full-Layout, Tabellen mehrspaltig, Drawer rechts
+- **Tablet (768-1279 px):** Tabellen Horizontal-Scroll, Drawer Full-Width-Bottom
+- **Mobile:** Gate-Page + Login-Popup mobile-optimiert · andere E-Learning-Pages Phase-2/3
+- Newsletter-Reader Mobile: Section-Timeline horizontal-scroll oben, Column 100 %
+
+### O.8 A11y
+
+- Gate-Page: `role="alertdialog"` mit ARIA-Describe auf pending Items
+- Login-Popup: Fokus-Trap, `aria-modal="true"`
+- Compliance-Score-Gauge: ARIA-Live bei Wert-Änderung
+- Quiz-Runner: ARIA-Live-Regionen für Score-Announcements
+- Section-Timeline: ARIA-Tree-Role
+- Countdown-Widget: ARIA-Live bei Status-Wechsel (< 1 Tag)
+- Quiz-Start-Button: `aria-disabled` + Tooltip warum disabled
+- Farb-Codierung nicht alleiniger Info-Träger (Icons + Text redundant)
+- Focus-Management: nach Drawer-Close Fokus zurück auf Zeilen-Row
+
+### O.9 Keyboard-Shortcuts Übersicht (E-Learning)
+
+| Kontext | Shortcuts |
+|---|---|
+| Quiz-Runner | Tab-Navigation, Enter-Submit |
+| Freitext-Review-Drawer (Sub A) | `J`/`K` next/prev · `Enter` LLM bestätigen · `O` Override · `Esc` |
+| Review-Queue (Sub B) | `A`/`R`/`E`/`P` Aktionen · `J`/`K` · `Esc` |
+| Newsletter-Reader (Sub C) | `Space`/`PageDown`/`PageUp` · `Q` Quiz · `Esc` |
+| Newsletter-Archive-Drawer (Sub C) | `J`/`K` · `P` Publish · `A` Archive · `Esc` |
+| Compliance-Dashboard (Sub D) | `F` Filter · `E` Export · `J`/`K` |
+| Gate-Rules-Editor (Sub D) | `N` Neue Rule · `D` Disable · `E` Edit |
+| Login-Popup (Sub D) | `Enter` primary · `Esc` wenn enabled |
+
+### O.10 Cross-Module-Integration
+
+- **Topbar-Tab „E-Learning" 🎓** in alle 6 anderen Shells integriert (crm/hr/zeit/commission/billing/elearn)
+- **postMessage-Theme-Sync:** Broadcast in 6 Shells, Message-Listener in 65+ Content-Pages (ab E-Learning-Release 2026-04-24)
+- **Shared `_shared/theme-sync.js`** vorhanden, Referenzierung in Folge-Session
 
 ---
 
 ## Pointer to Full Source
 
-Für die folgenden Details das Original-Dokument `C:\ARK CRM\Grundlagen MD\ARK_FRONTEND_FREEZE_v1_10.md` konsultieren:
+Für folgende Details das Original-Dokument `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_12.md` konsultieren:
 
 | Thema | §-Section | Was fehlt hier |
 |---|---|---|
-| Exakte CSS-Pixel, Padding, Margins | §8, §8b, §8c | Nur Drawer 540px, Snapshot sticky top:0/64px und Electron min 1024×700 hier lossless |
-| Animation-Timings, Motion-Details | §8.2 | Weggelassen (reduced-motion-Prinzip genügt) |
+| Exakte CSS-Pixel, Padding, Margins | §8, §8b, §8c | Nur Drawer 540px + Snapshot sticky top:0/64px hier lossless |
+| Animation-Timings | §8.2 | Weggelassen (reduced-motion-Prinzip genügt) |
 | Density-Padding-Werte kompakt/normal/komfort | §8.1 | Nur Modus-Namen hier |
-| ESLint Boundaries Importregeln vollständig | §24c | Namenskonventionen hier, Detail-Matrix dort |
-| Ordnerstruktur vollständig mit Kommentaren | §5 | Nur Top-Level-Stores/Hooks/Shared hier |
+| ESLint Boundaries Importregeln | §24c | Nur Namenskonventionen hier |
+| Ordnerstruktur vollständig | §5 | Nur Top-Level-Stores/Hooks/Shared hier |
 | Toast Error-Code-Mapping vollständig | §12 | Nur Prioritätsmatrix + Dedup hier |
-| Electron IPC preload.ts Beispielcode | §14.1 | contextIsolation/sandbox/true Flags hier, Code dort |
-| CSP-Header vollständig (default-src, connect-src etc.) | §11d | Nur dass CSP gesetzt wird hier |
-| OpenAPI Codegen + ts-to-zod Setup-Befehle | §11e, §25 | Kommandos nicht vollständig hier |
-| DataTable A11y `role="grid"` Details | §9.1, §22 | Regel-Liste hier, ARIA-Attribute dort |
-| Schema-SQL (bridge_briefing_projects etc.) | §4d.5 | Nur Hinweis dass es Schema-Änderungen gibt |
-| Assessment-Chart-Mapping-Tabelle (DISC Ringdiagramm etc.) | §4d.6 | Tab-Struktur hier, Chart-Bibliothek-Mapping dort |
-| Scraper Confidence-Schwellen, WebSocket-Latenz | §4d.8 | Hier lossless enthalten |
-| Dashboard Empty-State Copy-Text | §4b | Nur Block-Struktur hier |
-| Placement-Modal TX-Schritte / Saga-Zusammenspiel | "Placement-Modal" nach §4d.8 | Stichwort hier, 8 Saga-Steps in Backend v2.5 TX1 |
+| Electron IPC preload.ts Beispielcode | §14.1 | Nur Flags hier |
+| CSP-Header vollständig | §11d | Nur dass CSP gesetzt wird hier |
+| OpenAPI Codegen + ts-to-zod Setup | §11e, §25 | Nur Erwähnung hier |
+| DataTable A11y `role="grid"` Details | §9.1, §22 | Regel-Liste hier |
+| Schema-SQL Schnipsel | §4d.5 | Nur Hinweis hier |
+| Assessment-Chart-Mapping-Tabelle | §4d.6 | Nur Tab-Struktur hier |
+| Dashboard Empty-State Copy | §4b | Nur Block-Struktur hier |
+| Placement-Modal 8 Saga-Steps | "Placement-Modal" nach §4d.8 | Stichwort hier, Detail in Backend v2.5 TX1 |
+| E-Learning Page-Content-Details | TEIL O.3 (pro Page) | Page-Pfad + Zweck hier lossless, Layout-Details in Sub-Specs |
 
 ---
 
 **Digest-Meta:**
-- Quelle: 3850 Zeilen, ~110 kTok
-- Digest: ca. 450 Zeilen, geschätzt 8–10 kTok
-- Lossless: Routing, Detailmasken+Tabs, Drawer-Regel 540px, Snapshot-Slots, Color-Tokens, Component-Inventory, Interaction-Pattern-§-Numbers, 22 Grundregeln (kurz), Keyboard-Shortcuts v1.10, Build-Wellen.
+- Quelle: 4475 Zeilen, ~130 kTok
+- Digest: ca. 620 Zeilen, geschätzt 11–13 kTok
+- Lossless: Routing (CRM + ERP), Detailmasken+Tabs, Drawer-Regel 540px, Snapshot-Slots, Color-Tokens inkl. Sparte-Chip, Component-Inventory, Interaction-Pattern-§-Numbers, 22 Grundregeln (kurz), Keyboard-Shortcuts v1.10 + E-Learning, Build-Wellen, TEIL O (Topbar-Toggle, ERP-Sidebar, 25+ Page-Templates, Components + APIs, HTTP-Interceptor, Shortcut-Tabellen, Design-System-Konformität).
 - Summiert: CSS-Pixel/Paddings/Animations/Prose-Erklärungen/Schema-SQL/Code-Beispiele/Dashboard-Copy.

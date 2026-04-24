@@ -1,7 +1,8 @@
-# ARK CRM — Stammdaten-Export v1.3
+# ARK CRM — Stammdaten-Export v1.5
 
-**Stand:** 2026-04-14
-**Vorgänger:** v1.2 (2026-03-30)
+**Stand:** 2026-04-24
+**Vorgänger:** v1.4 (2026-04-19 · Zeit-Modul intern) / v1.3 (2026-04-14)
+**Scope v1.5:** Activity-Types-Patch (v1.4) + E-Learning-Modul A/B/C/D
 
 ## Änderungen v1.2 → v1.3
 
@@ -2744,3 +2745,457 @@ Default laut Reglement Generalis Provisio §6.2.1 = **Zürcher Skala**. Alternat
 
 - **v1.3 (2026-04-17):** dim_document_templates + RPO-Offerte-Exklusion
 - **v1.4 (2026-04-19):** Zeit-Modul-Stammdaten (§90) · 30 Abwesenheitstypen · 12 Zeit-Kategorien · 5 Arbeitszeit-Modelle · ZH-Feiertage 2026 · Zürcher/Berner Skala · Scanner-Integration · 19 firm_settings
+- **v1.5 (2026-04-24):** Activity-Types-Patch (§91) + E-Learning-Modul Sub A/B/C/D (§92-§95). 18 → 19 Activity-Kategorien (+`elearning`). +37 Activity-Types Activity-Patch (#70-#106) + 40 E-Learning Activity-Types (#107-#146). Neue Kataloge `dim_event_types` (~113 Rows) + `fact_system_log` (15 Ops-Events). 25 neue E-Learning-Enums. UI-Label-Vocabulary für `wiki/meta/mockup-baseline.md §16`.
+
+---
+
+# TEIL C (§91) — Activity-Types-Patch v1.3 → v1.4 (2026-04-17)
+
+**Quelle:** `specs/ARK_STAMMDATEN_PATCH_v1_3_to_v1_4_ACTIVITY_TYPES.md`
+**Basis-Spec:** `specs/ARK_SYSTEM_ACTIVITY_TYPES_SCHEMA_v1.md`
+**Decisions:** `specs/ARK_SYSTEM_ACTIVITY_TYPES_DECISIONS_v1_3.md`
+
+## §91.1 Neue Kategorien-Liste (ersetzt „11 Kategorien" im Header)
+
+```
+18 Kategorien (vor E-Learning):
+ 1 Kontaktberührung       2 Erreicht             3 Emailverkehr
+ 4 Messaging              5 Interviewprozess     6 Placementprozess
+ 7 Refresh Kandidatenpflege  8 Mandatsakquise   9 Erfolgsbasis
+10 Assessment            11 System / Meta       12 Kalender & Planung (NEU v1.4)
+13 Dokumenten-Pipeline (NEU v1.4)  14 Garantie & Schutzfrist (NEU v1.4)
+15 Scraper & Intelligence (NEU v1.4)  16 Pipeline-Transitions (NEU v1.4)
+17 Saga-Events (NEU v1.4)     18 AI & LLM (NEU v1.4)
+```
+
+## §91.2 Neue Spalten `dim_activity_types`
+
+```
+actor_type:     user | system | automation | integration
+source_system:  threecx | outlook | gmail | scraper | llm | saga-engine |
+                nightly-batch | event-worker | manual-upload | calendar-integration
+is_notifiable:  true = In-App-Notification beim Process-Owner / false = stumm
+```
+
+## §91.3 Row-Ergänzungen in bestehenden Sektionen (4 neue Rows)
+
+| # | Activity Type | Kategorie | Kanal | actor_type | source_system | is_notifiable |
+|---|---|---|---|---|---|---|
+| 103 | Emailverkehr - Bounce | Emailverkehr | Email | integration | outlook | false |
+| 104 | Assessment - Credit verbraucht | Assessment | System | automation | event-worker | false |
+| 105 | Placementprozess - Referral ausgelöst | Placementprozess | System | automation | saga-engine | true |
+| 106 | System - Kandidat anonymisiert (GDPR) | System / Meta | System | automation | nightly-batch | false |
+
+## §91.4 Neue Kategorie-Blöcke (33 Rows #70-#102)
+
+**Kalender & Planung (3):** #70 Interview geplant · #71 Reminder Interview bevor · #72 Reminder Interview-Datum fehlt
+
+**Dokumenten-Pipeline (5):** #73 Hochgeladen · #74 CV automatisch geparst · #75 OCR abgeschlossen · #76 Vektorindex aufgenommen · #77 Neu geparst
+
+**Garantie & Schutzfrist (7):** #78 Garantiefrist gestartet · #79 Garantiefrist erfüllt · #80 Garantiefrist gebrochen · #81 Reminder Garantie läuft ab · #82 Schutzfrist gestartet · #83 Schutzfrist auf 16 Mt verlängert · #84 Schutzfrist Claim eröffnet
+
+**Scraper & Intelligence (6):** #85 Neue Person bei Account · #86 Person hat Account verlassen · #87 Neue Job-Stelle erkannt · #88 Rollenänderung erkannt · #89 Eintrag importiert · #90 Schutzfrist-Match erkannt
+
+**Pipeline-Transitions Auto (8):** #91 Jobbasket Mündliches GO · #92 Schriftliches GO · #93 Zuweisung abgeschlossen · #94 Versandbereit · #95 CV an Kunde versendet · #96 Stage automatisch gewechselt · #97 Stale erkannt · #98 Automatisch abgelehnt
+
+**Saga-Events (1):** #99 Placement Vollständig abgeschlossen (Saga V7 · Sub-Drawer mit V1-V6 aus `fact_system_log`)
+
+**AI & LLM (3):** #100 Briefing aus Transkript befüllt · #101 Call-Transkription fertig · #102 Activity-Type-Vorschlag
+
+Vollständige Seed-Daten (alle Spalten inkl. Beschreibung): siehe `specs/ARK_STAMMDATEN_PATCH_v1_3_to_v1_4_ACTIVITY_TYPES.md §Neue Sektionen`.
+
+## §91.5 Statistik-Block (neu berechnet)
+
+```
+Total Activity-Types:           106  (+37 v1.4 System-Activities)
+  davon is_auto_logged = true:   38
+  davon is_auto_logged = false:  68
+Kategorien:                      18  (11 v1.3 + 7 neue)
+
+actor_type-Verteilung:
+  user          ~68    automation    ~24
+  integration   ~10    system         ~4
+
+entity_relevance-Verteilung:
+  candidate-only: ~52   account-only: ~22   both: ~32
+
+source_system-Verteilung (nur actor_type <> 'user'):
+  event-worker ~13 · nightly-batch ~8 · saga-engine ~5
+  scraper ~6 · llm ~4 · outlook ~1 · calendar-integration ~1
+```
+
+## §91.6 §14c NEU — `dim_event_types` (Event-Katalog ~61 Rows)
+
+Mapping Event-Name → Activity-Type (oder `fact_system_log`). Domänen-Übersicht:
+
+| event_domain | # Events | Beispiel |
+|--------------|----------|----------|
+| candidate | 2 | `candidate.stage_changed` |
+| process | 4 | `process.stage_changed`, `process.stale_detected`, `process.auto_rejected`, `process.placement_completed` |
+| jobbasket | 5 | `jobbasket.go_oral`, `jobbasket.cv_sent` |
+| guarantee | 4 | `guarantee.started`, `guarantee.breached` |
+| protection_window | 3 | `protection_window.started`, `direct_hire_claim.opened` |
+| scrape | 6 | `scrape.new_person`, `scrape.role_changed` |
+| document | 5 | `document.uploaded`, `document.cv_parsed` |
+| email | 3 | `email.sent`, `email.received`, `email.bounced` |
+| call | 2 | `call.transcript_ready`, `call.missed` |
+| assessment | 3 | `assessment.link_sent`, `assessment.credit_consumed` |
+| ai | 3 | `briefing.auto_filled`, `history.classification_suggested` |
+| saga | 8 | `saga.v1_stage_placement` … `saga.failure` |
+| system | 7 | `temperature.updated`, `circuit_breaker.tripped` |
+| reminder | 3 | `reminder.interview_upcoming`, `reminder.guarantee_expiring` |
+| finance | 2 | `finance.calculation_triggered`, `finance.refund_calculated` |
+| referral | 1 | `referral.triggered` |
+
+**Total ~61 Event-Types** — 46 → `fact_history` (via Activity-Type-Mapping), 15 → `fact_system_log` (Ops-only).
+
+## §91.7 §14d NEU — `fact_system_log` (15 Ops-only Events)
+
+Keine `dim_activity_types`-Row. `target_table='fact_system_log'`, nur in Admin-Debug-Tab (`/admin/system-log`):
+
+| event_name | severity | emitter |
+|-----------|----------|---------|
+| `saga.v1_stage_placement` | info | saga-engine |
+| `saga.v2_finance_calculated` | info | saga-engine |
+| `saga.v3_job_filled` | info | saga-engine |
+| `saga.v4_guarantee_opened` | info | saga-engine |
+| `saga.v5_referral_triggered` | info | saga-engine |
+| `saga.v6_staffing_plan_updated` | info | saga-engine |
+| `saga.failure` | error | saga-engine |
+| `temperature.updated` | debug | nightly-scoring-batch |
+| `matching.scores_recomputed` | debug | matching-recompute-worker |
+| `staffing_plan.updated` | info | project-staffing-worker |
+| `webhook.triggered` | info | webhook-dispatcher |
+| `dead_letter.alert` | error | event-queue-monitor |
+| `process.duplicate_detected` | warn | process-creation-guard |
+| `circuit_breaker.tripped` | critical | automation-engine |
+| `retention.warning` | warn | gdpr-retention-batch |
+
+**Retention:** 180 Tage Prod / 30 Tage Test / 7 Tage Dev. Key: `dim_automation_settings.system_log_retention_days`.
+
+---
+
+# TEIL D (§92) — E-Learning Sub A · Kurs-Katalog (v0.1 → 2026-04-24)
+
+**Quelle:** `specs/ARK_STAMMDATEN_PATCH_ELEARNING_v0_1.md`
+**Basis-Specs:** `specs/ARK_E_LEARNING_SUB_A_SCHEMA_v0_1.md`, `…_INTERACTIONS_v0_1.md`
+
+## §92.1 Neue Activity-Category `elearning` (19. Kategorie)
+
+**CHECK-Erweiterung `dim_activity_types.activity_category`:**
+
+```sql
+ALTER TABLE dim_activity_types DROP CONSTRAINT IF EXISTS dim_activity_types_activity_category_check;
+ALTER TABLE dim_activity_types ADD CONSTRAINT dim_activity_types_activity_category_check
+  CHECK (activity_category IN (
+    'Kontaktberührung','Erreicht','Emailverkehr','Messaging',
+    'Interviewprozess','Placementprozess','Refresh Kandidatenpflege',
+    'Mandatsakquise','Erfolgsbasis','Assessment','System',
+    'Kalender & Planung','Dokumenten-Pipeline','Garantie & Schutzfrist',
+    'Scraper & Intelligence','Pipeline-Transitions','Saga-Events','AI & LLM',
+    'elearning'  -- NEU v1.5
+  ));
+```
+
+**CHECK-Erweiterung `dim_event_types.event_category`:** `+'elearning'`.
+
+## §92.2 Neue Enums Sub A (8)
+
+**`elearn_assignment_reason`** (5): `onboarding` · `adhoc` · `refresher` · `role_change` · `sparten_change`
+
+**`elearn_assignment_status`** (4): `active` · `completed` · `expired` · `cancelled`
+
+**`elearn_attempt_kind`** (3): `module` · `pretest` · `newsletter` (`newsletter` ab Sub C aktiv)
+
+**`elearn_attempt_status`** (3): `in_progress` · `pending_review` · `finalized`
+
+**`elearn_review_status`** (4): `pending` · `confirmed` · `overridden` · `confirmed_auto`
+
+**`elearn_question_type`** (6): `mc` · `multi` · `freitext` · `truefalse` · `zuordnung` · `reihenfolge`
+
+**`elearn_course_status`** (3): `draft` · `published` · `archived`
+
+**`elearn_badge_type`** (4 Initial, erweiterbar): `first_course` · `all_onboarding` · `sparte_expert` · `streak_7`
+
+## §92.3 Activity-Types-Seed Sub A (11 Rows #107-#117)
+
+| # | activity_type_name | activity_category | activity_channel | is_auto_loggable |
+|---|---|---|---|---|
+| 107 | elearn_assigned | elearning | CRM | true |
+| 108 | elearn_started | elearning | CRM | true |
+| 109 | elearn_completed | elearning | CRM | true |
+| 110 | elearn_quiz_passed | elearning | CRM | true |
+| 111 | elearn_quiz_failed | elearning | CRM | true |
+| 112 | elearn_cert | elearning | System | true |
+| 113 | elearn_badge | elearning | System | true |
+| 114 | elearn_refresher | elearning | System | true |
+| 115 | elearn_role_change | elearning | System | true |
+| 116 | elearn_expired | elearning | System | true |
+| 117 | elearn_onboarding_done | elearning | CRM | true |
+
+## §92.4 Event-Types-Seed Sub A (16 Rows)
+
+| event_name | create_history | default_activity_type |
+|---|---|---|
+| `elearn_course_assigned` | true | elearn_assigned |
+| `elearn_course_started` | true | elearn_started |
+| `elearn_course_completed` | true | elearn_completed |
+| `elearn_lesson_completed` | false | — |
+| `elearn_quiz_attempted` | false | — |
+| `elearn_quiz_passed` | true | elearn_quiz_passed |
+| `elearn_quiz_failed` | true | elearn_quiz_failed |
+| `elearn_freitext_submitted` | false | — |
+| `elearn_freitext_reviewed` | false | — |
+| `elearn_certificate_issued` | true | elearn_cert |
+| `elearn_badge_earned` | true | elearn_badge |
+| `elearn_refresher_triggered` | true | elearn_refresher |
+| `elearn_role_change_triggered` | true | elearn_role_change |
+| `elearn_assignment_expired` | true | elearn_expired |
+| `elearn_onboarding_finalized` | true | elearn_onboarding_done |
+| `elearn_content_imported` | false | — |
+
+## §92.5 UI-Label-Vocabulary Sub A
+
+Kanonische Mappings (für `wiki/meta/mockup-baseline.md §16`):
+
+| Enum-Wert | UI-Label (DE) |
+|---|---|
+| `assignment_reason=onboarding` | Onboarding |
+| `assignment_reason=adhoc` | Einmalige Zuweisung |
+| `assignment_reason=refresher` | Refresher |
+| `assignment_reason=role_change` | Rollen-Wechsel |
+| `assignment_reason=sparten_change` | Sparten-Wechsel |
+| `assignment_status=active` | Aktiv |
+| `assignment_status=completed` | Abgeschlossen |
+| `assignment_status=expired` | Überfällig |
+| `assignment_status=cancelled` | Zurückgezogen |
+| `attempt_kind=module` | Modul-Quiz |
+| `attempt_kind=pretest` | Pre-Test |
+| `attempt_kind=newsletter` | Newsletter-Quiz |
+| `attempt_status=in_progress` | In Bearbeitung |
+| `attempt_status=pending_review` | In Prüfung |
+| `attempt_status=finalized` | Ausgewertet |
+| `review_status=pending` | Offen |
+| `review_status=confirmed` | Bestätigt |
+| `review_status=overridden` | Überschrieben |
+| `review_status=confirmed_auto` | Automatisch bestätigt |
+| `course_status=draft` | Entwurf |
+| `course_status=published` | Veröffentlicht |
+| `course_status=archived` | Archiviert |
+| `badge_type=first_course` | Erster Kurs |
+| `badge_type=all_onboarding` | Onboarding-Champion |
+| `badge_type=sparte_expert` | Sparten-Experte |
+| `badge_type=streak_7` | Lern-Streak (7 Tage) |
+
+---
+
+# TEIL E (§93) — E-Learning Sub B · Content-Generator (v0.1)
+
+**Quelle:** `specs/ARK_STAMMDATEN_PATCH_ELEARNING_SUB_B_v0_1.md`
+
+## §93.1 Neue Enums Sub B (8)
+
+**`elearn_source_kind`** (5): `pdf` · `docx` · `book` · `web_url` · `crm_query`
+
+**`elearn_source_priority`** (3): `low` · `normal` · `high`
+
+**`elearn_job_status`** (5): `pending` · `running` · `ready_for_review` · `completed` · `failed`
+
+**`elearn_job_triggered_by`** (3): `scheduled` · `manual` · `event`
+
+**`elearn_artifact_type`** (5): `course_meta` · `module` · `lesson` · `quiz_question` · `quiz_pool`
+
+**`elearn_artifact_status`** (5): `draft` · `approved` · `rejected` · `published` · `superseded`
+
+**`elearn_review_action`** (5): `approve` · `reject` · `edit` · `delete` · `publish`
+
+**`elearn_publish_mode`** (2): `direct` · `pr`
+
+## §93.2 Activity-Types-Seed Sub B (10 Rows #118-#127)
+
+| # | activity_type_name | activity_category | activity_channel | is_auto_loggable |
+|---|---|---|---|---|
+| 118 | elearn_source_registered | elearning | System | true |
+| 119 | elearn_source_failed | elearning | System | true |
+| 120 | elearn_job_started | elearning | System | true |
+| 121 | elearn_job_completed | elearning | System | true |
+| 122 | elearn_job_failed | elearning | System | true |
+| 123 | elearn_artifact_approved | elearning | CRM | true |
+| 124 | elearn_artifact_rejected | elearning | CRM | true |
+| 125 | elearn_artifact_edited | elearning | CRM | true |
+| 126 | elearn_artifact_published | elearning | System | true |
+| 127 | elearn_cost_cap | elearning | System | true |
+
+## §93.3 Event-Types-Seed Sub B (12 Rows)
+
+`elearn_source_registered` · `elearn_source_ingested` · `elearn_source_ingest_failed` · `elearn_generation_job_started` · `elearn_generation_job_completed` · `elearn_generation_job_failed` · `elearn_artifact_created` · `elearn_artifact_approved` · `elearn_artifact_rejected` · `elearn_artifact_edited` · `elearn_artifact_published` · `elearn_cost_cap_exceeded`
+
+## §93.4 UI-Label-Vocabulary Sub B
+
+| Enum-Wert | UI-Label (DE) |
+|---|---|
+| `source_kind=pdf` | PDF-Dokument |
+| `source_kind=docx` | Word-Dokument |
+| `source_kind=book` | Buch |
+| `source_kind=web_url` | Web-Quelle |
+| `source_kind=crm_query` | CRM-Abfrage |
+| `source_priority=low/normal/high` | Niedrig / Normal / Hoch |
+| `job_status=pending` | Wartet |
+| `job_status=running` | Läuft |
+| `job_status=ready_for_review` | Zur Prüfung |
+| `job_status=completed` | Abgeschlossen |
+| `job_status=failed` | Fehler |
+| `job_triggered_by=scheduled/manual/event` | Automatisch / Manuell / Ereignis-gesteuert |
+| `artifact_type=course_meta/module/lesson/quiz_question/quiz_pool` | Kurs-Metadaten / Modul / Lesson / Quiz-Frage / Quiz-Pool |
+| `artifact_status=draft/approved/rejected/published/superseded` | Entwurf / Freigegeben / Abgelehnt / Veröffentlicht / Überholt |
+| `review_action=approve/reject/edit/delete/publish` | Freigeben / Ablehnen / Bearbeiten / Löschen / Publizieren |
+| `publish_mode=direct/pr` | Direkt-Commit / Pull-Request |
+
+---
+
+# TEIL F (§94) — E-Learning Sub C · Wochen-Newsletter (v0.1)
+
+**Quelle:** `specs/ARK_STAMMDATEN_PATCH_ELEARNING_SUB_C_v0_1.md`
+
+## §94.1 Neue Enums Sub C (5)
+
+**`elearn_newsletter_section_type`** (6): `market_news` · `crm_insights` · `deep_dive` · `spotlight` · `trend_watch` · `ma_highlight`
+
+**`elearn_newsletter_status`** (4): `draft` · `review` · `published` · `archived`
+
+**`elearn_newsletter_assignment_status`** (6): `pending` · `reading` · `quiz_in_progress` · `quiz_passed` · `quiz_failed` · `expired`
+
+**`elearn_newsletter_subscription_mode`** (3): `auto` · `opt_in` · `opt_out`
+
+**`elearn_newsletter_enforcement_mode`** (2): `soft` · `hard`
+
+**Sub-A-Aktivierung:** `elearn_attempt_kind='newsletter'` ab jetzt produktiv.
+
+## §94.2 Activity-Types-Seed Sub C (9 Rows #128-#136)
+
+| # | activity_type_name | activity_category | activity_channel | is_auto_loggable |
+|---|---|---|---|---|
+| 128 | elearn_nl_published | elearning | System | true |
+| 129 | elearn_nl_assigned | elearning | System | true |
+| 130 | elearn_nl_quiz_passed | elearning | CRM | true |
+| 131 | elearn_nl_quiz_failed | elearning | CRM | true |
+| 132 | elearn_nl_reminder | elearning | System | true |
+| 133 | elearn_nl_escalated | elearning | System | true |
+| 134 | elearn_nl_expired | elearning | System | true |
+| 135 | elearn_nl_override | elearning | CRM | true |
+| 136 | elearn_nl_skipped | elearning | System | true |
+
+## §94.3 Event-Types-Seed Sub C (12 Rows)
+
+`elearn_newsletter_issue_drafted` · `elearn_newsletter_issue_published` · `elearn_newsletter_assigned` · `elearn_newsletter_read_started` · `elearn_newsletter_read_completed` · `elearn_newsletter_quiz_passed` · `elearn_newsletter_quiz_failed` · `elearn_newsletter_reminder_sent` · `elearn_newsletter_escalated_to_head` · `elearn_newsletter_expired` · `elearn_newsletter_subscription_added` · `elearn_newsletter_enforcement_override_set`
+
+## §94.4 UI-Label-Vocabulary Sub C
+
+| Enum-Wert | UI-Label (DE) |
+|---|---|
+| `section_type=market_news` | Markt-News |
+| `section_type=crm_insights` | Team-Einblicke |
+| `section_type=deep_dive` | Vertiefung |
+| `section_type=spotlight` | Im Fokus |
+| `section_type=trend_watch` | Trends |
+| `section_type=ma_highlight` | Team-Highlight |
+| `newsletter_status=draft/review/published/archived` | Entwurf / In Prüfung / Veröffentlicht / Archiviert |
+| `nl_assignment_status=pending` | Offen |
+| `nl_assignment_status=reading` | Beim Lesen |
+| `nl_assignment_status=quiz_in_progress` | Quiz läuft |
+| `nl_assignment_status=quiz_passed` | Bestanden |
+| `nl_assignment_status=quiz_failed` | Nicht bestanden |
+| `nl_assignment_status=expired` | Abgelaufen |
+| `subscription_mode=auto` | Automatisch (Pflicht) |
+| `subscription_mode=opt_in` | Freiwillig |
+| `subscription_mode=opt_out` | Abbestellt |
+| `enforcement_mode=soft/hard` | Erinnerungen / Pflicht-Lock |
+
+---
+
+# TEIL G (§95) — E-Learning Sub D · Progress-Gate (v0.1)
+
+**Quelle:** `specs/ARK_STAMMDATEN_PATCH_ELEARNING_SUB_D_v0_1.md`
+
+## §95.1 Neue Enums Sub D (4)
+
+**`elearn_gate_trigger_type`** (5): `newsletter_overdue` · `onboarding_overdue` · `refresher_due` · `cert_expired` · `assignment_expired`
+
+**`elearn_gate_event_action`** (4): `blocked` · `allowed` · `overridden` · `bypassed`
+
+**`elearn_gate_override_type`** (5): `vacation` · `parental_leave` · `medical` · `emergency_bypass` · `other`
+
+**`elearn_cert_status`** (3): `active` · `expired` · `revoked`
+
+## §95.2 `elearn_feature_catalog` (~40 Feature-Keys)
+
+Frei erweiterbar per Code-Deployment · Wildcard-Match erlaubt (`read_*` matcht alle `read_*`-Keys).
+
+| Kategorie | Beispiele |
+|---|---|
+| write-candidate | `create_candidate`, `update_candidate`, `delete_candidate` |
+| write-account | `create_account`, `update_account`, `delete_account` |
+| write-mandate | `create_mandate`, `update_mandate`, `delete_mandate` |
+| write-job | `create_job`, `update_job`, `delete_job` |
+| write-process | `create_process`, `update_process`, `progress_process_stage` |
+| write-project | `create_project`, `update_project` |
+| write-activity | `create_activity` |
+| write-placement | `create_placement` |
+| write-email | `send_email` |
+| read | `read_candidate`, `read_account`, `read_mandate`, `read_job`, `read_process`, `read_activity`, `read_placement`, `read_admin_*` |
+| elearning | `elearning_*` |
+| dashboard | `dashboard_full` |
+| export | `export_data` |
+| admin | `admin_*` |
+
+## §95.3 Activity-Types-Seed Sub D (8 Rows #137-#144)
+
+| # | activity_type_name | activity_category | activity_channel | is_auto_loggable |
+|---|---|---|---|---|
+| 137 | elearn_gate_blocked | elearning | System | true |
+| 138 | elearn_gate_overridden | elearning | System | true |
+| 139 | elearn_gate_override_created | elearning | CRM | true |
+| 140 | elearn_gate_override_ended | elearning | CRM | true |
+| 141 | elearn_cert_expired | elearning | System | true |
+| 142 | elearn_cert_revoked | elearning | System | true |
+| 143 | elearn_course_major_version | elearning | System | true |
+| 144 | elearn_compliance_low | elearning | System | true |
+
+## §95.4 Event-Types-Seed Sub D (12 Rows)
+
+`elearn_gate_rule_created` · `elearn_gate_rule_updated` · `elearn_gate_rule_disabled` · `elearn_gate_blocked` · `elearn_gate_overridden` · `elearn_gate_override_created` · `elearn_gate_override_ended` · `elearn_cert_expired` · `elearn_cert_revoked` · `elearn_course_major_version_bumped` · `elearn_compliance_snapshot_created` · `elearn_login_popup_shown`
+
+## §95.5 UI-Label-Vocabulary Sub D
+
+| Enum-Wert | UI-Label (DE) |
+|---|---|
+| `gate_trigger_type=newsletter_overdue` | Newsletter offen |
+| `gate_trigger_type=onboarding_overdue` | Onboarding überfällig |
+| `gate_trigger_type=refresher_due` | Refresher fällig |
+| `gate_trigger_type=cert_expired` | Zertifikat abgelaufen |
+| `gate_trigger_type=assignment_expired` | Pflicht-Aufgabe abgelaufen |
+| `gate_event_action=blocked/allowed/overridden/bypassed` | Blockiert / Erlaubt / Ausnahme aktiv / Notfall-Bypass |
+| `override_type=vacation` | Urlaub |
+| `override_type=parental_leave` | Elternzeit |
+| `override_type=medical` | Krankheit |
+| `override_type=emergency_bypass` | Notfall-Bypass |
+| `override_type=other` | Sonstiges |
+| `cert_status=active/expired/revoked` | Gültig / Abgelaufen / Zurückgenommen |
+
+---
+
+## Statistik nach v1.5
+
+```
+Total Activity-Types:  146  (106 v1.4 + 40 E-Learning: 11+10+9+8+2 Sub-B/C/D-only)
+Activity-Kategorien:    19  (18 v1.4 + 1 elearning)
+E-Learning Enums:       25  (Sub A: 8 · Sub B: 8 · Sub C: 5 · Sub D: 4)
+Event-Types gesamt:   ~113  (~61 v1.4 + 52 E-Learning: 16+12+12+12)
+```
+
+## Offene Punkte v1.5
+
+- **Refresher-Intervall-Presets:** frei `INT` in MVP; Enum-Vorschlag Phase-2 falls Pflege-Aufwand hoch
+- **Badge-Kriterien:** Code-hart in MVP; `dim_elearn_badge_rule` mit JSON-Kriterien Phase-2
+- **Sparte-Wert `uebergreifend`:** derzeit Sonder-Wert im Newsletter-Kontext; globaler Sparten-Katalog-Eintrag wenn cross-cutting in anderen Modulen auftaucht
+- **Feature-Catalog-Auto-Discovery:** Script scannt bei jedem Deploy alle `@gate_feature`-Decorators und synct `FEATURE_CATALOG.ts` → Source-of-Truth lebt im Code

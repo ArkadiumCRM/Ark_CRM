@@ -1,22 +1,15 @@
 # Digest Stale-Log
 
-**Letzter Clean:** 2026-04-17 18:18 (Mobile/Tablet-Support v1.3.6 komplett inkl. Touch-Gesten + Focus-Trap)
+**Letzter Clean:** 2026-04-24 16:35 (E-Learning-Merge v1.4/v1.5/v2.7/v1.12 komplett regeneriert · alle 5 Digests)
 
 ## Regeneriert (alle current)
 
-- `backend-architecture-digest.md` — v2.5.5: Reminders Events (+2), Worker Nightly-Batch 7→8, Endpoints reassign + user-preferences (2026-04-17 16:35)
-- `database-schema-digest.md` — `fact_reminders` + template_id FK + escalation_sent_at (2026-04-17 16:35)
-- `frontend-freeze-digest.md` — §24b Responsive-Policy v1.11 rewrite (Desktop-First + Mobile/Tablet voll), §4d.8 Scraper Single-File-Mockup, /reminders Tool-Maske (2026-04-17 18:10)
-- `gesamtsystem-digest.md` — v1.3.5 → v1.3.6: TEIL 23 (Reminders) + TEIL 24 (Mobile-Support), Changelog-Block (2026-04-17 18:12)
-
-## Nicht betroffen
-
-- `stammdaten-digest.md` — keine Änderung an `ARK_STAMMDATEN_EXPORT_v1_3.md` seit v1.3-Baseline
+- `stammdaten-digest.md` — v1.5: Activity-Types-Patch (§91 · 37 neue Rows #70-#106 · 7 neue Kategorien · 15 fact_system_log-Events) + E-Learning Sub A/B/C/D (§92-§95 · 40 Activity-Types #107-#146 · 25 Enums · 52 Event-Types · UI-Label-Vocabulary) + Zeit-Modul v1.4 · 1579 Zeilen (2026-04-24 16:24)
+- `database-schema-digest.md` — v1.5: E-Learning-Modul (28 neue Tabellen · pgvector · ALTER dim_user +2 · ALTER dim_elearn_certificate +4 · 30+ Indizes inkl. IVFFLAT · 20+ CHECK-Constraints · RLS-Policies · Multi-Tenant) · Tabellen-Count ~204 · 726 Zeilen (2026-04-24 16:26)
+- `backend-architecture-digest.md` — v2.7: E-Learning TEIL N (52 Events · 25 Worker · 80+ Endpoints · Gate-Middleware `@gate_feature` · Feature-Catalog · Cache-Layer · Python-Worker-Service · Cross-Sub-Integration A↔C/D · B→A · C→D) + Zeit-Modul v2.6 · 1822 Zeilen (2026-04-24 16:29)
+- `frontend-freeze-digest.md` — v1.12: E-Learning TEIL O (Topbar-Toggle CRM↔ERP · ERP-Sidebar mit 4 Sub-Blöcken · 25+ Page-Templates `mockups/erp/elearn/*` · Markdown-Renderer · 6 Quiz-Components · Freitext/Review/Newsletter-Drawer · Gate-Page-Globals · HTTP-Interceptor 403 GATE_BLOCKED · 8 Shortcut-Tabellen · Sparte-Chip-Farben) · 790 Zeilen (2026-04-24 16:31)
+- `gesamtsystem-digest.md` — v1.4: E-Learning TEIL 24 (Modul-Landkarte Sub A/B/C/D · Workspace-Struktur CRM↔ERP · Multi-Tenant-Pattern · 5 Inter-Sub-Datenflüsse · Externe Integrationen 8 Einträge · Compliance-Formel · Cert-Lifecycle · Sub-Interop-Matrix · Statistik ~204 Tabellen/52 Events/25 Worker/80+ Endpoints/25+ Pages/25 Enums/40 Activity-Types/19 Kategorien) · 522 Zeilen (2026-04-24 16:29)
 
 ## Hinweis
 
 Für volle Regeneration (statt targeted Updates) Agent mit Task: „Regenerate digest X from `Grundlagen MD/ARK_<FILE>_v<VERSION>.md` · verlustfrei alle Enums/Kataloge · lossy Prosa". Targeted Updates sind schneller, aber bei grösseren Grundlagen-Refactors volle Regeneration bevorzugen.
-- [2026-04-19 2026-04-19 22:59] `stammdaten-digest.md` stale -- source `ARK_STAMMDATEN_EXPORT_v1_3.md` edited (session-13946034)
-- [2026-04-19 2026-04-19 23:00] `database-schema-digest.md` stale -- source `ARK_DATABASE_SCHEMA_v1_3.md` edited (session-13946034)
-- [2026-04-19 2026-04-19 23:01] `backend-architecture-digest.md` stale -- source `ARK_BACKEND_ARCHITECTURE_v2_5.md` edited (session-13946034)
-- [2026-04-19 2026-04-19 23:01] `frontend-freeze-digest.md` stale -- source `ARK_FRONTEND_FREEZE_v1_10.md` edited (session-13946034)
