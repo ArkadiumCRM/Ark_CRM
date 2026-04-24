@@ -246,21 +246,24 @@
     </div>
 
     <div class="sb-section">Debitoren</div>
+    <div class="sb-item" data-src="billing-debitoren.html" data-title="Debitoren">
+      <span class="icon">📇</span><span class="label">Debitoren-Liste</span><span class="badge amber" title="12 Kunden überfällig">12</span>
+    </div>
     <div class="sb-item" data-src="billing-debitor-konto.html" data-title="Debitor-Konto">
-      <span class="icon">👤</span><span class="label">Kundenkonto</span>
+      <span class="icon">👤</span><span class="label">Kundenkonto (Detail)</span>
     </div>
 
     <div class="sb-section role-section" data-visible-for="BO,GF,ADMIN,TREU">Finanz-Reports</div>
-    <div class="sb-item role-item disabled" data-visible-for="BO,GF,ADMIN,TREU" data-title="MwSt-Abrechnung">
-      <span class="icon">⎙</span><span class="label">MwSt-Abrechnung</span>
+    <div class="sb-item role-item" data-visible-for="BO,GF,ADMIN,TREU" data-src="billing-mwst.html" data-title="MwSt-Abrechnung">
+      <span class="icon">⎙</span><span class="label">MwSt-Abrechnung</span><span class="badge amber" title="Q2/2026 in Erfassung">Q2</span>
     </div>
     <div class="sb-item role-item disabled" data-visible-for="BO,GF,ADMIN,TREU" data-title="Treuhand-Export">
       <span class="icon">◰</span><span class="label">Treuhand-Export</span>
     </div>
 
     <div class="sb-section role-section" data-visible-for="GF,ADMIN">Eskalation</div>
-    <div class="sb-item role-item disabled" data-visible-for="GF,ADMIN" data-title="Inkasso">
-      <span class="icon">⚐</span><span class="label">Inkasso</span>
+    <div class="sb-item role-item" data-visible-for="GF,ADMIN" data-src="billing-inkasso.html" data-title="Inkasso">
+      <span class="icon">⚐</span><span class="label">Inkasso</span><span class="badge red" title="3 Pending GF-Freigabe">3</span>
     </div>
 
     </div><!-- /sb-top -->
@@ -391,7 +394,10 @@
         <div class="cmd-item" onclick="navigateTo('billing-mahnwesen.html'); closeShellDrawer();"><span class="c-ic">⚠</span>Mahnwesen<span class="c-key">G M</span></div>
         <div class="cmd-item" onclick="navigateTo('billing-zahlungen.html'); closeShellDrawer();"><span class="c-ic">⇅</span>Zahlungseingang<span class="c-key">G Z</span></div>
         <div class="cmd-item" onclick="navigateTo('billing-refunds.html'); closeShellDrawer();"><span class="c-ic">↶</span>Refund-Cockpit<span class="c-key">G F</span></div>
-        <div class="cmd-item" onclick="navigateTo('billing-debitor-konto.html'); closeShellDrawer();"><span class="c-ic">👤</span>Debitor-Konto<span class="c-key">G K</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-debitoren.html'); closeShellDrawer();"><span class="c-ic">📇</span>Debitoren-Liste<span class="c-key">G D</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-debitor-konto.html'); closeShellDrawer();"><span class="c-ic">👤</span>Kundenkonto (Detail)<span class="c-key">G K</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-inkasso.html'); closeShellDrawer();"><span class="c-ic">⚐</span>Inkasso (GF)<span class="c-key">G I</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-mwst.html'); closeShellDrawer();"><span class="c-ic">⎙</span>MwSt-Abrechnung<span class="c-key">G V</span></div>
       </div>
       <div class="shell-drawer-section">
         <div class="cmd-cat">Aktionen</div>

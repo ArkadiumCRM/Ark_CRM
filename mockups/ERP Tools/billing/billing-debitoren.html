@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Debitoren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1600px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* KPI-Strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .kpi { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi.red { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .kpi .big { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:4px 0 2px; font-variant-numeric:tabular-nums; }
+  .kpi.red .big { color:var(--red); }
+  .kpi.amber .big { color:var(--amber); }
+  .kpi.green .big { color:var(--green); }
+  .kpi .sub { font-size:11px; color:var(--text-mid); line-height:1.5; }
+  .kpi .trend { font-size:11px; color:var(--text-light); margin-top:3px; }
+  .kpi .trend .up { color:var(--red); font-weight:600; }
+  .kpi .trend .down { color:var(--green); font-weight:600; }
+
+  /* Filter-Bar */
+  .filter-bar { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .filter-bar .grp { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .filter-bar label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .filter-bar select, .filter-bar input { font-family:'DM Sans',sans-serif; font-size:12.5px; padding:6px 8px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+  .filter-bar .sep { width:1px; background:var(--border); align-self:stretch; margin:4px 4px; }
+  .filter-bar .search { flex:1; min-width:220px; position:relative; }
+  .filter-bar .search input { width:100%; padding-left:28px; }
+  .filter-bar .search::before { content:"⌕"; position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:14px; }
+  .filter-bar .chk { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text); cursor:pointer; padding:4px 8px; border:1px solid var(--border); border-radius:3px; background:var(--bg); }
+  .filter-bar .chk input { accent-color:var(--accent); cursor:pointer; }
+  .filter-bar .chk.active { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 6%,var(--bg)); }
+
+  /* Bulk-Actions-Bar */
+  .bulk-bar { background:color-mix(in srgb,var(--accent) 8%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:12.5px; }
+  .bulk-bar .count { font-weight:700; color:var(--accent); }
+  .bulk-bar .actions { display:flex; gap:8px; margin-left:auto; }
+  .bulk-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--text); }
+  .bulk-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .bulk-btn.danger:hover { border-color:var(--red); color:var(--red); }
+
+  /* Tabelle */
+  .list-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .list-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .list-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; cursor:pointer; user-select:none; }
+  .list-table th:hover { color:var(--accent); }
+  .list-table th.sorted::after { content:" ▾"; color:var(--accent); }
+  .list-table th.asc::after { content:" ▴"; color:var(--accent); }
+  .list-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .list-table tbody tr:last-child td { border-bottom:none; }
+  .list-table tbody tr { cursor:pointer; transition:background 0.08s; }
+  .list-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 4%, var(--bg)); }
+  .list-table tbody tr.selected { background:color-mix(in srgb,var(--accent) 8%, var(--bg)); }
+  .list-table tbody tr.selected td:first-child { border-left:3px solid var(--accent); padding-left:7px; }
+  .list-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .list-table .name { font-weight:700; color:var(--text); }
+  .list-table .name:hover { color:var(--accent); text-decoration:underline; }
+  .list-table .name-sub { font-size:10.5px; color:var(--text-light); margin-top:1px; font-weight:400; }
+  .list-table .cb { width:24px; }
+  .list-table input[type=checkbox] { cursor:pointer; accent-color:var(--accent); }
+
+  /* Risiko-Dot */
+  .risk { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; }
+  .risk::before { content:""; width:9px; height:9px; border-radius:50%; background:var(--text-light); }
+  .risk.niedrig::before { background:var(--green); }
+  .risk.niedrig { color:var(--green); }
+  .risk.mittel::before { background:var(--amber); }
+  .risk.mittel { color:var(--amber); }
+  .risk.hoch::before { background:var(--red); }
+  .risk.hoch { color:var(--red); }
+
+  /* Chips */
+  .chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+  .chip.ok     { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip.draft  { background:color-mix(in srgb,var(--text-light) 20%,var(--bg)); color:var(--text-mid); }
+  .chip.sent   { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip.partial{ background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip.overdue{ background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .chip.dispute{ background:color-mix(in srgb,#c2410c 18%,var(--bg)); color:#c2410c; }
+  .chip.neutral{ background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+  .chip.key    { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .dot-flag { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--amber); margin-left:4px; vertical-align:middle; }
+  .dot-flag.red { background:var(--red); }
+
+  /* Tiny Age-Bar */
+  .age-bar { display:flex; height:8px; background:var(--bg); border-radius:2px; overflow:hidden; width:90px; }
+  .age-bar .seg { height:100%; }
+  .age-bar .seg.good { background:var(--green); }
+  .age-bar .seg.ok { background:var(--accent); }
+  .age-bar .seg.warn { background:var(--amber); }
+  .age-bar .seg.bad { background:var(--red); }
+
+  /* Footer */
+  .list-footer { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:var(--bg); font-size:11.5px; color:var(--text-light); }
+  .list-footer .pager { display:flex; gap:6px; }
+  .pager-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:4px 10px; cursor:pointer; font-size:11px; }
+  .pager-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* Drawer */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-head .close:hover { color:var(--text); }
+  .drawer-sub { padding:4px 20px 12px; font-size:12px; color:var(--text-light); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-primary:hover { opacity:0.9; }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+  .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:var(--surface); border-color:var(--red); color:var(--red); }
+  .btn-danger:hover { background:var(--red); color:#fff; }
+
+  /* Drawer · Kunde-Box */
+  .customer-box { background:var(--bg); padding:12px 14px; border-radius:3px; margin-bottom:14px; font-size:12.5px; line-height:1.55; }
+  .customer-box .name { font-weight:700; color:var(--text); font-size:14px; }
+  .customer-box .addr { font-size:11.5px; color:var(--text-mid); margin-top:2px; }
+  .customer-box .meta { font-size:11px; color:var(--text-light); margin-top:8px; display:flex; gap:6px; flex-wrap:wrap; }
+  .customer-box .meta .pill { background:var(--surface); padding:2px 8px; border-radius:10px; border:1px solid var(--border); }
+
+  /* Drawer · Mini-Ledger */
+  .mini-ledger { margin-top:4px; }
+  .mini-row { display:grid; grid-template-columns:auto 1fr auto auto; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); align-items:center; font-size:12px; }
+  .mini-row:last-child { border-bottom:none; }
+  .mini-row .nr { font-weight:700; color:var(--accent); font-size:11.5px; font-variant-numeric:tabular-nums; }
+  .mini-row .desc { color:var(--text); }
+  .mini-row .desc small { display:block; color:var(--text-light); font-size:10.5px; }
+  .mini-row .amt { font-variant-numeric:tabular-nums; font-weight:600; text-align:right; min-width:80px; }
+  .mini-row .amt.red { color:var(--red); }
+
+  /* Drawer · KPI-Mini */
+  .kpi-mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .kpi-mini { background:var(--bg); padding:10px 12px; border-radius:3px; border-left:3px solid var(--accent); }
+  .kpi-mini.red { border-left-color:var(--red); }
+  .kpi-mini.green { border-left-color:var(--green); }
+  .kpi-mini .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .kpi-mini .val { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--text); margin-top:3px; }
+  .kpi-mini.red .val { color:var(--red); }
+  .kpi-mini.green .val { color:var(--green); }
+  .kpi-mini .sub { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+
+  /* Drawer · Section-Header */
+  .sect-h { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); margin:18px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:baseline; }
+  .sect-h a { font-size:11.5px; color:var(--accent); font-weight:600; text-decoration:none; }
+  .sect-h a:hover { text-decoration:underline; }
+
+  /* Drawer · Settings */
+  .settings-block { background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12px; }
+  .settings-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px dashed var(--border); }
+  .settings-row:last-child { border-bottom:none; }
+  .settings-row .lbl { color:var(--text-light); }
+  .settings-row .val { color:var(--text); font-weight:600; }
+
+  /* Mahn-Batch Wizard */
+  .wizard-steps { display:flex; gap:4px; padding:12px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .wizard-step { flex:1; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); font-weight:600; padding:6px 8px; text-align:center; background:var(--surface); border-radius:2px; border-top:2px solid var(--border); }
+  .wizard-step.active { color:var(--accent); border-top-color:var(--accent); font-weight:700; }
+  .wizard-step.done { color:var(--green); border-top-color:var(--green); }
+
+  .preview-list { background:var(--bg); border-radius:3px; padding:10px 12px; margin-bottom:12px; max-height:280px; overflow-y:auto; }
+  .preview-row { display:grid; grid-template-columns:1fr auto auto; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); align-items:center; font-size:12px; }
+  .preview-row:last-child { border-bottom:none; }
+  .preview-row .cust { font-weight:600; color:var(--text); }
+  .preview-row .cust small { display:block; color:var(--text-light); font-weight:400; font-size:10.5px; }
+
+  .warn-inline { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left:3px solid var(--amber); padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text); border-radius:2px; }
+  .warn-inline .title { font-weight:700; margin-bottom:2px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Debitoren</h1>
+      <div class="sub">74 Kunden mit Bewegung 2026 · 38 mit offenem Saldo · 12 überfällig · RLS-Filter aktiv (Backoffice-Ansicht · alle Kunden)</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-secondary" type="button">◰ CSV-Export</button>
+      <button class="btn btn-primary" type="button" onclick="openBatchDrawer()">✉ Mahn-Lauf starten</button>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip">
+    <div class="kpi red">
+      <div class="lbl">Offener Saldo gesamt</div>
+      <div class="big">CHF 412'830</div>
+      <div class="sub">38 Kunden · 64 offene Rechnungen</div>
+      <div class="trend"><span class="up">▴ +8.4 %</span> vs. Vormonat</div>
+    </div>
+    <div class="kpi amber">
+      <div class="lbl">Davon überfällig</div>
+      <div class="big">CHF 158'470</div>
+      <div class="sub">12 Kunden · 18 Rechnungen · 3 im Honorarstreit</div>
+      <div class="trend">∅ 47 Tage überfällig · schlechtester 104 T</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">∅ Zahlungsdauer (DSO)</div>
+      <div class="big">38 Tage</div>
+      <div class="sub">Target 30 T · +8 T · Median 34 T</div>
+      <div class="trend"><span class="up">▴ +3 T</span> seit Januar</div>
+    </div>
+    <div class="kpi green">
+      <div class="lbl">Bezahlt YTD 2026</div>
+      <div class="big">CHF 1'847'200</div>
+      <div class="sub">72 Rechnungen · davon 68 auto-matched</div>
+      <div class="trend"><span class="down">▾ −1.2 T</span> DSO vs. Q4/2025</div>
+    </div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <div class="search"><input type="text" placeholder="Suche nach Kunde, UID, IBAN, AM …"></div>
+    <div class="sep"></div>
+    <div class="grp"><label>Saldo</label><select><option>alle mit Bewegung</option><option>nur offener Saldo &gt; 0</option><option>nur überfällig</option><option>nur Honorarstreit</option><option>nur Mahnung aktiv</option><option>nur bezahlt YTD</option></select></div>
+    <div class="grp"><label>Risiko</label><select><option>alle</option><option>niedrig</option><option>mittel</option><option>hoch</option></select></div>
+    <div class="grp"><label>Kadenz</label><select><option>alle</option><option>Key-Account</option><option>Standard</option></select></div>
+    <div class="grp"><label>Sparte</label><select><option>alle</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select></div>
+    <div class="grp"><label>AM</label><select><option>alle</option><option>PW</option><option>YB</option><option>SP</option><option>JV</option><option>NP</option></select></div>
+    <div class="grp"><label>Mindest-Offen</label><select><option>alle</option><option>&gt; CHF 5'000</option><option>&gt; CHF 10'000</option><option>&gt; CHF 25'000</option></select></div>
+    <label class="chk active"><input type="checkbox" checked> nur mit offenem Saldo</label>
+    <label class="chk"><input type="checkbox"> Blind-Copy aktiv</label>
+  </div>
+
+  <!-- Bulk-Bar (sichtbar wenn >=1 selektiert) -->
+  <div class="bulk-bar">
+    <span class="count">3</span> Kunden ausgewählt · CHF 92'830 offen
+    <div class="actions">
+      <button class="bulk-btn" type="button">✉ Mahn-Lauf vorbereiten</button>
+      <button class="bulk-btn" type="button">⎙ Kontoauszug (PDF-Batch)</button>
+      <button class="bulk-btn" type="button">◰ CSV · offene Posten</button>
+      <button class="bulk-btn" type="button">⚐ Kadenz ändern</button>
+      <button class="bulk-btn danger" type="button">⎈ An Inkasso übergeben · GF-Pflicht</button>
+    </div>
+  </div>
+
+  <!-- Liste -->
+  <div class="list-card">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th class="cb"><input type="checkbox"></th>
+          <th>Kunde</th>
+          <th>Sparte / AM</th>
+          <th>Kadenz</th>
+          <th style="text-align:right;">Offene Rg.</th>
+          <th style="text-align:right;">Offen total</th>
+          <th style="text-align:right;">Davon überfällig</th>
+          <th>Ältester OP</th>
+          <th>∅ Zahlungsdauer</th>
+          <th>Risiko</th>
+          <th>Flags</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="selected" onclick="openQuickDrawer()">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Emch+Berger Gruppe</div>
+            <div class="name-sub">Bern · buchhaltung@emch-berger.ch</div>
+          </td>
+          <td>ING · <strong>PW</strong></td>
+          <td><span class="chip key">Key-Account</span><br><small style="color:var(--text-light);">T+30/45/60</small></td>
+          <td class="num">3</td>
+          <td class="num" style="color:var(--red);">CHF 74'185</td>
+          <td class="num" style="color:var(--red);">CHF 36'083</td>
+          <td>22.03.2026<br><small style="color:var(--red);">33 T alt · 3 T überfällig</small></td>
+          <td>
+            34 T
+            <div class="age-bar"><div class="seg good" style="flex:4;"></div><div class="seg ok" style="flex:3;"></div><div class="seg warn" style="flex:1;"></div><div class="seg bad" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk mittel">Mittel</span></td>
+          <td><span class="chip overdue">Mahnung 1 fällig</span></td>
+        </tr>
+
+        <tr class="selected" onclick="event.stopPropagation();">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Volare Group AG</div>
+            <div class="name-sub">Zürich · finanzen@volare.ch</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">2</td>
+          <td class="num" style="color:var(--red);">CHF 21'620</td>
+          <td class="num" style="color:var(--red);">CHF 10'810</td>
+          <td>15.03.2026<br><small style="color:var(--red);">40 T alt · 25 T überfällig</small></td>
+          <td>
+            46 T
+            <div class="age-bar"><div class="seg good" style="flex:1;"></div><div class="seg ok" style="flex:2;"></div><div class="seg warn" style="flex:3;"></div><div class="seg bad" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk hoch">Hoch</span></td>
+          <td><span class="chip overdue">Mahnung 2</span></td>
+        </tr>
+
+        <tr class="selected">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Sievert &amp; Co.</div>
+            <div class="name-sub">Basel · rechnungen@sievert-co.ch</div>
+          </td>
+          <td>GT · <strong>SP</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--red);">CHF 18'900</td>
+          <td class="num" style="color:var(--red);">CHF 18'900</td>
+          <td>18.02.2026<br><small style="color:var(--red);">65 T alt · 35 T im Streit</small></td>
+          <td>
+            52 T
+            <div class="age-bar"><div class="seg warn" style="flex:1;"></div><div class="seg bad" style="flex:4;"></div></div>
+          </td>
+          <td><span class="risk hoch">Hoch</span></td>
+          <td><span class="chip dispute">Honorarstreit</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Frauenfelder Holding</div>
+            <div class="name-sub">Winterthur · finanzen@frauenfelder.ch</div>
+          </td>
+          <td>GT · <strong>PW</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--red);">CHF 22'500</td>
+          <td class="num" style="color:var(--red);">CHF 22'500</td>
+          <td>14.02.2026<br><small style="color:var(--red);">69 T alt · 39 T überfällig</small></td>
+          <td>
+            44 T
+            <div class="age-bar"><div class="seg good" style="flex:2;"></div><div class="seg ok" style="flex:3;"></div><div class="seg warn" style="flex:2;"></div><div class="seg bad" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk hoch">Hoch</span></td>
+          <td><span class="chip overdue">Mahnung 2</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Sutter + Partner AG</div>
+            <div class="name-sub">Zug · buchhaltung@sutter-partner.ch</div>
+          </td>
+          <td>ARC · <strong>YB</strong></td>
+          <td><span class="chip key">Key-Account</span><br><small style="color:var(--text-light);">T+30/45/60</small></td>
+          <td class="num">1</td>
+          <td class="num">CHF 29'325</td>
+          <td class="num">CHF 0</td>
+          <td>10.04.2026<br><small style="color:var(--text-light);">14 T alt</small></td>
+          <td>
+            28 T
+            <div class="age-bar"><div class="seg good" style="flex:6;"></div><div class="seg ok" style="flex:2;"></div><div class="seg warn" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip sent">Versendet</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Arcanum Architekten</div>
+            <div class="name-sub">Luzern · admin@arcanum-arch.ch</div>
+          </td>
+          <td>ARC · <strong>YB</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--amber);">CHF 5'810</td>
+          <td class="num" style="color:var(--amber);">CHF 5'810</td>
+          <td>01.04.2026<br><small style="color:var(--amber);">23 T alt · 13 T überfällig</small></td>
+          <td>
+            36 T
+            <div class="age-bar"><div class="seg good" style="flex:3;"></div><div class="seg ok" style="flex:3;"></div><div class="seg warn" style="flex:2;"></div><div class="seg bad" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk mittel">Mittel</span></td>
+          <td><span class="chip partial">Teilbezahlt</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Horizont Bauleitung GmbH</div>
+            <div class="name-sub">St. Gallen · info@horizont-bau.ch</div>
+          </td>
+          <td>ING · <strong>SP</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num">CHF 4'860</td>
+          <td class="num">CHF 0</td>
+          <td>15.04.2026<br><small style="color:var(--text-light);">9 T alt</small></td>
+          <td>
+            31 T
+            <div class="age-bar"><div class="seg good" style="flex:3;"></div><div class="seg ok" style="flex:4;"></div><div class="seg warn" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip sent">Versendet</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Morell Immobilien</div>
+            <div class="name-sub">Baar · finanzen@morell.ch</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">0</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td style="color:var(--text-light);">—</td>
+          <td>
+            22 T
+            <div class="age-bar"><div class="seg good" style="flex:8;"></div><div class="seg ok" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip ok">Bezahlt YTD</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Meier + Kübler AG</div>
+            <div class="name-sub">Aarau · buchhaltung@meier-kuebler.ch</div>
+          </td>
+          <td>GT · <strong>PW</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">2</td>
+          <td class="num" style="color:var(--red);">CHF 31'240</td>
+          <td class="num" style="color:var(--red);">CHF 14'620</td>
+          <td>26.02.2026<br><small style="color:var(--red);">57 T alt · 27 T überfällig</small></td>
+          <td>
+            41 T
+            <div class="age-bar"><div class="seg good" style="flex:2;"></div><div class="seg ok" style="flex:2;"></div><div class="seg warn" style="flex:3;"></div><div class="seg bad" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk hoch">Hoch</span></td>
+          <td><span class="chip overdue">Mahnung 2</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Alpina Consulting SA</div>
+            <div class="name-sub">Genève · comptabilite@alpina-sa.ch</div>
+          </td>
+          <td>PUR · <strong>NP</strong></td>
+          <td><span class="chip key">Key-Account</span><br><small style="color:var(--text-light);">T+30/45/60</small></td>
+          <td class="num">1</td>
+          <td class="num">CHF 12'400</td>
+          <td class="num">CHF 0</td>
+          <td>02.04.2026<br><small style="color:var(--text-light);">22 T alt</small></td>
+          <td>
+            36 T
+            <div class="age-bar"><div class="seg good" style="flex:4;"></div><div class="seg ok" style="flex:4;"></div><div class="seg warn" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip sent">Versendet</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Hunziker &amp; Schneider AG</div>
+            <div class="name-sub">Solothurn · buchhaltung@hus-ag.ch</div>
+          </td>
+          <td>ING · <strong>PW</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--red);">CHF 28'100</td>
+          <td class="num" style="color:var(--red);">CHF 28'100</td>
+          <td>10.01.2026<br><small style="color:var(--red);">104 T alt · 74 T überfällig</small></td>
+          <td>
+            58 T
+            <div class="age-bar"><div class="seg warn" style="flex:1;"></div><div class="seg bad" style="flex:5;"></div></div>
+          </td>
+          <td><span class="risk hoch">Hoch</span></td>
+          <td><span class="chip overdue">Mahnung 3</span><span class="dot-flag red" title="Inkasso-Vorschlag aktiv"></span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Westermann Architektur</div>
+            <div class="name-sub">Chur · office@westermann-arch.ch</div>
+          </td>
+          <td>ARC · <strong>YB</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num">CHF 18'750</td>
+          <td class="num">CHF 0</td>
+          <td>16.04.2026<br><small style="color:var(--text-light);">8 T alt</small></td>
+          <td>
+            29 T
+            <div class="age-bar"><div class="seg good" style="flex:5;"></div><div class="seg ok" style="flex:3;"></div><div class="seg warn" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip sent">Versendet</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Baumann Haustechnik AG</div>
+            <div class="name-sub">Thun · rechnungen@baumann-ht.ch</div>
+          </td>
+          <td>GT · <strong>SP</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">1</td>
+          <td class="num" style="color:var(--amber);">CHF 9'340</td>
+          <td class="num" style="color:var(--amber);">CHF 9'340</td>
+          <td>27.03.2026<br><small style="color:var(--amber);">28 T alt · 13 T überfällig</small></td>
+          <td>
+            33 T
+            <div class="age-bar"><div class="seg good" style="flex:3;"></div><div class="seg ok" style="flex:4;"></div><div class="seg warn" style="flex:2;"></div></div>
+          </td>
+          <td><span class="risk mittel">Mittel</span></td>
+          <td><span class="chip overdue">Mahnung 1 fällig</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Gutknecht Immobilien</div>
+            <div class="name-sub">Lausanne · finance@gutknecht-im.ch</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td><span class="chip key">Key-Account</span><br><small style="color:var(--text-light);">T+30/45/60</small></td>
+          <td class="num">1</td>
+          <td class="num">CHF 26'800</td>
+          <td class="num">CHF 0</td>
+          <td>19.04.2026<br><small style="color:var(--text-light);">5 T alt</small></td>
+          <td>
+            32 T
+            <div class="age-bar"><div class="seg good" style="flex:5;"></div><div class="seg ok" style="flex:3;"></div><div class="seg warn" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip sent">Versendet</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td>
+            <div class="name">Zehnder Bau + Planung</div>
+            <div class="name-sub">Bern · info@zehnder-bp.ch</div>
+          </td>
+          <td>ARC · <strong>PW</strong></td>
+          <td><span class="chip neutral">Standard</span><br><small style="color:var(--text-light);">T+15/30/45</small></td>
+          <td class="num">0</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td style="color:var(--text-light);">—</td>
+          <td>
+            18 T
+            <div class="age-bar"><div class="seg good" style="flex:9;"></div><div class="seg ok" style="flex:1;"></div></div>
+          </td>
+          <td><span class="risk niedrig">Niedrig</span></td>
+          <td><span class="chip ok">Bezahlt YTD</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="list-footer">
+      <span>15 von 74 Kunden · Seite 1 von 5</span>
+      <div class="pager">
+        <button class="pager-btn" type="button">‹</button>
+        <button class="pager-btn active" type="button">1</button>
+        <button class="pager-btn" type="button">2</button>
+        <button class="pager-btn" type="button">3</button>
+        <button class="pager-btn" type="button">4</button>
+        <button class="pager-btn" type="button">5</button>
+        <button class="pager-btn" type="button">›</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Kunde-Quickview · Emch+Berger Gruppe
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="quickOverlay" onclick="closeQuickDrawer()"></div>
+<div class="drawer" id="quickDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Emch+Berger Gruppe</h3>
+      <span class="chip key" style="margin-left:6px;">Key-Account</span>
+      <span class="risk mittel" style="margin-left:6px;">Mittel</span>
+    </div>
+    <button class="close" type="button" onclick="closeQuickDrawer()">×</button>
+  </div>
+  <div class="drawer-sub">
+    <span>Gartenstrasse 1 · 3001 Bern</span>
+    <span>·</span>
+    <span>AM PW</span>
+    <span>·</span>
+    <span>Sparte ING</span>
+    <span>·</span>
+    <span>Kunde seit 2019 · 18 Placements</span>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- KPI-Mini-Grid -->
+    <div class="kpi-mini-grid">
+      <div class="kpi-mini red">
+        <div class="lbl">Offener Saldo</div>
+        <div class="val">CHF 74'185</div>
+        <div class="sub">3 Rechnungen · 1 überfällig</div>
+      </div>
+      <div class="kpi-mini green">
+        <div class="lbl">Bezahlt YTD</div>
+        <div class="val">CHF 142'380</div>
+        <div class="sub">6 Rechnungen · alle erfüllt</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="lbl">∅ Zahlungsdauer</div>
+        <div class="val">34 Tage</div>
+        <div class="sub">Target 30 · +4 T</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="lbl">Höchste offene Einzel-Forderung</div>
+        <div class="val">CHF 36'083</div>
+        <div class="sub">3 T überfällig</div>
+      </div>
+    </div>
+
+    <!-- Kontakt-Box -->
+    <div class="customer-box">
+      <div class="name">Buchhaltung Finanzen</div>
+      <div class="addr">buchhaltung@emch-berger.ch · +41 31 359 99 00</div>
+      <div class="meta">
+        <span class="pill">Anrede: Sie</span>
+        <span class="pill">Blind-Copy: aktiv</span>
+        <span class="pill">AGB: FEB 2023</span>
+        <span class="pill">UID: CHE-105.428.922</span>
+      </div>
+    </div>
+
+    <!-- Offene Posten -->
+    <div class="sect-h">
+      Offene Posten · 3
+      <a href="#">Alle anzeigen ›</a>
+    </div>
+    <div class="mini-ledger">
+      <div class="mini-row">
+        <span class="nr">FN2026.03.0917</span>
+        <div class="desc">
+          Tobias Fischer · Projektleiter ING
+          <small>Fällig 21.04. · 3 T überfällig · <span class="chip overdue" style="font-size:9px;">Mahnung 1 fällig</span></small>
+        </div>
+        <span class="chip overdue">Erfolg</span>
+        <span class="amt red">CHF 36'083</span>
+      </div>
+      <div class="mini-row">
+        <span class="nr">FN2026.04.1102</span>
+        <div class="desc">
+          Scheelen EQ · 2 Kandidaten
+          <small>Fällig 18.05. · 3 T alt</small>
+        </div>
+        <span class="chip sent">Assessment</span>
+        <span class="amt">CHF 3'240</span>
+      </div>
+      <div class="mini-row">
+        <span class="nr">FN2026.04.1008</span>
+        <div class="desc">
+          Lukas Wanner · Projektleiter ING
+          <small>Entwurf · nicht versendet</small>
+        </div>
+        <span class="chip draft">Entwurf</span>
+        <span class="amt">CHF 34'862</span>
+      </div>
+    </div>
+
+    <!-- Zahlungsverhalten -->
+    <div class="sect-h">Zahlungsverhalten · letzte 12 Monate</div>
+    <div style="background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>9 bezahlte Rechnungen · ∅ 34 Tage</span>
+        <span style="color:var(--text-light);">beste 14 T · schlechteste 52 T</span>
+      </div>
+      <div class="age-bar" style="width:100%; height:16px;">
+        <div class="seg good" style="flex:4; font-size:10px; color:#fff; text-align:center; font-weight:700;">4×</div>
+        <div class="seg ok" style="flex:3; font-size:10px; color:#fff; text-align:center; font-weight:700;">3×</div>
+        <div class="seg warn" style="flex:1; font-size:10px; color:#fff; text-align:center; font-weight:700;">1×</div>
+        <div class="seg bad" style="flex:1; font-size:10px; color:#fff; text-align:center; font-weight:700;">1×</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-light); margin-top:4px;">
+        <span>&lt; 25 T</span><span>25–35 T</span><span>36–45 T</span><span>&gt; 45 T</span>
+      </div>
+    </div>
+
+    <!-- Rechnungseinstellungen -->
+    <div class="sect-h">Rechnungseinstellungen</div>
+    <div class="settings-block">
+      <div class="settings-row">
+        <span class="lbl">Mahn-Kadenz</span>
+        <span class="val">Key-Account · T+30/45/60</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Anrede</span>
+        <span class="val">Sie-Form</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Privacy-Modus</span>
+        <span class="val">Blind-Copy (Default)</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">IBAN / QR-IBAN</span>
+        <span class="val">CH93 0076 2011 6238 5295 7</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Export-Status Treuhand</span>
+        <span class="val" style="color:var(--green);">März 2026 bestätigt</span>
+      </div>
+    </div>
+
+    <div class="warn-inline">
+      <div class="title">Automatische Mahnung fällig</div>
+      Worker <code>dunning-cadence-check</code> schlägt für FN2026.03.0917 Mahnung 1 am 02.05. vor (Key-Account-Kadenz T+30). GF-Freigabe nicht nötig bei Mahnung 1.
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div>
+      <a href="billing-debitor-konto.html" style="font-size:12px; color:var(--accent); font-weight:600; text-decoration:none;">Vollansicht Kundenkonto öffnen ›</a>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-secondary" type="button">✉ Mahnung vorbereiten</button>
+      <button class="btn btn-primary" type="button">⎙ Kontoauszug (PDF)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Mahn-Batch-Wizard (3 Steps)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="batchOverlay" onclick="closeBatchDrawer()"></div>
+<div class="drawer" id="batchDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Mahn-Lauf vorbereiten</h3>
+      <span class="chip draft" style="margin-left:6px;">Entwurf</span>
+    </div>
+    <button class="close" type="button" onclick="closeBatchDrawer()">×</button>
+  </div>
+
+  <div class="wizard-steps">
+    <div class="wizard-step done">1 · Kandidaten wählen</div>
+    <div class="wizard-step active">2 · Vorschau &amp; Textbausteine</div>
+    <div class="wizard-step">3 · Freigabe &amp; Versand</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="customer-box">
+      <div class="name">7 Kunden · 11 Rechnungen · CHF 158'470 offen</div>
+      <div class="addr">Filter: überfällig · Kadenz-Trigger erreicht · keine aktiven Streitfälle</div>
+      <div class="meta">
+        <span class="pill">4× Mahnung 1 · CHF 65'400</span>
+        <span class="pill">5× Mahnung 2 · CHF 64'870</span>
+        <span class="pill">2× Mahnung 3 · CHF 28'200</span>
+      </div>
+    </div>
+
+    <div class="sect-h">
+      Vorschau pro Kunde
+      <a href="#">Details expandieren ›</a>
+    </div>
+    <div class="preview-list">
+      <div class="preview-row">
+        <div class="cust">
+          Emch+Berger Gruppe
+          <small>FN2026.03.0917 · 3 T überfällig · Key-Account</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 1</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 36'083</span>
+      </div>
+      <div class="preview-row">
+        <div class="cust">
+          Volare Group AG
+          <small>FN2026.03.0924 · 25 T überfällig · Standard</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 2</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 10'810</span>
+      </div>
+      <div class="preview-row">
+        <div class="cust">
+          Frauenfelder Holding
+          <small>FN2026.02.0565 · 39 T überfällig · Standard</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 2</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 22'500</span>
+      </div>
+      <div class="preview-row">
+        <div class="cust">
+          Meier + Kübler AG
+          <small>FN2026.02.0612 · 27 T überfällig · Standard</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 2</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 14'620</span>
+      </div>
+      <div class="preview-row">
+        <div class="cust">
+          Baumann Haustechnik AG
+          <small>FN2026.03.0998 · 13 T überfällig · Standard</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 1</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 9'340</span>
+      </div>
+      <div class="preview-row">
+        <div class="cust">
+          Hunziker &amp; Schneider AG
+          <small>FN2026.01.0204 · 74 T überfällig · Standard</small>
+        </div>
+        <span class="chip overdue" style="font-size:9px;">Mahnung 3</span>
+        <span style="font-variant-numeric:tabular-nums; font-weight:700;">CHF 28'100</span>
+      </div>
+    </div>
+
+    <div class="sect-h">Textbausteine</div>
+    <div class="settings-block">
+      <div class="settings-row">
+        <span class="lbl">Anrede-Standard</span>
+        <span class="val">Sie-Form · pro Kunde überschreibbar</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Sprache</span>
+        <span class="val">DE (default) · FR bei Romandie-Kunden</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Blind-Copy</span>
+        <span class="val">immer aktiv · Kandidaten-Namen verdeckt</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Mahngebühr</span>
+        <span class="val">Stufe 1: CHF 0 · Stufe 2: CHF 30 · Stufe 3: CHF 60</span>
+      </div>
+      <div class="settings-row">
+        <span class="lbl">Versandart</span>
+        <span class="val">E-Mail mit PDF-Anhang · CC an AM</span>
+      </div>
+    </div>
+
+    <div class="warn-inline">
+      <div class="title">Ausnahmen &amp; Blocker</div>
+      <strong>1 Kunde ausgeschlossen:</strong> Sievert &amp; Co. (FN2026.02.0558) · aktiver Honorarstreit · manuelle Klärung nötig.<br>
+      <strong>1 Kunde vor Inkasso:</strong> Hunziker &amp; Schneider (Mahnung 3 · 74 T) · bei erneutem Misserfolg Inkasso-Übergabe vorschlagen (GF-Pflicht).
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div style="font-size:12px; color:var(--text-mid);">
+      Gesamt-Forderung · <strong style="font-family:'Libre Baskerville',serif; color:var(--text); font-size:15px; display:block;">CHF 121'453</strong>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-secondary" type="button">‹ Zurück</button>
+      <button class="btn btn-primary" type="button">Weiter: Freigabe ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openQuickDrawer(){
+    document.getElementById('quickDrawer').classList.add('active');
+    document.getElementById('quickOverlay').classList.add('active');
+  }
+  function closeQuickDrawer(){
+    document.getElementById('quickDrawer').classList.remove('active');
+    document.getElementById('quickOverlay').classList.remove('active');
+  }
+  function openBatchDrawer(){
+    document.getElementById('batchDrawer').classList.add('active');
+    document.getElementById('batchOverlay').classList.add('active');
+  }
+  function closeBatchDrawer(){
+    document.getElementById('batchDrawer').classList.remove('active');
+    document.getElementById('batchOverlay').classList.remove('active');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeQuickDrawer(); closeBatchDrawer(); }
+  });
+</script>
+
+</body>
+</html>

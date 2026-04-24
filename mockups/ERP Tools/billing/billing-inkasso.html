@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Inkasso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1600px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:10px; }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+  .gf-badge { display:inline-flex; align-items:center; gap:5px; background:color-mix(in srgb,var(--red) 10%,var(--bg)); color:var(--red); border:1px solid color-mix(in srgb,var(--red) 30%,var(--bg)); padding:3px 10px; border-radius:12px; font-size:10.5px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; font-family:'DM Sans',sans-serif; }
+
+  /* KPI-Strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .kpi { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi.red { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .kpi .big { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:4px 0 2px; font-variant-numeric:tabular-nums; }
+  .kpi.red .big { color:var(--red); }
+  .kpi.amber .big { color:var(--amber); }
+  .kpi.green .big { color:var(--green); }
+  .kpi .sub { font-size:11px; color:var(--text-mid); line-height:1.5; }
+  .kpi .trend { font-size:11px; color:var(--text-light); margin-top:3px; }
+
+  /* Stage-Strip · Inkasso-Pipeline */
+  .pipeline { background:var(--surface); border-radius:4px; padding:14px 18px; box-shadow:var(--shadow-sm); margin-bottom:16px; }
+  .pipeline h3 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; font-weight:700; color:var(--accent); display:flex; justify-content:space-between; align-items:baseline; }
+  .pipeline h3 small { font-size:11px; color:var(--text-light); font-family:'DM Sans',sans-serif; font-weight:400; }
+  .pipe-row { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .pipe-step { background:var(--bg); padding:10px 12px; border-radius:3px; text-align:center; border-top:3px solid var(--border); position:relative; cursor:pointer; transition:all 0.1s; }
+  .pipe-step:hover { background:color-mix(in srgb,var(--accent) 4%,var(--bg)); }
+  .pipe-step.active { border-top-color:var(--accent); }
+  .pipe-step.warn { border-top-color:var(--amber); }
+  .pipe-step.hot { border-top-color:var(--red); }
+  .pipe-step.done { border-top-color:var(--green); }
+  .pipe-step .cnt { font-family:'Libre Baskerville',serif; font-size:18px; font-weight:700; color:var(--text); }
+  .pipe-step.hot .cnt { color:var(--red); }
+  .pipe-step.warn .cnt { color:var(--amber); }
+  .pipe-step.done .cnt { color:var(--green); }
+  .pipe-step .lbl { font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); font-weight:600; margin-top:3px; }
+  .pipe-step .amt { font-size:11px; color:var(--text-mid); margin-top:2px; font-variant-numeric:tabular-nums; }
+
+  /* Filter-Bar */
+  .filter-bar { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .filter-bar .grp { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .filter-bar label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .filter-bar select, .filter-bar input { font-family:'DM Sans',sans-serif; font-size:12.5px; padding:6px 8px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+  .filter-bar .sep { width:1px; background:var(--border); align-self:stretch; margin:4px 4px; }
+  .filter-bar .search { flex:1; min-width:220px; position:relative; }
+  .filter-bar .search input { width:100%; padding-left:28px; }
+  .filter-bar .search::before { content:"⌕"; position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:14px; }
+
+  /* Bulk-Actions */
+  .bulk-bar { background:color-mix(in srgb,var(--accent) 8%,var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:12.5px; }
+  .bulk-bar .count { font-weight:700; color:var(--accent); }
+  .bulk-bar .actions { display:flex; gap:8px; margin-left:auto; }
+  .bulk-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--text); }
+  .bulk-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .bulk-btn.danger:hover { border-color:var(--red); color:var(--red); }
+
+  /* Tabelle */
+  .list-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .list-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .list-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; cursor:pointer; user-select:none; }
+  .list-table th:hover { color:var(--accent); }
+  .list-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .list-table tbody tr:last-child td { border-bottom:none; }
+  .list-table tbody tr { cursor:pointer; transition:background 0.08s; }
+  .list-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 4%,var(--bg)); }
+  .list-table tbody tr.selected { background:color-mix(in srgb,var(--accent) 8%,var(--bg)); }
+  .list-table tbody tr.selected td:first-child { border-left:3px solid var(--accent); padding-left:7px; }
+  .list-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .list-table .name { font-weight:700; color:var(--text); }
+  .list-table .name-sub { font-size:10.5px; color:var(--text-light); margin-top:1px; font-weight:400; }
+  .list-table .case-nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; font-size:11.5px; }
+  .list-table .cb { width:24px; }
+  .list-table input[type=checkbox] { cursor:pointer; accent-color:var(--accent); }
+  .list-table tbody tr.pending-row { background:color-mix(in srgb,var(--amber) 6%,var(--surface)); }
+  .list-table tbody tr.pending-row td:first-child { border-left:3px solid var(--amber); padding-left:7px; }
+
+  /* Chips */
+  .chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+  .chip.pending   { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip.submitted { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip.work      { background:color-mix(in srgb,var(--accent) 18%,var(--bg)); color:var(--accent); }
+  .chip.plan      { background:color-mix(in srgb,#0891b2 18%,var(--bg)); color:#0891b2; }
+  .chip.legal     { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .chip.closed    { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip.writeoff  { background:color-mix(in srgb,var(--text-light) 20%,var(--bg)); color:var(--text-mid); text-decoration:line-through; }
+  .chip.partner   { background:var(--bg); color:var(--text); border:1px solid var(--border); text-transform:none; letter-spacing:0; font-size:10.5px; padding:2px 8px; border-radius:3px; }
+
+  /* Recovery-Bar */
+  .rec-bar-wrap { width:100px; }
+  .rec-bar { background:var(--bg); height:6px; border-radius:3px; overflow:hidden; }
+  .rec-bar .seg { height:100%; background:var(--green); }
+  .rec-bar .seg.amber { background:var(--amber); }
+  .rec-bar .seg.red { background:var(--red); }
+  .rec-pct { font-size:10.5px; color:var(--text-mid); margin-top:2px; text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
+
+  /* Footer */
+  .list-footer { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:var(--bg); font-size:11.5px; color:var(--text-light); }
+
+  /* Drawer */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-head .close:hover { color:var(--text); }
+  .drawer-sub { padding:4px 20px 12px; font-size:12px; color:var(--text-light); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .drawer-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 14px; background:var(--bg); overflow-x:auto; }
+  .drawer-tab { padding:10px 14px; font-size:12px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .drawer-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-primary:hover { opacity:0.9; }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+  .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:var(--surface); border-color:var(--red); color:var(--red); }
+  .btn-danger:hover { background:var(--red); color:#fff; }
+  .btn-gf { background:color-mix(in srgb,var(--red) 10%,var(--surface)); border-color:var(--red); color:var(--red); }
+  .btn-gf:hover { background:var(--red); color:#fff; }
+
+  /* Drawer · Case-Snapshot */
+  .case-snap { background:var(--bg); padding:12px 14px; border-radius:3px; margin-bottom:14px; }
+  .case-snap .row1 { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+  .case-snap .case-id { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--text); }
+  .case-snap .partner-line { font-size:11.5px; color:var(--text-mid); line-height:1.6; }
+  .case-snap .pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .case-snap .pill { background:var(--surface); padding:3px 9px; border-radius:10px; font-size:10.5px; color:var(--text-mid); border:1px solid var(--border); }
+
+  /* KPI-Mini-Grid */
+  .kpi-mini-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px; }
+  .kpi-mini { background:var(--bg); padding:10px 12px; border-radius:3px; border-left:3px solid var(--accent); }
+  .kpi-mini.red { border-left-color:var(--red); }
+  .kpi-mini.green { border-left-color:var(--green); }
+  .kpi-mini .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .kpi-mini .val { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--text); margin-top:3px; font-variant-numeric:tabular-nums; }
+  .kpi-mini.red .val { color:var(--red); }
+  .kpi-mini.green .val { color:var(--green); }
+  .kpi-mini .sub { font-size:10.5px; color:var(--text-light); margin-top:2px; }
+
+  /* Section-Header */
+  .sect-h { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); margin:18px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:baseline; }
+  .sect-h a { font-size:11.5px; color:var(--accent); font-weight:600; text-decoration:none; }
+  .sect-h a:hover { text-decoration:underline; }
+
+  /* Timeline */
+  .timeline { background:var(--surface); }
+  .tl-row { display:grid; grid-template-columns:105px 18px 1fr; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:12px; align-items:start; }
+  .tl-row:last-child { border-bottom:none; }
+  .tl-row .ts { color:var(--text-light); font-variant-numeric:tabular-nums; font-size:11px; line-height:1.5; }
+  .tl-row .dot { width:10px; height:10px; border-radius:50%; background:var(--accent); margin-top:5px; }
+  .tl-row .dot.green { background:var(--green); }
+  .tl-row .dot.red { background:var(--red); }
+  .tl-row .dot.amber { background:var(--amber); }
+  .tl-row .dot.gray { background:var(--text-light); }
+  .tl-row .body { color:var(--text); line-height:1.5; }
+  .tl-row .body .main { font-weight:600; }
+  .tl-row .body .meta { font-size:11px; color:var(--text-light); margin-top:2px; }
+  .tl-row .body .actor { color:var(--accent); font-weight:600; }
+
+  /* Cost-Block */
+  .cost-block { background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12px; }
+  .cost-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--border); }
+  .cost-row:last-child { border-bottom:none; padding-top:10px; font-weight:700; color:var(--text); border-top:1px solid var(--border); margin-top:4px; }
+  .cost-row .lbl { color:var(--text-mid); }
+  .cost-row .amt { font-variant-numeric:tabular-nums; font-weight:600; }
+  .cost-row.credit .amt { color:var(--green); }
+  .cost-row.debit .amt { color:var(--red); }
+
+  /* Doc-List */
+  .doc-list { font-size:12px; }
+  .doc-row { display:flex; align-items:center; gap:10px; padding:8px 10px; background:var(--bg); border-radius:3px; margin-bottom:4px; }
+  .doc-row .ic { font-size:16px; color:var(--accent); width:20px; text-align:center; }
+  .doc-row .main { flex:1; }
+  .doc-row .main .n { font-weight:600; color:var(--text); }
+  .doc-row .main .sub { font-size:10.5px; color:var(--text-light); }
+  .doc-row a { font-size:11px; color:var(--accent); font-weight:600; text-decoration:none; }
+  .doc-row a:hover { text-decoration:underline; }
+
+  /* Warn-Inline */
+  .warn-inline { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left:3px solid var(--amber); padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text); border-radius:2px; }
+  .warn-inline.error { background:color-mix(in srgb,var(--red) 10%,var(--surface)); border-left-color:var(--red); }
+  .warn-inline.gf { background:color-mix(in srgb,var(--red) 8%,var(--surface)); border-left-color:var(--red); }
+  .warn-inline .title { font-weight:700; margin-bottom:2px; }
+
+  /* Wizard-Steps */
+  .wizard-steps { display:flex; gap:4px; padding:12px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .wizard-step { flex:1; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); font-weight:600; padding:6px 8px; text-align:center; background:var(--surface); border-radius:2px; border-top:2px solid var(--border); }
+  .wizard-step.active { color:var(--accent); border-top-color:var(--accent); font-weight:700; }
+  .wizard-step.done { color:var(--green); border-top-color:var(--green); }
+  .wizard-step.gf { color:var(--red); border-top-color:var(--red); }
+
+  /* Form-Group */
+  .fg { margin-bottom:14px; }
+  .fg label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-light); font-weight:600; margin-bottom:5px; }
+  .fg input, .fg select, .fg textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); box-sizing:border-box; }
+  .fg textarea { min-height:70px; resize:vertical; }
+  .fg .hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+  .fg-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  .checkbox-row { display:flex; align-items:flex-start; gap:9px; padding:8px 0; font-size:12px; line-height:1.5; }
+  .checkbox-row input { margin-top:2px; accent-color:var(--accent); cursor:pointer; }
+  .checkbox-row .txt { flex:1; color:var(--text); }
+  .checkbox-row .txt small { display:block; color:var(--text-light); font-size:10.5px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Inkasso <span class="gf-badge">⚐ GF-Pflicht</span></h1>
+      <div class="sub">11 aktive Fälle · CHF 187'420 Forderung gesamt · 3 neue Vorschläge pending GF-Freigabe · Recovery-Rate 12 Monate: 74 %</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-secondary" type="button">◰ CSV-Export</button>
+      <button class="btn btn-primary" type="button" onclick="openSubmitDrawer()">＋ Fall vorbereiten</button>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip">
+    <div class="kpi red">
+      <div class="lbl">Aktive Fälle</div>
+      <div class="big">11</div>
+      <div class="sub">9 in Bearbeitung · 2 vor Gericht</div>
+      <div class="trend">CHF 187'420 Forderung</div>
+    </div>
+    <div class="kpi amber">
+      <div class="lbl">Pending GF-Freigabe</div>
+      <div class="big">3</div>
+      <div class="sub">vorbereitet von Backoffice</div>
+      <div class="trend">CHF 52'400 Forderung</div>
+    </div>
+    <div class="kpi green">
+      <div class="lbl">Recovery-Rate 12 Mt</div>
+      <div class="big">74 %</div>
+      <div class="sub">18 geschlossene Fälle · 13 erfolgreich</div>
+      <div class="trend">CHF 142'300 von CHF 192'000 eingetrieben</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">∅ Dauer bis Erledigung</div>
+      <div class="big">94 Tage</div>
+      <div class="sub">Median 82 T · Best 14 T · Worst 284 T</div>
+      <div class="trend">Nicht einbringlich: 3 Fälle · CHF 14'800</div>
+    </div>
+  </div>
+
+  <!-- Pipeline-Strip -->
+  <div class="pipeline">
+    <h3>Inkasso-Pipeline · Stage-Verteilung <small>Stand 24.04.2026 · 09:15 · auto-aktualisiert</small></h3>
+    <div class="pipe-row">
+      <div class="pipe-step warn">
+        <div class="cnt">3</div>
+        <div class="lbl">Pending GF</div>
+        <div class="amt">CHF 52'400</div>
+      </div>
+      <div class="pipe-step active">
+        <div class="cnt">2</div>
+        <div class="lbl">Eingereicht</div>
+        <div class="amt">CHF 36'500</div>
+      </div>
+      <div class="pipe-step active">
+        <div class="cnt">4</div>
+        <div class="lbl">In Bearbeitung</div>
+        <div class="amt">CHF 67'240</div>
+      </div>
+      <div class="pipe-step active">
+        <div class="cnt">3</div>
+        <div class="lbl">Zahlungsvereinbarung</div>
+        <div class="amt">CHF 49'200</div>
+      </div>
+      <div class="pipe-step hot">
+        <div class="cnt">2</div>
+        <div class="lbl">Rechtsweg</div>
+        <div class="amt">CHF 34'480</div>
+      </div>
+      <div class="pipe-step done">
+        <div class="cnt">18</div>
+        <div class="lbl">Erledigt · 12 Mt</div>
+        <div class="amt">74 % Recovery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter-Bar -->
+  <div class="filter-bar">
+    <div class="search"><input type="text" placeholder="Suche nach Fall-Nr, Kunde, Rechnung, Partner …"></div>
+    <div class="sep"></div>
+    <div class="grp"><label>Stage</label><select><option>alle aktiven</option><option>Pending GF</option><option>Eingereicht</option><option>In Bearbeitung</option><option>Zahlungsvereinbarung</option><option>Betreibungsbegehren</option><option>Rechtsöffnung</option><option>Gerichtsverfahren</option><option>Erledigt</option><option>Uneinbringlich</option></select></div>
+    <div class="grp"><label>Partner</label><select><option>alle</option><option>Creditreform</option><option>Intrum</option><option>Dun &amp; Bradstreet</option><option>Anwaltskanzlei Baumgartner</option><option>Gerichtliches Betreibungsamt</option></select></div>
+    <div class="grp"><label>Sparte</label><select><option>alle</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select></div>
+    <div class="grp"><label>AM</label><select><option>alle</option><option>PW</option><option>YB</option><option>SP</option><option>JV</option><option>NP</option></select></div>
+    <div class="grp"><label>Dauer</label><select><option>alle</option><option>&lt; 30 T</option><option>30 – 90 T</option><option>90 – 180 T</option><option>&gt; 180 T</option></select></div>
+    <div class="grp"><label>Mindest-Forderung</label><select><option>alle</option><option>&gt; CHF 5'000</option><option>&gt; CHF 15'000</option><option>&gt; CHF 30'000</option></select></div>
+  </div>
+
+  <!-- Bulk-Bar -->
+  <div class="bulk-bar">
+    <span class="count">2</span> Fälle ausgewählt · CHF 42'500 Forderung
+    <div class="actions">
+      <button class="bulk-btn" type="button">⎙ Aktenübersicht (PDF-Batch)</button>
+      <button class="bulk-btn" type="button">◰ CSV-Export · Steuerprüfung</button>
+      <button class="bulk-btn" type="button">✉ Status-Abfrage an Partner</button>
+      <button class="bulk-btn danger" type="button">⌫ Als uneinbringlich buchen · GF-Pflicht</button>
+    </div>
+  </div>
+
+  <!-- Liste -->
+  <div class="list-card">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th class="cb"><input type="checkbox"></th>
+          <th>Fall-Nr</th>
+          <th>Kunde</th>
+          <th>Sparte / AM</th>
+          <th>Forderung</th>
+          <th style="text-align:right;">Forderung CHF</th>
+          <th style="text-align:right;">Eingang CHF</th>
+          <th>Recovery</th>
+          <th>Partner</th>
+          <th>Übergabe</th>
+          <th>Dauer</th>
+          <th>Stage</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="pending-row" onclick="openCaseDrawer()">
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0012</td>
+          <td>
+            <div class="name">Hunziker &amp; Schneider AG</div>
+            <div class="name-sub">Solothurn · UID CHE-108.442.115</div>
+          </td>
+          <td>ING · <strong>PW</strong></td>
+          <td>
+            FN2026.01.0204
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 74 T überfällig</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 28'100</td>
+          <td class="num" style="color:var(--text-light);">—</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:0%;"></div></div>
+              <div class="rec-pct" style="color:var(--text-light);">0 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td style="color:var(--text-light);">pending</td>
+          <td style="color:var(--text-light);">—</td>
+          <td><span class="chip pending">Pending GF</span></td>
+        </tr>
+
+        <tr class="pending-row">
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0013</td>
+          <td>
+            <div class="name">Steinmann Immobilien</div>
+            <div class="name-sub">Zürich · UID CHE-111.882.004</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td>
+            FN2025.12.0088
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 128 T überfällig</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 16'200</td>
+          <td class="num" style="color:var(--text-light);">—</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:0%;"></div></div>
+              <div class="rec-pct" style="color:var(--text-light);">0 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Intrum</span></td>
+          <td style="color:var(--text-light);">pending</td>
+          <td style="color:var(--text-light);">—</td>
+          <td><span class="chip pending">Pending GF</span></td>
+        </tr>
+
+        <tr class="pending-row">
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0014</td>
+          <td>
+            <div class="name">Koller Bau GmbH</div>
+            <div class="name-sub">Luzern · UID CHE-112.004.338</div>
+          </td>
+          <td>GT · <strong>SP</strong></td>
+          <td>
+            FN2026.01.0318
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 61 T überfällig</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 8'100</td>
+          <td class="num" style="color:var(--text-light);">—</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:0%;"></div></div>
+              <div class="rec-pct" style="color:var(--text-light);">0 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td style="color:var(--text-light);">pending</td>
+          <td style="color:var(--text-light);">—</td>
+          <td><span class="chip pending">Pending GF</span></td>
+        </tr>
+
+        <tr class="selected">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0009</td>
+          <td>
+            <div class="name">Burkhalter GmbH</div>
+            <div class="name-sub">Aarau · UID CHE-107.221.009</div>
+          </td>
+          <td>GT · <strong>PW</strong></td>
+          <td>
+            FN2025.11.0387
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 142 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 21'600</td>
+          <td class="num" style="color:var(--green);">CHF 8'400</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg amber" style="width:38%;"></div></div>
+              <div class="rec-pct" style="color:var(--amber);">38 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td>18.02.2026</td>
+          <td>65 T</td>
+          <td><span class="chip work">In Bearbeitung</span></td>
+        </tr>
+
+        <tr class="selected">
+          <td class="cb"><input type="checkbox" checked onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2025-0044</td>
+          <td>
+            <div class="name">Lorenzi Holding</div>
+            <div class="name-sub">Lugano · UID CHE-104.881.772</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td>
+            FN2025.09.0221
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Honorarstreit · 198 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 34'200</td>
+          <td class="num" style="color:var(--green);">CHF 20'900</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg amber" style="width:61%;"></div></div>
+              <div class="rec-pct" style="color:var(--amber);">61 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Intrum</span></td>
+          <td>14.10.2025</td>
+          <td>192 T</td>
+          <td><span class="chip plan">Zahlungsvereinbarung</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0002</td>
+          <td>
+            <div class="name">Gräfler AG</div>
+            <div class="name-sub">St. Gallen · UID CHE-109.772.448</div>
+          </td>
+          <td>ING · <strong>SP</strong></td>
+          <td>
+            FN2025.10.0118
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 165 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 18'300</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg red" style="width:0%;"></div></div>
+              <div class="rec-pct" style="color:var(--red);">0 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Anwaltskanzlei Baumgartner</span></td>
+          <td>08.01.2026</td>
+          <td>106 T</td>
+          <td><span class="chip legal">Rechtsöffnung</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0006</td>
+          <td>
+            <div class="name">Neumayer Engineering</div>
+            <div class="name-sub">Bern · UID CHE-110.004.228</div>
+          </td>
+          <td>ING · <strong>PW</strong></td>
+          <td>
+            FN2025.12.0211
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 97 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 18'200</td>
+          <td class="num" style="color:var(--green);">CHF 6'100</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg amber" style="width:34%;"></div></div>
+              <div class="rec-pct" style="color:var(--amber);">34 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td>02.02.2026</td>
+          <td>81 T</td>
+          <td><span class="chip work">In Bearbeitung</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0010</td>
+          <td>
+            <div class="name">Vollrath Consulting</div>
+            <div class="name-sub">Zug · UID CHE-108.221.990</div>
+          </td>
+          <td>PUR · <strong>NP</strong></td>
+          <td>
+            FN2025.12.0388
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 83 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 12'400</td>
+          <td class="num" style="color:var(--green);">CHF 12'400</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:100%;"></div></div>
+              <div class="rec-pct" style="color:var(--green);">100 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Intrum</span></td>
+          <td>22.02.2026</td>
+          <td>42 T</td>
+          <td><span class="chip closed">Erledigt</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0011</td>
+          <td>
+            <div class="name">Trüb Immobilien</div>
+            <div class="name-sub">Baden · UID CHE-113.118.447</div>
+          </td>
+          <td>REM · <strong>JV</strong></td>
+          <td>
+            FN2026.01.0142
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 52 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 11'800</td>
+          <td class="num" style="color:var(--green);">CHF 3'600</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg amber" style="width:31%;"></div></div>
+              <div class="rec-pct" style="color:var(--amber);">31 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td>14.03.2026</td>
+          <td>41 T</td>
+          <td><span class="chip plan">Zahlungsvereinbarung</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2025-0038</td>
+          <td>
+            <div class="name">Weber &amp; Partner</div>
+            <div class="name-sub">Fribourg · UID CHE-102.338.881</div>
+          </td>
+          <td>ARC · <strong>YB</strong></td>
+          <td>
+            FN2025.07.0102
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 240 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 18'900</td>
+          <td class="num" style="color:var(--green);">CHF 16'200</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:86%;"></div></div>
+              <div class="rec-pct" style="color:var(--green);">86 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Intrum</span></td>
+          <td>22.09.2025</td>
+          <td>214 T</td>
+          <td><span class="chip closed">Erledigt</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2025-0028</td>
+          <td>
+            <div class="name">Winkler Consulting</div>
+            <div class="name-sub">Basel · UID CHE-100.882.447</div>
+          </td>
+          <td>PUR · <strong>NP</strong></td>
+          <td>
+            FN2025.05.0088
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 284 T · Konkurs</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 8'500</td>
+          <td class="num" style="color:var(--text-light);">CHF 0</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg red" style="width:0%;"></div></div>
+              <div class="rec-pct" style="color:var(--red);">0 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Anwaltskanzlei Baumgartner</span></td>
+          <td>28.06.2025</td>
+          <td>284 T</td>
+          <td><span class="chip writeoff">Uneinbringlich</span></td>
+        </tr>
+
+        <tr>
+          <td class="cb"><input type="checkbox" onclick="event.stopPropagation();"></td>
+          <td class="case-nr">INK-2026-0007</td>
+          <td>
+            <div class="name">Obrist Haustechnik</div>
+            <div class="name-sub">Wil SG · UID CHE-111.442.008</div>
+          </td>
+          <td>GT · <strong>SP</strong></td>
+          <td>
+            FN2025.11.0227
+            <div style="font-size:10.5px; color:var(--text-light); margin-top:1px;">Mahnung 3 · 118 T</div>
+          </td>
+          <td class="num" style="color:var(--red);">CHF 16'240</td>
+          <td class="num" style="color:var(--green);">CHF 16'240</td>
+          <td>
+            <div class="rec-bar-wrap">
+              <div class="rec-bar"><div class="seg" style="width:100%;"></div></div>
+              <div class="rec-pct" style="color:var(--green);">100 %</div>
+            </div>
+          </td>
+          <td><span class="chip partner">Creditreform</span></td>
+          <td>12.02.2026</td>
+          <td>68 T</td>
+          <td><span class="chip closed">Erledigt</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="list-footer">
+      <span>12 von 29 Fällen · alle aktiven + letzte 6 erledigte</span>
+      <span><span style="color:var(--amber);">●</span> Pending GF-Freigabe · <span style="color:var(--accent);">●</span> aktiv · <span style="color:var(--red);">●</span> Rechtsweg · <span style="color:var(--green);">●</span> erledigt</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Fall-Detail · INK-2026-0012 · Hunziker & Schneider AG
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="caseOverlay" onclick="closeCaseDrawer()"></div>
+<div class="drawer" id="caseDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>INK-2026-0012</h3>
+      <span class="chip pending" style="margin-left:6px;">Pending GF</span>
+      <span class="chip partner" style="margin-left:4px;">Creditreform</span>
+    </div>
+    <button class="close" type="button" onclick="closeCaseDrawer()">×</button>
+  </div>
+  <div class="drawer-sub">
+    <span>Hunziker &amp; Schneider AG · Solothurn</span>
+    <span>·</span>
+    <span>AM PW · Sparte ING</span>
+    <span>·</span>
+    <span>vorbereitet 22.04. durch <strong style="color:var(--accent);">ST</strong></span>
+  </div>
+
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Übersicht</div>
+    <div class="drawer-tab">Timeline · 7</div>
+    <div class="drawer-tab">Dokumente · 5</div>
+    <div class="drawer-tab">Kosten</div>
+    <div class="drawer-tab">Kommunikation · 2</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Case-Snapshot -->
+    <div class="case-snap">
+      <div class="row1">
+        <span class="case-id">FN2026.01.0204</span>
+        <span style="font-family:'Libre Baskerville',serif; font-size:16px; color:var(--red); font-weight:700;">CHF 28'100</span>
+      </div>
+      <div class="partner-line">
+        Offene Forderung seit 10.01.2026 · Fällig 09.02.2026 · <strong style="color:var(--red);">74 T überfällig</strong><br>
+        Mahnkadenz Standard: M1 am 24.02. · M2 am 11.03. · M3 am 26.03. · Kein Response
+      </div>
+      <div class="pills">
+        <span class="pill">Kandidat: Beno Schär</span>
+        <span class="pill">Funktion: Senior Bauingenieur</span>
+        <span class="pill">Eintritt: 15.02.2026</span>
+        <span class="pill">Probezeit: aktiv bis 15.05.</span>
+        <span class="pill">Honorar-Staffel: 25 %</span>
+      </div>
+    </div>
+
+    <!-- GF-Approval-Block -->
+    <div class="warn-inline gf">
+      <div class="title">⚐ GF-Freigabe benötigt</div>
+      Backoffice <strong style="color:var(--accent);">ST</strong> hat den Fall vorbereitet. Bevor die Übergabe an Creditreform aktiviert wird, braucht es Freigabe durch GF (NS oder MB). Geschätzte Kosten: CHF 890 Einreichgebühr + 12 % Erfolgsprovision bei Zahlungseingang.
+    </div>
+
+    <!-- KPI-Mini-Grid -->
+    <div class="kpi-mini-grid">
+      <div class="kpi-mini red">
+        <div class="lbl">Hauptforderung</div>
+        <div class="val">CHF 28'100</div>
+        <div class="sub">inkl. MwSt</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="lbl">Verzugszins 5 %</div>
+        <div class="val">CHF 285</div>
+        <div class="sub">seit 09.02.2026 · 74 T</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="lbl">Mahngebühr</div>
+        <div class="val">CHF 90</div>
+        <div class="sub">M2 + M3 gemäss AGB §7</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="lbl">Erwartete Netto-Recovery</div>
+        <div class="val">CHF 24'310</div>
+        <div class="sub">86 % nach Partner-Kosten</div>
+      </div>
+    </div>
+
+    <!-- Vor-Inkasso-Kontext -->
+    <div class="sect-h">
+      Vor-Inkasso-Prozess
+      <a href="#">Im Kundenkonto öffnen ›</a>
+    </div>
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="ts">26.03.2026<br>09:15</div>
+        <div class="dot red"></div>
+        <div class="body">
+          <div class="main">Mahnung 3 versendet · CHF 60 Mahngebühr</div>
+          <div class="meta"><span class="actor">ST</span> Backoffice · Email + Einschreiben · kein Response bis 15.04.</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="ts">11.03.2026<br>14:22</div>
+        <div class="dot amber"></div>
+        <div class="body">
+          <div class="main">Mahnung 2 versendet · CHF 30 Mahngebühr</div>
+          <div class="meta"><span class="actor">ST</span> Backoffice · Email · kein Response</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="ts">24.02.2026<br>11:08</div>
+        <div class="dot"></div>
+        <div class="body">
+          <div class="main">Mahnung 1 versendet</div>
+          <div class="meta">Auto-Versand · Kadenz Standard T+15 · kein Response</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="ts">22.01.2026<br>10:30</div>
+        <div class="dot"></div>
+        <div class="body">
+          <div class="main">Telefon-Kontaktversuch · kein Erfolg</div>
+          <div class="meta"><span class="actor">PW</span> AM · Buchhaltung nicht erreichbar · Mailbox</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="ts">10.01.2026<br>08:45</div>
+        <div class="dot gray"></div>
+        <div class="body">
+          <div class="main">Rechnung FN2026.01.0204 versendet · CHF 28'100</div>
+          <div class="meta">Honorar-Vermittlung Beno Schär · AGB §4 Stufe 25 % · Fällig 09.02.2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dokumente -->
+    <div class="sect-h">
+      Dokumente · 5
+      <a href="#">Alle anzeigen ›</a>
+    </div>
+    <div class="doc-list">
+      <div class="doc-row">
+        <span class="ic">📄</span>
+        <div class="main">
+          <div class="n">FN2026.01.0204 · Rechnung PDF</div>
+          <div class="sub">10.01.2026 · 248 KB</div>
+        </div>
+        <a href="#">Öffnen</a>
+      </div>
+      <div class="doc-row">
+        <span class="ic">📄</span>
+        <div class="main">
+          <div class="n">Mahnung 1 · 2 · 3 (gebündelt)</div>
+          <div class="sub">24.02. · 11.03. · 26.03.2026 · 412 KB</div>
+        </div>
+        <a href="#">Öffnen</a>
+      </div>
+      <div class="doc-row">
+        <span class="ic">📎</span>
+        <div class="main">
+          <div class="n">Vermittlungsvertrag · AGB FEB 2023</div>
+          <div class="sub">unterzeichnet 18.11.2025 · 1.2 MB</div>
+        </div>
+        <a href="#">Öffnen</a>
+      </div>
+      <div class="doc-row">
+        <span class="ic">📧</span>
+        <div class="main">
+          <div class="n">Email-Korrespondenz (6 Mails)</div>
+          <div class="sub">letzter Kontakt 22.01.2026 · aus Email-Archiv</div>
+        </div>
+        <a href="#">Öffnen</a>
+      </div>
+      <div class="doc-row">
+        <span class="ic">📑</span>
+        <div class="main">
+          <div class="n">Übergabe-Dossier Creditreform (Entwurf)</div>
+          <div class="sub">vorbereitet 22.04.2026 · 1.8 MB · ZIP</div>
+        </div>
+        <a href="#">Öffnen</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div style="font-size:11.5px; color:var(--text-mid);">
+      Geschätzte Netto-Recovery · <strong style="font-family:'Libre Baskerville',serif; color:var(--green); font-size:15px; display:block;">CHF 24'310</strong>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-danger" type="button">⌫ Ablehnen</button>
+      <button class="btn btn-secondary" type="button">✎ Anpassen</button>
+      <button class="btn btn-gf" type="button">⚐ GF-Freigabe erteilen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Fall vorbereiten · Wizard (4 Steps)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="submitOverlay" onclick="closeSubmitDrawer()"></div>
+<div class="drawer" id="submitDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Neuer Inkasso-Fall</h3>
+      <span class="chip pending" style="margin-left:6px;">Entwurf</span>
+    </div>
+    <button class="close" type="button" onclick="closeSubmitDrawer()">×</button>
+  </div>
+
+  <div class="wizard-steps">
+    <div class="wizard-step done">1 · Rechnung wählen</div>
+    <div class="wizard-step done">2 · Partner &amp; Strategie</div>
+    <div class="wizard-step active">3 · Dossier &amp; Kosten</div>
+    <div class="wizard-step gf">4 · GF-Freigabe</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="case-snap">
+      <div class="row1">
+        <span class="case-id">FN2025.12.0088</span>
+        <span style="font-family:'Libre Baskerville',serif; font-size:16px; color:var(--red); font-weight:700;">CHF 16'200</span>
+      </div>
+      <div class="partner-line">
+        <strong>Steinmann Immobilien · Zürich</strong> · Mahnung 3 · 128 T überfällig · REM · AM JV<br>
+        Verhandlungsversuche: 3 Telefonate erfolglos · 2 Emails ohne Response seit 12.03.
+      </div>
+      <div class="pills">
+        <span class="pill">Kandidatin: Melanie Probst</span>
+        <span class="pill">Property Manager REM</span>
+        <span class="pill">Eintritt: 01.12.2025</span>
+        <span class="pill">Probezeit abgelaufen</span>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Inkasso-Partner</label>
+      <select>
+        <option selected>Intrum — Standard-Partner · 12 % Erfolgsprovision · CHF 650 Einreichung</option>
+        <option>Creditreform — 10 % · CHF 890 · schneller Prozess</option>
+        <option>Anwaltskanzlei Baumgartner — ab Rechtsöffnung · Stundensatz CHF 280</option>
+      </select>
+      <div class="hint">Default aus Mandat-Kategorie REM · überschreibbar</div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Strategie</label>
+        <select>
+          <option>Klassisches Inkasso + Betreibung</option>
+          <option>Nur aussergerichtlich</option>
+          <option>Direkt Rechtsweg (Anwalt)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Zielgrösse Netto-Recovery</label>
+        <input type="text" value="CHF 14'000 (86 %)" readonly style="background:var(--surface); color:var(--text-mid);">
+      </div>
+    </div>
+
+    <div class="sect-h">Kostenvoranschlag</div>
+    <div class="cost-block">
+      <div class="cost-row"><span class="lbl">Hauptforderung</span><span class="amt">CHF 16'200</span></div>
+      <div class="cost-row"><span class="lbl">+ Verzugszins 5 % · 128 T</span><span class="amt">CHF 284</span></div>
+      <div class="cost-row"><span class="lbl">+ Mahngebühren (M2 + M3)</span><span class="amt">CHF 90</span></div>
+      <div class="cost-row"><span class="lbl">= Gesamt-Forderung</span><span class="amt">CHF 16'574</span></div>
+      <div class="cost-row debit"><span class="lbl">− Einreichgebühr Intrum</span><span class="amt">CHF 650</span></div>
+      <div class="cost-row debit"><span class="lbl">− Erfolgsprovision 12 % (bei Eingang)</span><span class="amt">CHF 1'989</span></div>
+      <div class="cost-row"><span class="lbl">= Erwartete Netto-Recovery (best case)</span><span class="amt" style="color:var(--green);">CHF 13'935</span></div>
+    </div>
+
+    <div class="sect-h">Dossier-Anhänge</div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Rechnung FN2025.12.0088 (PDF)
+        <small>10.12.2025 · 264 KB</small>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Mahnung 1 · 2 · 3 (gebündelt)
+        <small>25.12. · 11.01. · 26.01.2026 · 418 KB</small>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Vermittlungsvertrag AGB FEB 2023 (unterzeichnet)
+        <small>22.10.2025 · 1.1 MB</small>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Email-Korrespondenz-Export (8 Mails, letzter 12.03.2026)
+        <small>aus Email-Archiv · 212 KB</small>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox">
+      <div class="txt">
+        Interne Notiz · Telefonprotokoll
+        <small>3 Versuche · AM JV · nicht erreicht</small>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-top:12px;">
+      <label>Zusatz-Notiz an Partner (optional)</label>
+      <textarea placeholder="z.B. Ansprechpartner Buchhaltung war Frau Steinmann · abwesend seit Feb · Stellvertretung über info@steinmann-im.ch …"></textarea>
+    </div>
+
+    <div class="warn-inline">
+      <div class="title">Nächster Schritt: GF-Freigabe</div>
+      Mit „Weiter" geht das Dossier an GF (NS oder MB) zur Genehmigung. Versand an Intrum erfolgt erst nach Freigabe. Backoffice-Rolle kann hier nicht direkt versenden.
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div style="font-size:12px; color:var(--text-mid);">
+      Netto-Recovery (est.) · <strong style="font-family:'Libre Baskerville',serif; color:var(--green); font-size:15px; display:block;">CHF 13'935</strong>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-secondary" type="button">‹ Zurück</button>
+      <button class="btn btn-primary" type="button">Weiter: GF-Freigabe anfordern ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openCaseDrawer(){
+    document.getElementById('caseDrawer').classList.add('active');
+    document.getElementById('caseOverlay').classList.add('active');
+  }
+  function closeCaseDrawer(){
+    document.getElementById('caseDrawer').classList.remove('active');
+    document.getElementById('caseOverlay').classList.remove('active');
+  }
+  function openSubmitDrawer(){
+    document.getElementById('submitDrawer').classList.add('active');
+    document.getElementById('submitOverlay').classList.add('active');
+  }
+  function closeSubmitDrawer(){
+    document.getElementById('submitDrawer').classList.remove('active');
+    document.getElementById('submitOverlay').classList.remove('active');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeCaseDrawer(); closeSubmitDrawer(); }
+  });
+</script>
+
+</body>
+</html>

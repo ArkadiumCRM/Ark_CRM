@@ -29,10 +29,18 @@
 
   /* Tabs */
   .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:14px; }
-  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; }
+  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; user-select:none; }
+  .tab:hover { color:var(--accent); }
   .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
   .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
   .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Empty / Historie */
+  .empty-panel { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:34px 28px; text-align:center; color:var(--text-light); font-size:13px; line-height:1.6; }
+  .empty-panel h3 { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); margin:0 0 6px; }
 
   /* Bulk-Bar */
   .bulk-bar { background:color-mix(in srgb,var(--accent) 8%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:12.5px; }
@@ -157,11 +165,14 @@
 
   <!-- Tabs -->
   <div class="tabs">
-    <div class="tab active">Pending <span class="cnt">7</span></div>
-    <div class="tab">Aktiv in Stufe <span class="cnt">3</span></div>
-    <div class="tab">Honorarstreit <span class="cnt">1</span></div>
-    <div class="tab">Historie</div>
+    <div class="tab active" data-tab="pending">Pending <span class="cnt">7</span></div>
+    <div class="tab" data-tab="active">Aktiv in Stufe <span class="cnt">3</span></div>
+    <div class="tab" data-tab="dispute">Honorarstreit <span class="cnt">1</span></div>
+    <div class="tab" data-tab="hist">Historie</div>
   </div>
+
+  <!-- Tab: Pending -->
+  <div class="tab-pane active" id="tab-pending">
 
   <!-- Bulk-Bar -->
   <div class="bulk-bar">
@@ -286,6 +297,189 @@
     <strong>Disputed</strong>: Timer pausiert · manuelle GF-Eskalation
   </div>
 
+  </div><!-- /tab-pending -->
+
+  <!-- Tab: Aktiv in Stufe -->
+  <div class="tab-pane" id="tab-active">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Offen</th>
+            <th>Aktuelle Stufe</th>
+            <th>Gesendet</th>
+            <th>Frist läuft bis</th>
+            <th>Rest-Frist</th>
+            <th>Nächster Schritt</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.04.1055</td>
+            <td class="kunde">Frauenfelder Holding <small><span class="chip profile-std">Standard</span> · AM PW · GT</small></td>
+            <td class="num">CHF 22'500</td>
+            <td><span class="next-stage l2">Mahnung 2</span></td>
+            <td>25.03.2026</td>
+            <td>05.05.2026</td>
+            <td style="color:var(--amber);font-weight:600;">11 Tage</td>
+            <td>auto → Mahnung 3 am 06.05.</td>
+            <td><button class="row-action" type="button">✉ Erneut senden</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2026.03.0924</td>
+            <td class="kunde">Volare Group AG <small><span class="chip profile-key">Key-Account</span> · AM JV · REM</small></td>
+            <td class="num">CHF 10'810</td>
+            <td><span class="next-stage l2">Mahnung 2</span></td>
+            <td>16.04.2026</td>
+            <td>01.05.2026</td>
+            <td style="color:var(--amber);font-weight:600;">7 Tage</td>
+            <td>auto → Mahnung 3 am 02.05.</td>
+            <td><button class="row-action" type="button">✉ Erneut senden</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.11.0812</td>
+            <td class="kunde">Arcanum Architekten <small><span class="chip profile-std">Standard</span> · AM YB · ARC</small></td>
+            <td class="num">CHF 11'800</td>
+            <td><span class="next-stage l3">Mahnung 3</span></td>
+            <td>05.02.2026</td>
+            <td>29.04.2026</td>
+            <td style="color:var(--red);font-weight:600;">5 Tage</td>
+            <td>→ Inkasso-Übergabe ab 30.04. (GF-Pflicht)</td>
+            <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">⚐ GF-Review</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Hinweis:</strong> In dieser Liste laufen Mahnungen, die bereits versendet wurden und deren Frist noch offen ist. Nach Ablauf springen sie automatisch in die nächste Stufe (oder werden manuell eskaliert).
+    </div>
+  </div><!-- /tab-active -->
+
+  <!-- Tab: Honorarstreit -->
+  <div class="tab-pane" id="tab-dispute">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Strittig</th>
+            <th>Grund</th>
+            <th>Markiert am</th>
+            <th>Verantwortlich</th>
+            <th>Timer</th>
+            <th>Nächster Schritt</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.01.0142</td>
+            <td class="kunde">Sievert &amp; Co. <small><span class="chip profile-std">Standard</span> · AM SP · GT</small></td>
+            <td class="num" style="color:#c2410c;">CHF 18'900</td>
+            <td>Kandidatin vor Probezeit-Ende zurückgetreten · Kunde bestreitet Erfolgshonorar</td>
+            <td>20.02.2026</td>
+            <td>NS (GF) + SP (AM)</td>
+            <td><span class="chip dispute">Timer pausiert</span></td>
+            <td>Besprechung geplant 28.04. · danach Vergleich oder Rechtsweg</td>
+            <td><button class="row-action" type="button" style="color:#c2410c;border-color:#c2410c;">⚑ Eskalieren</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Honorarstreit-Flow:</strong> AM oder GF markiert Rechnung als strittig → Auto-Mahnung pausiert → GF-Eskalation (Vergleich / Storno / Rechtsweg). Wiederaufnahme der Mahn-Kadenz nur durch GF-Freigabe.
+    </div>
+  </div><!-- /tab-dispute -->
+
+  <!-- Tab: Historie -->
+  <div class="tab-pane" id="tab-hist">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Brutto</th>
+            <th>Höchste Stufe</th>
+            <th>Abgeschlossen</th>
+            <th>Ausgang</th>
+            <th>Dauer</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.01.0118</td>
+            <td class="kunde">Emch+Berger Gruppe <small>AM PW · ING</small></td>
+            <td class="num">CHF 28'500</td>
+            <td><span class="next-stage l1">Mahnung 1</span></td>
+            <td>08.04.2026</td>
+            <td style="color:var(--green);font-weight:600;">Bezahlt nach Mahnung 1</td>
+            <td>12 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.12.0388</td>
+            <td class="kunde">Vollrath Consulting <small>AM NP · PUR</small></td>
+            <td class="num">CHF 12'400</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>22.02.2026</td>
+            <td style="color:var(--green);font-weight:600;">Inkasso erfolgreich · 100 % eingegangen</td>
+            <td>82 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.11.0227</td>
+            <td class="kunde">Obrist Haustechnik <small>AM SP · GT</small></td>
+            <td class="num">CHF 16'240</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>12.02.2026</td>
+            <td style="color:var(--green);font-weight:600;">Inkasso erfolgreich · 100 %</td>
+            <td>68 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.10.0442</td>
+            <td class="kunde">Schneider Bau AG <small>AM SP · GT</small></td>
+            <td class="num">CHF 9'820</td>
+            <td><span class="next-stage l3">Mahnung 3</span></td>
+            <td>18.01.2026</td>
+            <td style="color:var(--green);font-weight:600;">Bezahlt nach Mahnung 3</td>
+            <td>54 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.05.0088</td>
+            <td class="kunde">Winkler Consulting <small>AM NP · PUR</small></td>
+            <td class="num" style="text-decoration:line-through;color:var(--text-light);">CHF 8'500</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>14.03.2026</td>
+            <td style="color:var(--red);font-weight:600;">Konkurs · uneinbringlich abgeschrieben</td>
+            <td>284 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.07.0102</td>
+            <td class="kunde">Weber &amp; Partner <small>AM YB · ARC</small></td>
+            <td class="num">CHF 18'900</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>08.04.2026</td>
+            <td style="color:var(--amber);font-weight:600;">Vergleich · 86 % eingegangen</td>
+            <td>214 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Auswertung letzte 12 Monate:</strong> Recovery-Rate 92 % · ∅ Dauer 78 Tage · 1 Ausfall (Konkurs). Export für Berichte via „⎙ Mahn-Report PDF".
+    </div>
+  </div><!-- /tab-hist -->
+
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -346,6 +540,17 @@
 <script>
   function openBulk(){ document.getElementById('bulkModal').classList.add('active'); }
   function closeBulk(){ document.getElementById('bulkModal').classList.remove('active'); }
+
+  document.querySelectorAll('.tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      if (!target) return;
+      document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + target)?.classList.add('active');
+    });
+  });
 </script>
 
 </body>
