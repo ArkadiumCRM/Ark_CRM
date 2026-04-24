@@ -183,12 +183,98 @@
 
   .warn-inline { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left:3px solid var(--amber); padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text); border-radius:2px; }
   .warn-inline .title { font-weight:700; margin-bottom:2px; }
+
+  /* ═══ Route-View Toggle (Liste / Vollansicht Kundenkonto) ═══ */
+  .route-view { display:none; }
+  .route-view.active { display:block; }
+
+  /* Konto-View · Breadcrumb */
+  .breadcrumb { font-size:11.5px; color:var(--text-light); margin-bottom:12px; }
+  .breadcrumb a { color:var(--accent); text-decoration:none; cursor:pointer; font-weight:600; }
+  .breadcrumb a:hover { text-decoration:underline; }
+
+  /* Konto-View · Snapshot-Header */
+  .snapshot { background:var(--surface); border-radius:4px; padding:18px 22px; box-shadow:var(--shadow-sm); margin-bottom:18px; display:grid; grid-template-columns:1.2fr 1fr; gap:20px; }
+  .snapshot .l h1 { margin:0 0 4px; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .snapshot .l .addr { font-size:13px; color:var(--text-mid); line-height:1.5; }
+  .snapshot .l .meta { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .snapshot .l .pill { background:var(--bg); padding:3px 10px; border-radius:10px; font-size:11px; color:var(--text-mid); border:1px solid var(--border); }
+  .snapshot .l .pill strong { color:var(--text); }
+  .snapshot .r { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .mini-kpi { background:var(--bg); padding:10px 12px; border-radius:3px; border-left:3px solid var(--accent); }
+  .mini-kpi.red { border-left-color:var(--red); }
+  .mini-kpi.green { border-left-color:var(--green); }
+  .mini-kpi .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .mini-kpi .big { font-family:'Libre Baskerville',serif; font-size:18px; font-weight:700; color:var(--text); margin:4px 0 1px; }
+  .mini-kpi.red .big { color:var(--red); }
+  .mini-kpi.green .big { color:var(--green); }
+  .mini-kpi .sub { font-size:11px; color:var(--text-mid); }
+
+  /* Konto-View · Settings-Bar (Kadenz/Anrede/Privacy) */
+  .settings-bar { background:var(--surface); border-radius:4px; padding:12px 16px; box-shadow:var(--shadow-sm); margin-bottom:14px; display:flex; gap:18px; align-items:center; flex-wrap:wrap; font-size:12.5px; }
+  .settings-bar .grp { display:flex; align-items:center; gap:8px; }
+  .settings-bar label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .settings-bar select { font-family:'DM Sans',sans-serif; font-size:12.5px; padding:5px 8px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+  .settings-bar .dot-s { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); margin-right:5px; }
+  .settings-bar .dot-s.amber { background:var(--amber); }
+  .settings-bar .dot-s.red { background:var(--red); }
+
+  /* Konto-View · Tabs */
+  .konto-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:14px; overflow-x:auto; }
+  .konto-tabs .ktab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .konto-tabs .ktab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .konto-tabs .ktab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
+  .konto-tabs .ktab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Konto-View · Empty-State */
+  .empty-state { background:var(--surface); border-radius:4px; padding:40px 24px; box-shadow:var(--shadow-sm); text-align:center; color:var(--text-light); font-size:13px; line-height:1.6; }
+  .empty-state .ic { font-size:28px; margin-bottom:8px; opacity:.5; }
+  .empty-state .hd { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--text-mid); margin-bottom:4px; font-weight:700; }
+
+  /* Konto-View · Ledger-Tabelle */
+  .konto-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .konto-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .konto-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .konto-table tbody tr:last-child td { border-bottom:none; }
+  .konto-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%, var(--bg)); }
+  .konto-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .konto-table .nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .konto-table tr.total-row td { background:var(--bg); font-family:'Libre Baskerville',serif; font-weight:700; }
+
+  /* Konto-View · Timeline (Audit) */
+  .timeline { background:var(--surface); border-radius:4px; padding:18px 20px; box-shadow:var(--shadow-sm); }
+  .tl-row { display:grid; grid-template-columns:140px 20px 1fr; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:12.5px; align-items:start; }
+  .tl-row:last-child { border-bottom:none; }
+  .tl-row .ts { color:var(--text-light); font-variant-numeric:tabular-nums; font-size:11.5px; line-height:1.5; }
+  .tl-row .dot-tl { width:10px; height:10px; border-radius:50%; background:var(--accent); margin-top:5px; }
+  .tl-row .dot-tl.green { background:var(--green); }
+  .tl-row .dot-tl.red { background:var(--red); }
+  .tl-row .dot-tl.amber { background:var(--amber); }
+  .tl-row .body-tl { color:var(--text); line-height:1.5; }
+  .tl-row .body-tl .main { font-weight:600; }
+  .tl-row .body-tl .meta { font-size:11.5px; color:var(--text-light); margin-top:2px; }
+  .tl-row .body-tl .actor { color:var(--accent); font-weight:600; }
+
+  /* Konto-View · DSO-Bar (groß) */
+  .dso-bar-big { display:flex; height:18px; background:var(--bg); border-radius:3px; overflow:hidden; margin-top:6px; }
+  .dso-bar-big .seg { font-size:10px; font-weight:700; color:#fff; display:flex; align-items:center; justify-content:center; }
+  .dso-bar-big .seg.good { background:var(--green); }
+  .dso-bar-big .seg.ok { background:var(--accent); }
+  .dso-bar-big .seg.warn { background:var(--amber); }
+  .dso-bar-big .seg.bad { background:var(--red); }
 </style>
 </head>
 <body>
 <script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 
 <div class="page">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 1 · Debitoren-Liste (Default · URL ohne #konto)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-list" class="route-view active">
 
   <div class="page-head">
     <div>
@@ -591,6 +677,236 @@
     </div>
   </div>
 
+</div><!-- /view-list -->
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     VIEW 2 · Vollansicht Kundenkonto (URL #konto=<kunde-id>)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="view-konto" class="route-view">
+
+  <div class="breadcrumb"><a onclick="showList()">← Debitoren</a> › <strong id="konto-name-bc">Emch+Berger Gruppe</strong></div>
+
+  <!-- Snapshot-Header -->
+  <div class="snapshot">
+    <div class="l">
+      <h1 id="konto-name">Emch+Berger Gruppe</h1>
+      <div class="addr">Gartenstrasse 1 · 3001 Bern · Schweiz<br>z.Hd. Buchhaltung Finanzen · buchhaltung@emch-berger.ch</div>
+      <div class="meta">
+        <span class="pill"><strong>Kadenz:</strong> Key-Account</span>
+        <span class="pill"><strong>Anrede:</strong> Sie</span>
+        <span class="pill"><strong>Blind-Copy:</strong> aktiv</span>
+        <span class="pill"><strong>AM:</strong> PW</span>
+        <span class="pill"><strong>UID-Empfänger:</strong> CHE-105.428.922</span>
+        <span class="pill"><strong>IBAN:</strong> CH93 0076 2011 6238 5295 7</span>
+      </div>
+    </div>
+    <div class="r">
+      <div class="mini-kpi red">
+        <div class="lbl">Offener Saldo</div>
+        <div class="big">CHF 74'185</div>
+        <div class="sub">3 Rechnungen · 1 überfällig</div>
+      </div>
+      <div class="mini-kpi green">
+        <div class="lbl">Bezahlt YTD 2026</div>
+        <div class="big">CHF 133'425</div>
+        <div class="sub">6 Rechnungen · alle erfüllt</div>
+      </div>
+      <div class="mini-kpi">
+        <div class="lbl">Ø Zahlungsdauer</div>
+        <div class="big">34 Tage</div>
+        <div class="sub">Target 30 · +4 T · Median 32</div>
+      </div>
+      <div class="mini-kpi">
+        <div class="lbl">Höchste offene Einzelforderung</div>
+        <div class="big">CHF 36'083</div>
+        <div class="sub">FN2026.03.0917 · 3 T überfällig</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings-Bar -->
+  <div class="settings-bar">
+    <div class="grp">
+      <label>Mahn-Kadenz</label>
+      <select><option>Key-Account (T+30/45/60)</option><option>Standard (T+15/30/45)</option></select>
+      <span style="color:var(--text-light);font-size:11px;">·</span>
+      <span><span class="dot-s"></span>Historisch keine Betreibung</span>
+    </div>
+    <div class="grp">
+      <label>Anrede</label>
+      <select><option>Sie-Form</option><option>Du-Form</option></select>
+    </div>
+    <div class="grp">
+      <label>Privacy-Mode</label>
+      <select><option>Blind-Copy (Default)</option><option>Initialen</option><option>Nur interne Referenz</option><option>Vollname</option></select>
+    </div>
+    <div class="grp" style="margin-left:auto;">
+      <label>Export-Status</label>
+      <span><span class="dot-s"></span>Treuhand Kunz · März 2026 exportiert 01.04.</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="konto-tabs">
+    <div class="ktab active" data-ktab="offen">Offene Posten <span class="cnt">3</span></div>
+    <div class="ktab" data-ktab="zahlungen">Zahlungshistorie <span class="cnt">6</span></div>
+    <div class="ktab" data-ktab="refunds">Gutschriften / Refunds <span class="cnt">1</span></div>
+    <div class="ktab" data-ktab="streit">Streitfälle <span class="cnt">0</span></div>
+    <div class="ktab" data-ktab="audit">Audit-Timeline</div>
+  </div>
+
+  <!-- TAB 1 · Offene Posten -->
+  <div class="tab-pane active" id="ktab-offen">
+    <div class="list-card">
+      <table class="konto-table">
+        <thead>
+          <tr><th>Rechnungs-Nr</th><th>Typ</th><th>Referenz</th><th style="text-align:right;">Brutto</th><th style="text-align:right;">Offen</th><th>Issue</th><th>Fälligkeit</th><th>Alter</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.03.0917</td>
+            <td><span class="chip ok">Erfolg</span></td>
+            <td>Tobias Fischer · Projektleiter ING</td>
+            <td class="num">CHF 36'083</td>
+            <td class="num" style="color:var(--red);">CHF 36'083</td>
+            <td>22.03.2026</td>
+            <td>21.04.2026</td>
+            <td style="color:var(--red);">3 T überfällig</td>
+            <td><span class="chip overdue">Überfällig</span><br><span class="chip dunning" style="margin-top:3px;">Mahnung 1 fällig</span></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2026.04.1008</td>
+            <td><span class="chip ok">Erfolg</span></td>
+            <td>Lukas Wanner · Projektleiter ING</td>
+            <td class="num">CHF 34'862</td>
+            <td class="num">CHF 34'862</td>
+            <td>—</td><td>—</td><td>Entwurf</td>
+            <td><span class="chip draft">Entwurf</span></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2026.04.1102</td>
+            <td><span class="chip ok">Assessment</span></td>
+            <td>Scheelen EQ · 2 Kandidaten</td>
+            <td class="num">CHF 3'240</td>
+            <td class="num">CHF 3'240</td>
+            <td>18.04.2026</td>
+            <td>18.05.2026</td>
+            <td>3 T alt</td>
+            <td><span class="chip sent">Versendet</span></td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="4" style="text-align:right;">Offen gesamt</td>
+            <td class="num" style="color:var(--red);font-size:14px;">CHF 74'185</td>
+            <td colspan="4" style="color:var(--text-light);font-size:11px;">inkl. Entwurf CHF 34'862 · fakturiert offen CHF 39'323</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--surface);border-radius:4px;padding:16px 20px;box-shadow:var(--shadow-sm);margin-bottom:18px;margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+        <h2 style="margin:0;font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:var(--accent);">Zahlungsverhalten letzte 12 Monate</h2>
+        <span style="font-size:11.5px;color:var(--text-light);">9 bezahlte Rechnungen · ∅ 34 Tage</span>
+      </div>
+      <div class="dso-bar-big">
+        <div class="seg good" style="flex:4;">4× &lt; 25 T</div>
+        <div class="seg ok" style="flex:3;">3× 25 – 35 T</div>
+        <div class="seg warn" style="flex:1;">1× 36 – 45 T</div>
+        <div class="seg bad" style="flex:1;">1× &gt; 45 T</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-light);margin-top:4px;">
+        <span>beste 14 T (FN2025.11.0204)</span>
+        <span>schlechteste 52 T (FN2025.08.0612)</span>
+      </div>
+    </div>
+  </div><!-- /ktab-offen -->
+
+  <!-- TAB 2 · Zahlungshistorie -->
+  <div class="tab-pane" id="ktab-zahlungen">
+    <div class="list-card">
+      <table class="konto-table">
+        <thead>
+          <tr><th>Zahlungs-Datum</th><th>Valuta</th><th>Zahlungsmittel</th><th>Rechnung</th><th style="text-align:right;">Betrag</th><th>Match</th><th>DSO</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>08.04.2026</td><td>08.04.2026</td><td>QR-Überweisung</td><td class="nr">FN2026.01.0118 · CHF 28'500</td><td class="num" style="color:var(--green);">CHF 28'500</td><td><span class="chip ok">Auto · 100 %</span></td><td style="color:var(--text-light);">28 T</td></tr>
+          <tr><td>14.03.2026</td><td>14.03.2026</td><td>QR-Überweisung</td><td class="nr">FN2026.02.0422 · CHF 22'100</td><td class="num" style="color:var(--green);">CHF 22'100</td><td><span class="chip ok">Auto · 100 %</span></td><td style="color:var(--text-light);">21 T</td></tr>
+          <tr><td>28.02.2026</td><td>28.02.2026</td><td>Bank-Überweisung</td><td class="nr">FN2026.01.0088 · CHF 14'650 · Teilzahlung</td><td class="num" style="color:var(--green);">CHF 7'325</td><td><span class="chip partial">Manuell · 50 %</span></td><td style="color:var(--amber);">41 T</td></tr>
+          <tr><td>12.02.2026</td><td>13.02.2026</td><td>QR-Überweisung</td><td class="nr">FN2025.12.0988 · CHF 31'200</td><td class="num" style="color:var(--green);">CHF 31'200</td><td><span class="chip ok">Auto · 100 %</span></td><td style="color:var(--text-light);">23 T</td></tr>
+          <tr><td>15.11.2025</td><td>15.11.2025</td><td>QR-Überweisung</td><td class="nr">FN2025.11.0204 · CHF 19'850</td><td class="num" style="color:var(--green);">CHF 19'850</td><td><span class="chip ok">Auto · 100 %</span></td><td style="color:var(--green);">14 T</td></tr>
+          <tr><td>02.09.2025</td><td>03.09.2025</td><td>Bank-Überweisung</td><td class="nr">FN2025.08.0612 · CHF 24'450</td><td class="num" style="color:var(--green);">CHF 24'450</td><td><span class="chip partial">Manuell · Ref fehlt</span></td><td style="color:var(--red);">52 T</td></tr>
+          <tr class="total-row">
+            <td colspan="4" style="text-align:right;">Total bezahlt (12 Mt)</td>
+            <td class="num" style="color:var(--green);font-size:14px;">CHF 133'425</td>
+            <td colspan="2" style="color:var(--text-light);font-size:11px;">∅ 34 T · 4× Auto-Match · 2× manuell</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
+      <strong>Match-Qualität</strong> · Auto-Match = QRR-Referenz oder IBAN+Betrag identisch · Manuell = Backoffice musste zuordnen (fehlende Referenz, Teilzahlung, andere Währung). Bei &gt; 3 manuellen Matches in 12 Monaten: Empfehlung QR-IBAN-Aktivierung (Stammdaten).
+    </div>
+  </div><!-- /ktab-zahlungen -->
+
+  <!-- TAB 3 · Gutschriften / Refunds -->
+  <div class="tab-pane" id="ktab-refunds">
+    <div class="list-card">
+      <table class="konto-table">
+        <thead>
+          <tr><th>Gutschrift-Nr</th><th>Typ</th><th>Bezug</th><th style="text-align:right;">Brutto</th><th>Datum</th><th>Ausgelöst durch</th><th>Ausbezahlt</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">GN2026.03.0044</td>
+            <td><span class="chip refund">Refund Kulanz</span></td>
+            <td>PR-2025-1187 · Michael Koch · Exit Monat 1</td>
+            <td class="num" style="color:var(--red);">CHF 19'593</td>
+            <td>25.03.2026</td>
+            <td>NS (GF-Approval)</td>
+            <td>25.03.2026 · QR</td>
+            <td><span class="chip ok">abgeschlossen</span></td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="3" style="text-align:right;">Total Refunds (12 Mt)</td>
+            <td class="num" style="color:var(--red);font-size:14px;">CHF 19'593</td>
+            <td colspan="4" style="color:var(--text-light);font-size:11px;">1× AGB-§8-Staffel 50 % · Clawback-Saga erledigt · Rücklage Q1 reduziert</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
+      <strong>Gutschriften-Typen</strong> · <em>Refund Kulanz</em> (AGB §8 · Probezeit-Staffel) · <em>Storno</em> (Fehlerhafte Rechnung · Brutto = Original-Brutto negativ) · <em>Rabatt-Nachtrag</em> (nachträgliche Preis-Korrektur). Alle GF-Pflicht. Verlinkung zum Refund-Cockpit für Details.
+    </div>
+  </div><!-- /ktab-refunds -->
+
+  <!-- TAB 4 · Streitfälle (Empty) -->
+  <div class="tab-pane" id="ktab-streit">
+    <div class="empty-state">
+      <div class="ic">✓</div>
+      <div class="hd">Keine offenen Streitfälle</div>
+      Dieser Kunde hat keine ungeklärten Honorar-Disputes oder Einreden. Zahlungsverhalten sauber (∅ 34 T · 9 bezahlte Rechnungen).<br>
+      <span style="font-size:11px;">Streitfälle entstehen z.B. bei Einrede „Kandidat-Eigenkontakt vor Mandat" · „Honorar-Basis falsch berechnet" · „Garantie-Fall nicht anerkannt" und werden ins Mahnwesen-Tab „Honorarstreit" gespiegelt.</span>
+    </div>
+  </div><!-- /ktab-streit -->
+
+  <!-- TAB 5 · Audit-Timeline -->
+  <div class="tab-pane" id="ktab-audit">
+    <div class="timeline">
+      <div class="tl-row"><div class="ts">21.04.2026<br>14:32</div><div class="dot-tl amber"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 überfällig-Flag gesetzt</div><div class="meta">Auto-Worker <code>dunning-cadence-check</code> · Key-Account-Kadenz · nächste Aktion: Mahnung 1 am 02.05.</div></div></div>
+      <div class="tl-row"><div class="ts">18.04.2026<br>11:15</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Assessment-Rechnung FN2026.04.1102 versendet</div><div class="meta"><span class="actor">ST</span> (Backoffice) · Email an buchhaltung@emch-berger.ch · Message-ID vorhanden</div></div></div>
+      <div class="tl-row"><div class="ts">08.04.2026<br>09:42</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 28'500 · FN2026.01.0118 bezahlt</div><div class="meta">CAMT.054-Import · Auto-Match QRR 100 % · Status → Bezahlt · Garantie-Timer für PR-2026-0088 läuft bis 15.06.2026</div></div></div>
+      <div class="tl-row"><div class="ts">25.03.2026<br>15:48</div><div class="dot-tl amber"></div><div class="body-tl"><div class="main">Refund ausbezahlt · GN2026.03.0044 · CHF 19'593</div><div class="meta">PR-2025-1187 Michael Koch Exit Monat 1 · AGB-§8-Staffel 50 % · GF-Freigabe <span class="actor">NS</span> · Clawback-Saga abgeschlossen</div></div></div>
+      <div class="tl-row"><div class="ts">22.03.2026<br>16:58</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 versendet · CHF 36'083</div><div class="meta"><span class="actor">ST</span> (Backoffice) · Honorar-Staffel 27 % (≥ CHF 130'000) · Kandidat Tobias Fischer · Eintritt 15.04.</div></div></div>
+      <div class="tl-row"><div class="ts">22.03.2026<br>10:12</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 freigegeben durch <span class="actor">NS</span> (GF)</div><div class="meta">Draft-Review · kein Rabatt · GF-Approval wegen Betrag-Kategorie (optional, nicht Pflicht bei 0 % Rabatt)</div></div></div>
+      <div class="tl-row"><div class="ts">15.03.2026<br>08:00</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Garantie-Ende · PR-2026-0088 · Lukas Wanner</div><div class="meta">3-Monats-Probezeit abgelaufen · kein Exit · Rücklage Q1 2026 für JV (AM · 50 %) + PW (CM · 50 %) freigegeben · CHF 2'345 gutgeschrieben</div></div></div>
+      <div class="tl-row"><div class="ts">14.03.2026<br>12:04</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 22'100 · FN2026.02.0422 bezahlt</div><div class="meta">CAMT.054-Import · Auto-Match QRR 100 %</div></div></div>
+      <div class="tl-row"><div class="ts">02.09.2025<br>10:22</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 24'450 · FN2025.08.0612 bezahlt</div><div class="meta">Bank-Überweisung ohne QRR · <span class="actor">ST</span> manuell zugeordnet · 52 Tage DSO · Grund: Email-Verzögerung Finanz-Abt. Kunde</div></div></div>
+      <div class="tl-row"><div class="ts">20.08.2025<br>14:10</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Kundenkonto angelegt · Emch+Berger Gruppe</div><div class="meta">Stammdaten-Sync aus Account · IBAN CH93 0076 2011 6238 5295 7 · QRR-fähig · Billing-Kontakt buchhaltung@emch-berger.ch</div></div></div>
+    </div>
+  </div><!-- /ktab-audit -->
+
+</div><!-- /view-konto -->
+
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -741,7 +1057,7 @@
 
   <div class="drawer-foot">
     <div>
-      <a href="billing-debitor-konto.html" style="font-size:12px; color:var(--accent); font-weight:600; text-decoration:none;">Vollansicht Kundenkonto öffnen ›</a>
+      <a style="font-size:12px; color:var(--accent); font-weight:600; text-decoration:none; cursor:pointer;" onclick="closeQuickDrawer(); showKonto('emch-berger');">Vollansicht Kundenkonto öffnen ›</a>
     </div>
     <div style="display:flex; gap:6px;">
       <button class="btn btn-secondary" type="button">✉ Mahnung vorbereiten</button>
@@ -898,6 +1214,61 @@
   }
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeQuickDrawer(); closeBatchDrawer(); }
+  });
+
+  /* ═══ Router · Liste ↔ Vollansicht Kundenkonto ═══ */
+  function showList(){
+    document.getElementById('view-list').classList.add('active');
+    document.getElementById('view-konto').classList.remove('active');
+    if (location.hash) history.replaceState(null, '', location.pathname);
+    window.scrollTo(0, 0);
+  }
+  function showKonto(kundeId){
+    document.getElementById('view-konto').classList.add('active');
+    document.getElementById('view-list').classList.remove('active');
+    location.hash = 'konto=' + (kundeId || '');
+    window.scrollTo(0, 0);
+  }
+  // Router-Init · URL-Hash lesen beim Laden
+  (function initRouter(){
+    const h = location.hash || '';
+    if (h.startsWith('#konto=')) {
+      document.getElementById('view-konto').classList.add('active');
+      document.getElementById('view-list').classList.remove('active');
+    }
+  })();
+  window.addEventListener('hashchange', () => {
+    const h = location.hash || '';
+    if (h.startsWith('#konto=')) {
+      document.getElementById('view-konto').classList.add('active');
+      document.getElementById('view-list').classList.remove('active');
+    } else {
+      showList();
+    }
+  });
+
+  /* Konto-Tab-Switch */
+  document.querySelectorAll('.konto-tabs .ktab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-ktab');
+      if (!target) return;
+      document.querySelectorAll('.konto-tabs .ktab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('#view-konto .tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('ktab-' + target)?.classList.add('active');
+    });
+  });
+
+  /* Listen-Row → Vollansicht (Delegation · ignoriert Checkboxen + Quickview-Trigger) */
+  document.querySelectorAll('#view-list .list-table tbody tr').forEach(tr => {
+    tr.addEventListener('click', (e) => {
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'BUTTON' || tag === 'A') return;
+      // Double-Click könnte Quickview triggern · Einzelclick → Vollansicht
+      const nameCell = tr.querySelector('.name');
+      const id = nameCell ? nameCell.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : 'kunde';
+      showKonto(id);
+    });
   });
 </script>
 
