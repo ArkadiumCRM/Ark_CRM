@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · MwSt-Abrechnung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* Quartals-Bar */
+  .period-bar { background:var(--surface); border-radius:4px; padding:12px 16px; box-shadow:var(--shadow-sm); margin-bottom:14px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .period-bar .grp { display:flex; align-items:center; gap:8px; font-size:12px; }
+  .period-bar label { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .period-bar select { font-family:'DM Sans',sans-serif; font-size:12.5px; padding:5px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); }
+  .period-bar .state-chip { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:12px; }
+  .period-bar .state-chip.draft { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .period-bar .state-chip.submitted { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .period-bar .state-chip.paid { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .period-bar .dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
+  .period-bar .dot.amber { background:var(--amber); }
+  .period-bar .dot.green { background:var(--green); }
+
+  /* KPI-Strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .kpi { background:var(--surface); border-radius:4px; padding:14px 16px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi.red { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi .lbl { font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .kpi .big { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:4px 0 2px; font-variant-numeric:tabular-nums; }
+  .kpi.red .big { color:var(--red); }
+  .kpi.green .big { color:var(--green); }
+  .kpi .sub { font-size:11px; color:var(--text-mid); line-height:1.5; }
+  .kpi .trend { font-size:11px; color:var(--text-light); margin-top:3px; }
+
+  /* Layout · Left/Right */
+  .grid-2 { display:grid; grid-template-columns:1.35fr 1fr; gap:16px; margin-bottom:18px; }
+
+  .card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:18px 22px; }
+  .card h2 { margin:0 0 12px; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); display:flex; justify-content:space-between; align-items:baseline; }
+  .card h2 small { font-size:11.5px; color:var(--text-light); font-family:'DM Sans',sans-serif; font-weight:400; }
+
+  /* Umsatz-Aufstellung */
+  .ums-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .ums-table th { text-align:left; padding:9px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .ums-table td { padding:10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .ums-table tbody tr:last-child td { border-bottom:none; }
+  .ums-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .ums-table .rate { font-variant-numeric:tabular-nums; text-align:right; color:var(--text-mid); }
+  .ums-table tr.sum td { background:var(--bg); font-weight:700; font-family:'Libre Baskerville',serif; border-top:1.5px solid var(--border); border-bottom:none; }
+  .ums-table tr.sum td.num { color:var(--accent); font-size:14px; }
+
+  /* Vorsteuer */
+  .vor-list { font-size:12.5px; }
+  .vor-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); gap:10px; }
+  .vor-row:last-child { border-bottom:none; padding-top:12px; margin-top:4px; border-top:1.5px solid var(--border); font-weight:700; font-family:'Libre Baskerville',serif; color:var(--green); }
+  .vor-row .lbl { flex:1; color:var(--text); }
+  .vor-row .lbl small { display:block; color:var(--text-light); font-size:11px; margin-top:1px; font-weight:400; font-family:'DM Sans',sans-serif; }
+  .vor-row .amt { font-variant-numeric:tabular-nums; font-weight:600; min-width:110px; text-align:right; }
+  .vor-row .cat-chip { font-size:10px; padding:2px 8px; background:var(--bg); border-radius:10px; color:var(--text-mid); font-weight:500; margin-right:6px; text-transform:none; letter-spacing:0; }
+
+  /* Zusammenfassung-Card */
+  .summary-box { background:color-mix(in srgb,var(--accent) 5%,var(--bg)); border:1px solid color-mix(in srgb,var(--accent) 20%,var(--bg)); border-radius:4px; padding:16px 18px; margin-top:12px; }
+  .summary-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; }
+  .summary-row.final { border-top:1px solid var(--border); margin-top:8px; padding-top:12px; font-family:'Libre Baskerville',serif; font-size:17px; font-weight:700; color:var(--accent); }
+  .summary-row .lbl { color:var(--text-mid); }
+  .summary-row .amt { font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
+  .summary-row.final .amt { color:var(--accent); }
+  .summary-row.credit .amt { color:var(--green); }
+
+  /* Satz-Breakdown */
+  .rate-breakdown { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+  .rate-card { background:var(--bg); padding:12px 14px; border-radius:3px; border-top:3px solid var(--accent); }
+  .rate-card.reduced { border-top-color:#0891b2; }
+  .rate-card.zero { border-top-color:var(--green); }
+  .rate-card .rate-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; }
+  .rate-card .rate-val { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; color:var(--text); margin:2px 0; }
+  .rate-card .rate-base { font-size:11.5px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
+  .rate-card .rate-tax { font-size:12px; color:var(--accent); margin-top:4px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* Historie-Liste */
+  .hist-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .hist-table th { text-align:left; padding:9px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .hist-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .hist-table tbody tr:last-child td { border-bottom:none; }
+  .hist-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%,var(--bg)); cursor:pointer; }
+  .hist-table .period-nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); }
+  .hist-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+
+  /* Chips */
+  .chip { font-size:9.5px; padding:2px 8px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+  .chip.draft { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:var(--amber); }
+  .chip.sent  { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip.paid  { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip.corr  { background:color-mix(in srgb,var(--dispute) 18%,var(--bg)); color:var(--dispute); }
+
+  /* Settings */
+  .settings-block { background:var(--bg); padding:14px 16px; border-radius:3px; font-size:12.5px; }
+  .settings-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px dashed var(--border); }
+  .settings-row:last-child { border-bottom:none; }
+  .settings-row .lbl { color:var(--text-light); }
+  .settings-row .val { color:var(--text); font-weight:600; }
+
+  /* Warn-Inline */
+  .warn-inline { background:color-mix(in srgb,var(--amber) 10%,var(--surface)); border-left:3px solid var(--amber); padding:10px 14px; margin:12px 0; font-size:12px; color:var(--text); border-radius:2px; }
+  .warn-inline.info { background:color-mix(in srgb,var(--accent) 8%,var(--surface)); border-left-color:var(--accent); }
+  .warn-inline.ok { background:color-mix(in srgb,var(--green) 10%,var(--surface)); border-left-color:var(--green); }
+  .warn-inline .title { font-weight:700; margin-bottom:3px; }
+
+  /* Drawer */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.18); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:92vw; height:100vh; background:var(--surface); box-shadow:-8px 0 32px rgba(0,0,0,0.1); z-index:51; transform:translateX(100%); transition:transform 0.25s ease; display:flex; flex-direction:column; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-head .close:hover { color:var(--text); }
+  .drawer-sub { padding:4px 20px 12px; font-size:12px; color:var(--text-light); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .drawer-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 14px; background:var(--bg); overflow-x:auto; }
+  .drawer-tab { padding:10px 14px; font-size:12px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .drawer-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px 20px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-primary:hover { opacity:0.9; }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+  .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:var(--surface); border-color:var(--red); color:var(--red); }
+  .btn-danger:hover { background:var(--red); color:#fff; }
+  .btn-gf { background:color-mix(in srgb,var(--red) 10%,var(--surface)); border-color:var(--red); color:var(--red); }
+  .btn-gf:hover { background:var(--red); color:#fff; }
+
+  /* Wizard */
+  .wizard-steps { display:flex; gap:4px; padding:12px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .wizard-step { flex:1; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); font-weight:600; padding:6px 8px; text-align:center; background:var(--surface); border-radius:2px; border-top:2px solid var(--border); }
+  .wizard-step.active { color:var(--accent); border-top-color:var(--accent); font-weight:700; }
+  .wizard-step.done { color:var(--green); border-top-color:var(--green); }
+  .wizard-step.gf { color:var(--red); border-top-color:var(--red); }
+
+  /* Form */
+  .fg { margin-bottom:14px; }
+  .fg label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-light); font-weight:600; margin-bottom:5px; }
+  .fg input, .fg select, .fg textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); box-sizing:border-box; }
+  .fg-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .fg .hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+
+  .check-row { display:flex; gap:10px; padding:8px 0; font-size:12.5px; align-items:flex-start; }
+  .check-row input { margin-top:3px; accent-color:var(--accent); cursor:pointer; }
+  .check-row .txt { flex:1; }
+  .check-row .txt small { display:block; color:var(--text-light); font-size:11px; margin-top:1px; }
+
+  /* Reconciliation */
+  .recon-row { display:grid; grid-template-columns:1fr auto; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:12px; align-items:center; }
+  .recon-row:last-child { border-bottom:none; padding-top:10px; font-weight:700; color:var(--text); border-top:1.5px solid var(--border); margin-top:4px; }
+  .recon-row .lbl { color:var(--text-mid); }
+  .recon-row .lbl small { display:block; color:var(--text-light); font-size:10.5px; }
+  .recon-row .amt { font-variant-numeric:tabular-nums; font-weight:600; text-align:right; }
+  .recon-row .amt.green { color:var(--green); }
+  .recon-row .amt.red { color:var(--red); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · MwSt-Abrechnung</h1>
+      <div class="sub">ESTV-Abrechnungsmethode: effektiv · UID CHE-312.448.007 MWST · Abrechnungs-Rhythmus: quartalsweise · Währung CHF</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-secondary" type="button">◰ Treuhand-Export (Kunz)</button>
+      <button class="btn btn-primary" type="button" onclick="openSubmitDrawer()">✓ Quartal abschliessen</button>
+    </div>
+  </div>
+
+  <!-- Quartals-Bar -->
+  <div class="period-bar">
+    <div class="grp">
+      <label>Abrechnungs-Periode</label>
+      <select>
+        <option selected>Q2 / 2026 · Apr – Jun</option>
+        <option>Q1 / 2026 · Jan – Mär (eingereicht)</option>
+        <option>Q4 / 2025 · Okt – Dez (bezahlt)</option>
+        <option>Q3 / 2025 · Jul – Sep (bezahlt)</option>
+      </select>
+    </div>
+    <div class="grp">
+      <label>Status</label>
+      <span class="state-chip draft"><span class="dot amber"></span>Entwurf · in Erfassung</span>
+    </div>
+    <div class="grp">
+      <label>Einreichfrist ESTV</label>
+      <span style="color:var(--text); font-weight:600;">31.08.2026</span>
+      <span style="color:var(--text-light); font-size:11px;">(noch 128 Tage)</span>
+    </div>
+    <div class="grp" style="margin-left:auto;">
+      <label>Letzte Aktualisierung</label>
+      <span style="color:var(--text-mid); font-size:11.5px;">heute · 08:45 · Auto-Snapshot aus Rechnungen</span>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="kpi-strip">
+    <div class="kpi">
+      <div class="lbl">Steuerbarer Umsatz Q2</div>
+      <div class="big">CHF 428'600</div>
+      <div class="sub">28 Rechnungen · davon 2 Ausland-Exempt</div>
+      <div class="trend">vs. Q1: CHF 391'200 (+9.6 %)</div>
+    </div>
+    <div class="kpi red">
+      <div class="lbl">MwSt-Schuld (Ausgang)</div>
+      <div class="big">CHF 34'498</div>
+      <div class="sub">Normalsatz 8.1 % auf CHF 425'900</div>
+      <div class="trend">Ausland 0 % · CHF 2'700 Umsatz</div>
+    </div>
+    <div class="kpi green">
+      <div class="lbl">Vorsteuer (Eingang)</div>
+      <div class="big">CHF 4'812</div>
+      <div class="sub">17 Eingangsrechnungen · 1 pending</div>
+      <div class="trend">Kategorien: IT 42 % · Miete 28 % · Admin 30 %</div>
+    </div>
+    <div class="kpi amber">
+      <div class="lbl">Netto-Schuld ESTV</div>
+      <div class="big">CHF 29'686</div>
+      <div class="sub">nach Vorsteuer-Abzug</div>
+      <div class="trend">Zahlungsziel 31.08. · Via IBAN-Auftrag</div>
+    </div>
+  </div>
+
+  <!-- Grid-2 · Links: Ausgangsumsatz · Rechts: Vorsteuer + Summary -->
+  <div class="grid-2">
+
+    <!-- Ausgangsumsatz -->
+    <div class="card">
+      <h2>Ausgangs-Umsatz Q2 / 2026 <small>automatisch aus versendeten Rechnungen</small></h2>
+
+      <!-- Satz-Breakdown -->
+      <div class="rate-breakdown">
+        <div class="rate-card">
+          <div class="rate-lbl">Normalsatz</div>
+          <div class="rate-val">8.1 %</div>
+          <div class="rate-base">Basis CHF 425'900</div>
+          <div class="rate-tax">→ CHF 34'498</div>
+        </div>
+        <div class="rate-card reduced">
+          <div class="rate-lbl">Reduzierter Satz</div>
+          <div class="rate-val">2.6 %</div>
+          <div class="rate-base">Basis CHF 0</div>
+          <div class="rate-tax" style="color:var(--text-light);">→ nicht anwendbar</div>
+        </div>
+        <div class="rate-card zero">
+          <div class="rate-lbl">Ausland / 0 %</div>
+          <div class="rate-val">0 %</div>
+          <div class="rate-base">Basis CHF 2'700</div>
+          <div class="rate-tax" style="color:var(--green);">→ CHF 0 (Meldung)</div>
+        </div>
+      </div>
+
+      <!-- Umsatz-Zusammensetzung -->
+      <table class="ums-table">
+        <thead>
+          <tr>
+            <th>Leistungskategorie</th>
+            <th style="text-align:right;">Rechnungen</th>
+            <th style="text-align:right;">Basis CHF</th>
+            <th style="text-align:right;">Satz</th>
+            <th style="text-align:right;">MwSt CHF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Erfolgsvermittlung (Honorar)</td>
+            <td class="num">14</td>
+            <td class="num">CHF 298'400</td>
+            <td class="rate">8.1 %</td>
+            <td class="num">CHF 24'170</td>
+          </tr>
+          <tr>
+            <td>Mandat · Akonto / Zwischen / Schluss</td>
+            <td class="num">8</td>
+            <td class="num">CHF 96'200</td>
+            <td class="rate">8.1 %</td>
+            <td class="num">CHF 7'792</td>
+          </tr>
+          <tr>
+            <td>Time-Mandat (Weekly-Fee)</td>
+            <td class="num">3</td>
+            <td class="num">CHF 18'600</td>
+            <td class="rate">8.1 %</td>
+            <td class="num">CHF 1'507</td>
+          </tr>
+          <tr>
+            <td>Assessment (Scheelen)</td>
+            <td class="num">2</td>
+            <td class="num">CHF 12'700</td>
+            <td class="rate">8.1 %</td>
+            <td class="num">CHF 1'029</td>
+          </tr>
+          <tr>
+            <td>Ausland · Meldepflicht</td>
+            <td class="num">2</td>
+            <td class="num">CHF 2'700</td>
+            <td class="rate">0 %</td>
+            <td class="num" style="color:var(--green);">CHF 0</td>
+          </tr>
+          <tr>
+            <td>Rückerstattungen · Probezeit-Refund</td>
+            <td class="num">1</td>
+            <td class="num" style="color:var(--red);">− CHF 7'350</td>
+            <td class="rate">8.1 %</td>
+            <td class="num" style="color:var(--red);">− CHF 595</td>
+          </tr>
+          <tr class="sum">
+            <td>Summe Q2</td>
+            <td class="num">28</td>
+            <td class="num">CHF 421'250</td>
+            <td class="rate">—</td>
+            <td class="num">CHF 33'903</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn-inline info">
+        <div class="title">Aktualität</div>
+        4 Rechnungen noch als Entwurf im Status (CHF 38'200 Basis · CHF 3'094 MwSt). Bei Freigabe vor Quartalsende werden sie automatisch in diese Abrechnung übernommen.
+      </div>
+    </div>
+
+    <!-- Vorsteuer + Summary -->
+    <div class="card">
+      <h2>Vorsteuer Q2 / 2026 <small>aus Eingangsrechnungen + Spesen</small></h2>
+
+      <div class="vor-list">
+        <div class="vor-row">
+          <div class="lbl">
+            <span class="cat-chip">IT</span>Microsoft 365 · JIRA · Zoom
+            <small>6 Rechnungen · CHF 25'040 Brutto</small>
+          </div>
+          <div class="amt" style="color:var(--green);">CHF 2'030</div>
+        </div>
+        <div class="vor-row">
+          <div class="lbl">
+            <span class="cat-chip">Miete</span>Büromiete Zürich + Bern
+            <small>2 × Quartals-Rechnung · CHF 16'850 Brutto</small>
+          </div>
+          <div class="amt" style="color:var(--green);">CHF 1'365</div>
+        </div>
+        <div class="vor-row">
+          <div class="lbl">
+            <span class="cat-chip">Admin</span>Treuhand Kunz · Swissdec-Lizenz · Büromaterial
+            <small>4 Rechnungen · CHF 10'440 Brutto</small>
+          </div>
+          <div class="amt" style="color:var(--green);">CHF 846</div>
+        </div>
+        <div class="vor-row">
+          <div class="lbl">
+            <span class="cat-chip">Reise</span>Bahn · Taxi · Parkgebühren (Mitarbeiter-Spesen)
+            <small>3 Abrechnungen · CHF 4'390 Brutto · 1 pending</small>
+          </div>
+          <div class="amt" style="color:var(--amber);">CHF 356 <small style="color:var(--text-light); font-size:10px;">+CHF 24 pending</small></div>
+        </div>
+        <div class="vor-row">
+          <div class="lbl">
+            <span class="cat-chip">Marketing</span>Publishing · Messen · LinkedIn-Ads
+            <small>2 Rechnungen · CHF 2'650 Brutto</small>
+          </div>
+          <div class="amt" style="color:var(--green);">CHF 215</div>
+        </div>
+        <div class="vor-row">
+          <div class="lbl">Summe Vorsteuer Q2</div>
+          <div class="amt">CHF 4'812</div>
+        </div>
+      </div>
+
+      <!-- Summary-Box -->
+      <div class="summary-box">
+        <div class="summary-row">
+          <span class="lbl">MwSt-Schuld (Ausgang, nach Refunds)</span>
+          <span class="amt">CHF 33'903</span>
+        </div>
+        <div class="summary-row">
+          <span class="lbl">Nicht-steuerbarer Umsatz Ausland (Info)</span>
+          <span class="amt" style="color:var(--text-light);">CHF 2'700</span>
+        </div>
+        <div class="summary-row credit">
+          <span class="lbl">− Vorsteuer (Eingang)</span>
+          <span class="amt" style="color:var(--green);">− CHF 4'812</span>
+        </div>
+        <div class="summary-row">
+          <span class="lbl">+ Abrundungs-Korrektur Q1 (ESTV-Bestätigung)</span>
+          <span class="amt">CHF 2</span>
+        </div>
+        <div class="summary-row final">
+          <span class="lbl">Zahlung ESTV</span>
+          <span class="amt">CHF 29'093</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Einstellungen + Historie -->
+  <div class="grid-2">
+
+    <!-- Einstellungen -->
+    <div class="card">
+      <h2>Abrechnungs-Einstellungen <small>Admin-Änderungen bei ESTV melden</small></h2>
+
+      <div class="settings-block">
+        <div class="settings-row">
+          <span class="lbl">UID-Nummer</span>
+          <span class="val">CHE-312.448.007 MWST</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Abrechnungsmethode</span>
+          <span class="val">Effektiv (Regelfall) · keine Saldosteuer</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Abrechnungsrhythmus</span>
+          <span class="val">Quartalsweise (default)</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Primärer Satz (Honorar)</span>
+          <span class="val">Normalsatz 8.1 % (CH seit 01.01.2024)</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Ausland-Regel</span>
+          <span class="val">0 % · Meldepflicht · EU + Drittstaaten</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Rundung</span>
+          <span class="val">Rappen-genau · kaufm. Rundung auf 5 Rappen bei Gesamt</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Einreichung ESTV</span>
+          <span class="val">Online-Portal ESTV SuisseTax · auto-generiert PDF + XML</span>
+        </div>
+        <div class="settings-row">
+          <span class="lbl">Verantwortlich</span>
+          <span class="val">Treuhand Kunz (externe Freigabe) · GF (interne Freigabe)</span>
+        </div>
+      </div>
+
+      <div class="warn-inline ok">
+        <div class="title">Satz-Historie CH</div>
+        Normalsatz: 8.1 % seit 01.01.2024 (vorher 7.7 %) · Reduziert: 2.6 % (vorher 2.5 %) · Beherbergung: 3.8 % (vorher 3.7 %). Rechnungen werden mit dem zur Leistungserbringung gültigen Satz verbucht.
+      </div>
+    </div>
+
+    <!-- Historie -->
+    <div class="card">
+      <h2>Abrechnungs-Historie <small>letzte 6 Quartale</small></h2>
+      <table class="hist-table">
+        <thead>
+          <tr>
+            <th>Periode</th>
+            <th style="text-align:right;">Umsatz</th>
+            <th style="text-align:right;">MwSt-Schuld</th>
+            <th style="text-align:right;">Vorsteuer</th>
+            <th style="text-align:right;">Zahlung</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="openPeriodDrawer()">
+            <td class="period-nr">Q2 / 2026</td>
+            <td class="num">CHF 428'600</td>
+            <td class="num">CHF 33'903</td>
+            <td class="num" style="color:var(--green);">CHF 4'812</td>
+            <td class="num" style="color:var(--amber);">CHF 29'093</td>
+            <td><span class="chip draft">Entwurf</span></td>
+          </tr>
+          <tr>
+            <td class="period-nr">Q1 / 2026</td>
+            <td class="num">CHF 391'200</td>
+            <td class="num">CHF 31'687</td>
+            <td class="num" style="color:var(--green);">CHF 5'212</td>
+            <td class="num">CHF 26'475</td>
+            <td><span class="chip sent">Eingereicht 28.04.</span></td>
+          </tr>
+          <tr>
+            <td class="period-nr">Q4 / 2025</td>
+            <td class="num">CHF 448'900</td>
+            <td class="num">CHF 36'361</td>
+            <td class="num" style="color:var(--green);">CHF 6'104</td>
+            <td class="num">CHF 30'257</td>
+            <td><span class="chip paid">Bezahlt 28.02.</span></td>
+          </tr>
+          <tr>
+            <td class="period-nr">Q3 / 2025</td>
+            <td class="num">CHF 372'800</td>
+            <td class="num">CHF 30'197</td>
+            <td class="num" style="color:var(--green);">CHF 4'890</td>
+            <td class="num">CHF 25'307</td>
+            <td><span class="chip paid">Bezahlt 28.11.</span></td>
+          </tr>
+          <tr>
+            <td class="period-nr">Q2 / 2025</td>
+            <td class="num">CHF 398'400</td>
+            <td class="num">CHF 32'270</td>
+            <td class="num" style="color:var(--green);">CHF 5'022</td>
+            <td class="num">CHF 27'248</td>
+            <td><span class="chip paid">Bezahlt 28.08.</span></td>
+          </tr>
+          <tr>
+            <td class="period-nr">Q1 / 2025</td>
+            <td class="num">CHF 361'200</td>
+            <td class="num">CHF 29'257</td>
+            <td class="num" style="color:var(--green);">CHF 4'680</td>
+            <td class="num">CHF 24'579</td>
+            <td><span class="chip corr">Korrektur + 2</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn-inline">
+        <div class="title">Korrektur Q1 / 2025</div>
+        Am 14.07.2025 wurde eine Korrekturrechnung für CHF 2 gemeldet (Rundungsdifferenz durch ESTV-Bestätigung). Wird automatisch in Q2 / 2026 als Zu-Zahlung verrechnet.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Periode-Detail · Q2 / 2026 Entwurf
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="periodOverlay" onclick="closePeriodDrawer()"></div>
+<div class="drawer" id="periodDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Q2 / 2026 · Apr – Jun</h3>
+      <span class="chip draft" style="margin-left:6px;">Entwurf</span>
+    </div>
+    <button class="close" type="button" onclick="closePeriodDrawer()">×</button>
+  </div>
+  <div class="drawer-sub">
+    <span>Erfassungs-Zeitraum: laufend</span>
+    <span>·</span>
+    <span>Einreichfrist 31.08.2026 · noch 128 Tage</span>
+    <span>·</span>
+    <span>Letzter Sync heute 08:45</span>
+  </div>
+
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Abstimmung</div>
+    <div class="drawer-tab">Einzelrechnungen · 28</div>
+    <div class="drawer-tab">Vorsteuer · 17</div>
+    <div class="drawer-tab">Warnungen · 2</div>
+    <div class="drawer-tab">Audit</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="sect-h" style="font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); margin:0 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border);">Abstimmung Umsatz ↔ Debitoren</div>
+
+    <div class="recon-row">
+      <div class="lbl">
+        Fakturierter Ausgangs-Umsatz (brutto, inkl. MwSt)
+        <small>28 Rechnungen versendet zwischen 01.04. – 23.04.</small>
+      </div>
+      <div class="amt">CHF 463'098</div>
+    </div>
+    <div class="recon-row">
+      <div class="lbl">
+        − darin enthaltene MwSt (8.1 % Ausgang)
+        <small>MwSt-Schuld Periode</small>
+      </div>
+      <div class="amt red">− CHF 34'498</div>
+    </div>
+    <div class="recon-row">
+      <div class="lbl">
+        + Rückerstattung Probezeit-Refund
+        <small>FN2026.03.0881 · Arcanum Architekten · M2 Refund</small>
+      </div>
+      <div class="amt red">− CHF 7'945</div>
+    </div>
+    <div class="recon-row">
+      <div class="lbl">
+        = Netto-Umsatz (Basis für MwSt-Abrechnung)
+      </div>
+      <div class="amt">CHF 420'655</div>
+    </div>
+
+    <div class="sect-h" style="font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); margin:18px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border);">Abstimmung Vorsteuer ↔ Eingangsrechnungen</div>
+
+    <div class="recon-row">
+      <div class="lbl">
+        Eingangsrechnungen Brutto
+        <small>17 Rechnungen · 1 pending Freigabe</small>
+      </div>
+      <div class="amt">CHF 64'210</div>
+    </div>
+    <div class="recon-row">
+      <div class="lbl">
+        − nicht vorsteuerabzugsfähig
+        <small>Bewirtungsspesen 50 % · Privatanteil</small>
+      </div>
+      <div class="amt red">− CHF 520</div>
+    </div>
+    <div class="recon-row">
+      <div class="lbl">
+        = Vorsteuer-Basis → 8.1 % davon
+      </div>
+      <div class="amt green">CHF 4'812</div>
+    </div>
+
+    <!-- Warnings -->
+    <div class="sect-h" style="font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--accent); margin:18px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border);">
+      Warnungen · 2
+      <a href="#" style="font-size:11.5px; color:var(--accent); font-weight:600; text-decoration:none; float:right;">Alle Regeln ›</a>
+    </div>
+
+    <div class="warn-inline">
+      <div class="title">4 Rechnungs-Entwürfe unfreigegeben</div>
+      FN2026.04.1008 · FN2026.04.1055 · FN2026.04.1062 · FN2026.04.1112 (Summe CHF 38'200 Basis). Bei Freigabe vor 30.06. werden sie in Q2 übernommen, sonst Q3.
+    </div>
+
+    <div class="warn-inline info">
+      <div class="title">1 Eingangsrechnung pending</div>
+      Spesen-Abrechnung Peter W. · 14.04. · CHF 290 Brutto · noch nicht freigegeben durch Backoffice. Bei Freigabe: Vorsteuer + CHF 24.
+    </div>
+
+    <div class="warn-inline ok">
+      <div class="title">Plausibilitäts-Check bestanden</div>
+      Umsatz-Wachstum Q1 → Q2: +9.6 % (normal). MwSt-Quote 8.03 % vom fakturierten Umsatz (innerhalb Toleranz 7.9 – 8.1 %). Keine Satz-Anomalien erkannt.
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div style="font-size:12px; color:var(--text-mid);">
+      Zahlung ESTV · <strong style="font-family:'Libre Baskerville',serif; color:var(--accent); font-size:15px; display:block;">CHF 29'093</strong>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-secondary" type="button">⎙ PDF-Vorschau</button>
+      <button class="btn btn-primary" type="button" onclick="closePeriodDrawer(); openSubmitDrawer();">✓ Abschluss vorbereiten</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER · Quartal abschliessen · Wizard (5 Steps)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="submitOverlay" onclick="closeSubmitDrawer()"></div>
+<div class="drawer" id="submitDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>Q2 / 2026 abschliessen &amp; einreichen</h3>
+      <span class="chip draft" style="margin-left:6px;">Entwurf</span>
+    </div>
+    <button class="close" type="button" onclick="closeSubmitDrawer()">×</button>
+  </div>
+
+  <div class="wizard-steps">
+    <div class="wizard-step done">1 · Pre-Check</div>
+    <div class="wizard-step active">2 · Abstimmung</div>
+    <div class="wizard-step">3 · Dokumente</div>
+    <div class="wizard-step gf">4 · GF-Freigabe</div>
+    <div class="wizard-step">5 · ESTV-Einreichung</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Step 2 Inhalt: Abstimmung bestätigen -->
+    <div class="summary-box" style="margin-top:0; margin-bottom:14px;">
+      <div class="summary-row">
+        <span class="lbl">Steuerbarer Umsatz (netto)</span>
+        <span class="amt">CHF 420'655</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">MwSt-Schuld 8.1 %</span>
+        <span class="amt">CHF 33'903</span>
+      </div>
+      <div class="summary-row credit">
+        <span class="lbl">− Vorsteuer</span>
+        <span class="amt">− CHF 4'812</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">+ Korrektur Q1 / 2025</span>
+        <span class="amt">CHF 2</span>
+      </div>
+      <div class="summary-row final">
+        <span class="lbl">Zahlung ESTV</span>
+        <span class="amt">CHF 29'093</span>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>IBAN für Zahlung an ESTV</label>
+      <input type="text" value="CH93 0076 2011 6238 5295 7 · Eidgenössische Steuerverwaltung · PC 30-37-5" readonly style="background:var(--surface); color:var(--text-mid);">
+      <div class="hint">Standard-ESTV-IBAN · auto-eingefügt · Zahlungs-Referenz wird generiert nach Einreichung</div>
+    </div>
+
+    <div class="fg-row">
+      <div class="fg">
+        <label>Zahlungs-Datum</label>
+        <input type="date" value="2026-08-28">
+        <div class="hint">Vorschlag: 3 Tage vor Frist 31.08.</div>
+      </div>
+      <div class="fg">
+        <label>Zahlungsart</label>
+        <select>
+          <option>IBAN-Überweisung (ISO 20022 pain.001)</option>
+          <option>QR-Rechnung ESTV</option>
+          <option>Bank-Trigger manuell</option>
+        </select>
+      </div>
+    </div>
+
+    <h4 style="font-family:'Libre Baskerville',serif; font-size:13px; color:var(--accent); margin:16px 0 8px;">Pre-Check Bestätigungen</h4>
+
+    <div class="check-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Alle Rechnungen der Periode freigegeben?
+        <small>4 Entwürfe noch offen · bewusst ausgelassen / nächstes Quartal</small>
+      </div>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Alle Eingangsrechnungen kategorisiert &amp; freigegeben?
+        <small>1 Spesen-Abrechnung pending (CHF 24 Vorsteuer) · bewusst Q3</small>
+      </div>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Plausibilitäts-Check bestanden (Umsatz-Wachstum + MwSt-Quote)?
+        <small>+9.6 % Q1 → Q2 · MwSt-Quote 8.03 % · in Toleranz</small>
+      </div>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" checked>
+      <div class="txt">
+        Ausland-Meldung vollständig (Kunden, Satz 0 %)?
+        <small>2 Rechnungen · CHF 2'700 · beide mit UID-Empfänger dokumentiert</small>
+      </div>
+    </div>
+    <div class="check-row">
+      <input type="checkbox">
+      <div class="txt">
+        Treuhand Kunz vor ESTV-Einreichung reviewed?
+        <small>empfohlen · nicht zwingend · Export-Paket bereit</small>
+      </div>
+    </div>
+
+    <div class="warn-inline gf" style="background:color-mix(in srgb,var(--red) 8%,var(--surface)); border-left:3px solid var(--red);">
+      <div class="title">⚐ Ab Schritt 4 GF-Freigabe notwendig</div>
+      Nach Abstimmung und Dokumenten-Upload wird die Abrechnung zur Freigabe an GF (NS oder MB) geschickt. Erst danach erfolgt die ESTV-Einreichung via SuisseTax.
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <div style="font-size:12px; color:var(--text-mid);">
+      Zahlung ESTV · <strong style="font-family:'Libre Baskerville',serif; color:var(--accent); font-size:15px; display:block;">CHF 29'093</strong>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-secondary" type="button">‹ Zurück</button>
+      <button class="btn btn-primary" type="button">Weiter: Dokumente ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openPeriodDrawer(){
+    document.getElementById('periodDrawer').classList.add('active');
+    document.getElementById('periodOverlay').classList.add('active');
+  }
+  function closePeriodDrawer(){
+    document.getElementById('periodDrawer').classList.remove('active');
+    document.getElementById('periodOverlay').classList.remove('active');
+  }
+  function openSubmitDrawer(){
+    document.getElementById('submitDrawer').classList.add('active');
+    document.getElementById('submitOverlay').classList.add('active');
+  }
+  function closeSubmitDrawer(){
+    document.getElementById('submitDrawer').classList.remove('active');
+    document.getElementById('submitOverlay').classList.remove('active');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closePeriodDrawer(); closeSubmitDrawer(); }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; overflow:hidden; }
+  body {
+    display:grid; grid-template-rows:52px 1fr;
+    font-family:'DM Sans', sans-serif;
+    background:var(--bg);
+  }
+
+  /* TOPBAR */
+  .topbar {
+    position:relative;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 20px; background:var(--surface);
+    border-bottom:1px solid var(--border);
+    height:52px;
+  }
+  .topbar .brand {
+    display:flex; align-items:center; gap:10px;
+  }
+  .topbar .logo {
+    width:28px; height:28px; border-radius:6px;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700;
+  }
+  .topbar .brand-text {
+    font-size:14px; font-weight:600; color:var(--text);
+  }
+  .topbar .brand-sub {
+    font-size:11px; color:var(--text-light);
+    font-weight:500;
+  }
+  .topbar .crumb {
+    font-size:13px; color:var(--text-light);
+  }
+  .topbar .crumb .current {
+    color:var(--text); font-weight:600;
+  }
+  .topbar .right {
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; color:var(--text-light);
+  }
+
+  /* TOOL-TABS */
+  .tool-tabs {
+    display:flex; gap:2px; align-items:center;
+    background:var(--surface-alt); padding:3px;
+    border-radius:22px;
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+  }
+  .tool-tab {
+    padding:6px 14px; font-size:12px; font-weight:500;
+    color:var(--text-light); cursor:pointer;
+    border-radius:18px;
+    text-decoration:none; display:flex; align-items:center; gap:5px;
+    transition:all 0.15s;
+    white-space:nowrap;
+  }
+  .tool-tab:hover {
+    background:var(--surface); color:var(--accent);
+  }
+  .tool-tab.active {
+    background:var(--accent); color:white; font-weight:600;
+  }
+  .tool-tab.disabled {
+    opacity:0.45; cursor:not-allowed;
+    pointer-events:none;
+  }
+  .tool-tab .icon { font-size:13px; }
+
+  /* THEME-TOGGLE */
+  .theme-toggle {
+    border:1px solid var(--border);
+    background:var(--surface); color:var(--text);
+    cursor:pointer; font-size:14px;
+    padding:4px 10px; border-radius:14px;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.15s;
+  }
+  .theme-toggle:hover {
+    background:var(--surface-alt);
+    border-color:var(--accent);
+  }
+
+  .user-chip {
+    padding:4px 10px; border-radius:14px;
+    background:var(--surface-alt); font-size:11px;
+    color:var(--text); font-weight:500;
+  }
+  .cmd-hint {
+    padding:4px 10px; border-radius:14px; background:var(--surface-alt);
+    font-size:11px; color:var(--text-light);
+    display:flex; align-items:center; gap:4px; cursor:pointer;
+    border:1px solid var(--border);
+  }
+  .cmd-hint kbd {
+    padding:1px 4px; background:var(--surface); border:1px solid var(--border);
+    border-radius:2px; font-family:monospace; font-size:10px;
+  }
+
+  /* LAYOUT */
+  .shell {
+    display:grid;
+    grid-template-columns:56px 1fr;
+    overflow:hidden;
+    transition:grid-template-columns 0.22s ease;
+  }
+  body:has(.sidebar:hover) .shell { grid-template-columns:240px 1fr; }
+  body:has(.sidebar.expanded) .shell { grid-template-columns:240px 1fr; }
+
+  /* SIDEBAR */
+  .sidebar {
+    background:var(--surface); border-right:1px solid var(--border);
+    overflow-x:hidden; overflow-y:auto; font-size:13px;
+    position:relative; transition:width 0.22s ease;
+    width:56px;
+  }
+  .sidebar:hover { width:240px; box-shadow:var(--shadow); }
+  .sidebar.expanded { width:240px; box-shadow:var(--shadow); }
+
+  .sidebar .sb-brand {
+    display:flex; align-items:center; gap:10px;
+    padding:16px 36px 16px 14px;
+    border-bottom:1px solid var(--border);
+    flex-shrink:0; position:relative;
+  }
+  .sidebar .sb-brand .logo-mark {
+    width:28px; height:28px; border-radius:4px;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px;
+    flex-shrink:0;
+  }
+  .sidebar .sb-brand .brand-text {
+    white-space:nowrap; overflow:hidden; opacity:0;
+    transition:opacity 0.2s;
+  }
+  .sidebar:hover .sb-brand .brand-text,
+  .sidebar.expanded .sb-brand .brand-text { opacity:1; }
+  .sidebar .sb-brand .brand-name {
+    font-family:'Libre Baskerville',serif;
+    font-size:13px; font-weight:700; letter-spacing:0.6px;
+    color:var(--accent);
+  }
+
+  .sb-expand-toggle {
+    position:absolute; top:14px; right:8px; z-index:10;
+    background:transparent; border:none; cursor:pointer;
+    font-size:14px; color:var(--text-light); padding:4px;
+    border-radius:3px; opacity:0;
+    transition:opacity 0.15s, color 0.15s, background 0.15s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .sidebar:hover .sb-expand-toggle { opacity:1; }
+  .sidebar.expanded .sb-expand-toggle { opacity:1; color:var(--accent); }
+  .sb-expand-toggle:hover { background:var(--bg); color:var(--accent); }
+
+  .sidebar .sb-section {
+    padding:10px 18px 4px; font-size:10px;
+    text-transform:uppercase; letter-spacing:0.5px;
+    color:var(--text-light); font-weight:600;
+    white-space:nowrap; opacity:0; transition:opacity 0.2s;
+  }
+  .sidebar:hover .sb-section,
+  .sidebar.expanded .sb-section { opacity:1; }
+
+  .sidebar .sb-item {
+    display:flex; align-items:center; gap:12px;
+    padding:8px 18px; color:var(--text); cursor:pointer;
+    border-left:3px solid transparent;
+    transition:all 0.12s; user-select:none;
+    white-space:nowrap;
+  }
+  .sidebar .sb-item:hover { background:var(--surface-alt); color:var(--accent); }
+  .sidebar .sb-item.active {
+    background:var(--surface-alt); color:var(--accent);
+    border-left-color:var(--accent); font-weight:600;
+  }
+  .sidebar .sb-item.disabled { opacity:0.45; cursor:not-allowed; }
+  .sidebar .sb-item .icon {
+    font-size:15px; width:20px; text-align:center; flex-shrink:0;
+  }
+  .sidebar .sb-item .label { opacity:0; transition:opacity 0.2s; }
+  .sidebar:hover .sb-item .label,
+  .sidebar.expanded .sb-item .label { opacity:1; }
+  .sidebar .sb-item .badge {
+    margin-left:auto; background:var(--accent); color:white;
+    padding:1px 7px; border-radius:8px; font-size:10px; font-weight:700;
+    opacity:0; transition:opacity 0.2s;
+  }
+  .sidebar:hover .sb-item .badge,
+  .sidebar.expanded .sb-item .badge { opacity:1; }
+  .sidebar .sb-item .badge.red { background:var(--red); }
+  .sidebar .sb-item.disabled .badge { background:var(--text-light); opacity:0.5; }
+
+  /* MAIN IFRAME */
+  .main-frame {
+    border:none; width:100%; height:100%;
+    background:var(--bg);
+  }
+
+  /* MOBILE */
+  @media (max-width:960px) {
+    .shell { grid-template-columns:1fr; }
+    body:has(.sidebar:hover) .shell,
+    body:has(.sidebar.expanded) .shell { grid-template-columns:1fr; }
+    .sidebar {
+      position:fixed; top:52px; left:-260px; width:240px;
+      height:calc(100vh - 52px); z-index:30;
+      transition:left 0.22s ease;
+      box-shadow:4px 0 15px rgba(0,0,0,0.1);
+    }
+    .sidebar.open { left:0; }
+    .sidebar:hover, .sidebar.expanded { width:240px; }
+    .topbar-burger {
+      display:inline-flex; font-size:20px; cursor:pointer;
+      color:var(--text); margin-right:8px;
+    }
+  }
+  .topbar-burger { display:none; }
+
+  /* Sidebar als Flex-Container damit Footer unten ist */
+  .sidebar { display:flex; flex-direction:column; }
+  .sidebar .sb-top { flex:1; min-height:0; overflow-y:auto; }
+
+  /* USER-FOOTER */
+  .sb-footer {
+    padding:12px 14px; border-top:1px solid var(--border);
+    flex-shrink:0; position:relative;
+    background:var(--surface);
+  }
+  .sb-user {
+    display:flex; align-items:center; gap:10px;
+    cursor:pointer; padding:4px; border-radius:4px;
+    transition:background 0.15s;
+  }
+  .sb-user:hover { background:var(--bg); }
+  .sb-user-avatar {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:12px; flex-shrink:0;
+  }
+  .sb-user-info { opacity:0; transition:opacity 0.2s; white-space:nowrap; flex:1; min-width:0; }
+  .sidebar:hover .sb-user-info,
+  .sidebar.expanded .sb-user-info { opacity:1; }
+  .sb-user-name { font-size:12px; font-weight:600; color:var(--text); }
+  .sb-user-role { font-size:10px; color:var(--text-light); }
+  .sb-user-caret { font-size:10px; color:var(--text-light); opacity:0; transition:opacity 0.2s; flex-shrink:0; }
+  .sidebar:hover .sb-user-caret,
+  .sidebar.expanded .sb-user-caret { opacity:1; }
+
+  /* PROFIL-DROPDOWN (drop-up) */
+  .profil-pop {
+    position:absolute; bottom:calc(100% + 4px); left:8px; right:8px;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    box-shadow:var(--shadow-lg); padding:6px; min-width:220px; z-index:60;
+    opacity:0; transform:translateY(4px); pointer-events:none;
+    transition:opacity 0.15s, transform 0.15s;
+  }
+  .profil-pop.open { opacity:1; transform:translateY(0); pointer-events:auto; }
+  .profil-pop-head {
+    padding:10px 12px 8px; border-bottom:1px solid var(--border);
+    margin-bottom:4px; display:flex; align-items:center; gap:10px;
+  }
+  .profil-pop-head .av {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:13px;
+  }
+  .profil-pop-head .name { font-size:13px; font-weight:600; color:var(--text); }
+  .profil-pop-head .email { font-size:10.5px; color:var(--text-light); }
+  .profil-pop-item {
+    display:flex; align-items:center; gap:10px; padding:8px 10px;
+    cursor:pointer; border-radius:4px; font-size:12.5px;
+    color:var(--text-mid); transition:background 0.1s;
+  }
+  .profil-pop-item:hover { background:var(--bg); color:var(--text); }
+  .profil-pop-item .ic { font-size:14px; width:18px; text-align:center; }
+  .profil-pop-sep { height:1px; background:var(--border); margin:4px 0; }
+  .profil-pop-cat {
+    padding:6px 14px 2px; font-size:9.5px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--text-light); font-weight:600;
+  }
+  .profil-pop-item.danger { color:var(--red); }
+  .profil-pop-item.danger:hover { background:color-mix(in srgb, var(--red) 10%, transparent); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <span class="topbar-burger" id="burger">☰</span>
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+
+  <!-- TOOL-TABS (tool-übergreifende Navigation) -->
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../../crm.html" title="CRM">
+      <span class="icon">🎯</span> CRM
+    </a>
+    <a class="tool-tab active" href="../hr/hr.html">
+      <span class="icon">👥</span> HR
+    </a>
+    <a class="tool-tab" href="../commission/commission.html" title="Commission-Engine">
+      <span class="icon">💰</span> Commission
+    </a>
+    <a class="tool-tab" href="../zeit/zeit.html" title="Zeiterfassung">
+      <span class="icon">⏱</span> Zeit
+    </a>
+    <a class="tool-tab" href="../billing/billing.html" title="Billing">
+      <span class="icon">📄</span> Billing
+    </a>
+    <span class="tool-tab disabled">
+      <span class="icon">📊</span> Performance
+    </span>
+  </div>
+
+  <div class="right">
+    <span class="cmd-hint"><kbd>⌘K</kbd>Suche</span>
+    <span class="user-chip">Peter W. · HR-Manager</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme">☀</button>
+  </div>
+</div>
+
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+
+    <button class="sb-expand-toggle" onclick="toggleSidebarExpand()" aria-label="Sidebar fixieren" title="Fixieren">⇔</button>
+    <div class="sb-brand">
+      <div class="logo-mark">A</div>
+      <div class="brand-text">
+        <div class="brand-name">HR</div>
+      </div>
+    </div>
+
+    <div class="sb-section">HR-Tool</div>
+    <div class="sb-item active" data-src="hr-dashboard.html" data-title="Dashboard">
+      <span class="icon">📊</span><span class="label">Dashboard</span>
+    </div>
+    <div class="sb-item" data-src="hr-mitarbeiter-self.html" data-title="Mein Profil">
+      <span class="icon">👤</span><span class="label">Mein Profil</span>
+    </div>
+    <div class="sb-item" data-src="hr-list.html" data-title="Mitarbeiter-Liste">
+      <span class="icon">👥</span><span class="label">Mitarbeiter</span> <span class="badge">12</span>
+    </div>
+
+    <div class="sb-section">Prozesse</div>
+    <div class="sb-item" data-src="hr-warnings-disciplinary.html" data-title="Verwarnungen">
+      <span class="icon">⚠️</span><span class="label">Verwarnungen</span> <span class="badge red">3</span>
+    </div>
+    <div class="sb-item" data-src="hr-provisionsvertrag-editor.html" data-title="Provisionsverträge">
+      <span class="icon">💰</span><span class="label">Provisionsverträge</span>
+    </div>
+    <div class="sb-item" data-src="hr-academy-dashboard.html" data-title="Academy">
+      <span class="icon">🎓</span><span class="label">Academy</span>
+    </div>
+
+    <div class="sb-section">Operativ (Phase 3.1+)</div>
+    <div class="sb-item disabled" title="Noch nicht verfügbar">
+      <span class="icon">📅</span><span class="label">Absenz-Kalender</span>
+    </div>
+    <div class="sb-item disabled">
+      <span class="icon">📄</span><span class="label">Dokumente-Admin</span>
+    </div>
+    <div class="sb-item disabled">
+      <span class="icon">📖</span><span class="label">Onboarding-Editor</span>
+    </div>
+
+    <div class="sb-section">Später (Phase 3.6)</div>
+    <div class="sb-item disabled">
+      <span class="icon">📈</span><span class="label">Reports</span>
+    </div>
+    <div class="sb-item disabled">
+      <span class="icon">🌳</span><span class="label">Organigramm</span>
+    </div>
+    <div class="sb-item disabled">
+      <span class="icon">⚙️</span><span class="label">Einstellungen</span>
+    </div>
+
+    </div><!-- /sb-top -->
+
+    <div class="sb-footer">
+      <div class="sb-user" onclick="toggleProfilPop(event)">
+        <div class="sb-user-avatar">PW</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Peter Wiederkehr</div>
+          <div class="sb-user-role">Senior Partner · AM</div>
+        </div>
+        <span class="sb-user-caret">▴</span>
+      </div>
+      <div class="profil-pop" id="profilPop">
+        <div class="profil-pop-head">
+          <div class="av">PW</div>
+          <div>
+            <div class="name">Peter Wiederkehr</div>
+            <div class="email">peter.wiederkehr@arkadium.ch</div>
+          </div>
+        </div>
+        <div class="profil-pop-cat">Team &amp; Mitarbeiter</div>
+        <div class="profil-pop-item"><span class="ic">👤</span>Mein Profil</div>
+        <div class="profil-pop-item"><span class="ic">👥</span>Team-Übersicht</div>
+        <div class="profil-pop-sep"></div>
+        <div class="profil-pop-cat">Tools</div>
+        <div class="profil-pop-item"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
+        <div class="profil-pop-sep"></div>
+        <div class="profil-pop-item danger"><span class="ic">⏻</span>Abmelden</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- IFRAME -->
+  <iframe id="mainFrame" class="main-frame" src="hr-dashboard.html"></iframe>
+
+</div>
+
+<script>
+  const frame = document.getElementById('mainFrame');
+  const crumb = null; // breadcrumb entfernt
+  const sidebar = document.getElementById('sidebar');
+  const burger = document.getElementById('burger');
+
+  document.querySelectorAll('.sb-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('disabled')) return;
+      const src = item.dataset.src;
+      const title = item.dataset.title;
+      if (!src) return;
+
+      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      frame.src = src;
+      if (title) crumb.textContent = title;
+
+      // close mobile sidebar
+      sidebar.classList.remove('open');
+    });
+  });
+
+  burger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+
+  // SIDEBAR EXPAND-TOGGLE (Pin via localStorage, icon wechselt wie crm.html)
+  function toggleSidebarExpand() {
+    const sb = document.getElementById('sidebar');
+    if (!sb) return;
+    sb.classList.toggle('expanded');
+    const btn = sb.querySelector('.sb-expand-toggle');
+    const pinned = sb.classList.contains('expanded');
+    if (btn) {
+      btn.textContent = pinned ? '⇥' : '⇔';
+      btn.setAttribute('title', pinned ? 'Sidebar entpinnen' : 'Sidebar fixieren');
+    }
+    localStorage.setItem('ark-sidebar-pinned', pinned ? '1' : '0');
+  }
+  (function() {
+    const sb = document.getElementById('sidebar');
+    if (sb && localStorage.getItem('ark-sidebar-pinned') === '1') {
+      sb.classList.add('expanded');
+      const btn = sb.querySelector('.sb-expand-toggle');
+      if (btn) { btn.textContent = '⇥'; btn.setAttribute('title', 'Sidebar entpinnen'); }
+    }
+  })();
+
+  // THEME-TOGGLE (wie crm.html)
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const glyph = theme === 'dark' ? '☾' : '☀';
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = glyph;
+    localStorage.setItem('ark-theme', theme);
+    try {
+      if (frame && frame.contentDocument) {
+        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+        const ifBtn = frame.contentDocument.getElementById('themeBtn');
+        if (ifBtn) ifBtn.textContent = glyph;
+      }
+    } catch (e) { /* cross-origin safe-fail */ }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  }
+
+  // Initial: aus localStorage oder default light
+  const savedTheme = localStorage.getItem('ark-theme') || 'light';
+  applyTheme(savedTheme);
+
+  // Sync theme zu iframe beim Seitenwechsel
+  frame.addEventListener('load', () => {
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    try {
+      if (frame.contentDocument && frame.contentDocument.documentElement) {
+        frame.contentDocument.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) { /* cross-origin safe-fail */ }
+  });
+
+  // PROFIL-DROPDOWN (drop-up)
+  function toggleProfilPop(e) {
+    if (e) e.stopPropagation();
+    const pop = document.getElementById('profilPop');
+    if (pop) pop.classList.toggle('open');
+  }
+  document.addEventListener('click', (e) => {
+    const pop = document.getElementById('profilPop');
+    if (pop && pop.classList.contains('open') && !e.target.closest('.sb-user, .profil-pop')) {
+      pop.classList.remove('open');
+    }
+  });
+</script>
+
+</body>
+</html>

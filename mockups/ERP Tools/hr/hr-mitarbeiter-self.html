@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR Self-Service</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .self-page {
+    padding:20px 28px 40px;
+    max-width:1400px; margin:0 auto;
+  }
+
+  /* PROFIL-HEADER */
+  .self-hero {
+    display:grid; grid-template-columns:auto 1fr auto; gap:20px;
+    align-items:center; padding:22px 24px; margin-bottom:22px;
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); border-left:4px solid var(--accent);
+  }
+  .self-avatar {
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), #3a5a7a);
+    color:white; display:flex; align-items:center; justify-content:center;
+    font-size:26px; font-weight:700; font-family:'Libre Baskerville',serif;
+    letter-spacing:1px;
+  }
+  .self-info h1 {
+    margin:0 0 4px; font-family:'Libre Baskerville',serif;
+    font-size:24px; color:var(--accent); font-weight:700;
+  }
+  .self-info .role {
+    font-size:14px; color:var(--text); margin-bottom:3px;
+  }
+  .self-info .meta {
+    font-size:12px; color:var(--text-light);
+  }
+  .self-info .meta span + span::before {
+    content:" · "; margin:0 6px; opacity:0.6;
+  }
+
+  .self-nextup {
+    text-align:right; font-size:12px; color:var(--text-light);
+    border-left:1px solid var(--border); padding-left:18px;
+  }
+  .self-nextup .label {
+    text-transform:uppercase; letter-spacing:0.5px;
+    font-size:10px; opacity:0.7; margin-bottom:3px;
+  }
+  .self-nextup .value {
+    font-size:15px; color:var(--accent); font-weight:600;
+  }
+
+  /* QUICK-ACTIONS */
+  .quick-actions {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+    margin-bottom:26px;
+  }
+  .qa-btn {
+    padding:14px 16px; background:var(--surface);
+    border:1px solid var(--border); border-radius:4px;
+    cursor:pointer; font-size:13px; font-weight:600;
+    color:var(--text); text-align:left;
+    display:flex; align-items:center; gap:10px;
+    transition:all 0.15s;
+  }
+  .qa-btn:hover {
+    border-color:var(--accent); color:var(--accent);
+    box-shadow:var(--shadow-sm);
+  }
+  .qa-btn .icon { font-size:18px; }
+  .qa-btn.primary {
+    background:var(--accent); color:white; border-color:var(--accent);
+  }
+  .qa-btn.primary:hover { filter:brightness(1.1); color:white; }
+
+  /* ALERT-STRIP */
+  .alert-strip {
+    display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;
+  }
+  .alert-strip .chip {
+    padding:8px 14px; background:var(--surface);
+    border-left:3px solid var(--amber); border-radius:4px;
+    font-size:12px; box-shadow:var(--shadow-sm);
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+  }
+  .alert-strip .chip.urgent { border-left-color:var(--red); }
+  .alert-strip .chip.info { border-left-color:var(--accent); }
+  .alert-strip .chip strong { font-weight:600; }
+
+  /* GRID */
+  .self-grid {
+    display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:16px;
+    margin-bottom:24px;
+  }
+  @media (max-width:1100px) {
+    .self-grid { grid-template-columns:1fr 1fr; }
+    .quick-actions { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:640px) {
+    .self-grid { grid-template-columns:1fr; }
+    .quick-actions { grid-template-columns:1fr; }
+    .self-hero { grid-template-columns:auto 1fr; }
+    .self-nextup { display:none; }
+  }
+
+  .widget {
+    background:var(--surface); padding:18px 20px; border-radius:6px;
+    box-shadow:var(--shadow-sm);
+  }
+  .widget h3 {
+    margin:0 0 14px; font-size:14px; font-weight:600;
+    color:var(--text); text-transform:uppercase; letter-spacing:0.5px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .widget h3 .small-link {
+    font-size:11px; font-weight:500; text-transform:none;
+    letter-spacing:0; color:var(--accent); cursor:pointer;
+  }
+
+  /* FERIEN-SALDO */
+  .vac-main {
+    display:flex; align-items:baseline; gap:10px; margin-bottom:14px;
+    padding-bottom:12px; border-bottom:1px solid var(--border);
+  }
+  .vac-main .big {
+    font-size:36px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif;
+  }
+  .vac-main .unit { font-size:13px; color:var(--text-light); }
+  .vac-main .label {
+    margin-left:auto; font-size:11px; color:var(--text-light);
+    text-align:right;
+  }
+  .vac-rows { display:flex; flex-direction:column; gap:8px; }
+  .vac-row {
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px;
+  }
+  .vac-row .name { color:var(--text); }
+  .vac-row .sub {
+    font-size:10px; color:var(--text-light);
+    margin-left:6px; opacity:0.8;
+  }
+  .vac-row .val {
+    font-variant-numeric:tabular-nums; color:var(--text);
+    font-weight:500;
+  }
+  .vac-row .val.zero { opacity:0.4; }
+
+  /* HO/REMOTE-QUOTA */
+  .quota-stack { display:flex; flex-direction:column; gap:14px; }
+  .quota-block .label {
+    display:flex; justify-content:space-between; font-size:12px;
+    margin-bottom:5px;
+  }
+  .quota-block .label .used { color:var(--text); font-weight:500; }
+  .quota-block .bar {
+    height:8px; background:var(--border); border-radius:4px;
+    overflow:hidden;
+  }
+  .quota-block .bar .fill {
+    height:100%; background:var(--accent); border-radius:4px;
+  }
+  .quota-block .hint {
+    font-size:10px; color:var(--text-light); margin-top:4px;
+  }
+
+  /* ACADEMY-PROGRESS */
+  .acad-progress {
+    display:flex; align-items:baseline; gap:10px; margin-bottom:10px;
+  }
+  .acad-progress .big {
+    font-size:28px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif;
+  }
+  .acad-progress .total { font-size:14px; color:var(--text-light); }
+  .acad-progress .label {
+    margin-left:auto; font-size:11px; color:var(--text-light);
+  }
+  .acad-bar {
+    height:6px; background:var(--border); border-radius:3px;
+    overflow:hidden; margin-bottom:12px;
+  }
+  .acad-bar .fill {
+    height:100%; background:linear-gradient(90deg, var(--accent), #5a7a9a);
+  }
+  .acad-next {
+    font-size:11px; color:var(--text-light);
+    padding:8px 10px; background:var(--surface-alt);
+    border-radius:3px;
+  }
+  .acad-next strong { color:var(--accent); }
+
+  /* ANTRÄGE-STATUS */
+  .antraege-list { display:flex; flex-direction:column; gap:8px; }
+  .antrag-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 12px; background:var(--surface-alt);
+    border-radius:4px; font-size:12px;
+  }
+  .antrag-row .what { color:var(--text); }
+  .antrag-row .when {
+    color:var(--text-light); font-size:11px;
+  }
+  .status-pill {
+    padding:2px 8px; border-radius:10px; font-size:10px;
+    font-weight:600; text-transform:uppercase; letter-spacing:0.3px;
+  }
+  .status-pill.pending { background:var(--amber-soft); color:var(--amber); }
+  .status-pill.approved { background:var(--green-soft); color:var(--green); }
+  .status-pill.rejected { background:var(--red-soft); color:var(--red); }
+
+  /* ZERTIFIKATE */
+  .cert-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
+  }
+  .cert-card {
+    padding:12px 14px; border-radius:4px;
+    background:var(--surface-alt); border-left:3px solid var(--green);
+    font-size:12px;
+  }
+  .cert-card.expiring { border-left-color:var(--amber); }
+  .cert-card.expired { border-left-color:var(--red); background:var(--red-soft); }
+  .cert-card.missing { border-left-color:var(--text-light); background:var(--surface); opacity:0.7; }
+  .cert-card .name { font-weight:600; margin-bottom:3px; color:var(--text); }
+  .cert-card .valid { font-size:10px; color:var(--text-light); }
+
+  /* DOKUMENTE */
+  .doc-table {
+    width:100%; border-collapse:collapse; font-size:12px;
+  }
+  .doc-table th {
+    text-align:left; padding:8px 10px;
+    border-bottom:2px solid var(--border); color:var(--text-light);
+    font-weight:500; text-transform:uppercase; letter-spacing:0.3px;
+    font-size:10px;
+  }
+  .doc-table td {
+    padding:10px; border-bottom:1px solid var(--border);
+  }
+  .doc-table tr:hover td { background:var(--surface-alt); }
+  .doc-table .type-chip {
+    padding:2px 7px; border-radius:8px; font-size:10px;
+    background:var(--surface-alt); color:var(--text-light);
+  }
+  .doc-action { color:var(--accent); cursor:pointer; font-size:11px; }
+  .doc-action:hover { text-decoration:underline; }
+
+  /* DSG-FOOTER */
+  .dsg-footer {
+    margin-top:32px; padding:18px 22px;
+    background:var(--surface); border-radius:6px;
+    border:1px dashed var(--border-strong);
+    display:flex; justify-content:space-between; align-items:center;
+    gap:16px; flex-wrap:wrap;
+  }
+  .dsg-footer .txt {
+    font-size:12px; color:var(--text-light);
+  }
+  .dsg-footer .txt strong { color:var(--text); }
+  .dsg-btn {
+    padding:8px 16px; background:var(--surface);
+    border:1px solid var(--border-strong); border-radius:4px;
+    font-size:12px; cursor:pointer; color:var(--text);
+  }
+  .dsg-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* DRAWER (simplified placeholders) */
+  .drawer-backdrop {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35);
+    z-index:40;
+  }
+  .drawer-backdrop.open { display:block; }
+  .drawer {
+    position:fixed; top:0; right:-600px; width:540px; height:100%;
+    background:var(--surface); z-index:50; box-shadow:-6px 0 20px rgba(0,0,0,0.15);
+    transition:right 0.25s; overflow-y:auto;
+  }
+  .drawer.open { right:0; }
+  .drawer-head {
+    padding:18px 22px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .drawer-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:18px; color:var(--accent);
+  }
+  .drawer-close {
+    background:none; border:none; font-size:22px; cursor:pointer;
+    color:var(--text-light);
+  }
+  .drawer-body { padding:22px; font-size:13px; line-height:1.5; color:var(--text); }
+  .drawer-body .field { margin-bottom:16px; }
+  .drawer-body .field label {
+    display:block; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.4px; color:var(--text-light); margin-bottom:4px;
+    font-weight:500;
+  }
+  .drawer-body .field input, .drawer-body .field select, .drawer-body .field textarea {
+    width:100%; padding:9px 11px; border:1px solid var(--border-strong);
+    border-radius:3px; font-size:13px; font-family:'DM Sans',sans-serif;
+    background:var(--surface);
+  }
+  .drawer-body .sidebar-info {
+    background:var(--surface-alt); padding:12px 14px; border-radius:4px;
+    font-size:11px; margin-bottom:16px;
+  }
+  .drawer-body .sidebar-info strong { color:var(--accent); }
+  .drawer-foot {
+    padding:16px 22px; border-top:1px solid var(--border);
+    display:flex; justify-content:flex-end; gap:10px;
+    background:var(--surface-alt);
+  }
+  .drawer-foot button {
+    padding:9px 18px; border-radius:3px; font-size:13px;
+    font-weight:500; cursor:pointer; border:1px solid transparent;
+  }
+  .drawer-foot .btn-primary {
+    background:var(--accent); color:white; border-color:var(--accent);
+  }
+  .drawer-foot .btn-secondary {
+    background:var(--surface); color:var(--text);
+    border-color:var(--border-strong);
+  }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="self-page">
+
+  <!-- PROFIL-HERO -->
+  <div class="self-hero">
+    <div class="self-avatar">PW</div>
+    <div class="self-info">
+      <h1>Peter Wiederkehr</h1>
+      <div class="role">Head of Civil Engineering &amp; Building Technology</div>
+      <div class="meta">
+        <span>PW</span>
+        <span>Seit 01.02.2019 · 7 Dienstjahre</span>
+        <span>Bereich ING · Civil Engineering</span>
+        <span>Pensum 100%</span>
+      </div>
+    </div>
+    <div class="self-nextup">
+      <div class="label">Nächstes Event</div>
+      <div class="value">Geburtstagswoche</div>
+      <div>15.–21. Juni · Extra-Tag verfügbar</div>
+    </div>
+  </div>
+
+  <!-- QUICK-ACTIONS -->
+  <div class="quick-actions">
+    <button class="qa-btn primary" onclick="openDrawer('drawer-homeoffice')">
+      <span class="icon">🏠</span> Home-Office-Antrag
+    </button>
+    <button class="qa-btn" onclick="openDrawer('drawer-training')">
+      <span class="icon">🎓</span> Schulung anfordern
+    </button>
+    <button class="qa-btn" onclick="openDrawer('drawer-cert')">
+      <span class="icon">🎖️</span> Zertifikat erfassen
+    </button>
+  </div>
+
+  <!-- ALERT-STRIP -->
+  <div class="alert-strip">
+    <div class="chip warning">
+      <strong>Scheelen-Zertifikat Relief</strong> läuft in 45 Tagen ab
+    </div>
+    <div class="chip info">
+      <strong>Dienstjubiläum</strong> 7→8 J. am 01.02.2027 (in 9 Mt)
+    </div>
+    <div class="chip info">
+      <strong>Geburtstags-Extra-Tag</strong> diese Woche einlösbar
+    </div>
+  </div>
+
+  <!-- GRID-ROW 1: Ferien + Quota + Academy -->
+  <div class="self-grid">
+
+    <!-- FERIEN-SALDO -->
+    <div class="widget">
+      <h3>Ferien-Saldo 2026 <span class="small-link" style="color:var(--text-light);">Nur Info · Anträge im Zeit-Modul</span></h3>
+      <div class="vac-main">
+        <span class="big">18.0</span>
+        <span class="unit">Tage Rest</span>
+        <div class="label">von 25 + 3 Vorjahr<br>Genommen: 10.0</div>
+      </div>
+      <div class="vac-rows">
+        <div class="vac-row">
+          <div>
+            <span class="name">Vorjahres-Übertrag</span>
+            <span class="sub">bis 20.04.2026 (Ostern+14)</span>
+          </div>
+          <span class="val">3.0</span>
+        </div>
+        <div class="vac-row">
+          <div>
+            <span class="name">Geburtstag MA</span>
+            <span class="sub">nur in Geburtstagswoche</span>
+          </div>
+          <span class="val">1.0</span>
+        </div>
+        <div class="vac-row">
+          <div>
+            <span class="name">Geburtstag nahestehend</span>
+            <span class="sub">optional</span>
+          </div>
+          <span class="val">1.0</span>
+        </div>
+        <div class="vac-row">
+          <div>
+            <span class="name">Jokertag (Me Time)</span>
+            <span class="sub">frei wählbar</span>
+          </div>
+          <span class="val">1.0</span>
+        </div>
+        <div class="vac-row">
+          <div>
+            <span class="name">Zielerreichung H1</span>
+            <span class="sub">Berechnung Ende August</span>
+          </div>
+          <span class="val zero">—</span>
+        </div>
+        <div class="vac-row">
+          <div>
+            <span class="name">Zielerreichung H2</span>
+            <span class="sub">aus 2025 · in Sperrfrist</span>
+          </div>
+          <span class="val">1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HO/REMOTE-QUOTA -->
+    <div class="widget">
+      <h3>Flexibles Arbeiten <span class="small-link" onclick="openDrawer('drawer-homeoffice')">Antrag →</span></h3>
+      <div class="quota-stack">
+        <div class="quota-block">
+          <div class="label">
+            <span>🏠 Home-Office</span>
+            <span class="used"><strong>8</strong>/20 verwendet</span>
+          </div>
+          <div class="bar"><div class="fill" style="width:40%;"></div></div>
+          <div class="hint">12 Tage Remaining · diese Woche 1× gebucht (max 1/Woche)</div>
+        </div>
+        <div class="quota-block">
+          <div class="label">
+            <span>🌍 Remote Work</span>
+            <span class="used"><strong>3</strong>/10 verwendet</span>
+          </div>
+          <div class="bar"><div class="fill" style="width:30%;"></div></div>
+          <div class="hint">7 Tage Remaining · max 2/Woche</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACADEMY-PROGRESS -->
+    <div class="widget">
+      <h3>Academy-Fortschritt <span class="small-link">Module →</span></h3>
+      <div class="acad-progress">
+        <span class="big">21</span>
+        <span class="total">/ 21 Module</span>
+        <span class="label">100% complete</span>
+      </div>
+      <div class="acad-bar"><div class="fill" style="width:100%;"></div></div>
+      <div class="acad-next">
+        <strong>Refresher empfohlen:</strong> Communication Edge Part II (3h) — zuletzt 2023
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GRID-ROW 2: Anträge + Zertifikate -->
+  <div class="self-grid" style="grid-template-columns:1fr 1.5fr;">
+
+    <!-- MEINE ANTRÄGE -->
+    <div class="widget">
+      <h3>Meine Anträge</h3>
+      <div class="antraege-list">
+        <div class="antrag-row">
+          <div>
+            <div class="what">Ferien 15.–19. Juli</div>
+            <div class="when">eingereicht 28.03.</div>
+          </div>
+          <span class="status-pill approved">Genehmigt</span>
+        </div>
+        <div class="antrag-row">
+          <div>
+            <div class="what">HO 22.04.</div>
+            <div class="when">eingereicht 18.04.</div>
+          </div>
+          <span class="status-pill pending">Pending</span>
+        </div>
+        <div class="antrag-row">
+          <div>
+            <div class="what">Schulung "Leadership Advanced"</div>
+            <div class="when">eingereicht 05.04.</div>
+          </div>
+          <span class="status-pill approved">Genehmigt</span>
+        </div>
+        <div class="antrag-row">
+          <div>
+            <div class="what">Weiterbildungsvereinbarung MAS HRM</div>
+            <div class="when">eingereicht 10.04.</div>
+          </div>
+          <span class="status-pill pending">Pending (Vorgesetzter)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ZERTIFIKATE -->
+    <div class="widget">
+      <h3>Zertifikate <span class="small-link" onclick="openDrawer('drawer-cert')">+ Erfassen</span></h3>
+      <div class="cert-grid">
+        <div class="cert-card">
+          <div class="name">Scheelen MDI</div>
+          <div class="valid">Erworben 2019 · unbefristet</div>
+        </div>
+        <div class="cert-card">
+          <div class="name">Scheelen ASSESS 5.0</div>
+          <div class="valid">Erworben 2020 · unbefristet</div>
+        </div>
+        <div class="cert-card expiring">
+          <div class="name">Scheelen RELIEF</div>
+          <div class="valid">⚠ Läuft ab 04.06.2026 (45 T)</div>
+        </div>
+        <div class="cert-card">
+          <div class="name">Scheelen TriMetrix® EQ</div>
+          <div class="valid">Erworben 2021 · unbefristet</div>
+        </div>
+        <div class="cert-card">
+          <div class="name">LinkedIn Recruiter</div>
+          <div class="valid">Erworben 2023 · gültig bis 2028</div>
+        </div>
+        <div class="cert-card">
+          <div class="name">MAS HR Management</div>
+          <div class="valid">Erworben 2022 · unbefristet</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DOKUMENTE -->
+  <div class="widget" style="margin-bottom:24px;">
+    <h3>Meine Dokumente <span class="small-link">Alle anzeigen →</span></h3>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Typ</th>
+          <th>Name</th>
+          <th>Datum</th>
+          <th>Retention bis</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="type-chip">Lohnausweis</span></td>
+          <td>Lohnausweis 2025</td>
+          <td>28.02.2026</td>
+          <td>28.02.2036</td>
+          <td><span class="doc-action">↓ Download</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-chip">Arbeitsvertrag</span></td>
+          <td>Arbeitsvertrag (Version 2019-02-01)</td>
+          <td>01.02.2019</td>
+          <td>—</td>
+          <td><span class="doc-action">↓ Download</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-chip">Provisionsvertrag</span></td>
+          <td><a href="../commission/commission-my.html" style="color:var(--text);text-decoration:underline;text-decoration-style:dotted;">Praemium Victoria 2026</a></td>
+          <td>15.12.2025</td>
+          <td>15.12.2035</td>
+          <td><span class="doc-action">↓ Download</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-chip">Reglement</span></td>
+          <td>Generalis Provisio v2024-01-01</td>
+          <td>01.01.2024</td>
+          <td>—</td>
+          <td><span class="doc-action">↓ Download</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-chip">Zertifikat</span></td>
+          <td>Scheelen RELIEF</td>
+          <td>04.06.2021</td>
+          <td>—</td>
+          <td><span class="doc-action">↓ Download</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PERSÖNLICHE DATEN + NOTFALLKONTAKTE -->
+  <div class="self-grid" style="grid-template-columns:1fr 1fr;">
+
+    <div class="widget">
+      <h3>Meine Daten <span class="small-link">Bearbeiten</span></h3>
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:10px 18px; font-size:13px;">
+        <span style="color:var(--text-light);">Email</span>
+        <span>peter.w@arkadium.ch</span>
+        <span style="color:var(--text-light);">Tel</span>
+        <span>+41 79 123 45 67</span>
+        <span style="color:var(--text-light);">Adresse</span>
+        <span>Bahnhofstrasse 12 · 8001 Zürich</span>
+        <span style="color:var(--text-light);">Geburtstag</span>
+        <span>15.06.1984 <span style="color:var(--text-light); font-size:11px;">(Sichtbarkeit Team-Kalender: ✓ opt-in)</span></span>
+        <span style="color:var(--text-light);">AHV-Nr</span>
+        <span>756.••••.••••.•• <span style="color:var(--accent); cursor:pointer; font-size:11px;">[Aufdecken]</span></span>
+      </div>
+    </div>
+
+    <div class="widget">
+      <h3>Notfallkontakte <span class="small-link">Bearbeiten</span></h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:10px 12px; background:var(--surface-alt); border-radius:4px;">
+          <div style="font-weight:600; font-size:13px;">Priorität 1 · Primärkontakt</div>
+          <div style="font-size:12px; margin-top:3px;">Anna Wiederkehr (Partnerin) · +41 79 987 65 43</div>
+          <div style="font-size:11px; color:var(--text-light); margin-top:2px;">Zuletzt bestätigt: 10.04.2026</div>
+        </div>
+        <div style="padding:10px 12px; background:var(--surface-alt); border-radius:4px;">
+          <div style="font-weight:600; font-size:13px;">Priorität 2 · Sekundärkontakt</div>
+          <div style="font-size:12px; margin-top:3px;">Thomas Wiederkehr (Bruder) · +41 78 111 22 33</div>
+          <div style="font-size:11px; color:var(--text-light); margin-top:2px;">Zuletzt bestätigt: 10.04.2026</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DSG-FOOTER -->
+  <div class="dsg-footer">
+    <div class="txt">
+      <strong>Datenschutz-Grundverordnung · Auskunftsrecht (Art. 25 DSG)</strong><br>
+      Du hast das Recht, alle über dich gespeicherten Daten als PDF zu exportieren.
+    </div>
+    <button class="dsg-btn">📄 DSG-Auskunft exportieren (PDF)</button>
+  </div>
+
+</div>
+
+<div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER: Home-Office-Antrag -->
+<div class="drawer" id="drawer-homeoffice">
+  <div class="drawer-head">
+    <h2>Home-Office / Remote Work beantragen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="sidebar-info">
+      <strong>Quota:</strong> HO 12/20 remaining · Remote 7/10 remaining<br>
+      Min. Vorlauf: 48 h · max 1 HO/Woche · max 2 Remote/Woche · Team-Abdeckung ≥ 70%
+    </div>
+    <div class="field">
+      <label>Datum</label>
+      <input type="date">
+    </div>
+    <div class="field">
+      <label>Typ</label>
+      <select>
+        <option>Home-Office (CH-Wohnort)</option>
+        <option>Remote Work (andere Location)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Projekt-Context (Pflicht laut Locus Extra)</label>
+      <textarea rows="3" placeholder="Welche konkreten Projekte / Arbeitsziele?"></textarea>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary">Beantragen</button>
+  </div>
+</div>
+
+<!-- DRAWER: Schulung -->
+<div class="drawer" id="drawer-training">
+  <div class="drawer-head">
+    <h2>Schulung anfordern</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="sidebar-info">
+      <strong>Dein Weiterbildungs-Budget:</strong> CHF 4'000 / Jahr · Verwendet CHF 800
+    </div>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" placeholder="z.B. Executive Coaching Weiterbildung">
+    </div>
+    <div class="field">
+      <label>Anbieter</label>
+      <input type="text">
+    </div>
+    <div class="field">
+      <label>Typ</label>
+      <select>
+        <option>Zertifizierung</option>
+        <option>Seminar</option>
+        <option>Konferenz</option>
+        <option>Online-Kurs</option>
+        <option>Coaching</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Kosten (CHF)</label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <input type="number" placeholder="Kurs">
+        <input type="number" placeholder="Reise">
+      </div>
+    </div>
+    <div class="field">
+      <label>Begründung</label>
+      <textarea rows="3"></textarea>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary">An Vorgesetzten senden</button>
+  </div>
+</div>
+
+<!-- DRAWER: Zertifikat erfassen -->
+<div class="drawer" id="drawer-cert">
+  <div class="drawer-head">
+    <h2>Zertifikat erfassen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <label>Zertifikats-Typ</label>
+      <select>
+        <optgroup label="Scheelen (Pflicht für alle)">
+          <option>Scheelen MDI</option>
+          <option>Scheelen RELIEF</option>
+          <option>Scheelen ASSESS 5.0</option>
+          <option>Scheelen TriMetrix® EQ</option>
+        </optgroup>
+        <optgroup label="Weitere">
+          <option>LinkedIn Recruiter</option>
+          <option>MAS HRM</option>
+          <option>CAS Consulting</option>
+          <option>Sonstiges</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field">
+      <label>Erworben am</label>
+      <input type="date">
+    </div>
+    <div class="field">
+      <label>Gültig bis (optional)</label>
+      <input type="date">
+    </div>
+    <div class="field">
+      <label>Zertifikats-Dokument</label>
+      <input type="file" accept=".pdf,.jpg,.png">
+    </div>
+    <div class="field">
+      <label>Kosten (CHF, optional)</label>
+      <input type="number">
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary">Hochladen</button>
+  </div>
+</div>
+
+<script>
+  function openDrawer(id) {
+    document.getElementById('backdrop').classList.add('open');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('backdrop').classList.remove('open');
+    document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+
+</body>
+</html>

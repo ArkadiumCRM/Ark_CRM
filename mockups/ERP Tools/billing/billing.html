@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Billing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; overflow:hidden; }
+  body {
+    display:grid; grid-template-rows:52px 1fr;
+    font-family:'DM Sans', sans-serif;
+    background:var(--bg);
+  }
+
+  .topbar {
+    position:relative;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 20px; background:var(--surface);
+    border-bottom:1px solid var(--border); height:52px;
+  }
+  .topbar .brand { display:flex; align-items:center; gap:10px; cursor:pointer; }
+  .topbar .logo {
+    width:28px; height:28px; border-radius:6px;
+    background:var(--accent); color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700;
+  }
+  .topbar .brand-text { font-size:14px; font-weight:600; color:var(--text); }
+  .topbar .brand-sub { font-size:11px; color:var(--text-light); font-weight:500; }
+
+  .topbar .right {
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; color:var(--text-light);
+  }
+
+  .tool-tabs {
+    display:flex; gap:2px; align-items:center;
+    background:var(--surface-alt); padding:3px;
+    border-radius:22px;
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+  }
+  .tool-tab {
+    padding:6px 14px; font-size:12px; font-weight:500;
+    color:var(--text-light); cursor:pointer;
+    border-radius:18px;
+    text-decoration:none; display:flex; align-items:center; gap:5px;
+    transition:all 0.15s; white-space:nowrap;
+  }
+  .tool-tab:hover { background:var(--surface); color:var(--accent); }
+  .tool-tab.active { background:var(--accent); color:white; font-weight:600; }
+  .tool-tab.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+  .tool-tab .icon { font-size:13px; }
+
+  .theme-toggle { border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:14px; padding:4px 10px; border-radius:14px; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+  .theme-toggle:hover { background:var(--surface-alt); border-color:var(--accent); }
+  .user-chip { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text); font-weight:500; cursor:pointer; }
+  .user-chip:hover { background:var(--bg); }
+  .cmd-hint { padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-light); display:flex; align-items:center; gap:4px; cursor:pointer; border:1px solid var(--border); }
+  .cmd-hint:hover { background:var(--bg); }
+  .cmd-hint kbd { padding:1px 4px; background:var(--surface); border:1px solid var(--border); border-radius:2px; font-family:monospace; font-size:10px; }
+  .role-switcher { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:14px; background:var(--surface-alt); font-size:11px; color:var(--text-mid); border:1px dashed var(--border-strong); }
+  .role-switcher .rs-label { font-weight:600; text-transform:uppercase; letter-spacing:0.8px; font-size:9.5px; color:var(--text-light); }
+  .role-switcher select { border:none; background:transparent; font-size:11.5px; color:var(--text); cursor:pointer; font-family:inherit; padding:0; }
+
+  .shell { display:grid; grid-template-columns:56px 1fr; overflow:hidden; transition:grid-template-columns 0.22s ease; }
+  body:has(.sidebar:hover) .shell { grid-template-columns:240px 1fr; }
+  body:has(.sidebar.expanded) .shell { grid-template-columns:240px 1fr; }
+
+  .sidebar { background:var(--surface); border-right:1px solid var(--border); overflow-x:hidden; overflow-y:auto; font-size:13px; position:relative; transition:width 0.22s ease; width:56px; display:flex; flex-direction:column; }
+  .sidebar:hover { width:240px; box-shadow:var(--shadow); }
+  .sidebar.expanded { width:240px; box-shadow:var(--shadow); }
+  .sidebar .sb-top { flex:1; min-height:0; overflow-y:auto; }
+
+  .sidebar .sb-brand { display:flex; align-items:center; gap:10px; padding:16px 36px 16px 14px; border-bottom:1px solid var(--border); flex-shrink:0; position:relative; }
+  .sidebar .sb-brand .logo-mark { width:28px; height:28px; border-radius:4px; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px; flex-shrink:0; }
+  .sidebar .sb-brand .brand-text { white-space:nowrap; overflow:hidden; opacity:0; transition:opacity 0.2s; }
+  .sidebar:hover .sb-brand .brand-text,
+  .sidebar.expanded .sb-brand .brand-text { opacity:1; }
+  .sidebar .sb-brand .brand-name { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; letter-spacing:0.6px; color:var(--accent); }
+
+  .sb-expand-toggle { position:absolute; top:14px; right:8px; z-index:10; background:transparent; border:none; cursor:pointer; font-size:14px; color:var(--text-light); padding:4px; border-radius:3px; opacity:0; transition:opacity 0.15s, color 0.15s, background 0.15s; display:flex; align-items:center; justify-content:center; }
+  .sidebar:hover .sb-expand-toggle { opacity:1; }
+  .sidebar.expanded .sb-expand-toggle { opacity:1; color:var(--accent); }
+  .sb-expand-toggle:hover { background:var(--bg); color:var(--accent); }
+
+  .sidebar .sb-section { padding:10px 18px 4px; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light); font-weight:600; white-space:nowrap; opacity:0; transition:opacity 0.2s; }
+  .sidebar:hover .sb-section,
+  .sidebar.expanded .sb-section { opacity:1; }
+
+  .sidebar .sb-item { display:flex; align-items:center; gap:12px; padding:8px 18px; color:var(--text); cursor:pointer; border-left:3px solid transparent; transition:all 0.12s; user-select:none; white-space:nowrap; }
+  .sidebar .sb-item:hover { background:var(--surface-alt); color:var(--accent); }
+  .sidebar .sb-item.active { background:var(--surface-alt); color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+  .sidebar .sb-item.disabled { opacity:0.45; cursor:not-allowed; }
+  .sidebar .sb-item .icon { font-size:15px; width:20px; text-align:center; flex-shrink:0; }
+  .sidebar .sb-item .label { opacity:0; transition:opacity 0.2s; }
+  .sidebar:hover .sb-item .label,
+  .sidebar.expanded .sb-item .label { opacity:1; }
+  .sidebar .sb-item .badge { margin-left:auto; background:var(--accent); color:white; padding:1px 7px; border-radius:8px; font-size:10px; font-weight:700; opacity:0; transition:opacity 0.2s; }
+  .sidebar:hover .sb-item .badge,
+  .sidebar.expanded .sb-item .badge { opacity:1; }
+  .sidebar .sb-item .badge.red { background:var(--red); }
+  .sidebar .sb-item .badge.amber { background:var(--amber); }
+  .sidebar .sb-item.disabled .badge { background:var(--text-light); opacity:0.5; }
+
+  .main-frame { border:none; width:100%; height:100%; background:var(--bg); }
+
+  @media (max-width:960px) {
+    .shell { grid-template-columns:1fr; }
+    body:has(.sidebar:hover) .shell,
+    body:has(.sidebar.expanded) .shell { grid-template-columns:1fr; }
+    .sidebar { position:fixed; top:52px; left:-260px; width:240px; height:calc(100vh - 52px); z-index:30; transition:left 0.22s ease; box-shadow:4px 0 15px rgba(0,0,0,0.1); }
+    .sidebar.open { left:0; }
+    .sidebar:hover, .sidebar.expanded { width:240px; }
+    .topbar-burger { display:inline-flex; font-size:20px; cursor:pointer; color:var(--text); margin-right:8px; }
+  }
+  .topbar-burger { display:none; }
+
+  .sb-footer { padding:12px 14px; border-top:1px solid var(--border); flex-shrink:0; position:relative; background:var(--surface); }
+  .sb-user { display:flex; align-items:center; gap:10px; cursor:pointer; padding:4px; border-radius:4px; transition:background 0.15s; }
+  .sb-user:hover { background:var(--bg); }
+  .sb-user-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+  .sb-user-info { opacity:0; transition:opacity 0.2s; white-space:nowrap; flex:1; min-width:0; }
+  .sidebar:hover .sb-user-info,
+  .sidebar.expanded .sb-user-info { opacity:1; }
+  .sb-user-name { font-size:12px; font-weight:600; color:var(--text); }
+  .sb-user-role { font-size:10px; color:var(--text-light); }
+  .sb-user-caret { font-size:10px; color:var(--text-light); opacity:0; transition:opacity 0.2s; flex-shrink:0; }
+  .sidebar:hover .sb-user-caret,
+  .sidebar.expanded .sb-user-caret { opacity:1; }
+
+  .profil-pop { position:absolute; bottom:calc(100% + 4px); left:8px; right:8px; background:var(--surface); border:1px solid var(--border); border-radius:6px; box-shadow:var(--shadow-lg); padding:6px; min-width:220px; z-index:60; opacity:0; transform:translateY(4px); pointer-events:none; transition:opacity 0.15s, transform 0.15s; }
+  .profil-pop.open { opacity:1; transform:translateY(0); pointer-events:auto; }
+  .profil-pop-head { padding:10px 12px 8px; border-bottom:1px solid var(--border); margin-bottom:4px; display:flex; align-items:center; gap:10px; }
+  .profil-pop-head .av { width:36px; height:36px; border-radius:50%; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+  .profil-pop-head .name { font-size:13px; font-weight:600; color:var(--text); }
+  .profil-pop-head .email { font-size:10.5px; color:var(--text-light); }
+  .profil-pop-item { display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; border-radius:4px; font-size:12.5px; color:var(--text-mid); transition:background 0.1s; }
+  .profil-pop-item:hover { background:var(--bg); color:var(--text); }
+  .profil-pop-item .ic { font-size:14px; width:18px; text-align:center; }
+  .profil-pop-sep { height:1px; background:var(--border); margin:4px 0; }
+  .profil-pop-cat { padding:6px 14px 2px; font-size:9.5px; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-light); font-weight:600; }
+  .profil-pop-item.danger { color:var(--red); }
+  .profil-pop-item.danger:hover { background:color-mix(in srgb, var(--red) 10%, transparent); }
+
+  .shell-drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:110; }
+  .shell-drawer-backdrop.active { display:block; }
+  .shell-drawer { position:fixed; top:0; right:-560px; width:540px; height:100%; background:var(--surface); z-index:120; transition:right 0.3s ease; display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.15); }
+  .shell-drawer.active { right:0 !important; transform:translateX(0) !important; }
+  .shell-drawer-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .shell-drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:19px; color:var(--accent); flex:1; }
+  .shell-drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .shell-drawer-body { flex:1; overflow-y:auto; padding:20px 22px; font-size:13px; }
+  .shell-drawer-section { margin-bottom:20px; }
+  .shell-drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .shell-drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+  .shell-drawer-foot button, .shell-drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .shell-drawer-foot button:hover, .shell-drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .shell-drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .shell-drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .shell-drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  .cmd-palette-search { width:100%; padding:10px 14px; border:2px solid var(--accent); border-radius:6px; font-size:15px; font-family:inherit; background:var(--surface); }
+  .cmd-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:4px; cursor:pointer; font-size:13px; color:var(--text-mid); }
+  .cmd-item:hover { background:var(--bg); color:var(--accent); }
+  .cmd-item .c-ic { font-size:16px; width:22px; text-align:center; }
+  .cmd-item .c-key { margin-left:auto; font-family:monospace; font-size:10.5px; color:var(--text-light); padding:2px 6px; background:var(--bg); border-radius:2px; border:1px solid var(--border); }
+  .cmd-cat { padding:8px 14px 4px; font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+
+  .shell-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.15); font-size:13px; z-index:250; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s; }
+  .shell-toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand" onclick="goToDashboard()" title="Zum Dashboard">
+    <span class="topbar-burger" id="burger">☰</span>
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-text">Arkadium</div>
+      <div class="brand-sub">ERP</div>
+    </div>
+  </div>
+
+  <div class="tool-tabs">
+    <a class="tool-tab" href="../../crm.html"><span class="icon">🎯</span> CRM</a>
+    <a class="tool-tab" href="../hr/hr.html"><span class="icon">👥</span> HR</a>
+    <a class="tool-tab" href="../commission/commission.html"><span class="icon">💰</span> Commission</a>
+    <a class="tool-tab" href="../zeit/zeit.html"><span class="icon">⏱</span> Zeit</a>
+    <a class="tool-tab active" href="billing.html"><span class="icon">📄</span> Billing</a>
+    <span class="tool-tab disabled"><span class="icon">📊</span> Performance</span>
+  </div>
+
+  <div class="right">
+    <span class="cmd-hint" onclick="openCmdPalette()" title="Command-Palette"><kbd>⌘K</kbd>Suche</span>
+    <span class="role-switcher" title="Demo-Rolle umschalten (Mockup-Feature)">
+      <span class="rs-label">Rolle:</span>
+      <select id="roleSel" onchange="applyRole(this.value)">
+        <option value="AM">AM / CM</option>
+        <option value="BO" selected>Backoffice</option>
+        <option value="GF">GF / Head of</option>
+        <option value="ADMIN">Admin</option>
+        <option value="TREU">Treuhand (RO)</option>
+      </select>
+    </span>
+    <span class="user-chip" onclick="toggleProfilPop(event)" title="Profil-Menü">Sabrina T. · Backoffice</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Theme" title="Light/Dark">☀</button>
+  </div>
+</div>
+
+
+<div class="shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+    <button class="sb-expand-toggle" onclick="toggleSidebarExpand()" aria-label="Sidebar fixieren" title="Fixieren">⇔</button>
+    <div class="sb-brand">
+      <div class="logo-mark">A</div>
+      <div class="brand-text">
+        <div class="brand-name">Billing</div>
+      </div>
+    </div>
+
+    <div class="sb-section">Überblick</div>
+    <div class="sb-item active" data-src="billing-dashboard.html" data-title="Dashboard">
+      <span class="icon">📊</span><span class="label">Dashboard</span>
+    </div>
+
+    <div class="sb-section">Operationen</div>
+    <div class="sb-item" data-src="billing-rechnungen.html" data-title="Rechnungen">
+      <span class="icon">📄</span><span class="label">Rechnungen</span>
+    </div>
+    <div class="sb-item" data-src="billing-mahnwesen.html" data-title="Mahnwesen">
+      <span class="icon">⚠</span><span class="label">Mahnwesen</span><span class="badge amber" title="7 pending Mahnungen">7</span>
+    </div>
+    <div class="sb-item" data-src="billing-zahlungen.html" data-title="Zahlungseingang">
+      <span class="icon">⇅</span><span class="label">Zahlungseingang</span><span class="badge" title="4 Bookings im Review">4</span>
+    </div>
+    <div class="sb-item" data-src="billing-refunds.html" data-title="Refund-Cockpit">
+      <span class="icon">↶</span><span class="label">Refund-Cockpit</span><span class="badge red" title="3 Exit-Risiko ≤ 14d">3</span>
+    </div>
+
+    <div class="sb-section">Debitoren</div>
+    <div class="sb-item" data-src="billing-debitoren.html" data-title="Debitoren">
+      <span class="icon">📇</span><span class="label">Debitoren</span><span class="badge amber" title="12 Kunden überfällig">12</span>
+    </div>
+
+    <div class="sb-section role-section" data-visible-for="BO,GF,ADMIN,TREU">Finanz-Reports</div>
+    <div class="sb-item role-item" data-visible-for="BO,GF,ADMIN,TREU" data-src="billing-mwst.html" data-title="MwSt-Abrechnung">
+      <span class="icon">⎙</span><span class="label">MwSt-Abrechnung</span><span class="badge amber" title="Q2/2026 in Erfassung">Q2</span>
+    </div>
+    <div class="sb-item role-item disabled" data-visible-for="BO,GF,ADMIN,TREU" data-title="Treuhand-Export">
+      <span class="icon">◰</span><span class="label">Treuhand-Export</span>
+    </div>
+
+    <div class="sb-section role-section" data-visible-for="GF,ADMIN">Eskalation</div>
+    <div class="sb-item role-item" data-visible-for="GF,ADMIN" data-src="billing-inkasso.html" data-title="Inkasso">
+      <span class="icon">⚐</span><span class="label">Inkasso</span><span class="badge red" title="3 Pending GF-Freigabe">3</span>
+    </div>
+
+    </div><!-- /sb-top -->
+
+    <div class="sb-footer">
+      <div class="sb-user" onclick="toggleProfilPop(event)">
+        <div class="sb-user-avatar">ST</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Sabrina Tanner</div>
+          <div class="sb-user-role">Backoffice</div>
+        </div>
+        <span class="sb-user-caret">▴</span>
+      </div>
+      <div class="profil-pop" id="profilPop">
+        <div class="profil-pop-head">
+          <div class="av">ST</div>
+          <div>
+            <div class="name">Sabrina Tanner</div>
+            <div class="email">sabrina.tanner@arkadium.ch</div>
+          </div>
+        </div>
+        <div class="profil-pop-cat">Team</div>
+        <div class="profil-pop-item"><span class="ic">👤</span>Mein Profil</div>
+        <div class="profil-pop-sep"></div>
+        <div class="profil-pop-cat">Tools</div>
+        <div class="profil-pop-item" onclick="openShortcutsDrawer()"><span class="ic">⌨</span>Keyboard-Shortcuts</div>
+        <div class="profil-pop-sep"></div>
+        <div class="profil-pop-item danger"><span class="ic">⏻</span>Abmelden</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <iframe id="mainFrame" class="main-frame" src="billing-dashboard.html"></iframe>
+
+</div>
+
+<!-- Shell-Level Drawer + Toast -->
+<div class="shell-drawer-backdrop" id="shellBackdrop" onclick="closeShellDrawer()"></div>
+<div class="shell-drawer" id="shellDrawer">
+  <div class="shell-drawer-head">
+    <div id="shellDrIcon" style="font-size:26px;">⌨</div>
+    <h2 id="shellDrTitle">Shell</h2>
+    <button class="shell-drawer-close" onclick="closeShellDrawer()">×</button>
+  </div>
+  <div class="shell-drawer-body" id="shellDrBody"></div>
+  <div class="shell-drawer-foot" id="shellDrFoot"></div>
+</div>
+
+<div class="shell-toast" id="shellToast">OK</div>
+
+<script>
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  }
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = theme === 'dark' ? '☾' : '☀';
+    localStorage.setItem('ark-theme', theme);
+    const frame = document.getElementById('mainFrame');
+    try { if (frame && frame.contentDocument) frame.contentDocument.documentElement.setAttribute('data-theme', theme); } catch (e) {}
+  }
+  function applyRole(role) {
+    document.querySelectorAll('.role-section, .role-item').forEach(el => {
+      const allowed = (el.dataset.visibleFor || '').split(',').map(s => s.trim());
+      el.style.display = allowed.includes(role) ? '' : 'none';
+    });
+    localStorage.setItem('ark-billing-role', role);
+  }
+  function toggleSidebarExpand() {
+    const sb = document.getElementById('sidebar');
+    sb.classList.toggle('expanded');
+    const btn = sb.querySelector('.sb-expand-toggle');
+    const pinned = sb.classList.contains('expanded');
+    if (btn) { btn.textContent = pinned ? '⇥' : '⇔'; btn.setAttribute('title', pinned ? 'Sidebar entpinnen' : 'Sidebar fixieren'); }
+    localStorage.setItem('ark-sidebar-pinned', pinned ? '1' : '0');
+  }
+  function toggleProfilPop(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('profilPop')?.classList.toggle('open');
+  }
+
+  function shellToast(msg, danger) {
+    const t = document.getElementById('shellToast');
+    t.textContent = msg;
+    t.style.borderLeftColor = danger ? 'var(--red)' : 'var(--green)';
+    t.classList.add('active');
+    setTimeout(() => t.classList.remove('active'), 2600);
+  }
+  function closeShellDrawer() {
+    document.getElementById('shellBackdrop').classList.remove('active');
+    document.getElementById('shellDrawer').classList.remove('active');
+  }
+  function openShellDrawer(icon, title, body, foot) {
+    document.getElementById('shellDrIcon').textContent = icon;
+    document.getElementById('shellDrTitle').textContent = title;
+    document.getElementById('shellDrBody').innerHTML = body;
+    document.getElementById('shellDrFoot').innerHTML = foot;
+    document.getElementById('shellBackdrop').classList.add('active');
+    document.getElementById('shellDrawer').classList.add('active');
+  }
+
+  function goToDashboard() {
+    const frame = document.getElementById('mainFrame');
+    if (frame) frame.src = 'billing-dashboard.html';
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelector('.sb-item[data-src="billing-dashboard.html"]')?.classList.add('active');
+  }
+
+  function navigateTo(src) {
+    const frame = document.getElementById('mainFrame');
+    if (frame) frame.src = src;
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelector(`.sb-item[data-src="${src}"]`)?.classList.add('active');
+  }
+
+  function openCmdPalette() {
+    openShellDrawer('⌘', 'Command-Palette',
+      `<div class="shell-drawer-section">
+        <input class="cmd-palette-search" placeholder="Suche Aktion, Rechnung, Kunde …" autofocus>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Navigation</div>
+        <div class="cmd-item" onclick="goToDashboard(); closeShellDrawer();"><span class="c-ic">📊</span>Dashboard<span class="c-key">G D</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-rechnungen.html'); closeShellDrawer();"><span class="c-ic">📄</span>Rechnungen<span class="c-key">G R</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-mahnwesen.html'); closeShellDrawer();"><span class="c-ic">⚠</span>Mahnwesen<span class="c-key">G M</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-zahlungen.html'); closeShellDrawer();"><span class="c-ic">⇅</span>Zahlungseingang<span class="c-key">G Z</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-refunds.html'); closeShellDrawer();"><span class="c-ic">↶</span>Refund-Cockpit<span class="c-key">G F</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-debitoren.html'); closeShellDrawer();"><span class="c-ic">📇</span>Debitoren<span class="c-key">G D</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-inkasso.html'); closeShellDrawer();"><span class="c-ic">⚐</span>Inkasso (GF)<span class="c-key">G I</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-mwst.html'); closeShellDrawer();"><span class="c-ic">⎙</span>MwSt-Abrechnung<span class="c-key">G V</span></div>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Aktionen</div>
+        <div class="cmd-item" onclick="shellToast('＋ Rechnung erstellen · öffnet Wizard'); navigateTo('billing-rechnungen.html'); closeShellDrawer();"><span class="c-ic">✎</span>＋ Neue Rechnung<span class="c-key">N R</span></div>
+        <div class="cmd-item" onclick="shellToast('⇅ CAMT.054-Import öffnet Dropzone'); navigateTo('billing-zahlungen.html'); closeShellDrawer();"><span class="c-ic">⇱</span>Bank-Import (CAMT.054)<span class="c-key">N B</span></div>
+        <div class="cmd-item" onclick="shellToast('✉ Alle Mahnung 1 vorbereiten'); navigateTo('billing-mahnwesen.html'); closeShellDrawer();"><span class="c-ic">✉</span>Mahnungen vorbereiten<span class="c-key">N M</span></div>
+        <div class="cmd-item" onclick="toggleTheme(); closeShellDrawer();"><span class="c-ic">🌓</span>Theme umschalten<span class="c-key">⌘ J</span></div>
+      </div>
+      <div class="shell-drawer-section">
+        <div class="cmd-cat">Tool wechseln</div>
+        <div class="cmd-item" onclick="location.href='../../crm.html'"><span class="c-ic">🎯</span>CRM<span class="c-key">G 1</span></div>
+        <div class="cmd-item" onclick="location.href='../hr/hr.html'"><span class="c-ic">👥</span>HR<span class="c-key">G 2</span></div>
+        <div class="cmd-item" onclick="location.href='../commission/commission.html'"><span class="c-ic">💰</span>Commission<span class="c-key">G 3</span></div>
+        <div class="cmd-item" onclick="location.href='../zeit/zeit.html'"><span class="c-ic">⏱</span>Zeit<span class="c-key">G 4</span></div>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Schliessen (Esc)</button>');
+  }
+
+  function openShortcutsDrawer() {
+    document.getElementById('profilPop')?.classList.remove('open');
+    openShellDrawer('⌨', 'Keyboard-Shortcuts',
+      `<div class="shell-drawer-section">
+        <h4>Navigation</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:12.5px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Command-Palette</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">⌘ K</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Dashboard</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">G D</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Rechnungen</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">G R</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Mahnwesen</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">G M</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Zahlungen</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">G Z</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Refund-Cockpit</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">G F</kbd></div>
+        </div>
+      </div>
+      <div class="shell-drawer-section">
+        <h4>Aktionen</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:12.5px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Neue Rechnung</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">N R</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Bank-Import</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">N B</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Mahnung senden</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">N M</kbd></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);"><span>Theme umschalten</span><kbd style="font-family:monospace;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;">⌘ J</kbd></div>
+        </div>
+      </div>`,
+      '<button class="btn btn-sm" onclick="closeShellDrawer()">Schliessen</button>');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeShellDrawer();
+    if (e.key === 'k' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); openCmdPalette(); }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const frame   = document.getElementById('mainFrame');
+    const sidebar = document.getElementById('sidebar');
+    const burger  = document.getElementById('burger');
+
+    sidebar.addEventListener('click', (e) => {
+      const item = e.target.closest('.sb-item');
+      if (!item) return;
+      if (item.classList.contains('disabled')) return;
+      const src = item.dataset.src;
+      if (!src) return;
+      sidebar.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      frame.src = src;
+      sidebar.classList.remove('open');
+    });
+
+    if (burger) burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    sidebar.classList.remove('expanded');
+    const expandBtn = sidebar.querySelector('.sb-expand-toggle');
+    if (expandBtn) { expandBtn.textContent = '⇔'; expandBtn.setAttribute('title', 'Sidebar fixieren'); }
+
+    applyTheme(localStorage.getItem('ark-theme') || 'light');
+
+    const savedRole = localStorage.getItem('ark-billing-role') || 'BO';
+    const sel = document.getElementById('roleSel');
+    if (sel) sel.value = savedRole;
+    applyRole(savedRole);
+
+    frame.addEventListener('load', () => {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      try { if (frame.contentDocument) frame.contentDocument.documentElement.setAttribute('data-theme', theme); } catch (e) {}
+    });
+
+    document.addEventListener('click', (e) => {
+      const pop = document.getElementById('profilPop');
+      if (pop && pop.classList.contains('open') && !e.target.closest('.sb-user, .profil-pop')) pop.classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>

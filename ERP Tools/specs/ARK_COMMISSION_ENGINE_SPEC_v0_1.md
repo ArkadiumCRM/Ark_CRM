@@ -3,8 +3,11 @@ title: "ARK Commission-Engine · Schema & Interactions v0.1"
 type: spec
 phase: 1
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-04-20
 status: draft
+patches_applied: [
+  "2026-04-20 · Billing-Integration · §4.1 2-Stufen-Modell (Forecast/Promotion) · §4.3 Stellenantritt-Policy · §5 6 neue Billing-Event-Subscriber + Naming-Alignment (ruecklage_clawback → commission_clawback_triggered)"
+]
 supersedes_scope: "wiki/concepts/provisionierung.md §Out-of-Scope (aufgehoben 2026-04-19)"
 authoritative_source: "wiki/concepts/provisionierung.md + Provisionssheets Peter/Joaquin"
 grundlagen_sync_required: [
@@ -513,24 +516,92 @@ Time-Deals werden aktuell "ausserordentlich abgerechnet" (Excel). Phase 3 kommt 
 
 ## 4. Flows · Workflows
 
-### 4.1 Placement-Trigger → automatische Ledger-Erzeugung
+### 4.1 Placement-Trigger → Forecast-Ledger-Erzeugung (2-Stufen-Modell, Update 2026-04-20)
+
+**Update 2026-04-20 · Billing-Integration:** Commission-Ledger nutzt 2-Stufen-Modell statt Single-Trigger. Grund: Billing-Decision Q1 (80/20-Split **bei Payment**, nicht bei Placement) verlangt klare Trennung zwischen Forecast (bei Placement sichtbar) und realisierter Commission (bei Payment · ab da Quartals-aggregat-wirksam).
+
+**Stufe 1 · Forecast bei Placement:**
 
 ```
-EVENT placement_confirmed (fact_process_finance.placement_date SET)
+EVENT placement_confirmed (fact_process_finance.placement_date SET · aus CRM-Flow)
   ↓
 WORKER commission-calc.worker.ts
   ↓
 1. Researcher-Fee erzeugen (aus dim_kandidat.created_by_user_id)
-  INSERT fact_researcher_fee(...) status='pending'
+  INSERT fact_researcher_fee(...) status='pending_payment'
   ↓
-2. Aktuellen Quartals-Commission-Snapshot neu berechnen
+2. Forecast-Ledger-Row schreiben
   für AM · CM · Head-of beteiligte
-  DELETE fact_commission_ledger WHERE period == current_quarter AND status='calculated'
-  INSERT fact_commission_ledger(...) neu
+  DELETE fact_commission_ledger WHERE period == current_quarter AND status='forecast' AND placement_id = :new_placement_id
+  INSERT fact_commission_ledger(...) status='forecast'
+    -- commission_gross_chf berechnet
+    -- abschlag_chf + ruecklage_chf noch NICHT aktiv (erst bei payment_received)
   ↓
 3. Notifications senden
-  MA: "Commission-Update wegen neuem Placement"
-  Backoffice: "Neue Commission-Berechnung zur Genehmigung"
+  MA: "Commission-Forecast wegen neuem Placement"
+  (KEIN Backoffice-Approval · Forecast-Rows sind read-only-Vorschau)
+```
+
+**Stufe 2 · Promotion bei Payment (Event aus Billing):**
+
+```
+EVENT payment_received (aus Billing · fact_payment INSERT)
+  + EVENT invoice_paid (wenn amount_paid >= amount_gross)
+  ↓
+WORKER commission-calc.worker.ts (Subscriber)
+  ↓
+1. Forecast-Row finden: fact_commission_ledger WHERE placement_id = :inv.process_id AND status='forecast'
+  ↓
+2. Promote zu 'pending_payment':
+  UPDATE fact_commission_ledger SET
+    status = 'pending_payment',
+    abschlag_chf = commission_gross_chf * 0.80,
+    ruecklage_chf = commission_gross_chf * 0.20,
+    placements_included = array_append(placements_included, :placement_id)
+  WHERE id = :ledger_id
+  ↓
+3. Researcher-Fee: UPDATE fact_researcher_fee SET status='pending_payment' (wenn vorhanden)
+  ↓
+4. Quartals-Aggregat neu berechnen (ZEG-Snapshot)
+  ↓
+5. Backoffice-Notification: "Commission-Row ready · Quartal {{q}} · MA {{kürzel}}"
+```
+
+**Handling bei `invoice_partially_paid`:**
+
+```
+EVENT invoice_partially_paid (aus Billing · Teilzahlung)
+  ↓
+WORKER commission-calc.worker.ts
+  ↓
+Forecast-Row bleibt status='forecast' (kein Abschlag-Trigger)
+fact_commission_ledger.notes = "Teilzahlung CHF {{amount_paid}}/{{amount_gross}} · warte auf Vollzahlung"
+Keine Abschlag-Auszahlung bis zur vollen Zahlung.
+```
+
+**Handling bei `invoice_cancelled` (Storno):**
+
+```
+EVENT invoice_cancelled (aus Billing · Invoice-Storno)
+  ↓
+WORKER commission-calc.worker.ts
+  ↓
+Wenn Row status='forecast' → DELETE (kein Clawback nötig, war nie ausgezahlt)
+Wenn Row status='pending_payment' → UPDATE status='clawed_back' + Gegenbuchung
+Wenn Row status='paid_abschlag' → Clawback-Process analog refund_issued (siehe §4.3)
+```
+
+**Handling bei `invoice_written_off`:**
+
+```
+EVENT invoice_written_off (aus Billing · Abschreibung nach Inkasso-Fail)
+  ↓
+WORKER commission-calc.worker.ts
+  ↓
+Wenn status='forecast' → DELETE (war nie realisiert)
+Wenn status='pending_payment' / 'paid_abschlag' → Clawback-Process
+  (Commission war auf Zahlungs-Erwartung basiert · Zahlung entfällt → Commission entfällt)
+Rücklage verloren (nicht freigegeben).
 ```
 
 ### 4.2 Quartals-Abschluss
@@ -555,17 +626,28 @@ WORKER commission-quarter-close.worker.ts
   UPDATE fact_commission_batch.status = 'exported', export_file_url = ...
 ```
 
-### 4.3 Rücklage-Freigabe (Cron täglich)
+### 4.3 Rücklage-Freigabe (Cron täglich · Update 2026-04-20)
+
+**Update 2026-04-20 · Guarantee-Start-Policy:** Rücklage-Freigabe-Trigger wechselt von `placement_date + 3 months` auf **`fact_candidate_placement.stellenantritt_date + 3 months`** (bzw. `guarantee_end_date` Generated Column). Grund: Billing-PO-Decision Batch 1 Q2 (2026-04-20) · Garantie-Start = Stellenantritt, nicht Placement-Datum. Parametrisierbar via `fact_mandate.guarantee_start_policy` (Default `stellenantritt`).
 
 ```
 CRON daily-guarantee-check.worker.ts (täglich 02:00)
   ↓
-FOR guarantee IN fact_candidate_guarantee WHERE end_at = today:
-  Check: Candidate noch angestellt? (dim_kandidat.current_employer match)
+FOR placement IN fact_candidate_placement WHERE guarantee_end_date = today:
+  -- guarantee_end_date = GENERATED (start_date + interval '3 months')::date STORED
+  -- Override-Quelle: fact_mandate.guarantee_start_policy (stellenantritt | placement_date | payment_received | custom)
+  ↓
+  Check: Candidate noch angestellt? (dim_kandidat.current_employer match · AND no candidate_resigned/dismissed event in fact_history)
   ↓
   Wenn ja: fact_ruecklage_release type='release' · total Rücklage freigegeben
+    UPDATE fact_commission_ledger SET ruecklage_frei_chf += amount · status='paid_ruecklage'
+    Event: commission_ruecklage_released
   Wenn Austritt: fact_ruecklage_release type='clawback' · Gegen-Buchung
+    UPDATE fact_commission_ledger SET ruecklage_clawback_chf += amount · status='clawed_back'
+    Event: commission_clawback_triggered (konsistenter Event-Name · siehe §5)
 ```
+
+**Hinweis zu Refund-Flow:** Clawback kann auch VOR Ablauf der 3-Monats-Garantie via `refund_issued`-Event aus Billing getriggert werden (Probezeit-basierte Refund-Staffel AGB §8). Beide Paths enden im selben Clawback-Mechanismus.
 
 ### 4.4 Bonus-Ermessen-Flow · Peter-Update 2026-04-19
 
@@ -649,19 +731,40 @@ Simulation wird NICHT gespeichert · nur Preview
 
 ---
 
-## 5. Events
+## 5. Events (Update 2026-04-20 · Billing-Integration)
+
+**Update 2026-04-20:** 6 neue Events für Billing-Integration · Naming-Alignment (`ruecklage_clawback` → `commission_clawback_triggered` · `ruecklage_released` → `commission_ruecklage_released`).
+
+### 5.1 Commission-interne Events (published)
 
 | Event-Code | Trigger | Subscriber | Aktion |
 |------------|---------|------------|--------|
-| `commission_calculated` | Neue Ledger-Row | MA-Notification-Worker | In-App + Email-Digest |
+| `commission_forecast_created` | Placement-Forecast-Row (§4.1 Stufe 1) | MA-Notification | "Commission-Forecast vom neuen Placement" |
+| `commission_promoted_to_pending` | Payment-Promotion (§4.1 Stufe 2) | MA-Notification + Backoffice | "Commission realisiert · Quartals-Batch-Kandidat" |
 | `commission_quarter_ready` | Quartals-Close | Backoffice-Notification | Approval-Queue |
 | `commission_approved` | Backoffice approved Batch | Export-Worker | CSV/Excel generieren |
 | `commission_exported` | File generiert | Backoffice | Download-Link |
-| `ruecklage_released` | Garantie abgelaufen, Candidate noch da | MA-Notification | "Deine Rücklage vom Q1 wurde freigegeben" |
-| `ruecklage_clawback` | Garantie-Breach | MA + Head-of | "Rücklage wurde gegengerechnet" |
-| `bonus_proposed` | GF schlägt Bonus vor | Empfänger + GF | Notification |
-| `bonus_approved` | Approval durch GF | Empfänger | Notification + Nächste Batch-Inclusion |
+| `commission_ruecklage_released` | Garantie 3 Mt abgelaufen + Candidate noch da (§4.3) | MA-Notification | "Deine Rücklage vom Q1 wurde freigegeben" |
+| `commission_clawback_triggered` | Refund-Issued (aus Billing) ODER Garantie-Breach (§4.3) ODER Invoice-Cancelled/Written-Off (§4.1) | MA + Head-of + Audit | "Rücklage wurde gegengerechnet · Begründung {{reason}}" |
+| `bonus_proposed` | GF schlägt Bonus vor | Empfänger + Head-ofs (falls Konsens-pflichtig) | Notification |
+| `bonus_approved` | Approval durch GF + Konsens | Empfänger | Notification + Nächste Batch-Inclusion |
 | `commission_staffel_updated` | Neue Staffel-Version (jährlich) | alle MA + Admin | Info-Broadcast |
+
+### 5.2 Billing-Events (subscribed · NEU 2026-04-20)
+
+| Event-Code (aus Billing) | Commission-Handling | Details |
+|--------------------------|---------------------|---------|
+| `placement_confirmed` | Stufe 1 · Forecast-Row schreiben | §4.1 Stufe 1 |
+| `payment_received` | — (warte auf invoice_paid) | — |
+| `invoice_paid` | Stufe 2 · Forecast → pending_payment (80 % Abschlag aktiv) | §4.1 Stufe 2 |
+| `invoice_partially_paid` | Keine Promotion · Forecast bleibt · Notiz-Annotation | §4.1 Teilzahlungs-Handling |
+| `invoice_cancelled` | Storno-Handling: DELETE bei forecast · Clawback bei pending_payment/paid_abschlag | §4.1 Cancellation-Handling |
+| `invoice_written_off` | Clawback · Rücklage verloren | §4.1 Written-Off-Handling |
+| `refund_issued` | Clawback-Saga · Researcher-Fee-Status `clawed_back` ODER Ledger-Gegenbuchung | §4.3 |
+
+### 5.3 Event-Naming-Kompatibilität
+
+Billing-Interactions v0.1 §4.1 sendet Event-Name `commission_clawback_triggered` · Commission-Engine subscribed unter diesem Namen (alter Name `ruecklage_clawback` deprecated per 2026-04-20).
 
 ---
 

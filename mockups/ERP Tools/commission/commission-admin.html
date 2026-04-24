@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Commission · Backoffice-Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  body { background:var(--bg); }
+
+  .ca-page { padding:0; max-width:1600px; margin:0 auto; }
+
+  /* Kompakter Top-Bar (sticky) */
+  .ca-topbar {
+    position:sticky; top:0; z-index:40;
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:12px 28px; display:flex; align-items:center; gap:14px;
+    flex-wrap:wrap;
+  }
+  .ca-topbar h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:20px; font-weight:700; color:var(--accent);
+  }
+  .ca-topbar .meta { font-size:12px; color:var(--text-light); }
+
+  /* Kompakter KPI-Strip (einzeilig) */
+  .kpi-strip-compact {
+    position:sticky; top:52px; z-index:39;
+    display:grid; grid-template-columns:repeat(5, 1fr);
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:10px 28px; gap:20px;
+  }
+  .kpi-mini {
+    display:flex; align-items:center; gap:10px;
+    padding:2px 0;
+  }
+  .kpi-mini .icon {
+    width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; flex-shrink:0;
+  }
+  .kpi-mini.urgent .icon { background:color-mix(in srgb,var(--red) 12%,var(--bg)); color:var(--red); }
+  .kpi-mini.primary .icon { background:var(--accent-soft); color:var(--accent); }
+  .kpi-mini.warning .icon { background:color-mix(in srgb,var(--amber) 12%,var(--bg)); color:var(--amber); }
+  .kpi-mini.success .icon { background:color-mix(in srgb,var(--green) 12%,var(--bg)); color:var(--green); }
+  .kpi-mini.neutral .icon { background:var(--bg); color:var(--text-mid); }
+  .kpi-mini .body { flex:1; min-width:0; }
+  .kpi-mini .lbl {
+    font-size:10px; text-transform:uppercase; letter-spacing:1px;
+    color:var(--text-light); font-weight:600; line-height:1.2;
+  }
+  .kpi-mini .val {
+    font-family:'Libre Baskerville',serif; font-size:16px;
+    font-weight:700; color:var(--accent); line-height:1.2; margin-top:1px;
+  }
+  .kpi-mini.urgent .val { color:var(--red); }
+  .kpi-mini.warning .val { color:var(--amber); }
+  .kpi-mini.success .val { color:var(--green); }
+
+  /* Tab-Bar sticky */
+  .tabbar-commission {
+    position:sticky; top:118px; z-index:38;
+    background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; padding:0 20px; overflow-x:auto;
+  }
+  .tabbar-commission .tab {
+    padding:12px 18px; cursor:pointer; font-size:13px;
+    color:var(--text-mid); border-bottom:2px solid transparent;
+    display:flex; align-items:center; gap:8px; white-space:nowrap;
+    font-weight:500;
+  }
+  .tabbar-commission .tab:hover { color:var(--accent); background:var(--bg); }
+  .tabbar-commission .tab.active {
+    color:var(--accent); border-bottom-color:var(--accent); font-weight:600;
+  }
+  .tabbar-commission .tab .count {
+    background:var(--bg); padding:1px 7px; border-radius:10px;
+    font-size:10.5px; font-weight:700; color:var(--text-mid);
+  }
+  .tabbar-commission .tab.active .count { background:var(--accent-soft); color:var(--accent); }
+  .tabbar-commission .tab.urgent .count { background:color-mix(in srgb,var(--red) 12%,var(--bg)); color:var(--red); }
+
+  /* Tab-Content-Container */
+  .tab-content-area {
+    padding:22px 28px 48px;
+  }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* Section-Head kompakter */
+  .sec-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .sec-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:16px; font-weight:700; color:var(--accent);
+  }
+  .sec-head .sub { font-size:12px; color:var(--text-light); margin-left:10px; }
+
+  /* Batch-Card */
+  .batch-card {
+    background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm);
+    padding:18px 22px; margin-bottom:16px; border-left:3px solid var(--accent);
+  }
+  .batch-card.pending { border-left-color:var(--amber); }
+  .batch-card.approved { border-left-color:var(--green); }
+  .batch-card.exported { border-left-color:var(--text-light); opacity:0.9; }
+
+  .batch-summary {
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;
+    padding:12px; background:var(--bg); border-radius:3px; margin-bottom:12px;
+  }
+  .batch-summary .item { text-align:center; }
+  .batch-summary .lbl { font-size:10px; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+  .batch-summary .val {
+    font-family:'Libre Baskerville',serif; font-size:17px; font-weight:700;
+    color:var(--accent); margin-top:2px;
+  }
+  .batch-summary .val.green { color:var(--green); }
+  .batch-summary .val.amber { color:var(--amber); }
+
+  /* Ledger-Table */
+  .ledger-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .ledger-table th {
+    text-align:left; padding:8px 10px; background:var(--bg);
+    font-size:10px; text-transform:uppercase; letter-spacing:1.1px;
+    color:var(--text-light); font-weight:600;
+    border-bottom:1px solid var(--border);
+    position:sticky; top:170px; z-index:10;
+  }
+  .ledger-table td {
+    padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:middle;
+  }
+  .ledger-table tbody tr:hover { background:var(--bg); cursor:pointer; }
+  .ledger-table td.num { font-family:'Libre Baskerville',serif; text-align:right; font-weight:500; }
+  .ledger-table .ma-cell { display:flex; align-items:center; gap:9px; }
+  .ledger-table .ma-avatar {
+    width:26px; height:26px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-size:10px; font-weight:700;
+    flex-shrink:0;
+  }
+  .ledger-table .model-chip {
+    font-size:9.5px; padding:2px 7px; border-radius:2px; text-transform:uppercase;
+    letter-spacing:0.8px; font-weight:600;
+  }
+  .model-chip.head_of { background:color-mix(in srgb,var(--accent) 18%,var(--bg)); color:var(--accent); }
+  .model-chip.cm_am { background:color-mix(in srgb,var(--gold) 18%,var(--bg)); color:var(--gold); }
+  .model-chip.researcher { background:color-mix(in srgb,var(--green) 18%,var(--bg)); color:var(--green); }
+  .model-chip.assessment_manager { background:color-mix(in srgb,#196774 18%,var(--bg)); color:#196774; }
+  .model-chip.bonus_ermessen { background:color-mix(in srgb,var(--text-light) 15%,var(--bg)); color:var(--text-mid); }
+
+  .batch-foot {
+    display:flex; align-items:center; gap:10px; margin-top:14px;
+    padding-top:12px; border-top:1px solid var(--border); flex-wrap:wrap;
+  }
+
+  /* Parallel-Betrieb-Panel */
+  .parallel-panel {
+    padding:14px 18px; background:color-mix(in srgb,var(--accent) 4%,var(--surface));
+    border-radius:4px; margin-top:14px;
+    display:grid; grid-template-columns:auto repeat(3, 1fr); gap:14px;
+    align-items:center;
+  }
+  .parallel-check {
+    padding:8px 10px; background:var(--surface); border-radius:3px;
+    border-left:3px solid var(--green); font-size:12px;
+  }
+
+  /* Rücklage-Row */
+  .release-row {
+    display:grid; grid-template-columns:30px 1.5fr 1fr 1fr 110px auto;
+    gap:12px; align-items:center; padding:10px 14px;
+    background:var(--surface); border-radius:3px; box-shadow:var(--shadow-sm);
+    margin-bottom:6px; font-size:12.5px;
+  }
+  .release-row.release { border-left:3px solid var(--green); }
+  .release-row.clawback { border-left:3px solid var(--red); background:color-mix(in srgb,var(--red) 4%,var(--surface)); }
+  .release-row .type-icon { font-size:18px; text-align:center; }
+  .release-row .num { font-family:'Libre Baskerville',serif; font-weight:500; }
+
+  /* Bonus-Card */
+  .bonus-card {
+    background:var(--surface); padding:14px 16px; border-radius:4px;
+    box-shadow:var(--shadow-sm); margin-bottom:10px; border-left:3px solid var(--gold);
+  }
+  .bonus-card.consensus-pending { border-left-color:var(--amber); }
+  .bonus-card.consensus-reached { border-left-color:var(--green); }
+  .bonus-card.self-approved { border-left-color:var(--accent); }
+  .bonus-head { display:flex; justify-content:space-between; align-items:start; margin-bottom:6px; flex-wrap:wrap; gap:8px; }
+  .bonus-head .amount { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; color:var(--gold); }
+  .bonus-rationale { font-size:12px; color:var(--text-mid); margin:4px 0; line-height:1.5; }
+  .bonus-consensus {
+    display:flex; gap:6px; flex-wrap:wrap; font-size:11px; margin-top:8px;
+    padding-top:8px; border-top:1px solid var(--border); align-items:center;
+  }
+  .consensus-chip {
+    padding:3px 8px; border-radius:10px; font-size:10.5px; font-weight:600;
+  }
+  .consensus-chip.approved { background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green); }
+  .consensus-chip.pending { background:color-mix(in srgb,var(--amber) 15%,var(--bg)); color:var(--amber); }
+  .consensus-chip.rejected { background:color-mix(in srgb,var(--red) 15%,var(--bg)); color:var(--red); }
+  .consensus-chip.self { background:var(--accent-soft); color:var(--accent); }
+
+  /* Export-Row */
+  .export-grid {
+    display:grid; grid-template-columns:90px 2fr 1fr 1fr 1fr 110px auto;
+    gap:12px; align-items:center; padding:10px 14px;
+    border-bottom:1px solid var(--border); font-size:12.5px;
+  }
+  .export-grid:hover { background:var(--bg); }
+  .export-grid.head {
+    background:var(--bg); font-size:10px; text-transform:uppercase;
+    letter-spacing:1.1px; color:var(--text-light); font-weight:600;
+  }
+
+  /* Past-Batch-Row */
+  .past-batch-row {
+    display:grid; grid-template-columns:100px 1fr 1fr 1fr 1fr 1fr 100px auto;
+    gap:12px; align-items:center; padding:10px 14px;
+    background:var(--surface); border-radius:3px; margin-bottom:4px;
+    box-shadow:var(--shadow-sm); font-size:12.5px; cursor:pointer;
+  }
+  .past-batch-row:hover { background:var(--bg); }
+  .past-batch-row .num { font-family:'Libre Baskerville',serif; text-align:right; font-weight:500; }
+
+  @media (max-width:960px) {
+    .kpi-strip-compact { grid-template-columns:1fr 1fr; }
+    .batch-summary { grid-template-columns:1fr 1fr; }
+    .release-row, .export-grid, .past-batch-row { grid-template-columns:1fr; gap:4px; }
+  }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<!-- HEADER -->
+
+<div class="ca-page">
+
+  <!-- Kompakter Top-Bar -->
+  <div class="ca-topbar">
+    <h1>Commission · Backoffice</h1>
+    <span class="meta">Sabrina Tanner · 19.04.2026</span>
+    <span class="spacer"></span>
+    <select style="padding:6px 10px;border:1px solid var(--border-strong);border-radius:3px;background:var(--surface);font-size:12px">
+      <option>Q1 2026 · aktuell</option>
+      <option>Q2 2026 · läuft</option>
+      <option>Q4 2025</option>
+    </select>
+    <button class="btn btn-sm">📊 Jahres-Report</button>
+    <button class="btn btn-sm btn-primary">✓ Q1 approve &amp; export</button>
+  </div>
+
+  <!-- Kompakter KPI-Strip -->
+  <div class="kpi-strip-compact">
+    <div class="kpi-mini urgent">
+      <div class="icon">⏳</div>
+      <div class="body">
+        <div class="lbl">Q1 Pending</div>
+        <div class="val">CHF 82'400</div>
+      </div>
+    </div>
+    <div class="kpi-mini primary">
+      <div class="icon">💰</div>
+      <div class="body">
+        <div class="lbl">Σ Abschlag 80 %</div>
+        <div class="val">CHF 65'920</div>
+      </div>
+    </div>
+    <div class="kpi-mini warning">
+      <div class="icon">🔒</div>
+      <div class="body">
+        <div class="lbl">Σ Rücklage 20 %</div>
+        <div class="val">CHF 16'480</div>
+      </div>
+    </div>
+    <div class="kpi-mini success">
+      <div class="icon">✓</div>
+      <div class="body">
+        <div class="lbl">Freigabe diesen Monat</div>
+        <div class="val">CHF 3'240</div>
+      </div>
+    </div>
+    <div class="kpi-mini neutral">
+      <div class="icon">💵</div>
+      <div class="body">
+        <div class="lbl">Bonus offen</div>
+        <div class="val">3 Anträge</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab-Navigation -->
+  <nav class="tabbar-commission">
+    <div class="tab active" data-tab="current" onclick="switchCaTab('current')">
+      ⏳ Aktueller Batch <span class="count">Q1 2026</span>
+    </div>
+    <div class="tab" data-tab="past" onclick="switchCaTab('past')">
+      📦 Vergangene Batches <span class="count">4</span>
+    </div>
+    <div class="tab urgent" data-tab="ruecklage" onclick="switchCaTab('ruecklage')">
+      🔒 Rücklage-Freigabe <span class="count">4</span>
+    </div>
+    <div class="tab" data-tab="bonus" onclick="switchCaTab('bonus')">
+      💰 Bonus-Queue <span class="count">3</span>
+    </div>
+    <div class="tab" data-tab="export" onclick="switchCaTab('export')">
+      📤 Export-Historie
+    </div>
+    <div class="tab" data-tab="settings" onclick="switchCaTab('settings')">
+      ⚙ Einstellungen
+    </div>
+  </nav>
+
+  <div class="tab-content-area">
+
+    <!-- =========================================================== -->
+    <!-- TAB 1 · AKTUELLER BATCH                                     -->
+    <!-- =========================================================== -->
+    <div id="tab-current" class="tab-panel active">
+
+      <div class="batch-card pending">
+        <div class="sec-head">
+          <div>
+            <h2>Q1 2026 · Commission-Batch</h2>
+            <span class="sub">9 MA · 18 Placements · 6 Researcher-Pauschalen · Close 31.03.2026 · Auszahlung fällig 01.04.</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span style="padding:5px 12px;border-radius:3px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;background:color-mix(in srgb,var(--amber) 15%,var(--bg));color:var(--amber)">⏳ Pending Approval</span>
+          </div>
+        </div>
+
+        <div class="batch-summary">
+          <div class="item"><div class="lbl">Σ Brutto</div><div class="val">CHF 82'400</div></div>
+          <div class="item"><div class="lbl">Σ Abschlag 80 %</div><div class="val green">CHF 65'920</div></div>
+          <div class="item"><div class="lbl">Σ Rücklage 20 %</div><div class="val amber">CHF 16'480</div></div>
+          <div class="item"><div class="lbl">Σ Netto-Auszahlung</div><div class="val">CHF 65'920</div></div>
+        </div>
+
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Mitarbeiter</th>
+              <th>Modell</th>
+              <th>ZEG</th>
+              <th>Brutto</th>
+              <th>Abschlag</th>
+              <th>Rücklage</th>
+              <th>Netto</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="ma-avatar">PW</div></td>
+              <td class="ma-cell"><div><strong>Peter Wiederkehr</strong><div class="muted" style="font-size:11px">Head of CI & BT</div></div></td>
+              <td><span class="model-chip head_of">Head of</span></td>
+              <td class="num">79 %</td>
+              <td class="num">CHF 13'050</td>
+              <td class="num">CHF 10'440</td>
+              <td class="num">CHF 2'610</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 10'440</td>
+              <td><span class="chip chip-green">✓ calc</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar">YB</div></td>
+              <td class="ma-cell"><div><strong>Yavor Bojkov</strong><div class="muted" style="font-size:11px">Head of ARC & REM</div></div></td>
+              <td><span class="model-chip head_of">Head of</span></td>
+              <td class="num">68 %</td>
+              <td class="num">CHF 8'460</td>
+              <td class="num">CHF 6'768</td>
+              <td class="num">CHF 1'692</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 6'768</td>
+              <td><span class="chip chip-green">✓ calc</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar">SP</div></td>
+              <td class="ma-cell"><div><strong>Stefano Papes</strong><div class="muted" style="font-size:11px">Head of Market Strategy</div></div></td>
+              <td><span class="model-chip head_of">Head of · custom</span></td>
+              <td class="num muted">TBD</td>
+              <td class="num muted">—</td>
+              <td class="num muted">—</td>
+              <td class="num muted">—</td>
+              <td class="num muted">—</td>
+              <td><span class="chip chip-amber">⏳ metric-pending</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar">JV</div></td>
+              <td class="ma-cell"><div><strong>Joaquin Vega</strong><div class="muted" style="font-size:11px">CM Civil Engineering</div></div></td>
+              <td><span class="model-chip cm_am">CM/AM</span></td>
+              <td class="num">118 %</td>
+              <td class="num">CHF 12'800</td>
+              <td class="num">CHF 10'240</td>
+              <td class="num">CHF 2'560</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 10'240</td>
+              <td><span class="chip chip-green">✓ calc</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar">NP</div></td>
+              <td class="ma-cell"><div><strong>Nina Petrusic</strong><div class="muted" style="font-size:11px">CM</div></div></td>
+              <td><span class="model-chip cm_am">CM/AM</span></td>
+              <td class="num">92 %</td>
+              <td class="num">CHF 10'400</td>
+              <td class="num">CHF 8'320</td>
+              <td class="num">CHF 2'080</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 8'320</td>
+              <td><span class="chip chip-green">✓ calc</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar" style="background:color-mix(in srgb,#196774 15%,var(--bg));color:#196774">SN</div></td>
+              <td class="ma-cell"><div><strong>Severina Nolan</strong><div class="muted" style="font-size:11px">Assessment Manager · Ziel 300k</div></div></td>
+              <td><span class="model-chip assessment_manager">Assessment</span></td>
+              <td class="num">85 %</td>
+              <td class="num">CHF 5'400</td>
+              <td class="num">CHF 4'320</td>
+              <td class="num">CHF 1'080</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 4'320</td>
+              <td><span class="chip chip-amber">⚠ Staffel TBD</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar" style="background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green)">HvdB</div></td>
+              <td class="ma-cell"><div><strong>Hannah van den Bosch</strong><div class="muted" style="font-size:11px">Researcher</div></div></td>
+              <td><span class="model-chip researcher">Researcher</span></td>
+              <td class="num muted">—</td>
+              <td class="num">CHF 2'500</td>
+              <td class="num">CHF 2'500</td>
+              <td class="num">CHF 0</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 2'500</td>
+              <td><span class="chip chip-green">✓ 5×500</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar" style="background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green)">LRR</div></td>
+              <td class="ma-cell"><div><strong>Luca Rochat Rammuno</strong><div class="muted" style="font-size:11px">Researcher</div></div></td>
+              <td><span class="model-chip researcher">Researcher</span></td>
+              <td class="num muted">—</td>
+              <td class="num">CHF 1'500</td>
+              <td class="num">CHF 1'500</td>
+              <td class="num">CHF 0</td>
+              <td class="num" style="color:var(--accent);font-weight:600">CHF 1'500</td>
+              <td><span class="chip chip-green">✓ 3×500</span></td>
+            </tr>
+            <tr>
+              <td><div class="ma-avatar">NS</div></td>
+              <td class="ma-cell"><div><strong>Nenad Stoparanovic</strong><div class="muted" style="font-size:11px">Geschäftsführer</div></div></td>
+              <td><span class="model-chip bonus_ermessen">GF-Self</span></td>
+              <td class="num muted">—</td>
+              <td class="num muted">0</td>
+              <td class="num muted">0</td>
+              <td class="num muted">0</td>
+              <td class="num muted">0</td>
+              <td><span class="chip">keine Commission</span></td>
+            </tr>
+            <tr style="background:var(--bg);font-weight:600">
+              <td colspan="4" style="text-align:right">Σ · 9 MA · 2 TBD</td>
+              <td class="num" style="color:var(--accent);font-size:13.5px">CHF 82'400</td>
+              <td class="num" style="color:var(--green)">CHF 65'920</td>
+              <td class="num" style="color:var(--amber)">CHF 16'480</td>
+              <td class="num" style="color:var(--accent);font-size:13.5px">CHF 65'920</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="batch-foot">
+          <button class="btn btn-sm">📋 Alle Ledger-Einträge</button>
+          <button class="btn btn-sm">🧮 Excel-Plausibilitäts-Check</button>
+          <button class="btn btn-sm" style="color:var(--amber)">⚠ 2 TBD-Positionen klären</button>
+          <span class="spacer"></span>
+          <button class="btn btn-sm">❌ Zurück an Berechnung</button>
+          <button class="btn btn-sm btn-primary">✓ Approve &amp; Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Excel-Parallel-Betrieb -->
+      <div class="parallel-panel">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:22px">🧮</span>
+          <div>
+            <strong style="font-family:'Libre Baskerville',serif;font-size:13px">Excel-Parallel</strong>
+            <div class="muted" style="font-size:11px">3/6 Mt QA-Phase</div>
+          </div>
+        </div>
+        <div class="parallel-check">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Joaquin Q1 ARK</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:14px;font-weight:700">CHF 12'800 <span style="color:var(--green)">✓</span></div>
+          <div class="muted" style="font-size:11px">Excel: 12'800 · match</div>
+        </div>
+        <div class="parallel-check">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Peter Q1 ARK</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:14px;font-weight:700">CHF 13'050 <span style="color:var(--green)">✓</span></div>
+          <div class="muted" style="font-size:11px">Excel: 13'050 · match</div>
+        </div>
+        <div class="parallel-check">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Gesamt-Diff</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:14px;font-weight:700">CHF 0</div>
+          <div class="muted" style="font-size:11px"><a href="#" style="color:var(--accent)">Detail-Log</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- TAB 2 · VERGANGENE BATCHES                                  -->
+    <!-- =========================================================== -->
+    <div id="tab-past" class="tab-panel">
+
+      <div class="sec-head">
+        <h2>📦 Vergangene Commission-Batches</h2>
+        <span class="sub">Auszahlung erfolgt · Rücklage läuft ggf. noch</span>
+      </div>
+
+      <div class="past-batch-row" style="background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:1.1px;color:var(--text-light);font-weight:600;box-shadow:none">
+        <div>Periode</div>
+        <div>MA</div>
+        <div>Brutto</div>
+        <div>Abschlag</div>
+        <div>Rücklage</div>
+        <div>Status</div>
+        <div>Datum</div>
+        <div></div>
+      </div>
+
+      <div class="past-batch-row">
+        <div><strong>Q4 2025</strong></div>
+        <div>10 MA</div>
+        <div class="num">CHF 72'800</div>
+        <div class="num" style="color:var(--green)">CHF 58'240</div>
+        <div class="num" style="color:var(--amber)">CHF 14'560</div>
+        <div><span class="chip chip-green">paid_abschlag</span></div>
+        <div>02.01.2026</div>
+        <div><button class="btn btn-sm">Details</button></div>
+      </div>
+      <div class="past-batch-row">
+        <div><strong>Q3 2025</strong></div>
+        <div>10 MA</div>
+        <div class="num">CHF 64'750</div>
+        <div class="num" style="color:var(--green)">CHF 51'800</div>
+        <div class="num" style="color:var(--green)">CHF 12'950</div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
+        <div>02.10.2025</div>
+        <div><button class="btn btn-sm">Details</button></div>
+      </div>
+      <div class="past-batch-row">
+        <div><strong>Q2 2025</strong></div>
+        <div>9 MA</div>
+        <div class="num">CHF 58'900</div>
+        <div class="num" style="color:var(--green)">CHF 47'120</div>
+        <div class="num" style="color:var(--green)">CHF 11'780</div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
+        <div>01.07.2025</div>
+        <div><button class="btn btn-sm">Details</button></div>
+      </div>
+      <div class="past-batch-row">
+        <div><strong>Q1 2025</strong></div>
+        <div>9 MA</div>
+        <div class="num">CHF 49'750</div>
+        <div class="num" style="color:var(--green)">CHF 39'800</div>
+        <div class="num" style="color:var(--green)">CHF 9'950</div>
+        <div><span class="chip chip-green">Ausgezahlt · Rücklage</span></div>
+        <div>03.04.2025</div>
+        <div><button class="btn btn-sm">Details</button></div>
+      </div>
+
+      <div style="margin-top:18px;padding:12px 14px;background:color-mix(in srgb,var(--accent) 4%,var(--surface));border-radius:3px;font-size:12.5px">
+        <strong>📊 Historische Daten</strong> · Migration aus Excel · Peter 6 Jahre Rollen-Historie (Researcher → CM → CM/AM → Head of) bereits importiert.
+        <a href="#" style="color:var(--accent);margin-left:6px">→ Jahres-Übersicht 2021-2026</a>
+      </div>
+
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- TAB 3 · RÜCKLAGE-FREIGABE                                   -->
+    <!-- =========================================================== -->
+    <div id="tab-ruecklage" class="tab-panel">
+
+      <div class="sec-head">
+        <h2>🔒 Rücklage-Freigabe · Garantie-Abläufe April 2026</h2>
+        <button class="btn btn-sm">Alle 16'480 gesperrt</button>
+      </div>
+
+      <div class="release-row release">
+        <div class="type-icon">✓</div>
+        <div>
+          <strong>Jan Osterwalder</strong> · B+S AG · CFO-Search
+          <div class="muted" style="font-size:11px">Platziert 30.04.2025 · Garantie-Ende 30.06.2025 · Kandidat ok</div>
+        </div>
+        <div>MA: <strong>Joaquin Vega</strong></div>
+        <div class="num">CHF 276</div>
+        <div>Freigabe 01.07.</div>
+        <button class="btn btn-sm">Freigabe bestätigen</button>
+      </div>
+
+      <div class="release-row release">
+        <div class="type-icon">✓</div>
+        <div>
+          <strong>Pascal Bader</strong> · Selmoni Ing.
+          <div class="muted" style="font-size:11px">Platziert 01.06.2025 · in Probezeit ok</div>
+        </div>
+        <div>MA: <strong>Joaquin Vega</strong></div>
+        <div class="num">CHF 434</div>
+        <div>Freigabe 01.09.</div>
+        <button class="btn btn-sm">Freigabe bestätigen</button>
+      </div>
+
+      <div class="release-row release">
+        <div class="type-icon">✓</div>
+        <div>
+          <strong>Morgane Giorgi</strong> · Grolimund+P.
+          <div class="muted" style="font-size:11px">Platziert 01.06.2025</div>
+        </div>
+        <div>MA: <strong>Joaquin Vega</strong></div>
+        <div class="num">CHF 249</div>
+        <div>Freigabe 01.09.</div>
+        <button class="btn btn-sm">Freigabe bestätigen</button>
+      </div>
+
+      <div class="release-row clawback">
+        <div class="type-icon" style="color:var(--red)">✕</div>
+        <div>
+          <strong>Thomas Weber</strong> · Steiner AG · Projektleiter
+          <div class="muted" style="font-size:11px">Platziert 15.01.2026 · <strong style="color:var(--red)">Austritt 12.04.2026</strong></div>
+        </div>
+        <div>MA: <strong>Peter Wiederkehr</strong></div>
+        <div class="num" style="color:var(--red)">− CHF 480</div>
+        <div>Clawback heute</div>
+        <button class="btn btn-sm">Clawback durchführen</button>
+      </div>
+
+      <div style="margin-top:14px;padding:12px 14px;background:color-mix(in srgb,var(--amber) 5%,var(--surface));border-left:3px solid var(--amber);border-radius:3px;font-size:12.5px">
+        <strong>⚠ 1 Clawback heute</strong> · Thomas Weber (Peter Wiederkehr) · CHF 480 werden im Q2 2026 gegengerechnet · MA-Notification ausgelöst.
+      </div>
+
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- TAB 4 · BONUS-QUEUE                                         -->
+    <!-- =========================================================== -->
+    <div id="tab-bonus" class="tab-panel">
+
+      <div class="sec-head">
+        <h2>💰 Bonus-Ermessen · offene Anträge</h2>
+        <button class="btn btn-sm">+ Neuer Bonus (Nenad)</button>
+      </div>
+
+      <div class="bonus-card consensus-reached">
+        <div class="bonus-head">
+          <div>
+            <strong>Sabrina Tanner</strong> · Backoffice · Q1 2026
+            <div class="muted" style="font-size:11.5px">vorgeschlagen 15.04. von Nenad Stoparanovic (GF)</div>
+          </div>
+          <div class="amount">CHF 2'500</div>
+        </div>
+        <div class="bonus-rationale">
+          Ausgezeichnete Qualität der Q1-Abrechnung · zusätzlicher Aufwand für Bexio-Migration-Vorbereitung · Überstundenkonto sauber dokumentiert.
+        </div>
+        <div class="bonus-consensus">
+          <span class="muted" style="text-transform:uppercase;letter-spacing:1px;font-weight:600;font-size:10.5px">Head-of-Konsens:</span>
+          <span class="consensus-chip approved">✓ Peter (15.04.)</span>
+          <span class="consensus-chip approved">✓ Yavor (16.04.)</span>
+          <span class="consensus-chip approved">✓ Stefano (16.04.)</span>
+          <span class="spacer"></span>
+          <button class="btn btn-sm btn-primary">In Q1-Batch übernehmen</button>
+        </div>
+      </div>
+
+      <div class="bonus-card consensus-pending">
+        <div class="bonus-head">
+          <div>
+            <strong>Severina Nolan</strong> · Assessment Manager · Q1 2026
+            <div class="muted" style="font-size:11.5px">vorgeschlagen 18.04. von Nenad Stoparanovic (GF)</div>
+          </div>
+          <div class="amount">CHF 1'200</div>
+        </div>
+        <div class="bonus-rationale">
+          Zusatz-Bonus für 3 erfolgreiche Assessment-Abschlüsse über Plan · Entlastung im Backoffice-Teil unter Q1-Stress.
+        </div>
+        <div class="bonus-consensus">
+          <span class="muted" style="text-transform:uppercase;letter-spacing:1px;font-weight:600;font-size:10.5px">Head-of-Konsens:</span>
+          <span class="consensus-chip approved">✓ Peter (18.04.)</span>
+          <span class="consensus-chip pending">⏳ Yavor</span>
+          <span class="consensus-chip pending">⏳ Stefano</span>
+          <span class="spacer"></span>
+          <button class="btn btn-sm">Reminder senden</button>
+        </div>
+      </div>
+
+      <div class="bonus-card self-approved">
+        <div class="bonus-head">
+          <div>
+            <strong>Nenad Stoparanovic</strong> · GF-Self-Bonus · Q1 2026
+            <div class="muted" style="font-size:11.5px">self-approved 16.04. · kein Head-of-Konsens erforderlich</div>
+          </div>
+          <div class="amount">CHF 15'000</div>
+        </div>
+        <div class="bonus-rationale">
+          GF-Bonus Q1 2026 gemäss Statut · Unternehmens-Performance H1 positiv · Cashflow gesichert für H2.
+        </div>
+        <div class="bonus-consensus">
+          <span class="consensus-chip self">Self-Approved · GF</span>
+          <span class="spacer"></span>
+          <button class="btn btn-sm btn-primary">In Q1-Batch übernehmen</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- TAB 5 · EXPORT-HISTORIE                                     -->
+    <!-- =========================================================== -->
+    <div id="tab-export" class="tab-panel">
+
+      <div class="sec-head">
+        <h2>📤 Export-Historie</h2>
+        <span class="sub">CSV/Excel/XML-Exports an Treuhänder · kein aktiver Bexio-API in Phase 1</span>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="export-grid head">
+          <div>Periode</div>
+          <div>Datei</div>
+          <div>Format</div>
+          <div>Σ Netto</div>
+          <div>Exportiert</div>
+          <div>Von</div>
+          <div></div>
+        </div>
+        <div class="export-grid">
+          <div><strong>Q4 2025</strong></div>
+          <div>commission-q4-2025-treuhand.csv</div>
+          <div><span class="chip">CSV · UTF-8</span></div>
+          <div class="num">CHF 58'240</div>
+          <div>02.01.2026 09:14</div>
+          <div><span class="actor-chip">ST</span></div>
+          <div><button class="btn btn-sm">↓ Download</button></div>
+        </div>
+        <div class="export-grid">
+          <div><strong>Q3 2025</strong></div>
+          <div>commission-q3-2025-treuhand.csv + bexio.xml</div>
+          <div><span class="chip">CSV + XML</span></div>
+          <div class="num">CHF 51'800</div>
+          <div>02.10.2025 11:22</div>
+          <div><span class="actor-chip">ST</span></div>
+          <div><button class="btn btn-sm">↓ Download</button></div>
+        </div>
+        <div class="export-grid">
+          <div><strong>Q2 2025</strong></div>
+          <div>commission-q2-2025-treuhand.xlsx</div>
+          <div><span class="chip">Excel</span></div>
+          <div class="num">CHF 47'120</div>
+          <div>01.07.2025 16:48</div>
+          <div><span class="actor-chip">ST</span></div>
+          <div><button class="btn btn-sm">↓ Download</button></div>
+        </div>
+        <div class="export-grid">
+          <div><strong>Q1 2025</strong></div>
+          <div>commission-q1-2025-treuhand.csv</div>
+          <div><span class="chip">CSV</span></div>
+          <div class="num">CHF 39'800</div>
+          <div>03.04.2025 14:02</div>
+          <div><span class="actor-chip">ST</span></div>
+          <div><button class="btn btn-sm">↓ Download</button></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- TAB 6 · EINSTELLUNGEN                                       -->
+    <!-- =========================================================== -->
+    <div id="tab-settings" class="tab-panel">
+
+      <div class="sec-head">
+        <h2>⚙ Commission-Einstellungen</h2>
+        <span class="sub">Admin-Only · Staffel-Versionierung · Jahres-Budgets · Export-Format</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Aktive ZEG-Staffel</div><a href="#" class="card-link">Verlauf</a></div>
+          <dl class="field-grid">
+            <dt>Version</dt><dd><strong>2026-default</strong></dd>
+            <dt>Gültig ab</dt><dd>01.01.2026</dd>
+            <dt>Stufen</dt><dd>7 (0-49 · 50-59 · 60-69 · 70-99 · 100 · 101-150 · &gt;150)</dd>
+            <dt>Letzte Änderung</dt><dd>03.01.2026 · Nenad</dd>
+          </dl>
+          <button class="btn btn-sm">Staffel-Editor öffnen</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-title">Jahres-Budgets 2026</div><a href="#" class="card-link">Bearbeiten</a></div>
+          <dl class="field-grid">
+            <dt>Head of CI & BT (PW)</dt><dd>CHF 1'500'000</dd>
+            <dt>Head of ARC & REM (YB)</dt><dd>CHF 1'200'000</dd>
+            <dt>Head of Market (SP)</dt><dd><span class="muted">custom metric TBD</span></dd>
+            <dt>CM/AM Budgets</dt><dd>CHF 360k-500k / MA</dd>
+            <dt>Assessment Severina</dt><dd>CHF 300'000</dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-title">Export-Format-Defaults</div></div>
+          <dl class="field-grid">
+            <dt>Quartals-Export</dt><dd>CSV (UTF-8)</dd>
+            <dt>Dateiname-Pattern</dt><dd><code>commission-{YYYY}-{Q}-treuhand.csv</code></dd>
+            <dt>Treuhänder-Ziel</dt><dd>SFTP-Upload nach QA</dd>
+            <dt>Bexio-API</dt><dd><span class="muted">nicht aktiv · Phase 2</span></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-title">Parallel-Betrieb Excel</div></div>
+          <dl class="field-grid">
+            <dt>QA-Phase</dt><dd>3 von 6 Monaten</dd>
+            <dt>Match-Rate</dt><dd><span class="chip chip-green">100 % · alle Quartale</span></dd>
+            <dt>Ende QA</dt><dd>30.09.2026</dd>
+            <dt>Excel-Archivierung</dt><dd>nach 30.09.2026 · Schreib-Sperre</dd>
+          </dl>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================================================== -->
+<!-- DRAWERS · Admin-Aktionen                                     -->
+<!-- =========================================================== -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- DRAWER · Approve & Export Batch -->
+<div class="drawer drawer-wide" id="approveDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✓</div>
+    <div class="info">
+      <h2>Q1 2026 · Approve &amp; Export</h2>
+      <div class="sub">Finaler Check vor Freigabe der Auszahlung · Treuhänder-Export CSV</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('approveDrawer')">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="adminDrawerTab('approveDrawer',0,this)">1 · Plausibilität</div>
+    <div class="drawer-tab" onclick="adminDrawerTab('approveDrawer',1,this)">2 · Ausnahmen</div>
+    <div class="drawer-tab" onclick="adminDrawerTab('approveDrawer',2,this)">3 · Export-Config</div>
+    <div class="drawer-tab" onclick="adminDrawerTab('approveDrawer',3,this)">4 · Bestätigen</div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-pane" style="display:block">
+      <div class="drawer-section">
+        <h4>✓ Plausibilitäts-Check</h4>
+        <div style="font-size:12.5px;line-height:1.8">
+          ✓ <strong>Excel-Abgleich Peter Q1</strong>: CHF 13'050 · match<br>
+          ✓ <strong>Excel-Abgleich Joaquin Q1</strong>: CHF 12'800 · match<br>
+          ✓ <strong>Σ Brutto</strong>: CHF 82'400 (kalkuliert) = CHF 82'400 (manuell) · match<br>
+          ✓ <strong>Σ Abschlag 80 %</strong>: CHF 65'920 · check<br>
+          ✓ <strong>Σ Rücklage 20 %</strong>: CHF 16'480 · check<br>
+          ⚠ <strong>2 MA mit TBD-Zuteilung</strong>: Stefano (custom-metric) · Severina (Staffel-Detail)<br>
+          ⚠ <strong>Bonus-Queue 3 offen</strong>: davon 1 Head-of-Konsens erreicht (Sabrina) · 1 pending (Severina) · 1 self-approved (Nenad)
+        </div>
+      </div>
+      <div class="drawer-section">
+        <h4>Warnungen vor Approval</h4>
+        <div style="padding:12px 14px;background:color-mix(in srgb,var(--amber) 5%,var(--bg));border-left:3px solid var(--amber);border-radius:3px;font-size:12.5px">
+          Sollen TBD-Positionen (Stefano · Severina) jetzt mit CHF 0 durchlaufen und später als Nachtrag gebucht werden · oder Approval bis zur Klärung vertagen?
+        </div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px">
+          <label><input type="radio" name="tbd-action" checked> Mit CHF 0 durchlaufen · Nachtrag in Q2-Batch</label>
+          <label><input type="radio" name="tbd-action"> Approval vertagen bis Klärung (Peter-Input nötig)</label>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Ausnahmen &amp; Anpassungen</h4>
+        <dl class="field-grid">
+          <dt>Manueller Override</dt><dd><label><input type="checkbox"> Einzelne Beträge anpassen (nach Rücksprache)</label></dd>
+          <dt>Bonus-Integration</dt><dd>
+            <label><input type="checkbox" checked> Sabrina-Bonus CHF 2'500 in Q1 übernehmen</label><br>
+            <label><input type="checkbox"> Severina-Bonus CHF 1'200 · wartet noch auf Yavor+Stefano</label><br>
+            <label><input type="checkbox" checked> Nenad-Self-Bonus CHF 15'000 übernehmen</label>
+          </dd>
+          <dt>Clawback</dt><dd><label><input type="checkbox" checked> Thomas-Weber-Clawback CHF 480 gegen Peter gegenrechnen</label></dd>
+          <dt>Rücklage-Freigabe</dt><dd><label><input type="checkbox" checked> 3 Freigaben heute bestätigen (CHF 959 Netto-Impact)</label></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Export-Konfiguration</h4>
+        <dl class="field-grid">
+          <dt>Format</dt><dd>
+            <label><input type="checkbox" checked> CSV (UTF-8, Treuhänder)</label><br>
+            <label><input type="checkbox"> Excel .xlsx (interne Doku)</label><br>
+            <label><input type="checkbox"> XML Bexio-kompatibel (Backup)</label>
+          </dd>
+          <dt>Dateiname</dt><dd><input type="text" value="commission-q1-2026-treuhand.csv" style="width:100%"></dd>
+          <dt>Ablageort</dt><dd><select><option>/treuhand/sftp-upload/</option><option>Lokaler Download</option><option>Backoffice-Email</option></select></dd>
+          <dt>Email-Benachrichtigung</dt><dd>
+            <label><input type="checkbox" checked> 8 MA · Commission-Detail-Email</label><br>
+            <label><input type="checkbox" checked> Treuhänder @ mazars.ch</label>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class="drawer-pane" style="display:none">
+      <div class="drawer-section">
+        <h4>Zusammenfassung</h4>
+        <div style="padding:16px;background:color-mix(in srgb,var(--green) 8%,var(--bg));border-radius:4px;font-size:13px;line-height:1.8">
+          <strong>Nach Bestätigung wird folgendes ausgeführt:</strong><br>
+          1. Commission-Batch Q1 2026 gesperrt (read-only)<br>
+          2. 8 MA bekommen Netto CHF 65'920 + Sabrina-Bonus CHF 2'500 + Nenad-Bonus CHF 15'000 = <strong>CHF 83'420</strong><br>
+          3. CSV exportiert nach SFTP-Upload-Ordner<br>
+          4. Excel-Archivierung im internen Share<br>
+          5. 11 Email-Notifications versendet<br>
+          6. 3 Rücklage-Freigaben durchgeführt<br>
+          7. 1 Clawback (Peter · −480) vollzogen<br>
+          <!-- ark-lint-skip:begin reason=admin-saga-preview -->
+          8. Audit-Log-Eintrag in fact_commission_batch mit Timestamp
+          <!-- ark-lint-skip:end -->
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:var(--bg);border-radius:3px;font-size:12.5px">
+          <strong>Fälligkeit Lohnauszahlung via Treuhänder</strong>: 15.04.2026<br>
+          <strong>Bestätigt von</strong>: Sabrina Tanner · Backoffice-Lead
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('approveDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Als Entwurf speichern</button>
+    <button class="btn btn-sm btn-primary">✓ Approve &amp; Export jetzt</button>
+  </div>
+</div>
+
+<!-- DRAWER · Rücklage-Freigabe bestätigen -->
+<div class="drawer" id="releaseDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:50%;background:color-mix(in srgb,var(--green) 15%,var(--bg));color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✓</div>
+    <div class="info">
+      <h2 id="relTitle">Rücklage-Freigabe · Jan Osterwalder</h2>
+      <div class="sub">B+S AG · Garantiefrist abgelaufen · Kandidat noch beim Kunden</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('releaseDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Freigabe-Betrag</h4>
+      <div style="padding:16px;background:color-mix(in srgb,var(--green) 8%,var(--bg));border-radius:4px;text-align:center">
+        <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:var(--green)">+ CHF 276</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Joaquin Vega · Rücklage-Anteil für dieses Placement</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Kandidat-Status-Check</h4>
+      <dl class="field-grid">
+        <dt>Platziert</dt><dd>30.04.2025 · B+S AG · CFO-Search</dd>
+        <dt>Garantie-Ende</dt><dd>30.06.2025 · erreicht ✓</dd>
+        <dt>Status heute</dt><dd><span class="chip chip-green">✓ aktiv bei B+S</span> · letzte Verifikation 15.04.2026 via LinkedIn-Scraper</dd>
+        <dt>Anstellung bestätigt</dt><dd>Ja · durch B+S-Kontakt H. Müller</dd>
+        <dt>Red Flags</dt><dd><span class="muted">keine</span></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Freigabe-Auswirkung</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Nach Bestätigung:<br>
+        1. CHF 276 zu Joaquins Q2-Batch hinzugefügt (Auszahlung Juli)<br>
+        2. Rücklage-Counter: CHF 2'560 → CHF 2'284 gesperrt<br>
+        3. Audit-Log: `ruecklage_released` Event ausgelöst<br>
+        4. Email an Joaquin: "Rücklage CHF 276 vom 30.04.2025-Placement freigegeben"
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('releaseDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm btn-primary">✓ Freigabe bestätigen</button>
+  </div>
+</div>
+
+<!-- DRAWER · Clawback bestätigen (rot) -->
+<div class="drawer" id="clawbackDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:50%;background:color-mix(in srgb,var(--red) 15%,var(--bg));color:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✕</div>
+    <div class="info">
+      <h2>Clawback · Thomas Weber</h2>
+      <div class="sub">Steiner AG · Kandidat 45 Tage vor Garantie-Ende ausgetreten</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('clawbackDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Clawback-Betrag</h4>
+      <div style="padding:16px;background:color-mix(in srgb,var(--red) 8%,var(--bg));border-radius:4px;text-align:center">
+        <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:var(--red)">− CHF 480</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Peter Wiederkehr · Rücklage-Gegenrechnung</div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Austritt-Details</h4>
+      <dl class="field-grid">
+        <dt>Kandidat</dt><dd>Thomas Weber · Projektleiter</dd>
+        <dt>Kunde</dt><dd>Steiner AG · Muttenz</dd>
+        <dt>Platziert</dt><dd>15.01.2026</dd>
+        <dt>Garantie-Ende</dt><dd>15.04.2026 · <strong style="color:var(--red)">nicht erreicht</strong></dd>
+        <dt>Austritt am</dt><dd>12.04.2026 · 3 Tage vor Garantie-Ende</dd>
+        <dt>Austritts-Grund</dt><dd>Abwerbung durch HRS Real Estate · besseres Angebot</dd>
+        <dt>Nachweis</dt><dd>Email von Steiner HR + LinkedIn-Update</dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Clawback-Kaskade</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Alle Beteiligten werden proportional clawbacked:<br>
+        <ul style="margin:6px 0;padding-left:20px">
+          <li><strong>Researcher Hannah</strong>: − CHF 500 (Pauschale zurück)</li>
+          <li><strong>CM Peter</strong>: − CHF 240 · Anteil Head-of-Teambudget</li>
+          <li><strong>AM Peter</strong>: − CHF 240 · Anteil AM-Split (doppelt betroffen als CM+AM)</li>
+        </ul>
+        Gesamt-Clawback: CHF 980
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Rechtliche Prüfung</h4>
+      <div style="padding:10px 14px;background:color-mix(in srgb,var(--amber) 5%,var(--bg));border-left:3px solid var(--amber);border-radius:3px;font-size:12.5px">
+        Bei Abwerbung durch einen anderen ARK-Kunden (HRS Real Estate) → Schutzfrist-Case. AGB §6 greift · separate Rechnung an HRS.
+      </div>
+      <label style="margin-top:10px;display:block;font-size:13px"><input type="checkbox" checked> Schutzfrist-Case an Peter eskalieren (separate Rechnung an HRS)</label>
+    </div>
+    <div class="drawer-section">
+      <h4>Nach Bestätigung</h4>
+      <!-- ark-lint-skip:begin reason=admin-saga-preview -->
+      <div style="font-size:12.5px;line-height:1.7">
+        1. Clawback-Event in `fact_commission_ledger` (CHF -480 · status='clawed_back')<br>
+        2. Peters Q2-Batch-Netto reduziert<br>
+        3. Hannahs Q1-Pauschale als Negative in Q2-Researcher-Batch<br>
+        4. Schutzfrist-Alert an PW<br>
+        5. Notifications an alle 3 Beteiligten + GF (cc)
+      </div>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('clawbackDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm" style="background:var(--red);border-color:var(--red);color:#fff">✕ Clawback durchführen</button>
+  </div>
+</div>
+
+<!-- DRAWER · MA-Commission-Detail (Ledger-Row-Click) -->
+<div class="drawer drawer-wide" id="ledgerDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:14px;flex-shrink:0" id="ledDrawAvatar">PW</div>
+    <div class="info">
+      <h2 id="ledDrawTitle">Peter Wiederkehr · Commission Q1 2026</h2>
+      <div class="sub" id="ledDrawSub">Head of CI &amp; BT · Teambudget-Rollup · ZEG 79 % · Staffel 58 %</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('ledgerDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Commission-Berechnung</h4>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div style="padding:12px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Teambudget Q1</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700">CHF 375k</div>
+        </div>
+        <div style="padding:12px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Net Fees erzielt</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700">CHF 295k</div>
+        </div>
+        <div style="padding:12px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">ZEG</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;color:var(--amber)">79 %</div>
+        </div>
+        <div style="padding:12px;background:var(--bg);border-radius:3px;text-align:center">
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:1px">Staffel-Satz</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700">58 %</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Teambudget-Rollup CI &amp; BT</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead><tr style="background:var(--bg)"><th style="padding:8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px">Team-MA</th><th style="padding:8px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px">Sparte</th><th style="padding:8px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1px">Net Fees Q1</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">Joaquin Vega · CM CI</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CI</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CHF 129'945</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">Nina Petrusic · CM CI/BT</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CI</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CHF 82'400</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">Hannah · Researcher (Placements)</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CI</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CHF 45'000</td></tr>
+          <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border)">Peter selbst · AM-Deals</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CI+BT</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);text-align:right">CHF 38'269</td></tr>
+          <tr style="background:var(--bg);font-weight:600"><td style="padding:8px 10px">Σ Teambudget</td><td></td><td style="padding:8px 10px;text-align:right;color:var(--accent)">CHF 295'614</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="drawer-section">
+      <h4>Provisions-Berechnung</h4>
+      <div style="font-size:13px;line-height:1.8">
+        <strong>OTE/Quartal</strong>: CHF 22'500 (Head-of-OTE 90k ÷ 4)<br>
+        <strong>ZEG</strong>: 295'614 / 375'000 = 78.8 % → Staffel-Satz 58 % (aus Tabelle bei 79 % ZEG)<br>
+        <strong>Provision brutto</strong>: 22'500 × 58 % = <strong>CHF 13'050</strong><br>
+        <strong>80 % Abschlag</strong>: CHF 10'440<br>
+        <strong>20 % Rücklage</strong>: CHF 2'610 · gestaffelt nach Garantie-Enden
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Jahres-Kontext</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Bei aktuellem Trend (ZEG 79 %) und 3 weiteren vergleichbaren Quartalen: Jahres-ZEG ≈ 80 % → Jahres-Staffel ~60 % → Total Jahres-Provision ~CHF 54'000. Ziel zur 100%-ZEG ist noch 63'386 CHF Net-Fees-Zusatz übers Jahr.
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('ledgerDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">→ MA-Self-View öffnen</button>
+    <button class="btn btn-sm">📄 Provisions-PDF</button>
+  </div>
+</div>
+
+<!-- DRAWER · Neuer Bonus (GF) -->
+<div class="drawer" id="bonusDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:color-mix(in srgb,var(--gold) 15%,var(--bg));color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💰</div>
+    <div class="info">
+      <h2>Neuer Ermessens-Bonus</h2>
+      <div class="sub">Nenad Stoparanovic · GF · Bonus nach Ermessen</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('bonusDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Bonus-Empfänger</h4>
+      <dl class="field-grid">
+        <dt>Zielperson <span style="color:var(--red)">*</span></dt>
+        <dd><select><option>— wählen —</option><option>Nenad Stoparanovic (self-approval · ohne Konsens)</option><option>Sabrina Tanner (Backoffice · Head-of-Konsens nötig)</option><option>Severina Nolan (Assessment Manager · Konsens nötig)</option><option>Joaquin Vega (CM · Konsens nötig)</option><option>+ anderer MA</option></select></dd>
+        <dt>Betrag CHF <span style="color:var(--red)">*</span></dt>
+        <dd><input type="number" placeholder="2500" style="width:140px"></dd>
+        <dt>Periode</dt>
+        <dd><select><option>Q1 2026 (im aktuellen Batch)</option><option>Q2 2026 (nächster Batch)</option></select></dd>
+      </dl>
+    </div>
+    <div class="drawer-section">
+      <h4>Begründung (Pflicht)</h4>
+      <textarea placeholder="Warum bekommt diese Person einen Bonus? z.B. 'Ausgezeichnete Q1-Performance · besondere Zusatzleistung · Ausgleich überdurchschnittlicher Arbeitsbelastung'" style="width:100%;min-height:100px"></textarea>
+    </div>
+    <div class="drawer-section">
+      <h4>Head-of-Konsens (bei Nicht-GF-Boni)</h4>
+      <div style="font-size:12.5px;line-height:1.7">
+        Für Nicht-GF-Boni automatisch an Head-ofs gesendet für Konsens-Prüfung:
+        <ul style="margin:6px 0;padding-left:20px">
+          <li>Peter Wiederkehr (Head of CI &amp; BT)</li>
+          <li>Yavor Bojkov (Head of ARC &amp; REM)</li>
+          <li>Stefano Papes (Head of Market Strategy)</li>
+        </ul>
+        Mindestens 1 Head-of-Approval nötig für Freigabe (bei Sparten-nahen Boni) · bei Cross-Head-Konsens alle 3.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Audit &amp; Transparenz</h4>
+      <dl class="field-grid">
+        <dt>Audit-Log</dt><dd>Eintrag mit Zeitstempel · Approver · Begründung · Empfänger</dd>
+        <dt>Sichtbarkeit</dt><dd>Nur GF + Head-ofs + Empfänger + Backoffice</dd>
+        <dt>Steuer-Impact</dt><dd>Boni sind voll einkommenssteuerpflichtig (AHV + QST)</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('bonusDrawer')">Abbrechen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">Als Entwurf</button>
+    <button class="btn btn-sm btn-primary">Vorschlagen &amp; Konsens-Request</button>
+  </div>
+</div>
+
+<!-- DRAWER · Export-Preview -->
+<div class="drawer drawer-wide" id="exportDrawer">
+  <div class="drawer-head">
+    <div style="width:48px;height:48px;border-radius:4px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📤</div>
+    <div class="info">
+      <h2>Export-Preview · commission-q4-2025-treuhand.csv</h2>
+      <div class="sub">CSV · UTF-8 · 10 MA · Σ Netto CHF 58'240 · exportiert 02.01.2026</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer('exportDrawer')">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div style="padding:16px;background:var(--bg);border-radius:3px;font-family:'Courier New',monospace;font-size:11px;line-height:1.8;color:var(--text-mid);overflow-x:auto">
+<pre style="margin:0">Kuerzel;Name;Periode;Modell;ZEG%;Brutto CHF;Abschlag 80%;Ruecklage 20%;Freigegeben;Clawback;Bonus;Netto
+PW;Peter Wiederkehr;Q4-2025;head_of;88;15600;12480;3120;+1800;0;0;14280
+YB;Yavor Bojkov;Q4-2025;head_of;72;9680;7744;1936;+480;0;0;8224
+SP;Stefano Papes;Q4-2025;head_of;0;0;0;0;0;0;5000;5000
+JV;Joaquin Vega;Q4-2025;cm_am;105;10800;8640;2160;+690;0;0;9330
+NP;Nina Petrusic;Q4-2025;cm_am;86;6880;5504;1376;+320;0;0;5824
+SN;Severina Nolan;Q4-2025;assessment_manager;92;5200;4160;1040;+650;0;0;4810
+HvdB;Hannah van den Bosch;Q4-2025;researcher;-;2500;2500;0;0;-500;0;2000
+LRR;Luca Rochat Rammuno;Q4-2025;researcher;-;1500;1500;0;0;0;0;1500
+NS;Nenad Stoparanovic;Q4-2025;bonus_ermessen;-;0;0;0;0;0;8000;8000
+ST;Sabrina Tanner;Q4-2025;bonus_ermessen;-;0;0;0;0;0;1500;1500
+Summen;;;;;72160;42528;9632;3940;-500;14500;60468</pre>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 5%,var(--bg));border-left:3px solid var(--accent);border-radius:3px;font-size:12.5px;line-height:1.6">
+      <strong>📋 Export-Metadaten</strong><br>
+      Zeilen: 11 (10 MA + 1 Summen-Zeile) · Encoding: UTF-8 · Separator: Semikolon · Decimal: Punkt · Datum-Format: DD.MM.YYYY<br>
+      Ziel: /treuhand/sftp-upload/ · von: Sabrina Tanner · bestätigt: 02.01.2026 09:14
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeDrawer('exportDrawer')">Schliessen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-sm">✉ Erneut an Treuhänder senden</button>
+    <button class="btn btn-sm btn-primary">↓ Download</button>
+  </div>
+</div>
+
+<script src="../_shared/layout.js"></script>
+<script>
+  function switchCaTab(tabId) {
+    document.querySelectorAll('.tabbar-commission .tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${tabId}`).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function adminDrawerTab(drawerId, idx, el) {
+    const drawer = document.getElementById(drawerId);
+    drawer.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    drawer.querySelectorAll('.drawer-pane').forEach((p,i) => p.style.display = (i===idx)?'block':'none');
+  }
+  function openApproveDrawer() { openDrawer('approveDrawer'); }
+  function openReleaseDrawer(name) { if (name) document.getElementById('relTitle').textContent = 'Rücklage-Freigabe · ' + name; openDrawer('releaseDrawer'); }
+  function openClawbackDrawer() { openDrawer('clawbackDrawer'); }
+  function openLedgerDrawer(kuerzel, name, role) {
+    if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel;
+    if (name) document.getElementById('ledDrawTitle').textContent = name + ' · Commission Q1 2026';
+    if (role) document.getElementById('ledDrawSub').textContent = role;
+    openDrawer('ledgerDrawer');
+  }
+  function openBonusDrawer() { openDrawer('bonusDrawer'); }
+  function openExportDrawer() { openDrawer('exportDrawer'); }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  // Verdraht bestehende Buttons + Rows
+  document.addEventListener('DOMContentLoaded', () => {
+    // Top-Bar: "Q1 approve & export" Button
+    document.querySelectorAll('button').forEach(btn => {
+      const t = btn.textContent.trim();
+      if (t === '✓ Q1 approve & export' || t === '✓ Approve & Export CSV') {
+        btn.onclick = openApproveDrawer;
+      }
+      if (t === 'Freigabe bestätigen') btn.onclick = () => openReleaseDrawer();
+      if (t === 'Clawback durchführen') btn.onclick = openClawbackDrawer;
+      if (t === '+ Neuer Bonus (Nenad)' || t.includes('Neuer Bonus')) btn.onclick = openBonusDrawer;
+      if (t === '↓ Download') btn.onclick = openExportDrawer;
+    });
+
+    // Ledger-Rows in Current-Batch-Tab
+    document.querySelectorAll('#tab-current .ledger-table tbody tr').forEach(row => {
+      if (row.querySelector('.ma-avatar')) {
+        row.style.cursor = 'pointer';
+        row.onclick = () => {
+          const avatar = row.querySelector('.ma-avatar');
+          const strong = row.querySelector('strong');
+          const muted = row.querySelector('.muted');
+          if (avatar && strong) {
+            openLedgerDrawer(avatar.textContent.trim(), strong.textContent.trim(), muted ? muted.textContent.trim() : '');
+          }
+        };
+      }
+    });
+
+    // Past-Batch-Rows
+    document.querySelectorAll('.past-batch-row').forEach(row => {
+      if (row.querySelector('strong')) {
+        row.onclick = openApproveDrawer;
+      }
+    });
+  });
+</script>
+</body>
+</html>

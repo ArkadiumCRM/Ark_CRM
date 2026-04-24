@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Zeit · Meine Zeit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .mz-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .mz-head {
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border);
+    margin-bottom:20px;
+  }
+  .mz-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .mz-head .sub { font-size:13px; color:var(--text-light); }
+  .mz-head .actions { margin-left:auto; display:flex; gap:8px; }
+  .mz-head button {
+    padding:9px 16px; font-size:13px; font-weight:500;
+    border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif;
+  }
+  .btn-primary { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+
+  .week-nav {
+    display:flex; align-items:center; gap:14px;
+    background:var(--surface); padding:12px 18px; border-radius:4px;
+    box-shadow:var(--shadow-sm); margin-bottom:20px;
+  }
+  .week-nav button { background:transparent; border:1px solid var(--border); padding:5px 12px; cursor:pointer; border-radius:3px; font-size:13px; }
+  .week-nav .label { flex:1; font-weight:600; font-family:'Libre Baskerville',serif; font-size:16px; color:var(--accent); }
+
+  .week-grid {
+    display:grid; grid-template-columns:repeat(7, 1fr); gap:8px;
+    margin-bottom:18px;
+  }
+  .day-card {
+    background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm);
+    padding:14px; border-top:3px solid var(--border); cursor:pointer;
+    min-height:280px;
+  }
+  .day-card:hover { box-shadow:var(--shadow-md); }
+  .day-card.today { border-top-color:var(--accent); background:color-mix(in srgb,var(--accent) 3%,var(--surface)); }
+  .day-card.weekend { opacity:0.55; }
+  .day-card .d-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .day-card .d-day { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .day-card .d-date { font-size:10.5px; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; }
+  .day-card .scans {
+    font-size:11px; font-family:'DM Sans',sans-serif; color:var(--text-mid);
+    padding:8px 0; border-top:1px dashed var(--border); border-bottom:1px dashed var(--border);
+    margin:8px 0;
+  }
+  .day-card .scans .row { display:flex; justify-content:space-between; padding:2px 0; }
+  .day-card .scans .row.break { color:var(--amber); }
+  .day-card .summary { font-size:11.5px; color:var(--text); margin-bottom:6px; }
+  .day-card .summary .num { font-family:'Libre Baskerville',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .day-card .diff-pos { color:var(--green); }
+  .day-card .diff-neg { color:var(--red); }
+  .day-card .cat-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+  .chip-mini {
+    font-size:9.5px; padding:2px 6px; border-radius:2px;
+    background:color-mix(in srgb,var(--accent) 12%,var(--bg));
+    color:var(--accent); font-weight:600;
+  }
+  .chip-mini.billable { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .chip-mini.admin { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+  .day-card .state {
+    margin-top:8px; font-size:10px; text-transform:uppercase; letter-spacing:0.8px;
+    padding:3px 8px; border-radius:10px; display:inline-block; font-weight:600;
+  }
+  .state.draft { background:color-mix(in srgb,var(--text-light) 12%,var(--bg)); color:var(--text-mid); }
+  .state.submitted { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .state.approved { background:color-mix(in srgb,var(--green) 14%,var(--bg)); color:var(--green); }
+  .state.locked { background:color-mix(in srgb,var(--gold,#8a6d3b) 14%,var(--bg)); color:#8a6d3b; }
+  .warning { color:var(--amber); font-size:11px; margin-top:4px; }
+  .warning::before { content:"🟠 "; }
+
+  .week-footer {
+    background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm);
+    padding:18px 22px; display:grid; grid-template-columns:1.2fr 1fr 1fr auto; gap:20px;
+    align-items:center;
+  }
+  .wf-block .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .wf-block .val { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; color:var(--accent); margin-top:4px; }
+  .wf-block .val.neg { color:var(--red); }
+  .wf-block .val.pos { color:var(--green); }
+  .wf-block .sub { font-size:11.5px; color:var(--text-mid); margin-top:3px; }
+  .wf-block.accounts .line { display:flex; justify-content:space-between; font-size:12px; padding:2px 0; }
+
+  /* Drawer */
+  .drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; z-index:90; }
+  .drawer-backdrop.open { display:block; }
+  .drawer { position:fixed; top:0; right:-560px; width:540px; height:100%;
+    background:var(--surface); z-index:100; transition:right 0.3s ease;
+    display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,0.1); }
+  .drawer.open { right:0 !important; transform:translateX(0) !important; }
+  .drawer-head {
+    padding:18px 22px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:12px;
+  }
+  .drawer-head h2 { margin:0; font-family:'Libre Baskerville',serif; font-size:20px; color:var(--accent); flex:1; }
+  .drawer-close { background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-light); }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px 22px; }
+  .drawer-section { margin-bottom:20px; }
+  .drawer-section h4 { margin:0 0 10px; font-family:'Libre Baskerville',serif; font-size:14px; color:var(--accent); }
+  .drawer-foot { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+  .scan-list { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:10px; font-size:12px; font-family:'DM Sans',sans-serif; }
+  .scan-list .scan-row { display:grid; grid-template-columns:70px 120px 1fr; gap:10px; padding:3px 0; }
+  .scan-list .scan-time { font-weight:600; color:var(--accent); }
+  .scan-list .scan-type { color:var(--text-mid); }
+  .scan-list .scan-device { color:var(--text-light); font-size:11px; }
+
+  .summary-box { background:var(--bg); padding:12px 14px; border-radius:3px; font-size:12.5px; }
+  .summary-box .row { display:flex; justify-content:space-between; padding:3px 0; }
+  .summary-box .row.highlight { font-weight:600; color:var(--accent); border-top:1px solid var(--border); padding-top:6px; margin-top:4px; }
+
+  .cat-row {
+    display:grid; grid-template-columns:140px 80px 1fr 60px; gap:8px;
+    padding:10px 12px; background:var(--bg); border-radius:3px; margin-bottom:6px;
+    font-size:12.5px; align-items:center;
+  }
+  .cat-row select, .cat-row input {
+    padding:6px 8px; border:1px solid var(--border-strong); border-radius:3px; background:var(--surface);
+    font-size:12px; width:100%; font-family:inherit;
+  }
+  .cat-row .bill-chk { text-align:center; }
+
+  .comment-field { width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; min-height:60px; font-family:inherit; }
+
+  .audit-collapsible { background:var(--bg); padding:10px 12px; border-radius:3px; font-size:11.5px; color:var(--text-mid); }
+  .audit-collapsible ul { margin:6px 0 0; padding-left:16px; }
+
+  .btn-sm { padding:7px 12px; font-size:12px; font-weight:500; border-radius:3px; cursor:pointer; }
+
+  .info-chip {
+    font-size:11.5px; padding:6px 10px; background:color-mix(in srgb,var(--amber) 10%,var(--bg));
+    color:var(--amber); border-radius:3px; margin-top:8px; border-left:3px solid var(--amber);
+  }
+
+  .m-bulk { display:flex; gap:10px; align-items:center; padding:12px 18px; background:var(--bg); border-radius:3px; margin-bottom:14px; font-size:13px; }
+/* CRM-Pattern drawer-foot btns */
+  .drawer-foot button, .drawer-foot .btn { padding:6px 14px; font-size:12px; border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; background:var(--surface); color:var(--text); border:1px solid var(--border-strong); transition:all 0.15s; }
+  .drawer-foot button:hover, .drawer-foot .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .drawer-foot .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-primary:hover { filter:brightness(1.08); color:#fff; border-color:var(--accent); }
+  .drawer-foot .btn-danger { background:var(--surface); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .drawer-foot .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); color:var(--red); }
+  .drawer-foot .btn-success { background:var(--green); color:#fff; border:1px solid var(--green); }
+  .drawer-foot .btn-success:hover { filter:brightness(1.08); color:#fff; }
+  .drawer-foot .btn-sm { padding:5px 10px; font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<div class="mz-page">
+
+  <div class="mz-head">
+    <div>
+      <h1>Meine Zeit</h1>
+      <div class="sub">Wochen-Raster · Scanner-Daten + manuelle Nachträge</div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" onclick="showToast('✓ Gestern kopiert · Stempel-Muster übernommen')">Gestern kopieren</button>
+      <button class="btn-primary" onclick="openManualDrawer()">+ Stempel-Antrag</button>
+    </div>
+  </div>
+
+  <div class="week-nav">
+    <button>← Vorige Woche</button>
+    <div class="label">Woche 16 · 20.04 – 26.04.2026</div>
+    <button>Heute</button>
+    <button>Nächste Woche →</button>
+  </div>
+
+  <div class="m-bulk">
+    <strong>Bulk-Aktion:</strong>
+    <select style="padding:5px 8px; font-size:12px;">
+      <option>Drafts einreichen</option>
+      <option>Woche einreichen</option>
+    </select>
+    <button class="btn-sm btn-secondary">Anwenden</button>
+    <span style="margin-left:auto; color:var(--text-light); font-size:12px;">3 Drafts · 2 Submitted · 0 Warnings</span>
+  </div>
+
+  <div class="week-grid">
+
+    <!-- Mo 20.04 -->
+    <div class="day-card" onclick="openDrawer('mo')">
+      <div class="d-head">
+        <div class="d-day">Mo</div>
+        <div class="d-date">20 Apr</div>
+      </div>
+      <div class="scans">
+        <div class="row">08:47 <span>Check-In</span></div>
+        <div class="row break">12:00 <span>Pause</span></div>
+        <div class="row break">13:28 <span>Ende</span></div>
+        <div class="row">17:45 <span>Check-Out</span></div>
+      </div>
+      <div class="summary">
+        Netto: <span class="num">8h 30m</span>
+        · Soll: <span class="num">9h</span>
+        · <span class="diff-neg">-30m</span>
+      </div>
+      <div class="cat-chips">
+        <span class="chip-mini billable">Produktiv · 6h</span>
+        <span class="chip-mini admin">Administration · 2h 30m</span>
+      </div>
+      <div class="state submitted">Submitted</div>
+    </div>
+
+    <!-- Di 21.04 -->
+    <div class="day-card today" onclick="openDrawer('di')">
+      <div class="d-head">
+        <div class="d-day">Di</div>
+        <div class="d-date">21 Apr · Heute</div>
+      </div>
+      <div class="scans">
+        <div class="row">08:45 <span>Check-In</span></div>
+        <div class="row break">12:02 <span>Pause</span></div>
+        <div class="row break">13:28 <span>Ende</span></div>
+        <div class="row" style="color:var(--text-light)">– läuft noch –</div>
+      </div>
+      <div class="summary">
+        Netto bisher: <span class="num">4h 45m</span>
+        · Soll: <span class="num">9h</span>
+      </div>
+      <div class="cat-chips">
+        <span class="chip-mini" style="background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid);">offen</span>
+      </div>
+      <div class="state draft">Draft</div>
+    </div>
+
+    <!-- Mi 22.04 -->
+    <div class="day-card" onclick="openDrawer('mi')">
+      <div class="d-head">
+        <div class="d-day">Mi</div>
+        <div class="d-date">22 Apr</div>
+      </div>
+      <div class="scans" style="color:var(--text-light); text-align:center; padding:20px 0;">
+        – noch keine Scans –
+      </div>
+      <div class="summary">Soll: <span class="num">9h</span></div>
+    </div>
+
+    <!-- Do 23.04 -->
+    <div class="day-card" onclick="openDrawer('do')">
+      <div class="d-head">
+        <div class="d-day">Do</div>
+        <div class="d-date">23 Apr</div>
+      </div>
+      <div class="scans" style="color:var(--text-light); text-align:center; padding:20px 0;">
+        – Ferien geplant –
+      </div>
+      <div class="summary"><span class="chip-mini" style="background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent);">Ferien (beantragt)</span></div>
+    </div>
+
+    <!-- Fr 24.04 -->
+    <div class="day-card" onclick="openDrawer('fr')">
+      <div class="d-head">
+        <div class="d-day">Fr</div>
+        <div class="d-date">24 Apr</div>
+      </div>
+      <div class="scans" style="color:var(--text-light); text-align:center; padding:20px 0;">
+        – Ferien geplant –
+      </div>
+      <div class="summary"><span class="chip-mini" style="background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent);">Ferien</span></div>
+    </div>
+
+    <!-- Sa/So -->
+    <div class="day-card weekend" onclick="openDrawer('sa')">
+      <div class="d-head">
+        <div class="d-day">Sa</div>
+        <div class="d-date">25 Apr</div>
+      </div>
+      <div class="scans" style="color:var(--text-light); text-align:center; padding:20px 0;">Wochenende</div>
+    </div>
+    <div class="day-card weekend" onclick="openDrawer('so')">
+      <div class="d-head">
+        <div class="d-day">So</div>
+        <div class="d-date">26 Apr</div>
+      </div>
+      <div class="scans" style="color:var(--text-light); text-align:center; padding:20px 0;">Wochenende</div>
+    </div>
+
+  </div>
+
+  <div class="week-footer">
+    <div class="wf-block">
+      <div class="lbl">Wochen-Ist</div>
+      <div class="val">23h 15m</div>
+      <div class="sub">davon gezählt 23h 15m · nicht angerechnet 0m</div>
+    </div>
+    <div class="wf-block">
+      <div class="lbl">Wochen-Soll</div>
+      <div class="val">45h 00m</div>
+      <div class="sub">inkl. 2.5h Team-Dev Fr</div>
+    </div>
+    <div class="wf-block accounts">
+      <div class="lbl">Überzeit-Tracking (Lohn-abgegolten)</div>
+      <div class="line">OR-Überstunden <strong>0h</strong></div>
+      <div class="line">ArG-Überzeit <strong>0h</strong></div>
+      <div class="line">Jahres-Cap (ArG) <strong>8 / 170h</strong></div>
+    </div>
+    <div>
+      <button class="btn-primary" style="padding:10px 18px; font-size:13px;" onclick="openSubmitModal()">Monat einreichen →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- DRAWER: Tages-Eintrag-Edit -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeAllDrawers()"></div>
+<div class="drawer" id="drawerMo">
+
+  <div class="drawer-head">
+    <div style="font-size:28px;">⌚</div>
+    <h2>Mo, 20.04.2026</h2>
+    <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <h4>Scanner-Events (SCANNER-01 · Eingang)</h4>
+      <div class="scan-list">
+        <div class="scan-row">
+          <div class="scan-time">08:47</div>
+          <div class="scan-type">Check-In</div>
+          <div class="scan-device">SCANNER-01 · Eingang</div>
+        </div>
+        <div class="scan-row">
+          <div class="scan-time">12:00</div>
+          <div class="scan-type">Pause-Start</div>
+          <div class="scan-device">SCANNER-01 · Eingang</div>
+        </div>
+        <div class="scan-row">
+          <div class="scan-time">13:28</div>
+          <div class="scan-type">Pause-Ende</div>
+          <div class="scan-device">SCANNER-01 · Eingang</div>
+        </div>
+        <div class="scan-row">
+          <div class="scan-time">17:45</div>
+          <div class="scan-type">Check-Out</div>
+          <div class="scan-device">SCANNER-01 · Eingang</div>
+        </div>
+      </div>
+      <div class="info-chip">Scanner-Events sind read-only. Korrekturen nur per Admin-Override mit Grund.</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Zusammenfassung</h4>
+      <div class="summary-box">
+        <div class="row"><span>Brutto (Scan-In bis Scan-Out)</span><strong>8h 58m</strong></div>
+        <div class="row"><span>Pause (gescannt)</span><strong>1h 28m</strong></div>
+        <div class="row"><span>Netto</span><strong>8h 30m</strong></div>
+        <div class="row"><span>Gezählt (10h-Cap)</span><strong>8h 30m</strong></div>
+        <div class="row"><span>Nicht angerechnet</span><strong>0m</strong></div>
+        <div class="row highlight"><span>Soll</span><strong>9h 00m · Diff -30m</strong></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Kommentar (optional)</h4>
+      <textarea class="comment-field" placeholder="z.B. Meeting mit Kunde, Reise nach Bern..."></textarea>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Audit-Trail</h4>
+      <!-- ark-lint-skip:begin reason=admin-audit-trail -->
+      <div class="audit-collapsible">
+        <ul>
+          <li>20.04. 08:47 — scan_event: check_in (SCANNER-01)</li>
+          <li>20.04. 17:45 — scan_event: check_out</li>
+          <li>20.04. 18:10 — fact_time_entry erstellt (Worker · source=scanner)</li>
+          <li>20.04. 18:15 — Tages-Eintrag validiert von Peter</li>
+          <li>20.04. 18:15 — Status: Entwurf → Eingereicht</li>
+        </ul>
+      </div>
+      <!-- ark-lint-skip:end -->
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn-sm btn-secondary" onclick="closeAllDrawers()">Schliessen</button>
+    <button class="btn-sm btn-secondary" onclick="showToast('✓ Als Entwurf gespeichert'); closeDrawer();">Speichern draft</button>
+    <button class="btn-sm btn-primary" style="background:var(--accent); color:white; border:none;" onclick="showToast('✓ Eingereicht zur Head-Approval'); closeDrawer();">Speichern + einreichen</button>
+  </div>
+
+</div>
+
+<!-- Manueller-Eintrag-Drawer (Scanner-frei · z.B. Home-Office oder Scanner-Defekt) -->
+<div class="drawer" id="drawerManual" style="display:none;">
+  <div class="drawer-head">
+    <div style="font-size:26px;">✎</div>
+    <h2>Stempel-Antrag (manuell)</h2>
+    <button class="drawer-close" onclick="closeManualDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="info-chip">ℹ <strong>Für vergangene oder heutige Tage.</strong> Typische Fälle: Freitag-Wochenkontrolle findet Fehlbuchungen, Home-Office ohne Scanner, vergessene Stempel. Antrag geht an Head-Approval.</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Stempel-Zeitpunkt</h4>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div>
+          <label style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Datum</label>
+          <input type="date" value="2026-04-20" max="2026-04-21" style="width:100%; padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; margin-top:3px;">
+        </div>
+        <div>
+          <label style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:600;">Uhrzeit</label>
+          <input type="time" value="09:00" style="width:100%; padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px; margin-top:3px;">
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--text-mid); margin-top:6px;">Rückwirkend bis max. aktueller Monat (nach Lock nur via Admin-Korrektur-Antrag).</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Stempel-Typ</h4>
+      <div style="padding:10px 14px; background:color-mix(in srgb,var(--accent) 5%,var(--bg)); border-left:3px solid var(--accent); border-radius:3px; font-size:12.5px; margin-bottom:10px;">
+        <strong>🔄 Auto-Detect</strong> basierend auf Stempel-Folge am gewählten Tag · <strong style="color:var(--accent);">Check-In</strong> (Mo 20.04. noch keine Stempel)
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0;">
+        <input type="checkbox" id="manualOverride" onchange="toggleManualOverride()"> Typ manuell überschreiben
+      </label>
+      <div id="manualTypeSelect" style="display:none; margin-top:10px;">
+        <select style="width:100%; padding:7px 9px; border:1px solid var(--border-strong); border-radius:3px; font-size:12.5px;">
+          <option value="check_in">Check-In (Arbeitsbeginn)</option>
+          <option value="break_start">Pause-Start</option>
+          <option value="break_end">Pause-Ende</option>
+          <option value="check_out">Check-Out (Arbeitsende)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Scan-Events am gewählten Tag</h4>
+      <div class="scan-list">
+        <div style="color:var(--text-light); font-size:12px; padding:8px 0; text-align:center; font-style:italic;">– keine Scans am Mo 20.04. –</div>
+      </div>
+      <div style="font-size:11.5px; color:var(--text-mid); margin-top:6px;">Antrag wird als <em>Manueller Eintrag</em> markiert und erscheint nach Head-Approval neben Scanner-Events in der Tages-Übersicht.</div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Grund (Pflicht)</h4>
+      <select id="manualReason" onchange="toggleReasonOther(this)" style="width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; font-family:inherit;">
+        <option value="">– Grund wählen –</option>
+        <option value="home_office">Home-Office · Scanner nicht vor Ort</option>
+        <option value="remote">Remote-Arbeit · Kunde vor Ort</option>
+        <option value="scanner_defect">Scanner-Defekt</option>
+        <option value="forgot_scan">Vergessen zu scannen</option>
+        <option value="client_meeting_extern">Termin extern · direkt zum Kunden</option>
+        <option value="early_leave">Frühzeitig verlassen · Notfall</option>
+        <option value="late_arrival">Später angekommen · Termin</option>
+        <option value="other">Sonstiges (Kommentar erforderlich)</option>
+      </select>
+      <textarea id="manualReasonComment" style="display:none; width:100%; margin-top:10px; padding:8px 10px; border:1px solid var(--border-strong); border-radius:3px; font-size:13px; min-height:60px; font-family:inherit;" placeholder="Details zum Grund..."></textarea>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeManualDrawer()">Abbrechen</button>
+    <button class="btn btn-sm btn-primary" onclick="showToast('✓ Stempel-Antrag Mo 20.04. 09:00 (Check-In) eingereicht · Head-Approval ausstehend'); closeManualDrawer();">Antrag einreichen</button>
+  </div>
+</div>
+
+<!-- Submit-Drawer (Monat einreichen) -->
+<div class="drawer" id="drawerSubmit" style="display:none;">
+  <div class="drawer-head">
+    <div style="font-size:26px;">📅</div>
+    <h2>Monat April 2026 einreichen</h2>
+    <button class="drawer-close" onclick="closeSubmitDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <h4>Zusammenfassung</h4>
+      <div class="summary-box">
+        <div class="row"><span>Ist (YTD aktuell)</span><strong>142h 00m</strong></div>
+        <div class="row"><span>Soll (22 AT April)</span><strong>180h 00m</strong></div>
+        <div class="row"><span>Differenz</span><strong style="color:var(--amber);">-38h (8 AT pending)</strong></div>
+        <div class="row"><span>Warnings</span><strong>0</strong></div>
+        <div class="row"><span>ArG-Überzeit YTD</span><strong>8 / 170h (Compliance-OK)</strong></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Status April 2026</h4>
+      <div style="padding:10px 14px; background:color-mix(in srgb,var(--amber) 8%,var(--bg)); border-left:3px solid var(--amber); border-radius:3px; font-size:12.5px; color:#8a5a00;">
+        ⚠ April ist noch nicht abgeschlossen (8 Arbeitstage offen). Submit nur für vergangene Perioden sinnvoll — sonst spätere Korrektur-Anträge nötig.
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Approval-Chain</h4>
+      <div style="font-size:12.5px; line-height:1.9;">
+        1. <strong>Du · Submit</strong> (pending)<br>
+        2. <strong>Head-Approval</strong> · Peter Wiederkehr<br>
+        3. <strong>Admin-Approval</strong> · Nenad Brunner<br>
+        4. <strong>Lock</strong> · Sabrina Tanner (Backoffice)<br>
+        5. <strong>Export</strong> · Treuhand Kunz
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Bestätigung</h4>
+      <label style="display:flex; align-items:flex-start; gap:8px; padding:10px 12px; background:var(--bg); border-radius:3px; font-size:13px;">
+        <input type="checkbox" id="submitChk" style="margin-top:3px;">
+        <span>Ich bestätige den Submit trotz offener Tage. Spätere Einträge können via Korrektur-Antrag nachgetragen werden (Admin-Approval erforderlich).</span>
+      </label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-sm" onclick="closeSubmitDrawer()">Abbrechen</button>
+    <button class="btn btn-sm btn-primary" onclick="confirmSubmit()">Einreichen</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--green); padding:12px 22px; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.1); font-size:13px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.2s, transform 0.25s;">OK</div>
+
+<script>
+const dayContent = {
+  mo: {
+    head: 'Mo, 20.04.2026',
+    scans: [['08:47','Check-In'],['12:00','Pause-Start'],['13:28','Pause-Ende'],['17:45','Check-Out']],
+    summary: { brutto:'8h 58m', pause:'1h 28m', netto:'8h 30m', gezählt:'8h 30m', uncounted:'0m', soll:'9h 00m · Diff -30m' },
+    audit: [
+      '20.04. 08:47 — scan_event: check_in (SCANNER-01)',
+      '20.04. 17:45 — scan_event: check_out',
+      '20.04. 18:10 — fact_time_entry erstellt (Worker · source=scanner)',
+      '20.04. 18:15 — Status: Entwurf → Eingereicht'
+    ],
+    state: 'submitted',
+    note: null
+  },
+  di: {
+    head: 'Di, 21.04.2026 · Heute',
+    scans: [['08:45','Check-In'],['12:02','Pause-Start'],['13:28','Pause-Ende'],['—','läuft noch']],
+    summary: { brutto:'4h 45m (bisher)', pause:'1h 26m', netto:'4h 45m', gezählt:'4h 45m', uncounted:'0m', soll:'9h 00m (noch 4h 15m)' },
+    audit: [
+      '21.04. 08:45 — scan_event: check_in',
+      '21.04. 12:02 — scan_event: break_start',
+      '21.04. 13:28 — scan_event: break_end'
+    ],
+    state: 'draft',
+    note: 'Tag läuft · Check-Out noch offen · Eintrag wird bei Check-Out finalisiert.'
+  },
+  mi: {
+    head: 'Mi, 22.04.2026',
+    scans: [],
+    summary: { brutto:'–', pause:'–', netto:'–', gezählt:'–', uncounted:'–', soll:'9h 00m' },
+    audit: [],
+    state: 'future',
+    note: 'Noch keine Scanner-Events · Bei fehlendem Scan am Tagesende kann Stempel-Antrag manuell gestellt werden.'
+  },
+  do: {
+    head: 'Do, 23.04.2026 · Abwesenheit',
+    scans: [],
+    summary: { brutto:'–', pause:'–', netto:'–', gezählt:'–', uncounted:'–', soll:'9h 00m (wird durch Ferien abgedeckt)' },
+    audit: [
+      '15.04. 10:30 — Ferien-Antrag erstellt (Typ: VACATION)',
+      '16.04. 14:20 — Head-Approval · Peter Wiederkehr',
+      '17.04. 09:00 — Status: active'
+    ],
+    state: 'absence',
+    absenceInfo: 'Ferien · Beantragt 15.04. · Approved durch Head · 1. Tag von 3 (23.–24.04.)'
+  },
+  fr: {
+    head: 'Fr, 24.04.2026 · Abwesenheit',
+    scans: [],
+    summary: { brutto:'–', pause:'–', netto:'–', gezählt:'–', uncounted:'–', soll:'6h 30m (wird durch Ferien abgedeckt)' },
+    audit: [
+      '15.04. 10:30 — Ferien-Antrag erstellt (Typ: VACATION)',
+      '16.04. 14:20 — Head-Approval · Peter Wiederkehr',
+      '17.04. 09:00 — Status: active'
+    ],
+    state: 'absence',
+    absenceInfo: 'Ferien · 2. Tag von 3 · Kurztrip Mailand'
+  },
+  sa: {
+    head: 'Sa, 25.04.2026 · Wochenende',
+    scans: [],
+    summary: { brutto:'–', pause:'–', netto:'–', gezählt:'–', uncounted:'–', soll:'–' },
+    audit: [],
+    state: 'weekend',
+    note: 'Wochenende · keine Soll-Zeit.'
+  },
+  so: {
+    head: 'So, 26.04.2026 · Wochenende',
+    scans: [],
+    summary: { brutto:'–', pause:'–', netto:'–', gezählt:'–', uncounted:'–', soll:'–' },
+    audit: [],
+    state: 'weekend',
+    note: 'Wochenende · keine Soll-Zeit.'
+  }
+};
+
+function openDrawer(id) {
+  const d = dayContent[id];
+  if (!d) return;
+  document.querySelector('#drawerMo .drawer-head h2').textContent = d.head;
+
+  // Scanner-Events
+  const scansDiv = document.querySelector('#drawerMo .drawer-section:nth-of-type(1)');
+  let scansHtml = '<h4>Scanner-Events';
+  if (d.scans.length > 0) {
+    scansHtml += ' (SCANNER-01 · Eingang)</h4><div class="scan-list">';
+    d.scans.forEach(([t, type]) => {
+      scansHtml += `<div class="scan-row"><div class="scan-time">${t}</div><div class="scan-type">${type}</div><div class="scan-device">SCANNER-01 · Eingang</div></div>`;
+    });
+    scansHtml += '</div><div class="info-chip">Scanner-Events sind read-only. Korrekturen nur per Admin-Override mit Grund.</div>';
+  } else {
+    scansHtml += '</h4><div class="scan-list" style="text-align:center; padding:14px; color:var(--text-mid); font-size:12.5px; font-style:italic;">– keine Scanner-Events –</div>';
+    if (d.note) scansHtml += `<div class="info-chip">${d.note}</div>`;
+    if (d.absenceInfo) scansHtml += `<div class="info-chip" style="background:color-mix(in srgb,var(--accent) 8%,var(--bg)); border-left-color:var(--accent); color:var(--accent);">ℹ ${d.absenceInfo}</div>`;
+  }
+  scansDiv.innerHTML = scansHtml;
+
+  // Zusammenfassung
+  const summaryDiv = document.querySelector('#drawerMo .drawer-section:nth-of-type(2)');
+  summaryDiv.innerHTML = `
+    <h4>Zusammenfassung</h4>
+    <div class="summary-box">
+      <div class="row"><span>Brutto (Scan-In bis Scan-Out)</span><strong>${d.summary.brutto}</strong></div>
+      <div class="row"><span>Pause (gescannt)</span><strong>${d.summary.pause}</strong></div>
+      <div class="row"><span>Netto</span><strong>${d.summary.netto}</strong></div>
+      <div class="row"><span>Gezählt (10h-Cap)</span><strong>${d.summary.gezählt}</strong></div>
+      <div class="row"><span>Nicht angerechnet</span><strong>${d.summary.uncounted}</strong></div>
+      <div class="row highlight"><span>Soll</span><strong>${d.summary.soll}</strong></div>
+    </div>
+  `;
+
+  // Audit-Trail (collapse Kategorie + Kommentar sections - no longer apply to new model)
+  const auditDiv = document.querySelectorAll('#drawerMo .drawer-section');
+  if (auditDiv[2]) {
+    auditDiv[2].innerHTML = `<h4>Kommentar (optional)</h4><textarea class="comment-field" placeholder="Notiz zum Tag..."></textarea>`;
+  }
+  if (auditDiv[3]) {
+    const auditHtml = d.audit.length
+      ? `<h4>Audit-Trail</h4><!-- ark-lint-skip:begin reason=admin-audit-trail --><div class="audit-collapsible"><ul>${d.audit.map(e=>`<li>${e}</li>`).join('')}</ul></div><!-- ark-lint-skip:end -->`
+      : '<h4>Audit-Trail</h4><div class="audit-collapsible" style="text-align:center; padding:14px; color:var(--text-light); font-style:italic;">– keine Einträge –</div>';
+    auditDiv[3].innerHTML = auditHtml;
+  }
+
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawerMo').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('drawerMo').classList.remove('open');
+}
+function openManualDrawer() {
+  const dr = document.getElementById('drawerManual');
+  dr.style.display = 'flex';
+  document.getElementById('drawerBackdrop').classList.add('open');
+  setTimeout(() => dr.classList.add('open'), 10);
+}
+function closeManualDrawer() {
+  const dr = document.getElementById('drawerManual');
+  dr.classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  setTimeout(() => dr.style.display = 'none', 300);
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(40px)'; }, 2400);
+}
+function toggleManualOverride() {
+  const cb = document.getElementById('manualOverride');
+  const sel = document.getElementById('manualTypeSelect');
+  sel.style.display = cb.checked ? 'block' : 'none';
+}
+function toggleReasonOther(sel) {
+  const ta = document.getElementById('manualReasonComment');
+  ta.style.display = sel.value === 'other' ? 'block' : 'none';
+}
+function openSubmitModal() {
+  const dr = document.getElementById('drawerSubmit');
+  dr.style.display = 'flex';
+  document.getElementById('drawerBackdrop').classList.add('open');
+  setTimeout(() => dr.classList.add('open'), 10);
+}
+function closeSubmitDrawer() {
+  const dr = document.getElementById('drawerSubmit');
+  dr.classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  setTimeout(() => dr.style.display = 'none', 300);
+}
+function confirmSubmit() {
+  const cb = document.getElementById('submitChk');
+  if (!cb.checked) { showToast('⚠ Bestätigung erforderlich'); return; }
+  closeSubmitDrawer();
+  showToast('✓ April 2026 eingereicht · Head-Approval-Queue aktualisiert');
+}
+function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
+</script>
+
+</body>
+</html>

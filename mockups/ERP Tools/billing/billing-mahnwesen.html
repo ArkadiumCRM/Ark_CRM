@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — Finanzen · Mahnwesen-Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .page { padding:22px 28px 48px; max-width:1600px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; }
+  .page-head h1 { margin:0; font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--accent); }
+  .page-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* KPI-Strip */
+  .strip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:18px; }
+  .strip-card { background:var(--surface); padding:14px 16px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--border); cursor:pointer; }
+  .strip-card.l1 { border-left-color:color-mix(in srgb,var(--amber) 70%,var(--accent)); }
+  .strip-card.l2 { border-left-color:var(--amber); }
+  .strip-card.l3 { border-left-color:var(--red); }
+  .strip-card.ink { border-left-color:#7c2d12; }
+  .strip-card.pause { border-left-color:var(--dispute); }
+  .strip-card .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
+  .strip-card .cnt { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:6px 0 3px; }
+  .strip-card .amt { font-size:11.5px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .tab { padding:10px 18px; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; user-select:none; }
+  .tab:hover { color:var(--accent); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
+  .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Empty / Historie */
+  .empty-panel { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:34px 28px; text-align:center; color:var(--text-light); font-size:13px; line-height:1.6; }
+  .empty-panel h3 { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--accent); margin:0 0 6px; }
+
+  /* Bulk-Bar */
+  .bulk-bar { background:color-mix(in srgb,var(--accent) 8%, var(--surface)); border:1px solid var(--accent); border-radius:4px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:12.5px; }
+  .bulk-bar .count { font-weight:700; color:var(--accent); }
+  .bulk-bar .actions { display:flex; gap:8px; margin-left:auto; }
+  .bulk-btn { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--text); }
+  .bulk-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .bulk-btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .bulk-btn.primary:hover { opacity:0.92; color:#fff; }
+
+  /* Cockpit-Tabelle */
+  .cockpit-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .cockpit-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .cockpit-table th { text-align:left; padding:10px 10px; background:var(--bg); font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .cockpit-table td { padding:12px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .cockpit-table tbody tr:last-child td { border-bottom:none; }
+  .cockpit-table tbody tr { transition:background 0.08s; }
+  .cockpit-table tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%, var(--bg)); }
+  .cockpit-table .num { font-variant-numeric:tabular-nums; text-align:right; font-weight:600; }
+  .cockpit-table .cb { width:24px; }
+  .cockpit-table .nr { font-family:'DM Sans',sans-serif; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .cockpit-table .kunde { font-weight:600; color:var(--text); }
+  .cockpit-table .kunde small { display:block; font-weight:normal; color:var(--text-light); font-size:11px; margin-top:2px; }
+
+  /* Chips + Badges */
+  .chip { font-size:9.5px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; white-space:nowrap; }
+  .chip.overdue { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .chip.profile-key { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
+  .chip.profile-std { background:color-mix(in srgb,var(--text-light) 18%,var(--bg)); color:var(--text-mid); }
+  .chip.dispute { background:color-mix(in srgb,var(--dispute) 18%,var(--bg)); color:var(--dispute); }
+
+  .next-stage { display:inline-block; padding:4px 10px; border-radius:3px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .next-stage.l1 { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:color-mix(in srgb,var(--amber) 90%,#000); border:1px solid color-mix(in srgb,var(--amber) 40%,var(--bg)); }
+  .next-stage.l2 { background:color-mix(in srgb,var(--red) 12%,var(--bg)); color:var(--red); border:1px solid color-mix(in srgb,var(--red) 40%,var(--bg)); }
+  .next-stage.l3 { background:color-mix(in srgb,var(--red) 20%,var(--bg)); color:var(--red); border:1px solid var(--red); }
+  .next-stage.ink { background:color-mix(in srgb,#7c2d12 22%,var(--bg)); color:#7c2d12; border:1px solid #7c2d12; }
+
+  /* Risiko-Dot */
+  .risk { display:flex; align-items:center; gap:6px; font-size:11.5px; }
+  .risk .dot { width:9px; height:9px; border-radius:50%; }
+  .risk .dot.green { background:var(--green); }
+  .risk .dot.amber { background:var(--amber); }
+  .risk .dot.red { background:var(--red); }
+
+  /* Aktion-Button-Inline */
+  .row-action { background:var(--surface); border:1px solid var(--accent); color:var(--accent); border-radius:3px; padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; }
+  .row-action:hover { background:var(--accent); color:#fff; }
+
+  /* Timeline-Mini */
+  .tl-mini { font-size:11px; color:var(--text-light); line-height:1.5; }
+  .tl-mini .last { color:var(--text-mid); }
+  .tl-mini .overdue { color:var(--red); font-weight:600; }
+
+  /* Drawer 540px · Mahn-Versand-Preview */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:96vw; height:100vh; background:var(--surface); box-shadow:-8px 0 28px rgba(0,0,0,0.18); z-index:55; display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.25s ease-out; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:15px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-body { padding:18px 20px; overflow-y:auto; flex:1; font-size:12.5px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:flex-end; gap:8px; }
+  .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
+
+  /* Drawer · Preview-Template-Box */
+  .tpl-preview { background:var(--bg); padding:14px 16px; border-radius:3px; font-size:12px; line-height:1.5; color:var(--text); border:1px solid var(--border); }
+  .tpl-preview .greet { font-weight:700; margin-bottom:8px; }
+  .tpl-preview .sig { margin-top:12px; font-style:italic; color:var(--text-mid); font-size:11px; }
+
+  .kv-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--border); font-size:12px; }
+  .kv-row:last-child { border-bottom:none; }
+  .kv-row .k { color:var(--text-light); }
+  .kv-row .v { font-weight:600; color:var(--text); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Finanzen · Mahnwesen-Cockpit</h1>
+      <div class="sub">7 Rechnungen pending Mahnung · 2 aktiv in Stufe · segmentierte Kadenz (Standard T+15/30/45 · Key-Account T+30/45/60)</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-secondary" type="button">⎙ Mahn-Report PDF</button>
+      <button class="btn btn-primary" type="button" onclick="openBulk()">▸ Alle Stufe 1 vorbereiten</button>
+    </div>
+  </div>
+
+  <!-- KPI-Strip -->
+  <div class="strip">
+    <div class="strip-card l1">
+      <div class="lbl">Mahnung 1 · pending</div>
+      <div class="cnt">3</div>
+      <div class="amt">CHF 22'840 · Standard: 2 · Key-Account: 1</div>
+    </div>
+    <div class="strip-card l2">
+      <div class="lbl">Mahnung 2 · aktiv</div>
+      <div class="cnt">2</div>
+      <div class="amt">CHF 12'600 · Frist läuft</div>
+    </div>
+    <div class="strip-card l3">
+      <div class="lbl">Mahnung 3 · aktiv</div>
+      <div class="cnt">1</div>
+      <div class="amt">CHF 7'500 · letzte Frist</div>
+    </div>
+    <div class="strip-card ink">
+      <div class="lbl">Inkasso-ready</div>
+      <div class="cnt">1</div>
+      <div class="amt">CHF 3'500 · GF-Approval</div>
+    </div>
+    <div class="strip-card pause">
+      <div class="lbl">Honorarstreit · Timer aus</div>
+      <div class="cnt">1</div>
+      <div class="amt">CHF 18'900 · Sievert &amp; Co.</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="pending">Pending <span class="cnt">7</span></div>
+    <div class="tab" data-tab="active">Aktiv in Stufe <span class="cnt">3</span></div>
+    <div class="tab" data-tab="dispute">Honorarstreit <span class="cnt">1</span></div>
+    <div class="tab" data-tab="hist">Historie</div>
+  </div>
+
+  <!-- Tab: Pending -->
+  <div class="tab-pane active" id="tab-pending">
+
+  <!-- Bulk-Bar -->
+  <div class="bulk-bar">
+    <span class="count">3</span> Rechnungen ausgewählt · CHF 22'840 · alle Stufe 1
+    <div class="actions">
+      <button class="bulk-btn primary" type="button" onclick="openBulk()">✉ Mahnungen vorbereiten</button>
+      <button class="bulk-btn" type="button">⏰ Soft-Reminder zuerst</button>
+      <button class="bulk-btn" type="button">⏸ Stunden / disputed markieren</button>
+    </div>
+  </div>
+
+  <!-- Cockpit-Liste · Tab: Pending -->
+  <div class="cockpit-card">
+    <table class="cockpit-table">
+      <thead>
+        <tr>
+          <th class="cb"><input type="checkbox"></th>
+          <th>Rechnungs-Nr</th>
+          <th>Kunde</th>
+          <th style="text-align:right;">Offen</th>
+          <th>Überfällig</th>
+          <th>Letzte Aktivität</th>
+          <th>Nächste Stufe</th>
+          <th>Empfohlene Aktion</th>
+          <th>Risiko</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cb"><input type="checkbox" checked></td>
+          <td class="nr">FN2026.03.0917</td>
+          <td class="kunde">Emch+Berger Gruppe <small><span class="chip profile-key">Key-Account</span> · AM PW · ING</small></td>
+          <td class="num">CHF 36'083</td>
+          <td class="num" style="color:var(--red);">3 T</td>
+          <td><div class="tl-mini"><div class="last">22.03. Rechnung versendet</div><div class="overdue">seit 21.04. überfällig</div></div></td>
+          <td><span class="next-stage l1">Mahnung 1</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">Ziel-Frist: 02.05.</div></td>
+          <td>Soft-Reminder + Mahnung 1</td>
+          <td><div class="risk"><span class="dot amber"></span>moderat</div></td>
+          <td><button class="row-action" type="button" onclick="openBulk()">✉ Vorbereiten</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" checked></td>
+          <td class="nr">FN2026.04.1055</td>
+          <td class="kunde">Frauenfelder Holding <small><span class="chip profile-std">Standard</span> · AM PW · GT</small></td>
+          <td class="num">CHF 22'500</td>
+          <td class="num" style="color:var(--red);">36 T</td>
+          <td><div class="tl-mini"><div class="last">14.02. Rechnung versendet · 25.03. Mahnung 1</div><div class="overdue">Frist 05.04. verstrichen</div></div></td>
+          <td><span class="next-stage l2">Mahnung 2</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">Frist +15 Tage · 05.05.</div></td>
+          <td>Mahnung 2 schärferer Ton</td>
+          <td><div class="risk"><span class="dot red"></span>hoch</div></td>
+          <td><button class="row-action" type="button">✉ Stufe 2</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox" checked></td>
+          <td class="nr">FN2026.03.0924</td>
+          <td class="kunde">Volare Group AG <small><span class="chip profile-key">Key-Account</span> · AM JV · REM · Mandat-Akonto</small></td>
+          <td class="num">CHF 10'810</td>
+          <td class="num" style="color:var(--red);">27 T</td>
+          <td><div class="tl-mini"><div class="last">15.03. Akonto-Rechnung versendet</div><div>Zahlungsziel T+10 gem. Mandat-Vertrag</div></div></td>
+          <td><span class="next-stage l2">Mahnung 2</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">erste Mahnung 16.04. bereits raus</div></td>
+          <td>Mahnung 2 schärferer Ton · Mandat-Vertrag referenzieren</td>
+          <td><div class="risk"><span class="dot amber"></span>moderat</div></td>
+          <td><button class="row-action" type="button">✉ Stufe 2</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox"></td>
+          <td class="nr">FN2026.01.0142</td>
+          <td class="kunde">Sievert &amp; Co. <small><span class="chip profile-std">Standard</span> · AM SP · GT</small></td>
+          <td class="num">CHF 18'900</td>
+          <td class="num" style="color:var(--text-light);">—</td>
+          <td><div class="tl-mini"><div class="last">20.02. Honorarstreit markiert durch AM</div><div>Timer pausiert</div></div></td>
+          <td><span class="next-stage l3" style="opacity:0.45;">Mahnung 3</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">pausiert bis Dispute-Resolution</div></td>
+          <td>GF-Eskalation · keine Auto-Mahnung</td>
+          <td><div class="risk"><span class="dot amber"></span>dispute</div></td>
+          <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox"></td>
+          <td class="nr">FN2025.11.0812</td>
+          <td class="kunde">Arcanum Architekten <small><span class="chip profile-std">Standard</span> · AM YB · ARC</small></td>
+          <td class="num">CHF 11'800</td>
+          <td class="num" style="color:var(--red);">74 T</td>
+          <td><div class="tl-mini"><div class="last">05.12. Rechnung · 20.01. M1 · 05.02. M2</div><div class="overdue">Frist 20.02. verstrichen · Mahnung 3 überfällig</div></div></td>
+          <td><span class="next-stage l3">Mahnung 3</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">letzte Frist 5 Tage</div></td>
+          <td>Mahnung 3 letzte Frist + Inkasso-Androhung</td>
+          <td><div class="risk"><span class="dot red"></span>hoch</div></td>
+          <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">✉ Stufe 3</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox"></td>
+          <td class="nr">FN2025.09.0624</td>
+          <td class="kunde">Monnier Bauherr AG <small><span class="chip profile-std">Standard</span> · AM SP · GT</small></td>
+          <td class="num">CHF 3'500</td>
+          <td class="num" style="color:var(--red);">134 T</td>
+          <td><div class="tl-mini"><div class="last">01.09. Rechnung · M1/M2/M3 ausgeschöpft</div><div class="overdue">Letzte Frist 15.04. verstrichen</div></div></td>
+          <td><span class="next-stage ink">Inkasso</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">GF-Approval nötig · Dossier bereit</div></td>
+          <td>Inkasso-Übergabe · Dossier-ZIP generieren</td>
+          <td><div class="risk"><span class="dot red"></span>kritisch</div></td>
+          <td><button class="row-action" type="button" style="color:#7c2d12;border-color:#7c2d12;">⚐ GF-Review</button></td>
+        </tr>
+        <tr>
+          <td class="cb"><input type="checkbox"></td>
+          <td class="nr">FN2026.02.0558</td>
+          <td class="kunde">Sutter + Partner AG <small><span class="chip profile-std">Standard</span> · AM YB · ARC</small></td>
+          <td class="num">CHF 8'700</td>
+          <td class="num" style="color:var(--red);">21 T</td>
+          <td><div class="tl-mini"><div class="last">18.03. Rechnung versendet</div><div class="overdue">seit 09.04. überfällig</div></div></td>
+          <td><span class="next-stage l1">Mahnung 1</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">Standard-Kadenz T+15 erreicht</div></td>
+          <td>Mahnung 1 höflich</td>
+          <td><div class="risk"><span class="dot amber"></span>moderat</div></td>
+          <td><button class="row-action" type="button">✉ Vorbereiten</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+    <strong>Legende Kadenz-Profile:</strong>
+    &nbsp;<span class="chip profile-std">Standard</span> T+15 · +15 · +15 · +5 (Inkasso) &nbsp;·&nbsp;
+    <span class="chip profile-key">Key-Account</span> T+30 · +15 · +15 · +5 (Inkasso) &nbsp;·&nbsp;
+    <strong>Disputed</strong>: Timer pausiert · manuelle GF-Eskalation
+  </div>
+
+  </div><!-- /tab-pending -->
+
+  <!-- Tab: Aktiv in Stufe -->
+  <div class="tab-pane" id="tab-active">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Offen</th>
+            <th>Aktuelle Stufe</th>
+            <th>Gesendet</th>
+            <th>Frist läuft bis</th>
+            <th>Rest-Frist</th>
+            <th>Nächster Schritt</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.04.1055</td>
+            <td class="kunde">Frauenfelder Holding <small><span class="chip profile-std">Standard</span> · AM PW · GT</small></td>
+            <td class="num">CHF 22'500</td>
+            <td><span class="next-stage l2">Mahnung 2</span></td>
+            <td>25.03.2026</td>
+            <td>05.05.2026</td>
+            <td style="color:var(--amber);font-weight:600;">11 Tage</td>
+            <td>auto → Mahnung 3 am 06.05.</td>
+            <td><button class="row-action" type="button">✉ Erneut senden</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2026.03.0924</td>
+            <td class="kunde">Volare Group AG <small><span class="chip profile-key">Key-Account</span> · AM JV · REM</small></td>
+            <td class="num">CHF 10'810</td>
+            <td><span class="next-stage l2">Mahnung 2</span></td>
+            <td>16.04.2026</td>
+            <td>01.05.2026</td>
+            <td style="color:var(--amber);font-weight:600;">7 Tage</td>
+            <td>auto → Mahnung 3 am 02.05.</td>
+            <td><button class="row-action" type="button">✉ Erneut senden</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.11.0812</td>
+            <td class="kunde">Arcanum Architekten <small><span class="chip profile-std">Standard</span> · AM YB · ARC</small></td>
+            <td class="num">CHF 11'800</td>
+            <td><span class="next-stage l3">Mahnung 3</span></td>
+            <td>05.02.2026</td>
+            <td>29.04.2026</td>
+            <td style="color:var(--red);font-weight:600;">5 Tage</td>
+            <td>→ Inkasso-Übergabe ab 30.04. (GF-Pflicht)</td>
+            <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">⚐ GF-Review</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Hinweis:</strong> In dieser Liste laufen Mahnungen, die bereits versendet wurden und deren Frist noch offen ist. Nach Ablauf springen sie automatisch in die nächste Stufe (oder werden manuell eskaliert).
+    </div>
+  </div><!-- /tab-active -->
+
+  <!-- Tab: Honorarstreit -->
+  <div class="tab-pane" id="tab-dispute">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Strittig</th>
+            <th>Grund</th>
+            <th>Markiert am</th>
+            <th>Verantwortlich</th>
+            <th>Timer</th>
+            <th>Nächster Schritt</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.01.0142</td>
+            <td class="kunde">Sievert &amp; Co. <small><span class="chip profile-std">Standard</span> · AM SP · GT</small></td>
+            <td class="num" style="color:var(--dispute);">CHF 18'900</td>
+            <td>Kandidatin vor Probezeit-Ende zurückgetreten · Kunde bestreitet Erfolgshonorar</td>
+            <td>20.02.2026</td>
+            <td>NS (GF) + SP (AM)</td>
+            <td><span class="chip dispute">Timer pausiert</span></td>
+            <td>Besprechung geplant 28.04. · danach Vergleich oder Rechtsweg</td>
+            <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Honorarstreit-Flow:</strong> AM oder GF markiert Rechnung als strittig → Auto-Mahnung pausiert → GF-Eskalation (Vergleich / Storno / Rechtsweg). Wiederaufnahme der Mahn-Kadenz nur durch GF-Freigabe.
+    </div>
+  </div><!-- /tab-dispute -->
+
+  <!-- Tab: Historie -->
+  <div class="tab-pane" id="tab-hist">
+    <div class="cockpit-card">
+      <table class="cockpit-table">
+        <thead>
+          <tr>
+            <th>Rechnungs-Nr</th>
+            <th>Kunde</th>
+            <th style="text-align:right;">Brutto</th>
+            <th>Höchste Stufe</th>
+            <th>Abgeschlossen</th>
+            <th>Ausgang</th>
+            <th>Dauer</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nr">FN2026.01.0118</td>
+            <td class="kunde">Emch+Berger Gruppe <small>AM PW · ING</small></td>
+            <td class="num">CHF 28'500</td>
+            <td><span class="next-stage l1">Mahnung 1</span></td>
+            <td>08.04.2026</td>
+            <td style="color:var(--green);font-weight:600;">Bezahlt nach Mahnung 1</td>
+            <td>12 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.12.0388</td>
+            <td class="kunde">Vollrath Consulting <small>AM NP · PUR</small></td>
+            <td class="num">CHF 12'400</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>22.02.2026</td>
+            <td style="color:var(--green);font-weight:600;">Inkasso erfolgreich · 100 % eingegangen</td>
+            <td>82 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.11.0227</td>
+            <td class="kunde">Obrist Haustechnik <small>AM SP · GT</small></td>
+            <td class="num">CHF 16'240</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>12.02.2026</td>
+            <td style="color:var(--green);font-weight:600;">Inkasso erfolgreich · 100 %</td>
+            <td>68 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.10.0442</td>
+            <td class="kunde">Schneider Bau AG <small>AM SP · GT</small></td>
+            <td class="num">CHF 9'820</td>
+            <td><span class="next-stage l3">Mahnung 3</span></td>
+            <td>18.01.2026</td>
+            <td style="color:var(--green);font-weight:600;">Bezahlt nach Mahnung 3</td>
+            <td>54 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.05.0088</td>
+            <td class="kunde">Winkler Consulting <small>AM NP · PUR</small></td>
+            <td class="num" style="text-decoration:line-through;color:var(--text-light);">CHF 8'500</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>14.03.2026</td>
+            <td style="color:var(--red);font-weight:600;">Konkurs · uneinbringlich abgeschrieben</td>
+            <td>284 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+          <tr>
+            <td class="nr">FN2025.07.0102</td>
+            <td class="kunde">Weber &amp; Partner <small>AM YB · ARC</small></td>
+            <td class="num">CHF 18'900</td>
+            <td><span class="next-stage ink">Inkasso</span></td>
+            <td>08.04.2026</td>
+            <td style="color:var(--amber);font-weight:600;">Vergleich · 86 % eingegangen</td>
+            <td>214 Tage</td>
+            <td><button class="row-action" type="button">Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
+      <strong>Auswertung letzte 12 Monate:</strong> Recovery-Rate 92 % · ∅ Dauer 78 Tage · 1 Ausfall (Konkurs). Export für Berichte via „⎙ Mahn-Report PDF".
+    </div>
+  </div><!-- /tab-hist -->
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     DRAWER 540px · Mahnung vorbereiten (Bulk · Preview)
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="bulkOverlay" onclick="closeBulk()"></div>
+<div class="drawer" id="bulkDrawer">
+  <div class="drawer-head">
+    <h3>Mahnung 1 vorbereiten · 3 Rechnungen</h3>
+    <button class="close" type="button" onclick="closeBulk()">×</button>
+  </div>
+  <div class="drawer-body">
+
+      <div style="background:color-mix(in srgb,var(--amber) 8%,var(--surface));border-left:3px solid var(--amber);padding:10px 12px;border-radius:3px;margin-bottom:14px;font-size:12px;">
+        <strong>Bulk-Vorbereitung · kein Direkt-Versand.</strong> Drafts werden nach Bestätigung erstellt · Versand pro Rechnung einzeln im Detail-Drawer oder via Liste.
+      </div>
+
+      <!-- Empfänger-Zusammenfassung -->
+      <div style="font-size:11.5px;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px;">Empfänger</div>
+      <div class="kv-row"><span class="k">Emch+Berger Gruppe</span><span class="v">FN2026.03.0917 · CHF 36'083</span></div>
+      <div class="kv-row"><span class="k">Frauenfelder Holding</span><span class="v">FN2026.04.1055 · CHF 22'500</span></div>
+      <div class="kv-row"><span class="k">Volare Group AG</span><span class="v">FN2026.03.0924 · CHF 10'810</span></div>
+      <div class="kv-row" style="border-bottom:none;padding-top:8px;"><span class="k">Total Mahnungs-Volumen</span><span class="v" style="color:var(--accent);font-family:'Libre Baskerville',serif;">CHF 69'393</span></div>
+
+      <!-- Template-Preview -->
+      <div style="font-size:11.5px;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin:16px 0 8px;">Anschreiben-Vorschau · Stufe 1 · Sie-Form</div>
+      <div class="tpl-preview">
+        <div class="greet">Sehr geehrte Damen und Herren</div>
+        <div>In der Hektik des Tagesgeschäfts ist unsere Rechnung <strong>{{rechnungs_nr}}</strong> über <strong>CHF {{brutto}}</strong> sicherlich untergegangen. Wir erlauben uns daher, Sie höflich an den offenen Betrag zu erinnern.</div>
+        <div style="margin-top:8px;">Bitte überweisen Sie den Rechnungsbetrag innert <strong>5 Tagen</strong>, spätestens bis zum <strong>{{neue_frist}}</strong>, auf unser bekanntes Konto.</div>
+        <div style="margin-top:8px;">Sollte sich Ihre Zahlung mit diesem Schreiben überschnitten haben, betrachten Sie es bitte als gegenstandslos.</div>
+        <div class="sig">Freundliche Grüsse<br>Nenad Stoparanovic · Founder<br>Peter Wiederkehr · Head CE&amp;BT</div>
+      </div>
+
+      <!-- Optionen -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:12px;">
+        <input type="checkbox" checked id="opt-setdeadline">
+        <label for="opt-setdeadline">Neue Frist +5 Tage setzen (02.05.2026)</label>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;">
+        <input type="checkbox" id="opt-fee">
+        <label for="opt-fee" style="color:var(--text-light);">Mahngebühr CHF 0 (MVP · vertagt bis AGB-Revision)</label>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;">
+        <input type="checkbox" id="opt-interest">
+        <label for="opt-interest" style="color:var(--text-light);">Verzugszins 5 % p.a. ausweisen (MVP · vertagt)</label>
+      </div>
+
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-secondary" type="button" onclick="closeBulk()">Abbrechen</button>
+    <button class="btn btn-secondary" type="button">⎙ PDF-Vorschau</button>
+    <button class="btn btn-primary" type="button">3 Drafts erstellen</button>
+  </div>
+</div>
+
+<script>
+  function openBulk(){
+    document.getElementById('bulkOverlay').classList.add('active');
+    document.getElementById('bulkDrawer').classList.add('active');
+  }
+  function closeBulk(){
+    document.getElementById('bulkOverlay').classList.remove('active');
+    document.getElementById('bulkDrawer').classList.remove('active');
+  }
+
+  document.querySelectorAll('.tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      if (!target) return;
+      document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + target)?.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
