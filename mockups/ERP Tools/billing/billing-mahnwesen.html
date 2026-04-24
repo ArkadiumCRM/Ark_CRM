@@ -22,7 +22,7 @@
   .strip-card.l2 { border-left-color:var(--amber); }
   .strip-card.l3 { border-left-color:var(--red); }
   .strip-card.ink { border-left-color:#7c2d12; }
-  .strip-card.pause { border-left-color:#c2410c; }
+  .strip-card.pause { border-left-color:var(--dispute); }
   .strip-card .lbl { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; }
   .strip-card .cnt { font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700; color:var(--text); margin:6px 0 3px; }
   .strip-card .amt { font-size:11.5px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
@@ -70,7 +70,7 @@
   .chip.overdue { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
   .chip.profile-key { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
   .chip.profile-std { background:color-mix(in srgb,var(--text-light) 18%,var(--bg)); color:var(--text-mid); }
-  .chip.dispute { background:color-mix(in srgb,#c2410c 18%,var(--bg)); color:#c2410c; }
+  .chip.dispute { background:color-mix(in srgb,var(--dispute) 18%,var(--bg)); color:var(--dispute); }
 
   .next-stage { display:inline-block; padding:4px 10px; border-radius:3px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
   .next-stage.l1 { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:color-mix(in srgb,var(--amber) 90%,#000); border:1px solid color-mix(in srgb,var(--amber) 40%,var(--bg)); }
@@ -94,20 +94,21 @@
   .tl-mini .last { color:var(--text-mid); }
   .tl-mini .overdue { color:var(--red); font-weight:600; }
 
-  /* Modal 420px · Mahn-Versand-Preview */
-  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:50; display:none; align-items:center; justify-content:center; }
-  .modal-overlay.active { display:flex; }
-  .modal { background:var(--surface); width:420px; max-width:92vw; max-height:88vh; border-radius:6px; box-shadow:0 20px 48px rgba(0,0,0,0.22); display:flex; flex-direction:column; overflow:hidden; }
-  .modal-head { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-  .modal-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:15px; font-weight:700; color:var(--accent); }
-  .modal-head .close { background:none; border:none; font-size:20px; color:var(--text-light); cursor:pointer; padding:0 4px; }
-  .modal-body { padding:16px 18px; overflow-y:auto; font-size:12.5px; }
-  .modal-foot { padding:12px 18px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:flex-end; gap:8px; }
+  /* Drawer 540px · Mahn-Versand-Preview */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:50; display:none; }
+  .drawer-overlay.active { display:block; }
+  .drawer { position:fixed; top:0; right:0; width:540px; max-width:96vw; height:100vh; background:var(--surface); box-shadow:-8px 0 28px rgba(0,0,0,0.18); z-index:55; display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.25s ease-out; }
+  .drawer.active { transform:translateX(0); }
+  .drawer-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville',serif; font-size:15px; font-weight:700; color:var(--accent); }
+  .drawer-head .close { background:none; border:none; font-size:22px; color:var(--text-light); cursor:pointer; padding:0 4px; }
+  .drawer-body { padding:18px 20px; overflow-y:auto; flex:1; font-size:12.5px; }
+  .drawer-foot { padding:12px 20px; border-top:1px solid var(--border); background:var(--bg); display:flex; justify-content:flex-end; gap:8px; }
   .btn { border-radius:3px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; }
   .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
   .btn-secondary { background:var(--surface); border-color:var(--border); color:var(--text); }
 
-  /* Modal · Preview-Template-Box */
+  /* Drawer · Preview-Template-Box */
   .tpl-preview { background:var(--bg); padding:14px 16px; border-radius:3px; font-size:12px; line-height:1.5; color:var(--text); border:1px solid var(--border); }
   .tpl-preview .greet { font-weight:700; margin-bottom:8px; }
   .tpl-preview .sig { margin-top:12px; font-style:italic; color:var(--text-mid); font-size:11px; }
@@ -248,7 +249,7 @@
           <td><span class="next-stage l3" style="opacity:0.45;">Mahnung 3</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">pausiert bis Dispute-Resolution</div></td>
           <td>GF-Eskalation · keine Auto-Mahnung</td>
           <td><div class="risk"><span class="dot amber"></span>dispute</div></td>
-          <td><button class="row-action" type="button" style="color:#c2410c;border-color:#c2410c;">⚑ Eskalieren</button></td>
+          <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
         </tr>
         <tr>
           <td class="cb"><input type="checkbox"></td>
@@ -379,13 +380,13 @@
           <tr>
             <td class="nr">FN2026.01.0142</td>
             <td class="kunde">Sievert &amp; Co. <small><span class="chip profile-std">Standard</span> · AM SP · GT</small></td>
-            <td class="num" style="color:#c2410c;">CHF 18'900</td>
+            <td class="num" style="color:var(--dispute);">CHF 18'900</td>
             <td>Kandidatin vor Probezeit-Ende zurückgetreten · Kunde bestreitet Erfolgshonorar</td>
             <td>20.02.2026</td>
             <td>NS (GF) + SP (AM)</td>
             <td><span class="chip dispute">Timer pausiert</span></td>
             <td>Besprechung geplant 28.04. · danach Vergleich oder Rechtsweg</td>
-            <td><button class="row-action" type="button" style="color:#c2410c;border-color:#c2410c;">⚑ Eskalieren</button></td>
+            <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
           </tr>
         </tbody>
       </table>
@@ -483,15 +484,15 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
-     MODAL 420px · Mahnung vorbereiten (Bulk · Preview)
+     DRAWER 540px · Mahnung vorbereiten (Bulk · Preview)
      ═══════════════════════════════════════════════════════════════════ -->
-<div class="modal-overlay" id="bulkModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h3>Mahnung 1 vorbereiten · 3 Rechnungen</h3>
-      <button class="close" type="button" onclick="closeBulk()">×</button>
-    </div>
-    <div class="modal-body">
+<div class="drawer-overlay" id="bulkOverlay" onclick="closeBulk()"></div>
+<div class="drawer" id="bulkDrawer">
+  <div class="drawer-head">
+    <h3>Mahnung 1 vorbereiten · 3 Rechnungen</h3>
+    <button class="close" type="button" onclick="closeBulk()">×</button>
+  </div>
+  <div class="drawer-body">
 
       <div style="background:color-mix(in srgb,var(--amber) 8%,var(--surface));border-left:3px solid var(--amber);padding:10px 12px;border-radius:3px;margin-bottom:14px;font-size:12px;">
         <strong>Bulk-Vorbereitung · kein Direkt-Versand.</strong> Drafts werden nach Bestätigung erstellt · Versand pro Rechnung einzeln im Detail-Drawer oder via Liste.
@@ -528,18 +529,23 @@
         <label for="opt-interest" style="color:var(--text-light);">Verzugszins 5 % p.a. ausweisen (MVP · vertagt)</label>
       </div>
 
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-secondary" type="button" onclick="closeBulk()">Abbrechen</button>
-      <button class="btn btn-secondary" type="button">⎙ PDF-Vorschau</button>
-      <button class="btn btn-primary" type="button">3 Drafts erstellen</button>
-    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-secondary" type="button" onclick="closeBulk()">Abbrechen</button>
+    <button class="btn btn-secondary" type="button">⎙ PDF-Vorschau</button>
+    <button class="btn btn-primary" type="button">3 Drafts erstellen</button>
   </div>
 </div>
 
 <script>
-  function openBulk(){ document.getElementById('bulkModal').classList.add('active'); }
-  function closeBulk(){ document.getElementById('bulkModal').classList.remove('active'); }
+  function openBulk(){
+    document.getElementById('bulkOverlay').classList.add('active');
+    document.getElementById('bulkDrawer').classList.add('active');
+  }
+  function closeBulk(){
+    document.getElementById('bulkOverlay').classList.remove('active');
+    document.getElementById('bulkDrawer').classList.remove('active');
+  }
 
   document.querySelectorAll('.tabs .tab').forEach(tab => {
     tab.addEventListener('click', () => {
