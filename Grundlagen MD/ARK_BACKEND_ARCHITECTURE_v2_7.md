@@ -1,10 +1,11 @@
-# ARK Backend Architecture – v2.5
+# ARK Backend Architecture – v2.7
 
-**Stand:** 2026-04-14
+**Stand:** 2026-04-24
 **System:** Greenfield – modularer Monolith mit Event Spine
-**Status:** Review-Reif (Ergänzung v2.4)
-**Referenz-DB:** ARK_DATABASE_SCHEMA_v1.3 (189+ Tabellen inkl. 28 neue)
-**Vorgänger:** v2.4 (2026-03-30)
+**Status:** Review-Reif (Ergänzung v2.6)
+**Referenz-DB:** ARK_DATABASE_SCHEMA_v1.5 (~204 Tabellen inkl. 28 E-Learning)
+**Vorgänger:** v2.6 (2026-04-19 · Zeit-Modul intern) / v2.5 (2026-04-14 · Outlook-Update) / v2.4 (2026-03-30)
+**Scope v2.7:** E-Learning-Modul Sub A/B/C/D (52 neue Events · 25 Worker · 80+ API-Endpoints · Gate-Middleware · RLS auf 28 Tabellen)
 
 ## Änderungen v2.4 → v2.5
 
@@ -3924,6 +3925,400 @@ Neue `firm_settings` (19) · siehe `ARK_STAMMDATEN_EXPORT_v1_3.md` §90.8.
 
 - **v2.5 (Outlook-Update 2026-04-17):** Individuelle User-Tokens (Shared-Mailbox verworfen)
 - **v2.6 (2026-04-19):** Zeit-Modul · 21 Endpoints · 12 Events · 9 Workers · 4 Sagas · 3 WS-Channels · Scanner-Integration · DSG-Audit-Worker
+- **v2.7 (2026-04-24):** E-Learning-Modul Sub A/B/C/D · 52 neue Events · 25 Workers · 80+ Endpoints · Gate-Middleware · pgvector-RAG · Python-Worker-Service · Multi-Tenant-RLS
+
+---
+
+# TEIL N — E-Learning-Modul Backend (v2.7)
+
+**Quellen:**
+- `specs/ARK_BACKEND_ARCHITECTURE_PATCH_ELEARNING_v0_1.md` (Sub A)
+- `specs/ARK_BACKEND_ARCHITECTURE_PATCH_ELEARNING_SUB_B_v0_1.md`
+- `specs/ARK_BACKEND_ARCHITECTURE_PATCH_ELEARNING_SUB_C_v0_1.md`
+- `specs/ARK_BACKEND_ARCHITECTURE_PATCH_ELEARNING_SUB_D_v0_1.md`
+
+**Scope:** Events, Worker, Endpoints, RLS, Gate-Middleware, Integrationen (LLM, Embeddings, Git, pgvector, Python-Worker-Service).
+
+---
+
+## N.1 Event-Typen (52 neue, Kategorie `elearning`)
+
+**CHECK-Erweiterung** `dim_event_types.event_category`: `+'elearning'`.
+
+### Sub A (16):
+`elearn_course_assigned` · `elearn_course_started` · `elearn_course_completed` · `elearn_lesson_completed` · `elearn_quiz_attempted` · `elearn_quiz_passed` · `elearn_quiz_failed` · `elearn_freitext_submitted` · `elearn_freitext_reviewed` · `elearn_certificate_issued` · `elearn_badge_earned` · `elearn_refresher_triggered` · `elearn_role_change_triggered` · `elearn_assignment_expired` · `elearn_onboarding_finalized` · `elearn_content_imported`
+
+### Sub B (12):
+`elearn_source_registered` · `elearn_source_ingested` · `elearn_source_ingest_failed` · `elearn_generation_job_started` · `elearn_generation_job_completed` · `elearn_generation_job_failed` · `elearn_artifact_created` · `elearn_artifact_approved` · `elearn_artifact_rejected` · `elearn_artifact_edited` · `elearn_artifact_published` · `elearn_cost_cap_exceeded`
+
+### Sub C (12):
+`elearn_newsletter_issue_drafted` · `elearn_newsletter_issue_published` · `elearn_newsletter_assigned` · `elearn_newsletter_read_started` · `elearn_newsletter_read_completed` · `elearn_newsletter_quiz_passed` · `elearn_newsletter_quiz_failed` · `elearn_newsletter_reminder_sent` · `elearn_newsletter_escalated_to_head` · `elearn_newsletter_expired` · `elearn_newsletter_subscription_added` · `elearn_newsletter_enforcement_override_set`
+
+### Sub D (12):
+`elearn_gate_rule_created` · `elearn_gate_rule_updated` · `elearn_gate_rule_disabled` · `elearn_gate_blocked` · `elearn_gate_overridden` · `elearn_gate_override_created` · `elearn_gate_override_ended` · `elearn_cert_expired` · `elearn_cert_revoked` · `elearn_course_major_version_bumped` · `elearn_compliance_snapshot_created` · `elearn_login_popup_shown`
+
+---
+
+## N.2 Worker (25 neue)
+
+### Sub A (10 Worker)
+
+**Event-driven:**
+
+| Worker | Trigger | Concurrency | Retry |
+|---|---|---|---|
+| `elearn-onboarding-initializer` | `user_created` | 1 | 3× |
+| `elearn-role-change-watcher` | `user_role_changed`/`user_sparte_changed` | 1 | 3× |
+| `elearn-cert-generator` | `elearn_course_completed` (letztes Modul) | 3 | 3× |
+| `elearn-badge-engine` | `elearn_course_completed`/`elearn_quiz_passed` | 5 | 3× |
+| `elearn-freitext-llm-scorer` | `elearn_freitext_submitted` | 5 | 3× (Backoff 2s/8s/30s) |
+| `elearn-attempt-finalizer` | `elearn_freitext_reviewed` (letzter pending Review) | 5 | 3× |
+| `elearn-import-worker` | `POST /api/elearn/admin/import` (HTTP-sync + BG-Parse) | 1 pro Tenant | 2× |
+
+**Cron:**
+
+| Worker | Schedule | Zweck |
+|---|---|---|
+| `elearn-refresher-trigger` | `0 2 * * *` | Refresher-Assignments erzeugen |
+| `elearn-deadline-expiry` | `0 6 * * *` | Abgelaufene Assignments expirieren |
+| `elearn-sla-reminder` | `0 * * * *` | Freitext-Queue-Reminder + Escalation + Auto-Confirm |
+
+### Sub B (8 Worker)
+
+**Event-driven:**
+
+| Worker | Trigger | Concurrency | Retry |
+|---|---|---|---|
+| `elearn-source-ingestor` | `elearn_source_registered` | 3 | 3× |
+| `elearn-chunk-embedder` | `elearn_source_ingested` | 5 | 3× (Rate-Limit-aware) |
+| `elearn-generation-orchestrator` | cluster-ready (intern) | 2 | 3× |
+| `elearn-publish-worker` | `elearn_artifact_approved` | 1 pro Tenant | 3× |
+
+**Cron:**
+
+| Worker | Schedule | Zweck |
+|---|---|---|
+| `elearn-web-scraper` | `0 * * * *` (Due-Set) | Fällige Web-Sources scrapen |
+| `elearn-crm-query-runner` | `0 * * * *` (Due-Set) | Fällige CRM-Queries ausführen |
+| `elearn-cost-monitor` | `0 1 * * *` | Monats-Cost aggregieren, Caps prüfen |
+| `elearn-artifact-expiry` | `0 4 * * *` | Drafts > 30 Tage ohne Review archivieren |
+
+### Sub C (7 Worker)
+
+**Cron:**
+
+| Worker | Schedule | Zweck |
+|---|---|---|
+| `elearn-newsletter-generator` | `{tenant}.elearn_c.publish_day_cron` (Default `0 6 * * 1`) | Pro Sparte ein Draft-Issue via R1–R4b |
+| `elearn-newsletter-publisher` | `0 * * * *` | Draft → `published` ab `publish_at`, Assignments |
+| `elearn-newsletter-reminder` | `0 * * * *` | Reminder / Escalation / Expiry |
+| `elearn-newsletter-archive-purger` | `0 2 1 * *` | Issues älter `archive_retention_months` archivieren |
+
+**Event-driven:**
+
+| Worker | Trigger | Concurrency |
+|---|---|---|
+| `elearn-newsletter-subscription-initializer` | `user_created` | 1 |
+| `elearn-newsletter-subscription-syncer` | `user_sparte_changed`/`user_role_changed` | 1 |
+| `elearn-newsletter-assignment-creator` | `elearn_newsletter_issue_published` | 1 pro Tenant |
+
+### Sub D (7 Worker)
+
+**Cron:**
+
+| Worker | Schedule | Zweck |
+|---|---|---|
+| `elearn-compliance-snapshot` | `{tenant}.elearn_d.compliance_snapshot_cron` (Default `0 3 * * *`) | Pro aktivem MA Compliance-Score |
+| `elearn-cert-expiry-monitor` | `0 4 * * *` | Certs `issued_at + refresher_months < NOW()` → `expired` |
+| `elearn-override-ender` | `0 * * * *` | Overrides mit `valid_until < NOW()` beenden |
+| `elearn-snapshot-pruner` | `0 2 2 * *` | Snapshots älter `compliance_report_retention_months` löschen |
+
+**Event-driven:**
+
+| Worker | Trigger | Zweck |
+|---|---|---|
+| `elearn-cert-revoker` | `elearn_course_major_version_bumped` | Alle aktiven Certs dieses Kurses `revoked` |
+| `elearn-gate-cache-invalidator` | `elearn_gate_rule_*`/`elearn_gate_override_*` | Cache-Pattern invalidieren |
+| `elearn-deadline-rescheduler` | `elearn_gate_override_ended` | Pausierte Deadlines verschieben |
+| `elearn-ma-cache-invalidator` | `elearn_quiz_passed`/`elearn_newsletter_quiz_passed`/`elearn_course_completed` | MA-spezifischen Cache-Key löschen |
+
+---
+
+## N.3 API-Endpoints (80+ neu)
+
+### Namespace `/api/elearn/*`
+
+**Auth-Middleware:** `requireAuth()` extrahiert `tenant_id`, `user_id`, `role` aus JWT → `SET app.current_tenant_id = $1` (PostgreSQL-Session-Var für RLS).
+
+**Route-Guards:**
+- `/my/*` → jeder authentifizierte User (nur eigene Ressourcen via RLS)
+- `/team/*` → `role IN ('head_of', 'admin', 'backoffice')` + Sparten-Filter via `reports_to`/`sparte`
+- `/admin/*` → `role IN ('admin', 'backoffice')`
+
+### Sub A Endpoints (~30)
+
+- **MA:** `/my/courses` · `/my/courses/:course_id` · `/my/lessons/:lid/progress` · `/my/quiz/start/:module_id` · `/my/quiz/submit/:attempt_id` · `/my/certificates` · `/my/badges` · `/my/curriculum`
+- **Team:** `/team/overview` · `/team/members/:ma_id` · `/team/assignments` · `/team/freitext-queue` · `/team/freitext-queue/:review_id/submit` · `/team/curriculum-override/:ma_id` · `/team/ad-hoc-assignment`
+- **Admin:** `/admin/courses` · `/admin/courses/:course_id` · `/admin/courses/:course_id/publish` · `/admin/courses/:course_id/archive` · `/admin/curriculum-templates` · `/admin/import` (Git-Webhook) · `/admin/import/manual` · `/admin/analytics/kpis` · `/admin/analytics/problem-courses`
+
+### Sub B Endpoints (~15, Admin-only)
+
+- `/admin/content-gen` · `/admin/content-gen/jobs` · `/admin/content-gen/jobs/:job_id` · `/admin/content-gen/trigger` · `/admin/content-gen/sources` · `/admin/content-gen/sources/:source_id` · `/admin/content-gen/sources/test` (Dry-Run) · `/admin/content-gen/review` · `/admin/content-gen/review/:artifact_id/approve` · `/admin/content-gen/review/:artifact_id/reject` · `/admin/content-gen/review/:artifact_id/edit` · `/admin/content-gen/review/:artifact_id/publish` · `/admin/content-gen/cost-report`
+
+### Sub C Endpoints (~15)
+
+- **MA:** `/my/newsletter` · `/my/newsletter/:issue_id` · `/my/newsletter/:issue_id/read-start` · `/my/newsletter/:issue_id/sections/:idx/progress` · `/my/newsletter/:issue_id/quiz/start` · `/my/newsletter/subscriptions` (GET/POST/DELETE)
+- **Team:** `/team/newsletter/queue` · `/team/newsletter/:assignment_id/remind`
+- **Admin:** `/admin/newsletter/issues` (GET) · `/admin/newsletter/issues/:id` · `/admin/newsletter/issues/:id/publish` · `/admin/newsletter/issues/:id/archive` · `/admin/newsletter/generate` · `/admin/newsletter/config` (GET/POST) · `/admin/newsletter/metrics` · `/admin/newsletter/enforcement-override`
+
+### Sub D Endpoints (~12 + interner Middleware-Fallback)
+
+- **MA:** `/my/gate-status` · `/my/compliance`
+- **Team:** `/team/compliance` · `/team/compliance/:ma_id` · `/team/overrides` (POST) · `/team/overrides/:id/end` (POST)
+- **Admin:** `/admin/gate/rules` (GET/POST) · `/admin/gate/rules/:id` (PUT) · `/admin/gate/rules/:id/disable` (POST) · `/admin/gate/events` · `/admin/gate/overrides` (GET/POST) · `/admin/compliance/metrics` · `/admin/compliance/report` (CSV/XLSX) · `/admin/certs/:id/revoke` (POST) · `/admin/feature-catalog`
+- **Intern:** `/gate/check?feature=<key>` (Middleware-Fallback, hardcoded allowed)
+
+### Git-Webhook (Sub A)
+
+**`POST /api/elearn/admin/import`:**
+- Auth: Shared-Secret HMAC-SHA256 Header `X-Git-Signature` (pro Tenant in `dim_elearn_tenant.settings.webhook_secret`)
+- Body: GitHub-Webhook-Payload
+- Response: 202 Accepted + Job-ID (Background-Processing)
+- Alternative manuell: `POST /api/elearn/admin/import/manual` mit `{ commit_sha? }`
+
+---
+
+## N.4 Gate-Middleware (Sub D)
+
+**Decorator:** `@gate_feature(<feature_key>)` auf jedem CRM-API-Endpoint. Middleware-Flow siehe `specs/ARK_E_LEARNING_SUB_D_INTERACTIONS_v0_1.md §2.1`. Bei Block: HTTP 403 + JSON-Body → Frontend-Interceptor → Redirect zu Gate-Page.
+
+**Hardcoded-Allowed-Paths (kein Gate-Check):**
+- `/api/auth/*` (Login/Logout/Refresh/Password-Reset)
+- `/api/elearn/*` (E-Learning selbst, Catch-22-Vermeidung)
+- `/api/health`, `/api/version`
+- `/api/elearn/gate/check` (interner Fallback)
+
+**Decorator-Discovery:** Statisches Script scannt alle Routes → generiert `FEATURE_CATALOG.ts`. CI-Check: jede neue Route **muss** `@gate_feature` oder `@gate_exempt` haben.
+
+**Cache-Layer:**
+- **Prod:** Redis, Key-Pattern `gate:{tenant_id}:{ma_id}`, TTL aus `settings.elearn_d.gate_cache_ttl_seconds` (Default 60s)
+- **Dev/Test:** In-Memory LRU (max 10k Keys)
+
+**Invalidation:** Rule-CRUD → `DEL gate:{tenant_id}:*` · Override-CRUD → `DEL gate:{tenant_id}:{ma_id}` · Assignment-State-Change → `DEL gate:{tenant_id}:{ma_id}`.
+
+**Performance:** p99 < 1 ms Cache-Hit, 5-15 ms Cache-Miss.
+
+---
+
+## N.5 Feature-Catalog
+
+Konstante in `lib/gate/feature_catalog.ts` (Backend) + `lib/gate/feature_catalog.py` (Python-Worker). ~40 Feature-Keys:
+
+```ts
+export const FEATURE_CATALOG = [
+  // Write (~30): create_candidate, update_candidate, delete_candidate,
+  //              create_account, ..., send_email, export_data
+  // Read (~10): read_candidate, ..., read_admin_*
+  // E-Learning (hardcoded allowed): elearning_*
+] as const;
+```
+
+**Admin-UI** (`/erp/elearn/admin/gate-rules.html`) zeigt Liste als Multi-Select im Rules-Editor.
+
+---
+
+## N.6 RLS-Policies (28 neue Tabellen)
+
+**Template pro Tabelle:**
+
+```sql
+ALTER TABLE <tabelle> ENABLE ROW LEVEL SECURITY;
+CREATE POLICY <table>_tenant_isolation ON <tabelle>
+  USING (tenant_id = current_setting('app.current_tenant_id')::uuid)
+  WITH CHECK (tenant_id = current_setting('app.current_tenant_id')::uuid);
+```
+
+**MA-Scoping-Ausnahmen:**
+- `fact_elearn_progress`, `fact_elearn_quiz_attempt`: MA-Endpoints zusätzlich `ma_id = app.current_user_id`
+- `fact_elearn_freitext_review`: Head-Scope via `dim_user.reports_to`
+- `fact_elearn_newsletter_assignment`: MA für `/my/*`, Team via `reports_to`, Admin tenant-weit
+- `fact_elearn_compliance_snapshot`: MA self-view, Team via `reports_to`
+
+---
+
+## N.7 Integrationen
+
+### N.7.1 Anthropic (LLM)
+
+- SDK: `anthropic` Python-Package (Sub B) + Anthropic-SDK (Sub A Freitext-Scorer)
+- Modell-Default Sub A: `claude-haiku-4-5` (Freitext-Scoring)
+- Modell-Default Sub B: `claude-sonnet-4-6` (Generation), `claude-haiku-4-5` (Tagging/Clustering)
+- Confidence-Escalation: bei `confidence < 60` Retry mit `claude-sonnet-4-6`
+- Cost-Tracking: `dim_elearn_generation_job.total_tokens_in/out` + `total_cost_eur`; pro LLM-Call Insert in `fact_llm_usage` (bestehend) mit `purpose='elearn_freitext'`
+- Rate-Limit: Concurrency 5 pro Tenant, Exponential-Backoff bei 429, 3× Retry
+- Prompt-Caching: Cluster-Prompt cacheable, Per-Artifact-Prompts nicht
+
+### N.7.2 Embeddings (Sub B)
+
+- Default: OpenAI `text-embedding-3-small` (1536 dims) via `openai` SDK
+- Override pro Tenant: `voyageai` `voyage-3` (1024 dims) — Migration-Pfad in DB-Patch
+- Batch-Size: 20 Chunks pro Request, max 8 192 Tokens gesamt
+- Durchsatz: ~100 Chunks/Min (OpenAI Standard-Tier)
+
+### N.7.3 Git / GitHub (Sub B)
+
+- `GitPython` für lokale Git-Ops (clone, commit, push)
+- GitHub-API via `httpx` für PR-Creation bei `publish_mode='pr'`
+- Auth: GitHub-PAT, Vault-Ref in `dim_elearn_tenant.settings.elearn_b.github_pat_vault_ref`
+- Content-Repo-Clone: shallow (`--depth 1 --branch main`), lokal gecached
+
+### N.7.4 pgvector (Sub B)
+
+**Ähnlichkeits-Suche für RAG-Context:**
+```sql
+SELECT chunk_id, text, 1 - (embedding <=> $query_embedding) AS similarity
+FROM dim_elearn_chunk
+WHERE tenant_id = $1
+ORDER BY embedding <=> $query_embedding
+LIMIT 15;
+```
+
+Latenz < 100 ms mit IVFFLAT bis ~1 Mio Chunks/Tenant. Reindex bei > 10 % Chunk-Wachstum.
+
+### N.7.5 S3/Blob (Sub A)
+
+- Bucket `ark-elearn-certs`, Pfad `<tenant_id>/<cert_id>.pdf`
+- Public-read (Download-Link in `dim_elearn_certificate.pdf_url`)
+- Lifecycle: kein Auto-Delete (Audit-Retention 10 Jahre Default)
+
+---
+
+## N.8 Pipeline-Runner `tools/elearn-content-gen/` (Sub B)
+
+**Python-Package, separater Worker-Service:**
+
+```
+tools/elearn-content-gen/
+├── pyproject.toml
+├── config/
+│   ├── elearn-web-sources.yml.example
+│   └── elearn-crm-queries.yml.example
+├── queries/
+│   └── debriefings_by_sparte.sql
+├── lib/
+│   ├── llm_client.py, embedding_client.py, dedup.py, frontmatter_io.py
+│   ├── config_loader.py, pricing.py, anonymizer.py, models.py
+├── runners/
+│   ├── r1_ingest.py (PDF/DOCX/Book/Web/CRM-Query-Dispatcher)
+│   ├── r2_chunk_embed.py (tiktoken + openai/voyageai)
+│   ├── r3_cluster.py (numpy + pgvector + LLM-Naming)
+│   ├── r4_generate.py (anthropic SDK + Pydantic-YAML)
+│   ├── r4b_newsletter.py (Sub C · Port aus LinkedIn-Automation)
+│   └── r5_publish.py (GitPython + httpx GitHub-API)
+├── prompts/
+│   ├── topic_cluster.md, lesson_draft.md, quiz_generation.md
+│   ├── newsletter_structure.md, newsletter_section_body.md, newsletter_quiz_generation.md
+└── cli.py  # python -m elearn_content_gen <command>
+```
+
+**Port aus** `C:\Linkedin_Automatisierung` (selektive Wiederverwendung: `anthropic_client`, `embedding_client`, `dedup`, `frontmatter_io`, `config_loader`).
+
+**Deployment:** Separater Python-Worker-Service `elearn-content-gen-worker` (kommuniziert mit Postgres via `DATABASE_URL`). Alternative: Event-Processor ruft Python-Subprozess (MVP-Option).
+
+---
+
+## N.9 Notifications (neue Templates)
+
+### Sub A
+`elearn-new-assignment` · `elearn-refresher-due` · `elearn-deadline-warning` (7 Tage vorher) · `elearn-deadline-expired` · `elearn-quiz-result` · `elearn-cert-issued` · `elearn-freitext-queue-reminder` (SLA Tag 3) · `elearn-freitext-queue-escalation` (SLA Tag 7)
+
+### Sub B
+`elearn-generation-ready` · `elearn-cost-cap-warning` (≥95 %) · `elearn-cost-cap-exceeded` · `elearn-source-ingest-failed` · `elearn-publish-failed` · `elearn-review-sla-reminder` (> 3 Tage)
+
+### Sub C
+`elearn-nl-issue-published` · `elearn-nl-reminder` · `elearn-nl-escalated-to-head` · `elearn-nl-expired` · `elearn-nl-quiz-passed` · `elearn-nl-generation-failed`
+
+### Sub D
+`elearn-gate-blocked` (debounced, nur 1. Block pro Session) · `elearn-cert-expired` · `elearn-cert-revoked` · `elearn-override-created` · `elearn-override-ended` · `elearn-compliance-low` (Score < 50 %) · `elearn-team-compliance-report` (wöchentlich)
+
+---
+
+## N.10 Queue-Integration
+
+- Alle E-Learning-Events fliessen durch bestehende `fact_event_queue` → `event-processor.worker.ts`
+- Neue Event-Typen bekommen Router-Dispatch auf entsprechende E-Learning-Worker
+- Keine eigene Queue-Infrastruktur
+- Priorität `default`
+- LLM-Scorer (Sub A) kann in Phase-2 auf separaten High-Throughput-Worker ausgelagert werden
+
+---
+
+## N.11 Cross-Sub-Integration
+
+### Sub A → Sub C: Attempt-Finalizer
+`elearn-attempt-finalizer` (Sub A) erkennt `attempt.attempt_kind='newsletter'` und emittiert zusätzlich `elearn_newsletter_quiz_passed`/`failed` (Cross-Event-Emission im Worker-Code dokumentieren).
+
+### Sub A → Sub D: Major-Version-Event
+Sub-A-Import-Worker emittiert `elearn_course_major_version_bumped` wenn:
+- `dim_elearn_course.version` inkrementiert UND `content_hash`-Diff ≥ 30 %
+- ODER YAML-Frontmatter explizites Flag `major_version: true`
+
+Payload: `{course_id, old_version, new_version, hash_diff_pct}`.
+
+### Sub B → Sub A: Publish-Loop
+Sub-B-R5-Publish schreibt Git-Commit in `arkadium/ark-elearning-content` → GitHub-Webhook → Sub-A `POST /api/elearn/admin/import` → parse + upsert.
+
+### Sub C → Sub D: Enforcement-State
+Sub D liest `fact_elearn_newsletter_assignment.enforcement_mode_applied='hard'` für Gate-Page-Trigger. Sub C schreibt nur State, kein Enforcement-Code in Sub C.
+
+---
+
+## N.12 Performance-Annahmen
+
+### Sub A
+- `GET /my/courses` mit Unlock-Computation: 1-2 JOINs, < 50 ms
+- `GET /team/freitext-queue`: Index `(tenant_id, status)` Partial, < 20 ms
+- Kurs-Content Edge-Cacheable (15 min TTL), Content-Hash-Bust bei Import
+- Volumen/Jahr/Tenant: ~50 Kurse, ~500 Module, ~5 000 Lessons, ~10 000 Fragen, ~30 aktive Lerner, ~100k Progress-Events, ~10k Quiz-Attempts, ~2 000 Freitext-Reviews
+
+### Sub B
+- pgvector RAG-Retrieval: < 100 ms mit IVFFLAT
+- Generation-Job: ~2-5 Min pro Modul (~300 Module/Monat bei single-Worker)
+- Kosten: ~0.5-2.0 € pro generiertes Modul (Claude Sonnet 4.6)
+- Volumen/Jahr/Tenant: ~500 Sources, ~100k Chunks, ~1 000 Jobs, ~10 000 Artefakte
+
+### Sub C
+- Newsletter-Generation: ~3-5 Min pro Sparte (4 Sections + Quiz)
+- Assignment-Bulk-Insert: 150 Rows (30 MA × 5 Sparten) < 200 ms
+- Reminder-Scan: stündlich via Index `(tenant_id, deadline)`
+
+### Sub D
+- Gate-Middleware: < 1 ms Cache-Hit, 5-15 ms Miss
+- Cache-Miss-Rate: ~5 % bei 60 s TTL
+- Compliance-Snapshot pro MA: ~50 ms Multi-JOIN
+- Audit-Log: ~150k Events/Monat/MA → Partition/Archive nach 12 Monaten
+
+---
+
+## N.13 Sicherheit
+
+- **Tenant-Isolation:** RLS auf DB + App-Layer-Guards + Route-Scoping
+- **CRM-Daten-Zugriff (Sub B R1):** dedizierter read-only Postgres-Role `elearn_content_gen_reader` (nur SELECT auf `fact_history`/`dim_candidate`/`dim_account`/`dim_user`)
+- **Anonymisierung Sub B:** `anonymizer.py` pre-persist · Tests in `tests/anonymizer_test.py` für PII-Patterns
+- **GitHub-PAT:** Vault-Ref, nie in Logs/Settings-Klartext, Runtime-Only Memory
+- **Webhook-Sicherheit:** HMAC-SHA256 pro Tenant in `dim_elearn_tenant.settings.webhook_secret`
+- **Rule-Engine Sub D:** keine freie SQL, nur fest-codierte Trigger-Evaluatoren → SQL-Injection-sicher
+- **Override-Audit:** Creation/End geloggt mit `created_by`+`reason`
+- **Bypass-Events:** Admin-only, audit-protokolliert
+- **Audit-Log unveränderlich:** keine UPDATE/DELETE auf `fact_elearn_gate_event` (nur INSERT)
+- **DSGVO:** MA-Delete kaskadiert Enrollments/Attempts · Certs bleiben bis Tenant-Retention (Default 10 Jahre)
+
+---
+
+## N.14 Hardcoded-Allowed-Paths in Gate-Middleware
+
+- `/api/auth/*` · `/api/elearn/*` · `/api/health` · `/api/version` · `/api/elearn/gate/check`
+- Frontend-Interceptor (Sub D) fängt `403 GATE_BLOCKED` → `window.location.href = redirect_to`
 
 ---
 

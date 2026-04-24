@@ -600,3 +600,83 @@ Alle 18 Einträge aus Session 13946034 (2026-04-19 22:59–23:46) in Sammel-Pass
 **Digest-Stale:** alle 4 Digests regenerieren nach nächstem Commit.
 
 **Hinweis:** Die 18 Einzel-Einträge bleiben als Audit-Trail sichtbar; Status über diese Zusammenfassung auf `resolved` gesetzt.
+
+## [2026-04-24 15:59] session-63ae8c3a
+- **File:** ARK_STAMMDATEN_EXPORT_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:02] session-63ae8c3a
+- **File:** ARK_STAMMDATEN_EXPORT_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:02] session-63ae8c3a
+- **File:** ARK_DATABASE_SCHEMA_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:04] session-63ae8c3a
+- **File:** ARK_DATABASE_SCHEMA_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:04] session-63ae8c3a
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_7.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:06] session-63ae8c3a
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_7.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:07] session-63ae8c3a
+- **File:** ARK_FRONTEND_FREEZE_v1_12.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:09] session-63ae8c3a
+- **File:** ARK_FRONTEND_FREEZE_v1_12.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:09] session-63ae8c3a
+- **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-24 16:11] session-63ae8c3a
+- **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)

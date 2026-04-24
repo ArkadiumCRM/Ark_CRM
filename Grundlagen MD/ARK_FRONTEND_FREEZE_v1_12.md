@@ -1,9 +1,10 @@
-# ARK Frontend Architecture – v1.10
+# ARK Frontend Architecture – v1.12
 
-**Stand:** 2026-04-14
-**Status:** Review-Reif (Ergänzung v1.9)
-**Referenzen:** ARK Backend v2.5 · ARK Datenbank Schema v1.3 · ARK Stammdaten-Export v1.3 · ARK Gesamtsystem-Übersicht v1.2
-**Vorgänger:** v1.9 (2026-03-30)
+**Stand:** 2026-04-24
+**Status:** Review-Reif (Ergänzung v1.11)
+**Referenzen:** ARK Backend v2.7 · ARK Datenbank Schema v1.5 · ARK Stammdaten-Export v1.5 · ARK Gesamtsystem-Übersicht v1.4
+**Vorgänger:** v1.11 (2026-04-19 · Zeit-Modul intern) / v1.10 (2026-04-14) / v1.9 (2026-03-30)
+**Scope v1.12:** E-Learning-Modul Sub A/B/C/D · CRM↔ERP-Topbar-Toggle · ERP-Workspace · 25+ neue Pages · Gate-Middleware-Interceptor
 
 ## Änderungen v1.9 → v1.10
 
@@ -4173,3 +4174,301 @@ Approval-Chain-Stepper in Monats-Übersicht:
 
 - **v1.10:** Email/Outlook-UI-Freeze
 - **v1.11 (2026-04-19):** Zeit-Modul · 7 Screens + 5 Drawer + 2 Modals · Scanner-Widget · DSG-Hinweise · 3-Konten-Saldi · Approval-Chain-Stepper
+- **v1.12 (2026-04-24):** E-Learning-Modul Sub A/B/C/D · Topbar-Toggle CRM↔ERP · ERP-Workspace-Pattern · 25+ Pages · neue Components (Markdown-Renderer, Scroll-Tracker, Quiz-Runner, Freitext-Review-Drawer, Newsletter-Reader, Gate-Page) · Frontend-Middleware (HTTP-Interceptor für 403 GATE_BLOCKED) · Login-Popup · Topbar-Gate-Badge
+
+---
+
+# TEIL O — E-Learning-Modul Frontend (v1.12)
+
+**Quellen:**
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_v0_1.md` (Sub A)
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_B_v0_1.md`
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_C_v0_1.md`
+- `specs/ARK_FRONTEND_FREEZE_PATCH_ELEARNING_SUB_D_v0_1.md`
+
+## O.1 Topbar-Toggle CRM ↔ ERP
+
+**Position:** links neben User-Avatar in globaler Topbar. Sichtbar auf allen Seiten (CRM + ERP).
+
+**Verhalten:**
+- Segmented-Control mit zwei Buttons: **CRM** | **ERP**
+- Aktiver Modus visuell hervorgehoben (Primärfarbe-Fill, weisser Text)
+- Klick wechselt Workspace: ändert Sidebar-Inhalt + Default-Route
+- Persistenz: letzter Modus pro User in `localStorage`
+- CRM-Default: `/crm/candidates.html` (bzw. letzte CRM-Route)
+- ERP-Default: `/erp/elearn/dashboard.html` (bzw. letzte ERP-Route)
+
+**Zugriffs-Rechte:** alle authentifizierten User sehen beide Modi; Sidebar-Items ohne Zugriff werden ausgeblendet.
+
+## O.2 ERP-Workspace-Struktur
+
+```
+/erp
+  /elearn               ← E-Learning (dieser Patch)
+  /hr                   ← bestehender HR-ERP
+  /zeit                 ← bestehender Zeit-ERP (v1.11)
+  /commission           ← bestehender Commission-ERP
+  /billing              ← bestehendes Billing-Modul
+```
+
+**ERP-Sidebar-Pattern** (identisch zu CRM-Sidebar):
+- Linke Fixed-Width-Spalte 240 px
+- Top-Logo (Arkadium)
+- Module-Gruppierung mit Section-Headern
+- Aktives Item hervorgehoben (Primary-Fill-Background + weisser Text)
+- Icons aus `lucide-icons`
+- Section-Header kollabierbar, Default: alle offen
+
+**ERP-Sidebar-Struktur E-Learning:**
+```
+── E-Learning
+   • Meine Kurse
+   • Mein Newsletter           (nach Sub C)
+   • Mein Compliance-Status    (nach Sub D)
+   ─ (Trenner, Head+Admin)
+   • Team-Übersicht
+   • Team-Compliance           (nach Sub D)
+   • Freitext-Queue
+   • Zuweisungen
+   ─ (Trenner, Admin only)
+   • Kurs-Katalog
+   • Curriculum-Templates
+   • Import-Dashboard
+   • Analytics
+   ─ (Trenner, Content-Gen)
+   • Content-Generator         (Sub B)
+   • Content-Sources
+   • Review-Queue
+   ─ (Trenner, Newsletter)
+   • Newsletter-Konfiguration  (Sub C)
+   • Newsletter-Archiv
+   • Newsletter-Queue
+   ─ (Trenner, Progress-Gate)
+   • Compliance-Dashboard      (Sub D)
+   • Gate-Rules
+   • Override-Verwaltung
+   • Gate-Audit-Log
+```
+
+## O.3 Neue Page-Templates (25+)
+
+Pfad: `mockups/erp/elearn/*.html`. Baseline-Styling = CRM (candidates.html).
+
+### Sub A · MA-Pages (6)
+
+| Datei | Zweck |
+|---|---|
+| `dashboard.html` | Einstieg: Onboarding-Progress (neue MA) oder Tabs Pflicht/Empfohlen/Entdecken |
+| `course.html` | Kurs-Übersicht: Module-Liste, Progress-Ringe, Pre-Test-Button |
+| `lesson.html` | Markdown-Viewer + Embeds + Scroll-Tracker + Sticky-Footer |
+| `quiz.html` | Quiz-Runner mit 6 Fragen-Components |
+| `quiz-result.html` | Ergebnis + Feedback + Retry/Weiter |
+| `certificates.html` | Zertifikate-Grid + Badge-Wall |
+
+### Sub A · Gemeinsame Pages (Head+Admin) (3)
+
+| Datei | Zweck |
+|---|---|
+| `team.html` | Team-Übersicht (Head: eigenes Team / Admin: tenant-weit) |
+| `freitext-queue.html` | Review-Queue mit LLM-Vorschlag + Head-Override-Drawer |
+| `assignments.html` | Massen-Zuweisung (Sparte/Rolle/Kurs-Filter) |
+
+### Sub A · Admin-only (4)
+
+`admin/courses.html` · `admin/curriculum.html` · `admin/imports.html` · `admin/analytics.html`
+
+### Sub B · Admin-only (3)
+
+`admin/content-gen.html` (Job-Timeline + Cost-Widget) · `admin/content-gen-sources.html` (Upload/Web/CRM-Tabs) · `admin/content-gen-review.html` (Review-Queue + Drawer)
+
+### Sub C · MA + Admin (5)
+
+`newsletter.html` (Übersicht mit Aktuell/Archiv-Tabs) · `newsletter-issue.html` (Reader mit Section-Timeline) · `admin/newsletter-config.html` · `admin/newsletter-archive.html` · `admin/newsletter-queue.html`
+
+### Sub D · MA + Team + Admin (6)
+
+`gate.html` (Full-Screen-Gate bei Block) · `my/compliance.html` (MA-Self-View) · `team/compliance.html` (Head-Dashboard) · `admin/compliance.html` (Admin-Dashboard) · `admin/gate-rules.html` · `admin/gate-overrides.html` · `admin/gate-audit.html`
+
+## O.4 Neue Components
+
+### O.4.1 Markdown-Renderer mit Embed-Blocks
+
+**Zweck:** Lesson-Content + Newsletter-Sections rendern. Standard-Markdown + Custom-Embed-Syntax:
+- `![[image.png]]` → `<img>` aus Content-Repo-Assets
+- `{% embed pdf="file.pdf" page=N %}` → embedded PDF-Viewer (PDF.js)
+- `{% embed youtube="ID" %}` → YouTube-iframe
+
+**Pre-Rendering:** Server-side Markdown-to-HTML beim Import, Embed-Blocks zu Platzhaltern, Client-side Komponenten-Mount.
+
+### O.4.2 Scroll-Tracker-Hook
+
+**API:** `useScrollTracker({ lessonId, minReadSeconds, onComplete })`
+- Trackt max erreichten `scroll_pct` pro Lesson/Section
+- Trackt aktive `time_sec` (pausiert bei Tab-Unfocus via `visibilitychange`)
+- Heartbeat alle 15 s via `POST /api/elearn/my/lessons/:lid/progress` (Sub A) bzw. 10 s für Newsletter-Sections (Sub C)
+- Callback `onComplete` bei `scroll_pct ≥ 90` UND `time_sec ≥ minReadSeconds`
+
+### O.4.3 Quiz-Runner Components (6)
+
+| Component | Typ |
+|---|---|
+| `<QuizQuestionMC>` | Radio-Buttons |
+| `<QuizQuestionMulti>` | Checkboxes |
+| `<QuizQuestionTrueFalse>` | Zwei grosse Buttons |
+| `<QuizQuestionZuordnung>` | Drag-Drop Left→Right |
+| `<QuizQuestionReihenfolge>` | Drag-Drop Vertikal-Sort |
+| `<QuizQuestionFreitext>` | Textarea + Char-Counter |
+
+**Gemeinsame API:** `{ question, value, onChange, disabled }`.
+
+### O.4.4 Freitext-Review-Drawer (Sub A)
+
+540 px Slide-in, Sections: Frage · Musterlösung (readonly) · Keywords (Chips) · MA-Antwort (readonly) · LLM-Vorschlag (Score-Bar farbkodiert + Feedback-Text) · Head-Override (Score-Slider 0-100 vorgefüllt + Feedback-Textarea) · Action-Buttons.
+
+**Shortcuts:** `J`/`K` next/prev · `Enter` LLM bestätigen · `O` Override-Fokus · `Esc` schliessen.
+
+### O.4.5 Review-Drawer (Sub B)
+
+540 px, Tabs: **Preview** (rendered Markdown / YAML) · **Source** (raw, editierbar) · **Chunks** (Scroll-Liste mit Similarity-Score) · **Diff** (Side-by-Side alt vs. neu).
+
+**Editor:** CodeMirror mit Markdown- bzw. YAML-Syntax-Highlighting + Schema-Validation. Live-Diff gegen Original-Draft.
+
+**Shortcuts:** `A` Freigeben · `R` Ablehnen · `E` Bearbeiten · `P` Direkt publishen · `J`/`K` next/prev · `Esc`.
+
+### O.4.6 Newsletter-Reader (Sub C)
+
+**Layout single-page scroll, Max-Width 720 px Reading-Column:**
+- Hero-Titel + Subtitle mit Lese-Fortschritt (2/4 Sections)
+- Left-Rail Section-Timeline (IntersectionObserver + Scroll-Spy, Checkmark bei `read_at`)
+- Enforcement-Badge oben rechts (`soft`=orange „Erinnerung" / `hard`=rot „Pflicht-Lock")
+- Sticky-Footer mit Quiz-Button (disabled bis alle Sections `read_at`)
+- Quiz → `POST /quiz/start` → Weiterleitung zu Sub-A-Quiz-Runner
+
+**Shortcuts:** `Space`/`PageDown` nächste Section · `PageUp` vorherige · `Q` Quiz starten · `Esc` zurück.
+
+### O.4.7 Countdown-Widget (Sub C)
+
+- Zeigt „noch X Tage" bis Deadline
+- Farbcodierung: grün > 3 Tage · gelb 1-3 · rot < 1 Tag/überfällig
+- Tooltip mit konkretem Datum
+
+### O.4.8 Enforcement-Badge (Sub C)
+
+- `soft` → orange Pill „Erinnerung"
+- `hard` → rote Pill „Pflicht-Lock"
+
+### O.4.9 Sparte-Chip (Sub C)
+
+**Farbcodierung (Vorschlag, cross-Module konsistent):** ARC=#D32F2F · GT=#1976D2 · ING=#388E3C · PUR=#7B1FA2 · REM=#F57C00 · uebergreifend=#616161.
+
+### O.4.10 State-spezifische Card-Visuals (Sub A Dashboard)
+
+| State | Visual |
+|---|---|
+| Gesperrt (Step-Lock) | Ausgegraut + Schloss-Icon + Tooltip |
+| Nicht gestartet | „Jetzt starten" + Progress-Ring 0 % |
+| In Arbeit | Progress-Ring X % + Modul-Stand |
+| Quiz in Prüfung | Badge „In Prüfung" + Progress eingefroren |
+| Abgeschlossen | Checkmark + „Erneut anschauen" |
+| Refresher fällig | Gelbes Badge „Refresher fällig" + Deadline |
+| Deadline überschritten | Rotes Badge „Überfällig" |
+
+### O.4.11 Cost-Widget (Sub B)
+
+- Progress-Bar Verbrauch/Cap
+- Farb-Codierung: grün < 80 %, gelb 80-95 %, rot ≥ 95 %
+- Tooltip mit Top-5-Jobs
+- Klick → Cost-Detail-Modal mit Aggregation nach Source-Kind
+
+### O.4.12 Global Components Sub D (CRM + ERP)
+
+**Login-Popup (nach erfolgreichem Login):**
+- 540 px, Fokus-Trap, `aria-modal="true"`
+- Trigger: `pending_items >= settings.login_popup_min_items` via `/api/elearn/my/gate-status`
+- Buttons: „Zu meinen Aufgaben" (primary, `Enter`) · „Später" (disabled wenn `blocks_active`, `Esc`)
+
+**Topbar-Gate-Badge:**
+- Icon: Checkliste mit Count-Badge (rot bei Pflicht, orange bei Soft)
+- Hover: Mini-Popover mit Top-5 pending Items
+- Klick: `/erp/elearn/dashboard.html` (MA) bzw. `/erp/elearn/admin/compliance.html` (Admin/Head)
+- Conditional: nur sichtbar wenn `pending_items > 0`
+
+**Dashboard-Banner (Sub A Dashboard):**
+- Gelb bei Soft, rot bei Hard
+- „Ausblenden" snoozt 30 Min (localStorage)
+- Klickbar pro Item → Direct Navigation
+
+### O.4.13 HTTP-Interceptor (Sub D)
+
+**Globaler Axios/Fetch-Interceptor:**
+```ts
+interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 403 && error.response.data?.error === 'GATE_BLOCKED') {
+      const { rule_id, redirect_to } = error.response.data;
+      window.location.href = redirect_to;  // → /erp/elearn/gate.html?rules=<id>
+      return;
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+**Ausnahme:** eigene Gate-Status-Calls (`/api/elearn/my/gate-status`) fangen den Fehler selbst ab.
+
+## O.5 Design-System-Konformität (E-Learning-Regeln)
+
+- **Umlaute:** UTF-8 echte ä/ö/ü/Ä/Ö/Ü/ß (nie `ae`/`oe`/`ue`/`ss`)
+- **Drawer-Default-Regel:** 540 px Slide-in für CRUD / Bestätigungen / Mehrschritt-Eingaben. Modale nur für kurze Confirms, Blocker, System-Notifications
+- **Datum-Eingabe-Regel:** nativer `<input type="date">`/`datetime-local`/`time` (Kalender-Picker UND manuelle Tastatur-Eingabe)
+- **Keine DB-Technikdetails** in User-facing-Texten: keine `dim_*`/`fact_*`/`_fk`/`_id`-Namen. UI-Label-Vocabulary aus Stammdaten-Patch
+- **Admin-/Debug-Ausnahmen:** wrappen mit `<!-- ark-lint-skip:begin reason=admin-elearn -->…<!-- ark-lint-skip:end -->`
+- **Gate-Page-Regel:** darf Gate-Rule-Namen (Admin-frei formulierbar) zeigen, aber keine Feature-Keys (technisch `create_candidate`). Stattdessen dynamische deutsche Labels
+- **Admin-Audit-Page** darf Feature-Keys und Rule-Namen zeigen (Admin-Kontext)
+
+## O.6 Base-Tokens (identisch CRM)
+
+- Primary: Arkadium-Blau
+- Score-Farbcodierung: rot < 50, gelb 50-79, grün ≥ 80 (cross-Module konsistent)
+- Lock-State: neutral-grey-400 + Schloss-Icon
+- Spacing: 8 px Grid
+- Component-Kits: Base wie CRM (Shadcn-basiert)
+
+## O.7 Responsive-Breakpoints
+
+- **Desktop (≥ 1280 px):** Full-Layout, Tabellen mehrspaltig, Drawer rechts
+- **Tablet (768-1279 px):** Tabellen Horizontal-Scroll, Drawer Full-Width-Bottom
+- **Mobile:** Gate-Page + Login-Popup mobile-optimiert · andere E-Learning-Pages Phase-2/3
+- Newsletter-Reader Mobile: Section-Timeline horizontal-scroll oben, Column 100 %
+
+## O.8 A11y
+
+- Gate-Page: `role="alertdialog"` mit ARIA-Describe auf pending Items
+- Login-Popup: Fokus-Trap, `aria-modal="true"`
+- Compliance-Score-Gauge: ARIA-Live bei Wert-Änderung
+- Quiz-Runner: ARIA-Live-Regionen für Score-Announcements
+- Section-Timeline: ARIA-Tree-Role
+- Countdown-Widget: ARIA-Live bei Status-Wechsel (< 1 Tag)
+- Quiz-Start-Button: `aria-disabled` + Tooltip warum disabled
+- Farb-Codierung nicht alleiniger Info-Träger (Icons + Text redundant)
+- Focus-Management: nach Drawer-Close Fokus zurück auf Zeilen-Row
+
+## O.9 Keyboard-Shortcuts Übersicht
+
+| Kontext | Shortcuts |
+|---|---|
+| Quiz-Runner | Tab-Navigation, Enter-Submit |
+| Freitext-Review-Drawer (Sub A) | `J`/`K` next/prev · `Enter` LLM bestätigen · `O` Override · `Esc` |
+| Review-Queue (Sub B) | `A`/`R`/`E`/`P` Aktionen · `J`/`K` · `Esc` |
+| Newsletter-Reader (Sub C) | `Space`/`PageDown`/`PageUp` · `Q` Quiz · `Esc` |
+| Newsletter-Archive-Drawer (Sub C) | `J`/`K` · `P` Publish · `A` Archive · `Esc` |
+| Compliance-Dashboard (Sub D) | `F` Filter · `E` Export · `J`/`K` |
+| Gate-Rules-Editor (Sub D) | `N` Neue Rule · `D` Disable · `E` Edit |
+| Login-Popup (Sub D) | `Enter` primary · `Esc` wenn enabled |
+
+## O.10 Cross-Module-Integration
+
+- **Topbar-Tab „E-Learning" 🎓** in alle 6 anderen Shells integriert (crm/hr/zeit/commission/billing/elearn)
+- **postMessage-Theme-Sync:** Broadcast in 6 Shells, Message-Listener in 65+ Content-Pages (ab E-Learning-Release 2026-04-24)
+- **Shared `_shared/theme-sync.js`** vorhanden, noch nicht referenziert — Umstellung Folge-Session

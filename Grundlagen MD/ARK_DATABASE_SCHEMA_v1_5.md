@@ -1,9 +1,10 @@
-# ARK Datenbank – Schema v1.3
+# ARK Datenbank – Schema v1.5
 
-**Stand:** 2026-04-14
+**Stand:** 2026-04-24
 **System:** Greenfield – komplett neuer Aufbau, keine Altlasten
-**Status:** Review-Reif (Ergänzung v1.2)
-**Vorgänger:** v1.2 (2026-03-30)
+**Status:** Review-Reif (Ergänzung v1.4)
+**Vorgänger:** v1.4 (2026-04-19 · Zeit-Modul intern) / v1.3 (2026-04-14)
+**Scope v1.5:** E-Learning-Modul Sub A/B/C/D (28 neue Tabellen + pgvector + Cert-Erweiterung + RLS-Policies)
 
 ## Änderungen v1.2 → v1.3
 
@@ -2655,3 +2656,315 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;  -- GIST-Overlap-Constraints
 
 - **v1.3 (2026-04-17):** Dok-Generator (dim_document_templates + fact_documents)
 - **v1.4 (2026-04-19):** Zeit-Modul (15 Tabellen + 4 Views + 9 Enums + btree_gist)
+- **v1.5 (2026-04-24):** E-Learning-Modul Sub A/B/C/D (28 neue Tabellen · pgvector-Extension · 2 Spalten `dim_user` · 4 Spalten `dim_elearn_certificate` · 30+ Indizes inkl. IVFFLAT · 20+ CHECK-Constraints · RLS-Policies auf allen tenant-scoped Tabellen). Tabellen-Count aktualisiert: ~204 Tabellen + 8 Views.
+
+---
+
+## v1.5 — E-Learning-Modul (Sub A/B/C/D)
+
+**Quellen:**
+- `specs/ARK_DATABASE_SCHEMA_PATCH_ELEARNING_v0_1.md` (Sub A)
+- `specs/ARK_DATABASE_SCHEMA_PATCH_ELEARNING_SUB_B_v0_1.md`
+- `specs/ARK_DATABASE_SCHEMA_PATCH_ELEARNING_SUB_C_v0_1.md`
+- `specs/ARK_DATABASE_SCHEMA_PATCH_ELEARNING_SUB_D_v0_1.md`
+
+**Multi-Tenant-Architektur:** E-Learning ist die erste konsequent Multi-Tenant-fähige Komponente in ARK. Alle 28 neuen Tabellen tragen `tenant_id UUID NOT NULL`. RLS-Policies auf allen Tabellen (`tenant_id = current_setting('app.current_tenant_id')::uuid`). Zweck: White-Label-Option für externe Recruiting-Boutiquen.
+
+### Extensions
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;  -- pgvector für RAG-Embeddings (Sub B)
+-- btree_gist bereits aus v1.4 (Zeit-Modul)
+```
+
+### Sub A · Kurs-Katalog (15 neue Tabellen)
+
+**Tenant + Content (5):**
+```sql
+dim_elearn_tenant (tenant_id PK, name, settings JSONB, created_at)
+
+dim_elearn_course (course_id PK, tenant_id, slug, title, description, sparten[], rollen[],
+                   duration_min, refresher_months, pretest_enabled, pretest_pass_threshold,
+                   pass_threshold, version, content_hash, status, published_at,
+                   created_at, updated_at, UNIQUE(tenant_id, slug))
+
+dim_elearn_module (module_id PK, tenant_id, course_id FK, slug, order_idx, title, description,
+                   content_hash, UNIQUE(tenant_id, course_id, slug),
+                   UNIQUE(tenant_id, course_id, order_idx))
+
+dim_elearn_lesson (lesson_id PK, tenant_id, module_id FK, slug, order_idx, title, content_md,
+                   min_read_seconds, content_hash, UNIQUE(tenant_id, module_id, slug),
+                   UNIQUE(tenant_id, module_id, order_idx))
+
+dim_elearn_question (question_id PK, tenant_id, module_id FK, type, payload JSONB,
+                     version, content_hash, created_at)
+```
+
+**Zuweisung / Onboarding (3):**
+```sql
+dim_elearn_curriculum_template (template_id PK, tenant_id, sparte NULLABLE, rolle,
+                                course_ids UUID[], created_by, updated_at,
+                                UNIQUE(tenant_id, sparte, rolle))
+
+fact_elearn_curriculum_override (override_id PK, tenant_id, ma_id, course_ids UUID[],
+                                 reason, overridden_by, created_at,
+                                 UNIQUE(tenant_id, ma_id))
+
+fact_elearn_assignment (assignment_id PK, tenant_id, ma_id, course_id FK, reason, deadline,
+                        assigned_by, assigned_at, status)
+```
+
+**Progress / Quiz (4):**
+```sql
+fact_elearn_enrollment (enrollment_id PK, tenant_id, ma_id, course_id FK, course_version,
+                        status, started_at, completed_at,
+                        UNIQUE(tenant_id, ma_id, course_id))
+
+fact_elearn_progress (progress_id PK, tenant_id, enrollment_id FK, lesson_id FK,
+                      scroll_reached_pct, time_spent_sec, completed_at,
+                      UNIQUE(tenant_id, enrollment_id, lesson_id))
+
+fact_elearn_quiz_attempt (attempt_id PK, tenant_id, enrollment_id FK, module_id FK,
+                          attempt_kind DEFAULT 'module',  -- module | pretest | newsletter
+                          score_pct, passed, status, attempted_at, finalized_at,
+                          answers JSONB)
+
+fact_elearn_freitext_review (review_id PK, tenant_id, attempt_id FK, question_id FK,
+                             ma_answer, llm_score, llm_feedback, llm_model,
+                             head_score, head_feedback, reviewed_by, reviewed_at, status)
+```
+
+**Cert / Badges / Audit (3):**
+```sql
+dim_elearn_certificate (cert_id PK, tenant_id, ma_id, course_id FK, course_version,
+                        pdf_url, issued_at,
+                        -- v1.5 Sub-D-Erweiterung: +status, +expired_at, +revoked_at, +revoked_reason
+                        UNIQUE(tenant_id, ma_id, course_id, course_version))
+
+dim_elearn_badge (badge_id PK, tenant_id, ma_id, badge_type, course_id NULLABLE, earned_at)
+
+fact_elearn_import_log (log_id PK, tenant_id, commit_sha, trigger, imported, updated,
+                        archived, errors JSONB, started_at, finished_at)
+```
+
+**ALTER `dim_user`:**
+```sql
+ALTER TABLE dim_user ADD COLUMN elearn_onboarding_active BOOLEAN NOT NULL DEFAULT false;
+```
+
+**Indizes Sub A:**
+```sql
+CREATE INDEX ON fact_elearn_progress (tenant_id, enrollment_id, lesson_id);
+CREATE INDEX ON fact_elearn_quiz_attempt (tenant_id, enrollment_id, module_id);
+CREATE INDEX ON fact_elearn_freitext_review (tenant_id, status) WHERE status = 'pending';
+CREATE INDEX ON fact_elearn_assignment (tenant_id, ma_id, status) WHERE status = 'active';
+CREATE INDEX ON dim_elearn_course (tenant_id, status, slug);
+```
+
+**CHECK-Constraints Sub A:**
+- `fact_elearn_assignment.reason IN ('onboarding','adhoc','refresher','role_change','sparten_change')`
+- `fact_elearn_assignment.status IN ('active','completed','expired','cancelled')`
+- `fact_elearn_quiz_attempt.attempt_kind IN ('module','pretest','newsletter')`
+- `fact_elearn_quiz_attempt.status IN ('in_progress','pending_review','finalized')`
+- `fact_elearn_freitext_review.status IN ('pending','confirmed','overridden','confirmed_auto')`
+- `dim_elearn_question.type IN ('mc','multi','freitext','truefalse','zuordnung','reihenfolge')`
+- `dim_elearn_course.status IN ('draft','published','archived')`
+
+### Sub B · Content-Generator (5 neue Tabellen + pgvector)
+
+```sql
+dim_elearn_source (source_id PK, tenant_id, kind, slug, uri, title, sparten[],
+                   target_course_slug, meta JSONB, priority, content_hash,
+                   last_ingested_at, enabled, created_at,
+                   UNIQUE(tenant_id, kind, slug))
+
+dim_elearn_chunk (chunk_id PK, tenant_id, source_id FK, order_idx, text, tokens,
+                  embedding VECTOR(1536), meta JSONB, content_hash, created_at,
+                  UNIQUE(tenant_id, source_id, order_idx))
+
+dim_elearn_generation_job (job_id PK, tenant_id, source_ids UUID[], cluster_summary JSONB,
+                           llm_model, llm_prompt_template, status, triggered_by,
+                           triggered_by_user, total_tokens_in, total_tokens_out,
+                           total_cost_eur, started_at, finished_at, error)
+
+dim_elearn_generated_artifact (artifact_id PK, tenant_id, job_id FK, artifact_type,
+                               target_course_slug, target_module_slug, target_lesson_slug,
+                               draft_content JSONB, preview_text, source_chunk_ids UUID[],
+                               status, reviewer, reviewed_at, published_commit_sha, created_at)
+
+fact_elearn_review_action (action_id PK, tenant_id, artifact_id FK, action, reviewer,
+                           reason, diff JSONB, created_at)
+```
+
+**Indizes Sub B (inkl. IVFFLAT Vector-Search):**
+```sql
+CREATE INDEX ON dim_elearn_source (tenant_id, kind, enabled);
+CREATE INDEX ON dim_elearn_chunk (tenant_id, source_id, order_idx);
+CREATE INDEX ON dim_elearn_chunk USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX ON dim_elearn_generation_job (tenant_id, status, started_at DESC);
+CREATE INDEX ON dim_elearn_generated_artifact (tenant_id, status) WHERE status IN ('draft', 'approved');
+CREATE INDEX ON fact_elearn_review_action (tenant_id, artifact_id, created_at DESC);
+```
+
+**CHECK-Constraints Sub B:**
+- `dim_elearn_source.kind IN ('pdf','docx','book','web_url','crm_query')`
+- `dim_elearn_source.priority IN ('low','normal','high')`
+- `dim_elearn_generation_job.status IN ('pending','running','ready_for_review','completed','failed')`
+- `dim_elearn_generation_job.triggered_by IN ('scheduled','manual','event')`
+- `dim_elearn_generated_artifact.artifact_type IN ('course_meta','module','lesson','quiz_question','quiz_pool')`
+- `dim_elearn_generated_artifact.status IN ('draft','approved','rejected','published','superseded')`
+- `fact_elearn_review_action.action IN ('approve','reject','edit','delete','publish')`
+
+**Tenant-Settings `elearn_b.*`:** `publish_mode`, `content_repo`, `content_repo_branch`, `github_pat_vault_ref`, `llm_model_default='claude-sonnet-4-6'`, `llm_model_tagging='claude-haiku-4-5'`, `llm_cost_cap_monthly_eur=200`, `llm_cost_cap_per_job_eur=5`, `embedding_model='text-embedding-3-small'`, `embedding_dimension=1536`, `scheduler.enabled`, `scheduler.default_schedule='0 3 * * 1'`, `review.auto_assign_to_head`, `review.review_sla_days=7`.
+
+### Sub C · Wochen-Newsletter (4 neue Tabellen)
+
+```sql
+dim_elearn_newsletter_issue (issue_id PK, tenant_id, sparte, issue_week, publish_at,
+                             title, sections JSONB, quiz_module_id, quiz_pass_threshold,
+                             enforcement_mode, generation_job_id, status, published_at, created_at,
+                             UNIQUE(tenant_id, sparte, issue_week))
+
+dim_elearn_newsletter_subscription (sub_id PK, tenant_id, ma_id, sparte, mode,
+                                    enforcement_override, created_at,
+                                    UNIQUE(tenant_id, ma_id, sparte))
+
+fact_elearn_newsletter_assignment (assignment_id PK, tenant_id, ma_id, issue_id FK,
+                                   assigned_at, deadline, read_started_at, read_completed_at,
+                                   quiz_attempt_id FK, status, reminder_sent_at,
+                                   escalated_to_head_at, enforcement_mode_applied,
+                                   UNIQUE(tenant_id, ma_id, issue_id))
+
+fact_elearn_newsletter_section_read (read_id PK, tenant_id, assignment_id FK,
+                                     section_idx, scroll_pct, time_spent_sec, read_at,
+                                     UNIQUE(tenant_id, assignment_id, section_idx))
+```
+
+**ALTER `dim_user`:**
+```sql
+ALTER TABLE dim_user ADD COLUMN newsletter_enforcement_override TEXT;
+-- NULL = tenant default · 'soft' | 'hard'
+```
+
+**Indizes Sub C:**
+```sql
+CREATE INDEX ON dim_elearn_newsletter_issue (tenant_id, sparte, issue_week);
+CREATE INDEX ON dim_elearn_newsletter_issue (tenant_id, status, publish_at);
+CREATE INDEX ON dim_elearn_newsletter_subscription (tenant_id, ma_id);
+CREATE INDEX ON fact_elearn_newsletter_assignment (tenant_id, ma_id, status)
+  WHERE status IN ('pending','reading','quiz_in_progress');
+CREATE INDEX ON fact_elearn_newsletter_assignment (tenant_id, deadline)
+  WHERE status NOT IN ('quiz_passed','expired');
+CREATE INDEX ON fact_elearn_newsletter_section_read (tenant_id, assignment_id, section_idx);
+```
+
+**CHECK-Constraints Sub C:**
+- `dim_elearn_newsletter_issue.status IN ('draft','review','published','archived')`
+- `dim_elearn_newsletter_issue.enforcement_mode IN ('soft','hard')`
+- `dim_elearn_newsletter_subscription.mode IN ('auto','opt_in','opt_out')`
+- `dim_elearn_newsletter_subscription.enforcement_override IS NULL OR IN ('soft','hard')`
+- `fact_elearn_newsletter_assignment.status IN ('pending','reading','quiz_in_progress','quiz_passed','quiz_failed','expired')`
+- `fact_elearn_newsletter_assignment.enforcement_mode_applied IN ('soft','hard')`
+- `dim_user.newsletter_enforcement_override IS NULL OR IN ('soft','hard')`
+
+**Tenant-Settings `elearn_c.*`:** `enforcement_mode='soft'`, `publish_day_cron='0 6 * * 1'`, `reminder_hours=48`, `escalation_days=7`, `expiry_days=14`, `sparten_enabled=['ARC','GT','ING','PUR','REM']`, `sparte_uebergreifend_enabled=true`, `archive_retention_months=24`, `max/min_sections_per_issue=6/3`, `max/min_questions_per_quiz=10/3`, `allow_auto_opt_out=false`.
+
+**Interop mit Sub A:** Newsletter-Quiz nutzt `fact_elearn_quiz_attempt` mit `attempt_kind='newsletter'`. Pro Issue synthetisches `dim_elearn_module` (Owner: versteckter Newsletter-Kurs pro Tenant mit `slug='__newsletter__'`).
+
+### Sub D · Progress-Gate (4 neue Tabellen + Cert-Erweiterung)
+
+```sql
+dim_elearn_gate_rule (rule_id PK, tenant_id, name, description, trigger_type,
+                      trigger_params JSONB, blocked_features TEXT[], allowed_features TEXT[],
+                      priority, enabled, created_by, created_at, updated_at,
+                      UNIQUE(tenant_id, name))
+
+fact_elearn_gate_event (event_id PK, tenant_id, ma_id, rule_id, feature_key, action,
+                        override_id, request_meta JSONB, occurred_at)
+
+dim_elearn_gate_override (override_id PK, tenant_id, ma_id, override_type, reason,
+                          valid_from, valid_until, pause_deadlines, created_by,
+                          created_at, ended_at, ended_by)
+
+fact_elearn_compliance_snapshot (snapshot_id PK, tenant_id, ma_id, snapshot_date,
+                                 courses_total, courses_completed,
+                                 newsletters_total, newsletters_passed,
+                                 certs_active, certs_expired, overdue_items,
+                                 compliance_score,
+                                 UNIQUE(tenant_id, ma_id, snapshot_date))
+```
+
+**ALTER `dim_elearn_certificate` (Sub-A-Tabelle):**
+```sql
+ALTER TABLE dim_elearn_certificate
+  ADD COLUMN status TEXT NOT NULL DEFAULT 'active',
+  ADD COLUMN expired_at TIMESTAMPTZ,
+  ADD COLUMN revoked_at TIMESTAMPTZ,
+  ADD COLUMN revoked_reason TEXT;
+
+ALTER TABLE dim_elearn_certificate ADD CONSTRAINT ck_cert_status
+  CHECK (status IN ('active','expired','revoked'));
+
+CREATE INDEX ON dim_elearn_certificate (tenant_id, ma_id, status) WHERE status = 'active';
+```
+
+**Indizes Sub D:**
+```sql
+CREATE INDEX ON dim_elearn_gate_rule (tenant_id, enabled, priority DESC) WHERE enabled = true;
+CREATE INDEX ON fact_elearn_gate_event (tenant_id, ma_id, occurred_at DESC);
+CREATE INDEX ON fact_elearn_gate_event (tenant_id, feature_key, occurred_at DESC);
+CREATE INDEX ON fact_elearn_gate_event (tenant_id, rule_id, occurred_at DESC) WHERE rule_id IS NOT NULL;
+CREATE INDEX ON dim_elearn_gate_override (tenant_id, ma_id, valid_from, valid_until) WHERE ended_at IS NULL;
+CREATE INDEX ON fact_elearn_compliance_snapshot (tenant_id, ma_id, snapshot_date DESC);
+CREATE INDEX ON fact_elearn_compliance_snapshot (tenant_id, snapshot_date, compliance_score);
+```
+
+**CHECK-Constraints Sub D:**
+- `dim_elearn_gate_rule.trigger_type IN ('newsletter_overdue','onboarding_overdue','refresher_due','cert_expired','assignment_expired')`
+- `fact_elearn_gate_event.action IN ('blocked','allowed','overridden','bypassed')`
+- `dim_elearn_gate_override.override_type IN ('vacation','parental_leave','medical','emergency_bypass','other')`
+- `dim_elearn_gate_override.valid_until IS NULL OR valid_until > valid_from`
+
+**Tenant-Settings `elearn_d.*`:** `login_popup_enabled=true`, `login_popup_min_items=1`, `gate_cache_ttl_seconds=60`, `compliance_snapshot_cron='0 3 * * *'`, `compliance_report_retention_months=36`, `cert_auto_revoke_on_major_version=true`, `dashboard_banner_position='top'`, `default_gate_rules_seed=true`.
+
+**Default-Gate-Rules-Seed** (4 Rules pro Tenant): `Hard-Newsletter-Block` (Priority 100) · `Onboarding-Expired-Block` (90) · `Cert-Expired-Readonly` (80) · `Soft-Newsletter-Warning` (50). Details in `specs/ARK_DATABASE_SCHEMA_PATCH_ELEARNING_SUB_D_v0_1.md §6`.
+
+### RLS-Policies (alle 28 neuen Tabellen)
+
+**Template pro Tabelle:**
+```sql
+ALTER TABLE <tabelle> ENABLE ROW LEVEL SECURITY;
+CREATE POLICY <table>_tenant_isolation ON <tabelle>
+  USING (tenant_id = current_setting('app.current_tenant_id')::uuid)
+  WITH CHECK (tenant_id = current_setting('app.current_tenant_id')::uuid);
+```
+
+**MA-Scoping-Ausnahmen:**
+- `fact_elearn_progress`, `fact_elearn_quiz_attempt`: zusätzlich `ma_id = current_setting('app.current_user_id')::uuid` für MA-Endpoints
+- `fact_elearn_freitext_review`: Head-Scoping via `dim_user.reports_to`-Join
+- `fact_elearn_newsletter_assignment`: MA-scoped für `/my/*`, Team via `reports_to`, Admin tenant-weit
+- `fact_elearn_compliance_snapshot`: MA-scoped für self-view, Team via `reports_to`
+
+### Tabellen-Count aktualisiert
+
+**v1.5:** ~204 Tabellen + 8 Views (176 v1.4 + 28 E-Learning). Inkl. Sub A 15, Sub B 5, Sub C 4, Sub D 4.
+
+### Migration-Reihenfolge (konsolidiert)
+
+1. `CREATE EXTENSION IF NOT EXISTS vector`
+2. Sub A: 15 Tables (FK-Reihenfolge: tenant → course → module → lesson → question → curriculum → override → assignment → enrollment → progress → quiz_attempt → freitext_review → cert → badge → import_log)
+3. Sub A: `ALTER dim_user ADD elearn_onboarding_active`
+4. Sub A: Indizes + CHECK-Constraints
+5. Sub A: Seed `dim_elearn_tenant` (Arkadium-Default)
+6. Sub B: 5 Tables + IVFFLAT-Index + CHECK-Constraints + Tenant-Settings `elearn_b.*`
+7. Sub C: 4 Tables + `ALTER dim_user ADD newsletter_enforcement_override` + Indizes + CHECK + Tenant-Settings `elearn_c.*` + Seed versteckter Newsletter-Kurs (`slug='__newsletter__'`)
+8. Sub D: 4 Tables + `ALTER dim_elearn_certificate` (+4 Spalten) + Indizes + CHECK + Tenant-Settings `elearn_d.*` + Default-Gate-Rules-Seed
+9. RLS: `ENABLE ROW LEVEL SECURITY` + Policies auf allen 28 Tabellen
+
+### Performance-Annahmen
+
+- **pgvector-RAG-Retrieval:** < 100 ms mit IVFFLAT (bis ~1 Mio Chunks/Tenant)
+- **Gate-Middleware-Overhead:** < 1 ms mit Cache, 5-15 ms ohne Cache
+- **Compliance-Snapshot:** ~50 ms pro MA (Multi-JOIN), 30 MA Tenant → 1.5 s/Run
+- **Newsletter-Publish:** Bulk-Insert 150 Assignments (30 MA × 5 Sparten) in < 200 ms
+- **Audit-Log-Volumen `fact_elearn_gate_event`:** ~150k Events/Monat/MA → Partitionieren/Archivieren nach 12 Monaten

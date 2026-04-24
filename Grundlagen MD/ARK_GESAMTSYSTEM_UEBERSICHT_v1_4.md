@@ -1,9 +1,10 @@
-# ARK CRM/ERP — Gesamtsystem-Übersicht v1.3
+# ARK CRM/ERP — Gesamtsystem-Übersicht v1.4
 
-**Stand:** 2026-04-14
+**Stand:** 2026-04-24
 **Autor:** Peter Wiederkehr (Produkt-Owner) + Claude (Architektur)
 **Zweck:** Vollständige Beschreibung des ARK-Systems für neue Entwickler, Reviewer und Stakeholder
-**Vorgänger:** v1.2 (2026-03-30)
+**Vorgänger:** v1.3.5 (2026-04-17 · Reminders-Vollansicht intern) / v1.3 (2026-04-14) / v1.2 (2026-03-30)
+**Scope v1.4:** E-Learning-Modul Sub A/B/C/D (vollständig) · Topbar-Toggle CRM↔ERP · Multi-Tenant-Pattern-Einführung
 
 ## Änderungen v1.2 → v1.3
 
@@ -766,4 +767,246 @@ Cross-entity, user-/teamzentrierte Oberfläche für alle Reminders mit:
 | `specs/ARK_REMINDERS_VOLLANSICHT_SCHEMA_v0_1.md` | — | **v0.1 (neu)** | Schema |
 | `specs/ARK_REMINDERS_VOLLANSICHT_INTERACTIONS_v0_1.md` | — | **v0.1 (neu)** | Interactions |
 | `mockups/reminders.html` | — | **neu** | Mockup Liste + Kalender |
+
+---
+
+# TEIL 24 — v1.4 E-Learning-Modul (2026-04-24)
+
+**Quellen:**
+- `specs/ARK_GESAMTSYSTEM_PATCH_ELEARNING_v0_1.md` (Sub A)
+- `specs/ARK_GESAMTSYSTEM_PATCH_ELEARNING_SUB_B_v0_1.md`
+- `specs/ARK_GESAMTSYSTEM_PATCH_ELEARNING_SUB_C_v0_1.md`
+- `specs/ARK_GESAMTSYSTEM_PATCH_ELEARNING_SUB_D_v0_1.md`
+
+## 24.1 Modul-Landkarte (final)
+
+```
+Phase 1 · CRM-Core (9 Detailmasken)                   ← produktiv
+Phase 2 · ERP-Light                                    ← laufend
+  ├── HR-Tool
+  ├── Zeiterfassung (v1.4)
+  ├── Commission-Engine (Option D 2026-04-19)
+Phase 3 · ERP-Vollausbau                               ← aktuell
+  ├── Billing-Modul (v0.1 2026-04-22)
+  ├── E-Learning                                       ← NEU v1.4
+  │   ├── Sub A: Kurs-Katalog         (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   ├── Sub B: Content-Generator    (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   ├── Sub C: Wochen-Newsletter    (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  │   └── Sub D: Progress-Gate        (Specs v0.1 · 20 Patches eingearbeitet v1.4)
+  └── Doc-Generator                   (Mockup v1.3.4)
+Phase 4 · Automatisierung + AI
+Phase 5 · Enforcement + Gamification
+```
+
+**Status:** alle 4 Subs (A/B/C/D) specct und in Grundlagen (v1.5 Stammdaten + v1.5 DB + v2.7 Backend + v1.12 Frontend) eingearbeitet. Implementation-Plan-Start nach diesem Merge.
+
+## 24.2 E-Learning Kern-Idee (cross-Sub)
+
+**Arkadium-internes Lernsystem mit 4 Bausteinen:**
+
+- **Sub A Kurs-Katalog:** MA bearbeiten Pflicht-Kurse + Refresher (mit Zertifikaten + Badges), Head reviewt Freitext-Antworten (LLM-gescort), Admin verwaltet Kurse/Curriculum-Templates, Import via Git-Webhook aus Content-Repo
+- **Sub B Content-Generator:** LLM-basierte Pipeline R1-R5 aus PDF/DOCX/Bücher/Web-Scrapes/CRM-Queries → Entwurfs-Artefakte → Admin-Review → Publish ins Content-Repo (Loop zu Sub A). Port aus `C:\Linkedin_Automatisierung`
+- **Sub C Wochen-Newsletter:** wöchentlicher Newsletter pro Sparte mit Sections aus Sub B + Pflicht-Quiz am Ende (attempt_kind='newsletter'), Soft/Hard-Enforcement
+- **Sub D Progress-Gate:** Feature-granulare Rules + Override-System + Compliance-Dashboards · schützt CRM-Features bei Nicht-Bearbeitung von E-Learning-Pflichten
+
+## 24.3 Workspace-Struktur (neu)
+
+**Topbar-Toggle CRM ↔ ERP** (global, links von Avatar):
+- CRM-Modus: Sidebar zeigt CRM-Module (Kandidaten, Accounts, Mandate, Jobs, Prozesse, Assessments, Aktivitäten, Admin)
+- ERP-Modus: Sidebar zeigt ERP-Module (E-Learning, HR, Zeiterfassung, Commission, Billing, Doc-Generator)
+- Persistenz pro User in `localStorage`
+
+**Gemeinsame Infrastruktur beider Workspaces:**
+- Authentifizierung (JWT, SSO)
+- User-Base (`dim_user`)
+- Event-Pipeline (`fact_event_queue`, `fact_history`, Event-Processor)
+- Notification-System
+- Audit-Logging
+- Design-System (Tokens, Components, Drawer-Pattern)
+
+**Getrennt:**
+- DB-Namespaces (CRM: Recruiting-Domain, ERP: modulspezifisch `dim_elearn_*`, `dim_hr_*`, `dim_zeit_*`)
+- URL-Routing (`/crm/*` vs. `/erp/<modul>/*`)
+- Sidebar-Items
+
+## 24.4 Multi-Tenant-Aspekt (neu)
+
+E-Learning ist das **erste ARK-Modul mit konsequenter Multi-Tenant-Architektur**:
+- Alle 28 neuen Tabellen tragen `tenant_id UUID NOT NULL`
+- RLS-Policies auf allen Tabellen (`tenant_id = app.current_tenant_id`)
+- Von Tag 1 an designt (nicht später nachgerüstet)
+
+**Begründung:** White-Label-Option für externe Recruiting-Boutiquen. Schema-Vorbereitung jetzt ist günstiger als spätere Migration.
+
+**Konsequenz für künftige ERP-Module:** Multi-Tenant-Pattern übernehmen (Pattern-Dokumentation aus Sub-A-Backend-Patch §4).
+
+## 24.5 Datenflüsse
+
+### 24.5.1 Eingehende Events (E-Learning reagiert auf CRM-Events)
+
+| Event | E-Learning-Reaktion |
+|---|---|
+| `user_created` | Sub A: `elearn-onboarding-initializer` erzeugt Curriculum; Sub C: `elearn-newsletter-subscription-initializer` |
+| `user_role_changed` | Sub A: `elearn-role-change-watcher` erzeugt Diff-Assignments; Sub C: Subscription-Syncer |
+| `user_sparte_changed` | dito |
+
+### 24.5.2 Ausgehende Events (E-Learning schreibt nach `fact_history`)
+
+52 neue `elearn_*`-Events (Sub A: 16 · Sub B: 12 · Sub C: 12 · Sub D: 12). Erscheinen in `fact_history`-Timeline eines MA unter Activity-Category `elearning`.
+
+### 24.5.3 Inter-Sub-Daten-Flüsse
+
+**Sub B → Sub A:** R5-Publish-Worker committed Artefakte ins Content-Repo (`arkadium/ark-elearning-content`) → GitHub-Webhook → Sub-A `POST /api/elearn/admin/import` → parse + upsert Kurse/Module/Lessons/Fragen.
+
+**Sub B R1-R3 → Sub C R4b:** Newsletter-Generator nutzt Sub-B-Pipeline (Ingest/Chunk/Embed/Cluster) und hängt eigenen Runner `r4b_newsletter.py` für Newsletter-Struktur + Sections + Quiz an.
+
+**Sub A ↔ Sub C:** Newsletter-Quiz nutzt identische `fact_elearn_quiz_attempt`-Logik mit `attempt_kind='newsletter'`. Sub A `elearn-attempt-finalizer` erkennt Newsletter-Attempts und emittiert Cross-Events.
+
+**Sub A → Sub D:** `elearn-course-major-version-bumped`-Event löst `elearn-cert-revoker` aus → alle aktiven Certs dieses Kurses `status='revoked'` → Re-Cert-Assignment.
+
+**Sub C → Sub D:** Gate-Middleware liest `fact_elearn_newsletter_assignment.enforcement_mode_applied='hard'` → zeigt Gate-Page bei CRM-Feature-Zugriff.
+
+## 24.6 Externe Integrationen (erweitert durch E-Learning)
+
+| Integration | Zweck | Richtung |
+|---|---|---|
+| Git (Content-Repo `arkadium/ark-elearning-content`) | Kurs-Content via Webhook importieren | Eingehend (Webhook) + Ausgehend (clone/push) |
+| GitHub API | PR-Creation bei `publish_mode='pr'` | Ausgehend |
+| Anthropic API | LLM-Freitext-Scoring (Haiku 4.5) + Content-Generation (Sonnet 4.6) | Ausgehend HTTPS |
+| OpenAI API | Embeddings (`text-embedding-3-small`, 1536 dims) | Ausgehend |
+| Voyage AI API | Alt-Embeddings (`voyage-3`, 1024 dims) | Ausgehend (optional) |
+| S3/Blob | Zertifikat-PDFs `ark-elearn-certs/<tenant_id>/<cert_id>.pdf` | Ausgehend Upload + Eingehend Download |
+| Web-Scraping (SIA/ETH/Baublatt/Konkurrenten) | Source-Ingest Sub B | Ausgehend HTTP |
+| CRM-DB (eigene) | SQL-Queries für CRM-Source-Ingest | Intern read-only Role `elearn_content_gen_reader` |
+
+## 24.7 Phasen-Plan aktualisiert
+
+| Phase | Fokus | E-Learning-Stand |
+|---|---|---|
+| 1 | CRM-Core (9 Detailmasken) | — |
+| 2 | ERP-Light (HR, Zeit, Commission, Billing) | — |
+| 3 | ERP-Vollausbau | **Sub A/B/C/D Specs v0.1 + Patches in Grundlagen (v1.4)** |
+| 4 | Automatisierung + AI | Sub B produktiv + Newsletter-Generator Sub C |
+| 5 | Enforcement + Gamification | Sub D Gate aktiv + Badge-Engine erweitert |
+
+### Sub A Meilensteine (priorisiert)
+
+1. Spec-Freigabe (abgeschlossen)
+2. Grundlagen-Merge (aktueller Stand v1.4)
+3. Implementation-Plan via `superpowers:writing-plans` (konsolidiert A+B+C+D)
+4. DB-Migration (`migrations/NNN_elearn_*.sql` · 4 Dateien: sub_a / sub_b / sub_c / sub_d)
+5. MA-Flows (Dashboard, Lesson, Quiz)
+6. Head/Admin-Flows (Team, Freitext-Queue, Curriculum)
+7. Import-Pipeline + Seed-Content
+8. LLM-Freitext-Scorer + Head-Review-Workflow
+9. Cert-Generator + Badge-Engine
+10. Pilot mit 1-2 neuen MA
+11. Roll-out an bestehende MA
+12. Sub B/C/D iterativ darauf aufsetzen
+
+## 24.8 Team-Ownership
+
+| Rolle | E-Learning-Verantwortung |
+|---|---|
+| Peter | Produkt-Owner, Content-Definition, Quellen-Kuration (Bücher, Notizen, Prio-PDFs), Final-Review, Default-Rules-Policy, Enforcement-Mode-Entscheid |
+| Admin/Backoffice | Kurs-Publishing, Curriculum-Templates, Massen-Zuweisungen, Import-Monitoring, Analytics, Source-Verwaltung, Scheduler-Config, Cost-Monitoring, GitHub-PAT-Rotation, Rules-Verwaltung, Override-Requests, Cert-Manual-Revokes |
+| Head-of (pro Sparte) | Team-Onboarding-Kontrolle, Freitext-Review, Ad-hoc-Zuweisungen, Status-Switch Neu→Bestehend, Queue-Bearbeitung Newsletter (überfällige), Override-Setting für eigenes Team, Team-Compliance-Dashboard |
+| MA | Kurse bearbeiten, Quizzes absolvieren, Certs erhalten, Newsletter lesen+Quiz bestehen, Compliance-Status-Self-View |
+
+## 24.9 Sicherheit & Compliance
+
+- **Tenant-Isolation:** RLS auf DB-Ebene + App-Layer-Guards + Route-Scoping
+- **Audit:** alle Zuweisungen, Completions, Reviews, Revisions, Overrides in `fact_history` + `fact_elearn_import_log` + `fact_elearn_gate_event`
+- **Datenschutz:** Freitext-Antworten privat · Head sieht nur Team · Admin tenant-weit (operative Notwendigkeit)
+- **DSGVO-Löschung:** MA-Löschung kaskadiert Enrollments/Attempts · Certs bleiben als Audit bis Tenant-Retention (Default 10 Jahre)
+- **CRM-Daten in Newsletter:** strikt anonymisiert (keine direkten Kandidaten-/Kunden-Namen) · Tenant-gescopt (kein Cross-Tenant-Leak via RAG)
+- **Rule-Engine Sub D:** keine freie SQL, nur fest-codierte Trigger-Evaluatoren → SQL-Injection-sicher
+- **Override-Audit:** Creation/End geloggt mit `created_by`+`reason`
+
+## 24.10 Kosten-Management (neu)
+
+**LLM-Kosten pro Tenant budgetierbar:**
+- Default: 200 €/Monat, 5 €/Job (Tenant-konfigurierbar `elearn_b.llm_cost_cap_*`)
+- `elearn-cost-monitor` (Cron täglich)
+- ≥ 95 % Monats-Cap → Admin-Notification
+- 100 % → Neue Jobs blockiert (manueller Reset oder Monats-Rollover)
+- Newsletter-Cost zählt gegen gleiches Budget (~6-30 €/Monat bei 5 Sparten × 4 Ausgaben)
+
+**Cost-Dashboard:** Monats-Verbrauch + Restbudget, Top-Jobs, Aggregation nach Source-Kind, separater Newsletter-Cost-Block.
+
+## 24.11 Compliance-Konzept (Sub D)
+
+**Simpel-Formel:**
+```
+score = (courses_completed + newsletters_passed + certs_active)
+        / NULLIF(courses_total + newsletters_total + (certs_active + certs_expired), 0)
+        * 100
+```
+
+**Interpretation:** 100 % alles erledigt · 80-99 % sehr gut · 50-79 % Handlungsbedarf · < 50 % kritisch (Head-Alarm).
+
+Tagesbasis-Snapshots in `fact_elearn_compliance_snapshot` ermöglichen Trend-Charts.
+
+## 24.12 Cert-Lifecycle
+
+```
+Course complete + passed → Cert issued (status='active')
+                                │
+                  (nach refresher_months)
+                                ▼
+                         status='expired'
+                                │
+               Automatisch neuer Refresher-Assignment
+                                │
+               ─────────────────────────────────
+               Alternativ: course version bump (major)
+                                ▼
+                         status='revoked'
+                                │
+               Automatischer Re-Cert-Assignment
+```
+
+## 24.13 Sub-Interop-Matrix (final)
+
+| Sub | Rolle |
+|---|---|
+| **Sub A Kurs-Katalog** | Liefert Assignments, Enrollments, Certs. Liest Events aus User-Admin. Emittiert `elearn_course_major_version_bumped` für Sub D |
+| **Sub B Content-Generator** | Nutzt pgvector + LLM. Publisht in Content-Repo → Webhook-Loop zu Sub A. Keine Sub-D-Interaktion |
+| **Sub C Newsletter** | Nutzt Sub-B-Pipeline (R1-R3) + eigenen R4b-Runner. Quiz via Sub-A-Engine (`attempt_kind='newsletter'`). Liefert `enforcement_mode_applied` für Sub D |
+| **Sub D Progress-Gate** | Gate-Middleware auf allen CRM-API-Routes. Liest State aus Sub A/C. Event `elearn_course_major_version_bumped` triggert Cert-Revoke |
+
+## 24.14 Referenz-Dokumente (28 Spec-Dateien total)
+
+**Pro Sub:** 1× SCHEMA + 1× INTERACTIONS + 5× Grundlagen-Patches = 7 Dateien. 4 Subs = 28 Spec-Dateien.
+
+- **Sub A:** `ARK_E_LEARNING_SUB_A_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub B:** `ARK_E_LEARNING_SUB_B_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub C:** `ARK_E_LEARNING_SUB_C_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+- **Sub D:** `ARK_E_LEARNING_SUB_D_{SCHEMA,INTERACTIONS}_v0_1.md` + 5 Patches
+
+## 24.15 Statistik nach v1.4
+
+```
+E-Learning Tabellen:      28  (Sub A 15 · Sub B 5 · Sub C 4 · Sub D 4)
+E-Learning Events:        52  (Sub A 16 · Sub B 12 · Sub C 12 · Sub D 12)
+E-Learning Worker:        25  (Sub A 10 · Sub B 8 · Sub C 7 · Sub D 7)
+E-Learning API-Endpoints: 80+ (Sub A 30 · Sub B 15 · Sub C 15 · Sub D 12+Intern)
+E-Learning Pages:         25+ (Sub A 13 · Sub B 3 · Sub C 5 · Sub D 6)
+E-Learning Enums:         25  (Sub A 8 · Sub B 8 · Sub C 5 · Sub D 4)
+E-Learning Activity-Types:40  (Sub A 11 · Sub B 10 · Sub C 9 · Sub D 8 · +2 Doppel-Kategorisierung)
+Activity-Kategorien:      19  (18 v1.4 + 1 elearning)
+Tabellen total:          ~204 (176 v1.4 + 28 E-Learning)
+```
+
+## 24.16 Offene Punkte / Follow-ups
+
+- **Implementation-Plan:** konsolidiert für A+B+C+D via `superpowers:writing-plans`
+- **CRM-API-Refactor:** Gate-Middleware in ALLE bestehenden API-Routes einhängen (einmaliger Refactor-Effort)
+- **CI-Check:** jede neue Route muss `@gate_feature` oder `@gate_exempt` haben (Linting-Regel)
+- **Pilot-Strategie Sub D:** Soft-Enforcement 4-6 Wochen, Daten beobachten, dann selektiv Hard aktivieren
+- **Port-Entscheidung Sub B:** bleiben LinkedIn_Automatisierung-Files als eigenes Repo oder in ARK-CRM konsolidiert? Peter entscheidet vor Implementation-Start
+- **Sparte-Wert `uebergreifend`:** globaler Sparten-Katalog-Eintrag Phase-2 wenn cross-cutting Themen in anderen Modulen auftauchen
+- **Mobile-App-Gate:** falls später Mobile-App, Gate-Middleware dort ebenfalls (Phase-3)
+- **Override-Request-Workflow:** MA beantragt Override, Head approved? MVP: nur Head/Admin legt direkt an. Phase-2 Request-Flow
+- **Emergency-Bypass-SLA:** Admin setzt Bypass → wirksam mit nächstem Request (Cache-Invalidation sofort)
 
