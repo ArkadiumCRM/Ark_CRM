@@ -2705,3 +2705,5 @@ Kandidaten-Stages, Prozess-Stages, Prozess-Status, Mandat-Status, Activity-Kateg
 - Account-Spec TEIL 8b: status-Enum von 5 auf 4 reduziert (offered/ordered/scheduled/completed). 'invoiced' war fälschlich Auftrag-Status, gehört aber zu fact_assessment_billing.status (parallel)
 - Mockup Tab 8 Footer-Note: zwei getrennte Lifecycles dokumentiert (Auftrag vs. Billing). Klargestellt dass Rechnung sofort bei 'ordered' fällig wird
 - Assessment-Detailmaske-Spec v0.2 (eigenständige Spec) bleibt unverändert mit 6-State-Enum (offered/ordered/partially_used/fully_used/invoiced/cancelled) — andere Semantik (invoiced = fully closed)
+
+## [2026-04-24] sync-report | ARK Drift-Scan — found 41 drift items (4 stale digests + 18 spec-drift + 19 mockup-drift) · 525 lint-violations 7d

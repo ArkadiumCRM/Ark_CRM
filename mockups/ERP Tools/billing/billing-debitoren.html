@@ -225,8 +225,6 @@
   .konto-tabs .ktab.active { color:var(--accent); border-bottom-color:var(--accent); }
   .konto-tabs .ktab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
   .konto-tabs .ktab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
-  .tab-pane { display:none; }
-  .tab-pane.active { display:block; }
 
   /* Konto-View · Empty-State */
   .empty-state { background:var(--surface); border-radius:4px; padding:40px 24px; box-shadow:var(--shadow-sm); text-align:center; color:var(--text-light); font-size:13px; line-height:1.6; }
@@ -337,7 +335,7 @@
       <button class="bulk-btn" type="button">⎙ Kontoauszug (PDF-Batch)</button>
       <button class="bulk-btn" type="button">◰ CSV · offene Posten</button>
       <button class="bulk-btn" type="button">⚐ Kadenz ändern</button>
-      <button class="bulk-btn danger" type="button">⎈ An Inkasso übergeben · GF-Pflicht</button>
+      <button class="bulk-btn danger" type="button">⎈ An Inkasso übergeben · Admin-Pflicht</button>
     </div>
   </div>
 
@@ -756,7 +754,7 @@
   </div>
 
   <!-- TAB 1 · Offene Posten -->
-  <div class="tab-pane active" id="ktab-offen">
+  <div class="tab-panel active" id="ktab-offen">
     <div class="list-card">
       <table class="konto-table">
         <thead>
@@ -822,7 +820,7 @@
   </div><!-- /ktab-offen -->
 
   <!-- TAB 2 · Zahlungshistorie -->
-  <div class="tab-pane" id="ktab-zahlungen">
+  <div class="tab-panel" id="ktab-zahlungen">
     <div class="list-card">
       <table class="konto-table">
         <thead>
@@ -849,7 +847,7 @@
   </div><!-- /ktab-zahlungen -->
 
   <!-- TAB 3 · Gutschriften / Refunds -->
-  <div class="tab-pane" id="ktab-refunds">
+  <div class="tab-panel" id="ktab-refunds">
     <div class="list-card">
       <table class="konto-table">
         <thead>
@@ -862,7 +860,7 @@
             <td>PR-2025-1187 · Michael Koch · Exit Monat 1</td>
             <td class="num" style="color:var(--red);">CHF 19'593</td>
             <td>25.03.2026</td>
-            <td>NS (GF-Approval)</td>
+            <td>NS (Admin-Approval)</td>
             <td>25.03.2026 · QR</td>
             <td><span class="chip ok">abgeschlossen</span></td>
           </tr>
@@ -875,12 +873,12 @@
       </table>
     </div>
     <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
-      <strong>Gutschriften-Typen</strong> · <em>Refund Kulanz</em> (AGB §8 · Probezeit-Staffel) · <em>Storno</em> (Fehlerhafte Rechnung · Brutto = Original-Brutto negativ) · <em>Rabatt-Nachtrag</em> (nachträgliche Preis-Korrektur). Alle GF-Pflicht. Verlinkung zum Refund-Cockpit für Details.
+      <strong>Gutschriften-Typen</strong> · <em>Refund Kulanz</em> (AGB §8 · Probezeit-Staffel) · <em>Storno</em> (Fehlerhafte Rechnung · Brutto = Original-Brutto negativ) · <em>Rabatt-Nachtrag</em> (nachträgliche Preis-Korrektur). Alle Admin-Pflicht. Verlinkung zum Refund-Cockpit für Details.
     </div>
   </div><!-- /ktab-refunds -->
 
   <!-- TAB 4 · Streitfälle (Empty) -->
-  <div class="tab-pane" id="ktab-streit">
+  <div class="tab-panel" id="ktab-streit">
     <div class="empty-state">
       <div class="ic">✓</div>
       <div class="hd">Keine offenen Streitfälle</div>
@@ -890,14 +888,14 @@
   </div><!-- /ktab-streit -->
 
   <!-- TAB 5 · Audit-Timeline -->
-  <div class="tab-pane" id="ktab-audit">
+  <div class="tab-panel" id="ktab-audit">
     <div class="timeline">
       <div class="tl-row"><div class="ts">21.04.2026<br>14:32</div><div class="dot-tl amber"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 überfällig-Flag gesetzt</div><div class="meta">Auto-Worker <code>dunning-cadence-check</code> · Key-Account-Kadenz · nächste Aktion: Mahnung 1 am 02.05.</div></div></div>
       <div class="tl-row"><div class="ts">18.04.2026<br>11:15</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Assessment-Rechnung FN2026.04.1102 versendet</div><div class="meta"><span class="actor">ST</span> (Backoffice) · Email an buchhaltung@emch-berger.ch · Message-ID vorhanden</div></div></div>
       <div class="tl-row"><div class="ts">08.04.2026<br>09:42</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 28'500 · FN2026.01.0118 bezahlt</div><div class="meta">CAMT.054-Import · Auto-Match QRR 100 % · Status → Bezahlt · Garantie-Timer für PR-2026-0088 läuft bis 15.06.2026</div></div></div>
-      <div class="tl-row"><div class="ts">25.03.2026<br>15:48</div><div class="dot-tl amber"></div><div class="body-tl"><div class="main">Refund ausbezahlt · GN2026.03.0044 · CHF 19'593</div><div class="meta">PR-2025-1187 Michael Koch Exit Monat 1 · AGB-§8-Staffel 50 % · GF-Freigabe <span class="actor">NS</span> · Clawback-Saga abgeschlossen</div></div></div>
+      <div class="tl-row"><div class="ts">25.03.2026<br>15:48</div><div class="dot-tl amber"></div><div class="body-tl"><div class="main">Refund ausbezahlt · GN2026.03.0044 · CHF 19'593</div><div class="meta">PR-2025-1187 Michael Koch Exit Monat 1 · AGB-§8-Staffel 50 % · Admin-Freigabe <span class="actor">NS</span> · Clawback-Saga abgeschlossen</div></div></div>
       <div class="tl-row"><div class="ts">22.03.2026<br>16:58</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 versendet · CHF 36'083</div><div class="meta"><span class="actor">ST</span> (Backoffice) · Honorar-Staffel 27 % (≥ CHF 130'000) · Kandidat Tobias Fischer · Eintritt 15.04.</div></div></div>
-      <div class="tl-row"><div class="ts">22.03.2026<br>10:12</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 freigegeben durch <span class="actor">NS</span> (GF)</div><div class="meta">Draft-Review · kein Rabatt · GF-Approval wegen Betrag-Kategorie (optional, nicht Pflicht bei 0 % Rabatt)</div></div></div>
+      <div class="tl-row"><div class="ts">22.03.2026<br>10:12</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Rechnung FN2026.03.0917 freigegeben durch <span class="actor">NS</span> (Admin)</div><div class="meta">Draft-Review · kein Rabatt · Admin-Approval wegen Betrag-Kategorie (optional, nicht Pflicht bei 0 % Rabatt)</div></div></div>
       <div class="tl-row"><div class="ts">15.03.2026<br>08:00</div><div class="dot-tl"></div><div class="body-tl"><div class="main">Garantie-Ende · PR-2026-0088 · Lukas Wanner</div><div class="meta">3-Monats-Probezeit abgelaufen · kein Exit · Rücklage Q1 2026 für JV (AM · 50 %) + PW (CM · 50 %) freigegeben · CHF 2'345 gutgeschrieben</div></div></div>
       <div class="tl-row"><div class="ts">14.03.2026<br>12:04</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 22'100 · FN2026.02.0422 bezahlt</div><div class="meta">CAMT.054-Import · Auto-Match QRR 100 %</div></div></div>
       <div class="tl-row"><div class="ts">02.09.2025<br>10:22</div><div class="dot-tl green"></div><div class="body-tl"><div class="main">Zahlungseingang CHF 24'450 · FN2025.08.0612 bezahlt</div><div class="meta">Bank-Überweisung ohne QRR · <span class="actor">ST</span> manuell zugeordnet · 52 Tage DSO · Grund: Email-Verzögerung Finanz-Abt. Kunde</div></div></div>
@@ -1050,7 +1048,7 @@
 
     <div class="warn-inline">
       <div class="title">Automatische Mahnung fällig</div>
-      Worker <code>dunning-cadence-check</code> schlägt für FN2026.03.0917 Mahnung 1 am 02.05. vor (Key-Account-Kadenz T+30). GF-Freigabe nicht nötig bei Mahnung 1.
+      Worker <code>dunning-cadence-check</code> schlägt für FN2026.03.0917 Mahnung 1 am 02.05. vor (Key-Account-Kadenz T+30). Admin-Freigabe nicht nötig bei Mahnung 1.
     </div>
 
   </div>
@@ -1179,7 +1177,7 @@
     <div class="warn-inline">
       <div class="title">Ausnahmen &amp; Blocker</div>
       <strong>1 Kunde ausgeschlossen:</strong> Sievert &amp; Co. (FN2026.02.0558) · aktiver Honorarstreit · manuelle Klärung nötig.<br>
-      <strong>1 Kunde vor Inkasso:</strong> Hunziker &amp; Schneider (Mahnung 3 · 74 T) · bei erneutem Misserfolg Inkasso-Übergabe vorschlagen (GF-Pflicht).
+      <strong>1 Kunde vor Inkasso:</strong> Hunziker &amp; Schneider (Mahnung 3 · 74 T) · bei erneutem Misserfolg Inkasso-Übergabe vorschlagen (Admin-Pflicht).
     </div>
 
   </div>
@@ -1254,7 +1252,7 @@
       if (!target) return;
       document.querySelectorAll('.konto-tabs .ktab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      document.querySelectorAll('#view-konto .tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#view-konto .tab-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('ktab-' + target)?.classList.add('active');
     });
   });

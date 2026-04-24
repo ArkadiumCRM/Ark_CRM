@@ -147,7 +147,7 @@ updated: 2026-04-19
 
 ## Analyses (8)
 
-- [[sync-report-2026-04-24]] — Drift-Scan nach E-Learning Sub A–D + Billing · 0 unresolved Changelog · 0 stale Digests · E-Learning-Patches noch nicht in Grundlagen gemerged
+- [[sync-report-2026-04-24]] — Vollscan Drift-Report 2026-04-24 · 0 unresolved · 4 stale Digests · 18 Spec-Drift · 19 Mockup-Drift · 525 Lint-Violations (7d)
 - [[sync-report-2026-04-17]] — Drift-Scan nach Admin-Vollansicht-Specs · 9 unresolved Changelog · 2 stale Digests · 10 Sync-Schulden Admin ↔ Grundlagen
 - [[ungereimtheiten-report]] — Systematische Prüfung aller Widersprüche, Entscheidungen, Schema-Deltas, offene Specs
 - [[namenskonventionen]] — Kanonische Benennungen: Rollen, Stages, Status, Wechselmotivation

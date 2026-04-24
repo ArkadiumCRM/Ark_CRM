@@ -35,8 +35,6 @@
   .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
   .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
 
-  .tab-pane { display:none; }
-  .tab-pane.active { display:block; }
 
   /* Empty / Historie */
   .empty-panel { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:34px 28px; text-align:center; color:var(--text-light); font-size:13px; line-height:1.6; }
@@ -155,7 +153,7 @@
     <div class="strip-card ink">
       <div class="lbl">Inkasso-ready</div>
       <div class="cnt">1</div>
-      <div class="amt">CHF 3'500 · GF-Approval</div>
+      <div class="amt">CHF 3'500 · Admin-Approval</div>
     </div>
     <div class="strip-card pause">
       <div class="lbl">Honorarstreit · Timer aus</div>
@@ -173,7 +171,7 @@
   </div>
 
   <!-- Tab: Pending -->
-  <div class="tab-pane active" id="tab-pending">
+  <div class="tab-panel active" id="tab-pending">
 
   <!-- Bulk-Bar -->
   <div class="bulk-bar">
@@ -247,7 +245,7 @@
           <td class="num" style="color:var(--text-light);">—</td>
           <td><div class="tl-mini"><div class="last">20.02. Honorarstreit markiert durch AM</div><div>Timer pausiert</div></div></td>
           <td><span class="next-stage l3" style="opacity:0.45;">Mahnung 3</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">pausiert bis Dispute-Resolution</div></td>
-          <td>GF-Eskalation · keine Auto-Mahnung</td>
+          <td>Admin-Eskalation · keine Auto-Mahnung</td>
           <td><div class="risk"><span class="dot amber"></span>dispute</div></td>
           <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
         </tr>
@@ -270,10 +268,10 @@
           <td class="num">CHF 3'500</td>
           <td class="num" style="color:var(--red);">134 T</td>
           <td><div class="tl-mini"><div class="last">01.09. Rechnung · M1/M2/M3 ausgeschöpft</div><div class="overdue">Letzte Frist 15.04. verstrichen</div></div></td>
-          <td><span class="next-stage ink">Inkasso</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">GF-Approval nötig · Dossier bereit</div></td>
+          <td><span class="next-stage ink">Inkasso</span><div style="font-size:10.5px;color:var(--text-light);margin-top:3px;">Admin-Approval nötig · Dossier bereit</div></td>
           <td>Inkasso-Übergabe · Dossier-ZIP generieren</td>
           <td><div class="risk"><span class="dot red"></span>kritisch</div></td>
-          <td><button class="row-action" type="button" style="color:#7c2d12;border-color:#7c2d12;">⚐ GF-Review</button></td>
+          <td><button class="row-action" type="button" style="color:#7c2d12;border-color:#7c2d12;">⚐ Admin-Review</button></td>
         </tr>
         <tr>
           <td class="cb"><input type="checkbox"></td>
@@ -295,13 +293,13 @@
     <strong>Legende Kadenz-Profile:</strong>
     &nbsp;<span class="chip profile-std">Standard</span> T+15 · +15 · +15 · +5 (Inkasso) &nbsp;·&nbsp;
     <span class="chip profile-key">Key-Account</span> T+30 · +15 · +15 · +5 (Inkasso) &nbsp;·&nbsp;
-    <strong>Disputed</strong>: Timer pausiert · manuelle GF-Eskalation
+    <strong>Disputed</strong>: Timer pausiert · manuelle Admin-Eskalation
   </div>
 
   </div><!-- /tab-pending -->
 
   <!-- Tab: Aktiv in Stufe -->
-  <div class="tab-pane" id="tab-active">
+  <div class="tab-panel" id="tab-active">
     <div class="cockpit-card">
       <table class="cockpit-table">
         <thead>
@@ -348,8 +346,8 @@
             <td>05.02.2026</td>
             <td>29.04.2026</td>
             <td style="color:var(--red);font-weight:600;">5 Tage</td>
-            <td>→ Inkasso-Übergabe ab 30.04. (GF-Pflicht)</td>
-            <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">⚐ GF-Review</button></td>
+            <td>→ Inkasso-Übergabe ab 30.04. (Admin-Pflicht)</td>
+            <td><button class="row-action" type="button" style="color:var(--red);border-color:var(--red);">⚐ Admin-Review</button></td>
           </tr>
         </tbody>
       </table>
@@ -360,7 +358,7 @@
   </div><!-- /tab-active -->
 
   <!-- Tab: Honorarstreit -->
-  <div class="tab-pane" id="tab-dispute">
+  <div class="tab-panel" id="tab-dispute">
     <div class="cockpit-card">
       <table class="cockpit-table">
         <thead>
@@ -383,7 +381,7 @@
             <td class="num" style="color:var(--dispute);">CHF 18'900</td>
             <td>Kandidatin vor Probezeit-Ende zurückgetreten · Kunde bestreitet Erfolgshonorar</td>
             <td>20.02.2026</td>
-            <td>NS (GF) + SP (AM)</td>
+            <td>NS (Admin) + SP (AM)</td>
             <td><span class="chip dispute">Timer pausiert</span></td>
             <td>Besprechung geplant 28.04. · danach Vergleich oder Rechtsweg</td>
             <td><button class="row-action" type="button" style="color:var(--dispute);border-color:var(--dispute);">⚑ Eskalieren</button></td>
@@ -392,12 +390,12 @@
       </table>
     </div>
     <div style="margin-top:14px;font-size:11.5px;color:var(--text-light);padding:0 2px;">
-      <strong>Honorarstreit-Flow:</strong> AM oder GF markiert Rechnung als strittig → Auto-Mahnung pausiert → GF-Eskalation (Vergleich / Storno / Rechtsweg). Wiederaufnahme der Mahn-Kadenz nur durch GF-Freigabe.
+      <strong>Honorarstreit-Flow:</strong> AM oder Admin markiert Rechnung als strittig → Auto-Mahnung pausiert → Admin-Eskalation (Vergleich / Storno / Rechtsweg). Wiederaufnahme der Mahn-Kadenz nur durch Admin-Freigabe.
     </div>
   </div><!-- /tab-dispute -->
 
   <!-- Tab: Historie -->
-  <div class="tab-pane" id="tab-hist">
+  <div class="tab-panel" id="tab-hist">
     <div class="cockpit-card">
       <table class="cockpit-table">
         <thead>
@@ -553,7 +551,7 @@
       if (!target) return;
       document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('tab-' + target)?.classList.add('active');
     });
   });

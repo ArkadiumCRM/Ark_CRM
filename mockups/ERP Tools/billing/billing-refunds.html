@@ -31,8 +31,6 @@
   .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
   .tab .cnt { background:var(--bg); font-size:10px; padding:2px 7px; border-radius:8px; margin-left:6px; font-weight:700; }
   .tab.active .cnt { background:color-mix(in srgb,var(--accent) 14%,var(--bg)); color:var(--accent); }
-  .tab-pane { display:none; }
-  .tab-pane.active { display:block; }
 
   /* Cockpit-Tabelle */
   .cockpit-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
@@ -133,7 +131,7 @@
   <div class="page-head">
     <div>
       <h1>Finanzen · Refund-Cockpit</h1>
-      <div class="sub">Garantie-Fälle nach AGB §8 · Staffel 100 / 50 / 25 / 10 % · immer GF-Approval-Pflicht</div>
+      <div class="sub">Garantie-Fälle nach AGB §8 · Staffel 100 / 50 / 25 / 10 % · immer Admin-Approval-Pflicht</div>
     </div>
   </div>
 
@@ -152,7 +150,7 @@
     <div class="strip-card urgent">
       <div class="lbl">Refund im Entstehen</div>
       <div class="cnt">2</div>
-      <div class="amt">CHF 22'785 · Draft / GF-Review</div>
+      <div class="amt">CHF 22'785 · Draft / Admin-Review</div>
     </div>
     <div class="strip-card done">
       <div class="lbl">Abgeschlossen 2026</div>
@@ -172,7 +170,7 @@
   <!-- ═════════════════════════════════════════════════════════════════════
        TAB 1 · Offen & Exit-Risiko · 17 aktive Placements in Probezeit
        ═════════════════════════════════════════════════════════════════════ -->
-  <div class="tab-pane active" id="tab-offen">
+  <div class="tab-panel active" id="tab-offen">
 
   <!-- Cockpit-Liste -->
   <div class="cockpit-card">
@@ -273,7 +271,7 @@
   <!-- ═════════════════════════════════════════════════════════════════════
        TAB 2 · Im Entstehen · 2 Drafts · Refund-Berechnung läuft
        ═════════════════════════════════════════════════════════════════════ -->
-  <div class="tab-pane" id="tab-entstehen">
+  <div class="tab-panel" id="tab-entstehen">
 
   <div class="cockpit-card">
     <table class="cockpit-table">
@@ -318,15 +316,15 @@
   </div>
 
   <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
-    <strong>Drafts</strong> · Refund-Berechnung ist angelegt, aber noch nicht zur GF-Approval gesendet. Verbleibende Schritte: 3-Tage-Meldepflicht-Check · Ausschluss-Prüfung · Staffel-Bestätigung · GF-Review.
+    <strong>Drafts</strong> · Refund-Berechnung ist angelegt, aber noch nicht zur Admin-Approval gesendet. Verbleibende Schritte: 3-Tage-Meldepflicht-Check · Ausschluss-Prüfung · Staffel-Bestätigung · Admin-Review.
   </div>
 
   </div><!-- /tab-entstehen -->
 
   <!-- ═════════════════════════════════════════════════════════════════════
-       TAB 3 · Refund-Denied · 1 Fall · Ausschluss-Grund oder GF-Ablehnung
+       TAB 3 · Refund-Denied · 1 Fall · Ausschluss-Grund oder Admin-Ablehnung
        ═════════════════════════════════════════════════════════════════════ -->
-  <div class="tab-pane" id="tab-denied">
+  <div class="tab-panel" id="tab-denied">
 
   <div class="cockpit-card">
     <table class="cockpit-table">
@@ -348,7 +346,7 @@
           <td class="kunde">Daniel Rohrer<small>Kellerhals Baugruppe · ARC · AM LR</small></td>
           <td>03.04.2026</td>
           <td>3-Tage-Meldepflicht verletzt (8 Tage)</td>
-          <td>NS (GF)</td>
+          <td>NS (Admin)</td>
           <td>08.04.2026</td>
           <td class="num" style="color:var(--text-light);">CHF 4'560</td>
           <td><button class="row-action" type="button" onclick="event.stopPropagation();openDrawer();">Fall öffnen</button></td>
@@ -358,7 +356,7 @@
   </div>
 
   <div style="margin-top:14px;font-size:11px;color:var(--text-light);padding:0 2px;line-height:1.6;">
-    <strong>Denied-Fälle</strong> · Refund wurde aus AGB-§8-Ausschlussgrund oder GF-Entscheid abgelehnt. Originaler Prüf-Snapshot bleibt archiviert. GF-Override möglich (z.B. Kulanz-Ausnahme bei Meldepflicht-Verletzung) · Status setzt auf „Re-Opened" zurück.
+    <strong>Denied-Fälle</strong> · Refund wurde aus AGB-§8-Ausschlussgrund oder Admin-Entscheid abgelehnt. Originaler Prüf-Snapshot bleibt archiviert. Admin-Override möglich (z.B. Kulanz-Ausnahme bei Meldepflicht-Verletzung) · Status setzt auf „Re-Opened" zurück.
   </div>
 
   </div><!-- /tab-denied -->
@@ -366,7 +364,7 @@
   <!-- ═════════════════════════════════════════════════════════════════════
        TAB 4 · Abgeschlossen · 4 Refunds ausbezahlt · 2026 (CHF 41'350)
        ═════════════════════════════════════════════════════════════════════ -->
-  <div class="tab-pane" id="tab-hist">
+  <div class="tab-panel" id="tab-hist">
 
   <div class="cockpit-card">
     <table class="cockpit-table">
@@ -511,8 +509,8 @@
           <option>Kandidat kann wegen Kunden-Gründen Stelle nicht antreten</option>
           <option>Kunde kündigt Kandidat während Probezeit</option>
           <option>Austritt nach Probezeit-Ende</option>
-          <option>3-Tage-Meldepflicht verletzt (GF-Override möglich)</option>
-          <option>Kunde meldete keine Gründe (GF-Override möglich)</option>
+          <option>3-Tage-Meldepflicht verletzt (Admin-Override möglich)</option>
+          <option>Kunde meldete keine Gründe (Admin-Override möglich)</option>
         </select>
       </div>
       <div class="pill-row">
@@ -579,18 +577,18 @@
       </div>
     </div>
 
-    <!-- GF-Approval -->
+    <!-- Admin-Approval -->
     <div class="gf-box">
-      <div class="head">GF-Approval-Pflicht</div>
-      Alle Refunds erfordern GF-Genehmigung (PO-Decision Batch 2 Q8). NS (GF) muss freigeben bevor Refund-Rechnung ausgestellt wird.
+      <div class="head">Admin-Approval-Pflicht</div>
+      Alle Refunds erfordern Admin-Genehmigung (PO-Decision Batch 2 Q8). NS (Admin) muss freigeben bevor Refund-Rechnung ausgestellt wird.
       <div style="margin-top:8px;display:flex;gap:8px;">
-        <button class="btn btn-secondary" type="button">Zur GF-Review senden</button>
+        <button class="btn btn-secondary" type="button">Zur Admin-Review senden</button>
       </div>
     </div>
 
     <!-- Auszahlung -->
     <div class="sec">
-      <div class="sec-head">Auszahlung (nach GF-Approval)</div>
+      <div class="sec-head">Auszahlung (nach Admin-Approval)</div>
       <div class="fg">
         <label>Kunden-IBAN (aus Stammdaten)</label>
         <input type="text" value="CH45 0023 4500 1122 3344 5" readonly style="background:var(--surface);color:var(--text-mid);">
@@ -610,12 +608,12 @@
   <div class="drawer-foot">
     <div class="totals">
       Refund · <strong>CHF 4'188.88</strong>
-      <span style="color:var(--amber);font-size:11px;">pending GF-Approval</span>
+      <span style="color:var(--amber);font-size:11px;">pending Admin-Approval</span>
     </div>
     <div class="actions">
       <button class="btn btn-secondary" type="button">Entwurf speichern</button>
       <button class="btn btn-danger" type="button">✕ Ablehnen</button>
-      <button class="btn btn-primary" type="button">▸ GF-Approval</button>
+      <button class="btn btn-primary" type="button">▸ Admin-Approval</button>
     </div>
   </div>
 </div>
@@ -637,7 +635,7 @@
       if (!target) return;
       document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       const pane = document.getElementById('tab-' + target);
       if (pane) pane.classList.add('active');
     });
