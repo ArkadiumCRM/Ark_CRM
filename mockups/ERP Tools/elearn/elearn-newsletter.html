@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Mein Newsletter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow-y:auto; }
+  .page { padding:22px 28px 48px; max-width:1300px; margin:0 auto; }
+
+  .page-head { margin-bottom:22px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:26px; color:var(--accent); font-weight:700; margin:0 0 4px; }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+
+  /* Pflicht-Banner (aktuelle KW) */
+  .pflicht-banner { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border:1px solid var(--red); border-radius:6px; padding:20px 24px; margin-bottom:22px; display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; }
+  .pflicht-banner .icon-box { width:48px; height:48px; background:var(--red); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .pflicht-banner .title { font-family:'Libre Baskerville', serif; font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .pflicht-banner .meta { font-size:12.5px; color:var(--text-light); }
+  .pflicht-banner .meta .deadline { color:var(--red); font-weight:700; }
+
+  /* KPI */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+  .kpi-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi-card.green { border-left-color:var(--green); }
+  .kpi-card.amber { border-left-color:var(--amber); }
+  .kpi-card.red { border-left-color:var(--red); }
+  .kpi-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .kpi-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .kpi-card.green .big { color:var(--green); }
+  .kpi-card.amber .big { color:var(--amber); }
+  .kpi-card.red .big { color:var(--red); }
+  .kpi-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  /* Tabs */
+  .tabs-nav { display:flex; gap:2px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .tab-btn { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-light); border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; font-family:'DM Sans', sans-serif; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab-btn .count { background:var(--surface-alt); padding:1px 7px; border-radius:10px; margin-left:6px; font-size:11px; }
+
+  /* Filter */
+  .filter-row { display:flex; gap:10px; align-items:center; background:var(--surface); padding:10px 14px; border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:14px; flex-wrap:wrap; }
+  .filter-row input[type="search"] { flex:1; min-width:180px; border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+  .filter-row select { border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+
+  /* Issue-Cards */
+  .issues-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px; }
+  .issue-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; cursor:pointer; transition:all 0.15s; position:relative; }
+  .issue-card:hover { border-color:var(--accent); box-shadow:var(--shadow); transform:translateY(-1px); }
+  .issue-card.urgent { border-left:4px solid var(--red); }
+  .issue-card.warn { border-left:4px solid var(--amber); }
+  .issue-card.done { border-left:4px solid var(--green); }
+
+  .issue-card .meta-row { display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-light); }
+  .issue-card .meta-row .kw { font-family:'Libre Baskerville', serif; font-weight:700; color:var(--accent); font-size:13px; }
+  .issue-card h3 { font-family:'Libre Baskerville', serif; font-size:16px; color:var(--text); font-weight:700; margin:0; line-height:1.35; }
+  .issue-card .lede { font-size:12.5px; color:var(--text-light); line-height:1.5; margin-top:-4px; }
+  .issue-card .tags { display:flex; gap:5px; flex-wrap:wrap; }
+  .issue-card .tag { padding:2px 8px; background:var(--surface-alt); color:var(--text-mid); font-size:10.5px; border-radius:10px; }
+
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  .status-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .status-chip.overdue { background:color-mix(in srgb, var(--red) 15%, var(--bg)); color:var(--red); }
+  .status-chip.pending { background:color-mix(in srgb, var(--amber) 20%, var(--bg)); color:var(--amber); }
+  .status-chip.passed { background:color-mix(in srgb, var(--green) 15%, var(--bg)); color:var(--green); }
+  .status-chip.failed { background:color-mix(in srgb, var(--red) 15%, var(--bg)); color:var(--red); }
+
+  .issue-card .footer { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid var(--border); margin-top:auto; }
+  .issue-card .footer .score { font-family:'Libre Baskerville', serif; font-weight:700; font-size:14px; color:var(--green); }
+  .issue-card .footer .deadline { font-size:11.5px; color:var(--amber); font-weight:600; }
+  .issue-card .footer .deadline.urgent { color:var(--red); }
+
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-danger { background:var(--red); color:white; border-color:var(--red); }
+  .btn-danger:hover { filter:brightness(1.08); color:white; }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  .sub-chip { display:inline-block; padding:3px 9px; background:var(--accent-soft); color:var(--accent); border-radius:12px; font-size:11.5px; font-weight:600; margin-right:5px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <h1>Mein Newsletter</h1>
+    <div class="sub">Wöchentliche Branchen-Newsletter mit Pflicht-Quiz · Subscribed:
+      <span class="sub-chip"><span class="chip-sparte arc">ARC</span> wöchentlich</span>
+      <span class="sub-chip"><span class="chip-sparte gt">GT</span> Cross-Sparte</span>
+    </div>
+  </div>
+
+  <!-- Pflicht-Banner (aktuelle KW) -->
+  <div class="pflicht-banner">
+    <div class="icon-box">📬</div>
+    <div>
+      <div class="title">Newsletter KW17/2026 (ARC) noch nicht gelesen</div>
+      <div class="meta">Pflicht-Lock aktiv · <span class="deadline">noch 2 Tage bis Deadline</span> · 4 Artikel + 5 Quiz-Fragen · ca. 8 Min Lesezeit</div>
+    </div>
+    <button class="btn btn-danger" onclick="location.href='elearn-newsletter-issue.html'">Jetzt lesen</button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-strip">
+    <div class="kpi-card red">
+      <div class="lbl">Offen Pflicht</div>
+      <div class="big">1</div>
+      <div class="sub">KW17/ARC · Deadline 26.04.2026</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">Gelesen + bestanden</div>
+      <div class="big">14</div>
+      <div class="sub">letzte 30 Tage · Ø 89% Quiz</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Abo</div>
+      <div class="big">2</div>
+      <div class="sub">ARC wöchentlich · GT Cross</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="lbl">Erinnerungen</div>
+      <div class="big">0</div>
+      <div class="sub">letzter Reminder: keine</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-nav">
+    <button class="tab-btn active">Alle <span class="count">16</span></button>
+    <button class="tab-btn">Pflicht offen <span class="count">1</span></button>
+    <button class="tab-btn">Gelesen <span class="count">14</span></button>
+    <button class="tab-btn">Abgelaufen <span class="count">1</span></button>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-row">
+    <input type="search" placeholder="Suche im Newsletter-Archiv…">
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC</option>
+      <option>GT</option>
+      <option>ING</option>
+      <option>PUR</option>
+      <option>REM</option>
+    </select>
+    <select>
+      <option>Letzte 3 Monate</option>
+      <option>Letzte 6 Monate</option>
+      <option>Letztes Jahr</option>
+      <option>Alle</option>
+    </select>
+  </div>
+
+  <!-- Issue-Cards -->
+  <div class="issues-grid">
+
+    <!-- Aktuelle Pflicht (urgent) -->
+    <div class="issue-card urgent" onclick="location.href='elearn-newsletter-issue.html'">
+      <div class="meta-row">
+        <span class="kw">KW 17 · 2026</span>
+        <span class="chip-sparte arc">ARC</span>
+      </div>
+      <h3>GP-Markt Umbruch · SIA-Update 2026 · 3 neue Hauptakteure</h3>
+      <div class="lede">Diese Woche: Grössenverschiebungen bei den Top-5 GP-Büros, SIA 102 Revision mit Auswirkung auf Honorarmodelle, plus neue Player im Hochbau-Segment.</div>
+      <div class="tags">
+        <span class="tag">GP-Markt</span>
+        <span class="tag">SIA-Normen</span>
+        <span class="tag">Hochbau</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip overdue">Pflicht offen</span>
+        <span class="deadline urgent">Deadline in 2 Tagen</span>
+      </div>
+    </div>
+
+    <!-- Letzte Woche · gelesen -->
+    <div class="issue-card done">
+      <div class="meta-row">
+        <span class="kw">KW 16 · 2026</span>
+        <span class="chip-sparte arc">ARC</span>
+      </div>
+      <h3>Tunnelbau-Grossprojekte · Gotthard-Nachfolger in Planung</h3>
+      <div class="lede">Der Bundesrat hat letzte Woche den Planungskredit freigegeben. Kandidaten-Markt für Tunnelbau-Spezialisten heizt sich auf.</div>
+      <div class="tags">
+        <span class="tag">Infrastruktur</span>
+        <span class="tag">Tunnelbau</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip passed">Gelesen · 92%</span>
+        <span class="score">92%</span>
+      </div>
+    </div>
+
+    <!-- KW 15 · GT (Cross) -->
+    <div class="issue-card done">
+      <div class="meta-row">
+        <span class="kw">KW 16 · 2026</span>
+        <span class="chip-sparte gt">GT</span>
+      </div>
+      <h3>Verkehrsplanung-Trends · Mobilitätsstrategie ZH</h3>
+      <div class="lede">Cross-Sparten-Blick: Entwicklung im GT-Markt, relevant für ARC-Kandidaten mit Verkehrs-Projekterfahrung.</div>
+      <div class="tags">
+        <span class="tag">Verkehrsplanung</span>
+        <span class="tag">ZH</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip passed">Gelesen · 85%</span>
+        <span class="score">85%</span>
+      </div>
+    </div>
+
+    <!-- KW 15 ARC -->
+    <div class="issue-card done">
+      <div class="meta-row">
+        <span class="kw">KW 15 · 2026</span>
+        <span class="chip-sparte arc">ARC</span>
+      </div>
+      <h3>BIM-Durchdringung · 68% der Grossprojekte</h3>
+      <div class="lede">BIM ist 2026 bei Grossprojekten (&gt;20 Mio.) faktisch Standard. Kandidaten ohne BIM-Erfahrung fallen aus der Pipeline.</div>
+      <div class="tags">
+        <span class="tag">BIM</span>
+        <span class="tag">Digitalisierung</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip passed">Gelesen · 88%</span>
+        <span class="score">88%</span>
+      </div>
+    </div>
+
+    <!-- KW 14 ARC -->
+    <div class="issue-card done">
+      <div class="meta-row">
+        <span class="kw">KW 14 · 2026</span>
+        <span class="chip-sparte arc">ARC</span>
+      </div>
+      <h3>Nachhaltiges Bauen · Minergie-P-Standard neu</h3>
+      <div class="lede">Verschärfung der Nachhaltigkeits-Kriterien ab Q3 · neue Anforderungen an Architekten-Profile.</div>
+      <div class="tags">
+        <span class="tag">Nachhaltigkeit</span>
+        <span class="tag">Minergie</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip passed">Gelesen · 95%</span>
+        <span class="score">95%</span>
+      </div>
+    </div>
+
+    <!-- KW 13 - expired -->
+    <div class="issue-card" style="opacity:0.6;">
+      <div class="meta-row">
+        <span class="kw">KW 13 · 2026</span>
+        <span class="chip-sparte arc">ARC</span>
+      </div>
+      <h3>Messe Swissbau 2026 · Retrospektive + Trends</h3>
+      <div class="lede">Rückblick auf die wichtigste Bau-Messe der Schweiz. Welche Kunden besucht haben, welche Themen dominierten.</div>
+      <div class="tags">
+        <span class="tag">Messe</span>
+        <span class="tag">Swissbau</span>
+      </div>
+      <div class="footer">
+        <span class="status-chip" style="background:var(--surface-alt); color:var(--text-light);">Abgelaufen</span>
+        <span style="font-size:11px; color:var(--text-light);">nicht gelesen · expired</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

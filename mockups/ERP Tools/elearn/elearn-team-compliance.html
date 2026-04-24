@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Team-Compliance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:14px; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .kpi-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .kpi-card.green { border-left-color:var(--green); }
+  .kpi-card.amber { border-left-color:var(--amber); }
+  .kpi-card.red { border-left-color:var(--red); }
+  .kpi-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .kpi-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .kpi-card.green .big { color:var(--green); }
+  .kpi-card.amber .big { color:var(--amber); }
+  .kpi-card.red .big { color:var(--red); }
+  .kpi-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  .sec-head { display:flex; justify-content:space-between; align-items:baseline; margin:22px 0 12px; }
+  .sec-head h2 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0; font-weight:700; }
+  .sec-head .sub { font-size:12px; color:var(--text-light); }
+
+  .two-col { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; }
+  @media (max-width:1000px) { .two-col { grid-template-columns:1fr; } }
+
+  .table-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .compliance-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .compliance-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); }
+  .compliance-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .compliance-table tbody tr:last-child td { border-bottom:none; }
+  .compliance-table tbody tr { cursor:pointer; }
+  .compliance-table tbody tr:hover { background:var(--bg); }
+
+  .ma-cell { display:flex; align-items:center; gap:9px; }
+  .ma-avatar { width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville', serif; font-size:10.5px; font-weight:700; flex-shrink:0; }
+  .ma-name { font-weight:600; color:var(--text); }
+
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  .score-cell { display:flex; align-items:center; gap:10px; min-width:160px; }
+  .score-cell .bar { flex:1; height:6px; background:var(--surface-alt); border-radius:3px; overflow:hidden; }
+  .score-cell .fill { height:100%; }
+  .score-cell .fill.green { background:var(--green); }
+  .score-cell .fill.amber { background:var(--amber); }
+  .score-cell .fill.red { background:var(--red); }
+  .score-cell .pct { font-family:'Libre Baskerville', serif; font-weight:700; min-width:40px; text-align:right; font-size:13px; }
+  .score-cell .pct.green { color:var(--green); }
+  .score-cell .pct.amber { color:var(--amber); }
+  .score-cell .pct.red { color:var(--red); }
+
+  .trend-chip { display:inline-flex; gap:3px; font-size:11.5px; font-weight:600; }
+  .trend-chip.up { color:var(--green); }
+  .trend-chip.down { color:var(--red); }
+  .trend-chip.flat { color:var(--text-light); }
+
+  .overdue-pill { display:inline-block; padding:2px 8px; border-radius:10px; background:var(--surface-alt); color:var(--text); font-size:11px; font-weight:600; }
+  .overdue-pill.warn { background:color-mix(in srgb, var(--amber) 15%, var(--bg)); color:var(--amber); }
+  .overdue-pill.red { background:color-mix(in srgb, var(--red) 12%, var(--bg)); color:var(--red); }
+
+  /* Problem-List */
+  .problem-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:14px 18px; }
+  .problem-row { padding:10px 0; border-bottom:1px solid var(--border); display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; font-size:13px; }
+  .problem-row:last-child { border-bottom:none; }
+  .problem-row .rank { font-family:'Libre Baskerville', serif; font-size:14px; color:var(--text-light); font-weight:700; width:24px; text-align:center; }
+  .problem-row .body { display:flex; flex-direction:column; gap:2px; }
+  .problem-row .name { font-weight:600; color:var(--text); }
+  .problem-row .meta { font-size:11.5px; color:var(--text-light); }
+  .problem-row .score { font-family:'Libre Baskerville', serif; font-weight:700; font-size:15px; }
+  .problem-row .score.red { color:var(--red); }
+  .problem-row .score.amber { color:var(--amber); }
+
+  /* Trend-Chart */
+  .trend-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); padding:18px 20px; }
+  .trend-svg { width:100%; height:140px; }
+  .trend-legend { display:flex; justify-content:space-between; margin-top:10px; font-size:11px; color:var(--text-light); }
+
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  /* Alert-List */
+  .alerts-list { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .alert-row { padding:12px 16px; display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .alert-row:last-child { border-bottom:none; }
+  .alert-row .ico { font-size:18px; }
+  .alert-row .body { line-height:1.5; }
+  .alert-row .body strong { color:var(--text); }
+  .alert-row .body .sub { font-size:11.5px; color:var(--text-light); }
+  .alert-row.urgent { border-left:3px solid var(--red); }
+  .alert-row.warn { border-left:3px solid var(--amber); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Team-Compliance</h1>
+      <div class="sub">Sparte CE &amp; BT · 8 direkte Reports · Snapshot vom heutigen Stand (03:00 Uhr)</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-sm">↓ Report als PDF</button>
+      <button class="btn btn-primary btn-sm">Head-Notification konfigurieren</button>
+    </div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card amber">
+      <div class="lbl">Team-Score (Durchschnitt)</div>
+      <div class="big">78%</div>
+      <div class="sub">-2% vs. Vormonat</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">MA mit Score ≥ 90</div>
+      <div class="big">2</div>
+      <div class="sub">Sabine H. · Lukas R.</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="lbl">MA mit Score &lt; 70</div>
+      <div class="big">1</div>
+      <div class="sub">Anna K. · 62% · intervention?</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="lbl">Überfällige Items gesamt</div>
+      <div class="big">5</div>
+      <div class="sub">3 Kurse · 1 Newsletter · 1 Cert</div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="sec-head">
+    <h2>Escalation-Alerts</h2>
+    <span class="sub">Items &gt; 7 Tage überfällig bedürfen Head-Intervention</span>
+  </div>
+  <div class="alerts-list">
+    <div class="alert-row urgent">
+      <span class="ico">🚨</span>
+      <div class="body">
+        <strong>Anna K. · Datenschutz-Refresher seit 3 Tagen überfällig</strong>
+        <div class="sub">3. Reminder gesendet · nächster Eskalation-Check in 4 Tagen (Admin-CC)</div>
+      </div>
+      <button class="btn btn-sm">Eingreifen</button>
+    </div>
+    <div class="alert-row warn">
+      <span class="ico">⚠️</span>
+      <div class="body">
+        <strong>Eva M. · Newsletter KW16 nicht gelesen</strong>
+        <div class="sub">Cross-Sparte · 2 Reminder · Deadline abgelaufen</div>
+      </div>
+      <button class="btn btn-sm">Eingreifen</button>
+    </div>
+    <div class="alert-row warn">
+      <span class="ico">📄</span>
+      <div class="body">
+        <strong>Peter W. · Cert Datenschutz-Refresher läuft in 45 Tagen ab</strong>
+        <div class="sub">Rechtzeitiges Renewal einplanen</div>
+      </div>
+      <button class="btn btn-sm">Planen</button>
+    </div>
+  </div>
+
+  <!-- Team-Table + Chart/Problems -->
+  <div class="sec-head">
+    <h2>MA-Detail</h2>
+    <span class="sub">sortiert nach Score aufsteigend · Klick zeigt Detail-Drawer (aus elearn-team.html)</span>
+  </div>
+  <div class="two-col">
+
+    <!-- Table -->
+    <div class="table-card">
+      <table class="compliance-table">
+        <thead>
+          <tr>
+            <th>MA</th>
+            <th>Sparte</th>
+            <th>Score</th>
+            <th>Trend</th>
+            <th>Überfällig</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">AK</div><span class="ma-name">Anna K.</span></div></td>
+            <td><span class="chip-sparte ing">ING</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill red" style="width:62%;"></div></div>
+                <span class="pct red">62%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip down">▼ -5%</span></td>
+            <td><span class="overdue-pill red">3</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">Jürgen V.</span></div></td>
+            <td><span class="chip-sparte arc">ARC</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill amber" style="width:72%;"></div></div>
+                <span class="pct amber">72%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip up">▲ +8%</span></td>
+            <td><span class="overdue-pill warn">1</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">MB</div><span class="ma-name">Marc B.</span></div></td>
+            <td><span class="chip-sparte pur">PUR</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill amber" style="width:75%;"></div></div>
+                <span class="pct amber">75%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip up">▲ +3%</span></td>
+            <td><span class="overdue-pill warn">1</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">EM</div><span class="ma-name">Eva M.</span></div></td>
+            <td><span class="chip-sparte gt">GT</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill green" style="width:82%;"></div></div>
+                <span class="pct green">82%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip flat">— 0%</span></td>
+            <td><span class="overdue-pill warn">1</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">RF</div><span class="ma-name">Remo F.</span></div></td>
+            <td><span class="chip-sparte pur">PUR</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill green" style="width:85%;"></div></div>
+                <span class="pct green">85%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip up">▲ +4%</span></td>
+            <td><span class="overdue-pill">0</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">TG</div><span class="ma-name">Thomas G.</span></div></td>
+            <td><span class="chip-sparte arc">ARC</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill green" style="width:88%;"></div></div>
+                <span class="pct green">88%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip up">▲ +2%</span></td>
+            <td><span class="overdue-pill warn">1</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">LR</div><span class="ma-name">Lukas R.</span></div></td>
+            <td><span class="chip-sparte gt">GT</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill green" style="width:92%;"></div></div>
+                <span class="pct green">92%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip up">▲ +1%</span></td>
+            <td><span class="overdue-pill">0</span></td>
+          </tr>
+          <tr>
+            <td><div class="ma-cell"><div class="ma-avatar">SH</div><span class="ma-name">Sabine H.</span></div></td>
+            <td><span class="chip-sparte rem">REM</span></td>
+            <td>
+              <div class="score-cell">
+                <div class="bar"><div class="fill green" style="width:95%;"></div></div>
+                <span class="pct green">95%</span>
+              </div>
+            </td>
+            <td><span class="trend-chip flat">— 0%</span></td>
+            <td><span class="overdue-pill">0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Right column: Chart + Problem-List -->
+    <div>
+      <div class="trend-card">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
+          <h3 style="margin:0; font-family:'Libre Baskerville', serif; font-size:14px; color:var(--text); font-weight:700;">Team-Score-Trend</h3>
+          <span style="font-size:11px; color:var(--text-light);">letzte 6 Monate</span>
+        </div>
+        <svg class="trend-svg" viewBox="0 0 500 140" preserveAspectRatio="none">
+          <line x1="0" y1="28" x2="500" y2="28" stroke="var(--border)" stroke-dasharray="2,3"/>
+          <line x1="0" y1="70" x2="500" y2="70" stroke="var(--border)" stroke-dasharray="2,3"/>
+          <line x1="0" y1="112" x2="500" y2="112" stroke="var(--border)" stroke-dasharray="2,3"/>
+          <line x1="0" y1="52" x2="500" y2="52" stroke="var(--green)" stroke-dasharray="4,4" stroke-width="1"/>
+          <text x="498" y="48" fill="var(--green)" font-size="10" text-anchor="end" font-family="DM Sans">80% Ziel</text>
+          <!-- Team-Avg: 72, 75, 77, 80, 80, 78 -->
+          <polyline fill="none" stroke="var(--accent)" stroke-width="2.5" points="25,80 120,68 220,60 320,52 410,52 485,60" />
+          <circle cx="25" cy="80" r="4" fill="var(--accent)"/>
+          <circle cx="120" cy="68" r="4" fill="var(--accent)"/>
+          <circle cx="220" cy="60" r="4" fill="var(--accent)"/>
+          <circle cx="320" cy="52" r="4" fill="var(--green)" stroke="white" stroke-width="2"/>
+          <circle cx="410" cy="52" r="4" fill="var(--green)" stroke="white" stroke-width="2"/>
+          <circle cx="485" cy="60" r="5" fill="var(--amber)" stroke="white" stroke-width="2"/>
+        </svg>
+        <div class="trend-legend">
+          <span>Nov</span><span>Dez</span><span>Jan</span><span>Feb</span><span>Mär</span><span>Apr</span>
+        </div>
+      </div>
+
+      <div class="sec-head">
+        <h2>Aufmerksamkeit nötig</h2>
+        <span class="sub">Top-3 nach Score aufsteigend</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-row">
+          <span class="rank">1</span>
+          <div class="body">
+            <span class="name">Anna K.</span>
+            <span class="meta">AM · ING · Score stagniert unter 70% seit 2 Mt · 3 überfällig</span>
+          </div>
+          <span class="score red">62%</span>
+        </div>
+        <div class="problem-row">
+          <span class="rank">2</span>
+          <div class="body">
+            <span class="name">Jürgen V.</span>
+            <span class="meta">Researcher · ARC · Onboarding · Trend steigt, 1 überfällig</span>
+          </div>
+          <span class="score amber">72%</span>
+        </div>
+        <div class="problem-row">
+          <span class="rank">3</span>
+          <div class="body">
+            <span class="name">Marc B.</span>
+            <span class="meta">Researcher · PUR · Onboarding · 1 Pflicht offen</span>
+          </div>
+          <span class="score amber">75%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

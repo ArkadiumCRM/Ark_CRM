@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow-y:auto; }
+  .dash-page { padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  /* HERO-STRIP (einheitlich mit hr-dashboard / commission-dashboard) */
+  .hero-strip {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    margin-bottom:22px;
+  }
+  .hero-card {
+    background:var(--surface); padding:18px 20px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .hero-card.green { border-left-color:var(--green); }
+  .hero-card.amber { border-left-color:var(--amber); }
+  .hero-card.red   { border-left-color:var(--red); }
+  .hero-card .lbl {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px;
+    color:var(--text-light); font-weight:600;
+  }
+  .hero-card .big {
+    font-family:'Libre Baskerville',serif; font-size:28px; font-weight:700;
+    color:var(--accent); line-height:1; margin:8px 0 5px;
+  }
+  .hero-card.green .big { color:var(--green); }
+  .hero-card.amber .big { color:var(--amber); }
+  .hero-card.red   .big { color:var(--red); }
+  .hero-card .sub { font-size:12px; color:var(--text-mid); }
+
+  /* Section-Head */
+  .sec-head {
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin:28px 0 14px;
+  }
+  .sec-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:17px; font-weight:700; color:var(--accent);
+  }
+  .sec-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* Path-Mini (Onboarding-Visualisierung) */
+  .path-mini {
+    display:grid; grid-template-columns:repeat(5,1fr); gap:8px;
+    margin-top:6px;
+  }
+  .pth-cell {
+    background:var(--surface); padding:12px 14px; border-radius:3px;
+    box-shadow:var(--shadow-sm); border-top:3px solid var(--border);
+  }
+  .pth-cell.done { border-top-color:var(--green); }
+  .pth-cell.current { border-top-color:var(--accent); background:color-mix(in srgb,var(--accent) 5%,var(--surface)); }
+  .pth-cell.locked { border-top-color:var(--text-light); opacity:0.65; }
+  .pth-cell .lbl {
+    font-size:10px; text-transform:uppercase; letter-spacing:1px;
+    color:var(--text-light); font-weight:600;
+  }
+  .pth-cell .title {
+    font-size:13px; font-weight:600; color:var(--text); margin-top:4px;
+    line-height:1.25;
+  }
+  .pth-cell .meta {
+    font-size:11px; color:var(--text-light); margin-top:4px;
+  }
+
+  /* 2-Column */
+  .two-col { display:grid; grid-template-columns:1.1fr 1fr; gap:20px; }
+  @media (max-width:1000px) {
+    .two-col { grid-template-columns:1fr; }
+    .hero-strip { grid-template-columns:repeat(2,1fr); }
+    .path-mini { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* Action-Items */
+  .alerts-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item {
+    background:var(--surface); padding:12px 14px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+    display:flex; gap:12px; align-items:flex-start; cursor:pointer;
+  }
+  .alert-item.urgent { border-left-color:var(--red); }
+  .alert-item.warning { border-left-color:var(--amber); }
+  .alert-item .icon { font-size:18px; margin-top:2px; flex-shrink:0; }
+  .alert-item .body { flex:1; }
+  .alert-item .title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .alert-item .note { font-size:11.5px; color:var(--text-light); line-height:1.45; }
+
+  /* Key-Liste (Recent Activity) */
+  .key-card {
+    background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm);
+    overflow:hidden;
+  }
+  .key-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .key-table th {
+    text-align:left; padding:10px 12px; background:var(--bg);
+    font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600;
+    border-bottom:1px solid var(--border);
+  }
+  .key-table td {
+    padding:10px 12px; border-bottom:1px solid var(--border);
+  }
+  .key-table tbody tr:last-child td { border-bottom:none; }
+  .key-table tbody tr:hover { background:var(--bg); cursor:pointer; }
+  .status-chip {
+    padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600;
+    background:var(--surface-alt); color:var(--text-mid);
+  }
+  .status-chip.done { background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green); }
+  .status-chip.passed { background:color-mix(in srgb,var(--green) 15%,var(--bg)); color:var(--green); }
+  .status-chip.running { background:color-mix(in srgb,var(--accent) 15%,var(--bg)); color:var(--accent); }
+
+  /* Sparten-Chips */
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  .btn-link {
+    background:transparent; border:none; color:var(--accent);
+    font-size:12px; font-weight:600; cursor:pointer; padding:0;
+    text-decoration:none;
+  }
+  .btn-link:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="dash-page">
+
+  <!-- HERO-STRIP (4 KPIs) -->
+  <div class="hero-strip">
+    <div class="hero-card amber">
+      <div class="lbl">Offene Pflicht-Kurse</div>
+      <div class="big">2</div>
+      <div class="sub">1 überfällig · 1 fällig in 25 Tagen</div>
+    </div>
+    <div class="hero-card green">
+      <div class="lbl">Compliance-Score</div>
+      <div class="big">82%</div>
+      <div class="sub">gut · 1 offenes Pflicht-Item</div>
+    </div>
+    <div class="hero-card">
+      <div class="lbl">Aktueller Fortschritt</div>
+      <div class="big">45%</div>
+      <div class="sub">Marktwissen ARC · Modul 2 / 4</div>
+    </div>
+    <div class="hero-card green">
+      <div class="lbl">Abgeschlossen 2026</div>
+      <div class="big">3</div>
+      <div class="sub">3 Zertifikate · 4 Badges</div>
+    </div>
+  </div>
+
+  <!-- PFAD-MINI (Onboarding-Pfad) -->
+  <div class="sec-head">
+    <h2>Dein Pfad · Onboarding ARC · Researcher</h2>
+    <a class="btn-link" href="elearn-my-courses.html">Alle Kurse →</a>
+  </div>
+  <div class="path-mini">
+    <div class="pth-cell done">
+      <div class="lbl">✓ Abgeschlossen</div>
+      <div class="title">Onboarding Arkadium</div>
+      <div class="meta">12.04.2026 · 100%</div>
+    </div>
+    <div class="pth-cell done">
+      <div class="lbl">✓ Abgeschlossen</div>
+      <div class="title">Recruiting-Grundlagen</div>
+      <div class="meta">17.04.2026 · Quiz 88%</div>
+    </div>
+    <div class="pth-cell current">
+      <div class="lbl">▶ Aktuell</div>
+      <div class="title">Marktwissen ARC</div>
+      <div class="meta">45% · Modul 2 / 4</div>
+    </div>
+    <div class="pth-cell locked">
+      <div class="lbl">🔒 Gesperrt</div>
+      <div class="title">Technik-Grundlagen ARC</div>
+      <div class="meta">Nach Marktwissen</div>
+    </div>
+    <div class="pth-cell locked">
+      <div class="lbl">🔒 Gesperrt</div>
+      <div class="title">Kommunikation</div>
+      <div class="meta">—</div>
+    </div>
+  </div>
+
+  <!-- ACTION + KEY-LIST -->
+  <div class="two-col" style="margin-top:28px;">
+
+    <div>
+      <div class="sec-head" style="margin-top:0;">
+        <h2>Action-Items</h2>
+        <span class="sub">4 offen</span>
+      </div>
+      <div class="alerts-list">
+        <div class="alert-item urgent" onclick="location.href='elearn-course.html'">
+          <span class="icon">⚠️</span>
+          <div class="body">
+            <div class="title">Datenschutz-Refresher überfällig</div>
+            <div class="note">Seit 3 Tagen offen · Pflicht · jetzt erledigen</div>
+          </div>
+        </div>
+        <div class="alert-item warning">
+          <span class="icon">📬</span>
+          <div class="body">
+            <div class="title">Newsletter KW17 bereit (Sparte ARC)</div>
+            <div class="note">Pflicht-Lock aktiv · noch 2 Tage bis Deadline</div>
+          </div>
+        </div>
+        <div class="alert-item warning">
+          <span class="icon">🔄</span>
+          <div class="body">
+            <div class="title">Refresher Marktwissen ARC</div>
+            <div class="note">Fällig in 25 Tagen · jährlicher Turnus</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <span class="icon">▶</span>
+          <div class="body">
+            <div class="title">Weiterlernen: Marktwissen ARC</div>
+            <div class="note">Modul 2 · Lesson „Pauschale vs. Aufwand" · ca. 6 Min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-head" style="margin-top:0;">
+        <h2>Letzte Aktivität</h2>
+        <a class="btn-link" href="elearn-certificates.html">Alle Zertifikate →</a>
+      </div>
+      <div class="key-card">
+        <table class="key-table">
+          <thead>
+            <tr><th>Kurs</th><th>Sparte</th><th>Ereignis</th><th>Datum</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Marktwissen ARC</td>
+              <td><span class="chip-sparte arc">ARC</span></td>
+              <td><span class="status-chip running">Lesson erledigt</span></td>
+              <td>Heute</td>
+            </tr>
+            <tr>
+              <td>Marktwissen ARC · Modul 1</td>
+              <td><span class="chip-sparte arc">ARC</span></td>
+              <td><span class="status-chip passed">Quiz 88%</span></td>
+              <td>Gestern</td>
+            </tr>
+            <tr>
+              <td>Recruiting-Grundlagen</td>
+              <td><span class="chip-sparte arc">ARC</span></td>
+              <td><span class="status-chip done">Abgeschlossen</span></td>
+              <td>17.04.2026</td>
+            </tr>
+            <tr>
+              <td>Onboarding Arkadium</td>
+              <td><span class="chip-sparte arc">ARC</span></td>
+              <td><span class="status-chip done">Abgeschlossen</span></td>
+              <td>12.04.2026</td>
+            </tr>
+            <tr>
+              <td>Marktwissen ARC</td>
+              <td><span class="chip-sparte arc">ARC</span></td>
+              <td><span class="status-chip running">Kurs gestartet</span></td>
+              <td>18.04.2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

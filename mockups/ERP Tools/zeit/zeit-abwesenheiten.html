@@ -592,5 +592,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function closeAllDrawers() { document.querySelectorAll(".drawer.open").forEach(d => d.classList.remove("open")); document.querySelectorAll(".drawer-backdrop.open").forEach(b => b.classList.remove("open")); }
 </script>
 
+<script>(function(){var t=localStorage.getItem("ark-theme")||"light";document.documentElement.setAttribute("data-theme",t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);var b=document.getElementById('themeBtn');if(b)b.textContent=e.data.value==='dark'?'☾':'☀';}});})();</script>
 </body>
 </html>

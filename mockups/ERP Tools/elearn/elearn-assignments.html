@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — E-Learning · Zuweisungen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .page { height:100%; overflow-y:auto; padding:22px 28px 48px; max-width:1500px; margin:0 auto; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; gap:14px; flex-wrap:wrap; }
+  .page-head h1 { font-family:'Libre Baskerville', serif; font-size:24px; color:var(--accent); font-weight:700; margin:0 0 4px; }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+
+  /* HERO-STRIP */
+  .hero-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .hero-card { background:var(--surface); padding:14px 18px; border-radius:4px; box-shadow:var(--shadow-sm); border-left:3px solid var(--accent); }
+  .hero-card.green { border-left-color:var(--green); }
+  .hero-card.amber { border-left-color:var(--amber); }
+  .hero-card.red { border-left-color:var(--red); }
+  .hero-card .lbl { font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); font-weight:600; }
+  .hero-card .big { font-family:'Libre Baskerville', serif; font-size:24px; font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px; }
+  .hero-card.green .big { color:var(--green); }
+  .hero-card.amber .big { color:var(--amber); }
+  .hero-card.red .big { color:var(--red); }
+  .hero-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  /* Tab-Nav */
+  .tabs-nav { display:flex; gap:2px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .tab-btn { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-light); border:none; background:transparent; cursor:pointer; border-bottom:2px solid transparent; font-family:'DM Sans', sans-serif; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab-btn .count { background:var(--surface-alt); padding:1px 7px; border-radius:10px; margin-left:6px; font-size:11px; }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; background:var(--surface); padding:10px 14px; border-radius:4px; box-shadow:var(--shadow-sm); margin-bottom:14px; flex-wrap:wrap; }
+  .toolbar input[type="search"] { flex:1; min-width:180px; border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+  .toolbar select { border:1px solid var(--border); border-radius:3px; padding:6px 10px; font-size:12.5px; background:var(--bg); color:var(--text); font-family:'DM Sans', sans-serif; }
+
+  .btn { padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px; cursor:pointer; font-family:'DM Sans', sans-serif; transition:all 0.1s; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-ghost { background:transparent; border:1px solid var(--border-strong); }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+  .btn-danger { color:var(--red); border-color:color-mix(in srgb, var(--red) 30%, var(--border)); }
+  .btn-danger:hover { background:color-mix(in srgb, var(--red) 8%, var(--surface)); border-color:var(--red); }
+
+  /* Tabelle */
+  .table-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .assign-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .assign-table th { text-align:left; padding:10px 12px; background:var(--bg); font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .assign-table td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .assign-table tbody tr:last-child td { border-bottom:none; }
+  .assign-table tbody tr:hover { background:var(--bg); }
+
+  .ma-cell { display:flex; align-items:center; gap:9px; }
+  .ma-avatar { width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Libre Baskerville', serif; font-size:10.5px; font-weight:700; flex-shrink:0; }
+  .ma-name { font-weight:600; color:var(--text); }
+
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  .reason-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .reason-chip.onboarding { background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .reason-chip.refresher { background:color-mix(in srgb, #6B4E9F 15%, var(--bg)); color:#6B4E9F; }
+  .reason-chip.adhoc { background:color-mix(in srgb, var(--amber) 20%, var(--bg)); color:var(--amber); }
+  .reason-chip.role { background:color-mix(in srgb, #1E7A8C 15%, var(--bg)); color:#1E7A8C; }
+  .reason-chip.compliance { background:color-mix(in srgb, var(--red) 12%, var(--bg)); color:var(--red); }
+
+  .status-chip { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-weight:600; }
+  .status-chip.active { background:color-mix(in srgb, var(--accent) 15%, var(--bg)); color:var(--accent); }
+  .status-chip.completed { background:color-mix(in srgb, var(--green) 15%, var(--bg)); color:var(--green); }
+  .status-chip.expired { background:color-mix(in srgb, var(--red) 15%, var(--bg)); color:var(--red); }
+  .status-chip.cancelled { background:var(--surface-alt); color:var(--text-light); text-decoration:line-through; }
+
+  .deadline-cell { font-size:12.5px; }
+  .deadline-cell.green { color:var(--green); font-weight:600; }
+  .deadline-cell.amber { color:var(--amber); font-weight:600; }
+  .deadline-cell.red { color:var(--red); font-weight:700; }
+
+  .progress-inline { display:flex; align-items:center; gap:8px; min-width:120px; }
+  .progress-inline .pbar-track { flex:1; height:6px; background:var(--surface-alt); border-radius:3px; overflow:hidden; }
+  .progress-inline .pbar-fill { height:100%; background:var(--accent); }
+  .progress-inline .pct { font-size:11.5px; font-weight:600; color:var(--text); min-width:30px; text-align:right; }
+
+  .row-actions { display:flex; gap:4px; justify-content:flex-end; }
+  .row-actions button { background:transparent; border:none; color:var(--text-light); cursor:pointer; padding:4px 6px; border-radius:3px; font-size:13px; }
+  .row-actions button:hover { background:var(--bg); color:var(--accent); }
+  .row-actions .del:hover { color:var(--red); }
+
+  /* DRAWER */
+  .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:1; transition:opacity 0.18s; z-index:100; }
+  .drawer-overlay.hidden { opacity:0; pointer-events:none; }
+  .drawer { position:fixed; top:0; right:0; width:540px; height:100%; background:var(--surface); border-left:1px solid var(--border); box-shadow:-6px 0 20px rgba(0,0,0,0.12); z-index:101; display:flex; flex-direction:column; transition:transform 0.2s; }
+  .drawer.hidden { transform:translateX(100%); }
+  .drawer-head { padding:20px 24px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+  .drawer-head .title-block .lbl { font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:4px; }
+  .drawer-head .title-block h3 { font-family:'Libre Baskerville', serif; font-size:19px; color:var(--accent); font-weight:700; margin:0; }
+  .drawer-head .close-btn { background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-light); padding:4px 8px; border-radius:3px; }
+  .drawer-head .close-btn:hover { background:var(--bg); color:var(--text); }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 24px 24px; }
+
+  /* Form */
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-light); font-weight:600; margin-bottom:6px; }
+  .form-group label .req { color:var(--red); }
+  .form-group input[type="text"],
+  .form-group input[type="date"],
+  .form-group select,
+  .form-group textarea {
+    width:100%; box-sizing:border-box; border:1px solid var(--border); border-radius:3px;
+    padding:8px 10px; font-size:13px; background:var(--bg); color:var(--text);
+    font-family:'DM Sans', sans-serif;
+  }
+  .form-group textarea { resize:vertical; min-height:64px; }
+  .form-group .hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+
+  /* MA-Picker (Multi-Select-Chips) */
+  .ma-picker { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:6px; min-height:44px; display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+  .ma-picker .ma-selected { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; background:var(--accent); color:white; border-radius:14px; font-size:12px; font-weight:500; }
+  .ma-picker .ma-selected .x { cursor:pointer; font-size:14px; line-height:1; }
+  .ma-picker input { flex:1; min-width:120px; border:none; background:transparent; outline:none; padding:4px 6px; font-size:12.5px; font-family:'DM Sans', sans-serif; color:var(--text); }
+
+  /* Checkbox-Row */
+  .checkbox-row { display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:var(--text); padding:8px 0; }
+  .checkbox-row input[type="checkbox"] { margin-top:3px; cursor:pointer; }
+  .checkbox-row label { cursor:pointer; font-size:12.5px; line-height:1.45; }
+  .checkbox-row label strong { color:var(--text); display:block; margin-bottom:2px; }
+
+  /* Preview-Box */
+  .preview-box { background:color-mix(in srgb, var(--accent) 5%, var(--surface)); border:1px dashed var(--accent); border-radius:4px; padding:12px 14px; font-size:12.5px; color:var(--text); line-height:1.5; }
+  .preview-box strong { color:var(--accent); }
+
+  /* Drawer-Foot */
+  .drawer-foot { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; background:var(--surface); }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});})();</script>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1>Zuweisungen</h1>
+      <div class="sub">Kurs-Assignments im Team · Ad-hoc, Onboarding, Refresher, Compliance</div>
+    </div>
+    <button class="btn btn-primary" onclick="openDrawer()">➕ Ad-hoc Zuweisung</button>
+  </div>
+
+  <!-- HERO-STRIP -->
+  <div class="hero-strip">
+    <div class="hero-card">
+      <div class="lbl">Aktive Zuweisungen</div>
+      <div class="big">14</div>
+      <div class="sub">8 MA betroffen</div>
+    </div>
+    <div class="hero-card red">
+      <div class="lbl">Überfällig</div>
+      <div class="big">3</div>
+      <div class="sub">2 Compliance · 1 Onboarding</div>
+    </div>
+    <div class="hero-card amber">
+      <div class="lbl">Fällig diese Woche</div>
+      <div class="big">5</div>
+      <div class="sub">2 Refresher · 3 Onboarding</div>
+    </div>
+    <div class="hero-card green">
+      <div class="lbl">Abgeschlossen 2026</div>
+      <div class="big">27</div>
+      <div class="sub">Schnitt 88% Quiz-Score</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-nav">
+    <button class="tab-btn active">Aktiv <span class="count">14</span></button>
+    <button class="tab-btn">Abgeschlossen <span class="count">27</span></button>
+    <button class="tab-btn">Abgelaufen <span class="count">4</span></button>
+    <button class="tab-btn">Storniert <span class="count">2</span></button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input type="search" placeholder="Suche nach MA oder Kurs…">
+    <select>
+      <option>Alle Mitarbeiter</option>
+      <option>Jürgen V.</option>
+      <option>Lukas R.</option>
+      <option>Anna K.</option>
+      <option>Marc B.</option>
+    </select>
+    <select>
+      <option>Alle Gründe</option>
+      <option>Onboarding</option>
+      <option>Refresher</option>
+      <option>Ad-hoc</option>
+      <option>Rollen-/Sparten-Wechsel</option>
+      <option>Compliance</option>
+    </select>
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC</option>
+      <option>GT</option>
+      <option>ING</option>
+      <option>PUR</option>
+      <option>REM</option>
+    </select>
+    <button class="btn btn-sm">↓ CSV</button>
+  </div>
+
+  <!-- Tabelle -->
+  <div class="table-card">
+    <table class="assign-table">
+      <thead>
+        <tr>
+          <th>Mitarbeiter</th>
+          <th>Kurs</th>
+          <th>Sparte</th>
+          <th>Grund</th>
+          <th>Deadline</th>
+          <th>Fortschritt</th>
+          <th>Status</th>
+          <th style="text-align:right;">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">AK</div><span class="ma-name">Anna K.</span></div></td>
+          <td>Datenschutz-Refresher</td>
+          <td><span class="chip-sparte ing">ING</span></td>
+          <td><span class="reason-chip compliance">Compliance</span></td>
+          <td><span class="deadline-cell red">überfällig · 3 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:10%; background:var(--red);"></div></div><span class="pct">10%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">Jürgen V.</span></div></td>
+          <td>Marktwissen ARC</td>
+          <td><span class="chip-sparte arc">ARC</span></td>
+          <td><span class="reason-chip onboarding">Onboarding</span></td>
+          <td><span class="deadline-cell amber">15.05.2026 · 21 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:45%;"></div></div><span class="pct">45%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">Jürgen V.</span></div></td>
+          <td>Technik-Grundlagen ARC</td>
+          <td><span class="chip-sparte arc">ARC</span></td>
+          <td><span class="reason-chip onboarding">Onboarding</span></td>
+          <td><span class="deadline-cell">15.06.2026 · 52 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:0%;"></div></div><span class="pct">—</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">PW</div><span class="ma-name">Peter W.</span></div></td>
+          <td>Marktwissen ARC (Refresh 2026)</td>
+          <td><span class="chip-sparte arc">ARC</span></td>
+          <td><span class="reason-chip refresher">Refresher</span></td>
+          <td><span class="deadline-cell amber">15.05.2026 · 21 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:0%;"></div></div><span class="pct">—</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">LR</div><span class="ma-name">Lukas R.</span></div></td>
+          <td>Marktwissen GT (Cross-Sparte)</td>
+          <td><span class="chip-sparte gt">GT</span></td>
+          <td><span class="reason-chip adhoc">Ad-hoc</span></td>
+          <td><span class="deadline-cell green">30.06.2026 · 67 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:85%; background:var(--green);"></div></div><span class="pct">85%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">MB</div><span class="ma-name">Marc B.</span></div></td>
+          <td>Recruiting-Grundlagen</td>
+          <td><span class="chip-sparte pur">PUR</span></td>
+          <td><span class="reason-chip onboarding">Onboarding</span></td>
+          <td><span class="deadline-cell">08.07.2026 · 75 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:60%;"></div></div><span class="pct">60%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">TG</div><span class="ma-name">Thomas G.</span></div></td>
+          <td>Kommunikation &amp; Interview</td>
+          <td><span class="chip-sparte arc">ARC</span></td>
+          <td><span class="reason-chip role">Rollen-Wechsel</span></td>
+          <td><span class="deadline-cell">22.07.2026 · 89 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:30%;"></div></div><span class="pct">30%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="ma-cell"><div class="ma-avatar">EM</div><span class="ma-name">Eva M.</span></div></td>
+          <td>Onboarding Arkadium</td>
+          <td><span class="chip-sparte gt">GT</span></td>
+          <td><span class="reason-chip onboarding">Onboarding</span></td>
+          <td><span class="deadline-cell amber">30.04.2026 · 6 Tage</span></td>
+          <td><div class="progress-inline"><div class="pbar-track"><div class="pbar-fill" style="width:75%;"></div></div><span class="pct">75%</span></div></td>
+          <td><span class="status-chip active">aktiv</span></td>
+          <td><div class="row-actions"><button title="Details">✎</button><button class="del" title="Stornieren">✕</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- DRAWER: Ad-hoc Zuweisung -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer hidden" id="drawer">
+  <div class="drawer-head">
+    <div class="title-block">
+      <div class="lbl">Neue Zuweisung</div>
+      <h3>Ad-hoc Kurs zuweisen</h3>
+    </div>
+    <button class="close-btn" onclick="closeDrawer()" aria-label="Schliessen">×</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="form-group">
+      <label>Mitarbeiter <span class="req">*</span></label>
+      <div class="ma-picker">
+        <span class="ma-selected">JV · Jürgen V.<span class="x">×</span></span>
+        <span class="ma-selected">MB · Marc B.<span class="x">×</span></span>
+        <input type="text" placeholder="Name suchen…">
+      </div>
+      <div class="hint">Mehrfach-Auswahl möglich · nur MA aus deinem Team-Scope (Sparte CE &amp; BT)</div>
+    </div>
+
+    <div class="form-group">
+      <label>Kurs <span class="req">*</span></label>
+      <select>
+        <option>— Kurs auswählen —</option>
+        <optgroup label="Marktwissen">
+          <option>Marktwissen ARC</option>
+          <option>Marktwissen GT</option>
+          <option>Marktwissen ING</option>
+          <option>Marktwissen PUR</option>
+          <option>Marktwissen REM</option>
+        </optgroup>
+        <optgroup label="Technik">
+          <option>Technik-Grundlagen ARC</option>
+          <option>Technik-Grundlagen GT</option>
+          <option>SIA-Normen Überblick</option>
+        </optgroup>
+        <optgroup label="Recruiting">
+          <option selected>Recruiting-Grundlagen</option>
+          <option>Kommunikation &amp; Interview</option>
+          <option>Verhaltenspsychologie</option>
+        </optgroup>
+        <optgroup label="Compliance">
+          <option>Datenschutz-Refresher</option>
+          <option>Onboarding Arkadium</option>
+        </optgroup>
+      </select>
+      <div class="hint">Nur veröffentlichte Kurse (aktuelle Version aus Content-Repo)</div>
+    </div>
+
+    <div class="form-group">
+      <label>Deadline <span class="req">*</span></label>
+      <input type="date" value="2026-07-15">
+      <div class="hint">Kalender + manuelle Eingabe · Default 90 Tage nach heute</div>
+    </div>
+
+    <div class="form-group">
+      <label>Grund <span class="req">*</span></label>
+      <select>
+        <option>— Grund auswählen —</option>
+        <option selected>Ad-hoc</option>
+        <option>Rollen-Wechsel</option>
+        <option>Sparten-Wechsel</option>
+        <option>Compliance (neue Vorgabe)</option>
+        <option>Auf Wunsch des MA</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Begründung (für MA sichtbar)</label>
+      <textarea placeholder="z.B. Cross-Sparten-Aufbau für Pipeline-Ausbau Q3">Cross-Sparten-Aufbau · MA soll Pipeline-Projekte in PUR mit-betreuen können. Priorität vor Onboarding-Pfad.</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Benachrichtigung</label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="notify-ma" checked>
+        <label for="notify-ma"><strong>MA per Mail + Teams benachrichtigen</strong>Default-Template „Neue Zuweisung" · CodeTwo-Signatur</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="notify-head" checked>
+        <label for="notify-head"><strong>Mich bei Fertigstellung + Abbruch benachrichtigen</strong>Push-Notification im CRM</label>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="form-group">
+      <label>Vorschau</label>
+      <div class="preview-box">
+        <strong>2 Zuweisungen</strong> werden erstellt:<br>
+        · Jürgen V. → Recruiting-Grundlagen · Deadline 15.07.2026<br>
+        · Marc B. → Recruiting-Grundlagen · Deadline 15.07.2026<br>
+        Grund: Ad-hoc · MA erhalten Mail + Teams-Notification. Aktion im Audit-Trail protokolliert.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn btn-primary">✓ Zuweisen</button>
+  </div>
+</aside>
+
+<script>
+  function openDrawer() {
+    document.getElementById('drawer').classList.remove('hidden');
+    document.getElementById('drawerOverlay').classList.remove('hidden');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.add('hidden');
+    document.getElementById('drawerOverlay').classList.add('hidden');
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+</script>
+
+</body>
+</html>

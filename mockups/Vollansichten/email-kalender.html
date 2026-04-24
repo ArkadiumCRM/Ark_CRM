@@ -1785,7 +1785,8 @@ function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme') || 'light';
   applyTheme(cur === 'dark' ? 'light' : 'dark');
 }
-(function(){ applyTheme(localStorage.getItem('ark-theme') || 'light'); })();
+(function(){ applyTheme(localStorage.getItem('ark-theme') || 'light');
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){applyTheme(e.data.value);}}); })();
 
 /* ========= MODE-SWITCH (Email ↔ Kalender) ========= */
 function switchMode(m) {

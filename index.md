@@ -147,6 +147,7 @@ updated: 2026-04-19
 
 ## Analyses (8)
 
+- [[sync-report-2026-04-24]] — Drift-Scan nach E-Learning Sub A–D + Billing · 0 unresolved Changelog · 0 stale Digests · E-Learning-Patches noch nicht in Grundlagen gemerged
 - [[sync-report-2026-04-17]] — Drift-Scan nach Admin-Vollansicht-Specs · 9 unresolved Changelog · 2 stale Digests · 10 Sync-Schulden Admin ↔ Grundlagen
 - [[ungereimtheiten-report]] — Systematische Prüfung aller Widersprüche, Entscheidungen, Schema-Deltas, offene Specs
 - [[namenskonventionen]] — Kanonische Benennungen: Rollen, Stages, Status, Wechselmotivation
@@ -158,6 +159,7 @@ updated: 2026-04-19
 
 ## Meta
 
+- [[elearn-handover]] — E-Learning Modul Handover: 6 fertige Mockups, 12 fehlende Pages, Sub A–D Scope, Prio-Reihenfolge
 - [[overview]] — Gesamtübersicht des ARK CRM mit allen Verknüpfungen
 - [[detailseiten-guideline]] — Pflicht-Inhalt für Schema + Interactions jeder Detailseite
 - [[detailseiten-inventar]] — Status-Übersicht aller spezifizierten / fehlenden Detailseiten

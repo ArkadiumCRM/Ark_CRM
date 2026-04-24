@@ -605,6 +605,7 @@
     <a class="tool-tab" href="ERP%20Tools/zeit/zeit.html"><span class="icon">⏱</span><span class="label">Zeit</span></a>
     <a class="tool-tab" href="ERP%20Tools/billing/billing.html"><span class="icon">📄</span><span class="label">Billing</span></a>
     <span class="tool-tab disabled"><span class="icon">📊</span><span class="label">Performance</span></span>
+    <a class="tool-tab" href="ERP%20Tools/elearn/elearn.html"><span class="icon">🎓</span><span class="label">E-Learning</span></a>
   </div>
   <div class="right">
     <span class="cmd-hint" onclick="openCmdPalette && openCmdPalette()"><kbd>⌘K</kbd>Suche</span>
@@ -899,6 +900,9 @@ function applyTheme(theme) {
       f.contentDocument.documentElement.setAttribute('data-theme', theme);
       const ifBtn = f.contentDocument.getElementById('themeBtn');
       if (ifBtn) ifBtn.textContent = glyph;
+    }
+    if (f && f.contentWindow) {
+      f.contentWindow.postMessage({type:'ark-theme', value:theme}, '*');
     }
   } catch(e){}
 }
