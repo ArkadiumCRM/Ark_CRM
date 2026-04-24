@@ -225,8 +225,8 @@
 
   <div class="page-head">
     <div>
-      <h1>Finanzen · Inkasso <span class="gf-badge">⚐ GF-Pflicht</span></h1>
-      <div class="sub">11 aktive Fälle · CHF 187'420 Forderung gesamt · 3 neue Vorschläge pending GF-Freigabe · Recovery-Rate 12 Monate: 74 %</div>
+      <h1>Finanzen · Inkasso <span class="gf-badge">⚐ Admin-Pflicht</span></h1>
+      <div class="sub">11 aktive Fälle · CHF 187'420 Forderung gesamt · 3 neue Vorschläge pending Admin-Freigabe · Recovery-Rate 12 Monate: 74 %</div>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="btn btn-secondary" type="button">◰ CSV-Export</button>
@@ -243,7 +243,7 @@
       <div class="trend">CHF 187'420 Forderung</div>
     </div>
     <div class="kpi amber">
-      <div class="lbl">Pending GF-Freigabe</div>
+      <div class="lbl">Pending Admin-Freigabe</div>
       <div class="big">3</div>
       <div class="sub">vorbereitet von Backoffice</div>
       <div class="trend">CHF 52'400 Forderung</div>
@@ -268,7 +268,7 @@
     <div class="pipe-row">
       <div class="pipe-step warn">
         <div class="cnt">3</div>
-        <div class="lbl">Pending GF</div>
+        <div class="lbl">Pending Admin</div>
         <div class="amt">CHF 52'400</div>
       </div>
       <div class="pipe-step active">
@@ -303,7 +303,7 @@
   <div class="filter-bar">
     <div class="search"><input type="text" placeholder="Suche nach Fall-Nr, Kunde, Rechnung, Partner …"></div>
     <div class="sep"></div>
-    <div class="grp"><label>Stage</label><select><option>alle aktiven</option><option>Pending GF</option><option>Eingereicht</option><option>In Bearbeitung</option><option>Zahlungsvereinbarung</option><option>Betreibungsbegehren</option><option>Rechtsöffnung</option><option>Gerichtsverfahren</option><option>Erledigt</option><option>Uneinbringlich</option></select></div>
+    <div class="grp"><label>Stage</label><select><option>alle aktiven</option><option>Pending Admin</option><option>Eingereicht</option><option>In Bearbeitung</option><option>Zahlungsvereinbarung</option><option>Betreibungsbegehren</option><option>Rechtsöffnung</option><option>Gerichtsverfahren</option><option>Erledigt</option><option>Uneinbringlich</option></select></div>
     <div class="grp"><label>Partner</label><select><option>alle</option><option>Creditreform</option><option>Intrum</option><option>Dun &amp; Bradstreet</option><option>Anwaltskanzlei Baumgartner</option><option>Gerichtliches Betreibungsamt</option></select></div>
     <div class="grp"><label>Sparte</label><select><option>alle</option><option>ARC</option><option>GT</option><option>ING</option><option>PUR</option><option>REM</option></select></div>
     <div class="grp"><label>AM</label><select><option>alle</option><option>PW</option><option>YB</option><option>SP</option><option>JV</option><option>NP</option></select></div>
@@ -318,7 +318,7 @@
       <button class="bulk-btn" type="button">⎙ Aktenübersicht (PDF-Batch)</button>
       <button class="bulk-btn" type="button">◰ CSV-Export · Steuerprüfung</button>
       <button class="bulk-btn" type="button">✉ Status-Abfrage an Partner</button>
-      <button class="bulk-btn danger" type="button">⌫ Als uneinbringlich buchen · GF-Pflicht</button>
+      <button class="bulk-btn danger" type="button">⌫ Als uneinbringlich buchen · Admin-Pflicht</button>
     </div>
   </div>
 
@@ -366,7 +366,7 @@
           <td><span class="chip partner">Creditreform</span></td>
           <td style="color:var(--text-light);">pending</td>
           <td style="color:var(--text-light);">—</td>
-          <td><span class="chip pending">Pending GF</span></td>
+          <td><span class="chip pending">Pending Admin</span></td>
         </tr>
 
         <tr class="pending-row">
@@ -392,7 +392,7 @@
           <td><span class="chip partner">Intrum</span></td>
           <td style="color:var(--text-light);">pending</td>
           <td style="color:var(--text-light);">—</td>
-          <td><span class="chip pending">Pending GF</span></td>
+          <td><span class="chip pending">Pending Admin</span></td>
         </tr>
 
         <tr class="pending-row">
@@ -418,7 +418,7 @@
           <td><span class="chip partner">Creditreform</span></td>
           <td style="color:var(--text-light);">pending</td>
           <td style="color:var(--text-light);">—</td>
-          <td><span class="chip pending">Pending GF</span></td>
+          <td><span class="chip pending">Pending Admin</span></td>
         </tr>
 
         <tr class="selected">
@@ -659,7 +659,7 @@
     </table>
     <div class="list-footer">
       <span>12 von 29 Fällen · alle aktiven + letzte 6 erledigte</span>
-      <span><span style="color:var(--amber);">●</span> Pending GF-Freigabe · <span style="color:var(--accent);">●</span> aktiv · <span style="color:var(--red);">●</span> Rechtsweg · <span style="color:var(--green);">●</span> erledigt</span>
+      <span><span style="color:var(--amber);">●</span> Pending Admin-Freigabe · <span style="color:var(--accent);">●</span> aktiv · <span style="color:var(--red);">●</span> Rechtsweg · <span style="color:var(--green);">●</span> erledigt</span>
     </div>
   </div>
 
@@ -673,7 +673,7 @@
   <div class="drawer-head">
     <div>
       <h3>INK-2026-0012</h3>
-      <span class="chip pending" style="margin-left:6px;">Pending GF</span>
+      <span class="chip pending" style="margin-left:6px;">Pending Admin</span>
       <span class="chip partner" style="margin-left:4px;">Creditreform</span>
     </div>
     <button class="close" type="button" onclick="closeCaseDrawer()">×</button>
@@ -715,10 +715,10 @@
       </div>
     </div>
 
-    <!-- GF-Approval-Block -->
+    <!-- Admin-Approval-Block -->
     <div class="warn-inline gf">
-      <div class="title">⚐ GF-Freigabe benötigt</div>
-      Backoffice <strong style="color:var(--accent);">ST</strong> hat den Fall vorbereitet. Bevor die Übergabe an Creditreform aktiviert wird, braucht es Freigabe durch GF (NS oder MB). Geschätzte Kosten: CHF 890 Einreichgebühr + 12 % Erfolgsprovision bei Zahlungseingang.
+      <div class="title">⚐ Admin-Freigabe benötigt</div>
+      Backoffice <strong style="color:var(--accent);">ST</strong> hat den Fall vorbereitet. Bevor die Übergabe an Creditreform aktiviert wird, braucht es Freigabe durch Admin (NS oder MB). Geschätzte Kosten: CHF 890 Einreichgebühr + 12 % Erfolgsprovision bei Zahlungseingang.
     </div>
 
     <!-- KPI-Mini-Grid -->
@@ -850,7 +850,7 @@
     <div style="display:flex; gap:6px;">
       <button class="btn btn-danger" type="button">⌫ Ablehnen</button>
       <button class="btn btn-secondary" type="button">✎ Anpassen</button>
-      <button class="btn btn-gf" type="button">⚐ GF-Freigabe erteilen</button>
+      <button class="btn btn-gf" type="button">⚐ Admin-Freigabe erteilen</button>
     </div>
   </div>
 </div>
@@ -872,7 +872,7 @@
     <div class="wizard-step done">1 · Rechnung wählen</div>
     <div class="wizard-step done">2 · Partner &amp; Strategie</div>
     <div class="wizard-step active">3 · Dossier &amp; Kosten</div>
-    <div class="wizard-step gf">4 · GF-Freigabe</div>
+    <div class="wizard-step gf">4 · Admin-Freigabe</div>
   </div>
 
   <div class="drawer-body">
@@ -973,8 +973,8 @@
     </div>
 
     <div class="warn-inline">
-      <div class="title">Nächster Schritt: GF-Freigabe</div>
-      Mit „Weiter" geht das Dossier an GF (NS oder MB) zur Genehmigung. Versand an Intrum erfolgt erst nach Freigabe. Backoffice-Rolle kann hier nicht direkt versenden.
+      <div class="title">Nächster Schritt: Admin-Freigabe</div>
+      Mit „Weiter" geht das Dossier an Admin (NS oder MB) zur Genehmigung. Versand an Intrum erfolgt erst nach Freigabe. Backoffice-Rolle kann hier nicht direkt versenden.
     </div>
 
   </div>
@@ -985,7 +985,7 @@
     </div>
     <div style="display:flex; gap:6px;">
       <button class="btn btn-secondary" type="button">‹ Zurück</button>
-      <button class="btn btn-primary" type="button">Weiter: GF-Freigabe anfordern ›</button>
+      <button class="btn btn-primary" type="button">Weiter: Admin-Freigabe anfordern ›</button>
     </div>
   </div>
 </div>

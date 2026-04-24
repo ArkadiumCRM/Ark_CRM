@@ -204,7 +204,6 @@
       <select id="roleSel" onchange="applyRole(this.value)">
         <option value="AM">AM / CM</option>
         <option value="BO" selected>Backoffice</option>
-        <option value="GF">GF / Head of</option>
         <option value="ADMIN">Admin</option>
         <option value="TREU">Treuhand (RO)</option>
       </select>
@@ -261,7 +260,7 @@
 
     <div class="sb-section role-section" data-visible-for="GF,ADMIN">Eskalation</div>
     <div class="sb-item role-item" data-visible-for="GF,ADMIN" data-src="billing-inkasso.html" data-title="Inkasso">
-      <span class="icon">⚐</span><span class="label">Inkasso</span><span class="badge red" title="3 Pending GF-Freigabe">3</span>
+      <span class="icon">⚐</span><span class="label">Inkasso</span><span class="badge red" title="3 Pending Admin-Freigabe">3</span>
     </div>
 
     </div><!-- /sb-top -->
@@ -402,7 +401,7 @@
         <div class="cmd-item" onclick="navigateTo('billing-zahlungen.html'); closeShellDrawer();"><span class="c-ic">⇅</span>Zahlungseingang<span class="c-key">G Z</span></div>
         <div class="cmd-item" onclick="navigateTo('billing-refunds.html'); closeShellDrawer();"><span class="c-ic">↶</span>Refund-Cockpit<span class="c-key">G F</span></div>
         <div class="cmd-item" onclick="navigateTo('billing-debitoren.html'); closeShellDrawer();"><span class="c-ic">📇</span>Debitoren<span class="c-key">G D</span></div>
-        <div class="cmd-item" onclick="navigateTo('billing-inkasso.html'); closeShellDrawer();"><span class="c-ic">⚐</span>Inkasso (GF)<span class="c-key">G I</span></div>
+        <div class="cmd-item" onclick="navigateTo('billing-inkasso.html'); closeShellDrawer();"><span class="c-ic">⚐</span>Inkasso (Admin)<span class="c-key">G I</span></div>
         <div class="cmd-item" onclick="navigateTo('billing-mwst.html'); closeShellDrawer();"><span class="c-ic">⎙</span>MwSt-Abrechnung<span class="c-key">G V</span></div>
       </div>
       <div class="shell-drawer-section">

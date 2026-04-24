@@ -3,111 +3,172 @@ title: "Spec-Mockup-Sync-Report 2026-04-24"
 type: analysis
 created: 2026-04-24
 updated: 2026-04-24
-sources: []
-tags: [sync-report, drift-scan, elearn, phase3]
+tags: [sync, drift, report]
 ---
 
 # Spec-Mockup-Sync-Report — 2026-04-24
 
-Scope: alle Module. Fokus: Status nach E-Learning Sub A–D Mockup-Komplettierung und Billing-Finalisierung.
+## Summary
 
-## Unresolved Changelog-Einträge (0)
+- Unresolved Changelog: 0
+- Stale Digests: 4
+- Spec-Grundlagen-Drift: 18
+- Mockup-Drift: 19
+- Lint-Violations (7d): 525
 
-Alle 18 Zeit-Modul-Einträge aus Session `13946034` (2026-04-19 22:59 – 23:46) wurden im Sammel-Resolution-Block 2026-04-20 auf `resolved` gesetzt — Sync erfolgte via PR #2 (commit d0828ba). Keine weiteren unresolved Einträge offen.
+---
 
-## Stale Digests (0)
+## A · Unresolved Changelog-Einträge (0)
 
-Letzter Clean-State: 2026-04-17 18:18.
+Alle Einträge im grundlagen-changelog.md tragen Status resolved.
 
-- ✅ `backend-architecture-digest.md` — v2.5.5 current
-- ✅ `database-schema-digest.md` — fact_reminders + template_id FK current
-- ✅ `frontend-freeze-digest.md` — v1.11 Responsive-Policy current
-- ✅ `gesamtsystem-digest.md` — v1.3.6 current
-- ✅ `stammdaten-digest.md` — keine Änderung an Grundlage seit v1.3
+Top-5 jüngste resolved Einträge:
 
-**Hinweis:** Nach Zeit-Modul PR #2 (d0828ba) wurden Grundlagen auf v1.4/v2.6/v1.11 gebumpt. Die Digests sind **noch auf Baseline** (v1.3.6 etc.) — technisch überholt. Regeneration empfohlen, nicht blockierend.
+| Datum | Grundlage | Sync-Target | Status |
+|-------|-----------|-------------|--------|
+| 2026-04-20 | ARK_BACKEND_ARCHITECTURE v2.5→v2.6 | ARK_ZEIT_SCHEMA + ARK_ZEIT_INTERACTIONS | resolved |
+| 2026-04-20 | ARK_DATABASE_SCHEMA v1.3→v1.4 | Zeit-Modul 15T+4V+9E | resolved |
+| 2026-04-20 | ARK_STAMMDATEN_EXPORT v1.3→v1.4 | §90 Zeit-Modul-Stammdaten | resolved |
+| 2026-04-17 | ARK_FRONTEND_FREEZE v1.10→v1.11 | 22 Mockups Responsive-Rollout | resolved |
+| 2026-04-17 | ARK_FRONTEND_FREEZE →v1.10.5 | ARK_EMAIL_KALENDER Spec + mockup | resolved |
 
-## Spec ↔ Grundlagen Drift (E-Learning-Spezial-Kontext)
+---
 
-E-Learning Sub A–D sind **neue Module** ohne bestehende Grundlagen-Verankerung. Die 8 E-Learning-Specs (Schema + Interactions × 4 Subs) existieren als `draft`, aber:
+## B · Stale Digests (4)
 
-| Spec | Status | Grundlagen-Patch erstellt? |
-|------|--------|----------------------------|
-| `ARK_E_LEARNING_SUB_A_SCHEMA_v0_1.md` | draft | ✅ 5 Patches (DB, Backend, Frontend, Stammdaten, Gesamt) |
-| `ARK_E_LEARNING_SUB_A_INTERACTIONS_v0_1.md` | draft | ✅ 5 Patches |
-| `ARK_E_LEARNING_SUB_B/C/D` | draft | ✅ je 5 Patches (insg. 20 Patches) |
+STALE.md Letzter Clean: 2026-04-17 18:18 (vor Zeit-Modul PR #2).
+Nach PR #2 (commit d0828ba, 2026-04-20) 4 Grundlagen gebumpt, Digests nicht regeneriert:
 
-**Drift-Status:** Patches existieren in `specs/ARK_*_PATCH_ELEARNING_*.md`, sind aber noch **nicht in Grundlagen-Files eingearbeitet** (analog Zeit-Modul-Workflow vor PR #2). Dies ist **erwarteter Zustand** im Spec-First-Workflow — nicht als Drift zu werten.
+| Digest | Digest-Stand | Grundlage | git-mtime | Stale? |
+|--------|-------------|-----------|-----------|--------|
+| stammdaten-digest.md | 2026-04-17 v1.3.4 | ARK_STAMMDATEN_EXPORT v1.4 | 2026-04-20 19:00 | STALE |
+| database-schema-digest.md | 2026-04-17 v1.3.4 | ARK_DATABASE_SCHEMA v1.4 | 2026-04-20 19:00 | STALE |
+| backend-architecture-digest.md | 2026-04-17 v2.5.5 | ARK_BACKEND_ARCHITECTURE v2.6 | 2026-04-20 19:00 | STALE |
+| frontend-freeze-digest.md | 2026-04-17 v1.10.5 | ARK_FRONTEND_FREEZE v1.11 | 2026-04-20 19:00 | STALE |
+| gesamtsystem-digest.md | 2026-04-17 v1.3.5 | ARK_GESAMTSYSTEM v1.3 | 2026-04-18 18:46 | ok |
 
-**Empfehlung (Folge-Session):** Nach Deep-Review Mockups + Specs → Grundlagen-Merge (wie Zeit-Modul PR #2) für v1.5/v2.7/v1.12 Bump.
+---
 
-## Mockup Drift
+## C · Spec ↔ Grundlagen Drift (18)
 
-### E-Learning-Modul (19 Files + 5 harmonisierte)
+Alle 18 Entity-Detailmasken-Specs: git-mtime 2026-04-18 18:46 (commit 9b78d5f E-Learning Phase-3).
+4 Grundlagen (STAMMDATEN/DATABASE/BACKEND/FRONTEND): git-mtime 2026-04-20 19:00 (PR #2 Zeit-Modul).
 
-Scan gegen Baseline (`candidates.html`, hr.html-Shell-Pattern, `wiki/meta/mockup-baseline.md`):
+| Spec-File | Spec-Aenderung | Grundlage-Source | Grundlage-Aenderung | Drift |
+|-----------|---------------|------------------|---------------------|-------|
+| ARK_KANDIDATENMASKE_SCHEMA_v1_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_KANDIDATENMASKE_INTERACTIONS_v1_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_ACCOUNT_DETAILMASKE_INTERACTIONS_v0_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_FIRMENGRUPPE_DETAILMASKE_SCHEMA_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_FIRMENGRUPPE_DETAILMASKE_INTERACTIONS_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_MANDAT_DETAILMASKE_INTERACTIONS_v0_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_JOB_DETAILMASKE_SCHEMA_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_JOB_DETAILMASKE_INTERACTIONS_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_PROZESS_DETAILMASKE_SCHEMA_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_PROZESS_DETAILMASKE_INTERACTIONS_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_ASSESSMENT_DETAILMASKE_SCHEMA_v0_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_ASSESSMENT_DETAILMASKE_INTERACTIONS_v0_3.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_SCRAPER_MODUL_SCHEMA_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_SCRAPER_MODUL_INTERACTIONS_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_PROJEKT_DETAILMASKE_SCHEMA_v0_2.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
+| ARK_PROJEKT_DETAILMASKE_INTERACTIONS_v0_1.md | 2026-04-18 | STAMMDATEN/DB/BACKEND/FRONTEND | 2026-04-20 | +1d 0h |
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| Shell-Pattern (topbar + sidebar + profil-pop) | ✅ 1:1 hr.html | elearn.html |
-| 540 px Drawer | ✅ durchgängig | Alle Drawer (team, freitext, assignments, admin-courses, curriculum, imports, content-gen) |
-| KPI-Hero-Strip (4 Karten, farbiger border-left) | ✅ konsistent | hr-dashboard-Pattern |
-| Sparten-Chips (Farben ARC/GT/ING/PUR/REM) | ✅ konsistent | fest definiert |
-| Stage-Pipeline (9 Dots) | N/A | E-Learning hat keine Pipeline-Entity |
-| Snapshot-Bar | N/A | E-Learning kein Snapshot-Modul |
-| Theme-Toggle | ✅ funktional | postMessage + localStorage + direct-DOM |
+Kontext: Zeit-Modul loest keine Detailmasken-Kaskade aus (neues eigenstaendiges Modul).
+Drift formal vorhanden, inhaltlich unkritisch. Acknowledgment-Notiz empfohlen.
 
-**Keine Drift-Punkte identifiziert.**
+---
 
-### Billing / Commission / Zeit / HR (Bestand)
+## D · Mockup-Drift (19)
 
-Laut `wiki/meta/lint-violations.md` letzte 7 Tage:
+### D.1 Drawer-Width
 
-| Datei | Violations | Kategorie |
-|-------|------------|-----------|
-| `billing-mahnwesen.html` | 1 | DRAWER-DEFAULT (1 Modal-Pattern) |
-| `zeit-monat.html` | 1 (2×) | DRAWER-DEFAULT (3 Modal-Patterns) |
-| `commission-team.html` | 2 | UMLAUT (Kuerzel in JS-Funktionsnamen) |
-| `billing-debitoren.html`, `billing-dashboard.html` | mehrere | DRAWER-DEFAULT |
+Baseline editorial.css: .drawer { width:540px } korrekt als shared CSS (kein CSS-Custom-Property).
+Alle Vollansichten laden editorial.css. ERP billing.html: 540px bestaetigt.
+Drift-Hits: 0
 
-**Empfehlung:** Diese Violations sind teilweise in Admin-/Debug-Bereichen und benötigen Einzelprüfung ob Modal-Pattern legitim (System-Notification) oder Drawer-Umbau fällig.
+### D.2 Tab-Panel-Class (.tab-pane vs .tab-panel) -- 17 Files
 
-## Lint-Violations letzte 7 Tage (konsolidiert)
+| File | Drift | Fix |
+|------|-------|-----|
+| Vollansichten/accounts.html | .tab-pane | → .tab-panel |
+| Vollansichten/admin.html | .tab-pane | → .tab-panel |
+| Vollansichten/assessments.html | .tab-pane | → .tab-panel |
+| Vollansichten/candidates.html | .tab-pane | → .tab-panel |
+| Vollansichten/groups.html | .tab-pane | → .tab-panel |
+| Vollansichten/jobs.html | .tab-pane | → .tab-panel |
+| Vollansichten/mandates.html | .tab-pane | → .tab-panel |
+| Vollansichten/processes.html | .tab-pane | → .tab-panel |
+| Vollansichten/projects.html | .tab-pane | → .tab-panel |
+| Vollansichten/reminders.html | .tab-pane | → .tab-panel |
+| Vollansichten/scraper.html | .tab-pane | → .tab-panel |
+| Vollansichten/stammdaten.html | .tab-pane | → .tab-panel |
+| ERP Tools/billing/billing-debitoren.html | .tab-pane | → .tab-panel |
+| ERP Tools/billing/billing-mahnwesen.html | .tab-pane | → .tab-panel |
+| ERP Tools/billing/billing-refunds.html | .tab-pane | → .tab-panel |
+| ERP Tools/commission/commission-admin.html | .tab-pane | → .tab-panel |
+| ERP Tools/commission/commission-team.html | .tab-pane | → .tab-panel |
 
-| Datei | DB-TECH | UMLAUT | DRAWER | SNAKE-CASE | Total |
-|-------|---------|--------|--------|------------|-------|
-| elearn-newsletter-issue.html | 2 (gefixt) | — | — | — | 0 |
-| elearn-freitext-queue.html | — | — | 1* | — | 1 |
-| elearn-admin-curriculum.html | — | — | — | 1 | 1 |
-| billing-mahnwesen.html | — | — | 1 | — | 1 |
-| billing-debitoren.html | — | — | 1 | — | 1 |
-| billing-dashboard.html | — | — | 1 | — | 1 |
-| zeit-monat.html | — | — | 2 | — | 2 |
-| commission-team.html | — | 2 | — | — | 2 |
+### D.3 Topbar Tool-Tabs Reihenfolge -- 2 Files
 
-*Freitext-Queue Modal-Pattern = Batch-Confirm-Modal (Spec-konform, kleiner Bestätigungs-Dialog) → false positive oder absichtlich Modal.
+Soll: CRM - HR - Commission - Zeit - Billing - Performance - E-Learning
+Clean: zeit.html / elearn.html / hr.html (alle 7 Tabs inkl. E-Learning korrekt)
+
+| File | Component | Drift | Fix |
+|------|-----------|-------|-----|
+| ERP Tools/billing/billing.html | Topbar Tool-Tabs | E-Learning-Tab fehlt | Append E-Learning-Link nach Performance |
+| ERP Tools/commission/commission.html | Topbar Tool-Tabs | E-Learning-Tab fehlt | dto. |
+
+Vollansichten haben kein tool-tabs-Topbar -- kein Vollansichten-Drift in dieser Kategorie.
+
+---
+
+## E · Lint-Violations letzte 7 Tage (525)
+
+Zeitfenster: 2026-04-17 bis 2026-04-24. Gesamt 525 Violation-Rows.
+
+| Regel | Anzahl |
+|-------|--------|
+| SNAKE-CASE | 188 |
+| UMLAUT | 161 |
+| DB-TECH | 116 |
+| DRAWER-DEFAULT | 33 |
+| ROUTE-TMPL | 6 |
+| sonstige | ~21 |
+| **Total** | **525** |
+
+| File | UMLAUT | DB-TECH | DRAWER-DEFAULT | SNAKE-CASE | Total |
+|------|--------|---------|----------------|------------|-------|
+| scraper.html | 13 | -- | -- | 52 | 124 |
+| log.md | 59 | -- | -- | -- | 84 |
+| stammdaten.html | -- | 30 | -- | 8 | 76 |
+| admin-dashboard-templates.html | -- | 1 | 16 | 16 | 57 |
+| admin-mobile.html | -- | -- | -- | -- | 36 |
+| candidates.html | -- | 18 | -- | -- | 20 |
+| processes.html | -- | 19 | -- | -- | 19 |
+| commission-admin.html | -- | -- | -- | -- | 14 |
+| commission-team.html | 12 | -- | -- | -- | 12 |
+| billing-mahnwesen.html | -- | -- | 8 | -- | 8 |
+
+Hinweis: log.md UMLAUT 59 = Artefakt (Hook scannt log.md-Appends, kein User-facing Content).
+scraper.html 124 = iterative Sessions, gleiche Violations mehrfach geloggt.
+
+---
 
 ## Empfehlungen (priorisiert)
 
-### P0 — Sofort
-- Keine. E-Learning + Billing strukturell clean.
+1. [P0] Digests regenerieren -- 4 Digests stale seit Zeit-Modul PR #2 (2026-04-20). Vor naechstem prime-ark: Agent-Task je Digest.
+2. [P1] tab-pane → tab-panel Rollout -- sed-Rollout auf 17 Files. Risikoarm.
+3. [P1] E-Learning-Tab in billing.html + commission.html -- Copy aus zeit.html Topbar-Block, je 1 Zeile appenden.
+4. [P2] Spec-Drift Acknowledgment -- 18 Specs formal vor Zeit-Modul-Grundlagen-Update. Kein Kaskaden-Bedarf. Notiz in spec-sync-regel.md.
+5. [P2] scraper.html + admin-dashboard-templates.html Cleanup -- 52 SNAKE-CASE + 16 DRAWER-DEFAULT pruefen ob noch offen.
+6. [P3] Lint-Hook Ausnahmen -- log.md + wiki/meta/ vom UMLAUT-Scan ausschliessen (59 false positives).
 
-### P1 — Vor nächstem Release
-1. **Billing/Zeit DRAWER-DEFAULT prüfen:** 6 Treffer in `billing-*` und `zeit-monat.html`. Entscheidung Modal (System) vs. Drawer (CRUD) pro Fall.
-2. **commission-team.html UMLAUT:** 2× „kuerzel" in JS-Code → `kuerzel` als Variablenname ist zulässig, Lint-Hook sollte JS-Identifier von UI-Text unterscheiden (Hook-Verbesserung, kein Content-Fix).
-3. **elearn-admin-curriculum.html SNAKE-CASE:** 1× `elearn_onboarding_initializer` in User-Text → mit `<!-- ark-lint-skip -->` wrappen (Info-Box für Admin).
-
-### P2 — Nächster Sync-Zyklus
-1. **Grundlagen-Merge E-Learning:** Nach Deep-Review Mockups → Grundlagen-Patches (20 Dateien) in Hauptdateien einarbeiten → v1.5/v2.7/v1.12 Bump (Muster wie Zeit-Modul PR #2).
-2. **Digests regenerieren:** Nach Grundlagen-Bump.
-3. **Billing-Drift-Audit:** Laut Handover aus anderer Session läuft parallel `claude/distracted-almeida-16d1f1` mit Billing Cross-Module-Vernetzungs-Audit — Ergebnisse mergen.
-
-## Gesamt-Status
-
-**Grün.** Hauptsysteme strukturell in Sync. Offene Punkte sind kosmetische Lints (P2) oder Prozess-Schritte für nächsten Release-Zyklus (Grundlagen-Merge).
+---
 
 ## Related
 
-- [[elearn-handover]] — E-Learning Handover-Dokument
-- [[spec-sync-regel]] — Governance: Sync-Matrix
-- [[sync-report-2026-04-17]] — vorheriger Report
+- [[spec-sync-regel]] -- Sync-Matrix Grundlagen <-> Specs
+- [[sync-report-2026-04-17]] -- vorheriger Report
+- [[digests/STALE]] -- aktueller Stale-Status
