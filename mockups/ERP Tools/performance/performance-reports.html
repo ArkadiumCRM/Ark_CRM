@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>Reports · ARK Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  :root {
+    --bg: #F4F5F7;
+    --surface: #FFFFFF;
+    --surface-alt: #EDEFF3;
+    --surface-sunk: #E5E7EC;
+    --text: #1A1F2E;
+    --text-mid: #4A5568;
+    --text-light: #8A95A8;
+    --border: #E2E5EA;
+    --border-strong: #CDD2DA;
+    --accent: #1A3A5C;
+    --accent-soft: rgba(26, 58, 92, 0.08);
+    --gold: #B8860B;
+    --gold-strong: #9B7009;
+    --gold-soft: rgba(184, 134, 11, 0.10);
+    --green: #1A6B4A;
+    --green-soft: rgba(26, 107, 74, 0.10);
+    --amber: #D97706;
+    --amber-soft: rgba(217, 119, 6, 0.10);
+    --red: #C0392B;
+    --red-soft: rgba(192, 57, 43, 0.10);
+
+    --serif: "Libre Baskerville", Georgia, serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+    --radius: 5px;
+    --radius-sm: 3px;
+  }
+  [data-theme="dark"] {
+    --bg: #0E1116;
+    --surface: #161B22;
+    --surface-alt: #1D242D;
+    --surface-sunk: #0B0E12;
+    --text: #E6EDF3;
+    --text-mid: #B0BAC8;
+    --text-light: #7A869A;
+    --border: #2A323D;
+    --border-strong: #3A4350;
+    --accent: #7CB5E8;
+    --accent-soft: rgba(124, 181, 232, 0.12);
+    --gold: #D4A84B;
+    --gold-strong: #E5BC5E;
+    --gold-soft: rgba(212, 168, 75, 0.14);
+    --green: #3FB950;
+    --green-soft: rgba(63, 185, 80, 0.14);
+    --amber: #D29922;
+    --amber-soft: rgba(210, 153, 34, 0.14);
+    --red: #F85149;
+    --red-soft: rgba(248, 81, 73, 0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .page { max-width: 1440px; margin: 0 auto; padding: 32px 36px 48px; }
+
+  /* HEADER */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 8px;
+  }
+  .h1 {
+    font-family: var(--serif); font-weight: 400; font-size: 34px;
+    color: var(--accent); letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 13px; }
+  .subtitle .sep { color: var(--border-strong); margin: 0 8px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    font-family: var(--sans); font-size: 12.5px; padding: 8px 14px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text); cursor: pointer;
+    font-weight: 500; transition: all 0.12s;
+  }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold-strong); }
+  .btn-gold:hover { background: var(--gold-strong); }
+  [data-theme="dark"] .btn-gold { color: #1A1F2E; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="dark"] .btn-primary { color: #0E1116; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-mid); }
+  .btn-sm { padding: 5px 10px; font-size: 11.5px; }
+  .theme-toggle {
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-mid); margin-left: 4px;
+  }
+  .theme-toggle svg { width: 14px; height: 14px; }
+
+  /* SNAPSHOT */
+  .snapshot {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--surface); padding: 16px 18px 14px;
+    display: flex; flex-direction: column; min-height: 118px;
+  }
+  .kpi-label {
+    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: var(--serif); font-size: 23px; line-height: 1.1;
+    color: var(--text); font-weight: 400; margin-bottom: 2px;
+  }
+  .kpi-value .num-large { font-family: var(--mono); font-weight: 500; }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-value.gold { color: var(--gold-strong); }
+  [data-theme="dark"] .kpi-value.gold { color: var(--gold); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-delta {
+    margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+    padding-top: 10px; font-size: 11.5px; color: var(--text-mid);
+  }
+  .delta-pos { color: var(--green); font-weight: 500; }
+  .delta-neg { color: var(--red); font-weight: 500; }
+  .delta-warn { color: var(--amber); font-weight: 500; }
+  .red-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); margin-right: 6px; vertical-align: middle; }
+  .green-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--green-soft); color: var(--green);
+    padding: 3px 7px; border-radius: 10px;
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  }
+  .green-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+  /* FILTERS */
+  .filters {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px 7px 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px;
+    font-size: 12px; color: var(--text); cursor: pointer; font-family: var(--sans);
+  }
+  .filter-pill .lbl { color: var(--text-light); font-weight: 500; }
+  .filter-pill .val { font-weight: 500; }
+  .filter-pill .caret { font-size: 9px; color: var(--text-light); margin-left: 2px; }
+  .filter-pill:hover { background: var(--surface-alt); }
+
+  .tab-switcher {
+    margin-left: auto;
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2px;
+    font-family: var(--sans);
+  }
+  .tab-sw-btn {
+    padding: 6px 14px;
+    border: 0; background: transparent;
+    border-radius: 14px;
+    font-size: 12px;
+    color: var(--text-mid);
+    cursor: pointer;
+    font-weight: 500;
+    font-family: var(--sans);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tab-sw-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  [data-theme="dark"] .tab-sw-btn.active { color: #0E1116; }
+  .tab-sw-btn .count {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: inherit;
+    opacity: 0.75;
+  }
+
+  /* TEMPLATES GRID */
+  .templates-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+  .tpl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .tpl-card.failed-state { border-color: var(--red); }
+  .tpl-card.paused-state { opacity: 0.78; }
+  .tpl-head {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; gap: 8px;
+    cursor: pointer;
+  }
+  .tpl-head:hover { background: var(--surface-alt); }
+  .tpl-title-wrap { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .tpl-title {
+    font-family: var(--serif); font-size: 15px; font-weight: 400;
+    color: var(--text); line-height: 1.2;
+  }
+  .tpl-tag {
+    display: inline-flex; align-items: center;
+    font-family: var(--mono);
+    font-size: 9.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600;
+    color: var(--gold-strong);
+  }
+  .tpl-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .badge-failed {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--red-soft); color: var(--red);
+    padding: 3px 7px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .badge-paused {
+    background: var(--surface-sunk); color: var(--text-light);
+    padding: 3px 7px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  /* Toggle switch */
+  .switch {
+    position: relative;
+    width: 32px; height: 18px;
+    background: var(--surface-sunk);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .switch::after {
+    content: '';
+    position: absolute;
+    top: 1px; left: 1px;
+    width: 14px; height: 14px;
+    background: var(--surface);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    transition: left 0.15s;
+  }
+  .switch.on {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .switch.on::after { left: 15px; background: #fff; }
+
+  .tpl-meta {
+    padding: 12px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+    font-size: 12px;
+  }
+  .meta-row { display: grid; grid-template-columns: 96px 1fr; gap: 10px; }
+  .meta-k { color: var(--text-light); font-size: 11.5px; }
+  .meta-v { color: var(--text); font-family: var(--mono); font-size: 11.5px; font-weight: 500; }
+  .meta-v.muted { color: var(--text-light); }
+
+  .tpl-contents {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .tpl-contents-label {
+    font-size: 9.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-light);
+    font-weight: 600; margin-bottom: 8px;
+  }
+  .tpl-contents ul { list-style: none; margin: 0; padding: 0; }
+  .tpl-contents li {
+    font-size: 11.5px; color: var(--text-mid); padding: 2px 0;
+    display: flex; gap: 6px;
+  }
+  .tpl-contents li::before {
+    content: '·'; color: var(--text-light); flex-shrink: 0;
+  }
+
+  .tpl-foot {
+    padding: 10px 16px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .tpl-last {
+    font-size: 11px; color: var(--text-mid);
+    font-family: var(--mono);
+  }
+  .tpl-last.last-good::before { content: '✓ '; color: var(--green); font-weight: 700; }
+  .tpl-last.last-failed::before { content: '⚠ '; color: var(--red); font-weight: 700; }
+  .tpl-last.last-paused::before { content: '⏸ '; color: var(--text-light); font-weight: 700; }
+  .tpl-actions { display: flex; gap: 6px; }
+  .tpl-actions .btn { flex: 1; }
+
+  /* RUNS TABLE */
+  .runs-section { margin-top: 24px; }
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .panel-head {
+    padding: 16px 20px 14px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .panel-title {
+    font-family: var(--serif); font-size: 16px; font-weight: 400; color: var(--text);
+  }
+  .panel-meta {
+    font-size: 11px; color: var(--text-light); letter-spacing: 0.05em; font-family: var(--mono);
+  }
+  .runs-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+  }
+  .runs-table thead th {
+    text-align: left; padding: 10px 14px; background: var(--surface-alt);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .runs-table thead th.right { text-align: right; }
+  .runs-table tbody td {
+    padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text);
+    vertical-align: middle;
+  }
+  .runs-table tbody tr { cursor: pointer; }
+  .runs-table tbody tr:hover { background: var(--surface-alt); }
+  .runs-table tbody tr:last-child td { border-bottom: 0; }
+  .runs-table tbody tr.failed-row td:first-child { box-shadow: inset 3px 0 0 var(--red); }
+  .runs-table .mono { font-family: var(--mono); }
+  .state-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10.5px;
+    font-weight: 600; letter-spacing: 0.04em;
+  }
+  .state-sent    { background: var(--green-soft); color: var(--green); }
+  .state-partial { background: var(--amber-soft); color: var(--amber); }
+  .state-failed  { background: var(--red-soft); color: var(--red); }
+  .state-queued  { background: var(--surface-sunk); color: var(--text-light); }
+  .pdf-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--accent); text-decoration: none;
+    font-family: var(--mono); font-size: 11.5px;
+    font-weight: 500;
+  }
+  .pdf-link:hover { text-decoration: underline; }
+  .reason { font-size: 11.5px; color: var(--text-mid); font-family: var(--mono); }
+  .reason.crit { color: var(--red); }
+
+  /* DRAWERS */
+  .drawers-section {
+    margin-top: 32px; padding-top: 28px; border-top: 1px dashed var(--border-strong);
+  }
+  .drawers-section-head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+  }
+  .drawers-section-title { font-family: var(--serif); font-size: 16px; color: var(--text); }
+  .drawers-section-meta {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light);
+  }
+  .drawers-row {
+    display: grid; grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: center;
+  }
+  .drawer {
+    width: 540px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: -8px 0 24px -12px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (max-width: 1280px) {
+    .drawers-row { grid-template-columns: 1fr; }
+    .drawer { width: 100%; }
+    .templates-grid { grid-template-columns: repeat(2, 1fr); }
+    .snapshot { grid-template-columns: repeat(3, 1fr); }
+    .page { padding: 24px 24px 40px; }
+  }
+  .drawer-head { padding: 18px 22px 16px; border-bottom: 1px solid var(--border); position: relative; }
+  .drawer-eyebrow {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .drawer-title {
+    font-family: var(--serif); font-size: 19px; color: var(--text);
+    font-weight: 400; line-height: 1.2;
+  }
+  .drawer-close {
+    position: absolute; top: 16px; right: 18px;
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-light); cursor: pointer; background: none; border: 0;
+    font-size: 18px; border-radius: 3px;
+  }
+  .drawer-close:hover { background: var(--surface-alt); }
+  .drawer-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 22px; background: var(--surface);
+  }
+  .drawer-tab {
+    padding: 11px 0; margin-right: 22px;
+    font-size: 12px; color: var(--text-mid); font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; background: none; border-top: 0; border-left: 0; border-right: 0;
+    font-family: var(--sans);
+  }
+  .drawer-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .drawer-body { padding: 20px 22px; overflow-y: auto; max-height: 760px; }
+  .drawer-section { margin-bottom: 22px; }
+  .drawer-section:last-child { margin-bottom: 0; }
+  .drawer-section-title {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .drawer-section-meta {
+    color: var(--text-light); font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: 0.06em; text-transform: none;
+  }
+
+  .form-row { margin-bottom: 12px; }
+  .form-label {
+    display: block;
+    font-size: 11px; color: var(--text-light);
+    font-weight: 500; margin-bottom: 6px;
+  }
+  .select, .input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 12.5px;
+    border-radius: 3px;
+  }
+  .select { background-image: linear-gradient(45deg, transparent 50%, var(--text-light) 50%), linear-gradient(135deg, var(--text-light) 50%, transparent 50%); background-position: calc(100% - 14px) center, calc(100% - 9px) center; background-size: 5px 5px; background-repeat: no-repeat; appearance: none; padding-right: 24px; }
+
+  .check-list { display: flex; flex-direction: column; gap: 8px; }
+  .check-row {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--text);
+  }
+  .check-row .cb {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 2px;
+    background: var(--surface);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-row.checked .cb {
+    background: var(--accent); border-color: var(--accent);
+    color: #fff;
+  }
+  [data-theme="dark"] .check-row.checked .cb { color: #0E1116; }
+  .check-row.checked .cb::after { content: '✓'; font-size: 10px; font-weight: 700; }
+
+  .chip-input {
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    border-radius: 3px;
+    padding: 6px 8px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    align-items: center;
+    min-height: 36px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 3px 4px 3px 8px;
+    border-radius: 11px;
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 600;
+  }
+  .chip-x { cursor: pointer; opacity: 0.6; padding: 0 4px; }
+  .chip-add {
+    border: 0; background: none; outline: none;
+    font-family: var(--sans); font-size: 12px;
+    color: var(--text-light); flex: 1; min-width: 100px;
+    padding: 3px 0;
+  }
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0;
+    font-size: 12px; color: var(--text);
+  }
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-row {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--text); cursor: pointer;
+  }
+  .radio {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .radio-row.checked .radio {
+    border-color: var(--accent);
+  }
+  .radio-row.checked .radio::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px;
+    width: 6px; height: 6px;
+    border-radius: 50%; background: var(--accent);
+  }
+
+  .insight-card {
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 12px 14px; margin-bottom: 8px;
+    border-left: 3px solid; background: var(--surface);
+  }
+  .insight-card:last-child { margin-bottom: 0; }
+  .insight-card.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .insight-card.crit { border-left-color: var(--red); background: var(--red-soft); }
+  .insight-tag {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.16em; font-weight: 700; margin-bottom: 4px;
+  }
+  .insight-tag.warn { color: var(--amber); }
+  .insight-tag.crit { color: var(--red); }
+  .insight-title { font-size: 12.5px; color: var(--text); font-weight: 500; }
+  .insight-meta { font-size: 11px; color: var(--text-mid); margin-top: 2px; font-family: var(--mono); }
+
+  .callout {
+    padding: 14px 16px; border-radius: 3px;
+    font-size: 12px; line-height: 1.55;
+    border-left: 3px solid;
+  }
+  .callout-gold { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+  .callout-gold strong { color: var(--gold-strong); }
+  [data-theme="dark"] .callout-gold strong { color: var(--gold); }
+
+  .state-big {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--red-soft); color: var(--red);
+    padding: 6px 12px; border-radius: 3px;
+    font-family: var(--mono); font-size: 13px;
+    font-weight: 700; letter-spacing: 0.08em;
+  }
+
+  .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kv-table td { padding: 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .kv-table tr:last-child td { border-bottom: 0; }
+  .kv-table td.k { color: var(--text-light); width: 40%; }
+  .kv-table td.v { color: var(--text); font-family: var(--mono); font-weight: 500; }
+  .kv-table td.v .meta { color: var(--text-light); margin-left: 6px; font-weight: 400; }
+  .kv-table td.v.warn-v { color: var(--amber); }
+  .kv-table td.v.crit-v { color: var(--red); }
+  .kv-table td.v.good-v { color: var(--green); }
+
+  .stack-trace {
+    margin-top: 10px;
+    background: var(--surface-sunk);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--text-mid);
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  .stack-toggle {
+    background: none; border: 0; color: var(--accent);
+    font-size: 11px; padding: 4px 0; cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+    font-family: var(--sans);
+  }
+
+  .drawer-foot {
+    padding: 14px 22px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">CRM · Performance</div>
+      <h1 class="h1">Reports</h1>
+      <div class="subtitle">Automatisierte Performance-Reports<span class="sep">·</span>Templates<span class="sep">·</span>Run-History<span class="sep">·</span>Manual-Trigger</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-gold">+ Neuer Report</button>
+      <button class="btn btn-primary">Manuell generieren</button>
+      <!-- Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window. -->
+    </div>
+  </header>
+
+  <!-- SNAPSHOT -->
+  <section class="snapshot">
+    <div class="kpi">
+      <div class="kpi-label">Reports diesen Monat</div>
+      <div class="kpi-value accent"><span class="num-large">24</span></div>
+      <div class="kpi-delta"><span><span class="delta-pos">↗ +6</span> vs Vormonat</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Pending Versand</div>
+      <div class="kpi-value amber"><span class="num-large">3</span></div>
+      <div class="kpi-delta"><span>queued · morgen 06:00</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Failed</div>
+      <div class="kpi-value red"><span class="red-dot"></span><span class="num-large">1</span></div>
+      <div class="kpi-delta"><span>letzte Woche · Retry nötig</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Templates aktiv</div>
+      <div class="kpi-value green"><span class="num-large">5</span> <span style="font-size:13px;color:var(--text-light);font-family:var(--mono);">/ 6</span></div>
+      <div class="kpi-delta"><span>1 pausiert</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Cron-Status</div>
+      <div class="kpi-value" style="font-size:18px;"><span class="green-badge"><span class="dot"></span>läuft</span></div>
+      <div class="kpi-delta"><span>Heartbeat vor <span class="num">4 min</span></span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Letzter Run</div>
+      <div class="kpi-value accent" style="font-size:18px;"><span class="num-large">25.04. 06:14</span></div>
+      <div class="kpi-delta"><span class="delta-pos">✓ erfolgreich · <span class="num">8</span> Empfänger</span></div>
+    </div>
+  </section>
+
+  <!-- FILTERS + TAB SWITCH -->
+  <section class="filters">
+    <button class="filter-pill"><span class="lbl">Template</span><span class="val">Alle</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Periode</span><span class="val">Letzte 30 Tage</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Status</span><span class="val">Alle</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Empfänger</span><span class="val">Alle</span><span class="caret">▾</span></button>
+    <div class="tab-switcher" id="tabSwitcher">
+      <button class="tab-sw-btn active" data-tab="templates">Templates <span class="count">6</span></button>
+      <button class="tab-sw-btn" data-tab="runs">Runs <span class="count">24</span></button>
+    </div>
+  </section>
+
+  <!-- TAB CONTENT — TEMPLATES -->
+  <section class="tab-content active" data-content="templates">
+    <div class="templates-grid">
+
+      <!-- 1 Strategic Quarterly -->
+      <article class="tpl-card">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag">Strategic</div>
+            <div class="tpl-title">Strategic Quarterly Report</div>
+          </div>
+          <div class="tpl-status">
+            <div class="switch on" data-active="true" title="Active"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Quartalsweise · 1./Quartal</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v">01.07.2026 06:00</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v">4 · GL-Mitglieder</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>Sparten-Vergleich (alle 5)</li>
+            <li>Revenue-Verlauf + Forecast YE</li>
+            <li>Top/Flop-Mandanten</li>
+            <li>Strategie-Empfehlungen</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-good">Letzter Run · 01.04.2026 · 4 Empfänger erhalten</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm">Manuell triggern</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 Weekly Team-Performance -->
+      <article class="tpl-card">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag">Team</div>
+            <div class="tpl-title">Weekly Team-Performance</div>
+          </div>
+          <div class="tpl-status">
+            <div class="switch on" data-active="true" title="Active"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Wöchentlich Mo 06:00</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v">28.04.2026 06:00</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v">3 · alle Heads</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>Team-KPIs (Pipeline, Conversion, Compliance)</li>
+            <li>Anomalien-Briefing pro MA</li>
+            <li>MA-Vergleich vs Median</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-good">Letzter Run · 21.04.2026 · 3 Empfänger erhalten</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm">Manuell triggern</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 Monthly Compliance -->
+      <article class="tpl-card">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag">Compliance</div>
+            <div class="tpl-title">Monthly Compliance-Digest</div>
+          </div>
+          <div class="tpl-status">
+            <div class="switch on" data-active="true" title="Active"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Monatlich · 1.</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v">01.05.2026 06:00</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v">5 · HR + Heads</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>E-Learning-Backlog pro MA</li>
+            <li>Reminder-Backlog &amp; Touch-Frequenz</li>
+            <li>AI-Confirm-Rate (KPI-Drift)</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-good">Letzter Run · 01.04.2026 · 5 Empfänger erhalten</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm">Manuell triggern</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 Daily Critical -->
+      <article class="tpl-card">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag">Daily</div>
+            <div class="tpl-title">Daily Critical-Insights</div>
+          </div>
+          <div class="tpl-status">
+            <div class="switch on" data-active="true" title="Active"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Werktags 07:00</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v">28.04.2026 07:00</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v muted">dynamisch · betroffene Owner</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>Critical / Blocker-Insights</li>
+            <li>Forecast-Drift &gt; Schwellwert</li>
+            <li>Coverage-Alerts (Sparte unter 60%)</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-good">Letzter Run · heute 07:14 · 8 Empfänger erhalten</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm">Manuell triggern</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5 Forecast-Audit FAILED -->
+      <article class="tpl-card failed-state">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag">Audit</div>
+            <div class="tpl-title">Quarterly Forecast-Audit</div>
+          </div>
+          <div class="tpl-status">
+            <span class="badge-failed">⚠ FAILED</span>
+            <div class="switch on" data-active="true" title="Active"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Quartal-Ende +5 Tage</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v">05.07.2026 06:30</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v">1 · Admin</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>Forecast-Accuracy-Audit (Q-Vergleich)</li>
+            <li>Drift-Analysis pro Sparte</li>
+            <li>Modell-Konfidenz-Trend</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-failed">Letzter Run · 05.04.2026 · FAILED · PowerBI-View stale</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm btn-gold">Retry</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6 Custom Sparten-Briefing PUR -->
+      <article class="tpl-card paused-state">
+        <header class="tpl-head">
+          <div class="tpl-title-wrap">
+            <div class="tpl-tag" style="color:var(--gold);">Custom</div>
+            <div class="tpl-title">Sparten-Briefing PUR</div>
+          </div>
+          <div class="tpl-status">
+            <span class="badge-paused">PAUSIERT</span>
+            <div class="switch" data-active="false" title="Paused"></div>
+          </div>
+        </header>
+        <div class="tpl-meta">
+          <div class="meta-row"><span class="meta-k">Cadence</span><span class="meta-v">Wöchentlich Fr 16:00</span></div>
+          <div class="meta-row"><span class="meta-k">Nächster Run</span><span class="meta-v muted">— pausiert</span></div>
+          <div class="meta-row"><span class="meta-k">Empfänger</span><span class="meta-v">2 · LR + MR</span></div>
+        </div>
+        <div class="tpl-contents">
+          <div class="tpl-contents-label">Inhalte</div>
+          <ul>
+            <li>Sparte PUR · Underperformance-Analyse</li>
+            <li>Mandanten-Risiko-Liste (Touch &gt; 14d)</li>
+            <li>Coverage- &amp; Conversion-Drift</li>
+          </ul>
+        </div>
+        <div class="tpl-foot">
+          <div class="tpl-last last-paused">Pausiert seit 11.04.2026 · letzter Run 04.04.2026</div>
+          <div class="tpl-actions">
+            <button class="btn btn-sm">Reaktivieren</button>
+            <button class="btn btn-sm btn-ghost">Konfigurieren</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TAB CONTENT — RUNS -->
+  <section class="tab-content" data-content="runs">
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Run-History · Letzte 30 Tage</h2>
+        <span class="panel-meta">24 RUNS · 1 FAILED · 1 PARTIAL</span>
+      </div>
+      <table class="runs-table">
+        <thead>
+          <tr>
+            <th>Datum / Zeit</th>
+            <th>Template</th>
+            <th>Periode</th>
+            <th>State</th>
+            <th class="right">Empfänger</th>
+            <th>PDF</th>
+            <th>Failure-Reason</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">25.04.2026 07:14</td>
+            <td>Daily Critical-Insights</td>
+            <td class="mono">24.04.</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">8</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="mono">25.04.2026 06:14</td>
+            <td>Strategic Quarterly Report</td>
+            <td class="mono">Q1 2026</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">4</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="mono">24.04.2026 07:11</td>
+            <td>Daily Critical-Insights</td>
+            <td class="mono">23.04.</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">6</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="mono">22.04.2026 06:02</td>
+            <td>Weekly Team-Performance</td>
+            <td class="mono">KW 16</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">3</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="mono">22.04.2026 06:00</td>
+            <td>Weekly Team-Performance</td>
+            <td class="mono">KW 16</td>
+            <td><span class="state-badge state-partial">⚠ Partial</span></td>
+            <td class="right mono">2 / 3</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">ST · email-bounce</td>
+            <td><button class="btn btn-sm">Erneut senden</button></td>
+          </tr>
+          <tr class="failed-row">
+            <td class="mono">05.04.2026 06:30</td>
+            <td>Quarterly Forecast-Audit</td>
+            <td class="mono">Q1 2026</td>
+            <td><span class="state-badge state-failed">✗ Failed</span></td>
+            <td class="right mono">0 / 1</td>
+            <td>—</td>
+            <td class="reason crit">PowerBI-View stale</td>
+            <td><button class="btn btn-sm btn-gold">Retry</button></td>
+          </tr>
+          <tr>
+            <td class="mono">01.04.2026 06:00</td>
+            <td>Strategic Quarterly Report</td>
+            <td class="mono">Q1 2026</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">4</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="mono">01.04.2026 05:58</td>
+            <td>Monthly Compliance-Digest</td>
+            <td class="mono">März</td>
+            <td><span class="state-badge state-sent">✓ Sent</span></td>
+            <td class="right mono">5</td>
+            <td><a class="pdf-link" href="#">📄 PDF</a></td>
+            <td class="reason">—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <!-- DRAWERS -->
+  <section class="drawers-section">
+    <div class="drawers-section-head">
+      <span class="drawers-section-meta">Drawer-Previews ·</span>
+      <h2 class="drawers-section-title">Statisch nebeneinander gerendert · 540 px slide-in von rechts</h2>
+    </div>
+    <div class="drawers-row">
+
+      <!-- DRAWER A · Trigger -->
+      <div class="drawer" id="drawer-trigger">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Manuell generieren · Strategic Quarterly Report</div>
+          <div class="drawer-title">Report jetzt generieren</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="trigger">
+          <button class="drawer-tab active" data-tab="template">Template</button>
+          <button class="drawer-tab" data-tab="empfaenger">Empfänger</button>
+          <button class="drawer-tab" data-tab="periode">Periode</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="template">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Template</div>
+              <div class="form-row">
+                <label class="form-label">Report-Template</label>
+                <select class="select">
+                  <option>Strategic Quarterly Report</option>
+                  <option>Weekly Team-Performance</option>
+                  <option>Monthly Compliance-Digest</option>
+                  <option>Daily Critical-Insights</option>
+                </select>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Inhalte <span class="drawer-section-meta">4 von 4</span></div>
+              <div class="check-list">
+                <label class="check-row checked"><span class="cb"></span>Sparten-Vergleich (alle 5)</label>
+                <label class="check-row checked"><span class="cb"></span>Revenue-Verlauf + Forecast YE</label>
+                <label class="check-row checked"><span class="cb"></span>Top/Flop-Mandanten</label>
+                <label class="check-row checked"><span class="cb"></span>Strategie-Empfehlungen</label>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Versand-Optionen</div>
+              <label class="form-label">Versand-Modus</label>
+              <div class="radio-group" style="margin-bottom:14px;">
+                <label class="radio-row checked"><span class="radio"></span>Sofort</label>
+                <label class="radio-row"><span class="radio"></span>Geplant für Datum&hellip;</label>
+              </div>
+              <label class="form-label">Format</label>
+              <div class="radio-group">
+                <label class="radio-row checked"><span class="radio"></span>PDF (Standard)</label>
+                <label class="radio-row"><span class="radio"></span>HTML-Email-Inline</label>
+                <label class="radio-row"><span class="radio"></span>Beides</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="empfaenger">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Empfänger <span class="drawer-section-meta">3 ausgewählt</span></div>
+              <label class="form-label">Direkt-Empfänger</label>
+              <div class="chip-input">
+                <span class="chip">PW <span class="chip-x">×</span></span>
+                <span class="chip">JV <span class="chip-x">×</span></span>
+                <span class="chip">LR <span class="chip-x">×</span></span>
+                <input class="chip-add" placeholder="Empfänger hinzufügen…">
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verteiler</div>
+              <div class="toggle-row">
+                <span>An GL-Verteiler senden <span style="color:var(--text-light);font-size:11px;">(Standard)</span></span>
+                <div class="switch on"></div>
+              </div>
+              <div class="toggle-row">
+                <span>BCC an Performance-Admin</span>
+                <div class="switch"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="periode">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Periode</div>
+              <div class="form-row">
+                <label class="form-label">Date-Range</label>
+                <input class="input" value="Q2 2026 · 01.04.2026 – 30.06.2026">
+              </div>
+              <div class="toggle-row">
+                <span>Nur Vergleich zu Vorperiode</span>
+                <div class="switch"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn btn-gold">Vorschau (PDF)</button>
+          <button class="btn btn-primary">Generieren + Versenden</button>
+        </div>
+      </div>
+
+      <!-- DRAWER B · Run Detail -->
+      <div class="drawer" id="drawer-run-detail">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Run · Quarterly Forecast-Audit · 05.04.2026 06:30 · ✗ FAILED</div>
+          <div class="drawer-title">Forecast-Audit · Q1 2026</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="rundetail">
+          <button class="drawer-tab active" data-tab="status">Status</button>
+          <button class="drawer-tab" data-tab="diagnose">Fehler-Diagnose</button>
+          <button class="drawer-tab" data-tab="retry">Retry</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="status">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Run-Status</div>
+              <div style="margin-bottom:12px;"><span class="state-big">✗ FAILED</span></div>
+              <table class="kv-table">
+                <tr><td class="k">Geplant</td><td class="v">05.04.2026 06:30</td></tr>
+                <tr><td class="k">Real-Start</td><td class="v">05.04.2026 06:30</td></tr>
+                <tr><td class="k">Failed-At</td><td class="v crit-v">05.04.2026 06:32 <span class="meta">2 min Runtime</span></td></tr>
+                <tr><td class="k">Trigger</td><td class="v">Cron <span class="meta">automatisch</span></td></tr>
+                <tr><td class="k">Empfänger</td><td class="v crit-v">0 von 1 <span class="meta">Admin</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="diagnose">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Fehler-Diagnose</div>
+              <div class="insight-card crit">
+                <!-- ark-lint-skip:begin reason=admin-error-diagnose -->
+                <div class="insight-tag crit">ERROR-CODE · VIEW_STALE_NOT_REFRESHED</div>
+                <div class="insight-title">PowerBI-View nicht aktuell</div>
+                <div class="insight-meta">View <span style="color:var(--text);">v_perf_forecast_q_audit</span> · last refresh 02.04.2026 (3 days stale, threshold 24h)</div>
+                <!-- ark-lint-skip:end -->
+              </div>
+              <button class="stack-toggle" id="stackToggle">Stack-Trace anzeigen ▾</button>
+              <!-- ark-lint-skip:begin reason=admin-error-diagnose -->
+              <div class="stack-trace" id="stackTrace" style="display:none;">at ReportRunner.execute (report-runner.ts:142)
+  at QueryEngine.fetchView('v_perf_forecast_q_audit')
+  at PowerBIClient.refreshCheck → ViewStaleError
+  at TemplateRenderer.precheck (forecast-audit.tpl:18)
+  → throw VIEW_STALE_NOT_REFRESHED</div>
+              <!-- ark-lint-skip:end -->
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Auswirkung</div>
+              <table class="kv-table">
+                <tr><td class="k">Re-Queue</td><td class="v">bei manuellem Retry</td></tr>
+                <tr><td class="k">Versuche</td><td class="v warn-v">1 von 3 <span class="meta">max-retries</span></td></tr>
+                <tr><td class="k">Auto-Retry</td><td class="v muted" style="color:var(--text-light);">nicht aktiv · manueller Retry erforderlich</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="retry">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Retry-Empfehlung</div>
+              <div class="callout callout-gold">
+                <strong>Reihenfolge:</strong> Erst PowerBI-View manuell refreshen über Performance-Admin → PowerBI-Views, dann Retry triggern. Andernfalls schlägt der Run erneut mit gleichem Fehler fehl.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Retry-Optionen</div>
+              <table class="kv-table">
+                <tr><td class="k">Periode</td><td class="v">Q1 2026 <span class="meta">unverändert</span></td></tr>
+                <tr><td class="k">Empfänger</td><td class="v">1 · Admin</td></tr>
+                <tr><td class="k">Trigger</td><td class="v">Manuell</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn btn-gold">PowerBI-View refreshen →</button>
+          <button class="btn btn-primary">Retry jetzt</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+// Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
+
+/* TAB SWITCHER (Templates ↔ Runs) */
+(function() {
+  const sw = document.getElementById('tabSwitcher');
+  sw.addEventListener('click', e => {
+    const btn = e.target.closest('.tab-sw-btn');
+    if (!btn) return;
+    const t = btn.dataset.tab;
+    sw.querySelectorAll('.tab-sw-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.toggle('active', c.dataset.content === t);
+    });
+  });
+})();
+
+/* SWITCHES (toggle on/off) */
+document.querySelectorAll('.switch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    sw.classList.toggle('on');
+  });
+});
+
+/* CHECK ROWS */
+document.querySelectorAll('.check-row').forEach(r => {
+  r.addEventListener('click', e => {
+    e.preventDefault();
+    r.classList.toggle('checked');
+  });
+});
+
+/* RADIO ROWS (within a group) */
+document.querySelectorAll('.radio-group').forEach(g => {
+  g.addEventListener('click', e => {
+    const row = e.target.closest('.radio-row');
+    if (!row) return;
+    g.querySelectorAll('.radio-row').forEach(r => r.classList.toggle('checked', r === row));
+  });
+});
+
+/* DRAWER TABS */
+document.querySelectorAll('.drawer-tabs').forEach(tabBar => {
+  const drawerEl = tabBar.parentElement;
+  tabBar.addEventListener('click', e => {
+    const btn = e.target.closest('.drawer-tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    tabBar.querySelectorAll('.drawer-tab').forEach(b => b.classList.toggle('active', b === btn));
+    drawerEl.querySelectorAll('.tab-pane').forEach(p => {
+      p.classList.toggle('active', p.dataset.pane === tab);
+    });
+  });
+});
+
+/* STACK TRACE TOGGLE */
+(function() {
+  const tg = document.getElementById('stackToggle');
+  const tr = document.getElementById('stackTrace');
+  if (!tg || !tr) return;
+  tg.addEventListener('click', () => {
+    const open = tr.style.display !== 'none';
+    tr.style.display = open ? 'none' : 'block';
+    tg.textContent = open ? 'Stack-Trace anzeigen ▾' : 'Stack-Trace ausblenden ▴';
+  });
+})();
+</script>
+</body>
+</html>
