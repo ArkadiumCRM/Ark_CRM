@@ -49,11 +49,7 @@
 
 ### Push-Log
 
-- Zwei parallele Sessions (session_01EhXZg4tnpn1fuw45EfZd1a + session_01RYKqESP5vzksaFg6xF9jDX) haben denselben Report unabhängig erstellt. Konflikt beim Rebase aufgelöst: Remote-Version (detailliertere Tabelle) übernommen, Push-Log ergänzt.
-
-### Push-Log
-
-- `git push origin main` fehlgeschlagen: Remote enthält bereits einen model-watch Commit vom selben Tag (session_01EhXZg4tnpn1fuw45EfZd1a, commit 4f9ce27). Kein Force-Push. Commit lokal vorhanden (cherry-pick e104f34 auf main). Manuelle Zusammenführung durch Peter erforderlich falls beide Einträge erhalten bleiben sollen.
+- Zwei parallele Sessions (session_01EhXZg4tnpn1fuw45EfZd1a + session_01RYKqESP5vzksaFg6xF9jDX) haben denselben Report unabhängig erstellt. Rebase-Konflikt aufgelöst: Remote-Version (detailliertere Tabelle) übernommen, Push-Log ergänzt.
 
 ---
 
