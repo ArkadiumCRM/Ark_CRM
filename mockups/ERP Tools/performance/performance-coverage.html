@@ -225,70 +225,29 @@
     letter-spacing: 0.04em;
   }
 
-  /* Heatmap */
+  /* CH-Karte (SVG Schweiz, 7 BFS-Grossregionen) */
   .heatmap-wrap { padding: 22px 24px 24px; display: grid; grid-template-columns: 1fr 200px; gap: 28px; align-items: start; }
-  .heatmap {
-    display: grid;
-    grid-template-columns: 80px repeat(5, 1fr) 80px;
-    gap: 4px;
-    font-size: 11px;
+  .ch-map-wrap { display: flex; justify-content: center; align-items: flex-start; }
+  .ch-map {
+    width: 100%; max-width: 520px; height: auto;
+    display: block;
   }
-  .hm-corner { }
-  .hm-col-h, .hm-row-h {
-    font-family: "DM Sans", sans-serif;
-    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--text-light); font-weight: 600;
-    display: grid; place-items: center;
-    padding: 6px 0;
-  }
-  .hm-row-h { justify-content: end; padding-right: 12px; color: var(--text); }
-  .hm-cell {
-    aspect-ratio: 2 / 1;
-    min-height: 52px;
-    border-radius: 3px;
-    display: flex; align-items: center; justify-content: center;
-    gap: 2px;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
+  .ch-map path {
+    stroke: #FFFFFF; stroke-width: 1.5;
     cursor: pointer;
-    position: relative;
-    border: 1px solid transparent;
-    transition: transform .12s, border-color .12s;
-    white-space: nowrap;
+    transition: stroke-width .12s, filter .12s;
   }
-  .hm-cell:hover {
-    transform: scale(1.02);
-    border-color: var(--text-mid);
+  .ch-map path:hover { stroke-width: 2.5; filter: brightness(0.93); }
+  .ch-map path.active { stroke: var(--gold-strong); stroke-width: 3; }
+  .ch-map text {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; font-weight: 500;
+    fill: var(--text); pointer-events: none;
+    dominant-baseline: middle; text-anchor: middle;
   }
-  .hm-cell.active {
-    border-color: var(--gold-strong);
-    box-shadow: 0 0 0 2px var(--gold-strong);
-    z-index: 2;
-  }
-  .hm-cell.dark-text { color: #fff; }
-  .hm-cell .pct-unit { font-size: 11px; color: inherit; opacity: 0.7; margin-left: 1px; }
-  .hm-cell.dark-text .pct-unit { opacity: 0.85; }
+  .ch-map text.dark-lbl { fill: #fff; }
 
-  .hm-summary {
-    color: var(--text-mid);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11.5px;
-    background: var(--surface-alt);
-    border-radius: 3px;
-    display: grid; place-items: center;
-    aspect-ratio: 2 / 1;
-    min-height: 52px;
-  }
-  .hm-summary.row-end { justify-self: stretch; }
-  .hm-foot-h { /* "Sparte Ø" axis label */
-    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--text-light); font-weight: 600;
-    padding: 6px 0; text-align: right; padding-right: 12px;
-  }
-
-  /* Heatmap legend column */
+  /* CH-Karte legend column */
   .hm-legend { padding-top: 8px; }
   .hm-legend h4 {
     margin: 0 0 10px 0; font-size: 10.5px; letter-spacing: 0.18em;
@@ -654,7 +613,7 @@
     <div>
       <div class="crumb">CRM · Performance</div>
       <h1 class="serif">Coverage</h1>
-      <div class="subtitle">Kandidaten- + Kunden-Vernachlässigung <span class="dot">·</span> Owner × Sparte</div>
+      <div class="subtitle">Kandidaten- + Kunden-Vernachlässigung <span class="dot">·</span> Geografische Verteilung · BFS-Grossregionen</div>
     </div>
     <div class="page-head-actions">
       <button class="btn btn-gold">Massenaktion</button>
@@ -736,18 +695,78 @@
   <section class="panel">
     <div class="panel-head">
       <h2>Coverage-Heatmap</h2>
-      <span class="meta">Owner × Sparte · Kandidaten · Score = % aktiv kontaktiert (30d)</span>
+      <span class="meta">Schweiz · BFS-Grossregionen · Kandidaten · Score = % aktiv kontaktiert (30d)</span>
       <div class="right">
-        <span class="scope-chip">5 × 5 · 25 Zellen</span>
+        <span class="scope-chip">7 Regionen · CH</span>
       </div>
     </div>
 
+    <!-- TODO: Stammdaten-Patch v1.6→v1.7 für dim_region (BFS-Grossregionen) ausstehend. Region-Codes hier hardcoded für Mockup. -->
     <div class="heatmap-wrap">
-      <div class="heatmap" id="heatmap"></div>
+      <div class="ch-map-wrap">
+        <svg class="ch-map" id="chMap" viewBox="0 0 600 400">
+          <!--
+            Stilisierte Polygon-Pfade der 7 BFS-Grossregionen der Schweiz.
+            Koordinaten sind annähernde geografische Positionen (kein Präzisionsanspruch — Mockup).
+            Leserichtung West→Ost: GE · MI · NW · ZE · ZH · OS, TI hängt südlich.
+          -->
+
+          <!-- GE: Genferseeregion — Südwest-Ecke, dreieckig -->
+          <path id="region-GE"
+            data-code="GE" data-name="Genferseeregion"
+            data-contacted="24" data-total="38" data-pct="63"
+            d="M 30,230 L 110,180 L 145,260 L 115,310 L 55,300 Z" />
+
+          <!-- MI: Espace Mittelland — Zentrum-West, grosse Fläche -->
+          <path id="region-MI"
+            data-code="MI" data-name="Espace Mittelland"
+            data-contacted="32" data-total="41" data-pct="78"
+            d="M 110,100 L 210,85 L 250,130 L 255,195 L 210,230 L 145,260 L 110,180 Z" />
+
+          <!-- NW: Nordwestschweiz — Nordwest, schmales Band -->
+          <path id="region-NW"
+            data-code="NW" data-name="Nordwestschweiz"
+            data-contacted="19" data-total="27" data-pct="70"
+            d="M 210,85 L 290,70 L 310,120 L 280,145 L 250,130 Z" />
+
+          <!-- ZH: Zürich — Zentrum-Nord, kompakt -->
+          <path id="region-ZH"
+            data-code="ZH" data-name="Zürich"
+            data-contacted="51" data-total="58" data-pct="88"
+            d="M 290,70 L 380,75 L 390,145 L 350,165 L 310,155 L 310,120 Z" />
+
+          <!-- OS: Ostschweiz — rechte Seite, gross -->
+          <path id="region-OS"
+            data-code="OS" data-name="Ostschweiz"
+            data-contacted="14" data-total="33" data-pct="42"
+            d="M 380,75 L 560,90 L 570,240 L 470,260 L 400,250 L 350,200 L 350,165 L 390,145 Z" />
+
+          <!-- ZE: Zentralschweiz — Zentrum, kleiner Kern -->
+          <path id="region-ZE"
+            data-code="ZE" data-name="Zentralschweiz"
+            data-contacted="22" data-total="28" data-pct="79"
+            d="M 255,195 L 310,155 L 350,165 L 350,200 L 400,250 L 360,270 L 300,265 L 255,240 Z" />
+
+          <!-- TI: Tessin — fingerförmig nach Süden -->
+          <path id="region-TI"
+            data-code="TI" data-name="Tessin"
+            data-contacted="6" data-total="14" data-pct="43"
+            d="M 255,240 L 300,265 L 360,270 L 370,310 L 320,370 L 270,360 L 240,300 Z" />
+
+          <!-- Region-Code Labels, zentriert in jeder Region -->
+          <text x="88"  y="262" class="dark-lbl" id="lbl-GE">GE</text>
+          <text x="178" y="175" id="lbl-MI">MI</text>
+          <text x="258" y="108" id="lbl-NW">NW</text>
+          <text x="338" y="115" id="lbl-ZH">ZH</text>
+          <text x="472" y="170" id="lbl-OS">OS</text>
+          <text x="315" y="218" id="lbl-ZE">ZE</text>
+          <text x="305" y="320" class="dark-lbl" id="lbl-TI">TI</text>
+        </svg>
+      </div>
 
       <aside class="hm-legend">
         <h4>Skala</h4>
-        <p>Score = Anteil Kandidaten der Owner × Sparte-Zelle, der in den letzten 30 Tagen mind. einen Touch erhalten hat.</p>
+        <p>Score = Anteil Kandidaten in dieser Region, der in den letzten 30 Tagen mind. einen Touch erhalten hat.</p>
         <div class="hm-scale"></div>
         <div class="hm-scale-labels">
           <span>0 %</span>
@@ -756,8 +775,8 @@
         </div>
         <div class="hm-active-info" id="hmInfo">
           <div class="ln">
-            <div class="key">Aktive Zelle</div>
-            <div class="val" id="hmInfoCell">LR × PUR</div>
+            <div class="key">Aktive Region</div>
+            <div class="val" id="hmInfoCell">Ostschweiz</div>
           </div>
           <div class="ln">
             <div class="key">Coverage</div>
@@ -765,7 +784,7 @@
           </div>
           <div class="ln">
             <div class="key">Kontaktiert · Total</div>
-            <div class="val mono" id="hmInfoCount" style="font-size:13px;">8 / 19 Kandidaten</div>
+            <div class="val mono" id="hmInfoCount" style="font-size:13px;">14 / 33 Kandidaten</div>
           </div>
         </div>
       </aside>
@@ -1033,27 +1052,16 @@
     b.classList.add('active');
   }));
 
-  // ── Heatmap ──────────────────────────────────────
-  const owners  = ['PW','JV','LR','ST','MR'];
-  const sparten = ['ARC','GT','ING','PUR','REM'];
-  // rows = owners, cols = sparten
-  const matrix = [
-    [80, 72, 68, 45, 78],   // PW
-    [88, 76, 82, 58, 71],   // JV
-    [62, 85, 77, 42, 69],   // LR
-    [74, 90, 73, 65, 83],   // ST
-    [91, 68, 79, 55, 76],   // MR
+  // ── SVG Schweiz-Karte (7 BFS-Grossregionen) ──────
+  const regions = [
+    { code:'GE', name:'Genferseeregion',  contacted: 24, total: 38, score: 63 },
+    { code:'MI', name:'Espace Mittelland', contacted: 32, total: 41, score: 78 },
+    { code:'NW', name:'Nordwestschweiz',   contacted: 19, total: 27, score: 70 },
+    { code:'ZH', name:'Zürich',            contacted: 51, total: 58, score: 88 },
+    { code:'OS', name:'Ostschweiz',        contacted: 14, total: 33, score: 42 },
+    { code:'ZE', name:'Zentralschweiz',    contacted: 22, total: 28, score: 79 },
+    { code:'TI', name:'Tessin',            contacted:  6, total: 14, score: 43 },
   ];
-  // contacted / total per cell (for tooltip + active-info)
-  const counts = [
-    [12,15], [13,18], [11,16], [9,20], [14,18],
-    [15,17], [13,17], [14,17], [11,19], [12,17],
-    [8,13],  [17,20], [10,13], [8,19],  [9,13],
-    [11,15], [18,20], [11,15], [13,20], [10,12],
-    [10,11], [11,16], [11,14], [11,20], [13,17],
-  ];
-  const colHdrAvg = ['79','78','76','53','75'];   // sparte Ø
-  const rowHdrAvg = ['69','75','67','77','74'];   // owner Ø
 
   function lerpHex(a, b, k) {
     const ah = a.replace('#',''); const bh = b.replace('#','');
@@ -1064,8 +1072,7 @@
     const bl = Math.round(ab + (bb-ab)*k);
     return `rgb(${r},${g},${bl})`;
   }
-  // Calm 5-stop scale: red → red-tint → amber-tint → green-tint → green
-  // 0..40 red→red-tint ; 40..55 red-tint→amber-tint ; 55..70 amber-tint→green-tint ; 70..90 green-tint→green ; 90+ green
+  // Canonical 5-stop scale: red → red-tint → amber-tint → green-tint → green
   function scoreColor(pct) {
     const t = Math.max(0, Math.min(100, pct));
     if (t < 40) {
@@ -1085,77 +1092,64 @@
     }
   }
 
-  const heatmap = document.getElementById('heatmap');
-  let html = '';
-  // top-left corner
-  html += '<div class="hm-corner"></div>';
-  // column headers
-  sparten.forEach(s => html += `<div class="hm-col-h">${s}</div>`);
-  // owner Ø header (right)
-  html += '<div class="hm-col-h" style="color:var(--text-mid);">Owner Ø</div>';
-
-  // rows
-  matrix.forEach((row, ri) => {
-    html += `<div class="hm-row-h">${owners[ri]}</div>`;
-    row.forEach((pct, ci) => {
-      const { bg, dark } = scoreColor(pct);
-      const [a,b] = counts[ri*5 + ci];
-      const cls = `hm-cell${dark ? ' dark-text' : ''}`;
-      html += `<div class="${cls}" data-r="${ri}" data-c="${ci}" data-pct="${pct}" data-a="${a}" data-b="${b}" style="background:${bg};" title="${owners[ri]} × ${sparten[ci]} · ${a} von ${b} Kandidaten kontaktiert · ${pct} % Coverage"><span>${pct}</span><span class="pct-unit">%</span></div>`;
-    });
-    // owner average
-    html += `<div class="hm-summary">${rowHdrAvg[ri]} %</div>`;
+  // Apply fill colors to region paths
+  regions.forEach(reg => {
+    const path = document.getElementById(`region-${reg.code}`);
+    if (!path) return;
+    const { bg, dark } = scoreColor(reg.score);
+    path.style.fill = bg;
+    // Update label dark/light
+    const lbl = document.getElementById(`lbl-${reg.code}`);
+    if (lbl) {
+      lbl.classList.toggle('dark-lbl', dark);
+    }
+    path.setAttribute('title', `${reg.name} · ${reg.contacted} von ${reg.total} Kandidaten · ${reg.score} % Coverage`);
   });
 
-  // bottom row: sparte averages
-  html += '<div class="hm-foot-h">Sparte Ø</div>';
-  colHdrAvg.forEach(v => {
-    html += `<div class="hm-summary">${v} %</div>`;
-  });
-  html += '<div class="hm-summary" style="background:var(--surface-sunk); color:var(--text);">72 %</div>';
-
-  heatmap.innerHTML = html;
-
-  // active cell (LR × PUR by default — the worst red zone matching the spec)
+  // Active region state
   const hmInfoCell  = document.getElementById('hmInfoCell');
   const hmInfoScore = document.getElementById('hmInfoScore');
   const hmInfoCount = document.getElementById('hmInfoCount');
   const critFilter  = document.getElementById('critFilter');
 
-  function setActiveCell(cell) {
-    document.querySelectorAll('.hm-cell.active').forEach(x => x.classList.remove('active'));
-    cell.classList.add('active');
-    const r = +cell.dataset.r, c = +cell.dataset.c;
-    const pct = +cell.dataset.pct, a = +cell.dataset.a, b = +cell.dataset.b;
-    const owner = owners[r], sparte = sparten[c];
-    hmInfoCell.textContent = `${owner} × ${sparte}`;
+  function setActiveRegion(path) {
+    document.querySelectorAll('#chMap path.active').forEach(x => x.classList.remove('active'));
+    path.classList.add('active');
+    const code = path.dataset.code;
+    const name = path.dataset.name;
+    const pct  = +path.dataset.pct;
+    const contacted = +path.dataset.contacted;
+    const total     = +path.dataset.total;
+    hmInfoCell.textContent  = name;
     hmInfoScore.textContent = `${pct} %`;
     hmInfoScore.style.color = pct < 55 ? 'var(--red)' : pct < 70 ? 'var(--amber)' : 'var(--green)';
-    hmInfoCount.textContent = `${a} / ${b} Kandidaten`;
-    critFilter.firstChild.textContent = `${owner} × ${sparte} · ` + (function(){
-      // count rows in critList matching
-      const matches = critList.filter(r2 => r2.owner === owner && r2.sparte === sparte).length;
-      return `${matches} Treffer`;
-    })() + ' ';
+    hmInfoCount.textContent = `${contacted} / ${total} Kandidaten`;
+    const matches = critList.filter(r => r.region === code).length;
+    critFilter.firstChild.textContent = `${name} · ${matches} Treffer `;
     critFilter.classList.add('gold');
+    renderCrit(code);
   }
 
-  document.querySelectorAll('.hm-cell').forEach(c => {
-    c.addEventListener('click', () => setActiveCell(c));
+  document.querySelectorAll('#chMap path').forEach(p => {
+    p.addEventListener('click', () => setActiveRegion(p));
   });
+
+  // Default active: OS (worst region)
+  const defaultPath = document.getElementById('region-OS');
+  if (defaultPath) setActiveRegion(defaultPath);
 
   // ── Critical list ────────────────────────────────
   const critList = [
-    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false },
-    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true  },
-    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true  },
-    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false },
-    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true  },
-    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false },
-    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false },
-    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false },
-    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false },
-    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false },
+    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false, region:'OS' },
+    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true,  region:'ZH' },
+    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true,  region:'OS' },
+    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false, region:'MI' },
+    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true,  region:'ZH' },
+    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false, region:'TI' },
+    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false, region:'NW' },
+    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false, region:'GE' },
+    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false, region:'OS' },
+    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false, region:'ZE' },
   ];
 
   function scoreClass(s) {
@@ -1171,9 +1165,16 @@
   }
 
   const critBody = document.getElementById('critBody');
-  function renderCrit() {
+  let activeRegionFilter = 'OS'; // default: worst region
+
+  function renderCrit(regionCode) {
+    if (regionCode !== undefined) activeRegionFilter = regionCode;
+    const list = activeRegionFilter
+      ? critList.filter(r => r.region === activeRegionFilter)
+      : critList;
     let html = '';
-    critList.forEach((r, i) => {
+    list.forEach((r, _) => {
+      const i = critList.indexOf(r);
       const sc = scoreClass(r.score);
       const dc = daysClass(r.last, r.soll);
       html += `
@@ -1240,9 +1241,11 @@
   // critFilter clear
   document.getElementById('critFilterX').addEventListener('click', (e) => {
     e.stopPropagation();
-    document.querySelectorAll('.hm-cell.active').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('#chMap path.active').forEach(x => x.classList.remove('active'));
+    activeRegionFilter = null;
     critFilter.firstChild.textContent = 'alle ';
     critFilter.classList.remove('gold');
+    renderCrit(null);
   });
 
   renderCrit();
