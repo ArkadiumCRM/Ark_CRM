@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>Performance-Admin · ARK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  :root {
+    --bg: #F4F5F7;
+    --surface: #FFFFFF;
+    --surface-alt: #EDEFF3;
+    --surface-sunk: #E5E7EC;
+    --text: #1A1F2E;
+    --text-mid: #4A5568;
+    --text-light: #8A95A8;
+    --border: #E2E5EA;
+    --border-strong: #CDD2DA;
+    --accent: #1A3A5C;
+    --accent-soft: rgba(26, 58, 92, 0.08);
+    --gold: #B8860B;
+    --gold-strong: #9B7009;
+    --gold-soft: rgba(184, 134, 11, 0.10);
+    --green: #1A6B4A;
+    --green-soft: rgba(26, 107, 74, 0.10);
+    --amber: #D97706;
+    --amber-soft: rgba(217, 119, 6, 0.10);
+    --red: #C0392B;
+    --red-soft: rgba(192, 57, 43, 0.10);
+    --serif: "Libre Baskerville", Georgia, serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    --radius: 5px;
+    --radius-sm: 3px;
+  }
+  [data-theme="dark"] {
+    --bg: #0E1116;
+    --surface: #161B22;
+    --surface-alt: #1D242D;
+    --surface-sunk: #0B0E12;
+    --text: #E6EDF3;
+    --text-mid: #B0BAC8;
+    --text-light: #7A869A;
+    --border: #2A323D;
+    --border-strong: #3A4350;
+    --accent: #7CB5E8;
+    --accent-soft: rgba(124, 181, 232, 0.12);
+    --gold: #D4A84B;
+    --gold-strong: #E5BC5E;
+    --gold-soft: rgba(212, 168, 75, 0.14);
+    --green: #3FB950;
+    --green-soft: rgba(63, 185, 80, 0.14);
+    --amber: #D29922;
+    --amber-soft: rgba(210, 153, 34, 0.14);
+    --red: #F85149;
+    --red-soft: rgba(248, 81, 73, 0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .page { max-width: 1440px; margin: 0 auto; padding: 32px 36px 48px; }
+
+  /* HEADER */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 8px;
+  }
+  .h1 {
+    font-family: var(--serif); font-weight: 400; font-size: 34px;
+    color: var(--accent); letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 13px; }
+  .subtitle .sep { color: var(--border-strong); margin: 0 8px; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .admin-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold-soft); color: var(--gold-strong);
+    border: 1px solid var(--gold);
+    padding: 5px 10px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  [data-theme="dark"] .admin-badge { color: var(--gold); }
+  .admin-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .green-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-soft); color: var(--green);
+    padding: 5px 10px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+  }
+  .green-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .link-btn {
+    background: none; border: 0; color: var(--accent); font-size: 12px;
+    cursor: pointer; padding: 4px 6px; text-decoration: underline;
+    text-decoration-color: var(--border-strong); text-underline-offset: 4px;
+    font-family: var(--sans);
+  }
+
+  .btn {
+    font-family: var(--sans); font-size: 12.5px; padding: 7px 12px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text); cursor: pointer;
+    font-weight: 500; transition: all 0.12s;
+  }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold-strong); }
+  .btn-gold:hover { background: var(--gold-strong); }
+  [data-theme="dark"] .btn-gold { color: #1A1F2E; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="dark"] .btn-primary { color: #0E1116; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-mid); }
+  .btn-sm { padding: 4px 9px; font-size: 11.5px; }
+
+  /* SNAPSHOT */
+  .snapshot {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  }
+  .kpi { background: var(--surface); padding: 16px 18px 14px; display: flex; flex-direction: column; min-height: 118px; }
+  .kpi-label {
+    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: var(--serif); font-size: 23px; line-height: 1.1;
+    color: var(--text); font-weight: 400; margin-bottom: 2px;
+  }
+  .kpi-value .num-large { font-family: var(--mono); font-weight: 500; }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-value.gold { color: var(--gold-strong); }
+  [data-theme="dark"] .kpi-value.gold { color: var(--gold); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-delta {
+    margin-top: auto; padding-top: 10px;
+    font-size: 11.5px; color: var(--text-mid);
+  }
+
+  /* SUB-TABS */
+  .subtabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+    margin-bottom: 24px; overflow-x: auto;
+  }
+  .subtab {
+    padding: 12px 18px;
+    font-size: 12.5px; color: var(--text-mid);
+    background: none; border: 0; cursor: pointer;
+    font-family: var(--sans); font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+  }
+  .subtab:hover { color: var(--text); }
+  .subtab.active {
+    color: var(--gold-strong);
+    border-bottom-color: var(--gold-strong);
+    font-weight: 600;
+  }
+  [data-theme="dark"] .subtab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .subtab .count {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text-light); margin-left: 4px;
+  }
+  .subtab.active .count { color: var(--gold-strong); }
+  [data-theme="dark"] .subtab.active .count { color: var(--gold); }
+
+  /* PANEL */
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  .panel-head {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .panel-title { font-family: var(--serif); font-size: 16px; font-weight: 400; color: var(--text); }
+  .panel-meta {
+    font-size: 11px; color: var(--text-light); letter-spacing: 0.05em;
+    font-family: var(--mono);
+  }
+  .panel-actions { display: flex; gap: 8px; align-items: center; }
+  .search-input {
+    padding: 6px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--sans); font-size: 12px;
+    border-radius: 3px;
+    width: 220px;
+  }
+
+  /* TABLES */
+  .adm-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .adm-table thead th {
+    text-align: left; padding: 10px 14px; background: var(--surface-alt);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .adm-table thead th.right { text-align: right; }
+  .adm-table tbody td {
+    padding: 11px 14px; border-bottom: 1px solid var(--border);
+    color: var(--text); vertical-align: middle;
+  }
+  .adm-table tbody tr { cursor: pointer; }
+  .adm-table tbody tr:hover { background: var(--surface-alt); }
+  .adm-table tbody tr:last-child td { border-bottom: 0; }
+  .adm-table tbody td.right { text-align: right; }
+  .adm-table tbody tr.paused-row td { opacity: 0.65; }
+
+  .code-cell {
+    font-family: var(--mono); font-weight: 500;
+    color: var(--accent); font-size: 11.5px;
+  }
+  .cat-pill {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 10px; font-size: 10px; font-weight: 600;
+    font-family: var(--mono); letter-spacing: 0.04em;
+    background: var(--surface-sunk); color: var(--text-mid);
+  }
+  .cat-pill.coverage { background: rgba(26,107,74,0.10); color: var(--green); }
+  .cat-pill.pipeline { background: var(--accent-soft); color: var(--accent); }
+  .cat-pill.revenue  { background: var(--gold-soft); color: var(--gold-strong); }
+  [data-theme="dark"] .cat-pill.revenue { color: var(--gold); }
+  .cat-pill.goals    { background: rgba(155,123,92,0.14); color: #9B7B5C; }
+  [data-theme="dark"] .cat-pill.goals { color: #B89478; }
+  .cat-pill.activity { background: rgba(77,114,153,0.14); color: #4D7299; }
+  [data-theme="dark"] .cat-pill.activity { color: #7CB5E8; }
+  .cat-pill.compliance { background: var(--amber-soft); color: var(--amber); }
+
+  .agg-pill {
+    display: inline-block; padding: 2px 7px;
+    border-radius: 3px; font-size: 10px; font-weight: 600;
+    font-family: var(--mono); letter-spacing: 0.04em;
+    background: var(--surface-sunk); color: var(--text-mid);
+  }
+  .switch {
+    position: relative; width: 30px; height: 17px;
+    background: var(--surface-sunk); border: 1px solid var(--border-strong);
+    border-radius: 10px; cursor: pointer; transition: background 0.15s;
+    flex-shrink: 0; display: inline-block;
+  }
+  .switch::after {
+    content: ''; position: absolute; top: 1px; left: 1px;
+    width: 13px; height: 13px; background: var(--surface);
+    border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    transition: left 0.15s;
+  }
+  .switch.on { background: var(--green); border-color: var(--green); }
+  .switch.on::after { left: 14px; background: #fff; }
+
+  .state-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 7px; border-radius: 3px;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .state-fresh   { background: var(--green-soft); color: var(--green); }
+  .state-stale   { background: var(--amber-soft); color: var(--amber); }
+  .state-fail    { background: var(--red-soft); color: var(--red); }
+
+  /* FORECAST CARDS */
+  .fc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fc-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 18px 16px;
+    display: flex; flex-direction: column; min-height: 220px;
+  }
+  .fc-title {
+    font-family: var(--serif); font-size: 15px; color: var(--text);
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .fc-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 5px 0; font-size: 12px;
+  }
+  .fc-row .k { color: var(--text-light); }
+  .fc-row .v { font-family: var(--mono); font-weight: 500; color: var(--text); }
+  .fc-row .v.amber { color: var(--amber); }
+  .fc-row .v.green { color: var(--green); }
+  .fc-radio { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 12px; }
+  .fc-radio label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text); cursor: pointer;
+    font-family: var(--mono);
+  }
+  .radio { width: 14px; height: 14px; border: 1.5px solid var(--border-strong); border-radius: 50%; flex-shrink: 0; position: relative; }
+  .fc-radio label.checked .radio { border-color: var(--accent); }
+  .fc-radio label.checked .radio::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .fc-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: 12px; }
+
+  /* TAB-CONTENT */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* DRAWERS */
+  .drawers-section {
+    margin-top: 32px; padding-top: 28px; border-top: 1px dashed var(--border-strong);
+  }
+  .drawers-section-head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+  }
+  .drawers-section-title { font-family: var(--serif); font-size: 16px; color: var(--text); }
+  .drawers-section-meta {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light);
+  }
+  .drawers-row {
+    display: grid; grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: center;
+  }
+  .drawer {
+    width: 540px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: -8px 0 24px -12px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (max-width: 1280px) {
+    .drawers-row { grid-template-columns: 1fr; }
+    .drawer { width: 100%; }
+    .snapshot { grid-template-columns: repeat(3, 1fr); }
+    .fc-grid { grid-template-columns: 1fr; }
+    .page { padding: 24px 24px 40px; }
+  }
+  .drawer-head { padding: 18px 22px 16px; border-bottom: 1px solid var(--border); position: relative; }
+  .drawer-eyebrow {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .drawer-title {
+    font-family: var(--serif); font-size: 19px; color: var(--text);
+    font-weight: 400; line-height: 1.2;
+  }
+  .drawer-close {
+    position: absolute; top: 16px; right: 18px;
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-light); cursor: pointer; background: none; border: 0;
+    font-size: 18px; border-radius: 3px;
+  }
+  .drawer-tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+    padding: 0 22px; background: var(--surface);
+  }
+  .drawer-tab {
+    padding: 11px 0; margin-right: 22px;
+    font-size: 12px; color: var(--text-mid); font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; background: none; border-top: 0; border-left: 0; border-right: 0;
+    font-family: var(--sans);
+  }
+  .drawer-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .drawer-body { padding: 20px 22px; overflow-y: auto; max-height: 760px; }
+  .drawer-section { margin-bottom: 22px; }
+  .drawer-section:last-child { margin-bottom: 0; }
+  .drawer-section-title {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .drawer-section-meta {
+    color: var(--text-light); font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: 0.06em; text-transform: none;
+  }
+  .form-row { margin-bottom: 12px; }
+  .form-label { display: block; font-size: 11px; color: var(--text-light); font-weight: 500; margin-bottom: 6px; }
+  .input, .select, .textarea {
+    width: 100%; padding: 7px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text);
+    font-family: var(--sans); font-size: 12.5px;
+    border-radius: 3px;
+  }
+  .input.code { font-family: var(--mono); background: var(--surface-sunk); color: var(--accent); font-weight: 500; }
+  .textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+  .select { appearance: none; padding-right: 24px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-light) 50%), linear-gradient(135deg, var(--text-light) 50%, transparent 50%);
+    background-position: calc(100% - 14px) center, calc(100% - 9px) center;
+    background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  .radio-group { display: flex; gap: 14px; }
+  .radio-row { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+  .radio-row.checked .radio { border-color: var(--accent); }
+  .radio-row.checked .radio::after { content: ''; position: absolute; top: 2px; left: 2px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kv-table td { padding: 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .kv-table tr:last-child td { border-bottom: 0; }
+  .kv-table td.k { color: var(--text-light); width: 42%; }
+  .kv-table td.v { color: var(--text); font-family: var(--mono); font-weight: 500; }
+  .kv-table td.v .meta { color: var(--text-light); margin-left: 6px; font-weight: 400; }
+  .kv-table td.v.warn-v { color: var(--amber); }
+  .kv-table td.v.crit-v { color: var(--red); }
+  .kv-table td.v.good-v { color: var(--green); }
+
+  .sql-block {
+    background: var(--surface-sunk); border: 1px solid var(--border);
+    border-radius: 3px; padding: 12px 14px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text); line-height: 1.6;
+    white-space: pre; overflow-x: auto;
+  }
+  .sql-kw { color: var(--accent); font-weight: 600; }
+  .sql-fn { color: var(--gold-strong); }
+  [data-theme="dark"] .sql-fn { color: var(--gold); }
+
+  .drawer-foot {
+    padding: 14px 22px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  .lock-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    padding: 1px 6px; border-radius: 2px;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+  }
+  .lock-pill.locked { background: var(--gold-soft); color: var(--gold-strong); }
+  [data-theme="dark"] .lock-pill.locked { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">CRM · Performance · Admin</div>
+      <h1 class="h1">Performance-Admin</h1>
+      <div class="subtitle">Konfiguration<span class="sep">·</span>Worker-Monitoring<span class="sep">·</span>Schwellen<span class="sep">·</span>Dashboard-Defaults</div>
+    </div>
+    <div class="header-actions">
+      <span class="green-badge"><span class="dot"></span>Worker-Status · ✓ alle 12 grün</span>
+      <button class="link-btn">Audit-Log öffnen</button>
+      <span class="admin-badge"><span class="dot"></span>Admin-Only · PW</span>
+    </div>
+  </header>
+
+  <!-- SNAPSHOT -->
+  <section class="snapshot">
+    <div class="kpi">
+      <div class="kpi-label">Aktive Metriken</div>
+      <div class="kpi-value accent"><span class="num-large">47</span> <span style="font-size:13px;color:var(--text-light);font-family:var(--mono);">/ 52</span></div>
+      <div class="kpi-delta">5 archiviert</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Aktive Schwellen</div>
+      <div class="kpi-value accent"><span class="num-large">138</span></div>
+      <div class="kpi-delta">über <span class="mono">47</span> Metriken × 3-5 Scopes</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">PowerBI-Views fresh</div>
+      <div class="kpi-value green"><span class="num-large">14</span> <span style="font-size:13px;color:var(--text-light);font-family:var(--mono);">/ 17</span></div>
+      <div class="kpi-delta">refresh ok &lt; 24h</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">PowerBI-Views stale</div>
+      <div class="kpi-value amber"><span class="num-large">3</span></div>
+      <div class="kpi-delta">älter als 24h · Refresh nötig</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Worker-Lag Ø</div>
+      <div class="kpi-value green"><span class="num-large">4.2</span> min</div>
+      <div class="kpi-delta">Schwelle <span class="mono">15 min</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Snapshot-Volumen 24h</div>
+      <div class="kpi-value accent"><span class="num-large">184k</span> Rows</div>
+      <!-- ark-lint-skip:begin reason=admin-table-spec -->
+      <div class="kpi-delta"><code style="font-size:10.5px;color:var(--text-light);">fact_metric_snapshot_*</code></div>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </section>
+
+  <!-- SUB-TABS -->
+  <nav class="subtabs" id="subtabs">
+    <button class="subtab active" data-tab="metriken">Metriken <span class="count">47</span></button>
+    <button class="subtab" data-tab="schwellen">Anomalie-Schwellen <span class="count">138</span></button>
+    <button class="subtab" data-tab="defaults">Dashboard-Defaults <span class="count">25</span></button>
+    <button class="subtab" data-tab="views">Power-BI-Views <span class="count">17</span></button>
+    <button class="subtab" data-tab="worker">Worker-Health <span class="count">12</span></button>
+    <button class="subtab" data-tab="forecast">Forecast-Konfiguration</button>
+  </nav>
+
+  <!-- TAB · METRIKEN -->
+  <section class="tab-content active" data-content="metriken">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Metriken</h2>
+        <div class="panel-actions">
+          <input class="search-input" placeholder="Filter Metric-Code…">
+          <button class="btn btn-sm">Bulk-Actions ▾</button>
+          <button class="btn btn-sm btn-primary">+ Neue Metric</button>
+        </div>
+      </div>
+      <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Kategorie</th>
+            <th>Quelle (PowerBI-View)</th>
+            <th>Aggregat</th>
+            <th class="right">Active</th>
+            <th>Letzter Snapshot</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="code-cell">placement_count</td>
+            <td>Placement-Anzahl</td>
+            <td><span class="cat-pill pipeline">Pipeline</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
+            <td><span class="agg-pill">COUNT</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">candidate_coverage_score</td>
+            <td>Kandidaten-Coverage</td>
+            <td><span class="cat-pill coverage">Coverage</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_candidate_coverage</td>
+            <td><span class="agg-pill">AVG</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">account_coverage_score</td>
+            <td>Account-Coverage</td>
+            <td><span class="cat-pill coverage">Coverage</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_account_coverage</td>
+            <td><span class="agg-pill">AVG</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">conversion_rate</td>
+            <td>Konversionsrate</td>
+            <td><span class="cat-pill pipeline">Pipeline</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
+            <td><span class="agg-pill">DERIVED</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">time_to_hire</td>
+            <td>Time-to-Hire</td>
+            <td><span class="cat-pill pipeline">Pipeline</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
+            <td><span class="agg-pill">MEDIAN</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">revenue_realized</td>
+            <td>Revenue Realisiert</td>
+            <td><span class="cat-pill revenue">Revenue</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_perf_revenue_monthly</td>
+            <td><span class="agg-pill">SUM</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">revenue_forecast</td>
+            <td>Revenue Forecast</td>
+            <td><span class="cat-pill revenue">Revenue</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_perf_forecast_q_audit</td>
+            <td><span class="agg-pill">DERIVED</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">goal_drift</td>
+            <td>Goal-Drift</td>
+            <td><span class="cat-pill goals">Goals</span></td>
+            <td class="mono" style="color:var(--text-mid);">derived from fact_perf_goal</td>
+            <td><span class="agg-pill">DERIVED</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">activity_count_weekly</td>
+            <td>Aktivität Woche</td>
+            <td><span class="cat-pill activity">Activity</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_activity_rollup</td>
+            <td><span class="agg-pill">COUNT</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">reminder_backlog</td>
+            <td>Reminder-Backlog</td>
+            <td><span class="cat-pill compliance">Compliance</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_compliance_status</td>
+            <td><span class="agg-pill">COUNT</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr>
+            <td class="code-cell">elearning_compliance</td>
+            <td>E-Learning Compliance</td>
+            <td><span class="cat-pill compliance">Compliance</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_elearn_status</td>
+            <td><span class="agg-pill">AVG</span></td>
+            <td class="right"><span class="switch on"></span></td>
+            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
+          </tr>
+          <tr class="paused-row">
+            <td class="code-cell">hunt_rate_weekly</td>
+            <td>Hunt-Rate Woche <span style="color:var(--text-light);font-size:11px;margin-left:4px;">(legacy → hunt_rate_v2)</span></td>
+            <td><span class="cat-pill activity">Activity</span></td>
+            <td class="mono" style="color:var(--text-mid);">v_hunt_rollup</td>
+            <td><span class="agg-pill">COUNT</span></td>
+            <td class="right"><span class="switch"></span></td>
+            <td class="mono" style="color:var(--text-light);">18.04. 06:14</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </section>
+
+  <!-- TAB · ANOMALIE-SCHWELLEN -->
+  <section class="tab-content" data-content="schwellen">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Anomalie-Schwellen</h2>
+        <div class="panel-actions">
+          <button class="btn btn-sm">Bulk-Edit</button>
+          <button class="btn btn-sm btn-primary">+ Neue Schwelle</button>
+        </div>
+      </div>
+      <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Scope</th>
+            <th class="right">info</th>
+            <th class="right">warn</th>
+            <th class="right">critical</th>
+            <th class="right">blocker</th>
+            <th>Last-Edited</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="code-cell">candidate_coverage_score</td>
+            <td class="mono" style="color:var(--text-mid);">sparte/<span style="color:var(--text);">ARC</span></td>
+            <td class="right mono" style="color:var(--text-mid);">80%</td>
+            <td class="right mono" style="color:var(--amber);">70%</td>
+            <td class="right mono" style="color:var(--red);">50%</td>
+            <td class="right mono" style="color:var(--red);font-weight:600;">30%</td>
+            <td class="mono" style="color:var(--text-light);">18.04.2026 · PW</td>
+          </tr>
+          <tr>
+            <td class="code-cell">candidate_coverage_score</td>
+            <td class="mono" style="color:var(--text-mid);">sparte/<span style="color:var(--text);">PUR</span></td>
+            <td class="right mono" style="color:var(--text-mid);">75%</td>
+            <td class="right mono" style="color:var(--amber);">65%</td>
+            <td class="right mono" style="color:var(--red);">45%</td>
+            <td class="right mono" style="color:var(--red);font-weight:600;">25%</td>
+            <td class="mono" style="color:var(--text-light);">18.04.2026 · PW</td>
+          </tr>
+          <tr>
+            <td class="code-cell">goal_drift</td>
+            <td class="mono" style="color:var(--text-mid);">ma/*</td>
+            <td class="right mono" style="color:var(--text-mid);">−5%</td>
+            <td class="right mono" style="color:var(--amber);">−15%</td>
+            <td class="right mono" style="color:var(--red);">−30%</td>
+            <td class="right mono" style="color:var(--red);font-weight:600;">−50%</td>
+            <td class="mono" style="color:var(--text-light);">12.04.2026 · PW</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </section>
+
+  <!-- TAB · DASHBOARD-DEFAULTS -->
+  <section class="tab-content" data-content="defaults">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Dashboard-Defaults · Layouts pro Rolle</h2>
+        <span class="panel-meta">5 ROLLEN × 5 PAGES · 25 LAYOUTS</span>
+      </div>
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Rolle</th>
+            <th>Page</th>
+            <th class="right">Tiles</th>
+            <th>Locked</th>
+            <th class="right">User-Overrides</th>
+            <th>Letzte Änderung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" style="font-weight:600;">MA</td>
+            <td>Dashboard</td>
+            <td class="right mono">8</td>
+            <td><span class="lock-pill locked">🔒 1 · Compliance-Status</span></td>
+            <td class="right mono">12 User</td>
+            <td class="mono" style="color:var(--text-light);">10.04.2026 · PW</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-weight:600;">HEAD</td>
+            <td>Dashboard</td>
+            <td class="right mono">12</td>
+            <td><span class="lock-pill locked">🔒 3 · Health · Anomalien · Forecast</span></td>
+            <td class="right mono">4 User</td>
+            <td class="mono" style="color:var(--text-light);">14.04.2026 · PW</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-weight:600;">ADMIN</td>
+            <td>Dashboard</td>
+            <td class="right mono">14</td>
+            <td><span class="lock-pill locked">🔒 5</span></td>
+            <td class="right mono">1 User · PW</td>
+            <td class="mono" style="color:var(--text-light);">22.04.2026 · PW</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB · POWER-BI-VIEWS -->
+  <section class="tab-content" data-content="views">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Power-BI-Views</h2>
+        <span class="panel-meta">17 VIEWS · 14 FRESH · 3 STALE</span>
+      </div>
+      <!-- ark-lint-skip:begin reason=admin-view-spec -->
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>View-Name</th>
+            <th>Cadence</th>
+            <th>Last-Refresh</th>
+            <th>Status</th>
+            <th class="right">Row-Count</th>
+            <th class="right">Manual-Refresh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="code-cell">v_perf_pipeline_funnel_daily</td>
+            <td class="mono" style="color:var(--text-mid);">daily 02:00</td>
+            <td class="mono" style="color:var(--text-light);">25.04. 02:14</td>
+            <td><span class="state-badge state-fresh">✓ fresh</span></td>
+            <td class="right mono">1'240</td>
+            <td class="right"><button class="btn btn-sm">Refresh</button></td>
+          </tr>
+          <tr>
+            <td class="code-cell">v_candidate_coverage</td>
+            <td class="mono" style="color:var(--text-mid);">daily 03:00</td>
+            <td class="mono" style="color:var(--text-light);">25.04. 03:18</td>
+            <td><span class="state-badge state-fresh">✓ fresh</span></td>
+            <td class="right mono">5'820</td>
+            <td class="right"><button class="btn btn-sm">Refresh</button></td>
+          </tr>
+          <tr>
+            <td class="code-cell">v_perf_forecast_q_audit</td>
+            <td class="mono" style="color:var(--text-mid);">weekly Mo</td>
+            <td class="mono" style="color:var(--amber);">18.04. 02:30</td>
+            <td><span class="state-badge state-stale">⚠ STALE 7d</span></td>
+            <td class="right mono">12</td>
+            <td class="right"><button class="btn btn-sm btn-gold">Refresh</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </section>
+
+  <!-- TAB · WORKER-HEALTH -->
+  <section class="tab-content" data-content="worker">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Worker-Health · Live-Status</h2>
+        <span class="panel-meta">12 WORKER · 11 GREEN · 1 AMBER</span>
+      </div>
+      <!-- ark-lint-skip:begin reason=admin-worker-spec -->
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Worker-Name</th>
+            <th>Cadence</th>
+            <th>Last-Run</th>
+            <th class="right">Lag (min)</th>
+            <th class="right">Failure-Rate 7d</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="code-cell">snapshot-collector.worker</td>
+            <td class="mono" style="color:var(--text-mid);">hourly :15</td>
+            <td class="mono" style="color:var(--text-light);">vor 14 min</td>
+            <td class="right mono">1.2</td>
+            <td class="right mono" style="color:var(--green);">0%</td>
+            <td><span class="state-badge state-fresh">✓ green</span></td>
+          </tr>
+          <tr>
+            <td class="code-cell">anomaly-detector.worker</td>
+            <td class="mono" style="color:var(--text-mid);">daily 06:00</td>
+            <td class="mono" style="color:var(--text-light);">vor 4h 14min</td>
+            <td class="right mono">4.5</td>
+            <td class="right mono" style="color:var(--green);">1.8%</td>
+            <td><span class="state-badge state-fresh">✓ green</span></td>
+          </tr>
+          <tr>
+            <td class="code-cell">action-outcome-measurer.worker</td>
+            <td class="mono" style="color:var(--text-mid);">daily 06:30</td>
+            <td class="mono" style="color:var(--text-light);">vor 4h 44min</td>
+            <td class="right mono" style="color:var(--amber);">8.2</td>
+            <td class="right mono" style="color:var(--amber);">3.1%</td>
+            <td><span class="state-badge state-stale">⚠ amber</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- ark-lint-skip:end -->
+    </div>
+  </section>
+
+  <!-- TAB · FORECAST-KONFIGURATION -->
+  <section class="tab-content" data-content="forecast">
+    <div class="fc-grid">
+      <div class="fc-card">
+        <div class="fc-title">Methode</div>
+        <div class="fc-row"><span class="k">Aktiv</span><span class="v" style="color:var(--accent);">Markov-Stage v0.1</span></div>
+        <div class="fc-radio">
+          <!-- ark-lint-skip:begin reason=admin-forecast-method-codes -->
+          <label class="checked"><span class="radio"></span>markov_stage_v0_1 <span style="color:var(--text-light);">(aktiv)</span></label>
+          <label><span class="radio"></span>pipeline_simple <span style="color:var(--text-light);">(legacy)</span></label>
+          <label><span class="radio"></span>manual <span style="color:var(--text-light);">(override-only)</span></label>
+          <!-- ark-lint-skip:end -->
+        </div>
+        <div class="fc-actions">
+          <button class="btn btn-sm">Methode wechseln</button>
+        </div>
+      </div>
+      <div class="fc-card">
+        <div class="fc-title">Konversionsraten · Audit</div>
+        <div class="fc-row"><span class="k">Letzter Recompute</span><span class="v">22.04.2026</span></div>
+        <div class="fc-row"><span class="k">Median-Drift 30d</span><span class="v green">±2.4 pp</span></div>
+        <div class="fc-row"><span class="k">Konfidenz</span><span class="v">78%</span></div>
+        <div class="fc-row"><span class="k">Audit-Status</span><span class="v green">✓ in Toleranz</span></div>
+        <div class="fc-actions">
+          <button class="btn btn-sm">Audit-Report öffnen</button>
+          <button class="btn btn-sm btn-gold">Recompute jetzt triggern</button>
+        </div>
+      </div>
+      <div class="fc-card">
+        <div class="fc-title">Schwellwerte</div>
+        <div class="fc-row"><span class="k">Forecast-Drift Warn</span><span class="v amber">10%</span></div>
+        <div class="fc-row"><span class="k">Forecast-Drift Critical</span><span class="v" style="color:var(--red);">25%</span></div>
+        <div class="fc-row"><span class="k">Confidence-Threshold</span><span class="v">70%</span></div>
+        <div class="fc-row"><span class="k">Auto-Override-Trigger</span><span class="v" style="color:var(--text-light);">aus</span></div>
+        <div class="fc-actions">
+          <button class="btn btn-sm">Schwellwerte bearbeiten</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRAWERS -->
+  <section class="drawers-section">
+    <div class="drawers-section-head">
+      <span class="drawers-section-meta">Drawer-Previews ·</span>
+      <h2 class="drawers-section-title">Statisch nebeneinander gerendert · 540 px slide-in von rechts</h2>
+    </div>
+    <div class="drawers-row">
+
+      <!-- DRAWER A · Metric Edit -->
+      <div class="drawer">
+        <div class="drawer-head">
+          <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+          <div class="drawer-eyebrow">Metric · candidate_coverage_score · Kategorie Coverage</div>
+          <!-- ark-lint-skip:end -->
+          <div class="drawer-title">Kandidaten-Coverage</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="metric">
+          <button class="drawer-tab active" data-tab="def">Definition</button>
+          <button class="drawer-tab" data-tab="quelle">Quelle</button>
+          <button class="drawer-tab" data-tab="schwellen">Schwellen</button>
+          <button class="drawer-tab" data-tab="audit">Audit</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="def">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Definition</div>
+              <div class="form-row">
+                <label class="form-label">Code <span style="color:var(--text-light);">· read-only</span></label>
+                <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+                <input class="input code" value="candidate_coverage_score" readonly>
+                <!-- ark-lint-skip:end -->
+              </div>
+              <div class="form-row">
+                <label class="form-label">Name</label>
+                <input class="input" value="Kandidaten-Coverage">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Beschreibung</label>
+                <textarea class="textarea">Anteil der Kandidaten in einem Scope (Sparte / Owner / Stage), der in den letzten 30 Tagen mindestens einen Touch erhalten hat.</textarea>
+              </div>
+              <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                  <label class="form-label">Kategorie</label>
+                  <select class="select"><option>Coverage</option><option>Pipeline</option><option>Revenue</option><option>Goals</option><option>Activity</option><option>Compliance</option></select>
+                </div>
+                <div>
+                  <label class="form-label">Aggregat</label>
+                  <select class="select"><option>AVG</option><option>COUNT</option><option>SUM</option><option>MEDIAN</option><option>DERIVED</option></select>
+                </div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Skala</label>
+                <div class="radio-group">
+                  <label class="radio-row checked"><span class="radio"></span>Prozent (0–100)</label>
+                  <label class="radio-row"><span class="radio"></span>Absolut</label>
+                  <label class="radio-row"><span class="radio"></span>Index</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="quelle">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Quelle</div>
+              <div class="form-row">
+                <label class="form-label">PowerBI-View</label>
+                <!-- ark-lint-skip:begin reason=admin-view-spec -->
+                <select class="select"><option>v_candidate_coverage</option><option>v_account_coverage</option></select>
+                <!-- ark-lint-skip:end -->
+              </div>
+              <table class="kv-table">
+                <tr><td class="k">Last-Refresh</td><td class="v good-v">25.04.2026 03:18 <span class="meta">✓ fresh</span></td></tr>
+                <tr><td class="k">Refresh-Cadence</td><td class="v">daily 03:00</td></tr>
+                <tr><td class="k">Row-Count</td><td class="v">5'820</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="schwellen">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verlinkte Schwellen <span class="drawer-section-meta">3</span></div>
+              <table class="kv-table">
+                <tr><td class="k mono" style="color:var(--text-mid);">sparte/ARC</td><td class="v">80 / 70 / 50 / 30</td></tr>
+                <tr><td class="k mono" style="color:var(--text-mid);">sparte/PUR</td><td class="v">75 / 65 / 45 / 25</td></tr>
+                <tr><td class="k mono" style="color:var(--text-mid);">owner/*</td><td class="v">70 / 60 / 45 / 30</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="audit">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Audit-Trail</div>
+              <table class="kv-table">
+                <tr><td class="k">Erstellt</td><td class="v">12.01.2025 · PW</td></tr>
+                <tr><td class="k">Letzte Änderung</td><td class="v">18.04.2026 · PW <span class="meta">Beschreibung präzisiert</span></td></tr>
+                <tr><td class="k">Snapshot-Versionen</td><td class="v">468</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn btn-gold">Archivieren</button>
+          <button class="btn btn-primary">Speichern</button>
+        </div>
+      </div>
+
+      <!-- DRAWER B · Power-BI View -->
+      <div class="drawer">
+        <div class="drawer-head">
+          <!-- ark-lint-skip:begin reason=admin-view-spec -->
+          <div class="drawer-eyebrow">Power-BI-View · v_perf_forecast_q_audit · ⚠ STALE 7d</div>
+          <!-- ark-lint-skip:end -->
+          <div class="drawer-title">Forecast-Audit-View</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="view">
+          <button class="drawer-tab active" data-tab="status">Status</button>
+          <button class="drawer-tab" data-tab="sql">SQL</button>
+          <button class="drawer-tab" data-tab="log">Refresh-Log</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="status">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Status</div>
+              <div style="margin-bottom:12px;"><span class="state-badge state-stale" style="font-size:11.5px;padding:4px 10px;">⚠ STALE · 7 days · threshold 24h</span></div>
+              <table class="kv-table">
+                <tr><td class="k">Last-Refresh</td><td class="v warn-v">18.04.2026 02:30</td></tr>
+                <tr><td class="k">Cadence</td><td class="v">weekly Mo 02:30</td></tr>
+                <tr><td class="k">Row-Count</td><td class="v">12</td></tr>
+                <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+                <tr><td class="k">Konsumierende Metriken</td><td class="v">1 <span class="meta">revenue_forecast</span></td></tr>
+                <!-- ark-lint-skip:end -->
+                <tr><td class="k">Konsumierende Pages</td><td class="v">2 <span class="meta">Revenue · Reports</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="sql">
+            <div class="drawer-section">
+              <div class="drawer-section-title">SQL <span class="drawer-section-meta">read-only · Admin-Lock</span></div>
+              <!-- ark-lint-skip:begin reason=admin-sql-spec -->
+<div class="sql-block"><span class="sql-kw">SELECT</span>
+  tenant_id, sparte_code, q_label, q_actual_revenue,
+  q_forecast_revenue, q_forecast_confidence, q_decomposition_jsonb
+<span class="sql-kw">FROM</span> fact_perf_forecast_q
+<span class="sql-kw">WHERE</span> q_label <span class="sql-kw">IN</span> (<span class="sql-fn">'Q1 2025'</span>,<span class="sql-fn">'Q2 2025'</span>,<span class="sql-fn">'Q3 2025'</span>,<span class="sql-fn">'Q4 2025'</span>,
+                  <span class="sql-fn">'Q1 2026'</span>,<span class="sql-fn">'Q2 2026'</span>,<span class="sql-fn">'Q3 2026'</span>,<span class="sql-fn">'Q4 2026'</span>)
+<span class="sql-kw">ORDER BY</span> q_label, sparte_code;</div>
+              <!-- ark-lint-skip:end -->
+              <div style="margin-top:10px;"><button class="btn btn-sm btn-ghost">SQL editieren · Admin-Lock erforderlich</button></div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="log">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Refresh-Log <span class="drawer-section-meta">letzte 5</span></div>
+              <table class="kv-table">
+                <tr><td class="k mono">18.04. 02:30</td><td class="v good-v">✓ ok</td></tr>
+                <tr><td class="k mono">11.04. 02:30</td><td class="v good-v">✓ ok</td></tr>
+                <tr><td class="k mono">04.04. 02:32</td><td class="v warn-v">⚠ 12s slow</td></tr>
+                <tr><td class="k mono">28.03. 02:30</td><td class="v good-v">✓ ok</td></tr>
+                <tr><td class="k mono">21.03. 02:31</td><td class="v good-v">✓ ok</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn btn-gold">Cron pausieren</button>
+          <button class="btn btn-primary">Manuell refreshen</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* SUB-TABS */
+(function() {
+  const nav = document.getElementById('subtabs');
+  nav.addEventListener('click', e => {
+    const btn = e.target.closest('.subtab');
+    if (!btn) return;
+    const t = btn.dataset.tab;
+    nav.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.content === t));
+  });
+})();
+
+/* SWITCHES */
+document.querySelectorAll('.switch').forEach(sw => sw.addEventListener('click', () => sw.classList.toggle('on')));
+
+/* RADIO GROUPS (radio-group + fc-radio) */
+document.querySelectorAll('.radio-group, .fc-radio').forEach(g => {
+  g.addEventListener('click', e => {
+    const row = e.target.closest('.radio-row, label');
+    if (!row || !g.contains(row)) return;
+    g.querySelectorAll('.radio-row, label').forEach(r => r.classList.toggle('checked', r === row));
+  });
+});
+
+/* DRAWER TABS */
+document.querySelectorAll('.drawer-tabs').forEach(tabBar => {
+  const drawerEl = tabBar.parentElement;
+  tabBar.addEventListener('click', e => {
+    const btn = e.target.closest('.drawer-tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    tabBar.querySelectorAll('.drawer-tab').forEach(b => b.classList.toggle('active', b === btn));
+    drawerEl.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.pane === tab));
+  });
+});
+</script>
+</body>
+</html>
