@@ -2,8 +2,8 @@
 title: "ARK CRM — Gesamtübersicht"
 type: meta
 created: 2026-04-08
-updated: 2026-04-17
-sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_3.md", "ARK_DATABASE_SCHEMA_v1_3.md", "ARK_BACKEND_ARCHITECTURE_v2_5.md", "ARK_FRONTEND_FREEZE_v1_10.md", "ARK_STAMMDATEN_EXPORT_v1_3.md"]
+updated: 2026-04-25
+sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md", "ARK_DATABASE_SCHEMA_v1_5.md", "ARK_BACKEND_ARCHITECTURE_v2_7.md", "ARK_FRONTEND_FREEZE_v1_12.md", "ARK_STAMMDATEN_EXPORT_v1_5.md"]
 tags: [overview, architecture, crm]
 ---
 
@@ -29,7 +29,7 @@ ARK Executive Search (Arkadium AG) ist eine Schweizer Personalberatung spezialis
 
 - **Backend:** Node.js / Fastify / TypeScript auf Railway
 - **Frontend:** Next.js / React auf Vercel, Dark (Default) + Light Mode (user-umschaltbar)
-- **Datenbank:** Supabase PostgreSQL (~161 Tabellen, `ark` Schema)
+- **Datenbank:** Supabase PostgreSQL (~204 Tabellen, `ark` Schema)
 - **Pattern:** Modularer Monolith mit Event Spine
 - **Desktop:** Electron App
 - **AI:** Schreibt nie direkt — immer Vorschlag → Mensch bestätigt
@@ -49,7 +49,7 @@ Siehe: [[backend-architektur]], [[frontend-architektur]], [[datenbank-schema]]
 | [[projekt]] | Bauprojekte, 3-Tier Gewerk/Beteiligungen | 6 Tabs (Phase A–I) |
 | [[assessment]] | Credits-basierte Diagnostik, 11 Typen | 5 Tabs |
 | [[scraper]] | Control-Center, 7 Typen, Review-Queue | 6 Tabs |
-| [[history-system]] | 64 Activity Types in 11 Kategorien | |
+| [[history-system]] | 146 Activity Types in 19 Kategorien (§91 v1.4-Patch + §92-§95 E-Learning) | |
 | [[event-system]] | Event-Driven Architecture mit Automationen | |
 | [[dokumente]] | Upload, OCR, Generator (ARK CV, Exposé, Abstract) | |
 | [[reminders]] | Auto-generiert + manuell, Eskalation | |
@@ -86,7 +86,7 @@ Eine Person kann mehrere Rollen gleichzeitig haben. Siehe [[namenskonventionen]]
 | **Phase 1** | Kern-CRM: Kandidaten, Accounts, Jobs, Mandate, Prozesse, History, Reminders, Dokumente, Dashboard | Launch-Blocker |
 | **Phase 1.5** | AI Activity-Types, Transkript-Summaries, Email-System, 3CX, Assessment-Import | Erste 4 Wochen |
 | **Phase 2** | RAG, Matching, Dok-Generator, Assessment-Charts, Kanban, Report-Generator | 3-6 Monate |
-| **Phase 3** | ERP: Zeiterfassung, Buchhaltung, Payroll, Messaging, Publishing | Eigenes Produkt |
+| **Phase 3** | ERP-Tools (eigenständige Produkte): Zeiterfassung ✓ · Billing ✓ · E-Learning ✓ · HR ✓ · Provisionen ✓ · Performance / Publishing (ausstehend) | In Arbeit |
 
 ## Separate Projekte
 
@@ -106,12 +106,29 @@ Ingested 2026-04-17 als Struktur-Referenz für Assessment-Modul:
   - [[assessment-beispiel-entwicklungsbericht]] — Coaching (13 S.)
   - [[assessment-beispiel-selektionsbericht]] — Interview-Leitfaden (8 S.)
 
+## ERP-Tools (Phase 3, eigenständig)
+
+| Tool | Route | Status | Grundlagen |
+|------|-------|--------|------------|
+| Zeiterfassung | `/erp/zeit` | Specs v0.1 + 7 Mockups ✓ | DB v1.4 · Backend v2.6 · Freeze v1.11 |
+| Billing | `/erp/billing` | Specs v0.1 + 4 Mockups ✓ | DB v1.5 · Backend v2.7 |
+| E-Learning | `/erp/elearn` | Specs + 6 Mockups ✓ · Sub A/B/C/D | DB v1.5 (28 Tabellen) · Backend v2.7 (80+ Endpoints) |
+| HR | `/erp/hr` | Specs v0.1 + 7 Mockups ✓ | DB v1.5 · Backend v2.7 |
+| Provisionen | `/erp/commission` | Specs + 4 Mockups ✓ | |
+
+Zugang via **Topbar-Toggle CRM ↔ ERP** (Frontend-Freeze v1.12 TEIL O). Feature-Flag `feature_hr_tool` locked bis Go-Live.
+
 ## Nachträge v1.3.x (2026-04-14 bis 2026-04-16)
 
 - **v1.3.1** — Account-UI-Konsolidierung: Snapshot-Slots 5+6 auf Firmografik, Arkadium-Relation-KPI-Bar in Tab 1, 4-Tab-Kontakt-Drawer, Theme-Preference (Dark/Light umschaltbar)
 - **v1.3.2** — Snapshot-Bar-Harmonisierung aller 5 Detailmasken: `.snapshot-bar` uniform, sticky ÜBER Tabbar (`top:0, z-index:50`), dupe-freie Slot-Belegung
 - **v1.3.3** — Projekt-Detailmaske komplett ausgebaut (Phase A–I, 6 Tabs, 3-Tier BKP/SIA, Matching, Galerie)
 - **TEIL 21** — Spec-Sync-Regel: 5 Grundlagen ↔ 9 Detail-Specs bidirektional synchron halten. Siehe [[spec-sync-regel]]
+
+## Nachträge v1.4 (2026-04-24)
+
+- **v1.4 / v1.5 / v2.7 / v1.12** — E-Learning-Merge: 28 neue Tabellen (elearn_*), 52 Events, 25 Worker, 80+ Endpoints, Activity-Types-Patch v1.4 (+37 Rows #70–#106, 18 Kategorien), E-Learning §92–§95 (+40 Rows #107–#146, 19. Kategorie). Workspace-Struktur CRM↔ERP, Multi-Tenant-RLS, pgvector-RAG, Python-Worker-Service.
+- **HR-Modul v0.1** (2026-04-25) — Phase-3 HR komplett: 7 Mockups + Specs Schema/Interactions v0.1
 
 ## Open Questions
 

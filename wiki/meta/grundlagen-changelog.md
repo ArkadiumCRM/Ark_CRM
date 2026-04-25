@@ -604,79 +604,103 @@ Alle 18 Einträge aus Session 13946034 (2026-04-19 22:59–23:46) in Sammel-Pass
 ## [2026-04-24 15:59] session-63ae8c3a
 - **File:** ARK_STAMMDATEN_EXPORT_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Additive Änderungen (§91 Activity-Types-Patch +37 Rows + §92-§95 E-Learning +40 Rows). 9 CRM-Entity-Specs referenzieren Katalog per Verweis, keine Einzellistung → kein Drift in Entity-Specs. E-Learning-Specs waren Source der Grundlagen-Updates (PR #5 vor PR #7).
+- **Resolved-In:** N/A — kein Entity-Spec-Drift. E-Learning-Specs (elearn.*) bereits konform.
+- **Digest-Stale:** Digests regeneriert (PR #7 commit 3).
 
 ## [2026-04-24 16:02] session-63ae8c3a
 - **File:** ARK_STAMMDATEN_EXPORT_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Identischer Scope wie 15:59-Eintrag (iterativer Edit). Sammel-Resolution.
+- **Resolved-In:** siehe 15:59-Eintrag.
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:02] session-63ae8c3a
 - **File:** ARK_DATABASE_SCHEMA_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** 28 neue elearn_*-Tabellen, pgvector-Extension, ALTER dim_user/dim_elearn_certificate. Rein additiv — keine bestehende Entity-Spec betroffen. E-Learning-DB-Design war bereits in elearn-Specs dokumentiert.
+- **Resolved-In:** N/A — kein Entity-Spec-Drift.
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:04] session-63ae8c3a
 - **File:** ARK_DATABASE_SCHEMA_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Identischer Scope (iterativer Edit). Sammel-Resolution.
+- **Resolved-In:** siehe 16:02-Eintrag (DB).
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:04] session-63ae8c3a
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_7.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** TEIL N: 52 Events, 25 Workers, 80+ Endpoints (alle elearn_*). Rein additiv — bestehende CRM-Interactions-Specs unberührt. E-Learning-Architektur war Source der v2.7-Updates.
+- **Resolved-In:** N/A — kein CRM-Interactions-Spec-Drift. elearn-Specs konform.
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:06] session-63ae8c3a
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_7.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Identischer Scope (iterativer Edit). Sammel-Resolution.
+- **Resolved-In:** siehe 16:04-Eintrag (Backend).
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:07] session-63ae8c3a
 - **File:** ARK_FRONTEND_FREEZE_v1_12.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** TEIL O: Topbar-Toggle CRM↔ERP, 25+ neue E-Learning-Page-Templates, neue Components. Rein additiv — bestehende CRM-Mockups unberührt. Freeze-Update dokumentiert bereits gebaute elearn-Mockups.
+- **Resolved-In:** N/A — kein CRM-Mockup-Drift. elearn-Mockups konform.
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:09] session-63ae8c3a
 - **File:** ARK_FRONTEND_FREEZE_v1_12.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Identischer Scope (iterativer Edit). Sammel-Resolution.
+- **Resolved-In:** siehe 16:07-Eintrag (Frontend).
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:09] session-63ae8c3a
 - **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** wiki/meta/overview.md war stale (Versionen v1.3/v2.5, ~161 Tabellen, kein E-Learning). Gefixt.
+- **Resolved-In:** wiki/meta/overview.md (Versionen v1.5/v2.7/v1.12/v1.4 · ~204 Tabellen · 146 Activity-Types · ERP-Tools-Sektion · Phasen-Plan · Nachträge v1.4) · index.md (elearn-handover bereits vorhanden, ausreichend).
+- **Digest-Stale:** Digests regeneriert.
 
 ## [2026-04-24 16:11] session-63ae8c3a
 - **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
-- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** Identischer Scope (iterativer Edit). Sammel-Resolution.
+- **Resolved-In:** siehe 16:09-Eintrag (Gesamtsystem).
+- **Digest-Stale:** Digests regeneriert.
+
+## [2026-04-25] session-current | RESOLUTION ✓ (E-Learning-Merge Grundlagen-Sync)
+
+Alle 10 Einträge aus session-63ae8c3a (2026-04-24 15:59–16:11) resolved.
+
+**Befund:** E-Learning-Merge war rein additiv. Grundlagen-Updates (v1.5/v2.7/v1.12/v1.4) dokumentierten bereits gebaute E-Learning-Specs/Mockups (PR #5). Keine bestehenden CRM-Entity-Specs/Mockups betroffen.
+
+**Einziger echter Drift:** `wiki/meta/overview.md` — stale auf v1.3-Versionen. Gefixt 2026-04-25:
+- Quell-Versionen aktualisiert (v1.3→v1.5, v2.5→v2.7, v1.10→v1.12, v1.3→v1.4)
+- Tabellenanzahl ~161 → ~204
+- Activity-Types 64/11 → 146/19
+- ERP-Tools-Sektion neu (Zeit/Billing/E-Learning/HR/Provision)
+- Phasen-Plan Phase-3-Status aktualisiert
+- Nachträge v1.4 ergänzt
