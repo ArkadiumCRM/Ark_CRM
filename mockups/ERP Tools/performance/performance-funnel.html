@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Pipeline-Funnel — ARK CRM Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/editorial.css" />
+<style>
+  /* Hub-Iframe-Compat: App-Bar nur im Standalone-Modus */
+  body.in-iframe .app-bar { display: none; }
+  body.in-iframe main { padding-top: 12px; }
+
+  :root, [data-theme="light"] {
+    --accent: #196774; --accent-tint: #e7eff1;
+    --gold: #dcb479; --gold-tint: #f6ecd9; --gold-strong: #b88e4e;
+    --green: #2d8659; --green-tint: #e2efe7;
+    --amber: #c98e2c; --amber-tint: #f6ecd5;
+    --red: #b94545; --red-tint: #f3dede;
+    --info: #4d6b80; --info-tint: #e3eaf0;
+
+    --bg: #faf7f2; --surface: #ffffff; --surface-alt: #f5efe6; --surface-sunk: #f1ebe0;
+    --text: #262626; --text-mid: #555; --text-light: #8a8a8a;
+    --border: #e8e2d5; --border-strong: #d8cfba;
+
+    --shadow-sm: 0 1px 2px rgba(40, 30, 10, 0.04);
+    --shadow:    0 1px 3px rgba(40, 30, 10, 0.06);
+    --shadow-md: 0 8px 28px rgba(40, 30, 10, 0.10);
+
+    --r-sm: 4px; --r: 6px;
+  }
+  [data-theme="dark"] {
+    --accent: #4ea3b0; --accent-tint: #1a2c30;
+    --gold: #dcb479; --gold-tint: #2c2519; --gold-strong: #e0bd84;
+    --green: #5cb88a; --green-tint: #1a2922;
+    --amber: #d9a548; --amber-tint: #2c2417;
+    --red: #d97070; --red-tint: #2d1d1d;
+    --info: #8aa6bb; --info-tint: #1d262e;
+
+    --bg: #16181a; --surface: #1d2023; --surface-alt: #22262a; --surface-sunk: #15171a;
+    --text: #ececec; --text-mid: #b0b0b0; --text-light: #7a7a7a;
+    --border: #2c3034; --border-strong: #3a4046;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 1px 3px rgba(0,0,0,0.35);
+    --shadow-md: 0 8px 28px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: "Libre Baskerville", Georgia, serif; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  /* App bar */
+  .app-bar {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 24px;
+    font-size: 12px; color: var(--text-mid);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 22px; height: 22px;
+    background: var(--text); color: var(--bg);
+    display: grid; place-items: center;
+    font-family: "Libre Baskerville", serif; font-weight: 700;
+    font-size: 13px; border-radius: 2px;
+  }
+  .brand-name { font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+  .brand-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+  .modules { display: flex; gap: 2px; margin-left: 20px; }
+  .mod {
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .mod.active { background: var(--text); color: var(--bg); font-weight: 600; }
+  .app-bar-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  .user-pill { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; }
+  .user-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 11px;
+  }
+  .theme-toggle {
+    width: 26px; height: 26px;
+    border: 1px solid var(--border); border-radius: 50%;
+    display: grid; place-items: center; color: var(--text-mid);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .ico { width: 14px; height: 14px; stroke-width: 1.6; }
+  .ico-sm { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  main { padding: 22px 32px 64px; max-width: 1440px; margin: 0 auto; }
+
+  /* Page head */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+  }
+  .page-head h1 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 28px;
+    color: var(--accent); letter-spacing: -0.005em;
+  }
+  .crumb {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 12.5px; margin-top: 6px; }
+  .subtitle .dot { color: var(--border-strong); margin: 0 7px; }
+  .page-head-actions { display: flex; align-items: center; gap: 10px; }
+  .btn {
+    padding: 6px 12px; border-radius: var(--r-sm);
+    font-size: 12.5px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--text);
+  }
+  .btn:hover { border-color: var(--border-strong); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-gold { background: var(--gold-strong); color: #fff; border-color: var(--gold-strong); font-weight: 500; }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-mid); }
+  .btn-ghost:hover { color: var(--text); }
+
+  /* Snapshot bar */
+  .snapshot { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+  .snap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 12px 14px;
+    box-shadow: var(--shadow-sm); position: relative;
+  }
+  .snap .label {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .snap .dot-color { width: 6px; height: 6px; border-radius: 50%; background: var(--text-light); }
+  .snap .value {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 24px; line-height: 1;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .snap .value .unit { font-size: 13px; color: var(--text-mid); margin-left: 2px; font-weight: 400; }
+  .snap .delta { margin-top: 6px; font-size: 11px; color: var(--text-mid); display: flex; align-items: center; gap: 6px; }
+  .spark { width: 100%; height: 22px; margin-top: 4px; display: block; }
+
+  /* Filter bar */
+  .filterbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--r);
+    margin-bottom: 18px;
+  }
+  .field {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 999px; padding: 5px 10px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .field .lab { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); }
+  .field .val { color: var(--text); font-weight: 500; }
+  .field svg { color: var(--text-light); }
+  .filterbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+  .toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px 4px 5px; background: var(--surface);
+    font-size: 12px; color: var(--text-mid);
+  }
+  .toggle .switch {
+    width: 24px; height: 14px; border-radius: 999px;
+    background: var(--border-strong); position: relative;
+  }
+  .toggle .switch::after {
+    content: ""; position: absolute; left: 2px; top: 2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--surface);
+  }
+
+  /* Main split */
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 14px; align-items: start;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-head h2 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 15px; color: var(--text);
+  }
+  .panel-head .meta { font-size: 11px; color: var(--text-light); }
+  .panel-head .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  /* Funnel */
+  .funnel-wrap { padding: 22px 32px 28px 32px; }
+  .stage-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 90px;
+    align-items: center;
+    gap: 18px;
+    padding: 5px 0;
+    cursor: pointer;
+    border-radius: var(--r-sm);
+    transition: background .12s;
+  }
+  .stage-row:hover { background: var(--surface-alt); }
+  .stage-row.active { background: var(--gold-tint); }
+  [data-theme="dark"] .stage-row.active { background: rgba(220,180,121,0.08); }
+  .stage-name {
+    font-family: "Libre Baskerville", serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text);
+    text-align: right;
+  }
+  .stage-bar-wrap { position: relative; height: 38px; display: flex; align-items: center; }
+  .stage-bar {
+    height: 28px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: filter .12s;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.08);
+  }
+  .stage-row.active .stage-bar {
+    background: var(--gold-strong);
+    box-shadow: 0 0 0 2px var(--gold-strong);
+  }
+  .stage-row:nth-child(1) .stage-bar { background: #1d6f7c; }
+  .stage-row:nth-child(3) .stage-bar { background: #1f7682; }
+  .stage-row:nth-child(5) .stage-bar { background: #237d89; }
+  .stage-row:nth-child(7) .stage-bar { background: #25848f; }
+  .stage-row:nth-child(9) .stage-bar { background: #289b96; }
+  .stage-row:nth-child(11) .stage-bar { background: #2ba287; }
+  .stage-row:nth-child(13) .stage-bar { background: #2a8b6b; }
+  .stage-row:nth-child(15) .stage-bar { background: var(--green); }
+  .stage-row:nth-child(17) .stage-bar { background: var(--green); }
+  .stage-row.active .stage-bar { background: var(--gold-strong) !important; }
+  .stage-count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px; font-weight: 500;
+    color: var(--text);
+  }
+  .stage-count .pct {
+    display: block;
+    font-size: 10.5px; color: var(--text-light); margin-top: 1px;
+  }
+
+  .conv-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 90px;
+    gap: 18px;
+    align-items: center;
+    padding: 0 0 0 0;
+    height: 26px;
+  }
+  .conv-arrow {
+    grid-column: 2 / 3;
+    display: flex; align-items: center; gap: 8px;
+    padding-left: 4px;
+    color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+  }
+  .conv-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .conv-pill.good { background: var(--green-tint); color: var(--green); }
+  .conv-pill.warn { background: var(--amber-tint); color: var(--amber); }
+  .conv-pill.bad  { background: var(--red-tint);   color: var(--red); }
+  .conv-arrow .drop {
+    color: var(--text-light); font-size: 10.5px;
+  }
+
+  /* Stage detail table */
+  .det-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .det-table th, .det-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .det-table th {
+    font-weight: 500;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    background: var(--surface-alt);
+  }
+  .det-table td.num, .det-table th.num {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .det-table tr.row { cursor: pointer; }
+  .det-table tr.row:hover { background: var(--surface-alt); }
+  .det-table tr.row.active { background: var(--gold-tint); }
+  [data-theme="dark"] .det-table tr.row.active { background: rgba(220,180,121,0.08); }
+  .det-table .stage-cell { font-family: "Libre Baskerville", serif; font-weight: 700; color: var(--text); }
+  .det-table .bad { color: var(--red); font-weight: 600; }
+
+  /* Sparten compare */
+  .compare-grid {
+    padding: 18px 22px;
+    display: grid; grid-template-columns: 64px 1fr 90px; gap: 10px 18px;
+    align-items: center;
+  }
+  .compare-grid .lab { font-family: "JetBrains Mono", monospace; color: var(--text-mid); font-size: 12px; }
+  .compare-track {
+    height: 16px; background: var(--surface-sunk); border-radius: 2px;
+    position: relative; overflow: visible;
+  }
+  .compare-fill {
+    height: 100%; background: var(--accent); border-radius: 2px;
+  }
+  .compare-fill.gold { background: var(--gold-strong); }
+  .compare-fill.bad  { background: var(--red); }
+  .compare-fill.green{ background: var(--green); }
+  .median-line {
+    position: absolute; top: -4px; bottom: -4px; width: 1px;
+    background: var(--text);
+  }
+  .median-lbl {
+    position: absolute; top: -16px; transform: translateX(-50%);
+    font-family: "JetBrains Mono", monospace; font-size: 9.5px; color: var(--text-light);
+    white-space: nowrap;
+  }
+  .compare-val {
+    text-align: right;
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 14px; color: var(--text);
+  }
+
+  /* Drawer */
+  .drawer-section-title {
+    margin: 36px 0 12px 0;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .drawer-section-title .hint { font-size: 11px; letter-spacing: normal; text-transform: none; color: var(--text-light); margin-left: auto; font-weight: 400; }
+
+  .drawer-row {
+    display: grid;
+    grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: start;
+  }
+  @media (max-width: 1200px) { .drawer-row { grid-template-columns: 1fr; } }
+
+  .drawer {
+    width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-md);
+    overflow: hidden; position: relative;
+  }
+  .drawer::before {
+    content: "Drawer · 540 px · slide-in von rechts";
+    position: absolute; top: -22px; left: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--text-light);
+  }
+  .drawer-head { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .drawer-eyebrow { font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+  .drawer-head-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .drawer-head h3 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 16px; color: var(--text);
+  }
+  .drawer-close {
+    margin-left: auto; width: 26px; height: 26px;
+    display: grid; place-items: center;
+    color: var(--text-light); border-radius: 4px;
+  }
+  .drawer-tabs {
+    display: flex; gap: 0;
+    margin: 12px -18px 0 -18px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-tab {
+    padding: 8px 0; margin-right: 18px;
+    font-size: 12px; color: var(--text-mid);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .drawer-tab.active { color: var(--text); border-color: var(--accent); font-weight: 600; }
+
+  .drawer-body {
+    padding: 18px;
+    display: flex; flex-direction: column;
+    gap: 18px; max-height: 720px; overflow: auto;
+  }
+  .drawer-foot {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .drawer-foot .spacer { flex: 1; }
+
+  .sec-title {
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 0 0 8px 0; font-weight: 600;
+  }
+
+  .badge {
+    display: inline-block; padding: 2px 7px;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.12em; border-radius: 3px;
+    text-transform: uppercase; font-variant: small-caps;
+  }
+  .b-stage { background: var(--accent-tint); color: var(--accent); }
+
+  .scope-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; padding: 2px 6px; border-radius: 2px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+
+  .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 600;
+  }
+  .avatar.gold { background: var(--gold-tint); color: var(--gold-strong); }
+  .avatar.green { background: var(--green-tint); color: var(--green); }
+  .avatar.amber { background: var(--amber-tint); color: var(--amber); }
+  .avatar.red { background: var(--red-tint); color: var(--red); }
+
+  /* Mini bar in drawer */
+  .mini-bars { display: flex; flex-direction: column; gap: 6px; }
+  .mini-bar-row { display: grid; grid-template-columns: 70px 1fr 36px; gap: 10px; align-items: center; font-size: 12px; }
+  .mini-bar-row .lab { color: var(--text-mid); }
+  .mini-bar-track { height: 10px; background: var(--surface-sunk); border-radius: 2px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; background: var(--accent); }
+  .mini-bar-row .num { font-family: "JetBrains Mono", monospace; color: var(--text); text-align: right; font-weight: 500; }
+
+  .callout {
+    border: 1px solid var(--amber);
+    background: var(--amber-tint);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .callout.gold { border-color: var(--gold); background: var(--gold-tint); }
+  [data-theme="dark"] .callout.gold { background: rgba(220,180,121,0.08); }
+  .callout .ico-warn {
+    color: var(--amber); flex-shrink: 0; margin-top: 1px;
+  }
+  .callout.gold .ico-warn { color: var(--gold-strong); }
+
+  /* Cohort heatmap */
+  .cohort {
+    display: grid;
+    grid-template-columns: 80px repeat(9, 1fr);
+    gap: 2px;
+    font-size: 9.5px;
+  }
+  .cohort .h, .cohort .row-lab {
+    padding: 4px 4px;
+    color: var(--text-light);
+    text-align: center;
+    font-family: "DM Sans", sans-serif;
+    letter-spacing: 0.04em;
+  }
+  .cohort .row-lab { text-align: right; padding-right: 8px; color: var(--text); }
+  .cohort .cell {
+    aspect-ratio: 1.6 / 1;
+    border-radius: 2px;
+    display: grid; place-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    color: var(--text);
+  }
+
+  .footer-line {
+    margin-top: 28px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- App Bar -->
+<div class="app-bar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div>
+      <div class="brand-name">ARK · CRM</div>
+      <div class="brand-sub">Performance</div>
+    </div>
+  </div>
+  <div class="modules">
+    <button class="mod">Dashboard</button>
+    <button class="mod">Insights</button>
+    <button class="mod active">Funnel</button>
+    <button class="mod">Coverage</button>
+    <button class="mod">Mitarbeiter</button>
+    <button class="mod">Revenue</button>
+    <button class="mod">Reports</button>
+    <button class="mod">Admin</button>
+  </div>
+  <div class="app-bar-right">
+    <div class="user-pill">
+      <div class="user-dot">PW</div>
+      <span>Peter W. · Admin</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Theme umschalten">
+      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <header class="page-head">
+    <div>
+      <div class="crumb">CRM · Performance</div>
+      <h1 class="serif">Pipeline-Funnel</h1>
+      <div class="subtitle">Stage-Conversion <span class="dot">·</span> Drop-Off <span class="dot">·</span> Velocity</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-gold">Cohort-Analyse</button>
+      <button class="btn">
+        <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin-right:4px;"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Export
+      </button>
+    </div>
+  </header>
+
+  <!-- Snapshot -->
+  <section class="snapshot">
+    <div class="snap">
+      <div class="label">Konversion gesamt</div>
+      <div class="value serif">3.3<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--green);">↗</span> +0.4 pp vs. Vorperiode</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,16 L14,15 L28,14 L42,12 L56,12 L70,10 L84,9 L100,7" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Time-to-Hire Ø</div>
+      <div class="value serif">47<span class="unit"> Tage</span></div>
+      <div class="delta"><span style="color:var(--green);">↘</span> −3 Tage vs. Vorperiode</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,8 L14,10 L28,9 L42,11 L56,10 L70,12 L84,13 L100,14" fill="none" stroke="var(--green)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--red);"></span>Worst Drop-Off</div>
+      <div class="value serif" style="color:var(--red);">TI → 1st</div>
+      <div class="delta"><span style="color:var(--red);">·</span> −71 % Drop</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,4 L14,5 L28,8 L42,11 L56,14 L70,16 L84,18 L100,18" fill="none" stroke="var(--red)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Top-Sparte</div>
+      <div class="value serif">ARC <span class="unit">5.1 %</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Konv. Expose → Placement</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,16 L14,14 L28,13 L42,11 L56,10 L70,8 L84,6 L100,4" fill="none" stroke="var(--gold-strong)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Bottom-Sparte</div>
+      <div class="value serif" style="color:var(--red);">PUR <span class="unit">1.8 %</span></div>
+      <div class="delta"><span style="color:var(--red);">·</span> unter Median 3.3 %</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,8 L14,9 L28,11 L42,12 L56,13 L70,14 L84,16 L100,17" fill="none" stroke="var(--red)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Pipeline-Wert offen</div>
+      <div class="value serif">CHF 2.4<span class="unit"> Mio</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> 412 aktive Prozesse</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,15 L14,14 L28,12 L42,13 L56,10 L70,9 L84,7 L100,5" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Filter bar -->
+  <section class="filterbar">
+    <div class="field"><span class="lab">Periode</span><span class="val">Letzte 90 Tage</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Sparte</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Mandat-Typ</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Owner</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Vergleich</span><span class="val">Vorperiode</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="filterbar-right">
+      <button class="toggle" aria-pressed="false">
+        <span class="switch"></span>
+        <span>Anpassen</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Main split -->
+  <section class="split">
+
+    <!-- Funnel -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Funnel</h2>
+        <span class="meta">9 Stages · 240 → 4 Prozesse · 90 Tage</span>
+        <div class="right">
+          <span class="scope-chip">Konv. gesamt 3.3 %</span>
+        </div>
+      </div>
+      <div class="funnel-wrap" id="funnel"></div>
+    </div>
+
+    <!-- Stage detail table -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Stage-Detail</h2>
+        <span class="meta">klickbar · Hover synchronisiert mit Funnel</span>
+      </div>
+      <table class="det-table" id="detTable">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th class="num">#</th>
+            <th class="num">Konv. → nächste</th>
+            <th class="num">Ø Tage</th>
+            <th class="num">Drop-Off</th>
+          </tr>
+        </thead>
+        <tbody id="detBody"></tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- Sparten Compare -->
+  <section class="panel" style="margin-top:14px;">
+    <div class="panel-head">
+      <h2>Sparten-Vergleich · Konversion Expose → Placement</h2>
+      <span class="meta">Median 3.3 % gestrichelt</span>
+      <div class="right">
+        <span class="scope-chip">5 Sparten</span>
+      </div>
+    </div>
+    <div class="compare-grid">
+      <div class="lab">ARC</div>
+      <div class="compare-track">
+        <div class="compare-fill gold" style="width:51%;"></div>
+        <div class="median-line" style="left:33%;"><div class="median-lbl">Median 3.3 %</div></div>
+      </div>
+      <div class="compare-val">5.1 %</div>
+
+      <div class="lab">REM</div>
+      <div class="compare-track">
+        <div class="compare-fill green" style="width:42%;"></div>
+        <div class="median-line" style="left:33%;"></div>
+      </div>
+      <div class="compare-val">4.2 %</div>
+
+      <div class="lab">GT</div>
+      <div class="compare-track">
+        <div class="compare-fill green" style="width:38%;"></div>
+        <div class="median-line" style="left:33%;"></div>
+      </div>
+      <div class="compare-val">3.8 %</div>
+
+      <div class="lab">ING</div>
+      <div class="compare-track">
+        <div class="compare-fill" style="width:29%;background:var(--amber);"></div>
+        <div class="median-line" style="left:33%;"></div>
+      </div>
+      <div class="compare-val">2.9 %</div>
+
+      <div class="lab">PUR</div>
+      <div class="compare-track">
+        <div class="compare-fill bad" style="width:18%;"></div>
+        <div class="median-line" style="left:33%;"></div>
+      </div>
+      <div class="compare-val" style="color:var(--red);">1.8 %</div>
+    </div>
+  </section>
+
+  <!-- Drawer previews -->
+  <h2 class="drawer-section-title">
+    Drawer-States
+    <span class="hint">Slide-in von rechts · 540 px · überdeckt die rechte Spalte</span>
+  </h2>
+
+  <div class="drawer-row">
+
+    <!-- Drawer A: Stage Detail -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Stage · TI · 45 Prozesse · Periode 90 Tage</div>
+        <div class="drawer-head-top">
+          <span class="badge b-stage">TI</span>
+          <h3>Telefon-Interview · 45 aktive Prozesse</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Prozesse</button>
+          <button class="drawer-tab">Drop-Off</button>
+          <button class="drawer-tab">Owner-Split</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <section>
+          <h4 class="sec-title">Prozesse · sortiert nach Tagen in Stage</h4>
+          <table class="det-table">
+            <thead>
+              <tr><th>Kandidat</th><th>Mandat</th><th>Owner</th><th class="num">Tage</th><th class="num">Aktion</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar red">BL</span>BL</span></td>
+                <td><span class="mono" style="font-size:11px;">MAN-2026-099</span> <span class="scope-chip">ING</span></td>
+                <td><span class="avatar" style="display:inline-grid;">LR</span></td>
+                <td class="num bad">31 d</td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar gold">RM</span>RM</span></td>
+                <td><span class="mono" style="font-size:11px;">MAN-2026-104</span> <span class="scope-chip">ARC</span></td>
+                <td><span class="avatar" style="display:inline-grid;">JV</span></td>
+                <td class="num">22 d</td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar green">FA</span>FA</span></td>
+                <td><span class="mono" style="font-size:11px;">MAN-2026-118</span> <span class="scope-chip">ARC</span></td>
+                <td><span class="avatar" style="display:inline-grid;">PW</span></td>
+                <td class="num">14 d</td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar amber">TM</span>TM</span></td>
+                <td><span class="mono" style="font-size:11px;">MAN-2026-115</span> <span class="scope-chip">GT</span></td>
+                <td><span class="avatar" style="display:inline-grid;">JV</span></td>
+                <td class="num">11 d</td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar">SK</span>SK</span></td>
+                <td><span class="mono" style="font-size:11px;">MAN-2026-127</span> <span class="scope-chip">ARC</span></td>
+                <td><span class="avatar" style="display:inline-grid;">PW</span></td>
+                <td class="num">8 d</td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Drop-Off-Risiko</h4>
+          <div class="callout">
+            <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 2 21h20L12 3zM12 10v6M12 18v.01"/></svg>
+            <div>
+              <strong>32 Prozesse</strong> aus dieser Stage sind in den letzten 90 Tagen ausgeschieden — <strong>71 % Drop-Off-Rate</strong>, höchster Wert im Funnel. Häufigste Ursache: Kandidaten-Rückzug nach Briefing-Mismatch.
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Owner-Split</h4>
+          <div class="mini-bars">
+            <div class="mini-bar-row"><span class="lab">PW</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%;"></div></div><span class="num">18</span></div>
+            <div class="mini-bar-row"><span class="lab">JV</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:78%;"></div></div><span class="num">14</span></div>
+            <div class="mini-bar-row"><span class="lab">LR</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:44%;"></div></div><span class="num">8</span></div>
+            <div class="mini-bar-row"><span class="lab">andere</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:28%;background:var(--text-light);"></div></div><span class="num">5</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Bulk-Reminder erstellen</button>
+        <button class="btn">Massenaktion</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer B: Cohort -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Cohort-Analyse · Hunt-Vintage · 12 Monate</div>
+        <div class="drawer-head-top">
+          <h3>Vintage-Performance</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Heatmap</button>
+          <button class="drawer-tab">Tabelle</button>
+          <button class="drawer-tab">Trend</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <section>
+          <h4 class="sec-title">Vintage × Stage · Konversion in %</h4>
+          <div class="cohort" id="cohort"></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:10.5px;color:var(--text-light);font-family:'JetBrains Mono',monospace;">
+            <span>0 %</span>
+            <span style="display:inline-block;width:90px;height:6px;background:linear-gradient(to right, var(--red-tint), var(--amber-tint), var(--green-tint), var(--green));border-radius:2px;"></span>
+            <span>≥ 6 %</span>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Insight</h4>
+          <div class="callout gold">
+            <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div>
+              Vintages aus <strong>November 2025</strong> zeigen <strong>2.1×</strong> höhere TI → 1st-Conversion. Korrelation mit Stretch-Coaching-Pilot: ja (Konfidenz 78 %).
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Vintages · Top 3</h4>
+          <div class="mini-bars">
+            <div class="mini-bar-row"><span class="lab">Nov 2025</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:92%;background:var(--green);"></div></div><span class="num">5.8 %</span></div>
+            <div class="mini-bar-row"><span class="lab">Mär 2026</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:74%;background:var(--green);"></div></div><span class="num">4.6 %</span></div>
+            <div class="mini-bar-row"><span class="lab">Aug 2025</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:62%;background:var(--gold-strong);"></div></div><span class="num">3.9 %</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Export PDF</button>
+        <button class="btn">An Dok-Generator senden</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="footer-line">
+    <span>Quelle · ARK Performance-Warehouse · Stand 25.04.2026 09:14</span>
+    <span>Layout · funnel.v2 · Periode 90 Tage</span>
+  </div>
+
+</main>
+
+<script>
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // Funnel data
+  const stages = [
+    { name: 'Expose',     count: 240, conv: 38,  days: 4,  drop: 149 },
+    { name: 'CV Sent',    count:  91, conv: 49,  days: 6,  drop:  46 },
+    { name: 'TI',         count:  45, conv: 29,  days: 9,  drop:  32, danger: true },
+    { name: '1st',        count:  13, conv: 62,  days: 7,  drop:   5 },
+    { name: '2nd',        count:   8, conv: 75,  days: 8,  drop:   2 },
+    { name: '3rd',        count:   6, conv: 83,  days: 6,  drop:   1 },
+    { name: 'Assessment', count:   5, conv: 80,  days: 12, drop:   1 },
+    { name: 'Offer',      count:   4, conv: 100, days: 3,  drop:   0 },
+    { name: 'Placement',  count:   4, conv: null, days: null, drop: null },
+  ];
+  const max = stages[0].count;
+
+  // Render funnel
+  const funnelEl = document.getElementById('funnel');
+  stages.forEach((s, i) => {
+    const w = (s.count / max) * 100;
+    const pct = Math.round((s.count / max) * 100);
+
+    const row = document.createElement('div');
+    row.className = 'stage-row';
+    row.dataset.idx = i;
+    if (i === 2) row.classList.add('active'); // TI active
+    row.innerHTML = `
+      <div class="stage-name">${s.name}</div>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:${w}%;"></div>
+      </div>
+      <div class="stage-count">
+        ${s.count}
+        <span class="pct">${pct} % von Top</span>
+      </div>
+    `;
+    funnelEl.appendChild(row);
+
+    if (s.conv !== null) {
+      const cls = s.conv >= 50 ? 'good' : s.conv >= 30 ? 'warn' : 'bad';
+      const conv = document.createElement('div');
+      conv.className = 'conv-row';
+      conv.innerHTML = `
+        <div></div>
+        <div class="conv-arrow">
+          <span style="font-size:14px;">↓</span>
+          <span class="conv-pill ${cls}">${s.conv} %</span>
+          <span class="drop">Drop-Off · ${s.drop}</span>
+        </div>
+        <div></div>
+      `;
+      funnelEl.appendChild(conv);
+    }
+  });
+
+  // Render stage-detail table
+  const detBody = document.getElementById('detBody');
+  stages.forEach((s, i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'row';
+    if (i === 2) tr.classList.add('active');
+    tr.dataset.idx = i;
+    const conv = s.conv === null ? '—' : `${s.conv} %`;
+    const days = s.days === null ? '—' : `${s.days} d`;
+    const drop = s.drop === null ? '—' : s.drop;
+    const dropCls = (s.drop !== null && s.drop > 30) ? 'bad' : '';
+    tr.innerHTML = `
+      <td class="stage-cell">${s.name}</td>
+      <td class="num">${s.count}</td>
+      <td class="num ${s.conv !== null && s.conv < 30 ? 'bad' : ''}">${conv}</td>
+      <td class="num">${days}</td>
+      <td class="num ${dropCls}">${drop}</td>
+    `;
+    detBody.appendChild(tr);
+  });
+
+  // Sync hover/click between funnel + table
+  function setActive(idx) {
+    document.querySelectorAll('.stage-row').forEach(r => r.classList.remove('active'));
+    document.querySelectorAll('#detBody tr').forEach(r => r.classList.remove('active'));
+    const fr = document.querySelector(`.stage-row[data-idx="${idx}"]`);
+    const tr = document.querySelector(`#detBody tr[data-idx="${idx}"]`);
+    if (fr) fr.classList.add('active');
+    if (tr) tr.classList.add('active');
+  }
+  document.querySelectorAll('.stage-row').forEach(r => {
+    r.addEventListener('mouseenter', () => setActive(r.dataset.idx));
+    r.addEventListener('click', () => setActive(r.dataset.idx));
+  });
+  document.querySelectorAll('#detBody tr').forEach(r => {
+    r.addEventListener('mouseenter', () => setActive(r.dataset.idx));
+    r.addEventListener('click', () => setActive(r.dataset.idx));
+  });
+
+  // Drawer tabs
+  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.drawer-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  });
+
+  // Cohort heatmap
+  const months = ['Mai 25','Jun 25','Jul 25','Aug 25','Sep 25','Okt 25','Nov 25','Dez 25','Jan 26','Feb 26','Mär 26','Apr 26'];
+  const stageNames = ['Expose','CV Sent','TI','1st','2nd','3rd','Assessment','Offer','Placement'];
+  const cohortEl = document.getElementById('cohort');
+
+  // header row
+  let html = '<div class="row-lab"></div>';
+  stageNames.forEach(n => html += `<div class="h">${n}</div>`);
+
+  // base curve (rough conversion at each stage from Expose=100)
+  const base = [100, 38, 18.6, 5.4, 3.4, 2.8, 2.2, 1.8, 1.6];
+
+  function colorFor(pct) {
+    // pct 0..6+ → red→amber→green
+    const t = Math.min(1, pct / 6);
+    if (t < 0.35) {
+      // red → amber
+      const k = t / 0.35;
+      return `color-mix(in oklab, #f3dede ${(1-k)*100}%, #f6ecd5 ${k*100}%)`;
+    } else if (t < 0.7) {
+      const k = (t - 0.35) / 0.35;
+      return `color-mix(in oklab, #f6ecd5 ${(1-k)*100}%, #e2efe7 ${k*100}%)`;
+    } else {
+      const k = (t - 0.7) / 0.3;
+      return `color-mix(in oklab, #e2efe7 ${(1-k)*100}%, ${getComputedStyle(document.documentElement).getPropertyValue('--green')} ${k*100}%)`;
+    }
+  }
+
+  months.forEach((m, mi) => {
+    html += `<div class="row-lab">${m}</div>`;
+    // pseudo-stable bias per month
+    const seed = (mi * 37 + 11) % 100;
+    const novBoost = (m === 'Nov 25') ? 1.9 : 1.0;
+    const marBoost = (m === 'Mär 26') ? 1.4 : 1.0;
+    stageNames.forEach((s, si) => {
+      const noise = ((seed + si * 13) % 100) / 100 - 0.5; // -0.5..0.5
+      let pct = base[si] * (0.85 + noise * 0.4) * novBoost * marBoost / (si === 0 ? 100/6 : 1);
+      if (si === 0) pct = 6; // Expose always full
+      pct = Math.max(0.2, pct);
+      const display = si === 0 ? '100' : pct.toFixed(1);
+      const cellColorPct = si === 0 ? 6 : pct;
+      const t = Math.min(1, cellColorPct / 6);
+      const dark = t > 0.7;
+      html += `<div class="cell" style="background:${colorFor(cellColorPct)};color:${dark ? '#fff' : 'var(--text)'};">${display}</div>`;
+    });
+  });
+  cohortEl.innerHTML = html;
+</script>
+</body>
+</html>
