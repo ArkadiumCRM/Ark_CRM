@@ -302,6 +302,40 @@ Peter hat global `bypassPermissions` aktiviert. Claude Code fragt nicht mehr nac
 **Format der Rückfrage:** kurz + klar. Eine Zeile Aktion, eine Zeile Begründung/Risiko, Frage am Ende.
 Beispiel: "Will `git reset --hard HEAD~3` machen — verwirft 3 Commits inkl. aktuelle Mockup-Edits in candidates.html. OK oder lieber soft-reset?"
 
+## Tool-Choice-Rationale-Regel (CRITICAL — 2026-04-25)
+
+Vor jedem nicht-trivialen Tool-Call (Edit/Write/MultiEdit auf > 50 Zeilen, Bash mit Side-Effects, Agent-Spawn, MCP-Call mit > 5k Token Output) **eine Zeile Begründung in den Output**:
+
+> *Tool-Choice-Rationale: [Tool/Model] weil [Trigger-Match oder Begründung warum kein Spezial-Tool passt].*
+
+**Begründung:** Peter hat 2026-04-25 moniert — Claude bleibt zu oft bei Opus/Sonnet, obwohl DeepSeek/Codex/Gemini/Perplexity/Mistral/Context7 besser passen würden (Komfort-Bias). Die Pflicht-Zeile zwingt zu aktivem Self-Check statt Auto-Pilot.
+
+**Trigger-Tabelle:** vollständige Pattern-Liste in `~/.claude/projects/C--ARK-CRM/memory/feedback_tool_routing_triggers.md`. Kurz-Form:
+
+| Pattern | Tool |
+|---------|------|
+| Live-Doku zu Library/Framework/SDK | Context7 MCP |
+| Aktuelle News/Research/externe URL | Perplexity CLI |
+| CRUD-Boilerplate, Form-Scaffold, Standard-SQL | DeepSeek CLI |
+| Multi-File-Refactor (>5 Files), autonomes Feature | Codex CLI (mit `delegating-to-codex`-Skill) |
+| File >50k Token Read/Review | Gemini CLI |
+| Offizielle DE/FR-Kunden-Texte, DSGVO-Output | Mistral CLI |
+| Deep-Reasoning, Second-Opinion-Cross-Check, GPT-4o-Vision | OpenAI CLI (`-m o1-mini` / `-m gpt-4o`) |
+| ARK-DB-Inspection / Schema-Read | Supabase MCP |
+| ARK-Domain-Logic, Saga, Stages, Mockup-Edit | Opus/Sonnet (Edit-Tool) |
+
+**Format-Beispiele:**
+- `*Tool-Choice-Rationale: Edit-Tool (Opus) — Single-File-Mockup-Edit mit ARK-Domain-Logic, kein Spezial-Tool-Match.*`
+- `*Tool-Choice-Rationale: DeepSeek CLI — CRUD-Boilerplate ohne ARK-Saga-Verflechtung.*`
+- `*Tool-Choice-Rationale: Gemini CLI — Volltext-Read von 4600-Zeilen-Backend-Architecture statt Context laden.*`
+
+**Bei Spezial-Tool-Use** zusätzlich Attribution (RULE 6) wenn Output präsentiert wird:
+- `*DeepSeek wrote this:*`
+- `*Perplexity found:*`
+- `*Gemini reviewed:*`
+
+**Hook-Backup:** `routing-rationale.ps1` (PreToolUse) emittiert Reminder bei: Files >200KB / Edit-Streak >8/10min / CRUD-Pattern in Content. Reminder = nur Hilfe, Pflicht greift auch ohne Hook-Trigger.
+
 ## Guiding Principles
 
 1. **Sources are immutable.** Never modify anything in `/raw/`.
