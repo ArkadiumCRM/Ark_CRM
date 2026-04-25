@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR Absenz-Kalender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .cal-page { padding:20px 28px 40px; max-width:1800px; margin:0 auto; }
+
+  .cal-head {
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:20px;
+  }
+  .cal-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .cal-head .sub { font-size:13px; color:var(--text-light); }
+  .cal-head .actions { margin-left:auto; display:flex; gap:8px; }
+
+  .view-toggle {
+    display:flex; border:1px solid var(--border); border-radius:4px; overflow:hidden;
+  }
+  .view-btn {
+    padding:7px 14px; font-size:12px; font-weight:500; cursor:pointer;
+    background:var(--surface); color:var(--text-light);
+    border:none; border-right:1px solid var(--border);
+    font-family:'DM Sans',sans-serif; transition:all 0.12s;
+  }
+  .view-btn:last-child { border-right:none; }
+  .view-btn:hover { background:var(--surface-alt); color:var(--text); }
+  .view-btn.active { background:var(--accent); color:white; font-weight:600; }
+
+  .cal-nav { display:flex; align-items:center; gap:8px; }
+  .cal-nav .period {
+    font-size:15px; font-weight:600; color:var(--text);
+    min-width:130px; text-align:center;
+  }
+  .nav-btn {
+    width:28px; height:28px; border-radius:3px;
+    border:1px solid var(--border); background:var(--surface);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:var(--text-light); transition:all 0.12s;
+  }
+  .nav-btn:hover { background:var(--surface-alt); color:var(--accent); border-color:var(--accent); }
+
+  .kpi-bar {
+    display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:18px;
+  }
+  .kpi {
+    background:var(--surface); padding:14px 16px; border-radius:6px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .kpi.red   { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi.blue  { border-left-color:#4a90d9; }
+  .kpi .big {
+    font-size:28px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif; line-height:1;
+  }
+  .kpi.red   .big { color:var(--red); }
+  .kpi.amber .big { color:var(--amber); }
+  .kpi.green .big { color:var(--green); }
+  .kpi.blue  .big { color:#4a90d9; }
+  .kpi .label {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
+    color:var(--text-light); margin-top:6px; font-weight:500;
+  }
+  .kpi .sub { font-size:11px; color:var(--text-light); margin-top:2px; }
+
+  .filter-row {
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:14px;
+  }
+  .filter-row select {
+    padding:7px 10px; font-size:12px; border:1px solid var(--border);
+    border-radius:3px; background:var(--surface); color:var(--text);
+    font-family:'DM Sans',sans-serif; cursor:pointer;
+  }
+  .filter-row .spacer { flex:1 1 auto; }
+
+  /* CALENDAR */
+  .cal-container {
+    background:var(--surface); border-radius:6px;
+    box-shadow:var(--shadow-sm); border:1px solid var(--border);
+    overflow-x:auto;
+  }
+  .cal-table { border-collapse:collapse; min-width:100%; font-size:12px; }
+  .cal-table th, .cal-table td {
+    border-right:1px solid var(--border); border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+  .th-ma {
+    text-align:left; padding:6px 10px;
+    background:var(--surface-alt); font-size:11px; font-weight:600;
+    color:var(--text-light); min-width:168px;
+    position:sticky; left:0; z-index:10;
+    border-right:2px solid var(--border);
+  }
+  .th-day {
+    text-align:center; padding:6px 0;
+    background:var(--surface-alt); font-size:10px; font-weight:600;
+    color:var(--text-light); width:32px; min-width:32px;
+    position:sticky; top:0; z-index:5;
+  }
+  .th-day.today   { background:var(--accent); color:white; }
+  .th-day.weekend { background:color-mix(in srgb,var(--border) 40%,var(--surface-alt)); opacity:0.7; }
+  .th-day.holiday { background:color-mix(in srgb,var(--accent) 8%,var(--surface-alt)); color:var(--accent); }
+  .th-wd {
+    text-align:center; padding:2px 0;
+    background:var(--surface-alt); font-size:9px;
+    color:var(--text-light); letter-spacing:0.3px;
+    position:sticky; top:28px; z-index:5;
+  }
+  .th-wd.weekend { opacity:0.5; }
+
+  .ma-cell {
+    position:sticky; left:0; background:var(--surface);
+    border-right:2px solid var(--border);
+    padding:5px 10px; z-index:4; cursor:pointer;
+    transition:background 0.12s;
+  }
+  .ma-cell:hover { background:var(--surface-alt); }
+  .ma-av {
+    width:26px; height:26px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700;
+    font-size:9px; flex-shrink:0; margin-right:6px; vertical-align:middle;
+  }
+  .ma-nm  { font-size:12px; font-weight:600; color:var(--text); }
+  .ma-rl  { font-size:10px; color:var(--text-light); }
+
+  .day-cell {
+    text-align:center; padding:0; width:32px; min-width:32px; height:36px;
+    cursor:pointer; transition:background 0.1s; position:relative;
+  }
+  .day-cell:hover    { background:var(--surface-alt); }
+  .day-cell.weekend  { background:color-mix(in srgb,var(--bg) 60%,transparent); }
+  .day-cell.today    { background:color-mix(in srgb,var(--accent) 7%,transparent); }
+
+  .abs-dot {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:3px; font-size:13px;
+    transition:transform 0.1s;
+  }
+  .day-cell:hover .abs-dot { transform:scale(1.15); }
+
+  .legend {
+    display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+    padding:10px 14px; background:var(--surface);
+    border-top:1px solid var(--border); font-size:11px;
+  }
+  .legend-item { display:flex; align-items:center; gap:5px; color:var(--text-light); }
+  .legend-dot {
+    width:18px; height:18px; border-radius:2px;
+    display:flex; align-items:center; justify-content:center; font-size:12px;
+  }
+
+  /* PENDING SECTION */
+  .section-title {
+    font-size:12px; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.4px; color:var(--text-light);
+    padding-bottom:6px; border-bottom:1px solid var(--border);
+    margin:22px 0 12px;
+  }
+  .pending-item {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 12px; border-radius:4px; border:1px solid var(--border);
+    background:var(--surface); margin-bottom:8px;
+    transition:background 0.1s;
+  }
+  .pending-item:hover { background:var(--surface-alt); }
+  .pi-av {
+    width:32px; height:32px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:11px;
+    flex-shrink:0;
+  }
+  .pi-info { flex:1; }
+  .pi-name { font-size:13px; font-weight:600; color:var(--text); }
+  .pi-meta { font-size:11px; color:var(--text-light); margin-top:1px; }
+  .pi-acts { display:flex; gap:6px; }
+
+  .btn-ok {
+    padding:5px 12px; font-size:12px; font-weight:600; border:none;
+    border-radius:3px; cursor:pointer; background:var(--green); color:white;
+    font-family:'DM Sans',sans-serif; transition:filter 0.1s;
+  }
+  .btn-ok:hover { filter:brightness(1.1); }
+  .btn-no {
+    padding:5px 12px; font-size:12px; font-weight:600;
+    border:1px solid var(--red); border-radius:3px; cursor:pointer;
+    background:transparent; color:var(--red);
+    font-family:'DM Sans',sans-serif; transition:all 0.1s;
+  }
+  .btn-no:hover { background:var(--red); color:white; }
+
+  /* BUTTON */
+  .btn {
+    padding:8px 16px; font-size:13px; font-weight:500;
+    border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.12s;
+  }
+  .btn-primary   { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-primary:hover { filter:brightness(1.1); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+  .btn-secondary:hover { background:var(--surface-alt); }
+
+  /* OVERLAY + DRAWER */
+  .overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.3);
+    z-index:100; opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .overlay.open { opacity:1; pointer-events:auto; }
+  .drawer {
+    position:fixed; top:0; right:-560px; width:540px; height:100vh;
+    background:var(--surface); box-shadow:-4px 0 20px rgba(0,0,0,0.15);
+    z-index:101; transition:right 0.25s cubic-bezier(0.4,0,0.2,1);
+    display:flex; flex-direction:column;
+  }
+  .drawer.open { right:0; }
+  .drawer-head {
+    display:flex; align-items:center; gap:12px;
+    padding:18px 20px 16px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .drawer-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:18px; font-weight:700; color:var(--accent); flex:1;
+  }
+  .drawer-close {
+    width:32px; height:32px; border-radius:50%; border:none;
+    background:var(--surface-alt); color:var(--text-light);
+    cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center;
+    transition:all 0.12s;
+  }
+  .drawer-close:hover { background:var(--red); color:white; }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px; }
+  .drawer-footer {
+    padding:16px 20px; border-top:1px solid var(--border);
+    display:flex; gap:10px; justify-content:flex-end; flex-shrink:0;
+  }
+
+  /* FORM */
+  .form-group  { margin-bottom:16px; }
+  .form-label  { display:block; font-size:12px; font-weight:600; color:var(--text); margin-bottom:5px; }
+  .form-label .req { color:var(--red); margin-left:2px; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; box-sizing:border-box; padding:9px 12px;
+    font-size:13px; border:1px solid var(--border); border-radius:3px;
+    background:var(--surface); color:var(--text);
+    font-family:'DM Sans',sans-serif; transition:border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent);
+  }
+  .form-2col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+
+  .saldo-box {
+    background:var(--surface-alt); border-radius:4px; padding:12px 14px;
+    margin-bottom:16px; border-left:3px solid var(--accent);
+  }
+  .saldo-box .saldo-title { font-size:11px; font-weight:600; color:var(--text); margin-bottom:8px; }
+  .saldo-row {
+    display:flex; justify-content:space-between;
+    font-size:11px; padding:3px 0; border-bottom:1px solid var(--border);
+  }
+  .saldo-row:last-child { border-bottom:none; padding-bottom:0; }
+  .saldo-row .key { color:var(--text-light); }
+  .saldo-row .val { font-weight:600; color:var(--text); }
+  .saldo-row .val.good { color:var(--green); }
+  .saldo-row .val.warn { color:var(--amber); }
+  .saldo-row .val.crit { color:var(--red); }
+
+  /* CELL POPUP */
+  .cell-popup {
+    position:fixed; background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; box-shadow:var(--shadow-lg); padding:12px 14px;
+    min-width:210px; z-index:200; font-size:12px;
+    opacity:0; pointer-events:none; transition:opacity 0.12s;
+  }
+  .cell-popup.open { opacity:1; pointer-events:auto; }
+  .cp-head { font-weight:600; color:var(--text); margin-bottom:6px; }
+  .cp-row  { color:var(--text-light); padding:2px 0; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+<script>window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});</script>
+
+<div class="cal-page">
+
+  <!-- HEAD -->
+  <div class="cal-head">
+    <div>
+      <h1>📅 Absenz-Kalender</h1>
+      <span class="sub">Ferien · Krankheit · Home-Office · Alle Mitarbeitenden</span>
+    </div>
+
+    <div class="view-toggle" style="margin-left:8px">
+      <button class="view-btn" onclick="setView('week',this)">Woche</button>
+      <button class="view-btn active" onclick="setView('month',this)">Monat</button>
+      <button class="view-btn" onclick="setView('quarter',this)">Quartal</button>
+    </div>
+
+    <div class="cal-nav">
+      <button class="nav-btn" onclick="navStep(-1)">◀</button>
+      <span class="period" id="periodLabel">April 2026</span>
+      <button class="nav-btn" onclick="navStep(1)">▶</button>
+      <button class="nav-btn" onclick="goToday()" title="Heute" style="font-size:10px;font-weight:700;width:auto;padding:0 8px">Heute</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="openDrawer()">+ Absenz eintragen</button>
+      <button class="btn btn-secondary">↓ Export CSV</button>
+    </div>
+  </div>
+
+  <!-- KPI BAR -->
+  <div class="kpi-bar">
+    <div class="kpi red">
+      <div class="big">3</div>
+      <div class="label">Heute abwesend</div>
+      <div class="sub">2 Ferien · 1 krank</div>
+    </div>
+    <div class="kpi blue">
+      <div class="big">2</div>
+      <div class="label">Home-Office heute</div>
+      <div class="sub">0 Remote-Work</div>
+    </div>
+    <div class="kpi amber">
+      <div class="big">4</div>
+      <div class="label">Offene Anträge</div>
+      <div class="sub">2 Ferien · 2 HO</div>
+    </div>
+    <div class="kpi">
+      <div class="big">17.5</div>
+      <div class="label">Ø Ferientage Rest</div>
+      <div class="sub">Monat April 2026</div>
+    </div>
+    <div class="kpi amber">
+      <div class="big">3</div>
+      <div class="label">Übertrag verfällt</div>
+      <div class="sub">Deadline war 20. Apr</div>
+    </div>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div class="filter-row">
+    <select>
+      <option>Alle Teams</option>
+      <option>Team ING &amp; BT</option>
+      <option>Team ARC &amp; REM</option>
+      <option>Team PUR</option>
+      <option>Geschäftsleitung</option>
+      <option>Backoffice</option>
+    </select>
+    <select>
+      <option>Alle Sparten</option>
+      <option>ARC · Architecture</option>
+      <option>ING · Civil Engineering</option>
+      <option>GT · Building Technology</option>
+      <option>REM · Real Estate</option>
+      <option>PUR · Procurement</option>
+    </select>
+    <select id="filterType">
+      <option value="">Alle Absenztypen</option>
+      <option value="vacation">Ferien</option>
+      <option value="sick">Krankheit</option>
+      <option value="homeoffice">Home-Office</option>
+      <option value="remote">Remote-Work</option>
+      <option value="training">Weiterbildung</option>
+      <option value="military">Militär / Zivildienst</option>
+      <option value="maternity">Mutterschaft / Vaterschaft</option>
+    </select>
+    <select>
+      <option>Alle Vorgesetzten</option>
+      <option>PW · Peter Wiederkehr</option>
+      <option>JV · Jana Vogel</option>
+      <option>NP · Nina Preisig</option>
+      <option>ME · Michael Egger</option>
+    </select>
+    <span class="spacer"></span>
+    <span style="font-size:11px;color:var(--text-light)">Heute: 25. April 2026 (Sa)</span>
+  </div>
+
+  <!-- CALENDAR TABLE -->
+  <div class="cal-container">
+    <table class="cal-table" id="calTable">
+      <thead>
+        <tr id="hdrDays">
+          <th class="th-ma">Mitarbeitende:r</th>
+        </tr>
+        <tr id="hdrWd">
+          <th class="th-ma" style="padding:2px 10px;font-size:9px;letter-spacing:0.3px;color:var(--text-light)">Sparte · Pensum</th>
+        </tr>
+      </thead>
+      <tbody id="calBody"></tbody>
+    </table>
+    <div class="legend">
+      <span style="font-size:11px;font-weight:600;color:var(--text-light);margin-right:2px">Legende:</span>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,#4a90d9 20%,transparent)">✈️</div>Ferien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--red) 15%,transparent)">🤒</div>Krankheit</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--green) 12%,transparent)">🏠</div>Home-Office</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,#7c4dff 12%,transparent)">🌍</div>Remote-Work</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--amber) 15%,transparent)">🎓</div>Weiterbildung</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,#8B4513 15%,transparent)">🎖</div>Militär</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,#FF69B4 15%,transparent)">🤱</div>Mutterschaft</div>
+      <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--accent) 8%,transparent)">🎉</div>Feiertag ZH</div>
+      <div class="legend-item" style="margin-left:auto"><div style="display:inline-block;width:26px;height:26px;border:1px dashed var(--amber);border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:12px">⏳</div>Antrag pendent</div>
+    </div>
+  </div>
+
+  <!-- PENDING ANTRÄGE -->
+  <div class="section-title">📬 Offene Absenz-Anträge (4)</div>
+
+  <div class="pending-item">
+    <div class="pi-av">LR</div>
+    <div class="pi-info">
+      <div class="pi-name">Lara Roth · <span style="font-weight:400">Ferien</span></div>
+      <div class="pi-meta">28. Apr – 30. Apr 2026 · 3 Arbeitstage · Vorlauf 3 Tage ✓ · Team-Abdeckung 78 % ✓ · Vertr.: JV</div>
+    </div>
+    <div class="pi-acts">
+      <button class="btn-ok" onclick="approveItem(this)">✓ Genehmigen</button>
+      <button class="btn-no" onclick="rejectItem(this)">✗ Ablehnen</button>
+    </div>
+  </div>
+
+  <div class="pending-item">
+    <div class="pi-av">KF</div>
+    <div class="pi-info">
+      <div class="pi-name">Karin Frei · <span style="font-weight:400">Ferien</span></div>
+      <div class="pi-meta">05. Mai – 09. Mai 2026 · 5 Arbeitstage · Vorlauf 10 Tage ✓ · Team-Abdeckung 72 % ✓</div>
+    </div>
+    <div class="pi-acts">
+      <button class="btn-ok" onclick="approveItem(this)">✓ Genehmigen</button>
+      <button class="btn-no" onclick="rejectItem(this)">✗ Ablehnen</button>
+    </div>
+  </div>
+
+  <div class="pending-item">
+    <div class="pi-av">MF</div>
+    <div class="pi-info">
+      <div class="pi-name">Marc Feller · <span style="font-weight:400">Home-Office</span></div>
+      <div class="pi-meta">28. Apr 2026 (Di) · Team-Abdeckung 80 % ✓ · Vorlauf 3 Tage ✓ · Projektreferenz: «CV-Sichtung ING Batch»</div>
+    </div>
+    <div class="pi-acts">
+      <button class="btn-ok" onclick="approveItem(this)">✓ Genehmigen</button>
+      <button class="btn-no" onclick="rejectItem(this)">✗ Ablehnen</button>
+    </div>
+  </div>
+
+  <div class="pending-item" style="border-color:var(--amber)">
+    <div class="pi-av" style="background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber)">SR</div>
+    <div class="pi-info">
+      <div class="pi-name">Silvan Rüegg · <span style="font-weight:400">Home-Office</span></div>
+      <div class="pi-meta">⚠️ Probezeit-Sperre: noch in Probezeit bis 01.05.2026 · Locus Extra §4 · Antrag nicht genehmigbar</div>
+    </div>
+    <div class="pi-acts">
+      <button class="btn-ok" style="opacity:0.4;cursor:not-allowed" disabled>✓ Genehmigen</button>
+      <button class="btn-no" style="background:var(--red);color:white">✗ Ablehnen</button>
+    </div>
+  </div>
+
+</div><!-- /cal-page -->
+
+<!-- CELL POPUP -->
+<div class="cell-popup" id="cellPopup">
+  <div class="cp-head" id="cpHead"></div>
+  <div id="cpContent"></div>
+  <div id="cpBadge" style="margin-top:8px"></div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- DRAWER: Absenz eintragen (540px) -->
+<div class="drawer" id="drawerNew">
+  <div class="drawer-head">
+    <h2>Absenz eintragen</h2>
+    <button class="drawer-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <div class="form-group">
+      <label class="form-label">Mitarbeitende:r <span class="req">*</span></label>
+      <select class="form-select">
+        <option>— auswählen —</option>
+        <option>Lara Roth (LR)</option>
+        <option>Peter Wiederkehr (PW)</option>
+        <option>Jana Vogel (JV)</option>
+        <option>Marc Feller (MF)</option>
+        <option>Sarah Keller (SK)</option>
+        <option>Tim Berger (TB)</option>
+        <option>Michael Egger (ME)</option>
+        <option>Anna Meyer (AM)</option>
+        <option>Daniel Huber (DH)</option>
+        <option>Nina Preisig (NP)</option>
+        <option>Silvan Rüegg (SR)</option>
+        <option>Karin Frei (KF)</option>
+        <option>Roman Schmid (RS)</option>
+        <option>Claudia Denzler (CD)</option>
+        <option>Fabian Steiner (FS)</option>
+        <option>Elias Brunner (EB)</option>
+        <option>Lea Brunschwiler (LB)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Absenztyp <span class="req">*</span></label>
+      <select class="form-select" id="drawerAbsType" onchange="updateSaldo(this.value)">
+        <option value="">— auswählen —</option>
+        <option value="vacation">Ferien</option>
+        <option value="sick">Krankheit</option>
+        <option value="homeoffice">Home-Office</option>
+        <option value="remote">Remote-Work</option>
+        <option value="training">Weiterbildung</option>
+        <option value="military">Militär / Zivildienst</option>
+        <option value="family">Pflege Familie</option>
+        <option value="maternity">Mutterschaft (16 Wo EO)</option>
+        <option value="paternity">Vaterschaft (2 Wo EO)</option>
+        <option value="joker">Jokertag (Extra-Guthaben)</option>
+      </select>
+    </div>
+
+    <div class="form-2col">
+      <div class="form-group">
+        <label class="form-label">Von <span class="req">*</span></label>
+        <input type="date" class="form-input" value="2026-04-28">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bis <span class="req">*</span></label>
+        <input type="date" class="form-input" value="2026-04-30">
+      </div>
+    </div>
+
+    <div class="form-2col">
+      <div class="form-group">
+        <label class="form-label">Halber Tag (Beginn)</label>
+        <select class="form-select">
+          <option>Ganzer Tag</option>
+          <option>Nachmittag frei</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Halber Tag (Ende)</label>
+        <select class="form-select">
+          <option>Ganzer Tag</option>
+          <option>Vormittag frei</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Arbeitstage (berechnet)</label>
+      <input type="text" class="form-input" value="3 Tage" readonly
+             style="background:var(--surface-alt);color:var(--text-light)">
+      <div class="form-hint">Automatisch · exkl. Wochenende + Feiertage Kanton ZH</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Stellvertretung</label>
+      <select class="form-select">
+        <option>— optional —</option>
+        <option>Jana Vogel (JV)</option>
+        <option>Peter Wiederkehr (PW)</option>
+        <option>Michael Egger (ME)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Outlook Auto-Reply</label>
+      <select class="form-select">
+        <option selected>Nein</option>
+        <option>Ja, aktivieren</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Notiz</label>
+      <textarea class="form-textarea" rows="2" placeholder="Optional …"></textarea>
+    </div>
+
+    <!-- SALDO (erscheint bei Ferien/Joker) -->
+    <div class="saldo-box" id="saldoBox" style="display:none">
+      <div class="saldo-title">📊 Ferientage-Saldo</div>
+      <div class="saldo-row"><span class="key">Standard-Ferien verfügbar</span><span class="val good">18.5 Tage</span></div>
+      <div class="saldo-row"><span class="key">Übertrag 2025</span><span class="val crit">0 Tage ⚠️ verfallen (Deadline war 20. Apr)</span></div>
+      <div class="saldo-row"><span class="key">Jokertag</span><span class="val good">1 Tag verfügbar</span></div>
+      <div class="saldo-row"><span class="key">ZEG H2 2025</span><span class="val good">1 Tag</span></div>
+      <div class="saldo-row"><span class="key">Nach diesem Antrag (−3 Tage)</span><span class="val">15.5 Tage</span></div>
+    </div>
+
+    <div id="validationBox" style="display:none;border-radius:4px;padding:10px 12px;font-size:12px;margin-top:4px"></div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" onclick="closeAll()">Abbrechen</button>
+    <button class="btn btn-primary">Absenz einreichen</button>
+  </div>
+</div>
+
+<script>
+const MONTHS  = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const WD_ABBR = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+
+let cy = 2026, cm = 3; // April = index 3
+
+// April 2026 Feiertage ZH
+const HOLIDAYS_APR = [3, 6]; // Karfreitag, Ostermontag
+
+// Absenzen pro MA-Key: day → type
+const ABS_DATA = {
+  SK: Object.fromEntries([...Array(10)].map((_,i) => [16+i, 'vacation'])),  // 16-25
+  TB: {18:'sick',19:'sick',20:'sick',21:'sick',22:'sick'},
+  TM: Object.fromEntries([...Array(6)].map((_,i)  => [18+i, 'vacation'])), // 18-23
+};
+// Pending-Anträge
+const PENDING_DATA = {LR:[28,29,30], MF:[28]};
+
+const EMPLOYEES = [
+  {id:'PW',name:'Peter Wiederkehr',  role:'Managing Partner', sparte:'GL', p:'100%'},
+  {id:'LR',name:'Lara Roth',         role:'Senior Consultant',sparte:'ING',p:'100%'},
+  {id:'JV',name:'Jana Vogel',        role:'Senior Consultant',sparte:'ING',p:'80%'},
+  {id:'MF',name:'Marc Feller',       role:'Consultant',       sparte:'ING',p:'100%'},
+  {id:'SK',name:'Sarah Keller',      role:'Researcher',       sparte:'ING',p:'80%'},
+  {id:'TB',name:'Tim Berger',        role:'Jr. Researcher',   sparte:'ING',p:'100%'},
+  {id:'ME',name:'Michael Egger',     role:'Senior Consultant',sparte:'ARC',p:'100%'},
+  {id:'AM',name:'Anna Meyer',        role:'Consultant',       sparte:'ARC',p:'80%'},
+  {id:'DH',name:'Daniel Huber',      role:'Senior Consultant',sparte:'REM',p:'100%'},
+  {id:'NP',name:'Nina Preisig',      role:'Consultant',       sparte:'GT', p:'100%'},
+  {id:'SR',name:'Silvan Rüegg',      role:'Researcher',       sparte:'GT', p:'100%'},
+  {id:'KF',name:'Karin Frei',        role:'Consultant',       sparte:'PUR',p:'100%'},
+  {id:'RS',name:'Roman Schmid',      role:'Researcher',       sparte:'PUR',p:'100%'},
+  {id:'CD',name:'Claudia Denzler',   role:'Backoffice-Lead',  sparte:'—',  p:'60%'},
+  {id:'TM',name:'Tanja Müller',      role:'Backoffice',       sparte:'—',  p:'80%'},
+  {id:'FS',name:'Fabian Steiner',    role:'Senior Consultant',sparte:'REM',p:'100%'},
+  {id:'EB',name:'Elias Brunner',     role:'Consultant',       sparte:'GT', p:'100%'},
+  {id:'LB',name:'Lea Brunschwiler',  role:'Praktikantin',     sparte:'ARC',p:'100%'},
+];
+
+const ABS_ICON = {
+  vacation:'✈️',sick:'🤒',homeoffice:'🏠',remote:'🌍',
+  training:'🎓',military:'🎖',maternity:'🤱',paternity:'👶',family:'🧑‍⚕️',joker:'🃏',
+};
+const ABS_BG = {
+  vacation:'color-mix(in srgb,#4a90d9 18%,transparent)',
+  sick:    'color-mix(in srgb,var(--red) 15%,transparent)',
+  homeoffice:'color-mix(in srgb,var(--green) 12%,transparent)',
+  remote:  'color-mix(in srgb,#7c4dff 12%,transparent)',
+  training:'color-mix(in srgb,var(--amber) 15%,transparent)',
+  military:'color-mix(in srgb,#8B4513 15%,transparent)',
+  maternity:'color-mix(in srgb,#FF69B4 15%,transparent)',
+  family:  'color-mix(in srgb,var(--amber) 10%,transparent)',
+  joker:   'color-mix(in srgb,var(--accent) 12%,transparent)',
+};
+const ABS_LABEL = {
+  vacation:'Ferien',sick:'Krankheit',homeoffice:'Home-Office',remote:'Remote-Work',
+  training:'Weiterbildung',military:'Militär',maternity:'Mutterschaft',
+  paternity:'Vaterschaft',family:'Pflege Familie',joker:'Jokertag',
+};
+
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function dow(y,m,d){ return new Date(y,m,d).getDay(); } // 0=Su
+
+function buildCalendar(){
+  const nd = daysInMonth(cy,cm);
+  const hdrD  = document.getElementById('hdrDays');
+  const hdrWd = document.getElementById('hdrWd');
+  const body  = document.getElementById('calBody');
+  const isApr2026 = cy===2026 && cm===3;
+  const todayDay  = isApr2026 ? 25 : -1;
+
+  // clear old columns (keep first th)
+  while(hdrD.cells.length  > 1) hdrD.deleteCell(1);
+  while(hdrWd.cells.length > 1) hdrWd.deleteCell(1);
+
+  for(let d=1;d<=nd;d++){
+    const w = dow(cy,cm,d);
+    const we = w===0||w===6;
+    const td = isApr2026 && d===todayDay;
+    const hd = isApr2026 && HOLIDAYS_APR.includes(d);
+
+    const th1 = document.createElement('th');
+    th1.className = 'th-day'+(td?' today':(hd?' holiday':(we?' weekend':'')));
+    th1.textContent = d;
+    hdrD.appendChild(th1);
+
+    const th2 = document.createElement('th');
+    th2.className = 'th-wd'+(we?' weekend':'');
+    th2.textContent = WD_ABBR[w];
+    hdrWd.appendChild(th2);
+  }
+
+  body.innerHTML='';
+  EMPLOYEES.forEach(emp=>{
+    const tr = document.createElement('tr');
+    const empAbs = ABS_DATA[emp.id]||{};
+    const pending = PENDING_DATA[emp.id]||[];
+
+    // MA-Zelle
+    const tdMa = document.createElement('td');
+    tdMa.className='ma-cell';
+    tdMa.innerHTML=
+      `<div style="display:flex;align-items:center">
+        <div class="ma-av">${emp.id}</div>
+        <div><div class="ma-nm">${emp.name}</div>
+             <div class="ma-rl">${emp.sparte} · ${emp.p}</div></div>
+      </div>`;
+    tr.appendChild(tdMa);
+
+    // Tag-Zellen
+    for(let d=1;d<=nd;d++){
+      const w  = dow(cy,cm,d);
+      const we = w===0||w===6;
+      const td = isApr2026 && d===todayDay;
+      const hd = isApr2026 && HOLIDAYS_APR.includes(d);
+      const aType  = empAbs[d];
+      const pend   = pending.includes(d);
+
+      const cell = document.createElement('td');
+      cell.className='day-cell'+(we?' weekend':'')+(td?' today':'');
+
+      if(hd && !we){
+        cell.innerHTML=`<div class="abs-dot" style="background:color-mix(in srgb,var(--accent) 8%,transparent)">🎉</div>`;
+      } else if(aType){
+        const bg = ABS_BG[aType]||'var(--surface-alt)';
+        cell.innerHTML=`<div class="abs-dot" style="background:${bg}">${ABS_ICON[aType]||'•'}</div>`;
+        cell.addEventListener('click', e=>showPopup(e,emp,d,aType,false));
+      } else if(pend){
+        cell.innerHTML=`<div class="abs-dot" style="background:color-mix(in srgb,var(--amber) 12%,transparent);border:1px dashed var(--amber)">⏳</div>`;
+        cell.addEventListener('click', e=>showPopup(e,emp,d,null,true));
+      } else if(!we&&!hd){
+        cell.innerHTML=`<div style="width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--border)">·</div>`;
+      }
+      tr.appendChild(cell);
+    }
+    body.appendChild(tr);
+  });
+}
+
+function showPopup(e, emp, day, aType, isPend){
+  e.stopPropagation();
+  const pop = document.getElementById('cellPopup');
+  pop.querySelector('#cpHead').textContent = emp.name + ' · ' + day + '. ' + MONTHS[cm];
+  const label = isPend ? 'Ferien (Antrag pendent)' : (ABS_LABEL[aType]||aType);
+  const icon  = isPend ? '⏳' : (ABS_ICON[aType]||'');
+  pop.querySelector('#cpContent').innerHTML =
+    `<div class="cp-row">${icon} ${label}</div>`+
+    (isPend
+      ? '<div class="cp-row" style="color:var(--amber)">Warte auf Genehmigung</div>'
+      : '<div class="cp-row">✓ Genehmigt</div>');
+  pop.querySelector('#cpBadge').innerHTML = isPend
+    ? '<span class="chip chip-amber" style="font-size:10px">⏳ Pendent</span>'
+    : '<span class="chip chip-green" style="font-size:10px">✓ Genehmigt</span>';
+
+  const rect = e.currentTarget.getBoundingClientRect();
+  pop.style.left = Math.min(rect.left, window.innerWidth-230)+'px';
+  pop.style.top  = (rect.bottom+6)+'px';
+  pop.classList.add('open');
+  setTimeout(()=>{ document.addEventListener('click',closePopup,{once:true}); },0);
+}
+function closePopup(){ document.getElementById('cellPopup').classList.remove('open'); }
+
+function setView(v,btn){
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildCalendar(); // week/quarter: keeps same structure in mockup
+}
+
+function navStep(dir){
+  cm += dir;
+  if(cm<0){ cm=11; cy--; }
+  if(cm>11){ cm=0; cy++; }
+  document.getElementById('periodLabel').textContent = MONTHS[cm]+' '+cy;
+  buildCalendar();
+}
+function goToday(){
+  cy=2026; cm=3;
+  document.getElementById('periodLabel').textContent = 'April 2026';
+  buildCalendar();
+}
+
+function openDrawer(){
+  document.getElementById('drawerNew').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeAll(){
+  document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open'));
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function approveItem(btn){
+  const item = btn.closest('.pending-item');
+  item.style.opacity='0.5'; item.style.pointerEvents='none';
+  item.querySelector('.pi-acts').innerHTML='<span style="font-size:12px;color:var(--green);font-weight:600">✓ Genehmigt</span>';
+}
+function rejectItem(btn){
+  const item = btn.closest('.pending-item');
+  item.style.opacity='0.4'; item.style.pointerEvents='none';
+  item.querySelector('.pi-acts').innerHTML='<span style="font-size:12px;color:var(--red);font-weight:600">✗ Abgelehnt</span>';
+}
+
+function updateSaldo(type){
+  const box = document.getElementById('saldoBox');
+  const vbox = document.getElementById('validationBox');
+  const show = type==='vacation'||type==='joker';
+  box.style.display = show ? 'block' : 'none';
+  if(type==='homeoffice'){
+    vbox.style.display='block';
+    vbox.style.cssText='display:block;background:color-mix(in srgb,var(--amber) 8%,transparent);border:1px solid var(--amber);border-radius:4px;padding:10px 12px;font-size:12px';
+    vbox.innerHTML='<strong style="color:var(--amber)">⚠️ Probezeit-Check:</strong> Person bitte auswählen — HO nur nach Probezeit (Locus Extra §4)';
+  } else if(type){
+    vbox.style.display='block';
+    vbox.style.cssText='display:block;background:color-mix(in srgb,var(--green) 8%,transparent);border:1px solid var(--green);border-radius:4px;padding:10px 12px;font-size:12px';
+    vbox.innerHTML='<strong style="color:var(--green)">✓ Alle Prüfungen bestanden</strong>';
+  } else {
+    vbox.style.display='none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildCalendar();
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAll(); });
+});
+</script>
+</body>
+</html>

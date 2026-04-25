@@ -156,8 +156,7 @@
     color:var(--text);
   }
   .role-chip.researcher { background:#e8edf3; color:#6b7b8c; }
-  .role-chip.consultant { background:#e0ecff; color:var(--accent); }
-  .role-chip.team-leader { background:#ffe8d0; color:var(--amber); }
+  .role-chip.consultant { background:#e0ecff; color:var(--accent); } /* Jobtitel-Display */
   .role-chip.head { background:var(--amber-soft); color:#7a4a00; }
 
   .budget-cell {
@@ -299,7 +298,7 @@
   }
   .drawer-backdrop.open { display:block; }
   .drawer {
-    position:fixed; top:0; right:-820px; width:760px; height:100%;
+    position:fixed; top:0; right:-600px; width:540px; height:100%;
     background:var(--surface); z-index:50;
     box-shadow:-6px 0 20px rgba(0,0,0,0.15);
     transition:right 0.25s; overflow-y:auto;
@@ -735,14 +734,13 @@
     </div>
 
     <div class="field">
-      <label>Rolle im Vertrag</label>
+      <label>Rolle im Vertrag (Commission-Primär-Rolle)</label>
       <select>
-        <option>consultant</option>
-        <option>researcher</option>
-        <option>candidate_manager</option>
-        <option>account_manager</option>
-        <option>team_leader</option>
-        <option selected>head_of_department</option>
+        <option>Account Manager (AM)</option>
+        <option>Candidate Manager (CM)</option>
+        <option>Researcher · Pauschale</option>
+        <option selected>Head of Department · Teambudget</option>
+        <option>Assessment Manager · Modell TBC</option>
       </select>
     </div>
 

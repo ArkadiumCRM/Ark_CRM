@@ -56,7 +56,7 @@
 
   /* QUICK-ACTIONS */
   .quick-actions {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+    display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
     margin-bottom:26px;
   }
   .qa-btn {
@@ -355,21 +355,18 @@
 
   <!-- QUICK-ACTIONS -->
   <div class="quick-actions">
-    <button class="qa-btn primary" onclick="openDrawer('drawer-homeoffice')">
-      <span class="icon">🏠</span> Home-Office-Antrag
-    </button>
-    <button class="qa-btn" onclick="openDrawer('drawer-training')">
-      <span class="icon">🎓</span> Schulung anfordern
+    <button class="qa-btn primary" onclick="openDrawer('drawer-training')">
+      <span class="icon">🎓</span> Weiterbildung beantragen
     </button>
     <button class="qa-btn" onclick="openDrawer('drawer-cert')">
-      <span class="icon">🎖️</span> Zertifikat erfassen
+      <span class="icon">🎖️</span> Akkreditierung erfassen
     </button>
   </div>
 
   <!-- ALERT-STRIP -->
   <div class="alert-strip">
     <div class="chip warning">
-      <strong>Scheelen-Zertifikat Relief</strong> läuft in 45 Tagen ab
+      <strong>Akkreditierung Scheelen-Relief</strong> läuft in 45 Tagen ab
     </div>
     <div class="chip info">
       <strong>Dienstjubiläum</strong> 7→8 J. am 01.02.2027 (in 9 Mt)
@@ -438,7 +435,7 @@
 
     <!-- HO/REMOTE-QUOTA -->
     <div class="widget">
-      <h3>Flexibles Arbeiten <span class="small-link" onclick="openDrawer('drawer-homeoffice')">Antrag →</span></h3>
+      <h3>Flexibles Arbeiten <span class="small-link" style="color:var(--text-light)">Anträge im Zeit-Modul</span></h3>
       <div class="quota-stack">
         <div class="quota-block">
           <div class="label">
@@ -515,7 +512,7 @@
 
     <!-- ZERTIFIKATE -->
     <div class="widget">
-      <h3>Zertifikate <span class="small-link" onclick="openDrawer('drawer-cert')">+ Erfassen</span></h3>
+      <h3>Akkreditierungen <span class="small-link" onclick="openDrawer('drawer-cert')">+ Erfassen</span></h3>
       <div class="cert-grid">
         <div class="cert-card">
           <div class="name">Scheelen MDI</div>
@@ -649,43 +646,10 @@
 
 <div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
 
-<!-- DRAWER: Home-Office-Antrag -->
-<div class="drawer" id="drawer-homeoffice">
-  <div class="drawer-head">
-    <h2>Home-Office / Remote Work beantragen</h2>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="drawer-body">
-    <div class="sidebar-info">
-      <strong>Quota:</strong> HO 12/20 remaining · Remote 7/10 remaining<br>
-      Min. Vorlauf: 48 h · max 1 HO/Woche · max 2 Remote/Woche · Team-Abdeckung ≥ 70%
-    </div>
-    <div class="field">
-      <label>Datum</label>
-      <input type="date">
-    </div>
-    <div class="field">
-      <label>Typ</label>
-      <select>
-        <option>Home-Office (CH-Wohnort)</option>
-        <option>Remote Work (andere Location)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Projekt-Context (Pflicht laut Locus Extra)</label>
-      <textarea rows="3" placeholder="Welche konkreten Projekte / Arbeitsziele?"></textarea>
-    </div>
-  </div>
-  <div class="drawer-foot">
-    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
-    <button class="btn-primary">Beantragen</button>
-  </div>
-</div>
-
-<!-- DRAWER: Schulung -->
+<!-- DRAWER: Weiterbildung -->
 <div class="drawer" id="drawer-training">
   <div class="drawer-head">
-    <h2>Schulung anfordern</h2>
+    <h2>Weiterbildung beantragen</h2>
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
   <div class="drawer-body">
@@ -728,10 +692,10 @@
   </div>
 </div>
 
-<!-- DRAWER: Zertifikat erfassen -->
+<!-- DRAWER: Akkreditierung erfassen -->
 <div class="drawer" id="drawer-cert">
   <div class="drawer-head">
-    <h2>Zertifikat erfassen</h2>
+    <h2>Akkreditierung erfassen</h2>
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
   <div class="drawer-body">

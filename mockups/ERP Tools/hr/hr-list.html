@@ -121,7 +121,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr style="cursor:pointer" onclick="location.href='hr.html'">
+        <tr style="cursor:pointer" onclick="location.href='hr-mitarbeiter-self.html'">
           <td><div class="career-project-logo" style="width:32px;height:32px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:11px;border-radius:50%;border:2px solid var(--gold)">LR</div></td>
           <td><strong>Lara Roth</strong> <span class="chip chip-amber" style="font-size:9px;margin-left:4px">⏳ Probezeit</span><div class="muted" style="font-size:11px">34 J. · Zürich</div></td>
           <td>Senior Consultant · CM + Researcher</td>
@@ -375,7 +375,7 @@
     <div class="list-item">
       <div class="name"><span class="chip chip-amber">⏳ 18 d</span> Probezeit-Gespräch Lara Roth terminieren</div>
       <div class="meta">Ende Probezeit 07.05.2026 · Zuständig PW</div>
-      <button class="btn btn-sm" onclick="location.href='hr.html'">Öffnen</button>
+      <button class="btn btn-sm" onclick="location.href='hr-mitarbeiter-self.html'">Öffnen</button>
     </div>
     <div class="list-item">
       <div class="name"><span class="chip chip-amber">⚠</span> Scheelen Relief-Zertifizierung Marc Feller läuft ab</div>
@@ -395,12 +395,12 @@
   </div>
 </div>
 
-<script src="../_shared/layout.js"></script>
+<script src="../../_shared/layout.js"></script>
 <script>
 /* Auto-wire: jeder Row-Klick → Mitarbeiter-Detailmaske */
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('tr[style*="cursor:pointer"]').forEach(tr => {
-    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'hr.html');
+    if (!tr.hasAttribute('onclick')) tr.addEventListener('click', () => location.href = 'hr-mitarbeiter-self.html');
   });
 });
 </script>

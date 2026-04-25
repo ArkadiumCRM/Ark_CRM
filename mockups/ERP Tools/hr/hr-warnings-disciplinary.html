@@ -286,7 +286,7 @@
   }
   .drawer-backdrop.open { display:block; }
   .drawer {
-    position:fixed; top:0; right:-820px; width:760px; height:100%;
+    position:fixed; top:0; right:-600px; width:540px; height:100%;
     background:var(--surface); z-index:50;
     box-shadow:-6px 0 20px rgba(0,0,0,0.15);
     transition:right 0.25s; overflow-y:auto;
@@ -604,9 +604,9 @@
 
       <!-- Actions -->
       <div class="action-row">
-        <button class="btn-primary">✓ Compliance bestätigen</button>
-        <button class="btn-ghost">📝 Aufhebungsvereinbarung</button>
-        <button class="btn-red">⚠ Fristlos kündigen</button>
+        <button class="btn-primary" onclick="alert('Compliance bestätigt — Lifecycle zurück zu Aktiv')">✓ Compliance bestätigen</button>
+        <button class="btn-ghost" onclick="alert('Aufhebungsvereinbarung-Drawer öffnet (Phase 3.2)')">📝 Aufhebungsvereinbarung</button>
+        <button class="btn-red" onclick="if(confirm('Fristlose Kündigung Art. 337 OR auslösen? Diese Aktion startet die Offboarding-Saga.')) alert('Saga gestartet — Benachrichtigung an GL + Treuhand')">⚠ Fristlos kündigen</button>
       </div>
 
       <div style="font-size:11px; color:var(--text-light); text-align:center; margin-top:4px;">

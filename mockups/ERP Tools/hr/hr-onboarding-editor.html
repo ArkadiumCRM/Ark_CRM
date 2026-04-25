@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  .ob-page { padding:20px 28px 40px; max-width:1700px; margin:0 auto; }
+
+  .ob-head {
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:20px;
+  }
+  .ob-head h1 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:24px; font-weight:700; color:var(--accent);
+  }
+  .ob-head .sub { font-size:13px; color:var(--text-light); }
+  .ob-head .actions { margin-left:auto; display:flex; gap:8px; }
+
+  /* TABS */
+  .tabs {
+    display:flex; gap:2px; border-bottom:2px solid var(--border); margin-bottom:22px;
+  }
+  .tab {
+    padding:10px 20px; cursor:pointer; font-size:13px; font-weight:500;
+    color:var(--text-light); border-bottom:2px solid transparent; margin-bottom:-2px;
+    transition:all 0.12s;
+  }
+  .tab:hover { color:var(--accent); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab .badge {
+    display:inline-block; background:var(--surface-alt);
+    padding:1px 7px; border-radius:8px; font-size:10px;
+    margin-left:5px; color:var(--text-light);
+  }
+  .tab.active .badge { background:var(--accent); color:white; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* KPI BAR */
+  .kpi-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+  .kpi {
+    background:var(--surface); padding:14px 16px; border-radius:6px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi.red   { border-left-color:var(--red); }
+  .kpi .big {
+    font-size:28px; font-weight:700; color:var(--accent);
+    font-family:'Libre Baskerville',serif; line-height:1;
+  }
+  .kpi.amber .big { color:var(--amber); }
+  .kpi.green .big { color:var(--green); }
+  .kpi.red   .big { color:var(--red); }
+  .kpi .label {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
+    color:var(--text-light); margin-top:6px; font-weight:500;
+  }
+  .kpi .sub { font-size:11px; color:var(--text-light); margin-top:2px; }
+
+  /* INSTANCE CARD */
+  .instance-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; margin-bottom:14px; overflow:hidden;
+    box-shadow:var(--shadow-sm); transition:box-shadow 0.15s;
+  }
+  .instance-card:hover { box-shadow:var(--shadow); }
+  .instance-head {
+    display:flex; align-items:center; gap:14px;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+    cursor:pointer;
+  }
+  .instance-av {
+    width:40px; height:40px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville',serif; font-weight:700; font-size:14px;
+    flex-shrink:0;
+  }
+  .instance-info { flex:1; }
+  .instance-name { font-size:14px; font-weight:600; color:var(--text); }
+  .instance-meta { font-size:12px; color:var(--text-light); margin-top:2px; }
+  .instance-tmpl {
+    font-size:11px; font-weight:600; padding:3px 10px; border-radius:10px;
+    background:var(--accent-soft); color:var(--accent);
+  }
+  .instance-toggle { font-size:14px; color:var(--text-light); transition:transform 0.2s; }
+  .instance-card.expanded .instance-toggle { transform:rotate(180deg); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    padding:12px 18px 16px; border-bottom:1px solid var(--border);
+  }
+  .progress-row {
+    display:flex; align-items:center; gap:10px; margin-bottom:6px;
+  }
+  .progress-label { font-size:11px; color:var(--text-light); min-width:90px; }
+  .progress-bar-bg {
+    flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden;
+  }
+  .progress-bar-fill {
+    height:100%; border-radius:4px; background:var(--accent); transition:width 0.4s;
+  }
+  .progress-bar-fill.green  { background:var(--green); }
+  .progress-bar-fill.amber  { background:var(--amber); }
+  .progress-pct { font-size:11px; font-weight:600; color:var(--text); min-width:34px; text-align:right; }
+
+  /* PHASES */
+  .phases-wrap { padding:0 18px 14px; }
+  .phase-block { margin-top:12px; }
+  .phase-head {
+    display:flex; align-items:center; gap:8px;
+    padding:8px 10px; border-radius:4px; cursor:pointer;
+    background:var(--surface-alt); transition:background 0.12s;
+  }
+  .phase-head:hover { background:color-mix(in srgb,var(--accent) 6%,var(--surface-alt)); }
+  .phase-label { font-size:12px; font-weight:600; color:var(--text); flex:1; }
+  .phase-done  { font-size:11px; color:var(--text-light); }
+  .phase-chevron { font-size:11px; color:var(--text-light); transition:transform 0.2s; }
+  .phase-block.open .phase-chevron { transform:rotate(180deg); }
+  .phase-tasks { display:none; padding:6px 0 0 12px; }
+  .phase-block.open .phase-tasks { display:block; }
+
+  .task-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:6px 8px; border-radius:3px; font-size:12px;
+    transition:background 0.1s;
+  }
+  .task-row:hover { background:var(--surface-alt); }
+  .task-check {
+    width:16px; height:16px; border-radius:3px; border:1.5px solid var(--border);
+    flex-shrink:0; margin-top:1px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.15s;
+  }
+  .task-check.done { background:var(--green); border-color:var(--green); color:white; font-size:10px; }
+  .task-check.overdue { border-color:var(--red); }
+  .task-text { flex:1; color:var(--text); }
+  .task-text.done { text-decoration:line-through; color:var(--text-light); }
+  .task-module {
+    font-size:10px; padding:1px 7px; border-radius:8px;
+    background:var(--accent-soft); color:var(--accent); font-weight:600;
+    white-space:nowrap;
+  }
+  .task-overdue { font-size:10px; color:var(--red); white-space:nowrap; }
+
+  /* BUDDY / MENTOR */
+  .meta-strip {
+    display:flex; gap:16px; padding:10px 18px;
+    border-top:1px solid var(--border); flex-wrap:wrap;
+  }
+  .meta-item { font-size:11px; color:var(--text-light); }
+  .meta-item strong { color:var(--text); }
+
+  /* TEMPLATE EDITOR */
+  .tpl-layout {
+    display:grid; grid-template-columns:260px 1fr; gap:16px;
+  }
+  .tpl-list {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; overflow:hidden;
+  }
+  .tpl-list-head {
+    padding:12px 14px; border-bottom:1px solid var(--border);
+    font-size:12px; font-weight:600; color:var(--text);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .tpl-item {
+    padding:10px 14px; border-bottom:1px solid var(--border);
+    cursor:pointer; transition:background 0.12s; font-size:13px;
+  }
+  .tpl-item:last-child { border-bottom:none; }
+  .tpl-item:hover { background:var(--surface-alt); }
+  .tpl-item.active { background:var(--accent-soft); }
+  .tpl-item .tpl-nm { font-weight:600; color:var(--text); }
+  .tpl-item.active .tpl-nm { color:var(--accent); }
+  .tpl-item .tpl-sub { font-size:11px; color:var(--text-light); margin-top:2px; }
+
+  .tpl-detail {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; padding:20px;
+  }
+  .tpl-detail-head {
+    display:flex; align-items:center; gap:12px;
+    padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:18px;
+  }
+  .tpl-detail-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:20px; font-weight:700; color:var(--accent); flex:1;
+  }
+  .tpl-phase {
+    margin-bottom:12px; border:1px solid var(--border); border-radius:4px; overflow:hidden;
+  }
+  .tpl-phase-head {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:var(--surface-alt);
+    cursor:pointer; transition:background 0.12s;
+  }
+  .tpl-phase-head:hover { background:color-mix(in srgb,var(--accent) 5%,var(--surface-alt)); }
+  .tpl-phase-lbl { font-size:13px; font-weight:600; color:var(--text); flex:1; }
+  .tpl-phase-week { font-size:11px; color:var(--text-light); }
+  .tpl-phase-cnt  { font-size:11px; color:var(--text-light); }
+  .tpl-phase-ch   { font-size:11px; color:var(--text-light); transition:transform 0.2s; }
+  .tpl-phase.open .tpl-phase-ch { transform:rotate(180deg); }
+  .tpl-phase-body { display:none; padding:8px 14px 10px; }
+  .tpl-phase.open .tpl-phase-body { display:block; }
+  .tpl-task-row {
+    display:flex; align-items:center; gap:8px;
+    padding:5px 0; border-bottom:1px solid var(--border); font-size:12px;
+  }
+  .tpl-task-row:last-child { border-bottom:none; }
+  .drag-handle { color:var(--border); cursor:grab; font-size:12px; }
+  .tpl-task-nm { flex:1; color:var(--text); }
+  .tpl-task-mod {
+    font-size:10px; padding:1px 6px; border-radius:8px;
+    background:var(--accent-soft); color:var(--accent); font-weight:600;
+  }
+  .tpl-task-add {
+    display:flex; align-items:center; gap:8px; padding:6px 0;
+    color:var(--text-light); font-size:12px; cursor:pointer;
+    transition:color 0.12s;
+  }
+  .tpl-task-add:hover { color:var(--accent); }
+
+  /* ABGESCHLOSSEN TABLE */
+  .done-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .done-table th {
+    text-align:left; padding:8px 10px; background:var(--surface-alt);
+    font-size:11px; font-weight:600; color:var(--text-light);
+    border-bottom:2px solid var(--border); letter-spacing:0.3px;
+  }
+  .done-table td {
+    padding:10px; border-bottom:1px solid var(--border); color:var(--text);
+  }
+  .done-table tr:last-child td { border-bottom:none; }
+  .done-table tr:hover td { background:var(--surface-alt); }
+
+  /* BUTTON */
+  .btn {
+    padding:8px 16px; font-size:13px; font-weight:500;
+    border-radius:3px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.12s;
+  }
+  .btn-sm { padding:5px 12px; font-size:12px; }
+  .btn-primary   { background:var(--accent); color:white; border:1px solid var(--accent); }
+  .btn-primary:hover { filter:brightness(1.1); }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border-strong); }
+  .btn-secondary:hover { background:var(--surface-alt); }
+  .btn-ghost {
+    background:transparent; color:var(--text-light); border:none;
+    padding:5px 8px; font-size:12px; cursor:pointer; border-radius:3px;
+    font-family:'DM Sans',sans-serif; transition:all 0.12s;
+  }
+  .btn-ghost:hover { background:var(--surface-alt); color:var(--text); }
+
+  /* OVERLAY + DRAWER */
+  .overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.3);
+    z-index:100; opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .overlay.open { opacity:1; pointer-events:auto; }
+  .drawer {
+    position:fixed; top:0; right:-560px; width:540px; height:100vh;
+    background:var(--surface); box-shadow:-4px 0 20px rgba(0,0,0,0.15);
+    z-index:101; transition:right 0.25s cubic-bezier(0.4,0,0.2,1);
+    display:flex; flex-direction:column;
+  }
+  .drawer.open { right:0; }
+  .drawer-head {
+    display:flex; align-items:center; gap:12px;
+    padding:18px 20px 16px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .drawer-head h2 {
+    margin:0; font-family:'Libre Baskerville',serif;
+    font-size:18px; font-weight:700; color:var(--accent); flex:1;
+  }
+  .drawer-close {
+    width:32px; height:32px; border-radius:50%; border:none;
+    background:var(--surface-alt); color:var(--text-light);
+    cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center;
+    transition:all 0.12s;
+  }
+  .drawer-close:hover { background:var(--red); color:white; }
+  .drawer-body { flex:1; overflow-y:auto; padding:20px; }
+  .drawer-footer {
+    padding:16px 20px; border-top:1px solid var(--border);
+    display:flex; gap:10px; justify-content:flex-end; flex-shrink:0;
+  }
+
+  /* FORM */
+  .form-group { margin-bottom:16px; }
+  .form-label { display:block; font-size:12px; font-weight:600; color:var(--text); margin-bottom:5px; }
+  .form-label .req { color:var(--red); margin-left:2px; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; box-sizing:border-box; padding:9px 12px;
+    font-size:13px; border:1px solid var(--border); border-radius:3px;
+    background:var(--surface); color:var(--text);
+    font-family:'DM Sans',sans-serif; transition:border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent);
+  }
+  .form-2col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-hint { font-size:11px; color:var(--text-light); margin-top:4px; }
+</style>
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ark-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+<script>window.addEventListener('message',function(e){if(e.data&&e.data.type==='ark-theme'){document.documentElement.setAttribute('data-theme',e.data.value);localStorage.setItem('ark-theme',e.data.value);}});</script>
+
+<div class="ob-page">
+
+  <!-- HEAD -->
+  <div class="ob-head">
+    <div>
+      <h1>📖 Onboarding</h1>
+      <span class="sub">Aktive Instanzen · Templates · Abgeschlossene Onboardings</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="openDrawer('drawerNew')">+ Onboarding starten</button>
+      <button class="btn btn-secondary">↓ Export</button>
+    </div>
+  </div>
+
+  <!-- KPI BAR -->
+  <div class="kpi-bar">
+    <div class="kpi">
+      <div class="big">2</div>
+      <div class="label">Aktive Onboardings</div>
+      <div class="sub">Woche 5 · Woche 9</div>
+    </div>
+    <div class="kpi amber">
+      <div class="big">3</div>
+      <div class="label">Überfällige Aufgaben</div>
+      <div class="sub">Scheelen-Start Woche 13</div>
+    </div>
+    <div class="kpi green">
+      <div class="big">14</div>
+      <div class="label">Abgeschlossen (2025/26)</div>
+      <div class="sub">Ø 13.2 Wochen</div>
+    </div>
+    <div class="kpi">
+      <div class="big">2</div>
+      <div class="label">Verfügbare Templates</div>
+      <div class="sub">Consultant · Researcher</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('aktiv',this)">Aktive Onboardings <span class="badge">2</span></div>
+    <div class="tab" onclick="switchTab('templates',this)">Templates <span class="badge">2</span></div>
+    <div class="tab" onclick="switchTab('done',this)">Abgeschlossen <span class="badge">14</span></div>
+  </div>
+
+  <!-- TAB: AKTIVE ONBOARDINGS -->
+  <div class="tab-panel active" id="panel-aktiv">
+
+    <!-- INSTANCE 1: Lea Brunschwiler — Researcher 8W — Woche 9 -->
+    <div class="instance-card" id="card-LB">
+      <div class="instance-head" onclick="toggleCard('card-LB')">
+        <div class="instance-av">LB</div>
+        <div class="instance-info">
+          <div class="instance-name">Lea Brunschwiler
+            <span class="chip chip-amber" style="font-size:9px;margin-left:6px">⚠️ 3 Aufgaben überfällig</span>
+          </div>
+          <div class="instance-meta">Research Analyst · ARC &amp; REM · Eintritt 01.03.2026 · Woche 9 / 8</div>
+        </div>
+        <span class="instance-tmpl">Researcher 8 Wochen</span>
+        <span style="margin-left:10px;font-size:12px;color:var(--text-light)">Buddy: <strong>AM</strong> · Mentor: <strong>ME</strong></span>
+        <span class="instance-toggle">▾</span>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-row">
+          <span class="progress-label">Gesamt</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill amber" style="width:72%"></div></div>
+          <span class="progress-pct">72 %</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Academy</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:60%"></div></div>
+          <span class="progress-pct">3 / 5</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Scheelen</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:0%"></div></div>
+          <span class="progress-pct" style="color:var(--red)">0 / 4 ⚠️</span>
+        </div>
+      </div>
+
+      <div class="phases-wrap">
+        <!-- Phase: Pre-Arrival -->
+        <div class="phase-block open" id="ph-LB-0">
+          <div class="phase-head" onclick="togglePhase('ph-LB-0')">
+            <span class="phase-label">Vor Eintritt (Pre-Arrival)</span>
+            <span class="phase-done" style="color:var(--green)">3 / 3 ✓</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Arbeitsvertrag signiert erhalten</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Personalstammdaten an Treuhand Kunz</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">IT-Zugang eingerichtet</span></div>
+          </div>
+        </div>
+        <!-- Phase: Tag 1 -->
+        <div class="phase-block open" id="ph-LB-1">
+          <div class="phase-head" onclick="togglePhase('ph-LB-1')">
+            <span class="phase-label">Tag 1 — Einstieg</span>
+            <span class="phase-done" style="color:var(--green)">4 / 4 ✓</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Starterinfo + Hausordnung gelesen</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Arkadium am Markt gelesen</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Glossary gelesen</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">CRM-Einführung absolviert</span></div>
+          </div>
+        </div>
+        <!-- Phase: Wochen 1–2 -->
+        <div class="phase-block open" id="ph-LB-2">
+          <div class="phase-head" onclick="togglePhase('ph-LB-2')">
+            <span class="phase-label">Woche 1–2 — Academy Einstieg</span>
+            <span class="phase-done" style="color:var(--green)">3 / 3 ✓</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Communication Edge Part I</span><span class="task-module">comm_edge_1</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">M4 Modell Grundlagen</span><span class="task-module">m4_modell</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Lernkartei 1</span><span class="task-module">lernkartei_1</span></div>
+          </div>
+        </div>
+        <!-- Phase: Wochen 3–5 -->
+        <div class="phase-block open" id="ph-LB-3">
+          <div class="phase-head" onclick="togglePhase('ph-LB-3')">
+            <span class="phase-label">Woche 3–5 — M1-Serie + erstes Hunt-Telefonat</span>
+            <span class="phase-done">2 / 4</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">M 1.1 Ident</span><span class="task-module">m_1_1_ident</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">M 1.2 Hunt</span><span class="task-module">m_1_2_hunt</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">M 1.3 CV Chase &amp; Briefing</span><span class="task-module">m_1_3_cv_chase</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">Erstes Hunt-Telefonat (beobachtet)</span></div>
+          </div>
+        </div>
+        <!-- Phase: Wochen 6–8 — ÜBERFÄLLIG -->
+        <div class="phase-block open" id="ph-LB-4">
+          <div class="phase-head" onclick="togglePhase('ph-LB-4')" style="background:color-mix(in srgb,var(--red) 6%,var(--surface-alt))">
+            <span class="phase-label" style="color:var(--red)">⚠️ Woche 6–8 — Scheelen-Zertifizierungen (überfällig)</span>
+            <span class="phase-done" style="color:var(--red)">0 / 5 · Woche 9 erreicht</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check overdue" onclick="toggleTask(this)"></div><span class="task-text" style="color:var(--red)">Scheelen MDI starten</span><span class="task-overdue">überfällig</span></div>
+            <div class="task-row"><div class="task-check overdue" onclick="toggleTask(this)"></div><span class="task-text" style="color:var(--red)">Scheelen ASSESS starten</span><span class="task-overdue">überfällig</span></div>
+            <div class="task-row"><div class="task-check overdue" onclick="toggleTask(this)"></div><span class="task-text" style="color:var(--red)">Scheelen Relief starten</span><span class="task-overdue">überfällig</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">Scheelen EQ starten</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">Probezeit-Feedback-Gespräch mit Vorgesetzten</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-strip">
+        <div class="meta-item">Buddy: <strong>Anna Meyer (AM)</strong></div>
+        <div class="meta-item">Mentor: <strong>Michael Egger (ME)</strong></div>
+        <div class="meta-item">Probezeit-Ende: <strong style="color:var(--amber)">31.05.2026</strong></div>
+        <div class="meta-item" style="margin-left:auto">
+          <button class="btn btn-sm btn-secondary" onclick="openDrawer('drawerTask')">+ Aufgabe hinzufügen</button>
+          <button class="btn btn-sm btn-secondary" style="margin-left:6px">✎ Bearbeiten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTANCE 2: Silvan Rüegg — Researcher 8W — Woche 13 (fast abgeschlossen) -->
+    <div class="instance-card" id="card-SR">
+      <div class="instance-head" onclick="toggleCard('card-SR')">
+        <div class="instance-av">SR</div>
+        <div class="instance-info">
+          <div class="instance-name">Silvan Rüegg
+            <span class="chip chip-green" style="font-size:9px;margin-left:6px">Fast abgeschlossen</span>
+          </div>
+          <div class="instance-meta">Researcher · GT / ING &amp; BT · Eintritt 01.02.2026 · Woche 13 / 8</div>
+        </div>
+        <span class="instance-tmpl">Researcher 8 Wochen</span>
+        <span style="margin-left:10px;font-size:12px;color:var(--text-light)">Buddy: <strong>NP</strong> · Mentor: <strong>EB</strong></span>
+        <span class="instance-toggle">▾</span>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-row">
+          <span class="progress-label">Gesamt</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:91%"></div></div>
+          <span class="progress-pct">91 %</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Academy</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:100%"></div></div>
+          <span class="progress-pct">5 / 5 ✓</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Scheelen</span>
+          <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:75%"></div></div>
+          <span class="progress-pct">3 / 4</span>
+        </div>
+      </div>
+
+      <div class="phases-wrap">
+        <div class="phase-block" id="ph-SR-0">
+          <div class="phase-head" onclick="togglePhase('ph-SR-0')">
+            <span class="phase-label">Vor Eintritt, Tag 1, Woche 1–5</span>
+            <span class="phase-done" style="color:var(--green)">13 / 13 ✓</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Alle Pflicht-Aufgaben erledigt</span></div>
+          </div>
+        </div>
+        <div class="phase-block open" id="ph-SR-1">
+          <div class="phase-head" onclick="togglePhase('ph-SR-1')">
+            <span class="phase-label">Woche 6–8 — Scheelen + Probezeit</span>
+            <span class="phase-done">2 / 3 offen</span>
+            <span class="phase-chevron">▾</span>
+          </div>
+          <div class="phase-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Scheelen MDI abgeschlossen</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Scheelen ASSESS abgeschlossen</span></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)">✓</div><span class="task-text done">Scheelen Relief abgeschlossen</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">Scheelen EQ — Termin noch offen</span></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><span class="task-text">Probezeit-Feedback-Gespräch terminieren</span><span class="task-overdue" style="color:var(--amber)">Deadline 01.05.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-strip">
+        <div class="meta-item">Buddy: <strong>Nina Preisig (NP)</strong></div>
+        <div class="meta-item">Mentor: <strong>Elias Brunner (EB)</strong></div>
+        <div class="meta-item">Probezeit-Ende: <strong style="color:var(--amber)">01.05.2026</strong></div>
+        <div class="meta-item" style="margin-left:auto">
+          <button class="btn btn-sm btn-primary" onclick="openDrawer('drawerProbation')">🎓 Probezeit abschliessen</button>
+          <button class="btn btn-sm btn-secondary" style="margin-left:6px">✎ Bearbeiten</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-aktiv -->
+
+  <!-- TAB: TEMPLATES -->
+  <div class="tab-panel" id="panel-templates">
+    <div class="tpl-layout">
+
+      <!-- LINKE LISTE -->
+      <div class="tpl-list">
+        <div class="tpl-list-head">
+          Templates
+          <button class="btn btn-sm btn-secondary">+ Neu</button>
+        </div>
+        <div class="tpl-item active" onclick="selectTpl(this,'tpl-consultant')">
+          <div class="tpl-nm">Consultant · 14 Wochen</div>
+          <div class="tpl-sub">6 Phasen · 22 Aufgaben · 21 Academy-Module</div>
+        </div>
+        <div class="tpl-item" onclick="selectTpl(this,'tpl-researcher')">
+          <div class="tpl-nm">Research Analyst · 8 Wochen</div>
+          <div class="tpl-sub">5 Phasen · 15 Aufgaben · 10 Academy-Module</div>
+        </div>
+      </div>
+
+      <!-- RECHTES DETAIL -->
+      <div class="tpl-detail" id="tpl-detail-wrap">
+
+        <div class="tpl-detail-head">
+          <h2 id="tplTitle">Consultant · 14 Wochen</h2>
+          <span style="font-size:12px;color:var(--text-light)">Zielrolle: Consultant / AM / CM</span>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn btn-sm btn-secondary">✎ Bearbeiten</button>
+            <button class="btn btn-sm btn-primary" onclick="openDrawer('drawerNew')">▶ Instanz starten</button>
+          </div>
+        </div>
+
+        <div id="tplPhases">
+
+          <!-- Phase 0 -->
+          <div class="tpl-phase open">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Vor Eintritt</span>
+              <span class="tpl-phase-week">Woche 0</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">3 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Arbeitsvertrag + 5 Anhänge signiert erhalten</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Personalstammdaten an Treuhand Kunz senden</span><span class="tpl-task-mod">Auto-Email</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">IT-Zugang beantragen</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+          <!-- Phase 1 -->
+          <div class="tpl-phase open">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Tag 1 — Einstieg</span>
+              <span class="tpl-phase-week">Woche 1</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">7 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Starterinfo + Hausordnung lesen + Quiz</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Arkadium am Markt lesen</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Glossary lesen</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Einführung CRM-System</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Einführung Softphone (3CX) + Telefonliste</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Schlüsselquittung signiert</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Dresscode-Briefing</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+          <!-- Phase 2 -->
+          <div class="tpl-phase">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Woche 1 — Academy Einstieg</span>
+              <span class="tpl-phase-week">Woche 1</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">4 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Communication Edge Part I starten</span><span class="tpl-task-mod">comm_edge_1</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M4 Modell Überblick</span><span class="tpl-task-mod">m4_modell</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Kollegiales Mittagessen mit Team</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Erstes Koordinationsgespräch mit Vorgesetztem</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="tpl-phase">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Woche 2–4 — M1-Serie + erste Telefonate</span>
+              <span class="tpl-phase-week">Woche 2</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">4 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Communication Edge Part I abschliessen</span><span class="tpl-task-mod">comm_edge_1</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 1.1 Ident trainieren</span><span class="tpl-task-mod">m_1_1_ident</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 1.2 Hunt trainieren</span><span class="tpl-task-mod">m_1_2_hunt</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Erstes eigenes Hunt-Telefonat (beobachtet)</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+          <!-- Phase 4 (collapsed) -->
+          <div class="tpl-phase">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Monat 2 — Communication Edge + M2-Serie</span>
+              <span class="tpl-phase-week">Woche 5</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">9 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Communication Edge Part II</span><span class="tpl-task-mod">comm_edge_2</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Communication Edge Anhang</span><span class="tpl-task-mod">comm_edge_3</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 1.3 CV Chase &amp; Briefing</span><span class="tpl-task-mod">m_1_3_cv_chase</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 1.4 Briefing</span><span class="tpl-task-mod">m_1_4_briefing</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 2.1–2.4 (Doc Chase · PreLeading · GO Fishing)</span><span class="tpl-task-mod">m_2_*</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+          <!-- Phase 5 -->
+          <div class="tpl-phase">
+            <div class="tpl-phase-head" onclick="this.closest('.tpl-phase').classList.toggle('open')">
+              <span class="tpl-phase-lbl">Monat 3 — M3/M4-Serie + Scheelen + Probezeit</span>
+              <span class="tpl-phase-week">Woche 9</span>
+              <span class="tpl-phase-cnt" style="margin-left:auto;margin-right:8px">11 Aufgaben</span>
+              <span class="tpl-phase-ch">▾</span>
+            </div>
+            <div class="tpl-phase-body">
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 3.1–3.4 (Abstract · Akquise · CV sent)</span><span class="tpl-task-mod">m_3_*</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">M 4.1–4.4 (TIVT · 2nd · Offer · Placement)</span><span class="tpl-task-mod">m_4_*</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Erste eigene Kundenvorstellung</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Scheelen MDI-Zertifizierung</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Scheelen Relief-Zertifizierung</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Scheelen ASSESS-Zertifizierung</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Scheelen EQ-Zertifizierung</span></div>
+              <div class="tpl-task-row"><span class="drag-handle">⠿</span><span class="tpl-task-nm">Probezeit-Feedback-Gespräch</span></div>
+              <div class="tpl-task-add" onclick="addTask(this)">＋ Aufgabe hinzufügen</div>
+            </div>
+          </div>
+
+        </div><!-- /tplPhases -->
+      </div><!-- /tpl-detail -->
+    </div><!-- /tpl-layout -->
+  </div><!-- /panel-templates -->
+
+  <!-- TAB: ABGESCHLOSSEN -->
+  <div class="tab-panel" id="panel-done">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--shadow-sm)">
+      <table class="done-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Mitarbeitende:r</th>
+            <th>Template</th>
+            <th>Eintritt</th>
+            <th>Abgeschlossen</th>
+            <th>Dauer</th>
+            <th>Probezeit-Ergebnis</th>
+            <th>Scheelen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div style="width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:10px">MF</div></td>
+            <td><strong>Marc Feller</strong></td>
+            <td>Consultant · 14 W</td>
+            <td>01.09.2022</td>
+            <td>01.12.2022</td>
+            <td>13 Wochen</td>
+            <td><span class="chip chip-green">Übernommen</span></td>
+            <td><span class="chip chip-green">4 / 4 ✓</span></td>
+          </tr>
+          <tr>
+            <td><div style="width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:10px">AM</div></td>
+            <td><strong>Anna Meyer</strong></td>
+            <td>Consultant · 14 W</td>
+            <td>15.04.2021</td>
+            <td>15.07.2021</td>
+            <td>13 Wochen</td>
+            <td><span class="chip chip-green">Übernommen</span></td>
+            <td><span class="chip chip-green">4 / 4 ✓</span></td>
+          </tr>
+          <tr>
+            <td><div style="width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:10px">NP</div></td>
+            <td><strong>Nina Preisig</strong></td>
+            <td>Researcher · 8 W</td>
+            <td>01.03.2023</td>
+            <td>01.05.2023</td>
+            <td>9 Wochen</td>
+            <td><span class="chip chip-green">Übernommen</span></td>
+            <td><span class="chip chip-green">4 / 4 ✓</span></td>
+          </tr>
+          <tr>
+            <td><div style="width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:10px">RS</div></td>
+            <td><strong>Roman Schmid</strong></td>
+            <td>Researcher · 8 W</td>
+            <td>15.01.2024</td>
+            <td>15.03.2024</td>
+            <td>8 Wochen</td>
+            <td><span class="chip chip-green">Übernommen</span></td>
+            <td><span class="chip chip-green">4 / 4 ✓</span></td>
+          </tr>
+          <tr>
+            <td><div style="width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Libre Baskerville',serif;font-weight:700;font-size:10px">LR</div></td>
+            <td><strong>Lara Roth</strong></td>
+            <td>Consultant · 14 W</td>
+            <td>08.11.2025</td>
+            <td>08.02.2026</td>
+            <td>14 Wochen</td>
+            <td><span class="chip chip-green">Übernommen</span></td>
+            <td><span class="chip chip-amber">3 / 4 (EQ offen)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /ob-page -->
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- DRAWER: Neues Onboarding starten (540px) -->
+<div class="drawer" id="drawerNew">
+  <div class="drawer-head">
+    <h2>Onboarding starten</h2>
+    <button class="drawer-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <div class="form-group">
+      <label class="form-label">Mitarbeitende:r <span class="req">*</span></label>
+      <select class="form-select">
+        <option>— auswählen (nur aktive Mitarbeitende) —</option>
+        <option>Lea Brunschwiler (LB) · Eintritt 01.03.2026</option>
+        <option>Silvan Rüegg (SR) · Eintritt 01.02.2026</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Template <span class="req">*</span></label>
+      <select class="form-select" onchange="showTplPreview(this.value)">
+        <option value="">— auswählen —</option>
+        <option value="consultant">Consultant · 14 Wochen (22 Aufgaben, 21 Academy-Module)</option>
+        <option value="researcher">Research Analyst · 8 Wochen (15 Aufgaben, 10 Academy-Module)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Startdatum <span class="req">*</span></label>
+      <input type="date" class="form-input" value="2026-04-27">
+      <div class="form-hint">Entspricht typisch dem Eintrittsdatum — Phasen werden ab hier berechnet</div>
+    </div>
+
+    <div class="form-2col">
+      <div class="form-group">
+        <label class="form-label">Buddy</label>
+        <select class="form-select">
+          <option>— optional —</option>
+          <option>Jana Vogel (JV)</option>
+          <option>Anna Meyer (AM)</option>
+          <option>Nina Preisig (NP)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mentor / Vorgesetzter</label>
+        <select class="form-select">
+          <option>— optional —</option>
+          <option>Peter Wiederkehr (PW)</option>
+          <option>Michael Egger (ME)</option>
+          <option>Jana Vogel (JV)</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="tplPreview" style="display:none;background:var(--surface-alt);border-radius:4px;padding:12px 14px;border-left:3px solid var(--accent)">
+      <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Template-Vorschau</div>
+      <div id="tplPreviewContent" style="font-size:11px;color:var(--text-light)"></div>
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" onclick="closeAll()">Abbrechen</button>
+    <button class="btn btn-primary">Onboarding starten</button>
+  </div>
+</div>
+
+<!-- DRAWER: Aufgabe hinzufügen (540px) -->
+<div class="drawer" id="drawerTask">
+  <div class="drawer-head">
+    <h2>Aufgabe hinzufügen</h2>
+    <button class="drawer-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="form-group">
+      <label class="form-label">Phase <span class="req">*</span></label>
+      <select class="form-select">
+        <option>Woche 6–8 — Scheelen + Probezeit</option>
+        <option>Vor Eintritt</option>
+        <option>Tag 1</option>
+        <option>Woche 1–2</option>
+        <option>Woche 3–5</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Aufgaben-Titel <span class="req">*</span></label>
+      <input type="text" class="form-input" placeholder="z.B. Einführung Reporting-System">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Academy-Modul verknüpfen</label>
+      <select class="form-select">
+        <option value="">— kein Modul —</option>
+        <option>comm_edge_1 · Communication Edge Part I</option>
+        <option>m4_modell · M4 Modell</option>
+        <option>m_1_1_ident · M 1.1 Ident</option>
+        <option>m_1_2_hunt · M 1.2 Hunt</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fälligkeitsdatum</label>
+      <input type="date" class="form-input">
+      <div class="form-hint">Optional · für Erinnerungs-Alerts</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notiz</label>
+      <textarea class="form-textarea" rows="2" placeholder="Optional …"></textarea>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" onclick="closeAll()">Abbrechen</button>
+    <button class="btn btn-primary">Aufgabe hinzufügen</button>
+  </div>
+</div>
+
+<!-- DRAWER: Probezeit abschliessen (540px) -->
+<div class="drawer" id="drawerProbation">
+  <div class="drawer-head">
+    <h2>Probezeit abschliessen</h2>
+    <button class="drawer-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:4px;padding:10px 14px;margin-bottom:18px;font-size:12px">
+      <strong style="color:var(--accent)">Silvan Rüegg</strong> · Researcher · GT / ING &amp; BT<br>
+      <span style="color:var(--text-light)">Eintritt 01.02.2026 · Probezeit-Ende <strong style="color:var(--amber)">01.05.2026</strong> · Woche 13</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Probezeit-Ergebnis <span class="req">*</span></label>
+      <select class="form-select" id="probationOutcome" onchange="onProbationOutcomeChange(this.value)">
+        <option value="">— auswählen —</option>
+        <option value="pass">✓ Bestanden — Mitarbeitender wird übernommen</option>
+        <option value="extend">⏳ Verlängern — Probezeit verlängern (OR 335b Abs. 2, max. 6 Mt total)</option>
+        <option value="fail">✗ Nicht bestanden — Kündigung in der Probezeit</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="probExtendGroup" style="display:none">
+      <label class="form-label">Neues Probezeit-Ende <span class="req">*</span></label>
+      <input type="date" class="form-input" value="2026-07-01">
+      <div class="form-hint">Maximum: 6 Monate ab Vertragsbeginn (01.08.2026) · OR 335b Abs. 2</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Gesprächs-Notiz <span class="req">*</span></label>
+      <textarea class="form-textarea" rows="5" placeholder="Zusammenfassung des Probezeit-Abschlussgesprächs. Stärken, Entwicklungsfelder, nächste Schritte …"></textarea>
+      <div class="form-hint">Vertraulich · nur sichtbar für Head of und Admin</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Gesprächs-Protokoll</label>
+      <div style="border:1px dashed var(--border);border-radius:4px;padding:16px;text-align:center;font-size:12px;color:var(--text-light);cursor:pointer" onclick="this.querySelector('input').click()">
+        📎 PDF hochladen (optional)
+        <input type="file" accept=".pdf" style="display:none">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Gespräch geführt am <span class="req">*</span></label>
+      <input type="date" class="form-input" value="2026-04-25">
+    </div>
+
+    <div id="probFailWarning" style="display:none;background:color-mix(in srgb,var(--red) 8%,transparent);border:1px solid var(--red);border-radius:4px;padding:10px 14px;font-size:12px;margin-top:4px">
+      <strong style="color:var(--red)">⚠️ Kündigung in Probezeit:</strong> Kündigungsfrist laut OR 335b Abs. 1 = 7 Tage. Nach Speicherung wird der Kündigungsflow geöffnet.
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" onclick="closeAll()">Abbrechen</button>
+    <button class="btn btn-primary" onclick="saveProbation()">Probezeit abschliessen</button>
+  </div>
+</div>
+
+<script>
+function switchTab(id, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+}
+
+function toggleCard(id){
+  const card = document.getElementById(id);
+  card.classList.toggle('expanded');
+  const phases = card.querySelector('.phases-wrap');
+  const meta   = card.querySelector('.meta-strip');
+  const prog   = card.querySelector('.progress-wrap');
+  if(card.classList.contains('expanded')){
+    phases.style.display='block'; prog.style.display='block'; meta.style.display='flex';
+  } else {
+    phases.style.display='none'; prog.style.display='none'; meta.style.display='none';
+  }
+}
+
+function togglePhase(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleTask(el){
+  el.classList.toggle('done');
+  const txt = el.nextElementSibling;
+  if(el.classList.contains('done')){
+    el.textContent='✓';
+    if(txt) txt.classList.add('done');
+  } else {
+    el.textContent='';
+    if(txt) txt.classList.remove('done');
+  }
+}
+
+function selectTpl(el, tplId){
+  document.querySelectorAll('.tpl-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  const titles = {
+    'tpl-consultant':'Consultant · 14 Wochen',
+    'tpl-researcher':'Research Analyst · 8 Wochen'
+  };
+  document.getElementById('tplTitle').textContent = titles[tplId]||tplId;
+}
+
+function addTask(el){
+  const row = document.createElement('div');
+  row.className='tpl-task-row';
+  row.innerHTML='<span class="drag-handle">⠿</span><input type="text" class="form-input" style="padding:4px 8px;font-size:12px" placeholder="Neue Aufgabe…" autofocus>';
+  el.before(row);
+  row.querySelector('input').focus();
+}
+
+function openDrawer(id){
+  document.getElementById(id).classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeAll(){
+  document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open'));
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function onProbationOutcomeChange(val){
+  document.getElementById('probExtendGroup').style.display  = val==='extend' ? 'block' : 'none';
+  document.getElementById('probFailWarning').style.display  = val==='fail'   ? 'block' : 'none';
+}
+
+function saveProbation(){
+  const outcome = document.getElementById('probationOutcome').value;
+  if(!outcome){ alert('Bitte Probezeit-Ergebnis auswählen.'); return; }
+  closeAll();
+  const card = document.getElementById('card-SR');
+  const strip = card.querySelector('.meta-strip');
+  const btn = strip.querySelector('.btn-primary');
+  if(outcome==='pass'){
+    btn.textContent='🎓 Probezeit abgeschlossen';
+    btn.disabled=true; btn.style.opacity='0.6';
+    btn.insertAdjacentHTML('beforebegin','<span class="chip chip-green" style="font-size:11px">✓ Übernommen</span> ');
+  } else if(outcome==='extend'){
+    btn.textContent='⏳ Probezeit verlängert';
+    btn.style.background='var(--amber)'; btn.style.borderColor='var(--amber)';
+  } else {
+    btn.textContent='✗ Kündigung eingeleitet';
+    btn.style.background='var(--red)'; btn.style.borderColor='var(--red)';
+  }
+}
+
+function showTplPreview(val){
+  const box = document.getElementById('tplPreview');
+  const content = document.getElementById('tplPreviewContent');
+  if(!val){ box.style.display='none'; return; }
+  const data = {
+    consultant:'<strong>6 Phasen · 22 Aufgaben · 21 Academy-Module</strong><br>Woche 0: Pre-Arrival (3 Aufg.) · Tag 1 (7 Aufg.) · Woche 1 (4 Aufg.) · Woche 2–4 (4 Aufg.) · Monat 2 (9 Aufg.) · Monat 3 (11 Aufg.)<br><br>Automatisch: Personalstammdaten-Email an Treuhand Kunz',
+    researcher:'<strong>5 Phasen · 15 Aufgaben · 10 Academy-Module</strong><br>Woche 0: Pre-Arrival (3 Aufg.) · Tag 1 (4 Aufg.) · Woche 1–2 (3 Aufg.) · Woche 3–5 (4 Aufg.) · Woche 6–8 (5 Aufg.)<br><br>Automatisch: Personalstammdaten-Email an Treuhand Kunz',
+  };
+  content.innerHTML = data[val]||'';
+  box.style.display='block';
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  // Phases-wrap / meta-strip initial: show for first card, hide for second
+  document.getElementById('card-LB').classList.add('expanded');
+  document.getElementById('card-SR').classList.remove('expanded');
+  ['phases-wrap','meta-strip','progress-wrap'].forEach(cls=>{
+    document.querySelectorAll('#card-SR .'+cls).forEach(el=>el.style.display='none');
+  });
+
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAll(); });
+});
+</script>
+</body>
+</html>

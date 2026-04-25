@@ -371,9 +371,10 @@ Arbeitszeit-Vertrag pro MA pro Jahr.
 CREATE TABLE fact_workday_target (
     id                              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id                         UUID NOT NULL REFERENCES dim_user(id),
+    employment_contract_id          UUID NULL REFERENCES fact_employment_contracts(id),  -- HR-Modul: Pensum/Stunden-Source-of-Truth
     year                            SMALLINT NOT NULL,
     work_time_model_code            VARCHAR(40) NOT NULL REFERENCES dim_work_time_model(code),
-    target_hours_per_week           NUMERIC(5,2) NOT NULL,
+    target_hours_per_week           NUMERIC(5,2) NOT NULL,   -- muss mit HR fact_employment_contracts konsistent sein (via Worker)
     variant_percent                 NUMERIC(5,2) NOT NULL DEFAULT 100.00,
     weekday_minutes_jsonb           JSONB NOT NULL,  -- {"mon":510,"tue":510,...,"sun":0}
     default_break_min               SMALLINT NOT NULL DEFAULT 30,
