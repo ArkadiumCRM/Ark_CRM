@@ -1,0 +1,1621 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Insights & Massnahmen — ARK CRM Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/editorial.css" />
+<style>
+  /* Hub-Iframe-Compat: App-Bar nur im Standalone-Modus */
+  body.in-iframe .app-bar { display: none; }
+  body.in-iframe main { padding-top: 12px; }
+
+  :root, [data-theme="light"] {
+    --accent: #196774; --accent-tint: #e7eff1;
+    --gold: #dcb479; --gold-tint: #f6ecd9; --gold-strong: #b88e4e;
+    --green: #2d8659; --green-tint: #e2efe7;
+    --amber: #c98e2c; --amber-tint: #f6ecd5;
+    --red: #b94545; --red-tint: #f3dede;
+    --blocker: #8a2828; --blocker-tint: #ecd6d6;
+    --info: #4d6b80; --info-tint: #e3eaf0;
+
+    --bg: #faf7f2; --surface: #ffffff; --surface-alt: #f5efe6; --surface-sunk: #f1ebe0;
+    --text: #262626; --text-mid: #555; --text-light: #8a8a8a;
+    --border: #e8e2d5; --border-strong: #d8cfba;
+
+    --shadow-sm: 0 1px 2px rgba(40, 30, 10, 0.04);
+    --shadow:    0 1px 3px rgba(40, 30, 10, 0.06);
+    --shadow-md: 0 8px 28px rgba(40, 30, 10, 0.10);
+
+    --r-sm: 4px; --r: 6px;
+  }
+  [data-theme="dark"] {
+    --accent: #4ea3b0; --accent-tint: #1a2c30;
+    --gold: #dcb479; --gold-tint: #2c2519; --gold-strong: #e0bd84;
+    --green: #5cb88a; --green-tint: #1a2922;
+    --amber: #d9a548; --amber-tint: #2c2417;
+    --red: #d97070; --red-tint: #2d1d1d;
+    --blocker: #c93c3c; --blocker-tint: #2a1414;
+    --info: #8aa6bb; --info-tint: #1d262e;
+
+    --bg: #16181a; --surface: #1d2023; --surface-alt: #22262a; --surface-sunk: #15171a;
+    --text: #ececec; --text-mid: #b0b0b0; --text-light: #7a7a7a;
+    --border: #2c3034; --border-strong: #3a4046;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 1px 3px rgba(0,0,0,0.35);
+    --shadow-md: 0 8px 28px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: "Libre Baskerville", Georgia, serif; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ─── App Bar ─── */
+  .app-bar {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 24px;
+    font-size: 12px; color: var(--text-mid);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 22px; height: 22px;
+    background: var(--text); color: var(--bg);
+    display: grid; place-items: center;
+    font-family: "Libre Baskerville", serif; font-weight: 700;
+    font-size: 13px; border-radius: 2px;
+  }
+  .brand-name { font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+  .brand-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+  .modules { display: flex; gap: 2px; margin-left: 20px; }
+  .mod {
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .mod.active { background: var(--text); color: var(--bg); font-weight: 600; }
+  .app-bar-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  .user-pill { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; }
+  .user-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 11px;
+  }
+  .theme-toggle {
+    width: 26px; height: 26px;
+    border: 1px solid var(--border); border-radius: 50%;
+    display: grid; place-items: center; color: var(--text-mid);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .ico { width: 14px; height: 14px; stroke-width: 1.6; }
+  .ico-sm { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  main { padding: 22px 32px 64px; max-width: 1440px; margin: 0 auto; }
+
+  /* ─── Page Head ─── */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+  }
+  .page-head h1 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 28px;
+    color: var(--accent); letter-spacing: -0.005em;
+  }
+  .crumb {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 12.5px; margin-top: 6px; }
+  .subtitle .dot { color: var(--border-strong); margin: 0 7px; }
+  .page-head-actions { display: flex; align-items: center; gap: 10px; }
+  .btn {
+    padding: 6px 12px; border-radius: var(--r-sm);
+    font-size: 12.5px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); transition: border-color .12s, color .12s, background .12s;
+  }
+  .btn:hover { border-color: var(--border-strong); }
+  .btn-primary {
+    background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500;
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-gold {
+    background: var(--gold-strong); color: #fff; border-color: var(--gold-strong); font-weight: 500;
+  }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-green {
+    background: var(--green); color: #fff; border-color: var(--green); font-weight: 500;
+  }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-mid); }
+  .btn-ghost:hover { color: var(--text); }
+
+  /* ─── Snapshot Bar ─── */
+  .snapshot {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px; margin-bottom: 18px;
+  }
+  .snap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .snap .label {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .snap .dot-color {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--text-light);
+  }
+  .snap .value {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 26px; line-height: 1;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .snap .value .unit { font-size: 13px; color: var(--text-mid); margin-left: 2px; font-weight: 400; }
+  .snap .delta {
+    margin-top: 6px; font-size: 11px; color: var(--text-mid);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .spark { width: 100%; height: 22px; margin-top: 4px; display: block; }
+
+  /* ─── Filter Bar ─── */
+  .filterbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--r);
+    margin-bottom: 18px;
+  }
+  .field {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .field .lab { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); }
+  .field .val { color: var(--text); font-weight: 500; }
+  .field svg { color: var(--text-light); }
+  .search-input {
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 5px 10px 5px 28px; border-radius: 999px;
+    font-size: 12px; color: var(--text-mid);
+    width: 180px; position: relative;
+  }
+  .search-wrap { position: relative; }
+  .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
+  .filterbar-right { margin-left: auto; display: flex; align-items: center; gap: 0; }
+  .seg {
+    display: inline-flex; border: 1px solid var(--border);
+    border-radius: var(--r-sm); overflow: hidden;
+    background: var(--surface);
+  }
+  .seg button {
+    padding: 5px 12px; font-size: 12px; color: var(--text-mid);
+    border-right: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button.active { background: var(--text); color: var(--bg); font-weight: 500; }
+  .seg .count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px; padding: 1px 5px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    border-radius: 8px;
+  }
+  .seg button.active .count { background: rgba(255,255,255,0.18); color: var(--bg); }
+
+  /* ─── Main split ─── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (min-width: 1280px) {
+    .split { grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr); }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-head h2 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 15px; color: var(--text);
+  }
+  .panel-head .meta { font-size: 11px; color: var(--text-light); }
+  .panel-head .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  /* ─── Insight cards ─── */
+  .insight-list { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .insight {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--info);
+    border-radius: var(--r-sm);
+    padding: 12px 14px 12px 14px;
+    cursor: pointer;
+    transition: border-color .12s, background .12s, box-shadow .12s;
+  }
+  .insight:hover { border-color: var(--border-strong); }
+  .insight.sev-warn     { border-left-color: var(--amber); }
+  .insight.sev-critical { border-left-color: var(--red); }
+  .insight.sev-blocker  { border-left-color: var(--blocker); }
+  .insight.sev-info     { border-left-color: var(--info); }
+  .insight.active {
+    border-left: 4px solid var(--gold-strong);
+    background: var(--gold-tint);
+    box-shadow: var(--shadow);
+  }
+  .insight-top {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-variant: small-caps;
+  }
+  .b-info     { background: var(--info-tint);    color: var(--info); }
+  .b-warn     { background: var(--amber-tint);   color: var(--amber); }
+  .b-critical { background: var(--red-tint);     color: var(--red); }
+  .b-blocker  { background: var(--blocker-tint); color: var(--blocker); }
+  .b-pending     { background: var(--surface-sunk); color: var(--text-mid); }
+  .b-progress    { background: var(--accent-tint);  color: var(--accent); }
+  .b-done        { background: var(--green-tint);   color: var(--green); }
+  .b-overdue     { background: var(--red-tint);     color: var(--red); }
+  .b-resolved    { background: var(--green-tint);   color: var(--green); }
+
+  .scope-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; padding: 2px 6px; border-radius: 2px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+  .insight.active .scope-chip {
+    background: rgba(184,142,78, 0.18); color: #7a5926;
+  }
+  [data-theme="dark"] .insight.active .scope-chip { color: #d4ad6d; background: rgba(220,180,121,0.12); }
+
+  .insight-top .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .insight-headline {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 2px 0 8px 0;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .insight-headline .glyph {
+    color: var(--gold-strong);
+    font-size: 13px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  /* threshold bar */
+  .thr {
+    margin: 6px 0 8px 0;
+    font-size: 11px; color: var(--text-mid);
+  }
+  .thr-track {
+    position: relative;
+    height: 8px;
+    background: var(--surface-sunk);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 4px 0 6px 0;
+  }
+  .thr-zone-warn {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--amber-tint);
+  }
+  .thr-zone-crit {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--red-tint);
+  }
+  .thr-marker {
+    position: absolute; top: -2px;
+    width: 2px; height: 12px;
+    background: var(--text);
+  }
+  .thr-tick {
+    position: absolute; top: 0; bottom: 0;
+    width: 1px; background: var(--border-strong);
+  }
+  .thr-labels {
+    display: flex; justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--text-light);
+  }
+  .thr-current {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text); font-weight: 500;
+  }
+
+  .reco {
+    font-size: 12px; color: var(--text-mid);
+    background: var(--surface-alt);
+    border-left: 2px solid var(--gold-strong);
+    padding: 6px 10px;
+    border-radius: 2px;
+    margin: 8px 0 10px 0;
+  }
+  .insight.active .reco { background: rgba(255,255,255,0.55); }
+  [data-theme="dark"] .insight.active .reco { background: rgba(255,255,255,0.04); }
+  .reco .lbl { font-weight: 600; color: var(--text); }
+
+  .insight-foot {
+    display: flex; align-items: center; gap: 14px;
+    padding-top: 8px; margin-top: 4px;
+    border-top: 1px dashed var(--border);
+    font-size: 11.5px;
+  }
+  .link-action {
+    color: var(--accent); font-weight: 500;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .link-action:hover { text-decoration: underline; }
+  .link-quiet {
+    color: var(--text-mid);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .link-quiet:hover { color: var(--text); }
+  .insight-foot .right {
+    margin-left: auto;
+    color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+  }
+  .pill-link-count {
+    background: var(--surface-sunk);
+    border-radius: 8px;
+    padding: 1px 6px;
+    color: var(--text-mid);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+  }
+
+  .menu-btn {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    border-radius: 4px;
+    color: var(--text-light);
+  }
+  .menu-btn:hover { color: var(--text); background: var(--surface-sunk); }
+
+  /* ─── Right panel: Massnahmen ─── */
+  .panel-context {
+    padding: 10px 16px;
+    background: var(--gold-tint);
+    border-bottom: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-mid);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-context .lbl { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); }
+  .panel-context .val { color: var(--text); font-weight: 600; }
+  [data-theme="dark"] .panel-context { background: rgba(220,180,121,0.06); }
+
+  .actions-list { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+  .action {
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    background: var(--surface);
+  }
+  .action-top {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+    font-size: 11px; color: var(--text-light);
+  }
+  .action-title {
+    font-size: 13.5px; font-weight: 600; color: var(--text);
+    line-height: 1.35; margin: 4px 0 8px 0;
+  }
+  .action-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11.5px; color: var(--text-mid);
+  }
+  .avatar-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 600;
+  }
+  .avatar.gold { background: var(--gold-tint); color: var(--gold-strong); }
+  .avatar.green { background: var(--green-tint); color: var(--green); }
+  .meta-sep { color: var(--border-strong); }
+
+  .outcome {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--green);
+    background: var(--green-tint);
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .outcome.worsened { border-color: var(--red); background: var(--red-tint); }
+  .outcome.no_change { border-color: var(--border-strong); background: var(--surface-alt); }
+  .outcome-effect {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 14px;
+    color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+  .outcome.worsened .outcome-effect { color: var(--red); }
+  .outcome.no_change .outcome-effect { color: var(--text-mid); }
+  .outcome-comp {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px; color: var(--text-mid);
+  }
+  .outcome-comp .num { color: var(--text); font-weight: 500; }
+  .outcome-comp .delta { color: var(--green); font-weight: 600; margin-left: 4px; }
+  .outcome.worsened .outcome-comp .delta { color: var(--red); }
+  .outcome-meta {
+    margin-left: auto; text-align: right;
+    font-size: 10.5px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .action-foot {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px;
+  }
+  .action-foot .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  .empty-state {
+    padding: 28px 16px; text-align: center;
+    color: var(--text-mid); font-size: 12.5px;
+    border: 1px dashed var(--border);
+    border-radius: var(--r-sm);
+    margin: 14px 16px;
+  }
+
+  /* ─── Drawer block (rendered statically below as preview) ─── */
+  .drawer-section-title {
+    margin: 36px 0 12px 0;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .drawer-section-title .hint { font-size: 11px; letter-spacing: normal; text-transform: none; color: var(--text-light); margin-left: auto; font-weight: 400; }
+
+  .drawer-row {
+    display: grid;
+    grid-template-columns: 540px 540px;
+    gap: 24px;
+    justify-content: start;
+  }
+  @media (max-width: 1200px) {
+    .drawer-row { grid-template-columns: 1fr; }
+  }
+
+  .drawer {
+    width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    position: relative;
+  }
+  .drawer::before {
+    content: "Drawer · 540 px · slide-in von rechts";
+    position: absolute; top: -22px; left: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--text-light);
+    letter-spacing: 0.05em;
+  }
+  .drawer-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-head-top {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+  }
+  .drawer-head h3 {
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 16px;
+    color: var(--text);
+  }
+  .drawer-close {
+    margin-left: auto;
+    width: 26px; height: 26px;
+    display: grid; place-items: center;
+    color: var(--text-light);
+    border-radius: 4px;
+  }
+  .drawer-close:hover { color: var(--text); background: var(--surface-sunk); }
+  .drawer-eyebrow {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+
+  .drawer-tabs {
+    display: flex; gap: 0;
+    margin-top: 10px;
+    border-bottom: 1px solid var(--border);
+    margin: 12px -18px 0 -18px;
+    padding: 0 18px;
+  }
+  .drawer-tab {
+    padding: 8px 0;
+    margin-right: 18px;
+    font-size: 12px;
+    color: var(--text-mid);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .drawer-tab.active {
+    color: var(--text);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .drawer-body {
+    padding: 18px;
+    display: flex; flex-direction: column;
+    gap: 18px;
+    max-height: 720px;
+    overflow: auto;
+  }
+
+  .drawer-foot {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; align-items: center; gap: 8px;
+    position: sticky; bottom: 0;
+  }
+  .drawer-foot .spacer { flex: 1; }
+
+  .sec-title {
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+
+  .kv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .kv-table th, .kv-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .kv-table th {
+    font-weight: 500;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .kv-table td.num, .kv-table th.num {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .kv-table td:first-child { color: var(--text); }
+  .kv-table .diff-pos { color: var(--green); }
+  .kv-table .diff-neg { color: var(--red); }
+
+  .reco-box {
+    background: var(--gold-tint);
+    border: 1px solid var(--gold);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+  }
+  .reco-box h4 {
+    margin: 0 0 6px 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: 13.5px; color: var(--text);
+  }
+  .reco-box p { margin: 0; color: var(--text-mid); font-size: 12px; }
+  [data-theme="dark"] .reco-box { background: rgba(220,180,121,0.08); }
+
+  .related-list { display: flex; flex-direction: column; }
+  .related-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .related-row:last-child { border-bottom: 0; }
+  .related-row .arrow { color: var(--text-light); margin-left: auto; }
+  .related-row .meta { color: var(--text-light); font-size: 11px; }
+
+  .timeline { display: flex; flex-direction: column; gap: 12px; padding-left: 6px; }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    position: relative;
+  }
+  .tl-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    margin-top: 4px;
+    margin-left: 4px;
+    box-shadow: 0 0 0 3px var(--accent-tint);
+    z-index: 2;
+  }
+  .tl-dot.muted {
+    background: var(--border-strong);
+    box-shadow: 0 0 0 3px var(--surface-sunk);
+  }
+  .tl-row::before {
+    content: ""; position: absolute;
+    left: 7px; top: 14px; bottom: -16px;
+    width: 1px; background: var(--border);
+    z-index: 1;
+  }
+  .tl-row:last-child::before { display: none; }
+  .tl-time {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px; color: var(--text-light);
+  }
+  .tl-title { font-size: 12.5px; color: var(--text); font-weight: 500; }
+  .tl-desc { font-size: 11.5px; color: var(--text-mid); margin-top: 2px; }
+
+  /* outcome drawer */
+  .effect-hero {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 18px;
+    background: var(--green-tint);
+    border: 1px solid var(--green);
+    border-radius: var(--r);
+  }
+  .effect-hero .badge-big {
+    font-family: "Libre Baskerville", serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .effect-hero .nums {
+    flex: 1;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+  .effect-hero .nums .big {
+    font-family: "Libre Baskerville", serif;
+    font-size: 18px;
+    color: var(--text);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .effect-hero .meta {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--text-light);
+  }
+
+  .compare-bars {
+    display: grid;
+    grid-template-columns: 70px 1fr 70px;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .compare-bars .lab {
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .compare-bars .track {
+    height: 24px;
+    background: var(--surface-sunk);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .compare-bars .fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--text-mid);
+  }
+  .compare-bars .fill.after { background: var(--green); }
+  .compare-bars .num {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .measure-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    font-size: 11.5px;
+  }
+  .measure-grid .cell {
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 8px 10px;
+  }
+  .measure-grid .cell .lab {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 3px;
+  }
+  .measure-grid .cell .val {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text); font-weight: 500;
+  }
+
+  /* ─── Footer line ─── */
+  .footer-line {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ============== APP BAR ============== -->
+<div class="app-bar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div>
+      <div class="brand-name">ARK · CRM</div>
+      <div class="brand-sub">Performance</div>
+    </div>
+  </div>
+
+  <div class="modules">
+    <button class="mod">Dashboard</button>
+    <button class="mod active">Insights</button>
+    <button class="mod">Funnel</button>
+    <button class="mod">Coverage</button>
+    <button class="mod">Mitarbeiter</button>
+    <button class="mod">Revenue</button>
+    <button class="mod">Reports</button>
+    <button class="mod">Admin</button>
+  </div>
+
+  <div class="app-bar-right">
+    <div class="user-pill">
+      <div class="user-dot">PW</div>
+      <span>Peter W. · Admin</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Theme umschalten">
+      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============== PAGE HEAD ============== -->
+  <header class="page-head">
+    <div>
+      <div class="crumb">CRM · Performance</div>
+      <h1 class="serif">Insights &amp; Massnahmen</h1>
+      <div class="subtitle">
+        Closed-Loop <span class="dot">·</span> Anomalie → Massnahme → Wirkung
+      </div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn">
+        <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin-right:4px;"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Export
+      </button>
+      <button class="btn">Bulk-Done</button>
+    </div>
+  </header>
+
+  <!-- ============== SNAPSHOT BAR ============== -->
+  <section class="snapshot">
+    <div class="snap">
+      <div class="label">Offen</div>
+      <div class="value serif">7</div>
+      <div class="delta"><span style="color:var(--green);">↗</span> +2 vs. Vorwoche</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,16 L14,14 L28,15 L42,12 L56,13 L70,9 L84,10 L100,7" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--red);"></span>Critical</div>
+      <div class="value serif" style="color:var(--red);">2</div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> 2 Tage offen</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,18 L14,18 L28,16 L42,16 L56,12 L70,13 L84,10 L100,8" fill="none" stroke="var(--red)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--blocker);"></span>Blocker</div>
+      <div class="value serif" style="color:var(--blocker);">1</div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Eskalation an Head</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,18 L14,18 L28,18 L42,16 L56,16 L70,16 L84,12 L100,10" fill="none" stroke="var(--blocker)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Resolved · 30d</div>
+      <div class="value serif">14</div>
+      <div class="delta"><span style="color:var(--green);">↗</span> +5 vs. Vormonat</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,18 L14,16 L28,15 L42,12 L56,13 L70,8 L84,7 L100,4" fill="none" stroke="var(--green)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Wirkung Ø</div>
+      <div class="value serif" style="color:var(--green);">+18<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Median über Massnahmen</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,14 L14,12 L28,14 L42,10 L56,11 L70,8 L84,8 L100,5" fill="none" stroke="var(--green)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">False-Positive</div>
+      <div class="value serif">9<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Schwelle 10 %</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,8 L14,9 L28,11 L42,10 L56,12 L70,11 L84,13 L100,14" fill="none" stroke="var(--amber)" stroke-width="1.4"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============== FILTER BAR ============== -->
+  <section class="filterbar">
+    <div class="field"><span class="lab">Severity</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Scope</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Owner</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Periode</span><span class="val">Letzte 30 Tage</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="search-wrap" style="position:relative;">
+      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="search-input" placeholder="Suche · Insight, Owner, Sparte" />
+    </div>
+
+    <div class="filterbar-right">
+      <div class="seg" role="tablist">
+        <button class="active">Offen <span class="count">7</span></button>
+        <button>In Bearbeitung <span class="count">5</span></button>
+        <button>Resolved <span class="count">14</span></button>
+        <button>Archived <span class="count">38</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== MAIN SPLIT ============== -->
+  <section class="split">
+
+    <!-- LEFT: Insights list -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Insights</h2>
+        <span class="meta">7 offen · sortiert nach Severity, Alter</span>
+        <div class="right">
+          <button class="btn">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+            Sortieren
+          </button>
+        </div>
+      </div>
+
+      <div class="insight-list" id="insightList">
+
+        <!-- Insight 1 (active) -->
+        <article class="insight sev-critical active" data-id="1">
+          <div class="insight-top">
+            <span class="badge b-critical">Critical</span>
+            <span class="scope-chip">Sparte · ARC</span>
+            <span>· 2 Tage offen</span>
+            <span>· erkannt 23.04.2026</span>
+            <div class="right">
+              <button class="menu-btn" title="Mehr"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Coverage ARC kritisch unter Soll
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:35%; right:0;"></div>
+              <div class="thr-zone-crit" style="left:0; width:35%;"></div>
+              <div class="thr-tick" style="left:35%;"></div>
+              <div class="thr-tick" style="left:50%;"></div>
+              <div class="thr-marker" style="left:32%;" title="Aktuell 32 %"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">32 %</span> aktuell</span>
+              <span>Threshold warn 50 % · critical 35 %</span>
+              <span>Soll 70 %</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> 8 vernachlässigte ARC-Kandidaten reaktivieren — letzter Touch &gt; 21 Tage.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">1 Massnahme verknüpft</span>
+          </div>
+        </article>
+
+        <!-- Insight 2 -->
+        <article class="insight sev-blocker" data-id="2">
+          <div class="insight-top">
+            <span class="badge b-blocker">Blocker</span>
+            <span class="scope-chip">Team · ARC</span>
+            <span>· 1 Tag offen</span>
+            <span>· erkannt 24.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Compliance E-Learning · 4 MA überfällig
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:30%; right:0;"></div>
+              <div class="thr-zone-crit" style="left:0; width:30%;"></div>
+              <div class="thr-marker" style="left:18%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">4 von 12</span> überfällig</span>
+              <span>warn ≥ 2 · critical ≥ 4</span>
+              <span>Ziel 0</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Pflicht-Reminder versenden, Eskalation an Head ARC.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">0 Massnahmen</span>
+          </div>
+        </article>
+
+        <!-- Insight 3 -->
+        <article class="insight sev-critical" data-id="3">
+          <div class="insight-top">
+            <span class="badge b-critical">Critical</span>
+            <span class="scope-chip">MA · PW</span>
+            <span>· 5 Tage offen</span>
+            <span>· erkannt 20.04.2026</span>
+            <div class="right">
+              <span class="badge b-resolved" title="Wirkung gemessen">Confirm pending</span>
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Goal-Drift Placements PW · 100 % unter Soll Q2
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:40%; right:0;"></div>
+              <div class="thr-zone-crit" style="left:0; width:40%;"></div>
+              <div class="thr-marker" style="left:8%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">0 / 4</span> Q2-Placements</span>
+              <span>warn ≤ 60 % · critical ≤ 40 %</span>
+              <span>Soll 4</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Pipeline-Re-Forecast und Stretch-Mandate priorisieren.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Wirkung bestätigen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">1 Massnahme · Wirkung +15 pp</span>
+          </div>
+        </article>
+
+        <!-- Insight 4 -->
+        <article class="insight sev-warn" data-id="4">
+          <div class="insight-top">
+            <span class="badge b-warn">Warn</span>
+            <span class="scope-chip">Sparte · ING</span>
+            <span>· 3 Tage offen</span>
+            <span>· erkannt 22.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Conversion CV Sent → 1st Interview eingebrochen
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:30%; width:25%;"></div>
+              <div class="thr-zone-crit" style="left:0; width:30%;"></div>
+              <div class="thr-marker" style="left:22%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">18 %</span> aktuell</span>
+              <span>warn &lt; 22 % · critical &lt; 16 %</span>
+              <span>Median 28 %</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> CV-Quality-Review für letzte 12 Sendungen, Sparten-Briefing prüfen.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">0 Massnahmen</span>
+          </div>
+        </article>
+
+        <!-- Insight 5 -->
+        <article class="insight sev-warn" data-id="5">
+          <div class="insight-top">
+            <span class="badge b-warn">Warn</span>
+            <span class="scope-chip">Sparte · ARC</span>
+            <span>· 7 Tage offen</span>
+            <span>· erkannt 18.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Stale-Pipeline ARC · 23 Prozesse &gt; 45 Tage in Stage
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:25%; width:30%;"></div>
+              <div class="thr-zone-crit" style="left:55%; right:0;"></div>
+              <div class="thr-marker" style="left:62%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">23 Prozesse</span></span>
+              <span>warn ≥ 12 · critical ≥ 20</span>
+              <span>Ziel ≤ 5</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Stage-Review-Workshop, alte Prozesse archivieren oder reaktivieren.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">1 Massnahme · in Arbeit</span>
+          </div>
+        </article>
+
+        <!-- Insight 6 -->
+        <article class="insight sev-warn" data-id="6">
+          <div class="insight-top">
+            <span class="badge b-warn">Warn</span>
+            <span class="scope-chip">Team · REM</span>
+            <span>· 4 Tage offen</span>
+            <span>· erkannt 21.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Reminder-Backlog Team REM · 12 überfällig
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:25%; width:30%;"></div>
+              <div class="thr-zone-crit" style="left:55%; right:0;"></div>
+              <div class="thr-marker" style="left:48%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">12 überfällig</span></span>
+              <span>warn ≥ 8 · critical ≥ 16</span>
+              <span>Ziel ≤ 3</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Tages-Sweep, Owner-Verantwortung neu zuteilen.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">1 Massnahme · geplant</span>
+          </div>
+        </article>
+
+        <!-- Insight 7 -->
+        <article class="insight sev-info" data-id="7">
+          <div class="insight-top">
+            <span class="badge b-info">Info</span>
+            <span class="scope-chip">Team · GT</span>
+            <span>· 1 Tag offen</span>
+            <span>· erkannt 24.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Aktivität GT-Team · −12 % vs. 4-Wochen-Schnitt
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:20%; width:25%;"></div>
+              <div class="thr-zone-crit" style="left:0; width:20%;"></div>
+              <div class="thr-marker" style="left:42%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">−12 %</span></span>
+              <span>warn ≤ −15 % · critical ≤ −25 %</span>
+              <span>Schnitt 0 %</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Beobachten · Tendenz prüfen, kein Handlungsbedarf akut.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">0 Massnahmen</span>
+          </div>
+        </article>
+
+        <!-- Insight 8 -->
+        <article class="insight sev-info" data-id="8">
+          <div class="insight-top">
+            <span class="badge b-info">Info</span>
+            <span class="scope-chip">Sparte · ARC</span>
+            <span>· 6 Tage offen</span>
+            <span>· erkannt 19.04.2026</span>
+            <div class="right">
+              <button class="menu-btn"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+            </div>
+          </div>
+          <h3 class="insight-headline">
+            <span class="glyph">💡</span>
+            Forecast-Confidence ARC gefallen
+          </h3>
+          <div class="thr">
+            <div class="thr-track">
+              <div class="thr-zone-warn" style="left:30%; width:25%;"></div>
+              <div class="thr-zone-crit" style="left:0; width:30%;"></div>
+              <div class="thr-marker" style="left:62%;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">65 %</span> Konfidenz</span>
+              <span>warn &lt; 70 % · critical &lt; 60 %</span>
+              <span>vorher 82 %</span>
+            </div>
+          </div>
+          <div class="reco">
+            <span class="lbl">Empfehlung:</span> Daten-Quellen prüfen, Heads-Sicht einholen.
+          </div>
+          <div class="insight-foot">
+            <a class="link-action" href="#">→ Massnahme erstellen</a>
+            <a class="link-quiet" href="#">✓ Quittieren</a>
+            <span class="right">0 Massnahmen</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Massnahmen for active insight -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Massnahmen</h2>
+        <span class="meta">2 verknüpft</span>
+        <div class="right">
+          <button class="btn btn-primary">+ Neue Massnahme</button>
+        </div>
+      </div>
+
+      <div class="panel-context">
+        <span class="lbl">Aktive Insight</span>
+        <span class="val">Coverage ARC kritisch unter Soll</span>
+        <span style="margin-left:auto;" class="mono">#INS-2026-0241</span>
+      </div>
+
+      <div class="actions-list">
+
+        <!-- Action 1: in_progress -->
+        <article class="action">
+          <div class="action-top">
+            <span class="badge b-progress">In Arbeit</span>
+            <span>· erstellt aus Insight #INS-2026-0241</span>
+            <span style="margin-left:auto;" class="mono">#ACT-1187</span>
+          </div>
+          <div class="action-title">8 unter-touched ARC-Kandidaten reaktivieren</div>
+          <div class="action-meta">
+            <span class="avatar-chip"><span class="avatar">PW</span> PW</span>
+            <span class="meta-sep">·</span>
+            <span>Fällig <span class="mono">28.04.2026</span></span>
+            <span class="meta-sep">·</span>
+            <span style="color:var(--amber);">Noch 3 Tage</span>
+          </div>
+          <div class="action-foot">
+            <button class="btn">Status ändern</button>
+            <button class="btn btn-ghost">Notiz</button>
+            <span class="right" style="color:var(--text-light);font-size:11px;">Wirkung wird 7 Tage nach &laquo;Done&raquo; auto-gemessen</span>
+          </div>
+        </article>
+
+        <!-- Action 2: done with outcome pending confirm -->
+        <article class="action">
+          <div class="action-top">
+            <span class="badge b-done">Erledigt</span>
+            <span>· abgeschlossen 24.04.2026</span>
+            <span style="margin-left:auto;" class="mono">#ACT-1186</span>
+          </div>
+          <div class="action-title">ARC-Sparten-Briefing aktualisiert</div>
+          <div class="action-meta">
+            <span class="avatar-chip"><span class="avatar gold">JV</span> JV</span>
+            <span class="meta-sep">·</span>
+            <span>Fällig <span class="mono">23.04.2026</span></span>
+            <span class="meta-sep">·</span>
+            <span style="color:var(--green);">Pünktlich</span>
+          </div>
+
+          <div class="outcome">
+            <div class="outcome-effect">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+              Verbessert
+            </div>
+            <div class="outcome-comp">
+              Baseline <span class="num">32 %</span> → After <span class="num">38 %</span><span class="delta">↑ +6 pp</span>
+            </div>
+            <div class="outcome-meta">
+              Konfidenz 78 %<br/>gemessen 7 Tage nach Done
+            </div>
+          </div>
+
+          <div class="action-foot">
+            <button class="btn btn-green">Wirkung bestätigen</button>
+            <button class="btn">Folge-Massnahme</button>
+            <button class="btn btn-ghost">Später</button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============== DRAWER PREVIEWS (static side-by-side for spec) ============== -->
+  <h2 class="drawer-section-title">
+    Drawer-States
+    <span class="hint">Slide-in von rechts · überdeckt 540 px der Hauptansicht</span>
+  </h2>
+
+  <div class="drawer-row">
+
+    <!-- Drawer A: Insight Detail -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Insight · #INS-2026-0241 · ARC</div>
+        <div class="drawer-head-top">
+          <span class="badge b-critical">Critical</span>
+          <h3>Coverage ARC kritisch unter Soll</h3>
+          <button class="drawer-close" title="Schliessen">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Übersicht</button>
+          <button class="drawer-tab">Verlauf</button>
+          <button class="drawer-tab">Verknüpft</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Snapshot · 23.04.2026</h4>
+          <table class="kv-table">
+            <thead>
+              <tr><th>Metrik</th><th class="num">Wert</th><th class="num">Threshold</th><th class="num">Diff</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Coverage ARC</td><td class="num">32 %</td><td class="num">35 %</td><td class="num diff-neg">−3 pp</td></tr>
+              <tr><td>Vernachlässigte Kandidaten</td><td class="num">8</td><td class="num">≤ 3</td><td class="num diff-neg">+5</td></tr>
+              <tr><td>Letzter Touch ⌀</td><td class="num">26 d</td><td class="num">≤ 14 d</td><td class="num diff-neg">+12 d</td></tr>
+              <tr><td>Aktive Mandate ARC</td><td class="num">12</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Severity-Block</h4>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span class="badge b-critical">Critical</span>
+            <span style="font-size:12px; color:var(--text-mid);">unter critical-Threshold von 35 %, seit 23.04.2026</span>
+          </div>
+          <div class="thr" style="margin-top:10px;">
+            <div class="thr-track" style="height:10px;">
+              <div class="thr-zone-warn" style="left:35%; right:0;"></div>
+              <div class="thr-zone-crit" style="left:0; width:35%;"></div>
+              <div class="thr-tick" style="left:35%;"></div>
+              <div class="thr-tick" style="left:50%;"></div>
+              <div class="thr-marker" style="left:32%; height:14px; top:-2px;"></div>
+            </div>
+            <div class="thr-labels">
+              <span><span class="thr-current">32 %</span> aktuell</span>
+              <span>warn 50 % · critical 35 %</span>
+              <span>Soll 70 %</span>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Empfohlene Massnahme</h4>
+          <div class="reco-box">
+            <h4>8 vernachlässigte ARC-Kandidaten reaktivieren</h4>
+            <p>Touch-Sweep über Kandidaten ohne Aktivität in den letzten 21 Tagen. Erwartete Wirkung +6 bis +10 pp Coverage innerhalb 7 Tagen.</p>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verknüpfte Stammdaten · 3</h4>
+          <div class="related-list">
+            <div class="related-row">
+              <span class="avatar gold">FA</span>
+              <div>
+                <div>F. Aebi · Senior PM</div>
+                <div class="meta">Letzter Touch · 24 Tage <span class="scope-chip" style="margin-left:6px;">ARC</span></div>
+              </div>
+              <svg class="ico-sm arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+            <div class="related-row">
+              <span class="avatar">RM</span>
+              <div>
+                <div>R. Müller · Bauleiter</div>
+                <div class="meta">Letzter Touch · 22 Tage <span class="scope-chip" style="margin-left:6px;">ARC</span></div>
+              </div>
+              <svg class="ico-sm arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+            <div class="related-row">
+              <span class="avatar green">SK</span>
+              <div>
+                <div>S. Kunz · Architektin</div>
+                <div class="meta">Letzter Touch · 28 Tage <span class="scope-chip" style="margin-left:6px;">ARC</span></div>
+              </div>
+              <svg class="ico-sm arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Audit-Trail</h4>
+          <div class="timeline">
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div>
+                <div class="tl-time">25.04.2026 · 09:14</div>
+                <div class="tl-title">Massnahme #ACT-1187 erstellt</div>
+                <div class="tl-desc">Owner PW · Fällig 28.04.2026</div>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div>
+                <div class="tl-time">24.04.2026 · 16:02</div>
+                <div class="tl-title">Massnahme #ACT-1186 abgeschlossen</div>
+                <div class="tl-desc">Owner JV · Wirkung +6 pp gemessen</div>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot muted"></div>
+              <div>
+                <div class="tl-time">23.04.2026 · 04:30</div>
+                <div class="tl-title">Insight erkannt</div>
+                <div class="tl-desc">Worker · Coverage-Monitor · Threshold-Verletzung 35 %</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn">Quittieren</button>
+        <button class="btn btn-ghost">Verwerfen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-gold">Massnahme erstellen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer B: Outcome Confirm -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Wirkung · Massnahme #ACT-1186 · zu Insight #INS-2026-0241</div>
+        <div class="drawer-head-top">
+          <span class="badge b-done">Erledigt</span>
+          <h3>ARC-Sparten-Briefing aktualisiert</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Wirkung</button>
+          <button class="drawer-tab">Messung</button>
+          <button class="drawer-tab">Verlauf</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <div class="effect-hero">
+            <div class="badge-big">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+              Verbessert
+            </div>
+            <div class="nums">
+              Baseline <span class="big">32 %</span> → After <span class="big">47 %</span>
+              <div style="color:var(--green);font-weight:600;">↑ +15 pp</div>
+            </div>
+            <div class="meta">
+              Konfidenz 85 %<br/>
+              gemessen 7 d nach Done<br/>
+              Sample n = 142
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Vorher / Nachher</h4>
+          <div class="compare-bars">
+            <div class="lab">Baseline</div>
+            <div class="track"><div class="fill" style="width:32%;"></div></div>
+            <div class="num">32 %</div>
+
+            <div class="lab">After</div>
+            <div class="track"><div class="fill after" style="width:47%;"></div></div>
+            <div class="num">47 %</div>
+
+            <div class="lab">Soll</div>
+            <div class="track"><div class="fill" style="width:70%; background: var(--gold-strong);"></div></div>
+            <div class="num">70 %</div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Messung</h4>
+          <div class="measure-grid">
+            <div class="cell"><div class="lab">Mess-Fenster</div><div class="val">17.04. – 24.04.2026</div></div>
+            <div class="cell"><div class="lab">Mess-Dauer</div><div class="val">7 Tage</div></div>
+            <div class="cell"><div class="lab">Sample-Size</div><div class="val">142 Touches</div></div>
+            <div class="cell"><div class="lab">Konfidenz</div><div class="val">85 %</div></div>
+            <div class="cell"><div class="lab">Methode</div><div class="val">Pre/Post · Coverage-KPI</div></div>
+            <div class="cell"><div class="lab">Effekt-Label</div><div class="val">Verbessert</div></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verlauf · letzte 14 Tage</h4>
+          <svg viewBox="0 0 480 90" width="100%" height="90" preserveAspectRatio="none" style="display:block;">
+            <line x1="0" x2="480" y1="60" y2="60" stroke="var(--border)" stroke-dasharray="3 3"/>
+            <text x="6" y="56" font-size="9" fill="var(--text-light)" font-family="JetBrains Mono, monospace">32 % baseline</text>
+            <line x1="240" x2="240" y1="0" y2="90" stroke="var(--gold-strong)" stroke-dasharray="2 3"/>
+            <text x="244" y="12" font-size="9" fill="var(--gold-strong)" font-family="JetBrains Mono, monospace">Done · 24.04.</text>
+            <path d="M0,62 L34,64 L68,60 L102,62 L136,58 L170,60 L204,58 L238,56 L272,42 L306,38 L340,32 L374,26 L408,22 L442,18 L480,14"
+                  fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+            <circle cx="480" cy="14" r="3" fill="var(--green)"/>
+          </svg>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-green" style="font-weight:600;">Wirkung bestätigen → Insight resolven</button>
+        <button class="btn">Folge-Massnahme</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Später</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="footer-line">
+    <span>Quelle · ARK Performance-Warehouse · Stand 25.04.2026 09:14</span>
+    <span>Layout · insights.v2 · 8 Insights offen</span>
+  </div>
+
+</main>
+
+<script>
+  // theme toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+  });
+
+  // Insight selection (highlight + would update right panel in full app)
+  document.querySelectorAll('#insightList .insight').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('#insightList .insight').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+    });
+  });
+
+  // Tab switcher (visual only)
+  document.querySelectorAll('.seg').forEach(seg => {
+    seg.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => {
+        seg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+      });
+    });
+  });
+
+  // drawer tabs
+  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.drawer-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  });
+</script>
+</body>
+</html>
