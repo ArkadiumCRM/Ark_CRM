@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>Team-Performance · ARK Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css" />
+<style>
+  :root {
+    --bg: #F4F5F7;
+    --surface: #FFFFFF;
+    --surface-alt: #EDEFF3;
+    --surface-sunk: #E5E7EC;
+    --text: #1A1F2E;
+    --text-mid: #4A5568;
+    --text-light: #8A95A8;
+    --border: #E2E5EA;
+    --border-strong: #CDD2DA;
+    --accent: #1A3A5C;
+    --accent-soft: rgba(26, 58, 92, 0.08);
+    --gold: #B8860B;
+    --gold-strong: #9B7009;
+    --gold-soft: rgba(184, 134, 11, 0.10);
+    --green: #1A6B4A;
+    --green-soft: rgba(26, 107, 74, 0.10);
+    --amber: #D97706;
+    --amber-soft: rgba(217, 119, 6, 0.10);
+    --red: #C0392B;
+    --red-soft: rgba(192, 57, 43, 0.10);
+
+    --serif: "Libre Baskerville", Georgia, serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+    --radius: 5px;
+    --radius-sm: 3px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0E1116;
+    --surface: #161B22;
+    --surface-alt: #1D242D;
+    --surface-sunk: #0B0E12;
+    --text: #E6EDF3;
+    --text-mid: #B0BAC8;
+    --text-light: #7A869A;
+    --border: #2A323D;
+    --border-strong: #3A4350;
+    --accent: #7CB5E8;
+    --accent-soft: rgba(124, 181, 232, 0.12);
+    --gold: #D4A84B;
+    --gold-strong: #E5BC5E;
+    --gold-soft: rgba(212, 168, 75, 0.14);
+    --green: #3FB950;
+    --green-soft: rgba(63, 185, 80, 0.14);
+    --amber: #D29922;
+    --amber-soft: rgba(210, 153, 34, 0.14);
+    --red: #F85149;
+    --red-soft: rgba(248, 81, 73, 0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  .page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 36px 48px;
+  }
+
+  /* ─────────── PAGE HEADER ─────────── */
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 34px;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--text-mid);
+    font-size: 13px;
+  }
+  .subtitle .sep { color: var(--border-strong); margin: 0 8px; }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.12s;
+  }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-gold {
+    background: var(--gold);
+    color: #fff;
+    border-color: var(--gold-strong);
+  }
+  .btn-gold:hover { background: var(--gold-strong); }
+  [data-theme="dark"] .btn-gold { color: #1A1F2E; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  [data-theme="dark"] .btn-primary { color: #0E1116; }
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-mid);
+  }
+
+  .theme-toggle {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-mid);
+    margin-left: 4px;
+  }
+  .theme-toggle svg { width: 14px; height: 14px; }
+
+  /* ─────────── SNAPSHOT BAR ─────────── */
+  .snapshot {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--surface);
+    padding: 16px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    min-height: 118px;
+  }
+  .kpi-label {
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: var(--serif);
+    font-size: 24px;
+    line-height: 1.1;
+    color: var(--text);
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+  .kpi-value .num-large { font-family: var(--mono); font-weight: 500; }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-value.gold { color: var(--gold-strong); }
+  [data-theme="dark"] .kpi-value.gold { color: var(--gold); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-delta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    font-size: 11.5px;
+    color: var(--text-mid);
+  }
+  .delta-pos { color: var(--green); font-weight: 500; }
+  .delta-neg { color: var(--red); font-weight: 500; }
+  .delta-warn { color: var(--amber); font-weight: 500; }
+  .spark { width: 64px; height: 22px; }
+  .anom-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .anom-dot.crit { background: var(--red); }
+
+  /* ─────────── FILTER BAR ─────────── */
+  .filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: var(--sans);
+  }
+  .filter-pill .lbl { color: var(--text-light); font-weight: 500; }
+  .filter-pill .val { font-weight: 500; }
+  .filter-pill .caret {
+    font-size: 9px;
+    color: var(--text-light);
+    margin-left: 2px;
+  }
+  .filter-pill:hover { background: var(--surface-alt); }
+  .toggle-anpassen {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+  .switch {
+    width: 30px; height: 16px;
+    background: var(--surface-sunk);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 1px; left: 1px;
+    width: 12px; height: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    transition: left 0.15s;
+  }
+  .switch.on { background: var(--accent-soft); border-color: var(--accent); }
+  .switch.on::after { left: 15px; background: var(--accent); border-color: var(--accent); }
+
+  /* ─────────── TEAM CARDS ─────────── */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .section-meta {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-family: var(--mono);
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1280px) {
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .ma-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    transition: border-color 0.12s;
+  }
+  .ma-card:hover { border-color: var(--border-strong); }
+  .ma-card.attention { border-left: 3px solid var(--red); padding-left: 16px; }
+  .ma-card.warn { border-left: 3px solid var(--amber); padding-left: 16px; }
+
+  .ma-head {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ma-head:hover .ma-name { color: var(--accent); }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+    font-family: var(--sans);
+  }
+  [data-theme="dark"] .avatar { color: #0E1116; }
+  .avatar.av-jv { background: #6B9B7A; }
+  .avatar.av-lr { background: #5B7E9F; }
+  .avatar.av-mr { background: #9B7B5C; }
+  .avatar.lg {
+    width: 44px; height: 44px;
+    font-size: 14px;
+  }
+  .ma-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+  .ma-role {
+    font-size: 10.5px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+  }
+  .ma-menu {
+    color: var(--text-light);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .ma-pipeline {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .pipe-label {
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .pipe-val {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--text);
+  }
+  .pipe-val .num-p { font-family: var(--mono); font-weight: 500; color: var(--accent); }
+  .pipe-delta {
+    font-size: 11px;
+    font-family: var(--mono);
+  }
+
+  .stat-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 11.5px;
+  }
+  .stat-row {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .stat-key {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .stat-val { color: var(--text-mid); display: flex; align-items: center; gap: 8px; }
+  .stat-val .val-num { font-family: var(--mono); color: var(--text); font-weight: 500; }
+  .stat-val .val-sub { color: var(--text-light); font-family: var(--mono); font-size: 11px; }
+
+  .progress {
+    flex: 1;
+    height: 6px;
+    background: var(--surface-sunk);
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+  .progress-fill { height: 100%; background: var(--green); }
+  .progress-fill.warn { background: var(--amber); }
+  .progress-fill.crit { background: var(--red); }
+
+  .compl-tick { color: var(--green); font-weight: 600; }
+  .compl-warn { color: var(--amber); font-weight: 600; }
+  .above { color: var(--green); font-family: var(--mono); font-size: 11px; }
+  .below { color: var(--amber); font-family: var(--mono); font-size: 11px; }
+  .below-c { color: var(--red); font-family: var(--mono); font-size: 11px; }
+
+  .anom-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 8px 1px 6px;
+    background: var(--surface-alt);
+    border-radius: 10px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text);
+  }
+  .anom-bar.crit { background: var(--red-soft); color: var(--red); }
+  .anom-bar.zero { color: var(--text-light); background: transparent; padding-left: 0; }
+
+  .ma-foot {
+    margin-top: auto;
+    border-top: 1px dashed var(--border);
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .forecast-line {
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .forecast-line .fc-val {
+    font-family: var(--mono);
+    color: var(--gold-strong);
+    font-weight: 600;
+  }
+  [data-theme="dark"] .forecast-line .fc-val { color: var(--gold); }
+  .open-link {
+    font-size: 11.5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .open-link::after { content: "→"; font-family: var(--mono); }
+
+  /* ─────────── PANELS / CHARTS ─────────── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .panel-head {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .panel-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .panel-meta {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+    font-family: var(--mono);
+  }
+  .panel-body { padding: 18px 20px 20px; }
+
+  /* Placements bar chart */
+  .placements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .pl-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 28px;
+    gap: 12px;
+    align-items: center;
+  }
+  .pl-name {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .pl-bar-wrap {
+    height: 18px;
+    position: relative;
+    background: var(--surface-sunk);
+    border-radius: 2px;
+    overflow: visible;
+  }
+  .pl-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px 0 0 2px;
+    position: relative;
+  }
+  .pl-bar.below { background: var(--text-light); }
+  .pl-median {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    border-left: 1.5px dashed var(--gold);
+    z-index: 2;
+  }
+  .pl-count {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .pl-meta {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .pl-meta .num { color: var(--text); font-weight: 500; }
+
+  /* Activity-mix stacked */
+  .mix-list { display: flex; flex-direction: column; gap: 14px; }
+  .mix-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 36px;
+    gap: 12px;
+    align-items: center;
+  }
+  .mix-stack {
+    height: 18px;
+    display: flex;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .mix-seg { height: 100%; }
+  .seg-call { background: var(--accent); }
+  .seg-email { background: #5B7E9F; }
+  .seg-coach { background: var(--gold); }
+  .seg-brief { background: #9B7B5C; }
+  .seg-debrief { background: var(--text-light); }
+  .mix-total {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .mix-legend {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .lg-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lg-sw { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* ─────────── DRAWERS ─────────── */
+  .drawers-section {
+    margin-top: 20px;
+    padding-top: 28px;
+    border-top: 1px dashed var(--border-strong);
+  }
+  .drawers-section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .drawers-section-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+  }
+  .drawers-section-meta {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .drawers-row {
+    display: grid;
+    grid-template-columns: 540px 540px;
+    gap: 24px;
+    justify-content: center;
+  }
+  .drawer {
+    width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: -8px 0 24px -12px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  @media (max-width: 1280px) {
+    .drawers-row { grid-template-columns: 1fr; }
+    .drawer { width: 100%; }
+  }
+  .drawer-head {
+    padding: 18px 22px 16px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .drawer-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .drawer-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .drawer-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--text);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .drawer-title .anonym {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: var(--sans);
+    font-style: italic;
+    margin-left: 6px;
+  }
+  .drawer-close {
+    position: absolute;
+    top: 16px; right: 18px;
+    width: 24px; height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    cursor: pointer;
+    background: none; border: 0;
+    font-size: 18px;
+    border-radius: 3px;
+  }
+  .drawer-close:hover { background: var(--surface-alt); }
+
+  .drawer-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 22px;
+    background: var(--surface);
+  }
+  .drawer-tab {
+    padding: 11px 0;
+    margin-right: 22px;
+    font-size: 12px;
+    color: var(--text-mid);
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-top: 0; border-left: 0; border-right: 0;
+    font-family: var(--sans);
+  }
+  .drawer-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .drawer-body {
+    padding: 20px 22px;
+    overflow-y: auto;
+    max-height: 720px;
+  }
+  .drawer-section { margin-bottom: 22px; }
+  .drawer-section:last-child { margin-bottom: 0; }
+  .drawer-section-title {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .drawer-section-meta {
+    color: var(--text-light);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+
+  .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kv-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .kv-table tr:last-child td { border-bottom: 0; }
+  .kv-table td.k { color: var(--text-light); width: 38%; }
+  .kv-table td.v { color: var(--text); font-family: var(--mono); font-weight: 500; }
+  .kv-table td.v .meta { color: var(--text-light); margin-left: 6px; font-weight: 400; }
+  .kv-table td.v.warn-v { color: var(--amber); }
+  .kv-table td.v.crit-v { color: var(--red); }
+
+  .insight-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-left: 3px solid;
+    background: var(--surface);
+  }
+  .insight-card:last-child { margin-bottom: 0; }
+  .insight-card.crit { border-left-color: var(--red); background: var(--red-soft); }
+  .insight-card.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .insight-tag {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .insight-tag.crit { color: var(--red); }
+  .insight-tag.warn { color: var(--amber); }
+  .insight-title {
+    font-size: 12.5px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .insight-meta {
+    font-size: 11px;
+    color: var(--text-mid);
+    font-family: var(--mono);
+  }
+
+  .callout {
+    padding: 14px 16px;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.55;
+    border-left: 3px solid;
+  }
+  .callout-gold {
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: var(--text);
+  }
+  .callout-gold strong { color: var(--gold-strong); }
+  [data-theme="dark"] .callout-gold strong { color: var(--gold); }
+
+  .drawer-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  /* Bulk-Goal selection */
+  .bulk-list { display: flex; flex-direction: column; gap: 6px; }
+  .bulk-item {
+    display: grid;
+    grid-template-columns: 18px 28px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface);
+    font-size: 12px;
+  }
+  .bulk-check {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  [data-theme="dark"] .bulk-check { color: #0E1116; }
+  .bulk-name { font-family: var(--mono); font-size: 11.5px; font-weight: 500; }
+  .bulk-role { color: var(--text-light); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--mono); }
+  .bulk-pipeline { font-family: var(--mono); font-size: 11px; color: var(--text-mid); }
+  .bulk-toggle {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--text-mid);
+  }
+
+  /* Form fields */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+  .field-label {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .field-input, .field-select {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .field-select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-light) 50%), linear-gradient(135deg, var(--text-light) 50%, transparent 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 26px;
+  }
+  .field-range {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 7px 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    background: var(--surface);
+  }
+  .radio.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .radio-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: var(--surface);
+    position: relative;
+  }
+  .radio.active .radio-dot {
+    border-color: var(--accent);
+  }
+  .radio.active .radio-dot::after {
+    content: "";
+    position: absolute;
+    inset: 2.5px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .radio-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+
+  .slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+  }
+  input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .slider-val {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  /* Tab pane visibility */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Responsive */
+  @media (max-width: 1280px) {
+    .page { padding: 24px 24px 40px; }
+    .snapshot { grid-template-columns: repeat(3, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ─────────── PAGE HEADER ─────────── -->
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">CRM · Performance</div>
+      <h1 class="h1">Team-Performance</h1>
+      <div class="subtitle">
+        Head-View<span class="sep">·</span>Sparte ARC<span class="sep">·</span>4 MA aktiv<span class="sep">·</span>Periode Q2 2026
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-gold">Team-Goals setzen</button>
+      <button class="btn">Export PDF</button>
+      <!-- Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window. -->
+    </div>
+  </header>
+
+  <!-- ─────────── SNAPSHOT BAR ─────────── -->
+  <section class="snapshot">
+    <div class="kpi">
+      <div class="kpi-label">Team-Pipeline-Wert</div>
+      <div class="kpi-value accent"><span class="num-large">CHF 1.92</span> Mio</div>
+      <div class="kpi-delta">
+        <span><span class="delta-pos">↗ +18%</span> vs Vormonat</span>
+        <svg class="spark" viewBox="0 0 64 22"><polyline fill="none" stroke="#1A6B4A" stroke-width="1.5" points="0,17 8,15 16,14 24,12 32,10 40,9 48,7 56,5 64,4"/></svg>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Team-Goal-Erreichung</div>
+      <div class="kpi-value green"><span class="num-large">71</span>%</div>
+      <div class="kpi-delta">
+        <span><span class="num">3 von 4</span> MA on-track</span>
+        <svg class="spark" viewBox="0 0 64 22"><polyline fill="none" stroke="#1A6B4A" stroke-width="1.5" points="0,12 8,11 16,13 24,10 32,9 40,11 48,8 56,9 64,7"/></svg>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Team-Anomalien</div>
+      <div class="kpi-value amber"><span class="num-large">5</span> offen</div>
+      <div class="kpi-delta">
+        <span><span class="anom-dot crit"></span><span class="num">1</span> critical · <span class="anom-dot"></span><span class="num">4</span> warn</span>
+        <svg class="spark" viewBox="0 0 64 22">
+          <rect x="2" y="14" width="4" height="8" fill="#D97706" opacity="0.4"/>
+          <rect x="10" y="11" width="4" height="11" fill="#D97706" opacity="0.5"/>
+          <rect x="18" y="13" width="4" height="9" fill="#D97706" opacity="0.5"/>
+          <rect x="26" y="9" width="4" height="13" fill="#D97706" opacity="0.6"/>
+          <rect x="34" y="10" width="4" height="12" fill="#D97706" opacity="0.7"/>
+          <rect x="42" y="7" width="4" height="15" fill="#D97706" opacity="0.85"/>
+          <rect x="50" y="6" width="4" height="16" fill="#C0392B"/>
+          <rect x="58" y="8" width="4" height="14" fill="#D97706"/>
+        </svg>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Team-Aktivität</div>
+      <div class="kpi-value"><span class="num-large">184</span><span style="font-family:var(--mono);font-size:13px;color:var(--text-light);"> /Wo</span></div>
+      <div class="kpi-delta">
+        <span>Median <span class="num">41</span>/MA</span>
+        <svg class="spark" viewBox="0 0 64 22"><polyline fill="none" stroke="#1A6B4A" stroke-width="1.5" points="0,16 8,14 16,12 24,11 32,9 40,8 48,9 56,7 64,6"/></svg>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Team-Compliance</div>
+      <div class="kpi-value amber"><span class="num-large">88</span>%</div>
+      <div class="kpi-delta">
+        <span><span class="delta-warn">●</span> 1 MA mit Backlog</span>
+        <svg class="spark" viewBox="0 0 64 22"><polyline fill="none" stroke="#D97706" stroke-width="1.5" points="0,4 8,5 16,4 24,7 32,6 40,8 48,7 56,9 64,8"/></svg>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Team-Forecast Q-Ende</div>
+      <div class="kpi-value gold"><span class="num-large">CHF 2.40</span> Mio</div>
+      <div class="kpi-delta">
+        <span>Konfidenz <span class="num" style="color:var(--gold-strong);font-weight:500;">76%</span></span>
+        <svg class="spark" viewBox="0 0 64 22">
+          <polyline fill="none" stroke="#B8860B" stroke-width="1.5" points="0,18 8,15 16,12 24,10 32,9"/>
+          <polyline fill="none" stroke="#B8860B" stroke-width="1.5" stroke-dasharray="2,2" points="32,9 40,7 48,6 56,5 64,4"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── FILTER BAR ─────────── -->
+  <section class="filters">
+    <button class="filter-pill"><span class="lbl">Periode</span><span class="val">Q2 2026</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Sparte</span><span class="val">ARC (eigene)</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Vergleich</span><span class="val">Vorperiode</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Sortieren nach</span><span class="val">Pipeline-Wert</span><span class="caret">▾</span></button>
+    <span class="toggle-anpassen">Anpassen <span class="switch" id="anpassenSwitch" role="switch"></span></span>
+  </section>
+
+  <!-- ─────────── TEAM CARDS ─────────── -->
+  <div class="section-head">
+    <h2 class="section-title">Team-Mitarbeiter · 4 MA</h2>
+    <span class="section-meta">SORTIERT NACH PIPELINE-WERT ↓</span>
+  </div>
+
+  <section class="team-grid">
+
+    <!-- PW -->
+    <article class="ma-card">
+      <header class="ma-head" data-open="LR-no" data-ma="PW">
+        <span class="avatar">PW</span>
+        <div>
+          <div class="ma-name">PW</div>
+          <div class="ma-role">Senior Partner · AM</div>
+        </div>
+        <span class="ma-menu">⋮</span>
+      </header>
+      <div class="ma-pipeline">
+        <span class="pipe-label">Pipeline</span>
+        <span class="pipe-val"><span class="num-p">CHF 480k</span></span>
+      </div>
+      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +14%</span></div>
+
+      <div class="stat-rows">
+        <div class="stat-row">
+          <span class="stat-key">Goals</span>
+          <span class="stat-val">
+            <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+            <span class="val-num">75%</span>
+            <span class="val-sub">3/4</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Compl.</span>
+          <span class="stat-val">
+            <span class="compl-tick">✓ 100%</span>
+            <span class="val-sub">· 0 überfällig</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Aktiv.</span>
+          <span class="stat-val">
+            <span class="val-num">47</span><span class="val-sub">/Wo</span>
+            <span class="above">▲ Median +6</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Anom.</span>
+          <span class="stat-val">
+            <span class="anom-bar"><span class="anom-dot"></span>2 offen</span>
+          </span>
+        </div>
+      </div>
+
+      <footer class="ma-foot">
+        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 620k</span></span>
+        <a class="open-link" href="performance-mitarbeiter.html?ma=PW">Profil öffnen</a>
+      </footer>
+    </article>
+
+    <!-- JV -->
+    <article class="ma-card warn">
+      <header class="ma-head" data-ma="JV">
+        <span class="avatar av-jv">JV</span>
+        <div>
+          <div class="ma-name">JV</div>
+          <div class="ma-role">Manager · CM</div>
+        </div>
+        <span class="ma-menu">⋮</span>
+      </header>
+      <div class="ma-pipeline">
+        <span class="pipe-label">Pipeline</span>
+        <span class="pipe-val"><span class="num-p">CHF 320k</span></span>
+      </div>
+      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +8%</span></div>
+
+      <div class="stat-rows">
+        <div class="stat-row">
+          <span class="stat-key">Goals</span>
+          <span class="stat-val">
+            <div class="progress"><div class="progress-fill warn" style="width:62%"></div></div>
+            <span class="val-num" style="color:var(--amber);">62%</span>
+            <span class="val-sub">2/4</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Compl.</span>
+          <span class="stat-val">
+            <span class="compl-tick">✓ 100%</span>
+            <span class="val-sub">· 0 überfällig</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Aktiv.</span>
+          <span class="stat-val">
+            <span class="val-num">41</span><span class="val-sub">/Wo</span>
+            <span class="val-sub">· Median</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Anom.</span>
+          <span class="stat-val">
+            <span class="anom-bar"><span class="anom-dot"></span>1 offen</span>
+          </span>
+        </div>
+      </div>
+
+      <footer class="ma-foot">
+        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 410k</span></span>
+        <a class="open-link" href="performance-mitarbeiter.html?ma=JV">Profil öffnen</a>
+      </footer>
+    </article>
+
+    <!-- LR -->
+    <article class="ma-card attention">
+      <header class="ma-head" data-ma="LR" id="open-LR">
+        <span class="avatar av-lr">LR</span>
+        <div>
+          <div class="ma-name">LR</div>
+          <div class="ma-role">Researcher</div>
+        </div>
+        <span class="ma-menu">⋮</span>
+      </header>
+      <div class="ma-pipeline">
+        <span class="pipe-label">Pipeline</span>
+        <span class="pipe-val"><span class="num-p">CHF 180k</span></span>
+      </div>
+      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-neg">↘ −12%</span></div>
+
+      <div class="stat-rows">
+        <div class="stat-row">
+          <span class="stat-key">Goals</span>
+          <span class="stat-val">
+            <div class="progress"><div class="progress-fill crit" style="width:45%"></div></div>
+            <span class="val-num" style="color:var(--red);">45%</span>
+            <span class="val-sub">1/3</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Compl.</span>
+          <span class="stat-val">
+            <span class="compl-warn">⚠ 75%</span>
+            <span class="val-sub">· 1 E-Learning überfällig</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Aktiv.</span>
+          <span class="stat-val">
+            <span class="val-num">32</span><span class="val-sub">/Wo</span>
+            <span class="below">▼ Median −9</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Anom.</span>
+          <span class="stat-val">
+            <span class="anom-bar crit"><span class="anom-dot crit"></span>2 offen · 1 critical</span>
+          </span>
+        </div>
+      </div>
+
+      <footer class="ma-foot">
+        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 250k</span></span>
+        <a class="open-link" href="performance-mitarbeiter.html?ma=LR">Profil öffnen</a>
+      </footer>
+    </article>
+
+    <!-- MR -->
+    <article class="ma-card">
+      <header class="ma-head" data-ma="MR">
+        <span class="avatar av-mr">MR</span>
+        <div>
+          <div class="ma-name">MR</div>
+          <div class="ma-role">Junior Consultant</div>
+        </div>
+        <span class="ma-menu">⋮</span>
+      </header>
+      <div class="ma-pipeline">
+        <span class="pipe-label">Pipeline</span>
+        <span class="pipe-val"><span class="num-p">CHF 240k</span></span>
+      </div>
+      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +22%</span></div>
+
+      <div class="stat-rows">
+        <div class="stat-row">
+          <span class="stat-key">Goals</span>
+          <span class="stat-val">
+            <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            <span class="val-num">80%</span>
+            <span class="val-sub">4/5</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Compl.</span>
+          <span class="stat-val">
+            <span class="compl-tick">✓ 100%</span>
+            <span class="val-sub">· 0 überfällig</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Aktiv.</span>
+          <span class="stat-val">
+            <span class="val-num">38</span><span class="val-sub">/Wo</span>
+            <span class="below">▼ Median −3</span>
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Anom.</span>
+          <span class="stat-val">
+            <span class="anom-bar zero">0 offen</span>
+          </span>
+        </div>
+      </div>
+
+      <footer class="ma-foot">
+        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 320k</span></span>
+        <a class="open-link" href="performance-mitarbeiter.html?ma=MR">Profil öffnen</a>
+      </footer>
+    </article>
+
+  </section>
+
+  <!-- ─────────── TEAM CHARTS ─────────── -->
+  <div class="section-head">
+    <h2 class="section-title">Team-Vergleich</h2>
+    <span class="section-meta">PERIODE Q2 2026</span>
+  </div>
+
+  <section class="charts-grid">
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Placements pro MA · Q2</h3>
+        <span class="panel-meta">8 PLACEMENTS TOTAL</span>
+      </div>
+      <div class="panel-body">
+        <div class="placements-list">
+          <div class="pl-row">
+            <span class="pl-name">PW</span>
+            <div class="pl-bar-wrap">
+              <div class="pl-bar" style="width:75%"></div>
+              <div class="pl-median" style="left:50%"></div>
+            </div>
+            <span class="pl-count">3</span>
+          </div>
+          <div class="pl-row">
+            <span class="pl-name">JV</span>
+            <div class="pl-bar-wrap">
+              <div class="pl-bar" style="width:50%"></div>
+              <div class="pl-median" style="left:50%"></div>
+            </div>
+            <span class="pl-count">2</span>
+          </div>
+          <div class="pl-row">
+            <span class="pl-name">LR</span>
+            <div class="pl-bar-wrap">
+              <div class="pl-bar below" style="width:25%"></div>
+              <div class="pl-median" style="left:50%"></div>
+            </div>
+            <span class="pl-count">1</span>
+          </div>
+          <div class="pl-row">
+            <span class="pl-name">MR</span>
+            <div class="pl-bar-wrap">
+              <div class="pl-bar" style="width:50%"></div>
+              <div class="pl-median" style="left:50%"></div>
+            </div>
+            <span class="pl-count">2</span>
+          </div>
+        </div>
+        <div class="pl-meta">
+          <span><span style="color:var(--gold-strong);font-weight:600;">┊</span> Median <span class="num">2</span> Placements</span>
+          <span>Ø <span class="num">2.0</span> · Σ <span class="num">8</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Activity-Mix pro MA</h3>
+        <span class="panel-meta">TOUCHES / WOCHE</span>
+      </div>
+      <div class="panel-body">
+        <div class="mix-list">
+          <div class="mix-row">
+            <span class="pl-name">PW</span>
+            <div class="mix-stack">
+              <div class="mix-seg seg-call" style="width:38%"></div>
+              <div class="mix-seg seg-email" style="width:28%"></div>
+              <div class="mix-seg seg-coach" style="width:14%"></div>
+              <div class="mix-seg seg-brief" style="width:11%"></div>
+              <div class="mix-seg seg-debrief" style="width:9%"></div>
+            </div>
+            <span class="mix-total">47</span>
+          </div>
+          <div class="mix-row">
+            <span class="pl-name">JV</span>
+            <div class="mix-stack">
+              <div class="mix-seg seg-call" style="width:34%"></div>
+              <div class="mix-seg seg-email" style="width:30%"></div>
+              <div class="mix-seg seg-coach" style="width:12%"></div>
+              <div class="mix-seg seg-brief" style="width:13%"></div>
+              <div class="mix-seg seg-debrief" style="width:11%"></div>
+            </div>
+            <span class="mix-total">41</span>
+          </div>
+          <div class="mix-row">
+            <span class="pl-name">LR</span>
+            <div class="mix-stack">
+              <div class="mix-seg seg-call" style="width:22%"></div>
+              <div class="mix-seg seg-email" style="width:42%"></div>
+              <div class="mix-seg seg-coach" style="width:10%"></div>
+              <div class="mix-seg seg-brief" style="width:14%"></div>
+              <div class="mix-seg seg-debrief" style="width:12%"></div>
+            </div>
+            <span class="mix-total">32</span>
+          </div>
+          <div class="mix-row">
+            <span class="pl-name">MR</span>
+            <div class="mix-stack">
+              <div class="mix-seg seg-call" style="width:30%"></div>
+              <div class="mix-seg seg-email" style="width:32%"></div>
+              <div class="mix-seg seg-coach" style="width:18%"></div>
+              <div class="mix-seg seg-brief" style="width:10%"></div>
+              <div class="mix-seg seg-debrief" style="width:10%"></div>
+            </div>
+            <span class="mix-total">38</span>
+          </div>
+        </div>
+        <div class="mix-legend">
+          <span class="lg-key"><span class="lg-sw seg-call"></span>Calls</span>
+          <span class="lg-key"><span class="lg-sw seg-email"></span>Emails</span>
+          <span class="lg-key"><span class="lg-sw seg-coach"></span>Coachings</span>
+          <span class="lg-key"><span class="lg-sw seg-brief"></span>Briefings</span>
+          <span class="lg-key"><span class="lg-sw seg-debrief"></span>Debriefings</span>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- ─────────── DRAWER PREVIEWS ─────────── -->
+  <section class="drawers-section">
+    <div class="drawers-section-head">
+      <span class="drawers-section-meta">Drawer-Previews ·</span>
+      <h2 class="drawers-section-title">Statisch nebeneinander gerendert · 540 px slide-in von rechts</h2>
+    </div>
+    <div class="drawers-row">
+
+      <!-- ─── DRAWER A · Team-Mitarbeiter LR ─── -->
+      <div class="drawer" id="drawer-team-member">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Team-Mitarbeiter · LR · Researcher · Sparte ARC</div>
+          <div class="drawer-title-row">
+            <span class="avatar av-lr lg">LR</span>
+            <div>
+              <div class="drawer-title">LR · Lara R.<span class="anonym">(anonym)</span></div>
+            </div>
+          </div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="member">
+          <button class="drawer-tab active" data-tab="uebersicht">Übersicht</button>
+          <button class="drawer-tab" data-tab="pipeline">Pipeline</button>
+          <button class="drawer-tab" data-tab="goals">Goals</button>
+          <button class="drawer-tab" data-tab="aktivitaet">Aktivität</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="uebersicht">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Übersicht</div>
+              <table class="kv-table">
+                <tr><td class="k">Rolle</td><td class="v">Researcher</td></tr>
+                <tr><td class="k">Sparte</td><td class="v">ARC <span class="meta">(primär)</span></td></tr>
+                <tr><td class="k">Im Team seit</td><td class="v">15.01.2024</td></tr>
+                <tr><td class="k">Pipeline-Wert</td><td class="v">CHF 180k <span class="meta" style="color:var(--red);">−32% vs Team-Median</span></td></tr>
+                <tr><td class="k">Goals</td><td class="v crit-v">45% <span class="meta">(1 von 3 erreicht)</span></td></tr>
+                <tr><td class="k">Compliance</td><td class="v warn-v">75% <span class="meta">(1 E-Learning überfällig)</span></td></tr>
+                <tr><td class="k">Letzte Aktivität</td><td class="v">heute <span class="meta">Coaching mit MA-IK</span></td></tr>
+              </table>
+            </div>
+
+            <div class="drawer-section">
+              <div class="drawer-section-title">Anomalien <span class="drawer-section-meta">2 offen</span></div>
+              <div class="insight-card crit">
+                <div class="insight-tag crit">CRITICAL</div>
+                <div class="insight-title">Coverage ARC unter Soll</div>
+                <div class="insight-meta">0 Massnahmen aktiv · seit 12 Tagen offen</div>
+              </div>
+              <div class="insight-card warn">
+                <div class="insight-tag warn">WARN</div>
+                <div class="insight-title">Aktivität letzte 4 Wochen −22%</div>
+                <div class="insight-meta">1 Massnahme pending · Coaching-Termin 28.04.</div>
+              </div>
+            </div>
+
+            <div class="drawer-section">
+              <div class="drawer-section-title">1:1-Vorbereitung</div>
+              <div class="callout callout-gold">
+                <strong>Themen für nächstes 1:1 (vorgeschlagen):</strong><br>
+                Coverage-Plan ARC · Pipeline-Reaktivierung Mandate &lt; 30 Tage Touch · Compliance-Reminder E-Learning Datenschutz.
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="pipeline">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Aktive Mandate <span class="drawer-section-meta">5 Mandate · CHF 180k</span></div>
+              <table class="kv-table">
+                <tr><td class="k" style="font-family:var(--mono); color:var(--accent);">MAN-2026-118</td><td class="v">TI <span class="meta">CHF 67k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono); color:var(--accent);">MAN-2026-103</td><td class="v">CV Sent <span class="meta">CHF 42k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono); color:var(--accent);">MAN-2026-091</td><td class="v">Expose <span class="meta">CHF 28k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono); color:var(--accent);">MAN-2026-082</td><td class="v">1st <span class="meta">CHF 31k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono); color:var(--accent);">MAN-2026-074</td><td class="v">Expose <span class="meta">CHF 12k</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="goals">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Goals Q2 2026 <span class="drawer-section-meta">1/3 erreicht</span></div>
+              <table class="kv-table">
+                <tr><td class="k">Placements</td><td class="v crit-v">1 / 3 <span class="meta">33%</span></td></tr>
+                <tr><td class="k">Touches/Woche</td><td class="v warn-v">32 / 40 <span class="meta">80%</span></td></tr>
+                <tr><td class="k">Coverage ARC</td><td class="v" style="color:var(--green);">12 / 12 <span class="meta">erreicht</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="aktivitaet">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Touches letzte 4 Wochen</div>
+              <table class="kv-table">
+                <tr><td class="k">Kontaktberührung</td><td class="v">42</td></tr>
+                <tr><td class="k">Erreicht</td><td class="v">18</td></tr>
+                <tr><td class="k">Emailverkehr</td><td class="v">54</td></tr>
+                <tr><td class="k">Interviewprozess</td><td class="v">9</td></tr>
+                <tr><td class="k">Coaching</td><td class="v">3</td></tr>
+                <tr><td class="k">Briefing / Debriefing</td><td class="v">2 / 2</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn btn-gold">Goal hinzufügen</button>
+          <button class="btn btn-primary">Profil öffnen</button>
+        </div>
+      </div>
+
+      <!-- ─── DRAWER B · Bulk-Goal ─── -->
+      <div class="drawer" id="drawer-goal-new">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Bulk-Goal · Team ARC · 4 MA ausgewählt</div>
+          <div class="drawer-title-row">
+            <div class="drawer-title">Team-Goal setzen</div>
+          </div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="goal">
+          <button class="drawer-tab active" data-tab="goal">Goal</button>
+          <button class="drawer-tab" data-tab="verteilung">Verteilung</button>
+          <button class="drawer-tab" data-tab="periode">Periode</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="goal">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Auswahl <span class="drawer-section-meta">4 MA</span></div>
+              <div class="bulk-list">
+                <div class="bulk-item"><span class="bulk-check">✓</span><span class="avatar" style="width:22px;height:22px;font-size:9.5px;">PW</span><span><span class="bulk-name">PW</span> · <span class="bulk-role">Sr. Partner</span></span><span class="bulk-pipeline">CHF 480k</span></div>
+                <div class="bulk-item"><span class="bulk-check">✓</span><span class="avatar av-jv" style="width:22px;height:22px;font-size:9.5px;">JV</span><span><span class="bulk-name">JV</span> · <span class="bulk-role">Manager</span></span><span class="bulk-pipeline">CHF 320k</span></div>
+                <div class="bulk-item"><span class="bulk-check">✓</span><span class="avatar av-lr" style="width:22px;height:22px;font-size:9.5px;">LR</span><span><span class="bulk-name">LR</span> · <span class="bulk-role">Researcher</span></span><span class="bulk-pipeline">CHF 180k</span></div>
+                <div class="bulk-item"><span class="bulk-check">✓</span><span class="avatar av-mr" style="width:22px;height:22px;font-size:9.5px;">MR</span><span><span class="bulk-name">MR</span> · <span class="bulk-role">Jr. Consultant</span></span><span class="bulk-pipeline">CHF 240k</span></div>
+              </div>
+              <div class="bulk-toggle">
+                <span class="switch on"></span>
+                <span>Ausnahmen einzeln festlegen</span>
+              </div>
+            </div>
+
+            <div class="drawer-section">
+              <div class="drawer-section-title">Goal-Konfiguration</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label class="field-label">Goal-Typ</label>
+                  <select class="field-select"><option>Placements</option><option>Touches/Woche</option><option>Coverage</option><option>Pipeline-Wert</option></select>
+                </div>
+                <div class="field">
+                  <label class="field-label">Soll-Wert pro MA</label>
+                  <input class="field-input" type="text" value="4">
+                </div>
+                <div class="field full">
+                  <label class="field-label">Drift-Schwelle</label>
+                  <div class="slider-wrap">
+                    <input type="range" min="5" max="30" step="1" value="15" id="driftSlider">
+                    <span class="slider-val">±<span id="driftVal">15</span>%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="verteilung">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verteilung</div>
+              <div class="radio-group" id="verteilungRadios">
+                <label class="radio active" data-mode="gleich">
+                  <span class="radio-dot"></span>
+                  <span>Gleich für alle</span>
+                  <span class="radio-meta">4 Placements pro MA</span>
+                </label>
+                <label class="radio" data-mode="proportional">
+                  <span class="radio-dot"></span>
+                  <span>Proportional zu Pipeline-Wert</span>
+                  <span class="radio-meta">PW 6 · JV 4 · LR 2 · MR 3</span>
+                </label>
+                <label class="radio" data-mode="manuell">
+                  <span class="radio-dot"></span>
+                  <span>Manuell pro MA festlegen</span>
+                  <span class="radio-meta">individuell</span>
+                </label>
+              </div>
+            </div>
+            <div class="drawer-section" id="verteilungPreview">
+              <div class="drawer-section-title">Vorschau pro MA</div>
+              <table class="kv-table">
+                <tr><td class="k">PW</td><td class="v" id="prev-PW">4 Placements</td></tr>
+                <tr><td class="k">JV</td><td class="v" id="prev-JV">4 Placements</td></tr>
+                <tr><td class="k">LR</td><td class="v" id="prev-LR">4 Placements</td></tr>
+                <tr><td class="k">MR</td><td class="v" id="prev-MR">4 Placements</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="periode">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Periode</div>
+              <div class="field-grid">
+                <div class="field">
+                  <label class="field-label">Von</label>
+                  <input class="field-input" type="text" value="01.07.2026">
+                </div>
+                <div class="field">
+                  <label class="field-label">Bis</label>
+                  <input class="field-input" type="text" value="30.09.2026">
+                </div>
+                <div class="field full">
+                  <label class="field-label">Quartal-Preset</label>
+                  <select class="field-select"><option>Q3 2026 (01.07. – 30.09.2026)</option><option>Q4 2026</option><option>H2 2026</option></select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-section">
+            <div class="drawer-section-title">Auswirkung</div>
+            <div class="callout callout-gold">
+              <strong>16 Goals werden erstellt</strong> (4 pro MA). Owners erhalten Notification + Goal erscheint in <em>performance-mitarbeiter</em>.
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn">Vorschau</button>
+          <button class="btn btn-primary">16 Goals erstellen</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+// Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
+
+/* ─────────── DRAWER TABS ─────────── */
+document.querySelectorAll('.drawer-tabs').forEach(tabBar => {
+  const drawerEl = tabBar.parentElement;
+  tabBar.addEventListener('click', e => {
+    const btn = e.target.closest('.drawer-tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    tabBar.querySelectorAll('.drawer-tab').forEach(b => b.classList.toggle('active', b === btn));
+    drawerEl.querySelectorAll('.tab-pane').forEach(p => {
+      p.classList.toggle('active', p.dataset.pane === tab);
+    });
+  });
+});
+
+/* ─────────── ANPASSEN SWITCH ─────────── */
+document.getElementById('anpassenSwitch')?.addEventListener('click', e => {
+  e.currentTarget.classList.toggle('on');
+});
+
+/* ─────────── DRIFT SLIDER ─────────── */
+document.getElementById('driftSlider')?.addEventListener('input', e => {
+  document.getElementById('driftVal').textContent = e.target.value;
+});
+
+/* ─────────── VERTEILUNGS-RADIO + PREVIEW ─────────── */
+(function(){
+  const radios = document.querySelectorAll('#verteilungRadios .radio');
+  const presets = {
+    gleich:        { PW: '4 Placements', JV: '4 Placements', LR: '4 Placements', MR: '4 Placements' },
+    proportional:  { PW: '6 Placements', JV: '4 Placements', LR: '2 Placements', MR: '3 Placements' },
+    manuell:       { PW: '— manuell —',  JV: '— manuell —',  LR: '— manuell —',  MR: '— manuell —' },
+  };
+  radios.forEach(r => {
+    r.addEventListener('click', e => {
+      radios.forEach(x => x.classList.toggle('active', x === r));
+      const mode = r.dataset.mode;
+      const p = presets[mode];
+      ['PW','JV','LR','MR'].forEach(k => {
+        const cell = document.getElementById('prev-' + k);
+        if (cell) cell.textContent = p[k];
+      });
+    });
+  });
+})();
+
+/* ─────────── CARD HEADER → DRAWER (stub: scroll to LR drawer) ─────────── */
+document.querySelectorAll('.ma-head').forEach(h => {
+  h.addEventListener('click', () => {
+    document.getElementById('drawer-team-member').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+});
+
+/* ─────────── TEAM-GOALS BUTTON → BULK DRAWER ─────────── */
+document.querySelectorAll('.btn-gold').forEach(b => {
+  if (b.textContent.includes('Team-Goals')) {
+    b.addEventListener('click', () => {
+      document.getElementById('drawer-goal-new').scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  }
+});
+</script>
+</body>
+</html>
