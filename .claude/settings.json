@@ -40,6 +40,11 @@
             "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/ark-lint.ps1\"",
             "timeout": 10,
             "async": true
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/mockup-smoke.ps1\"",
+            "timeout": 30
           }
         ]
       }

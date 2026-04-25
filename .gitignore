@@ -68,6 +68,10 @@ Unbenannt.canvas
 # Playwright MCP session caches
 .playwright-mcp/
 
+# Playwright test artefacts
+playwright-report/
+test-results/
+
 # Superpowers plugin local state
 .superpowers/
 
