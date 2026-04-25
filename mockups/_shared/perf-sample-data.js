@@ -72,12 +72,69 @@ window.ARK_PERF = {
   // ---- Mitarbeiter (Stammdaten-konform: 2-Buchstaben-Kuerzel) ------------
   // pipeline_wert / forecast in CHF; goal_pct/compliance in %.
   // Vollstaendige ARK-MA-Matrix 2026 in memory/project_arkadium_roles_2026.md.
+  //
+  // Visual-State-Felder (Pattern-B-Refactor 2026-04-25):
+  //   delta_pct + delta_dir ('up'|'down'|'flat') — Pipeline-Delta-Pfeil
+  //   goal_state ('good'|'warn'|'crit')           — Progress-Bar-Farbe
+  //   compliance_state ('good'|'warn')            — compl-tick vs compl-warn
+  //   compliance_sub (Freitext)                   — z.B. "0 überfällig"
+  //   aktivitaet_median_diff                      — Differenz zum Median
+  //   aktivitaet_median_dir ('above'|'below'|'flat') — Richtungspfeil
+  //   anomalien_state ('zero'|'warn'|'crit')      — Anomalien-Bar-Klasse
+  //   anomalien_sub (Freitext)                    — z.B. "2 offen · 1 critical"
+  //   avatar_class (String)                       — CSS-Klasse am Avatar-Span
+  //   card_attention_state ('none'|'warn'|'attention') — Card-Border-Klasse
   mitarbeiter: [
-    { code:'PW', rolle:'Senior Partner · AM', pipeline_wert:480000, goal_pct:75, goal_done:3, goal_total:4, compliance:100, aktivitaet:47, anomalien:2, forecast:620000 },
-    { code:'JV', rolle:'Manager · CM',         pipeline_wert:320000, goal_pct:62, goal_done:2, goal_total:4, compliance:100, aktivitaet:41, anomalien:1, forecast:410000 },
-    { code:'LR', rolle:'Researcher',           pipeline_wert:180000, goal_pct:45, goal_done:1, goal_total:3, compliance: 75, aktivitaet:32, anomalien:2, forecast:250000 },
-    { code:'ST', rolle:'Senior Consultant',    pipeline_wert:240000, goal_pct:80, goal_done:3, goal_total:4, compliance:100, aktivitaet:38, anomalien:0, forecast:320000 },
-    { code:'MR', rolle:'Junior Consultant',    pipeline_wert:240000, goal_pct:80, goal_done:3, goal_total:4, compliance:100, aktivitaet:38, anomalien:0, forecast:320000 },
+    {
+      code:'PW', rolle:'Senior Partner · AM',
+      pipeline_wert:480000, delta_pct:14, delta_dir:'up',
+      goal_pct:75, goal_done:3, goal_total:4, goal_state:'good',
+      compliance:100, compliance_state:'good', compliance_sub:'0 überfällig',
+      aktivitaet:47, aktivitaet_median_diff:6, aktivitaet_median_dir:'above',
+      anomalien:2, anomalien_state:'warn', anomalien_sub:'2 offen',
+      forecast:620000,
+      avatar_class:'', card_attention_state:'none',
+    },
+    {
+      code:'JV', rolle:'Manager · CM',
+      pipeline_wert:320000, delta_pct:8, delta_dir:'up',
+      goal_pct:62, goal_done:2, goal_total:4, goal_state:'warn',
+      compliance:100, compliance_state:'good', compliance_sub:'0 überfällig',
+      aktivitaet:41, aktivitaet_median_diff:0, aktivitaet_median_dir:'flat',
+      anomalien:1, anomalien_state:'warn', anomalien_sub:'1 offen',
+      forecast:410000,
+      avatar_class:'av-jv', card_attention_state:'warn',
+    },
+    {
+      code:'LR', rolle:'Researcher',
+      pipeline_wert:180000, delta_pct:-12, delta_dir:'down',
+      goal_pct:45, goal_done:1, goal_total:3, goal_state:'crit',
+      compliance:75, compliance_state:'warn', compliance_sub:'1 E-Learning überfällig',
+      aktivitaet:32, aktivitaet_median_diff:-9, aktivitaet_median_dir:'below',
+      anomalien:2, anomalien_state:'crit', anomalien_sub:'2 offen · 1 critical',
+      forecast:250000,
+      avatar_class:'av-lr', card_attention_state:'attention',
+    },
+    {
+      code:'ST', rolle:'Senior Consultant',
+      pipeline_wert:240000, delta_pct:22, delta_dir:'up',
+      goal_pct:80, goal_done:3, goal_total:4, goal_state:'good',
+      compliance:100, compliance_state:'good', compliance_sub:'0 überfällig',
+      aktivitaet:38, aktivitaet_median_diff:-3, aktivitaet_median_dir:'below',
+      anomalien:0, anomalien_state:'zero', anomalien_sub:'0 offen',
+      forecast:320000,
+      avatar_class:'av-mr', card_attention_state:'none',
+    },
+    {
+      code:'MR', rolle:'Junior Consultant',
+      pipeline_wert:240000, delta_pct:22, delta_dir:'up',
+      goal_pct:80, goal_done:4, goal_total:5, goal_state:'good',
+      compliance:100, compliance_state:'good', compliance_sub:'0 überfällig',
+      aktivitaet:38, aktivitaet_median_diff:-3, aktivitaet_median_dir:'below',
+      anomalien:0, anomalien_state:'zero', anomalien_sub:'0 offen',
+      forecast:320000,
+      avatar_class:'av-mr', card_attention_state:'none',
+    },
   ],
 
   // Heatmap-Daten 12 MA × 7 Wochentage (Aktivitaets-Touches pro Tag) — dashboard.html.

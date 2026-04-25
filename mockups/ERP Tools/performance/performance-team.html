@@ -1082,221 +1082,128 @@
     <span class="section-meta">SORTIERT NACH PIPELINE-WERT ↓</span>
   </div>
 
-  <section class="team-grid">
+  <section class="team-grid" id="teamGrid"></section>
 
-    <!-- PW -->
-    <article class="ma-card">
-      <header class="ma-head" data-open="LR-no" data-ma="PW">
-        <span class="avatar">PW</span>
-        <div>
-          <div class="ma-name">PW</div>
-          <div class="ma-role">Senior Partner · AM</div>
-        </div>
-        <span class="ma-menu">⋮</span>
-      </header>
-      <div class="ma-pipeline">
-        <span class="pipe-label">Pipeline</span>
-        <span class="pipe-val"><span class="num-p">CHF 480k</span></span>
-      </div>
-      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +14%</span></div>
+  <script>
+  (function renderTeamCards() {
+    // Nur MA-Cards für die Kern-4 (PW/JV/LR/MR) aus window.ARK_PERF.mitarbeiter rendern.
+    // ST ist Senior Consultant (nicht in Head-View Q2); gefiltert via card_attention_state != undefined check.
+    const grid = document.getElementById('teamGrid');
+    const teamCodes = ['PW', 'JV', 'LR', 'MR'];
+    const maList = window.ARK_PERF.mitarbeiter.filter(m => teamCodes.includes(m.code));
 
-      <div class="stat-rows">
-        <div class="stat-row">
-          <span class="stat-key">Goals</span>
-          <span class="stat-val">
-            <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
-            <span class="val-num">75%</span>
-            <span class="val-sub">3/4</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Compl.</span>
-          <span class="stat-val">
-            <span class="compl-tick">✓ 100%</span>
-            <span class="val-sub">· 0 überfällig</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Aktiv.</span>
-          <span class="stat-val">
-            <span class="val-num">47</span><span class="val-sub">/Wo</span>
-            <span class="above">▲ Median +6</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Anom.</span>
-          <span class="stat-val">
-            <span class="anom-bar"><span class="anom-dot"></span>2 offen</span>
-          </span>
-        </div>
-      </div>
+    function deltaClass(dir) {
+      if (dir === 'up')   return 'delta-pos';
+      if (dir === 'down') return 'delta-neg';
+      return '';
+    }
+    function deltaArrow(dir) {
+      if (dir === 'up')   return '↗';
+      if (dir === 'down') return '↘';
+      return '·';
+    }
+    function deltaSign(n) { return n > 0 ? '+' : n < 0 ? '−' : ''; }
+    function deltaAbs(n)  { return Math.abs(n); }
+    function goalNumColor(state) {
+      if (state === 'warn') return ' style="color:var(--amber);"';
+      if (state === 'crit') return ' style="color:var(--red);"';
+      return '';
+    }
+    function medianSpan(ma) {
+      if (ma.aktivitaet_median_dir === 'above') {
+        return `<span class="above">▲ Median ${deltaSign(ma.aktivitaet_median_diff)}${ma.aktivitaet_median_diff}</span>`;
+      }
+      if (ma.aktivitaet_median_dir === 'below') {
+        return `<span class="below">▼ Median ${deltaSign(ma.aktivitaet_median_diff)}${ma.aktivitaet_median_diff}</span>`;
+      }
+      return `<span class="val-sub">· Median</span>`;
+    }
+    function anomBar(ma) {
+      if (ma.anomalien_state === 'zero') {
+        return `<span class="anom-bar zero">${ma.anomalien_sub}</span>`;
+      }
+      if (ma.anomalien_state === 'crit') {
+        return `<span class="anom-bar crit"><span class="anom-dot crit"></span>${ma.anomalien_sub}</span>`;
+      }
+      return `<span class="anom-bar"><span class="anom-dot"></span>${ma.anomalien_sub}</span>`;
+    }
+    function cardClass(ma) {
+      if (ma.card_attention_state === 'attention') return 'ma-card attention';
+      if (ma.card_attention_state === 'warn')      return 'ma-card warn';
+      return 'ma-card';
+    }
+    function avatarClass(ma) {
+      return ma.avatar_class ? `avatar ${ma.avatar_class}` : 'avatar';
+    }
+    function pipeK() { return Math.round; }
+    function fmtChf(v) { return `CHF ${Math.round(v / 1000)}k`; }
 
-      <footer class="ma-foot">
-        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 620k</span></span>
-        <a class="open-link" href="performance-mitarbeiter.html?ma=PW">Profil öffnen</a>
-      </footer>
-    </article>
+    grid.innerHTML = maList.map(ma => `
+      <article class="${cardClass(ma)}">
+        <header class="ma-head" data-ma="${ma.code}">
+          <span class="${avatarClass(ma)}">${ma.code}</span>
+          <div>
+            <div class="ma-name">${ma.code}</div>
+            <div class="ma-role">${ma.rolle}</div>
+          </div>
+          <span class="ma-menu">⋮</span>
+        </header>
+        <div class="ma-pipeline">
+          <span class="pipe-label">Pipeline</span>
+          <span class="pipe-val"><span class="num-p">${fmtChf(ma.pipeline_wert)}</span></span>
+        </div>
+        <div style="margin-top:-8px; text-align:right;">
+          <span class="pipe-delta ${deltaClass(ma.delta_dir)}">${deltaArrow(ma.delta_dir)} ${deltaSign(ma.delta_pct)}${ma.delta_pct}%</span>
+        </div>
 
-    <!-- JV -->
-    <article class="ma-card warn">
-      <header class="ma-head" data-ma="JV">
-        <span class="avatar av-jv">JV</span>
-        <div>
-          <div class="ma-name">JV</div>
-          <div class="ma-role">Manager · CM</div>
+        <div class="stat-rows">
+          <div class="stat-row">
+            <span class="stat-key">Goals</span>
+            <span class="stat-val">
+              <div class="progress"><div class="progress-fill ${ma.goal_state !== 'good' ? ma.goal_state : ''}" style="width:${ma.goal_pct}%"></div></div>
+              <span class="val-num"${goalNumColor(ma.goal_state)}>${ma.goal_pct}%</span>
+              <span class="val-sub">${ma.goal_done}/${ma.goal_total}</span>
+            </span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Compl.</span>
+            <span class="stat-val">
+              ${ma.compliance_state === 'good'
+                ? `<span class="compl-tick">✓ ${ma.compliance}%</span>`
+                : `<span class="compl-warn">⚠ ${ma.compliance}%</span>`}
+              <span class="val-sub">· ${ma.compliance_sub}</span>
+            </span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Aktiv.</span>
+            <span class="stat-val">
+              <span class="val-num">${ma.aktivitaet}</span><span class="val-sub">/Wo</span>
+              ${medianSpan(ma)}
+            </span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Anom.</span>
+            <span class="stat-val">
+              ${anomBar(ma)}
+            </span>
+          </div>
         </div>
-        <span class="ma-menu">⋮</span>
-      </header>
-      <div class="ma-pipeline">
-        <span class="pipe-label">Pipeline</span>
-        <span class="pipe-val"><span class="num-p">CHF 320k</span></span>
-      </div>
-      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +8%</span></div>
 
-      <div class="stat-rows">
-        <div class="stat-row">
-          <span class="stat-key">Goals</span>
-          <span class="stat-val">
-            <div class="progress"><div class="progress-fill warn" style="width:62%"></div></div>
-            <span class="val-num" style="color:var(--amber);">62%</span>
-            <span class="val-sub">2/4</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Compl.</span>
-          <span class="stat-val">
-            <span class="compl-tick">✓ 100%</span>
-            <span class="val-sub">· 0 überfällig</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Aktiv.</span>
-          <span class="stat-val">
-            <span class="val-num">41</span><span class="val-sub">/Wo</span>
-            <span class="val-sub">· Median</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Anom.</span>
-          <span class="stat-val">
-            <span class="anom-bar"><span class="anom-dot"></span>1 offen</span>
-          </span>
-        </div>
-      </div>
+        <footer class="ma-foot">
+          <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">${fmtChf(ma.forecast)}</span></span>
+          <a class="open-link" href="performance-mitarbeiter.html?ma=${ma.code}">Profil öffnen</a>
+        </footer>
+      </article>
+    `).join('');
 
-      <footer class="ma-foot">
-        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 410k</span></span>
-        <a class="open-link" href="performance-mitarbeiter.html?ma=JV">Profil öffnen</a>
-      </footer>
-    </article>
-
-    <!-- LR -->
-    <article class="ma-card attention">
-      <header class="ma-head" data-ma="LR" id="open-LR">
-        <span class="avatar av-lr">LR</span>
-        <div>
-          <div class="ma-name">LR</div>
-          <div class="ma-role">Researcher</div>
-        </div>
-        <span class="ma-menu">⋮</span>
-      </header>
-      <div class="ma-pipeline">
-        <span class="pipe-label">Pipeline</span>
-        <span class="pipe-val"><span class="num-p">CHF 180k</span></span>
-      </div>
-      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-neg">↘ −12%</span></div>
-
-      <div class="stat-rows">
-        <div class="stat-row">
-          <span class="stat-key">Goals</span>
-          <span class="stat-val">
-            <div class="progress"><div class="progress-fill crit" style="width:45%"></div></div>
-            <span class="val-num" style="color:var(--red);">45%</span>
-            <span class="val-sub">1/3</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Compl.</span>
-          <span class="stat-val">
-            <span class="compl-warn">⚠ 75%</span>
-            <span class="val-sub">· 1 E-Learning überfällig</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Aktiv.</span>
-          <span class="stat-val">
-            <span class="val-num">32</span><span class="val-sub">/Wo</span>
-            <span class="below">▼ Median −9</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Anom.</span>
-          <span class="stat-val">
-            <span class="anom-bar crit"><span class="anom-dot crit"></span>2 offen · 1 critical</span>
-          </span>
-        </div>
-      </div>
-
-      <footer class="ma-foot">
-        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 250k</span></span>
-        <a class="open-link" href="performance-mitarbeiter.html?ma=LR">Profil öffnen</a>
-      </footer>
-    </article>
-
-    <!-- MR -->
-    <article class="ma-card">
-      <header class="ma-head" data-ma="MR">
-        <span class="avatar av-mr">MR</span>
-        <div>
-          <div class="ma-name">MR</div>
-          <div class="ma-role">Junior Consultant</div>
-        </div>
-        <span class="ma-menu">⋮</span>
-      </header>
-      <div class="ma-pipeline">
-        <span class="pipe-label">Pipeline</span>
-        <span class="pipe-val"><span class="num-p">CHF 240k</span></span>
-      </div>
-      <div style="margin-top:-8px; text-align:right;"><span class="pipe-delta delta-pos">↗ +22%</span></div>
-
-      <div class="stat-rows">
-        <div class="stat-row">
-          <span class="stat-key">Goals</span>
-          <span class="stat-val">
-            <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
-            <span class="val-num">80%</span>
-            <span class="val-sub">4/5</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Compl.</span>
-          <span class="stat-val">
-            <span class="compl-tick">✓ 100%</span>
-            <span class="val-sub">· 0 überfällig</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Aktiv.</span>
-          <span class="stat-val">
-            <span class="val-num">38</span><span class="val-sub">/Wo</span>
-            <span class="below">▼ Median −3</span>
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-key">Anom.</span>
-          <span class="stat-val">
-            <span class="anom-bar zero">0 offen</span>
-          </span>
-        </div>
-      </div>
-
-      <footer class="ma-foot">
-        <span class="forecast-line">Forecast Q-Ende: <span class="fc-val">CHF 320k</span></span>
-        <a class="open-link" href="performance-mitarbeiter.html?ma=MR">Profil öffnen</a>
-      </footer>
-    </article>
-
-  </section>
+    /* Card-Header → Drawer (gleiche Logik wie vorher) */
+    grid.querySelectorAll('.ma-head').forEach(h => {
+      h.addEventListener('click', () => {
+        document.getElementById('drawer-team-member').scrollIntoView({behavior:'smooth', block:'center'});
+      });
+    });
+  })();
+  </script>
 
   <!-- ─────────── TEAM CHARTS ─────────── -->
   <div class="section-head">
@@ -1696,13 +1603,6 @@ document.getElementById('driftSlider')?.addEventListener('input', e => {
     });
   });
 })();
-
-/* ─────────── CARD HEADER → DRAWER (stub: scroll to LR drawer) ─────────── */
-document.querySelectorAll('.ma-head').forEach(h => {
-  h.addEventListener('click', () => {
-    document.getElementById('drawer-team-member').scrollIntoView({behavior:'smooth', block:'center'});
-  });
-});
 
 /* ─────────── TEAM-GOALS BUTTON → BULK DRAWER ─────────── */
 document.querySelectorAll('.btn-gold').forEach(b => {
