@@ -1,0 +1,1390 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mein Performance — ARK CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/editorial.css" />
+<style>
+  :root, [data-theme="light"] {
+    --accent: #1A3A5C; --accent-tint: #E8F0F8;
+    --gold: #B8860B; --gold-tint: #FDF6E3; --gold-strong: #9B7009;
+    --green: #1A6B4A; --green-tint: #E8F5EF;
+    --amber: #D97706; --amber-tint: #FEF3E2;
+    --red: #C0392B; --red-tint: #FDF0EE;
+    --info: #2D5F8A; --info-tint: #E8F0F8;
+
+    --bg: #F4F5F7; --surface: #FFFFFF; --surface-alt: #EDEFF3; --surface-sunk: #E5E7EC;
+    --text: #1A1F2E; --text-mid: #4A5568; --text-light: #8A95A8;
+    --border: #E2E5EA; --border-strong: #C8CDD6;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow:    0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.05);
+
+    --r-sm: 4px; --r: 6px;
+  }
+  [data-theme="dark"] {
+    --accent: #7CB5E8; --accent-tint: rgba(124,181,232,0.12);
+    --gold: #D4A84B; --gold-tint: rgba(212,168,75,0.12); --gold-strong: #D4A84B;
+    --green: #3FB950; --green-tint: rgba(63,185,80,0.12);
+    --amber: #D29922; --amber-tint: rgba(210,153,34,0.12);
+    --red: #F85149; --red-tint: rgba(248,81,73,0.12);
+    --info: #58A6FF; --info-tint: rgba(88,166,255,0.12);
+
+    --bg: #0E1116; --surface: #161B22; --surface-alt: #1D242D; --surface-sunk: #0E1116;
+    --text: #E6EDF3; --text-mid: #B6C0CC; --text-light: #8A95A8;
+    --border: #2A3340; --border-strong: #3A4454;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-md: 0 12px 32px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: "Libre Baskerville", Georgia, serif; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  main { padding: 24px 32px 64px; max-width: 1440px; margin: 0 auto; }
+
+  /* Page head */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+    gap: 24px;
+  }
+  .page-head h1 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 28px;
+    color: var(--accent); letter-spacing: -0.005em;
+  }
+  .crumb {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 12.5px; margin-top: 6px; }
+  .subtitle .dot { color: var(--border-strong); margin: 0 7px; }
+  .page-head-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .ctx-switch {
+    position: relative;
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 999px; padding: 5px 12px 5px 8px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .ctx-switch .av {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center; font-size: 10.5px; font-weight: 600;
+  }
+  .ctx-switch .lab { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); }
+  .ctx-switch .nm { font-weight: 600; }
+  .ctx-switch svg { color: var(--text-light); }
+
+  .btn {
+    padding: 6px 12px; border-radius: var(--r-sm);
+    font-size: 12.5px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--text);
+  }
+  .btn:hover { border-color: var(--border-strong); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-gold { background: var(--gold-strong); color: #fff; border-color: var(--gold-strong); font-weight: 500; }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-mid); }
+  .btn-ghost:hover { color: var(--text); }
+  .ico { width: 14px; height: 14px; stroke-width: 1.6; }
+  .ico-sm { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  /* Snapshot */
+  .snapshot { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+  .snap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 12px 14px;
+    box-shadow: var(--shadow-sm); position: relative;
+  }
+  .snap .label {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .snap .dot-color { width: 6px; height: 6px; border-radius: 50%; background: var(--text-light); }
+  .snap .value {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 24px; line-height: 1;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .snap .value .unit { font-size: 13px; color: var(--text-mid); margin-left: 2px; font-weight: 400; }
+  .snap .delta { margin-top: 6px; font-size: 11px; color: var(--text-mid); display: flex; align-items: center; gap: 6px; }
+  .spark { width: 100%; height: 22px; margin-top: 4px; display: block; }
+
+  /* Compliance badge inside snap */
+  .badge-inline {
+    display: inline-block; padding: 2px 7px;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.12em; border-radius: 3px;
+    text-transform: uppercase; font-variant: small-caps;
+    background: var(--green-tint); color: var(--green);
+  }
+
+  /* Tabs */
+  .tabnav {
+    display: flex; align-items: center; gap: 2px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    overflow-x: auto;
+  }
+  .tabnav button {
+    padding: 10px 16px;
+    font-size: 13px; color: var(--text-mid);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+  }
+  .tabnav button:hover { color: var(--text); }
+  .tabnav button.active {
+    color: var(--text); border-color: var(--gold-strong); font-weight: 600;
+  }
+  .tabnav .count {
+    font-family: "JetBrains Mono", monospace; font-size: 10.5px;
+    color: var(--text-light); margin-left: 6px;
+    padding: 1px 5px; background: var(--surface-sunk); border-radius: 2px;
+  }
+
+  /* Panels */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel + .panel { margin-top: 14px; }
+  .panel-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-head h2 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 15px; color: var(--text);
+  }
+  .panel-head .meta { font-size: 11px; color: var(--text-light); }
+  .panel-head .right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .scope-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; padding: 2px 6px; border-radius: 2px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+
+  /* Übersicht layout */
+  .ueber-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 14px; align-items: start;
+  }
+  .col-stack { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Mini funnel */
+  .mfunnel { padding: 18px 24px 22px; }
+  .mfun-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 70px;
+    align-items: center; gap: 14px;
+    padding: 4px 0;
+  }
+  .mfun-name {
+    font-family: "Libre Baskerville", serif;
+    font-size: 13px; font-weight: 700; color: var(--text);
+    text-align: right;
+  }
+  .mfun-track { height: 26px; display: flex; align-items: center; }
+  .mfun-bar {
+    height: 22px; background: var(--accent); border-radius: 2px;
+  }
+  .mfun-row:nth-child(1) .mfun-bar { background: #1A3A5C; }
+  .mfun-row:nth-child(2) .mfun-bar { background: #1f4a6f; }
+  .mfun-row:nth-child(3) .mfun-bar { background: #245b80; }
+  .mfun-row:nth-child(4) .mfun-bar { background: #2a6e8f; }
+  .mfun-row:nth-child(5) .mfun-bar { background: #34818c; }
+  .mfun-row:nth-child(6) .mfun-bar { background: #3d927e; }
+  .mfun-row:nth-child(7) .mfun-bar { background: var(--green); }
+  .mfun-count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .mfun-count .pct { display: block; font-size: 10px; color: var(--text-light); margin-top: 1px; }
+
+  /* Touched candidates table */
+  .ktable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ktable th, .ktable td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+  }
+  .ktable tr:last-child td { border-bottom: 0; }
+  .ktable th {
+    font-weight: 500;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    background: var(--surface-alt);
+  }
+  .ktable td.num, .ktable th.num {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .ktable .cand-cell { display: inline-flex; align-items: center; gap: 9px; }
+  .ktable .stage-tag {
+    font-family: "JetBrains Mono", monospace; font-size: 10.5px;
+    color: var(--text-mid);
+    padding: 1px 6px; border-radius: 2px;
+    background: var(--surface-sunk);
+    letter-spacing: 0.04em;
+  }
+  .ktable .days.bad { color: var(--red); font-weight: 600; }
+  .ktable .days.warn { color: var(--amber); font-weight: 600; }
+
+  .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .avatar.gold { background: var(--gold-tint); color: var(--gold-strong); }
+  .avatar.green { background: var(--green-tint); color: var(--green); }
+  .avatar.amber { background: var(--amber-tint); color: var(--amber); }
+  .avatar.red { background: var(--red-tint); color: var(--red); }
+  .avatar.lg { width: 36px; height: 36px; font-size: 13px; }
+  .avatar.sm { width: 20px; height: 20px; font-size: 9.5px; }
+
+  /* Heatmap day×weekday */
+  .day-heat {
+    display: grid;
+    grid-template-columns: 30px repeat(7, 1fr);
+    gap: 4px;
+    padding: 18px 22px 20px;
+    font-size: 11px;
+  }
+  .day-heat .h { color: var(--text-light); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; text-align: center; padding-bottom: 4px; font-weight: 600; }
+  .day-heat .h.left { text-align: right; padding-right: 6px; }
+  .day-heat .lab { color: var(--text-light); font-family: "JetBrains Mono", monospace; font-size: 10px; text-align: right; padding-right: 6px; align-self: center; }
+  .day-heat .cell {
+    aspect-ratio: 1.4 / 1; min-height: 28px;
+    border-radius: 3px;
+    background: var(--surface-sunk);
+    display: grid; place-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px; color: var(--text);
+  }
+  .day-heat-foot {
+    padding: 0 22px 16px; display: flex;
+    align-items: center; gap: 8px; font-size: 10.5px;
+    color: var(--text-light); font-family: "JetBrains Mono", monospace;
+    justify-content: flex-end;
+  }
+  .day-heat-scale {
+    display: inline-block; width: 100px; height: 6px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--surface-sunk), var(--accent));
+  }
+
+  /* Goal cards */
+  .goal-row {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .goal-row:last-child { border-bottom: 0; }
+  .goal-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .goal-title {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 13.5px; color: var(--text);
+  }
+  .goal-pct {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; font-weight: 500;
+  }
+  .goal-pct.green { color: var(--green); }
+  .goal-pct.amber { color: var(--amber); }
+  .goal-pct.red   { color: var(--red); }
+  .goal-track {
+    height: 8px; background: var(--surface-sunk);
+    border-radius: 2px; overflow: hidden;
+  }
+  .goal-fill { height: 100%; background: var(--green); }
+  .goal-fill.amber { background: var(--amber); }
+  .goal-fill.red   { background: var(--red); }
+  .goal-foot {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+    margin-top: 6px;
+  }
+
+  /* Insights cards */
+  .ins-card {
+    padding: 12px 14px;
+    border-left: 3px solid var(--amber);
+    background: var(--surface-alt);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    margin: 12px 12px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 8px; align-items: center;
+  }
+  .ins-card.info { border-left-color: var(--text-mid); }
+  .ins-card .sev {
+    font-size: 9.5px; letter-spacing: 0.16em; font-weight: 700;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 4px;
+  }
+  .ins-card.info .sev { color: var(--text-mid); }
+  .ins-card .title { font-size: 12.5px; color: var(--text); font-weight: 500; }
+  .ins-card .meta { font-size: 11px; color: var(--text-light); margin-top: 2px; font-family: "JetBrains Mono", monospace; }
+  .ins-card .arrow { color: var(--text-light); }
+
+  /* Massnahmen */
+  .mass-row {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 90px 24px;
+    gap: 10px; align-items: center;
+    font-size: 12.5px;
+  }
+  .mass-row:last-child { border-bottom: 0; }
+  .mass-row .title { color: var(--text); }
+  .mass-row .due { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-mid); text-align: right; }
+  .status-pill {
+    display: inline-block;
+    font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 600; padding: 2px 7px; border-radius: 3px;
+    margin-bottom: 2px;
+  }
+  .status-pill.work { background: var(--accent-tint); color: var(--accent); }
+  .status-pill.pending { background: var(--surface-sunk); color: var(--text-mid); }
+
+  /* Read-only banner */
+  .ro-banner {
+    display: none;
+    align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: var(--r-sm);
+    background: var(--gold-tint); color: var(--gold-strong);
+    border: 1px solid var(--gold);
+    font-size: 12px; margin-bottom: 14px;
+  }
+  .ro-banner.on { display: flex; }
+  .ro-banner a { color: var(--gold-strong); font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+  /* Other tabs (collapsed previews) */
+  .other-tabs {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .ot-title {
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 0 0 14px 0;
+  }
+
+  /* Activity heatmap (bigger) */
+  .act-heat {
+    display: grid;
+    grid-template-columns: 30px repeat(12, 1fr);
+    gap: 3px;
+    padding: 18px 22px;
+    font-size: 10px;
+  }
+  .act-heat .h, .act-heat .lab {
+    color: var(--text-light); font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px; text-align: center; padding: 4px 0;
+  }
+  .act-heat .lab { text-align: right; padding-right: 6px; align-self: center; }
+  .act-heat .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: 2px;
+    background: var(--surface-sunk);
+  }
+
+  /* Activity type bars */
+  .act-types {
+    padding: 14px 22px 18px; display: grid; grid-template-columns: 110px 1fr 70px;
+    gap: 8px 14px; align-items: center;
+  }
+  .act-types .lab { color: var(--text-mid); font-size: 12px; }
+  .act-types .track { height: 12px; background: var(--surface-sunk); border-radius: 2px; overflow: hidden; }
+  .act-types .fill { height: 100%; background: var(--accent); }
+  .act-types .num { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text); }
+
+  /* Compliance KV */
+  .comp-grid { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .comp-card {
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+  }
+  .comp-card .lab { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; font-weight: 600; }
+  .comp-card .val { font-family: "Libre Baskerville", serif; font-weight: 700; font-size: 18px; color: var(--text); }
+  .comp-card .sub { font-size: 11px; color: var(--text-mid); margin-top: 4px; }
+  .e-learn { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
+  .el-row { display: grid; grid-template-columns: 1fr 80px 50px; gap: 10px; align-items: center; font-size: 12px; }
+  .el-row .lab { color: var(--text); }
+  .el-row .track { height: 6px; background: var(--surface-sunk); border-radius: 2px; overflow: hidden; }
+  .el-row .fill { height: 100%; background: var(--green); }
+  .el-row .pct { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--text-mid); }
+
+  /* Commission table */
+  .ctable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ctable th, .ctable td { padding: 9px 14px; border-bottom: 1px solid var(--border); text-align: left; }
+  .ctable th { font-weight: 500; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); background: var(--surface-alt); }
+  .ctable td.num, .ctable th.num { text-align: right; font-family: "JetBrains Mono", monospace; }
+  .ctable td.month-cell { font-family: "Libre Baskerville", serif; font-weight: 700; }
+
+  .runrate-chart {
+    padding: 22px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; align-items: end;
+    height: 200px;
+  }
+  .rr-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .rr-bar-wrap { width: 100%; height: 150px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .rr-bar { width: 100%; }
+  .rr-bar.am { background: var(--accent); }
+  .rr-bar.cm { background: var(--gold-strong); }
+  .rr-month { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--text-light); }
+
+  /* Drawer previews */
+  .drawer-section-title {
+    margin: 36px 0 12px 0;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .drawer-section-title .hint { font-size: 11px; letter-spacing: normal; text-transform: none; color: var(--text-light); margin-left: auto; font-weight: 400; }
+
+  .drawer-row {
+    display: grid;
+    grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: start;
+  }
+  @media (max-width: 1200px) { .drawer-row { grid-template-columns: 1fr; } }
+
+  .drawer {
+    width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-md);
+    overflow: hidden; position: relative;
+  }
+  .drawer::before {
+    content: "Drawer · 540 px · slide-in von rechts";
+    position: absolute; top: -22px; left: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--text-light);
+  }
+  .drawer-head { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .drawer-eyebrow { font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+  .drawer-head-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .drawer-head h3 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 16px; color: var(--text);
+  }
+  .drawer-close {
+    margin-left: auto; width: 26px; height: 26px;
+    display: grid; place-items: center;
+    color: var(--text-light); border-radius: 4px;
+  }
+  .drawer-tabs {
+    display: flex; gap: 0;
+    margin: 12px -18px 0 -18px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-tab {
+    padding: 8px 0; margin-right: 18px;
+    font-size: 12px; color: var(--text-mid);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .drawer-tab.active { color: var(--text); border-color: var(--accent); font-weight: 600; }
+
+  .drawer-body {
+    padding: 18px;
+    display: flex; flex-direction: column;
+    gap: 22px; max-height: 720px; overflow: auto;
+  }
+  .drawer-foot {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .drawer-foot .spacer { flex: 1; }
+  .sec-title {
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 0 0 10px 0; font-weight: 600;
+  }
+  .form-row {
+    display: grid; grid-template-columns: 130px 1fr;
+    gap: 10px; align-items: center;
+    margin-bottom: 10px;
+  }
+  .form-row .lab {
+    font-size: 11px; color: var(--text-light);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .form-input {
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 7px 10px; border-radius: var(--r-sm);
+    font-size: 12.5px; color: var(--text);
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+  }
+  .form-input svg { color: var(--text-light); }
+  .form-input.num-input { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 500; }
+
+  .slider {
+    display: flex; align-items: center; gap: 10px; padding: 4px 0;
+  }
+  .slider-track {
+    flex: 1; height: 4px; background: var(--surface-sunk); border-radius: 2px;
+    position: relative;
+  }
+  .slider-fill {
+    position: absolute; top: 0; bottom: 0;
+    left: 35%; right: 35%;
+    background: var(--accent); border-radius: 2px;
+  }
+  .slider-thumb-l, .slider-thumb-r {
+    position: absolute; top: 50%; width: 12px; height: 12px;
+    background: var(--surface); border: 2px solid var(--accent);
+    border-radius: 50%; transform: translate(-50%, -50%);
+  }
+  .slider-thumb-l { left: 35%; }
+  .slider-thumb-r { left: 65%; }
+  .slider-val {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    min-width: 60px; text-align: right;
+  }
+
+  .chip-input {
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: var(--r-sm); padding: 6px 8px;
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    min-height: 36px; font-size: 12px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; background: var(--accent-tint); color: var(--accent);
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    border-radius: 3px;
+  }
+  .chip .x { color: var(--accent); cursor: pointer; opacity: 0.7; }
+  .chip-input .placeholder { color: var(--text-light); font-size: 12px; font-style: italic; }
+
+  /* Drawer B hero */
+  .goal-hero {
+    text-align: center; padding: 12px 0 4px;
+  }
+  .goal-hero .big {
+    font-family: "Libre Baskerville", serif; font-weight: 700;
+    font-size: 38px; color: var(--green); line-height: 1;
+  }
+  .goal-hero .sub { color: var(--text-mid); font-size: 12.5px; margin-top: 6px; }
+
+  .verlauf-chart {
+    height: 90px; position: relative;
+    background: var(--surface-alt); border-radius: var(--r-sm);
+    border: 1px solid var(--border); padding: 8px;
+  }
+  .verlauf-chart .line {
+    position: absolute; left: 8px; right: 8px; top: 50%;
+    height: 1px; background: var(--border);
+  }
+  .verlauf-chart .dot {
+    position: absolute; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green); border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--green);
+    transform: translate(-50%, -50%);
+  }
+  .verlauf-axis {
+    display: flex; justify-content: space-between;
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    color: var(--text-light); margin-top: 4px;
+  }
+
+  .proc-row {
+    display: grid; grid-template-columns: 22px 1fr 60px 70px; gap: 10px;
+    padding: 8px 0; align-items: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .proc-row:last-child { border-bottom: 0; }
+  .proc-row .ico-ok { color: var(--green); }
+  .proc-row .ico-pending { color: var(--amber); }
+  .proc-row .name { font-weight: 500; }
+  .proc-row .meta { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--text-mid); }
+  .proc-row .stage { text-align: right; }
+
+  .ontrack {
+    border: 1px solid var(--green); background: var(--green-tint);
+    border-radius: var(--r-sm); padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px; font-size: 12px;
+  }
+  .ontrack .badge { background: var(--green); color: #fff; font-size: 9.5px; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+
+  /* Footer */
+  .footer-line {
+    margin-top: 28px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+</style>
+</head>
+<body>
+<!-- Theme-Toggle wird vom Hub gesteuert -->
+
+<main>
+
+  <header class="page-head">
+    <div>
+      <div class="crumb">CRM · Performance</div>
+      <h1 class="serif">Mein Performance</h1>
+      <div class="subtitle">Persönlicher Cockpit <span class="dot">·</span> MA PW <span class="dot">·</span> Periode Q2 2026</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="ctx-switch" id="ctxSwitch">
+        <span class="av">PW</span>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+          <span class="lab">Ansicht</span>
+          <span class="nm">Mein Profil</span>
+        </div>
+        <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <button class="btn btn-gold">+ Goal</button>
+      <button class="btn">
+        <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin-right:4px;"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Export PDF
+      </button>
+    </div>
+  </header>
+
+  <div class="ro-banner" id="roBanner">
+    <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16v.01"/></svg>
+    <span>Du betrachtest <strong>LR</strong> · read-only-Modus</span>
+    <span class="spacer" style="flex:1;"></span>
+    <a id="backToMe">zurück zu Mein Profil →</a>
+  </div>
+
+  <!-- Snapshot -->
+  <section class="snapshot">
+    <div class="snap">
+      <div class="label">Mein Pipeline-Wert</div>
+      <div class="value serif" style="color:var(--accent);">CHF 480<span class="unit">k</span></div>
+      <div class="delta"><span style="color:var(--green);">↗</span> +14 % vs. Vormonat</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,18 L14,16 L28,15 L42,12 L56,10 L70,9 L84,7 L100,5" fill="none" stroke="var(--accent)" stroke-width="1.4"/></svg>
+    </div>
+    <div class="snap">
+      <div class="label">Goal-Erreichung MTD</div>
+      <div class="value serif" style="color:var(--green);">78<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Q2 · 3 / 4 Placements</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,18 L25,14 L50,12 L75,9 L100,6" fill="none" stroke="var(--green)" stroke-width="1.4"/></svg>
+    </div>
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--amber);"></span>Anomalien</div>
+      <div class="value serif" style="color:var(--amber);">2 <span class="unit">offen</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> 1 Coverage · 1 Activity</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,12 L20,12 L20,4 L40,4 L40,12 L60,12 L80,12 L80,4 L100,4" fill="none" stroke="var(--amber)" stroke-width="1.4"/></svg>
+    </div>
+    <div class="snap">
+      <div class="label">Aktivität diese Woche</div>
+      <div class="value serif">47<span class="unit"> Touches</span></div>
+      <div class="delta"><span style="color:var(--green);">↗</span> Median 41</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,14 L14,12 L28,15 L42,10 L56,11 L70,8 L84,9 L100,5" fill="none" stroke="var(--green)" stroke-width="1.4"/></svg>
+    </div>
+    <div class="snap">
+      <div class="label">Compliance</div>
+      <div class="value serif" style="display:flex; align-items:center; gap:8px;">100<span class="unit">%</span> <span class="badge-inline">aktuell</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> 0 Reminder überfällig</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,8 L20,8 L40,8 L60,8 L80,8 L100,8" fill="none" stroke="var(--green)" stroke-width="1.4"/></svg>
+    </div>
+    <div class="snap">
+      <div class="label">Forecast Q-Ende</div>
+      <div class="value serif" style="color:var(--gold-strong);">CHF 620<span class="unit">k</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Konfidenz 82 %</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none"><path d="M0,16 L20,14 L40,11 L60,8 L80,5 L100,4" fill="none" stroke="var(--gold-strong)" stroke-width="1.4"/></svg>
+    </div>
+  </section>
+
+  <!-- Tab navigation -->
+  <nav class="tabnav">
+    <button class="active" data-tab="ueber">Übersicht</button>
+    <button data-tab="pipe">Pipeline <span class="count">63</span></button>
+    <button data-tab="goals">Goals <span class="count">3</span></button>
+    <button data-tab="akt">Aktivität</button>
+    <button data-tab="comp">Compliance</button>
+    <button data-tab="comm">Commission</button>
+  </nav>
+
+  <!-- Tab 1 · Übersicht -->
+  <section class="ueber-grid">
+
+    <!-- Left column -->
+    <div class="col-stack">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Eigene Pipeline-Verteilung</h2>
+          <span class="meta">63 aktive Prozesse · Owner PW</span>
+          <div class="right"><span class="scope-chip">Q2 2026</span></div>
+        </div>
+        <div class="mfunnel">
+          <div class="mfun-row"><span class="mfun-name">Expose</span><div class="mfun-track"><div class="mfun-bar" style="width:100%;"></div></div><span class="mfun-count">32 <span class="pct">100 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">CV Sent</span><div class="mfun-track"><div class="mfun-bar" style="width:56%;"></div></div><span class="mfun-count">18 <span class="pct">56 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">TI</span><div class="mfun-track"><div class="mfun-bar" style="width:28%;"></div></div><span class="mfun-count">9 <span class="pct">28 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">1st</span><div class="mfun-track"><div class="mfun-bar" style="width:9.4%;"></div></div><span class="mfun-count">3 <span class="pct">9 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">2nd</span><div class="mfun-track"><div class="mfun-bar" style="width:3.1%;"></div></div><span class="mfun-count">1 <span class="pct">3 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">Offer</span><div class="mfun-track"><div class="mfun-bar" style="width:0%;"></div></div><span class="mfun-count">0 <span class="pct">0 %</span></span></div>
+          <div class="mfun-row"><span class="mfun-name">Placement</span><div class="mfun-track"><div class="mfun-bar" style="width:3.1%;"></div></div><span class="mfun-count">1 <span class="pct">3 %</span></span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Top-5 Kandidaten unter-touched</h2>
+          <span class="meta">eigene · sortiert nach Tagen seit letztem Touch</span>
+          <div class="right"><span class="scope-chip">5 von 12</span></div>
+        </div>
+        <table class="ktable">
+          <thead>
+            <tr>
+              <th>Kandidat</th>
+              <th>Mandat</th>
+              <th>Sparte</th>
+              <th>Stage</th>
+              <th class="num">Letzter Touch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cand-cell"><span class="avatar gold sm">RM</span><span style="font-weight:500;">R. M.</span></span></td>
+              <td><span class="mono" style="font-size:11px;">MAN-2026-104</span></td>
+              <td><span class="stage-tag">ARC</span></td>
+              <td><span class="stage-tag">TI</span></td>
+              <td class="num"><span class="days bad">26 d</span></td>
+            </tr>
+            <tr>
+              <td><span class="cand-cell"><span class="avatar green sm">FA</span><span style="font-weight:500;">F. A.</span></span></td>
+              <td><span class="mono" style="font-size:11px;">MAN-2026-118</span></td>
+              <td><span class="stage-tag">ARC</span></td>
+              <td><span class="stage-tag">CV Sent</span></td>
+              <td class="num"><span class="days bad">23 d</span></td>
+            </tr>
+            <tr>
+              <td><span class="cand-cell"><span class="avatar sm">SK</span><span style="font-weight:500;">S. K.</span></span></td>
+              <td><span class="mono" style="font-size:11px;">MAN-2026-127</span></td>
+              <td><span class="stage-tag">ARC</span></td>
+              <td><span class="stage-tag">TI</span></td>
+              <td class="num"><span class="days warn">21 d</span></td>
+            </tr>
+            <tr>
+              <td><span class="cand-cell"><span class="avatar amber sm">TM</span><span style="font-weight:500;">T. M.</span></span></td>
+              <td><span class="mono" style="font-size:11px;">MAN-2026-115</span></td>
+              <td><span class="stage-tag">GT</span></td>
+              <td><span class="stage-tag">1st</span></td>
+              <td class="num"><span class="days warn">18 d</span></td>
+            </tr>
+            <tr>
+              <td><span class="cand-cell"><span class="avatar sm">NW</span><span style="font-weight:500;">N. W.</span></span></td>
+              <td><span class="mono" style="font-size:11px;">MAN-2026-131</span></td>
+              <td><span class="stage-tag">REM</span></td>
+              <td><span class="stage-tag">Expose</span></td>
+              <td class="num"><span class="days">14 d</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Aktivität · Tag × Wochentag</h2>
+          <span class="meta">letzte 30 Tage · Touches gesamt</span>
+          <div class="right"><span class="scope-chip">∑ 178</span></div>
+        </div>
+        <div class="day-heat" id="dayHeat"></div>
+        <div class="day-heat-foot">
+          <span>0</span><span class="day-heat-scale"></span><span>14+</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right column -->
+    <div class="col-stack">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Aktive Goals</h2>
+          <span class="meta">3 aktiv · 0 in Drift</span>
+        </div>
+        <div class="goal-row">
+          <div class="goal-head">
+            <span class="goal-title">Q2 Placements</span>
+            <span class="goal-pct green">75 %</span>
+          </div>
+          <div class="goal-track"><div class="goal-fill" style="width:75%;"></div></div>
+          <div class="goal-foot">
+            <span>3 / 4 Placements</span>
+            <span>12 Tage Restdauer</span>
+          </div>
+        </div>
+        <div class="goal-row">
+          <div class="goal-head">
+            <span class="goal-title">Q2 Calls</span>
+            <span class="goal-pct green">95 %</span>
+          </div>
+          <div class="goal-track"><div class="goal-fill" style="width:95%;"></div></div>
+          <div class="goal-foot">
+            <span>142 / 150 Calls</span>
+            <span>12 Tage Restdauer</span>
+          </div>
+        </div>
+        <div class="goal-row">
+          <div class="goal-head">
+            <span class="goal-title">Annual Pipeline-Wert</span>
+            <span class="goal-pct amber">40 %</span>
+          </div>
+          <div class="goal-track"><div class="goal-fill amber" style="width:40%;"></div></div>
+          <div class="goal-foot">
+            <span>CHF 480k / CHF 1.2 Mio</span>
+            <span>6 Mt. Restdauer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Meine offenen Insights</h2>
+          <span class="meta">2 anstehend</span>
+        </div>
+        <div class="ins-card">
+          <div>
+            <div class="sev">Warn</div>
+            <div class="title">Coverage ARC unter Soll</div>
+            <div class="meta">1 Massnahme aktiv · seit 3 d</div>
+          </div>
+          <svg class="ico arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 6 6 6-6 6"/></svg>
+        </div>
+        <div class="ins-card info">
+          <div>
+            <div class="sev">Info</div>
+            <div class="title">Aktivität letzte Woche −8 %</div>
+            <div class="meta">keine Massnahme · seit 1 d</div>
+          </div>
+          <svg class="ico arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 6 6 6-6 6"/></svg>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Meine Massnahmen</h2>
+          <span class="meta">2 offen</span>
+        </div>
+        <div class="mass-row">
+          <div>
+            <div class="status-pill work">in Arbeit</div>
+            <div class="title">8 unter-touched ARC-Kandidaten reaktivieren</div>
+          </div>
+          <div class="due">fällig<br/>28.04.</div>
+          <svg class="ico arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--text-light);"><path d="m9 6 6 6-6 6"/></svg>
+        </div>
+        <div class="mass-row">
+          <div>
+            <div class="status-pill pending">pending</div>
+            <div class="title">Briefing-Checkliste aktualisieren</div>
+          </div>
+          <div class="due">fällig<br/>30.04.</div>
+          <svg class="ico arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--text-light);"><path d="m9 6 6 6-6 6"/></svg>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Other tabs (collapsed previews for spec-completeness) -->
+  <section class="other-tabs">
+    <h3 class="ot-title">Weitere Tabs · Vorschau</h3>
+
+    <!-- Pipeline -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-head">
+        <h2>Pipeline · Eigener Funnel (PW)</h2>
+        <span class="meta">analog Pipeline-Funnel · gefiltert auf Owner = PW · 63 aktive Prozesse</span>
+        <div class="right"><span class="scope-chip">Tab · Pipeline</span></div>
+      </div>
+      <div class="mfunnel">
+        <div class="mfun-row"><span class="mfun-name">Expose</span><div class="mfun-track"><div class="mfun-bar" style="width:100%;"></div></div><span class="mfun-count">32</span></div>
+        <div class="mfun-row"><span class="mfun-name">CV Sent</span><div class="mfun-track"><div class="mfun-bar" style="width:56%;"></div></div><span class="mfun-count">18</span></div>
+        <div class="mfun-row"><span class="mfun-name">TI</span><div class="mfun-track"><div class="mfun-bar" style="width:28%;"></div></div><span class="mfun-count">9</span></div>
+        <div class="mfun-row"><span class="mfun-name">1st</span><div class="mfun-track"><div class="mfun-bar" style="width:9.4%;"></div></div><span class="mfun-count">3</span></div>
+        <div class="mfun-row"><span class="mfun-name">Placement</span><div class="mfun-track"><div class="mfun-bar" style="width:3.1%;"></div></div><span class="mfun-count">1</span></div>
+      </div>
+    </div>
+
+    <!-- Aktivität -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-head">
+        <h2>Aktivität · 12-Wochen-Heatmap + Type-Breakdown</h2>
+        <span class="meta">eigene Touches · letzte 12 Wochen</span>
+        <div class="right"><span class="scope-chip">Tab · Aktivität</span></div>
+      </div>
+      <div class="act-heat" id="actHeat"></div>
+      <div style="border-top:1px solid var(--border);"></div>
+      <div class="act-types">
+        <span class="lab">Kontaktberührung</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="num">142</span>
+        <span class="lab">Erreicht</span><div class="track"><div class="fill" style="width:62%;"></div></div><span class="num">88</span>
+        <span class="lab">Emailverkehr</span><div class="track"><div class="fill" style="width:54%;background:var(--accent);"></div></div><span class="num">76</span>
+        <span class="lab">Messaging</span><div class="track"><div class="fill" style="width:30%;background:var(--accent);"></div></div><span class="num">42</span>
+        <span class="lab">Interviewprozess</span><div class="track"><div class="fill" style="width:25%;background:var(--gold-strong);"></div></div><span class="num">35</span>
+        <span class="lab">Coaching</span><div class="track"><div class="fill" style="width:13%;background:var(--gold-strong);"></div></div><span class="num">18</span>
+        <span class="lab">Briefing</span><div class="track"><div class="fill" style="width:9%;background:var(--green);"></div></div><span class="num">12</span>
+        <span class="lab">Debriefing</span><div class="track"><div class="fill" style="width:6%;background:var(--green);"></div></div><span class="num">8</span>
+        <span class="lab">Referenzauskunft</span><div class="track"><div class="fill" style="width:3%;background:var(--text-light);"></div></div><span class="num">4</span>
+      </div>
+    </div>
+
+    <!-- Compliance -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-head">
+        <h2>Compliance · E-Learning, Reminder, AI-Confirm</h2>
+        <span class="meta">Pflichtkurse + Backlog + AI-Vertrauen</span>
+        <div class="right"><span class="scope-chip">Tab · Compliance</span></div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="lab">Reminder-Backlog</div>
+          <div class="val" style="color:var(--green);">0 <span style="font-size:13px; color:var(--text-mid); font-weight:400;">überfällig</span></div>
+          <div class="sub">3 fällig diese Woche</div>
+        </div>
+        <div class="comp-card">
+          <div class="lab">AI-Confirm-Rate</div>
+          <div class="val">87 <span style="font-size:13px; color:var(--text-mid); font-weight:400;">%</span></div>
+          <div class="sub">Briefing-AI · letzte 30 Tage</div>
+        </div>
+        <div class="comp-card">
+          <div class="lab">Compliance-Score</div>
+          <div class="val" style="color:var(--green);">100 <span style="font-size:13px; color:var(--text-mid); font-weight:400;">%</span></div>
+          <div class="sub">aktuell · keine Lücken</div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);"></div>
+      <div class="e-learn">
+        <div style="font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-light); font-weight:600; margin-bottom:4px;">Pflichtkurse</div>
+        <div class="el-row"><span class="lab">Datenschutz · Refresher 2026</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="pct">100 %</span></div>
+        <div class="el-row"><span class="lab">Anti-Diskriminierung · Modul 3</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="pct">100 %</span></div>
+        <div class="el-row"><span class="lab">CRM-Update · v8.4</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="pct">100 %</span></div>
+        <div class="el-row"><span class="lab">Briefing-Standard 2026</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="pct">100 %</span></div>
+      </div>
+    </div>
+
+    <!-- Commission -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Commission · Run-Rate &amp; Auszahlungs-Verlauf</h2>
+        <span class="meta">read-only · Spiegel aus Commission-Modul</span>
+        <div class="right">
+          <span class="scope-chip">Tab · Commission</span>
+          <a class="mono" style="color:var(--accent); font-size:11.5px;" href="#">→ Details im Modul</a>
+        </div>
+      </div>
+      <div class="runrate-chart">
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:8px;"></div><div class="rr-bar am" style="height:42px;"></div></div><span class="rr-month">Jan</span></div>
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:14px;"></div><div class="rr-bar am" style="height:58px;"></div></div><span class="rr-month">Feb</span></div>
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:18px;"></div><div class="rr-bar am" style="height:74px;"></div></div><span class="rr-month">Mär</span></div>
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:22px;"></div><div class="rr-bar am" style="height:88px;"></div></div><span class="rr-month">Apr</span></div>
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:28px;opacity:0.4;"></div><div class="rr-bar am" style="height:104px;opacity:0.4;"></div></div><span class="rr-month">Mai*</span></div>
+        <div class="rr-col"><div class="rr-bar-wrap"><div class="rr-bar cm" style="height:32px;opacity:0.4;"></div><div class="rr-bar am" style="height:118px;opacity:0.4;"></div></div><span class="rr-month">Jun*</span></div>
+      </div>
+      <div style="padding:0 22px 12px; display:flex; gap:14px; font-size:11px; color:var(--text-mid); font-family:'JetBrains Mono',monospace;">
+        <span><span style="display:inline-block; width:10px; height:10px; background:var(--accent); margin-right:4px;"></span>AM-Anteil</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:var(--gold-strong); margin-right:4px;"></span>CM-Anteil</span>
+        <span style="margin-left:auto;">* Forecast</span>
+      </div>
+      <table class="ctable">
+        <thead>
+          <tr>
+            <th>Monat</th>
+            <th class="num">Brutto</th>
+            <th class="num">Auszahlung 80 %</th>
+            <th class="num">Rücklage 20 %</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="month-cell">Januar</td><td class="num">CHF 14'200</td><td class="num">CHF 11'360</td><td class="num">CHF 2'840</td><td><span class="status-pill" style="background:var(--green-tint); color:var(--green);">ausbezahlt</span></td></tr>
+          <tr><td class="month-cell">Februar</td><td class="num">CHF 18'600</td><td class="num">CHF 14'880</td><td class="num">CHF 3'720</td><td><span class="status-pill" style="background:var(--green-tint); color:var(--green);">ausbezahlt</span></td></tr>
+          <tr><td class="month-cell">März</td><td class="num">CHF 22'400</td><td class="num">CHF 17'920</td><td class="num">CHF 4'480</td><td><span class="status-pill" style="background:var(--green-tint); color:var(--green);">ausbezahlt</span></td></tr>
+          <tr><td class="month-cell">April</td><td class="num">CHF 26'800</td><td class="num">CHF 21'440</td><td class="num">CHF 5'360</td><td><span class="status-pill work">fällig 30.04.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Goals tab preview -->
+    <div class="panel" style="margin-top:14px;">
+      <div class="panel-head">
+        <h2>Goals · alle (aktiv + archiviert)</h2>
+        <span class="meta">3 aktiv · 8 archiviert</span>
+        <div class="right">
+          <span class="scope-chip">Tab · Goals</span>
+          <button class="btn btn-gold" style="font-size:11px; padding:4px 10px;">+ Goal</button>
+        </div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-head">
+          <span class="goal-title">Q2 Placements <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
+          <span class="goal-pct green">75 % · On-Track</span>
+        </div>
+        <div class="goal-track"><div class="goal-fill" style="width:75%;"></div></div>
+        <div class="goal-foot"><span>3 / 4 · 01.04. – 30.06.2026</span><span>Drift ±0 % · Schwelle ±15 %</span></div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-head">
+          <span class="goal-title">Q2 Calls <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
+          <span class="goal-pct green">95 % · On-Track</span>
+        </div>
+        <div class="goal-track"><div class="goal-fill" style="width:95%;"></div></div>
+        <div class="goal-foot"><span>142 / 150 · 01.04. – 30.06.2026</span><span>Drift +3 %</span></div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-head">
+          <span class="goal-title">Annual Pipeline-Wert <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
+          <span class="goal-pct amber">40 % · Drift</span>
+        </div>
+        <div class="goal-track"><div class="goal-fill amber" style="width:40%;"></div></div>
+        <div class="goal-foot"><span>CHF 480k / CHF 1.2 Mio · 01.01. – 31.12.2026</span><span>Drift −12 %</span></div>
+      </div>
+      <div class="goal-row" style="opacity:0.6;">
+        <div class="goal-head">
+          <span class="goal-title">Q1 Placements <span class="scope-chip" style="margin-left:8px;">archiviert</span></span>
+          <span class="goal-pct green">120 %</span>
+        </div>
+        <div class="goal-track"><div class="goal-fill" style="width:100%;"></div></div>
+        <div class="goal-foot"><span>6 / 5 · 01.01. – 31.03.2026</span><span>abgeschlossen 31.03.</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Drawer previews -->
+  <h2 class="drawer-section-title">
+    Drawer-States
+    <span class="hint">Slide-in von rechts · 540 px</span>
+  </h2>
+
+  <div class="drawer-row">
+
+    <!-- Drawer A · Goal new -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Neues Goal · MA PW · Periode Q3 2026</div>
+        <div class="drawer-head-top">
+          <h3>Goal erstellen</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Goal</button>
+          <button class="drawer-tab">Vorlage</button>
+          <button class="drawer-tab">Verknüpft</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Goal-Definition</h4>
+          <div class="form-row">
+            <span class="lab">Goal-Typ</span>
+            <div class="form-input">
+              <span>Placements</span>
+              <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Soll-Wert</span>
+            <div class="form-input num-input">
+              <span>4</span>
+              <span style="color:var(--text-light); font-size:11px; font-family:'DM Sans';">Placements</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Periode · Start</span>
+            <div class="form-input"><span>01.07.2026</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Periode · Ende</span>
+            <div class="form-input"><span>30.09.2026</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Drift-Schwelle</h4>
+          <div class="slider">
+            <span class="mono" style="font-size:11px; color:var(--text-light);">±5 %</span>
+            <div class="slider-track">
+              <div class="slider-fill"></div>
+              <div class="slider-thumb-l"></div>
+              <div class="slider-thumb-r"></div>
+            </div>
+            <span class="mono" style="font-size:11px; color:var(--text-light);">±30 %</span>
+            <span class="slider-val">±15 %</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--text-mid); margin-top:8px;">
+            Warn-Schwelle: <strong>−15 %</strong> triggert automatisch ein Insight.
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verknüpfen mit Mandat (optional)</h4>
+          <div class="chip-input">
+            <span class="chip">MAN-2026-104 <span class="x">×</span></span>
+            <span class="chip">MAN-2026-118 <span class="x">×</span></span>
+            <span class="placeholder">+ Mandat hinzufügen…</span>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Goal erstellen</button>
+        <button class="btn">Vorlage speichern</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer B · Goal Progress -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Goal · Q2 Placements · 75 % erreicht</div>
+        <div class="drawer-head-top">
+          <h3>Q2 Placements</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Verlauf</button>
+          <button class="drawer-tab">Verknüpfte Prozesse</button>
+          <button class="drawer-tab">Drift</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <div class="goal-hero">
+            <div class="big">3 / 4</div>
+            <div class="sub">12 Tage Restdauer · 1 Placement fehlt</div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verlauf · kumuliert</h4>
+          <div class="verlauf-chart">
+            <div class="line"></div>
+            <!-- Apr 1 ... Jun 30, 3 dots -->
+            <div class="dot" style="left:18%; top:65%;"></div>
+            <div class="dot" style="left:46%; top:42%;"></div>
+            <div class="dot" style="left:78%; top:25%;"></div>
+            <!-- target line dashed -->
+            <div style="position:absolute; left:8px; right:8px; top:20%; height:1px; border-top:1px dashed var(--gold-strong);"></div>
+            <span style="position:absolute; right:10px; top:6%; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold-strong);">Soll · 4</span>
+          </div>
+          <div class="verlauf-axis">
+            <span>April</span><span>Mai</span><span>Juni</span>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verknüpfte Prozesse · 4</h4>
+          <div class="proc-row">
+            <svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><div class="name">F. A.</div><div class="meta">MAN-2026-118 · ARC</div></div>
+            <span class="meta" style="text-align:center;">15.04.</span>
+            <span class="stage" style="color:var(--green); font-weight:600; font-size:11px;">PLACEMENT</span>
+          </div>
+          <div class="proc-row">
+            <svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><div class="name">M. B.</div><div class="meta">MAN-2026-091 · ING</div></div>
+            <span class="meta" style="text-align:center;">22.04.</span>
+            <span class="stage" style="color:var(--green); font-weight:600; font-size:11px;">PLACEMENT</span>
+          </div>
+          <div class="proc-row">
+            <svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><div class="name">D. K.</div><div class="meta">MAN-2026-076 · GT</div></div>
+            <span class="meta" style="text-align:center;">24.04.</span>
+            <span class="stage" style="color:var(--green); font-weight:600; font-size:11px;">PLACEMENT</span>
+          </div>
+          <div class="proc-row">
+            <svg class="ico ico-pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div><div class="name">R. M.</div><div class="meta">MAN-2026-104 · ARC</div></div>
+            <span class="meta" style="text-align:center;">offen</span>
+            <span class="stage"><span class="stage-tag">TI</span></span>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Drift</h4>
+          <div class="ontrack">
+            <span class="badge">On-Track</span>
+            <div style="flex:1;">
+              <div style="margin-bottom:4px; color:var(--text);">Drift <strong style="color:var(--green);">±0 %</strong> gegenüber Soll-Verlauf</div>
+              <div style="height:6px; background:var(--surface-sunk); border-radius:2px; overflow:hidden;">
+                <div style="height:100%; width:50%; background:var(--green);"></div>
+              </div>
+            </div>
+            <span class="mono" style="font-size:11px; color:var(--text-mid);">±15 % Schwelle</span>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Bearbeiten</button>
+        <button class="btn">Archivieren</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="footer-line">
+    <span>Quelle · ARK Performance-Warehouse · Stand 25.04.2026 09:14</span>
+    <span>Layout · mein-performance.v1 · Periode Q2 2026</span>
+  </div>
+
+</main>
+
+<script>
+  // Tab switching (visual only — content shown in "other-tabs" preview region for spec)
+  document.querySelectorAll('.tabnav button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.tabnav button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  // Drawer tabs
+  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.drawer-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  });
+
+  // Context-switch demo: toggle read-only banner
+  let viewingOther = false;
+  const ctxBtn = document.getElementById('ctxSwitch');
+  const roBanner = document.getElementById('roBanner');
+  ctxBtn.addEventListener('click', () => {
+    viewingOther = !viewingOther;
+    roBanner.classList.toggle('on', viewingOther);
+    ctxBtn.querySelector('.av').textContent = viewingOther ? 'LR' : 'PW';
+    ctxBtn.querySelector('.nm').textContent = viewingOther ? 'LR (read-only)' : 'Mein Profil';
+  });
+  document.getElementById('backToMe').addEventListener('click', (e) => {
+    e.preventDefault();
+    viewingOther = false;
+    roBanner.classList.remove('on');
+    ctxBtn.querySelector('.av').textContent = 'PW';
+    ctxBtn.querySelector('.nm').textContent = 'Mein Profil';
+  });
+
+  // Day × Wochentag heatmap (5 weeks × 7 days)
+  const dayHeat = document.getElementById('dayHeat');
+  const wd = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  let html = '<div class="h left"></div>';
+  wd.forEach(w => html += `<div class="h">${w}</div>`);
+  // 5 weeks of pseudo-stable data, weekdays heavier than weekends
+  const weeks = ['KW14','KW15','KW16','KW17','KW18'];
+  const data = [
+    [8, 11, 9, 7, 6, 1, 0],
+    [10, 12, 8, 11, 9, 2, 0],
+    [7, 9, 12, 14, 10, 1, 1],
+    [11, 13, 10, 9, 8, 0, 0],
+    [9, 12, 11, 10, 7, 2, 0],
+  ];
+  function bg(v) {
+    const t = Math.min(1, v / 14);
+    if (t === 0) return 'var(--surface-sunk)';
+    // mix surface-sunk → accent
+    const aR=26, aG=58, aB=92;     // accent #1A3A5C
+    const sR=229, sG=231, sB=236;  // surface-sunk
+    const r = Math.round(sR + (aR-sR)*t);
+    const g = Math.round(sG + (aG-sG)*t);
+    const b = Math.round(sB + (aB-sB)*t);
+    return `rgb(${r},${g},${b})`;
+  }
+  function txt(v) {
+    return v > 8 ? '#fff' : 'var(--text)';
+  }
+  weeks.forEach((wk, i) => {
+    html += `<div class="lab">${wk}</div>`;
+    data[i].forEach(v => {
+      html += `<div class="cell" style="background:${bg(v)}; color:${txt(v)};">${v || ''}</div>`;
+    });
+  });
+  dayHeat.innerHTML = html;
+
+  // 12-week activity heatmap
+  const actHeat = document.getElementById('actHeat');
+  const wdLabels = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  let ahHtml = '<div class="h"></div>';
+  for (let i = 1; i <= 12; i++) ahHtml += `<div class="h">W${i}</div>`;
+  for (let r = 0; r < 7; r++) {
+    ahHtml += `<div class="lab">${wdLabels[r]}</div>`;
+    for (let c = 0; c < 12; c++) {
+      // pseudo data: weekdays high, weekends low
+      const baseVal = r >= 5 ? 0.5 : 6;
+      const noise = ((c * 17 + r * 7) % 11) / 10;
+      const v = Math.round(baseVal + noise * (r >= 5 ? 1 : 8));
+      const t = Math.min(1, v / 14);
+      const aR=26, aG=58, aB=92, sR=229, sG=231, sB=236;
+      const cr = Math.round(sR + (aR-sR)*t);
+      const cg = Math.round(sG + (aG-sG)*t);
+      const cb = Math.round(sB + (aB-sB)*t);
+      ahHtml += `<div class="cell" style="background:rgb(${cr},${cg},${cb});" title="W${c+1} ${wdLabels[r]} · ${v} Touches"></div>`;
+    }
+  }
+  actHeat.innerHTML = ahHtml;
+</script>
+</body>
+</html>
