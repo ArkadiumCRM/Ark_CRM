@@ -1181,20 +1181,14 @@
   });
 
   // ---------- Funnel ----------
-  // ACHTUNG: legacy Stage-Namen (Research/Briefing) — sind NICHT Stammdaten-konform (§13).
-  // Bewusst inline gelassen, da window.ARK_PERF.stages andere counts hat (Live-Funnel) und
-  // Dashboard-Mini-Funnel als Trend-Snapshot konzipiert ist. Refactor (auf Expose/CV-Sent/...)
-  // separat auszufuehren.
+  // Stammdaten-konforme Stage-Namen gem. ARK_STAMMDATEN_EXPORT §13 dim_process_stages.
+  // Mini-Funnel zeigt kompakte Top-5-Auswahl: Expose · CV Sent · TI · 1st · Placement.
   const funnelStages = [
-    {name: 'Research',  count: 240},
-    {name: 'Briefing',  count: 180},
-    {name: 'CV Sent',   count: 45},
-    {name: 'TI',        count: 32},
-    {name: '1st',       count: 24},
-    {name: '2nd',       count: 18},
-    {name: '3rd',       count: 12},
-    {name: 'Offer',     count: 9},
-    {name: 'Placement', count: 8},
+    {name: 'Expose',    count: 240},
+    {name: 'CV Sent',   count: 91},
+    {name: 'TI',        count: 45},
+    {name: '1st',       count: 13},
+    {name: 'Placement', count: 4},
   ];
   const max = funnelStages[0].count;
   const funnelEl = document.getElementById('funnel');
