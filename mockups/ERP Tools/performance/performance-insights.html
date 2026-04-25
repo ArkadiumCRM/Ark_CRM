@@ -9,9 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../../_shared/editorial.css" />
 <style>
-  /* Hub-Iframe-Compat: App-Bar nur im Standalone-Modus */
-  body.in-iframe .app-bar { display: none; }
-  body.in-iframe main { padding-top: 12px; }
 
   :root, [data-theme="light"] {
     --accent: #196774; --accent-tint: #e7eff1;
@@ -813,37 +810,7 @@
 </head>
 <body>
 
-<!-- ============== APP BAR ============== -->
-<div class="app-bar">
-  <div class="brand">
-    <div class="brand-mark">A</div>
-    <div>
-      <div class="brand-name">ARK · CRM</div>
-      <div class="brand-sub">Performance</div>
-    </div>
-  </div>
-
-  <div class="modules">
-    <button class="mod">Dashboard</button>
-    <button class="mod active">Insights</button>
-    <button class="mod">Funnel</button>
-    <button class="mod">Coverage</button>
-    <button class="mod">Mitarbeiter</button>
-    <button class="mod">Revenue</button>
-    <button class="mod">Reports</button>
-    <button class="mod">Admin</button>
-  </div>
-
-  <div class="app-bar-right">
-    <div class="user-pill">
-      <div class="user-dot">PW</div>
-      <span>Peter W. · Admin</span>
-    </div>
-    <button class="theme-toggle" id="themeToggle" title="Theme umschalten">
-      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-    </button>
-  </div>
-</div>
+<!-- App-Bar entfernt: Hub-Topbar (performance.html) liefert Brand + Module-Tabs + Theme-Toggle. Sub-Pages enthalten ausschliesslich Content (analog hr-dashboard.html, zeit-dashboard.html). -->
 
 <main>
 
@@ -1582,12 +1549,7 @@
 </main>
 
 <script>
-  // theme toggle
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    const html = document.documentElement;
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-  });
+  // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
 
   // Insight selection (highlight + would update right panel in full app)
   document.querySelectorAll('#insightList .insight').forEach(el => {
