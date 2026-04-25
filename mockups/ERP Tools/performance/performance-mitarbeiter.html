@@ -955,25 +955,33 @@
     </div>
 
     <!-- Aktivität -->
-    <div class="panel" style="margin-bottom:14px;">
-      <div class="panel-head">
-        <h2>Aktivität · 12-Wochen-Heatmap + Type-Breakdown</h2>
-        <span class="meta">eigene Touches · letzte 12 Wochen</span>
-        <div class="right"><span class="scope-chip">Tab · Aktivität</span></div>
-      </div>
-      <div class="act-heat" id="actHeat"></div>
-      <div style="border-top:1px solid var(--border);"></div>
-      <div class="act-types">
-        <span class="lab">Kontaktberührung</span><div class="track"><div class="fill" style="width:100%;"></div></div><span class="num">142</span>
-        <span class="lab">Erreicht</span><div class="track"><div class="fill" style="width:62%;"></div></div><span class="num">88</span>
-        <span class="lab">Emailverkehr</span><div class="track"><div class="fill" style="width:54%;background:var(--accent);"></div></div><span class="num">76</span>
-        <span class="lab">Messaging</span><div class="track"><div class="fill" style="width:30%;background:var(--accent);"></div></div><span class="num">42</span>
-        <span class="lab">Interviewprozess</span><div class="track"><div class="fill" style="width:25%;background:var(--gold-strong);"></div></div><span class="num">35</span>
-        <span class="lab">Coaching</span><div class="track"><div class="fill" style="width:13%;background:var(--gold-strong);"></div></div><span class="num">18</span>
-        <span class="lab">Briefing</span><div class="track"><div class="fill" style="width:9%;background:var(--green);"></div></div><span class="num">12</span>
-        <span class="lab">Debriefing</span><div class="track"><div class="fill" style="width:6%;background:var(--green);"></div></div><span class="num">8</span>
-        <span class="lab">Referenzauskunft</span><div class="track"><div class="fill" style="width:3%;background:var(--text-light);"></div></div><span class="num">4</span>
-      </div>
+    <div class="panel" style="margin-bottom:14px; padding:20px 22px 18px;">
+      <section class="activity-overview">
+        <header class="panel-head" style="border:0; padding:0 0 14px 0;">
+          <h2 style="font-family:'Libre Baskerville',serif; font-size:18px; margin:0;">Aktivität · Letzte 12 Wochen</h2>
+          <span class="meta" style="margin-left:12px; color:var(--text-mid); font-size:12px;">KW 7 – 18 · 497 Touches gesamt · Ø 41 / Woche</span>
+          <div class="right"><span class="scope-chip">Tab · Aktivität</span></div>
+        </header>
+
+        <div class="activity-chart-wrap" style="background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:24px 28px;">
+          <svg id="activitySvg" viewBox="0 0 760 320" style="width:100%; height:auto; display:block;">
+            <!-- y-axis grid + labels -->
+            <g class="y-grid"></g>
+            <!-- median line -->
+            <line id="medianLine" x1="60" x2="740" stroke="var(--gold-strong)" stroke-width="1.2" stroke-dasharray="4 4" />
+            <text id="medianLbl" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--gold-strong)">Ø 41 Median</text>
+            <!-- bars -->
+            <g class="bars"></g>
+            <!-- x-axis labels (KW) -->
+            <g class="x-axis"></g>
+          </svg>
+        </div>
+
+        <!-- Legend with totals -->
+        <div class="activity-legend" style="display:flex; gap:24px; flex-wrap:wrap; padding:14px 4px 0 4px; font-size:12.5px;">
+          <!-- populated by JS -->
+        </div>
+      </section>
     </div>
 
     <!-- Compliance -->
@@ -1364,27 +1372,101 @@
   });
   dayHeat.innerHTML = html;
 
-  // 12-week activity heatmap
-  const actHeat = document.getElementById('actHeat');
-  const wdLabels = ['Mo','Di','Mi','Do','Fr','Sa','So'];
-  let ahHtml = '<div class="h"></div>';
-  for (let i = 1; i <= 12; i++) ahHtml += `<div class="h">W${i}</div>`;
-  for (let r = 0; r < 7; r++) {
-    ahHtml += `<div class="lab">${wdLabels[r]}</div>`;
-    for (let c = 0; c < 12; c++) {
-      // pseudo data: weekdays high, weekends low
-      const baseVal = r >= 5 ? 0.5 : 6;
-      const noise = ((c * 17 + r * 7) % 11) / 10;
-      const v = Math.round(baseVal + noise * (r >= 5 ? 1 : 8));
-      const t = Math.min(1, v / 14);
-      const aR=26, aG=58, aB=92, sR=229, sG=231, sB=236;
-      const cr = Math.round(sR + (aR-sR)*t);
-      const cg = Math.round(sG + (aG-sG)*t);
-      const cb = Math.round(sB + (aB-sB)*t);
-      ahHtml += `<div class="cell" style="background:rgb(${cr},${cg},${cb});" title="W${c+1} ${wdLabels[r]} · ${v} Touches"></div>`;
+  // Stacked-Bar-Chart: Aktivität 12 Wochen × 5 Activity-Types
+  (function renderActivityChart() {
+    const activityWeeks = [
+      { kw: 7,  values: [12, 18,  4, 2, 1] },
+      { kw: 8,  values: [15, 16,  5, 3, 2] },
+      { kw: 9,  values: [11, 19,  6, 4, 1] },
+      { kw: 10, values: [14, 14,  4, 2, 2] },
+      { kw: 11, values: [16, 17,  7, 3, 3] },
+      { kw: 12, values: [13, 15,  5, 4, 2] },
+      { kw: 13, values: [10, 12,  4, 2, 1] },
+      { kw: 14, values: [15, 18,  6, 3, 2] },
+      { kw: 15, values: [17, 19,  8, 4, 3] },
+      { kw: 16, values: [16, 17,  7, 3, 2] },
+      { kw: 17, values: [14, 16,  6, 3, 2] },
+      { kw: 18, values: [15, 17,  9, 4, 2] },
+    ];
+    const types = [
+      { name:'Kontaktberührung', color:'var(--accent)',  total:168 },
+      { name:'Emailverkehr',     color:'#5588B3',         total:198 },
+      { name:'Coaching',         color:'var(--gold)',     total: 71 },
+      { name:'Briefing',         color:'var(--green)',    total: 37 },
+      { name:'Debriefing',       color:'var(--amber)',    total: 23 },
+    ];
+    const median = 41;
+
+    const svg = document.getElementById('activitySvg');
+    if (!svg) return;
+
+    // Layout constants
+    const padL = 60, padR = 20, padT = 30, padB = 50;
+    const W = 760, H = 320;
+    const chartW = W - padL - padR;
+    const chartH = H - padT - padB;
+    const maxY = 60;
+    const yScale = v => H - padB - (v / maxY) * chartH;
+
+    // y-grid + labels
+    const yGrid = svg.querySelector('.y-grid');
+    [0, 20, 40, 60].forEach(v => {
+      const y = yScale(v);
+      yGrid.insertAdjacentHTML('beforeend',
+        `<line x1="${padL}" x2="${W-padR}" y1="${y}" y2="${y}" stroke="var(--border)" stroke-width="1"/>` +
+        `<text x="${padL-8}" y="${y+3}" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-light)" text-anchor="end">${v}</text>`
+      );
+    });
+
+    // bars
+    const barGap = 6;
+    const barW = (chartW - barGap * (activityWeeks.length - 1)) / activityWeeks.length;
+    const barsG = svg.querySelector('.bars');
+    const xAxisG = svg.querySelector('.x-axis');
+    activityWeeks.forEach((w, i) => {
+      const x = padL + i * (barW + barGap);
+      let yCursor = H - padB;
+      w.values.forEach((v, ti) => {
+        const segH = (v / maxY) * chartH;
+        barsG.insertAdjacentHTML('beforeend',
+          `<rect x="${x}" y="${yCursor - segH}" width="${barW}" height="${segH}" fill="${types[ti].color}" opacity="0.92"></rect>`
+        );
+        yCursor -= segH;
+      });
+      // total label above bar
+      const total = w.values.reduce((a,b)=>a+b,0);
+      barsG.insertAdjacentHTML('beforeend',
+        `<text x="${x + barW/2}" y="${yCursor - 6}" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-mid)" text-anchor="middle">${total}</text>`
+      );
+      // x-axis label
+      xAxisG.insertAdjacentHTML('beforeend',
+        `<text x="${x + barW/2}" y="${H - padB + 16}" font-family="DM Sans, sans-serif" font-size="10.5" fill="var(--text-light)" text-anchor="middle">KW ${w.kw}</text>`
+      );
+    });
+
+    // median line
+    const medianY = yScale(median);
+    document.getElementById('medianLine').setAttribute('y1', medianY);
+    document.getElementById('medianLine').setAttribute('y2', medianY);
+    const lbl = document.getElementById('medianLbl');
+    lbl.setAttribute('x', W - padR - 76);
+    lbl.setAttribute('y', medianY - 6);
+
+    // legend
+    const legend = document.querySelector('.activity-legend');
+    if (legend) {
+      legend.innerHTML = types.map(t =>
+        `<span style="display:inline-flex; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; background:${t.color}; border-radius:2px; display:inline-block;"></span>
+          <span style="color:var(--text-mid);">${t.name}</span>
+          <span style="font-family:'JetBrains Mono', monospace; color:var(--text); font-weight:500;">${t.total}</span>
+        </span>`
+      ).join('');
+      legend.insertAdjacentHTML('beforeend',
+        `<span style="margin-left:auto; color:var(--text-light); font-size:11.5px;">Gesamt · <strong style="color:var(--text); font-family:'JetBrains Mono', monospace;">497 Touches</strong></span>`
+      );
     }
-  }
-  actHeat.innerHTML = ahHtml;
+  })();
 </script>
 </body>
 </html>
