@@ -523,116 +523,7 @@
             <th>Letzter Snapshot</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="code-cell">placement_count</td>
-            <td>Placement-Anzahl</td>
-            <td><span class="cat-pill pipeline">Pipeline</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
-            <td><span class="agg-pill">COUNT</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">candidate_coverage_score</td>
-            <td>Kandidaten-Coverage</td>
-            <td><span class="cat-pill coverage">Coverage</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_candidate_coverage</td>
-            <td><span class="agg-pill">AVG</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">account_coverage_score</td>
-            <td>Account-Coverage</td>
-            <td><span class="cat-pill coverage">Coverage</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_account_coverage</td>
-            <td><span class="agg-pill">AVG</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">conversion_rate</td>
-            <td>Konversionsrate</td>
-            <td><span class="cat-pill pipeline">Pipeline</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
-            <td><span class="agg-pill">DERIVED</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">time_to_hire</td>
-            <td>Time-to-Hire</td>
-            <td><span class="cat-pill pipeline">Pipeline</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_perf_pipeline_funnel_daily</td>
-            <td><span class="agg-pill">MEDIAN</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">revenue_realized</td>
-            <td>Revenue Realisiert</td>
-            <td><span class="cat-pill revenue">Revenue</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_perf_revenue_monthly</td>
-            <td><span class="agg-pill">SUM</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">revenue_forecast</td>
-            <td>Revenue Forecast</td>
-            <td><span class="cat-pill revenue">Revenue</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_perf_forecast_q_audit</td>
-            <td><span class="agg-pill">DERIVED</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">goal_drift</td>
-            <td>Goal-Drift</td>
-            <td><span class="cat-pill goals">Goals</span></td>
-            <td class="mono" style="color:var(--text-mid);"><!-- ark-lint-skip:begin reason=admin-table-spec -->derived from fact_perf_goal<!-- ark-lint-skip:end --></td>
-            <td><span class="agg-pill">DERIVED</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">activity_count_weekly</td>
-            <td>Aktivität Woche</td>
-            <td><span class="cat-pill activity">Activity</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_activity_rollup</td>
-            <td><span class="agg-pill">COUNT</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">reminder_backlog</td>
-            <td>Reminder-Backlog</td>
-            <td><span class="cat-pill compliance">Compliance</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_compliance_status</td>
-            <td><span class="agg-pill">COUNT</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr>
-            <td class="code-cell">elearning_compliance</td>
-            <td>E-Learning Compliance</td>
-            <td><span class="cat-pill compliance">Compliance</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_elearn_status</td>
-            <td><span class="agg-pill">AVG</span></td>
-            <td class="right"><span class="switch on"></span></td>
-            <td class="mono" style="color:var(--text-light);">25.04. 06:14</td>
-          </tr>
-          <tr class="paused-row">
-            <td class="code-cell">hunt_rate_weekly</td>
-            <td>Hunt-Rate Woche <span style="color:var(--text-light);font-size:11px;margin-left:4px;">(legacy → hunt_rate_v2)</span></td>
-            <td><span class="cat-pill activity">Activity</span></td>
-            <td class="mono" style="color:var(--text-mid);">v_hunt_rollup</td>
-            <td><span class="agg-pill">COUNT</span></td>
-            <td class="right"><span class="switch"></span></td>
-            <td class="mono" style="color:var(--text-light);">18.04. 06:14</td>
-          </tr>
-        </tbody>
+        <tbody id="metricsBody"></tbody>
       </table>
       <!-- ark-lint-skip:end -->
     </div>
@@ -661,35 +552,7 @@
             <th>Last-Edited</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="code-cell">candidate_coverage_score</td>
-            <td class="mono" style="color:var(--text-mid);">sparte/<span style="color:var(--text);">ARC</span></td>
-            <td class="right mono" style="color:var(--text-mid);">80%</td>
-            <td class="right mono" style="color:var(--amber);">70%</td>
-            <td class="right mono" style="color:var(--red);">50%</td>
-            <td class="right mono" style="color:var(--red);font-weight:600;">30%</td>
-            <td class="mono" style="color:var(--text-light);">18.04.2026 · PW</td>
-          </tr>
-          <tr>
-            <td class="code-cell">candidate_coverage_score</td>
-            <td class="mono" style="color:var(--text-mid);">sparte/<span style="color:var(--text);">PUR</span></td>
-            <td class="right mono" style="color:var(--text-mid);">75%</td>
-            <td class="right mono" style="color:var(--amber);">65%</td>
-            <td class="right mono" style="color:var(--red);">45%</td>
-            <td class="right mono" style="color:var(--red);font-weight:600;">25%</td>
-            <td class="mono" style="color:var(--text-light);">18.04.2026 · PW</td>
-          </tr>
-          <tr>
-            <td class="code-cell">goal_drift</td>
-            <td class="mono" style="color:var(--text-mid);">ma/*</td>
-            <td class="right mono" style="color:var(--text-mid);">−5%</td>
-            <td class="right mono" style="color:var(--amber);">−15%</td>
-            <td class="right mono" style="color:var(--red);">−30%</td>
-            <td class="right mono" style="color:var(--red);font-weight:600;">−50%</td>
-            <td class="mono" style="color:var(--text-light);">12.04.2026 · PW</td>
-          </tr>
-        </tbody>
+        <tbody id="schwellenBody"></tbody>
       </table>
       <!-- ark-lint-skip:end -->
     </div>
@@ -713,32 +576,7 @@
             <th>Letzte Änderung</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="mono" style="font-weight:600;">MA</td>
-            <td>Dashboard</td>
-            <td class="right mono">8</td>
-            <td><span class="lock-pill locked">🔒 1 · Compliance-Status</span></td>
-            <td class="right mono">12 User</td>
-            <td class="mono" style="color:var(--text-light);">10.04.2026 · PW</td>
-          </tr>
-          <tr>
-            <td class="mono" style="font-weight:600;">HEAD</td>
-            <td>Dashboard</td>
-            <td class="right mono">12</td>
-            <td><span class="lock-pill locked">🔒 3 · Health · Anomalien · Forecast</span></td>
-            <td class="right mono">4 User</td>
-            <td class="mono" style="color:var(--text-light);">14.04.2026 · PW</td>
-          </tr>
-          <tr>
-            <td class="mono" style="font-weight:600;">ADMIN</td>
-            <td>Dashboard</td>
-            <td class="right mono">14</td>
-            <td><span class="lock-pill locked">🔒 5</span></td>
-            <td class="right mono">1 User · PW</td>
-            <td class="mono" style="color:var(--text-light);">22.04.2026 · PW</td>
-          </tr>
-        </tbody>
+        <tbody id="dashboardDefaultsBody"></tbody>
       </table>
     </div>
   </section>
@@ -762,32 +600,7 @@
             <th class="right">Manual-Refresh</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="code-cell">v_perf_pipeline_funnel_daily</td>
-            <td class="mono" style="color:var(--text-mid);">daily 02:00</td>
-            <td class="mono" style="color:var(--text-light);">25.04. 02:14</td>
-            <td><span class="state-badge state-fresh">✓ fresh</span></td>
-            <td class="right mono">1'240</td>
-            <td class="right"><button class="btn btn-sm">Refresh</button></td>
-          </tr>
-          <tr>
-            <td class="code-cell">v_candidate_coverage</td>
-            <td class="mono" style="color:var(--text-mid);">daily 03:00</td>
-            <td class="mono" style="color:var(--text-light);">25.04. 03:18</td>
-            <td><span class="state-badge state-fresh">✓ fresh</span></td>
-            <td class="right mono">5'820</td>
-            <td class="right"><button class="btn btn-sm">Refresh</button></td>
-          </tr>
-          <tr>
-            <td class="code-cell">v_perf_forecast_q_audit</td>
-            <td class="mono" style="color:var(--text-mid);">weekly Mo</td>
-            <td class="mono" style="color:var(--amber);">18.04. 02:30</td>
-            <td><span class="state-badge state-stale">⚠ STALE 7d</span></td>
-            <td class="right mono">12</td>
-            <td class="right"><button class="btn btn-sm btn-gold">Refresh</button></td>
-          </tr>
-        </tbody>
+        <tbody id="viewsBody"></tbody>
       </table>
       <!-- ark-lint-skip:end -->
     </div>
@@ -812,32 +625,7 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="code-cell">snapshot-collector.worker</td>
-            <td class="mono" style="color:var(--text-mid);">hourly :15</td>
-            <td class="mono" style="color:var(--text-light);">vor 14 min</td>
-            <td class="right mono">1.2</td>
-            <td class="right mono" style="color:var(--green);">0%</td>
-            <td><span class="state-badge state-fresh">✓ green</span></td>
-          </tr>
-          <tr>
-            <td class="code-cell">anomaly-detector.worker</td>
-            <td class="mono" style="color:var(--text-mid);">daily 06:00</td>
-            <td class="mono" style="color:var(--text-light);">vor 4h 14min</td>
-            <td class="right mono">4.5</td>
-            <td class="right mono" style="color:var(--green);">1.8%</td>
-            <td><span class="state-badge state-fresh">✓ green</span></td>
-          </tr>
-          <tr>
-            <td class="code-cell">action-outcome-measurer.worker</td>
-            <td class="mono" style="color:var(--text-mid);">daily 06:30</td>
-            <td class="mono" style="color:var(--text-light);">vor 4h 44min</td>
-            <td class="right mono" style="color:var(--amber);">8.2</td>
-            <td class="right mono" style="color:var(--amber);">3.1%</td>
-            <td><span class="state-badge state-stale">⚠ amber</span></td>
-          </tr>
-        </tbody>
+        <tbody id="workersBody"></tbody>
       </table>
       <!-- ark-lint-skip:end -->
     </div>
@@ -1069,6 +857,120 @@
 </div>
 
 <script>
+/* RENDER · Metrics-Tabelle aus window.ARK_PERF.metrics */
+function renderMetrics() {
+  const metrics = (window.ARK_PERF && window.ARK_PERF.metrics) || [];
+  const body = document.getElementById('metricsBody');
+  if (!body) return;
+  body.innerHTML = metrics.map(m => {
+    const trClass = m.paused_row ? ' class="paused-row"' : '';
+    const switchClass = m.active ? 'switch on' : 'switch';
+    const nameCell = m.name_html || m.name;
+    const sourceCell = m.source_html || m.source;
+    return `
+          <tr${trClass}>
+            <td class="code-cell">${m.code}</td>
+            <td>${nameCell}</td>
+            <td><span class="cat-pill ${m.cat_class}">${m.cat}</span></td>
+            <td class="mono" style="color:var(--text-mid);">${sourceCell}</td>
+            <td><span class="agg-pill">${m.agg}</span></td>
+            <td class="right"><span class="${switchClass}"></span></td>
+            <td class="mono" style="color:var(--text-light);">${m.last}</td>
+          </tr>`;
+  }).join('');
+}
+
+/* RENDER · Schwellen-Tabelle aus window.ARK_PERF.schwellen */
+function renderSchwellen() {
+  const rows = (window.ARK_PERF && window.ARK_PERF.schwellen) || [];
+  const body = document.getElementById('schwellenBody');
+  if (!body) return;
+  body.innerHTML = rows.map(r => {
+    const scopeCell = r.scope_suffix
+      ? `${r.scope_prefix}<span style="color:var(--text);">${r.scope_suffix}</span>`
+      : r.scope_prefix;
+    return `
+          <tr>
+            <td class="code-cell">${r.metric}</td>
+            <td class="mono" style="color:var(--text-mid);">${scopeCell}</td>
+            <td class="right mono" style="color:var(--text-mid);">${r.info}</td>
+            <td class="right mono" style="color:var(--amber);">${r.warn}</td>
+            <td class="right mono" style="color:var(--red);">${r.critical}</td>
+            <td class="right mono" style="color:var(--red);font-weight:600;">${r.blocker}</td>
+            <td class="mono" style="color:var(--text-light);">${r.last_edited}</td>
+          </tr>`;
+  }).join('');
+}
+
+/* RENDER · Dashboard-Defaults-Tabelle aus window.ARK_PERF.dashboard_defaults */
+function renderDashboardDefaults() {
+  const rows = (window.ARK_PERF && window.ARK_PERF.dashboard_defaults) || [];
+  const body = document.getElementById('dashboardDefaultsBody');
+  if (!body) return;
+  body.innerHTML = rows.map(r => `
+          <tr>
+            <td class="mono" style="font-weight:600;">${r.rolle}</td>
+            <td>${r.page}</td>
+            <td class="right mono">${r.tiles}</td>
+            <td><span class="lock-pill locked">${r.locked_label}</span></td>
+            <td class="right mono">${r.overrides}</td>
+            <td class="mono" style="color:var(--text-light);">${r.last_changed}</td>
+          </tr>`).join('');
+}
+
+/* RENDER · Power-BI-Views-Tabelle aus window.ARK_PERF.views */
+function renderViews() {
+  const views = (window.ARK_PERF && window.ARK_PERF.views) || [];
+  const body = document.getElementById('viewsBody');
+  if (!body) return;
+  body.innerHTML = views.map(v => {
+    const refreshStyle = v.refresh_class === 'amber'
+      ? ' style="color:var(--amber);"'
+      : ' style="color:var(--text-light);"';
+    const btnVariant = v.refresh_btn_variant ? ' ' + v.refresh_btn_variant : '';
+    return `
+          <tr>
+            <td class="code-cell">${v.name}</td>
+            <td class="mono" style="color:var(--text-mid);">${v.cadence}</td>
+            <td class="mono"${refreshStyle}>${v.last_refresh}</td>
+            <td><span class="state-badge state-${v.state}">${v.state_label}</span></td>
+            <td class="right mono">${v.row_count}</td>
+            <td class="right"><button class="btn btn-sm${btnVariant}">Refresh</button></td>
+          </tr>`;
+  }).join('');
+}
+
+/* RENDER · Worker-Health-Tabelle aus window.ARK_PERF.workers */
+function renderWorkers() {
+  const workers = (window.ARK_PERF && window.ARK_PERF.workers) || [];
+  const body = document.getElementById('workersBody');
+  if (!body) return;
+  const stateBadgeClass = (s) => s === 'green' ? 'state-fresh' : s === 'amber' ? 'state-stale' : 'state-failed';
+  body.innerHTML = workers.map(w => {
+    const lagStyle = w.lag_amber ? ' style="color:var(--amber);"' : '';
+    const failureStyle = w.failure_class === 'green'
+      ? ' style="color:var(--green);"'
+      : w.failure_class === 'amber'
+        ? ' style="color:var(--amber);"'
+        : ' style="color:var(--red);"';
+    return `
+          <tr>
+            <td class="code-cell">${w.name}</td>
+            <td class="mono" style="color:var(--text-mid);">${w.cadence}</td>
+            <td class="mono" style="color:var(--text-light);">${w.last_run}</td>
+            <td class="right mono"${lagStyle}>${w.lag}</td>
+            <td class="right mono"${failureStyle}>${w.failure_rate}</td>
+            <td><span class="state-badge ${stateBadgeClass(w.status)}">${w.status_label}</span></td>
+          </tr>`;
+  }).join('');
+}
+
+renderMetrics();
+renderSchwellen();
+renderDashboardDefaults();
+renderViews();
+renderWorkers();
+
 /* SUB-TABS */
 (function() {
   const nav = document.getElementById('subtabs');

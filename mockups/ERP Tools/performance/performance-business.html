@@ -943,26 +943,7 @@
         <h3 class="panel-title">Top-3 · Anchor-Mandanten YTD</h3>
         <span class="panel-meta">REVENUE-DRIVER</span>
       </div>
-      <div class="tf-list">
-        <div class="tf-item" data-mandant="SwissTech">
-          <span class="tf-rank">01</span>
-          <span class="tf-name">SwissTech AG <span class="tf-meta">· ARC</span></span>
-          <span class="tf-amt">CHF 320k</span>
-          <span class="tf-detail">5 Mandate</span>
-        </div>
-        <div class="tf-item" data-mandant="Helvetia">
-          <span class="tf-rank">02</span>
-          <span class="tf-name">Helvetia Bau <span class="tf-meta">· ARC</span></span>
-          <span class="tf-amt">CHF 240k</span>
-          <span class="tf-detail">3 Mandate</span>
-        </div>
-        <div class="tf-item" data-mandant="AlpenIngenieur">
-          <span class="tf-rank">03</span>
-          <span class="tf-name">AlpenIngenieur <span class="tf-meta">· ING</span></span>
-          <span class="tf-amt">CHF 180k</span>
-          <span class="tf-detail">4 Mandate</span>
-        </div>
-      </div>
+      <div class="tf-list" id="tfTopList"></div>
     </section>
 
     <section class="panel">
@@ -970,26 +951,7 @@
         <h3 class="panel-title">Flop-3 · Mandanten unter Erwartung</h3>
         <span class="panel-meta">RISIKO / STALE</span>
       </div>
-      <div class="tf-list">
-        <div class="tf-item" data-mandant="PurusGroup">
-          <span class="tf-rank">01</span>
-          <span class="tf-name">PurusGroup <span class="tf-meta">· PUR</span></span>
-          <span class="tf-amt">CHF 30k</span>
-          <span class="tf-detail bad">1 Mandat · Vj 90k · ↘ −67%</span>
-        </div>
-        <div class="tf-item" data-mandant="GartenTec">
-          <span class="tf-rank">02</span>
-          <span class="tf-name">GartenTec <span class="tf-meta">· GT</span></span>
-          <span class="tf-amt">CHF 20k</span>
-          <span class="tf-detail bad">0 aktive Mandate · sleeping</span>
-        </div>
-        <div class="tf-item" data-mandant="RomandiaServ">
-          <span class="tf-rank">03</span>
-          <span class="tf-name">RomandiaServ <span class="tf-meta">· GT</span></span>
-          <span class="tf-amt">CHF 15k</span>
-          <span class="tf-detail bad">1 Mandat · stale 60d+</span>
-        </div>
-      </div>
+      <div class="tf-list" id="tfFlopList"></div>
     </section>
 
   </section>
@@ -1077,9 +1039,7 @@
             <div class="drawer-section">
               <div class="drawer-section-title">Historie · 2024 / 2025</div>
               <table class="kv-table">
-                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-204</td><td class="v">Placement <span class="meta">CHF 38k</span></td></tr>
-                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-118</td><td class="v">Placement <span class="meta">CHF 28k</span></td></tr>
-                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-066</td><td class="v">Placement <span class="meta">CHF 24k</span></td></tr>
+                <tbody id="mandateHistoryBody"></tbody>
               </table>
             </div>
           </div>
@@ -1422,6 +1382,36 @@ function drawDonut() {
 
 drawConvChart();
 drawDonut();
+
+/* Render Top/Flop · Mandanten aus window.ARK_PERF.mandanten */
+function renderTopFlop() {
+  const all = (window.ARK_PERF && window.ARK_PERF.mandanten) || [];
+  const renderRow = (m) => `
+        <div class="tf-item" data-mandant="${m.name.replace(/\s+/g,'')}">
+          <span class="tf-rank">${String(m.rank).padStart(2,'0')}</span>
+          <span class="tf-name">${m.name} <span class="tf-meta">· ${m.sparte}</span></span>
+          <span class="tf-amt">CHF ${(m.revenue/1000).toFixed(0)}k</span>
+          <span class="tf-detail${m.tone === 'bad' ? ' bad' : ''}">${m.detail}</span>
+        </div>`;
+  const top = all.filter(m => m.segment === 'top').sort((a,b)=>a.rank-b.rank);
+  const flop = all.filter(m => m.segment === 'flop').sort((a,b)=>a.rank-b.rank);
+  const topEl = document.getElementById('tfTopList');
+  const flopEl = document.getElementById('tfFlopList');
+  if (topEl) topEl.innerHTML = top.map(renderRow).join('');
+  if (flopEl) flopEl.innerHTML = flop.map(renderRow).join('');
+}
+
+/* Render Mandate-Historie im Drawer A · PurusGroup */
+function renderMandateHistory() {
+  const hist = (window.ARK_PERF && window.ARK_PERF.mandate_history) || [];
+  const body = document.getElementById('mandateHistoryBody');
+  if (!body) return;
+  body.innerHTML = hist.map(h => `
+                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">${h.id}</td><td class="v">${h.state} <span class="meta">CHF ${(h.amount_chf/1000).toFixed(0)}k</span></td></tr>`).join('');
+}
+
+renderTopFlop();
+renderMandateHistory();
 
 /* TF clicks → drawer-business-mandant */
 document.querySelectorAll('.tf-item').forEach(el => {
