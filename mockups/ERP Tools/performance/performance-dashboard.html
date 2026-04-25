@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); margin:0; padding:24px 28px 60px; color:var(--text); }
+
+  /* Hero / Page-Header */
+  .page-head { margin-bottom:18px; max-width:1500px; margin-inline:auto; }
+  .page-head h1 {
+    font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700;
+    color:var(--accent); margin:0 0 4px;
+  }
+  .page-head .sub { font-size:13px; color:var(--text-light); }
+
+  /* Snapshot-Bar (6 Slots, Pattern aus Mockup-Baseline) */
+  .snap-bar {
+    display:grid; grid-template-columns:repeat(6,1fr); gap:10px;
+    margin:0 auto 24px; max-width:1500px;
+  }
+  .snap-tile {
+    background:var(--surface); padding:14px 16px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .snap-tile.green { border-left-color:var(--green); }
+  .snap-tile.amber { border-left-color:var(--amber); }
+  .snap-tile.red   { border-left-color:var(--red); }
+  .snap-tile.gold  { border-left-color:var(--gold); }
+  .snap-tile .lbl {
+    font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600;
+  }
+  .snap-tile .val {
+    font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700;
+    color:var(--accent); line-height:1; margin:6px 0 4px;
+  }
+  .snap-tile.green .val { color:var(--green); }
+  .snap-tile.amber .val { color:var(--amber); }
+  .snap-tile.red   .val { color:var(--red); }
+  .snap-tile.gold  .val { color:var(--gold); }
+  .snap-tile .delta { font-size:11px; color:var(--text-mid); }
+  .snap-tile .delta.up { color:var(--green); }
+  .snap-tile .delta.down { color:var(--red); }
+
+  /* Placeholder-Banner */
+  .ph-banner {
+    background:color-mix(in srgb, var(--gold) 10%, var(--surface));
+    border:1px dashed var(--gold);
+    border-radius:6px; padding:18px 22px;
+    max-width:1500px; margin:0 auto 24px;
+    display:flex; gap:18px; align-items:flex-start;
+  }
+  .ph-banner .ic {
+    font-size:24px; line-height:1; flex-shrink:0;
+    color:var(--gold);
+  }
+  .ph-banner h2 {
+    margin:0 0 6px; font-family:'Libre Baskerville',serif;
+    font-size:15px; font-weight:700; color:var(--text);
+  }
+  .ph-banner p {
+    margin:0 0 4px; font-size:12.5px; color:var(--text-mid); line-height:1.55;
+  }
+  .ph-banner code {
+    background:var(--surface); padding:1px 5px; border-radius:3px;
+    font-size:11.5px; color:var(--accent);
+  }
+
+  /* Filter-Bar Stub */
+  .filter-bar {
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    background:var(--surface); padding:10px 14px; border-radius:4px;
+    box-shadow:var(--shadow-sm); max-width:1500px; margin:0 auto 18px;
+    font-size:12px;
+  }
+  .filter-chip {
+    padding:5px 12px; background:var(--surface-alt); border-radius:14px;
+    color:var(--text-mid); border:1px solid var(--border);
+    cursor:pointer; transition:all 0.12s;
+  }
+  .filter-chip:hover { border-color:var(--accent); color:var(--accent); }
+  .filter-chip.active { background:var(--accent); color:white; border-color:var(--accent); }
+  .filter-spacer { flex:1; }
+  .filter-action {
+    padding:5px 12px; background:transparent; border:1px solid var(--border);
+    border-radius:14px; color:var(--text-mid); cursor:pointer; font-size:12px;
+    font-family:'DM Sans',sans-serif;
+  }
+  .filter-action:hover { border-color:var(--accent); color:var(--accent); }
+  .filter-action.primary { background:var(--accent); color:white; border-color:var(--accent); }
+
+  /* Tile-Grid Placeholder */
+  .tile-grid {
+    display:grid; grid-template-columns:repeat(12,1fr); gap:12px;
+    max-width:1500px; margin:0 auto;
+  }
+  .tile-ph {
+    background:var(--surface); border:1px dashed var(--border);
+    border-radius:6px; padding:18px;
+    display:flex; flex-direction:column; gap:8px;
+    min-height:160px;
+    position:relative;
+  }
+  .tile-ph .tile-head {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:6px;
+  }
+  .tile-ph .tile-title {
+    font-size:12.5px; font-weight:600; color:var(--text);
+  }
+  .tile-ph .tile-tag {
+    font-size:9.5px; padding:2px 6px; border-radius:8px;
+    background:var(--surface-alt); color:var(--text-light);
+    text-transform:uppercase; letter-spacing:0.6px;
+  }
+  .tile-ph .tile-body {
+    flex:1; display:flex; align-items:center; justify-content:center;
+    color:var(--text-light); font-size:11.5px; text-align:center;
+    background:repeating-linear-gradient(45deg,
+      transparent, transparent 10px,
+      color-mix(in srgb, var(--border) 50%, transparent) 10px,
+      color-mix(in srgb, var(--border) 50%, transparent) 11px);
+    border-radius:4px;
+    padding:14px;
+  }
+  .tile-ph.lock::after {
+    content:"🔒"; position:absolute; top:10px; right:10px;
+    font-size:11px; color:var(--text-light);
+  }
+
+  /* Spans */
+  .span-3 { grid-column:span 3; }
+  .span-4 { grid-column:span 4; }
+  .span-6 { grid-column:span 6; }
+  .span-8 { grid-column:span 8; }
+  .span-12 { grid-column:span 12; }
+</style>
+</head>
+<body>
+
+<!-- Page Header -->
+<div class="page-head">
+  <h1>Performance · Dashboard</h1>
+  <div class="sub">Tile-Grid · Anpassbar · Rollen-Default + User-Override · Locked Compliance-Tiles</div>
+</div>
+
+<!-- Snapshot-Bar (6 Slots) -->
+<div class="snap-bar">
+  <div class="snap-tile">
+    <div class="lbl">Health-Score</div>
+    <div class="val">87</div>
+    <div class="delta up">▲ 3 vs. Vorwoche</div>
+  </div>
+  <div class="snap-tile red">
+    <div class="lbl">Insights offen</div>
+    <div class="val">7</div>
+    <div class="delta down">▲ 2 critical</div>
+  </div>
+  <div class="snap-tile amber">
+    <div class="lbl">Massnahmen überfällig</div>
+    <div class="val">3</div>
+    <div class="delta">2 mit Wirkungsmessung</div>
+  </div>
+  <div class="snap-tile green">
+    <div class="lbl">Goal-Erreichung MTD</div>
+    <div class="val">94%</div>
+    <div class="delta up">▲ 6% vs. Plan</div>
+  </div>
+  <div class="snap-tile">
+    <div class="lbl">Compliance</div>
+    <div class="val">96%</div>
+    <div class="delta">E-Learning · AGB · Reminder</div>
+  </div>
+  <div class="snap-tile gold">
+    <div class="lbl">Forecast Q-Ende</div>
+    <div class="val">CHF 480k</div>
+    <div class="delta">±18% Konfidenz</div>
+  </div>
+</div>
+
+<!-- Placeholder-Banner -->
+<div class="ph-banner">
+  <div class="ic">🎨</div>
+  <div>
+    <h2>Mockup in Bearbeitung · Claude-Design-Workflow</h2>
+    <p>Dieses Dashboard wird via <code>claude.ai/design</code> erstellt (Schritt 1 + 2). Bundle wird anschliessend hier eingebaut und an ARK-Pattern angepasst (Schritt 3).</p>
+    <p>Snapshot-Bar oben · Filter-Bar darunter · Tile-Grid (12-Spalten, customizable) folgt. Für Spec-Detail siehe <code>specs/ARK_PERFORMANCE_TOOL_INTERACTIONS_v0_1.md §2.2</code>.</p>
+  </div>
+</div>
+
+<!-- Filter-Bar -->
+<div class="filter-bar">
+  <span class="filter-chip active">Dieser Monat</span>
+  <span class="filter-chip">Letzte 7 Tage</span>
+  <span class="filter-chip">Quartal</span>
+  <span class="filter-chip">YTD</span>
+  <span class="filter-chip">Alle Sparten</span>
+  <span class="filter-chip">vs. Vorperiode</span>
+  <span class="filter-spacer"></span>
+  <button class="filter-action">Filter zurücksetzen</button>
+  <button class="filter-action primary">Anpassen</button>
+</div>
+
+<!-- Tile-Grid Placeholder (Default-Layout für Rolle "admin") -->
+<div class="tile-grid">
+
+  <div class="tile-ph span-3">
+    <div class="tile-head">
+      <div class="tile-title">Pipeline-Wert (gesamt)</div>
+      <div class="tile-tag">KPI-Card</div>
+    </div>
+    <div class="tile-body">CHF 2.4M · Trend-Sparkline</div>
+  </div>
+
+  <div class="tile-ph span-3">
+    <div class="tile-head">
+      <div class="tile-title">Goal-Erreichung Team</div>
+      <div class="tile-tag">Goal-Progress</div>
+    </div>
+    <div class="tile-body">94% · 17/18 MA on track</div>
+  </div>
+
+  <div class="tile-ph span-3 lock">
+    <div class="tile-head">
+      <div class="tile-title">Compliance-Score</div>
+      <div class="tile-tag">KPI · Locked</div>
+    </div>
+    <div class="tile-body">96% · E-Learning · AGB · Reminder</div>
+  </div>
+
+  <div class="tile-ph span-3">
+    <div class="tile-head">
+      <div class="tile-title">Forecast Q-Ende</div>
+      <div class="tile-tag">Forecast-Card</div>
+    </div>
+    <div class="tile-body">CHF 480k · Markov · Top-5-Drill</div>
+  </div>
+
+  <div class="tile-ph span-6">
+    <div class="tile-head">
+      <div class="tile-title">Pipeline-Funnel (live)</div>
+      <div class="tile-tag">Funnel-Chart</div>
+    </div>
+    <div class="tile-body">9 Stages · Drop-Off-Analysis · Drill auf Stage</div>
+  </div>
+
+  <div class="tile-ph span-6">
+    <div class="tile-head">
+      <div class="tile-title">Revenue-Trend (12 Mt)</div>
+      <div class="tile-tag">Trend-Chart</div>
+    </div>
+    <div class="tile-body">Linie pro Sparte · vs. Vorjahr-Overlay</div>
+  </div>
+
+  <div class="tile-ph span-4">
+    <div class="tile-head">
+      <div class="tile-title">Anomalien-Liste</div>
+      <div class="tile-tag">Anomaly-List</div>
+    </div>
+    <div class="tile-body">7 offen · 2 critical · 1 blocker</div>
+  </div>
+
+  <div class="tile-ph span-4">
+    <div class="tile-head">
+      <div class="tile-title">Massnahmen-Liste</div>
+      <div class="tile-tag">Action-List</div>
+    </div>
+    <div class="tile-body">3 überfällig · 5 in Bearbeitung · 12 done (30d)</div>
+  </div>
+
+  <div class="tile-ph span-4">
+    <div class="tile-head">
+      <div class="tile-title">Coverage-Kritisch</div>
+      <div class="tile-tag">Top-N-List</div>
+    </div>
+    <div class="tile-body">12 Kandidaten · 4 Accounts · Sparte ARC dominant</div>
+  </div>
+
+  <div class="tile-ph span-8">
+    <div class="tile-head">
+      <div class="tile-title">Activity-Heatmap (Team × Wochentag)</div>
+      <div class="tile-tag">Heatmap</div>
+    </div>
+    <div class="tile-body">Calls · Meetings · Briefings · Drill auf MA</div>
+  </div>
+
+  <div class="tile-ph span-4">
+    <div class="tile-head">
+      <div class="tile-title">Sparten-Vergleich Revenue</div>
+      <div class="tile-tag">Bar-Chart</div>
+    </div>
+    <div class="tile-body">ARC · GT · ING · PUR · REM</div>
+  </div>
+
+</div>
+
+<script>
+  // Theme-Sync vom Hub-Frame
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'ark-theme') {
+      document.documentElement.setAttribute('data-theme', e.data.value);
+    }
+  });
+</script>
+
+</body>
+</html>
