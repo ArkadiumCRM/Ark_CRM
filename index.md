@@ -145,6 +145,9 @@ updated: 2026-04-19
 - [[hr-konkurrenz-abwerbeverbot]] — 18 Mt Deutschschweiz + Karenzentschädigung (CHF 500/350) + Konventionalstrafen (CHF 80k min) + Disziplinar-Katalog
 - [[hr-ma-rollen-matrix]] — MA-Rollen aus Vertrags-Sicht (Researcher · Consultant · CM · AM · Team Leader · Head), Progressus-Mapping, §5.3-Praemium-Grace-Period
 
+### Phase-3 ERP
+- [[performance-modul]] — Performance-Modul · Cross-Modul-Analytics-Hub mit Closed-Loop-Pattern (8 Architektur-Decisions · Markov-Forecast v0.1 · 11 Mockups · 14 Tabellen)
+
 ## Analyses (9)
 
 - [[sync-report-2026-04-25]] — Spec-Mockup-Sync-Drift-Report nach Performance-Modul-Mockup-Phase · 5 stale Digests · 4 Performance-Patches NICHT in Grundlagen gemerged · 4 Mockup-Lint-Drifts · 43 Lint-Violations (7d)

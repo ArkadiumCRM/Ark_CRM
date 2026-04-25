@@ -1,3 +1,22 @@
+## [2026-04-25] create | Performance-Modul Wiki-Konzept
+
+- created: wiki/concepts/performance-modul.md
+- updated: index.md (neue Sektion "Phase-3 ERP" unter Concepts)
+
+Stakeholder-Doku für Performance-Modul (Cross-Modul-Analytics-Hub):
+- Was/Warum/Wer
+- 8 Architektur-Decisions (Q1-Q8 vom 2026-04-25)
+- Datenquellen + Datenmodell-Highlights (TEIL Q v1.6)
+- Backend-Architektur (TEIL R v2.8) + Closed-Loop-Saga
+- Frontend-Pattern (11 Mockups Inventar, TEIL Q Frontend-Freeze v1.13)
+- Closed-Loop-Narrativ (Coverage-ARC-Beispiel)
+- Forecast-Methodik (Markov-Stage v0.1)
+- Stammdaten-Statistik
+- Cross-Links zu Specs/Patches/Memory/Wiki
+- Roadmap Phase 3.1 → 3.4
+
+Stil analog wiki/concepts/interaction-patterns.md.
+
 ## [2026-04-25] sync-report | Spec-Mockup-Sync-Report
 
 - created: wiki/analyses/sync-report-2026-04-25.md
