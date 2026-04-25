@@ -1,313 +1,1348 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Performance · Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../_shared/editorial.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Performance · Dashboard — ARK CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/editorial.css" />
 <style>
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); margin:0; padding:24px 28px 60px; color:var(--text); }
+  /* ----------  Performance-spezifische Tokens (Ergänzung zu editorial.css)  ---------- */
+  :root, [data-theme="light"] {
+    --accent: #196774;
+    --accent-tint: #e7eff1;
+    --gold: #dcb479;
+    --gold-tint: #f6ecd9;
+    --green: #2d8659;
+    --green-tint: #e2efe7;
+    --amber: #c98e2c;
+    --amber-tint: #f6ecd5;
+    --red: #b94545;
+    --red-tint: #f3dede;
 
-  /* Hero / Page-Header */
-  .page-head { margin-bottom:18px; max-width:1500px; margin-inline:auto; }
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --surface-alt: #f5efe6;
+    --surface-sunk: #f1ebe0;
+
+    --text: #262626;
+    --text-mid: #555;
+    --text-light: #8a8a8a;
+    --border: #e8e2d5;
+    --border-strong: #d8cfba;
+
+    --shadow-sm: 0 1px 2px rgba(40, 30, 10, 0.04);
+    --shadow:    0 1px 3px rgba(40, 30, 10, 0.06);
+    --shadow-md: 0 4px 14px rgba(40, 30, 10, 0.08);
+
+    --r-sm: 4px;
+    --r:    6px;
+  }
+
+  [data-theme="dark"] {
+    --accent: #4ea3b0;
+    --accent-tint: #1a2c30;
+    --gold: #dcb479;
+    --gold-tint: #2c2519;
+    --green: #5cb88a;
+    --green-tint: #1a2922;
+    --amber: #d9a548;
+    --amber-tint: #2c2417;
+    --red: #d97070;
+    --red-tint: #2d1d1d;
+
+    --bg: #16181a;
+    --surface: #1d2023;
+    --surface-alt: #22262a;
+    --surface-sunk: #15171a;
+
+    --text: #ececec;
+    --text-mid: #b0b0b0;
+    --text-light: #7a7a7a;
+    --border: #2c3034;
+    --border-strong: #3a4046;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow:    0 1px 3px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  /* ----------  Reset  ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .serif { font-family: "Libre Baskerville", Georgia, serif; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; }
+
+  /* ----------  Top app chrome (NUR im Standalone-Modus sichtbar)  ---------- */
+  .app-bar {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+  /* Wenn im Hub-Iframe geladen: App-Bar ausblenden, Hub liefert eigene Topbar */
+  body.in-iframe .app-bar { display: none; }
+
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 22px; height: 22px;
+    background: var(--text);
+    color: var(--bg);
+    display: grid; place-items: center;
+    font-family: "Libre Baskerville", serif; font-weight: 700;
+    font-size: 13px;
+    border-radius: 2px;
+  }
+  .brand-name { font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+  .brand-sub  { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+
+  .modules { display: flex; gap: 2px; margin-left: 20px; }
+  .modules .mod {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+  .modules .mod.active {
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  .app-bar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .search-pill {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 12px 4px 10px;
+    color: var(--text-light);
+    font-size: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text);
+    font-size: 12px;
+  }
+  .user-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 11px;
+  }
+  .theme-toggle {
+    width: 26px; height: 26px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--text-mid);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ----------  Page header  ---------- */
+  main { padding: 22px 32px 64px; max-width: 1440px; margin: 0 auto; }
+
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
   .page-head h1 {
-    font-family:'Libre Baskerville',serif; font-size:22px; font-weight:700;
-    color:var(--accent); margin:0 0 4px;
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--accent);
+    letter-spacing: -0.005em;
   }
-  .page-head .sub { font-size:13px; color:var(--text-light); }
+  .page-head .crumb {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .page-head .subtitle {
+    color: var(--text-mid);
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+  .page-head .subtitle .dot { color: var(--border-strong); margin: 0 7px; }
 
-  /* Snapshot-Bar (6 Slots, Pattern aus Mockup-Baseline) */
-  .snap-bar {
-    display:grid; grid-template-columns:repeat(6,1fr); gap:10px;
-    margin:0 auto 24px; max-width:1500px;
+  .page-head-actions { display: flex; align-items: center; gap: 14px; }
+  .link-btn {
+    color: var(--text-mid);
+    font-size: 12.5px;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
   }
-  .snap-tile {
-    background:var(--surface); padding:14px 16px; border-radius:4px;
-    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
-  }
-  .snap-tile.green { border-left-color:var(--green); }
-  .snap-tile.amber { border-left-color:var(--amber); }
-  .snap-tile.red   { border-left-color:var(--red); }
-  .snap-tile.gold  { border-left-color:var(--gold); }
-  .snap-tile .lbl {
-    font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
-    color:var(--text-light); font-weight:600;
-  }
-  .snap-tile .val {
-    font-family:'Libre Baskerville',serif; font-size:24px; font-weight:700;
-    color:var(--accent); line-height:1; margin:6px 0 4px;
-  }
-  .snap-tile.green .val { color:var(--green); }
-  .snap-tile.amber .val { color:var(--amber); }
-  .snap-tile.red   .val { color:var(--red); }
-  .snap-tile.gold  .val { color:var(--gold); }
-  .snap-tile .delta { font-size:11px; color:var(--text-mid); }
-  .snap-tile .delta.up { color:var(--green); }
-  .snap-tile .delta.down { color:var(--red); }
+  .link-btn:hover { color: var(--accent); border-color: currentColor; }
 
-  /* Placeholder-Banner */
-  .ph-banner {
-    background:color-mix(in srgb, var(--gold) 10%, var(--surface));
-    border:1px dashed var(--gold);
-    border-radius:6px; padding:18px 22px;
-    max-width:1500px; margin:0 auto 24px;
-    display:flex; gap:18px; align-items:flex-start;
+  .toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px 5px 5px;
+    background: var(--surface);
+    font-size: 12.5px;
+    color: var(--text-mid);
+    transition: border-color .15s, color .15s, background .15s;
   }
-  .ph-banner .ic {
-    font-size:24px; line-height:1; flex-shrink:0;
-    color:var(--gold);
+  .toggle .switch {
+    width: 26px; height: 16px;
+    border-radius: 999px;
+    background: var(--border-strong);
+    position: relative;
+    transition: background .15s;
   }
-  .ph-banner h2 {
-    margin:0 0 6px; font-family:'Libre Baskerville',serif;
-    font-size:15px; font-weight:700; color:var(--text);
+  .toggle .switch::after {
+    content: "";
+    position: absolute; left: 2px; top: 2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--surface);
+    transition: transform .18s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
-  .ph-banner p {
-    margin:0 0 4px; font-size:12.5px; color:var(--text-mid); line-height:1.55;
+  .toggle[aria-pressed="true"] {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-tint);
   }
-  .ph-banner code {
-    background:var(--surface); padding:1px 5px; border-radius:3px;
-    font-size:11.5px; color:var(--accent);
+  .toggle[aria-pressed="true"] .switch { background: var(--accent); }
+  .toggle[aria-pressed="true"] .switch::after { transform: translateX(10px); }
+
+  /* ----------  Snapshot bar  ---------- */
+  .snapshot {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .snap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px 14px 18px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .snap::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent-color, var(--accent));
+  }
+  .snap .label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .snap .value {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .snap .value .unit { font-size: 14px; color: var(--text-mid); margin-left: 4px; font-weight: 400; }
+  .snap .delta {
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--text-mid);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .arrow-up   { color: var(--green); }
+  .arrow-down { color: var(--red); }
+  .arrow-neutral { color: var(--text-light); }
+
+  /* ----------  Filter bar  ---------- */
+  .filterbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-mid);
+    transition: all .12s;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text); }
+  .chip.active {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+    font-weight: 500;
+  }
+  .chip-sep {
+    width: 1px; height: 18px;
+    background: var(--border);
+    margin: 0 6px;
+  }
+  .filter-group-label {
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-right: 4px;
+  }
+  .filterbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: var(--r-sm);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+
+  /* ----------  Tile grid  ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+  }
+  .tile {
+    grid-column: span 3;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px 16px;
+    position: relative;
+    transition: box-shadow .15s, border-color .15s;
+  }
+  .tile.span-3 { grid-column: span 3; }
+  .tile.span-4 { grid-column: span 4; }
+  .tile.span-6 { grid-column: span 6; }
+  .tile.span-8 { grid-column: span 8; }
+
+  body.customize .tile {
+    box-shadow: 0 0 0 1px var(--accent-tint), 0 4px 14px rgba(25, 103, 116, 0.10);
+    border-color: var(--accent-tint);
+  }
+  body.customize .tile:hover {
+    box-shadow: 0 0 0 1px var(--accent), var(--shadow-md);
   }
 
-  /* Filter-Bar Stub */
-  .filter-bar {
-    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-    background:var(--surface); padding:10px 14px; border-radius:4px;
-    box-shadow:var(--shadow-sm); max-width:1500px; margin:0 auto 18px;
-    font-size:12px;
+  .tile-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
   }
-  .filter-chip {
-    padding:5px 12px; background:var(--surface-alt); border-radius:14px;
-    color:var(--text-mid); border:1px solid var(--border);
-    cursor:pointer; transition:all 0.12s;
+  .tile-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.005em;
   }
-  .filter-chip:hover { border-color:var(--accent); color:var(--accent); }
-  .filter-chip.active { background:var(--accent); color:white; border-color:var(--accent); }
-  .filter-spacer { flex:1; }
-  .filter-action {
-    padding:5px 12px; background:transparent; border:1px solid var(--border);
-    border-radius:14px; color:var(--text-mid); cursor:pointer; font-size:12px;
-    font-family:'DM Sans',sans-serif;
+  .tile-badge {
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
   }
-  .filter-action:hover { border-color:var(--accent); color:var(--accent); }
-  .filter-action.primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .tile-icons { margin-left: auto; display: flex; align-items: center; gap: 4px; color: var(--text-light); }
+  .tile-ic {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    border-radius: 4px;
+    color: var(--text-light);
+  }
+  .tile-ic:hover { color: var(--accent); background: var(--accent-tint); }
+  .drag-handle, .gear-icon { display: none; }
+  body.customize .drag-handle, body.customize .gear-icon { display: grid; }
+  .lock-ic { color: var(--text-light); cursor: default; }
+  .tile.locked .gear-icon { display: none !important; }
 
-  /* Tile-Grid Placeholder */
-  .tile-grid {
-    display:grid; grid-template-columns:repeat(12,1fr); gap:12px;
-    max-width:1500px; margin:0 auto;
+  /* ----------  Tile contents  ---------- */
+
+  /* KPI value */
+  .big-num {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
-  .tile-ph {
-    background:var(--surface); border:1px dashed var(--border);
-    border-radius:6px; padding:18px;
-    display:flex; flex-direction:column; gap:8px;
-    min-height:160px;
-    position:relative;
+  .big-num .unit { font-size: 14px; color: var(--text-mid); font-weight: 400; margin-left: 2px; }
+  .kpi-sub { font-size: 11.5px; color: var(--text-mid); margin-top: 6px; }
+
+  /* sparkline svg */
+  .spark { width: 100%; height: 38px; margin-top: 10px; display: block; }
+
+  /* progress bar */
+  .progress-row { margin-top: 6px; }
+  .progress-bar {
+    height: 6px;
+    background: var(--surface-sunk);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
   }
-  .tile-ph .tile-head {
-    display:flex; justify-content:space-between; align-items:flex-start;
-    margin-bottom:6px;
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 999px;
   }
-  .tile-ph .tile-title {
-    font-size:12.5px; font-weight:600; color:var(--text);
+  .sub-bars { margin-top: 10px; display: flex; flex-direction: column; gap: 7px; }
+  .sub-bar { font-size: 11px; color: var(--text-mid); }
+  .sub-bar .sb-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .sub-bar .sb-track {
+    height: 3px; background: var(--surface-sunk); border-radius: 999px;
   }
-  .tile-ph .tile-tag {
-    font-size:9.5px; padding:2px 6px; border-radius:8px;
-    background:var(--surface-alt); color:var(--text-light);
-    text-transform:uppercase; letter-spacing:0.6px;
+  .sub-bar .sb-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+
+  /* forecast */
+  .conf-bar {
+    margin-top: 14px;
+    position: relative;
+    height: 10px;
   }
-  .tile-ph .tile-body {
-    flex:1; display:flex; align-items:center; justify-content:center;
-    color:var(--text-light); font-size:11.5px; text-align:center;
-    background:repeating-linear-gradient(45deg,
-      transparent, transparent 10px,
-      color-mix(in srgb, var(--border) 50%, transparent) 10px,
-      color-mix(in srgb, var(--border) 50%, transparent) 11px);
-    border-radius:4px;
-    padding:14px;
+  .conf-track {
+    position: absolute; left: 0; right: 0; top: 4px;
+    height: 2px; background: var(--surface-sunk);
   }
-  .tile-ph.lock::after {
-    content:"🔒"; position:absolute; top:10px; right:10px;
-    font-size:11px; color:var(--text-light);
+  .conf-fill {
+    position: absolute;
+    height: 6px;
+    top: 2px;
+    background: var(--gold-tint);
+    border-top: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+  .conf-marker {
+    position: absolute;
+    top: -2px;
+    width: 2px; height: 14px;
+    background: var(--gold);
+  }
+  .conf-labels {
+    display: flex; justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+    margin-top: 6px;
   }
 
-  /* Spans */
-  .span-3 { grid-column:span 3; }
-  .span-4 { grid-column:span 4; }
-  .span-6 { grid-column:span 6; }
-  .span-8 { grid-column:span 8; }
-  .span-12 { grid-column:span 12; }
+  /* funnel */
+  .funnel { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+  .funnel-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 60px 50px;
+    align-items: center;
+    gap: 10px;
+    font-size: 11.5px;
+    color: var(--text-mid);
+    padding: 4px 0;
+  }
+  .funnel-row .stage { font-weight: 500; color: var(--text); font-size: 12px; }
+  .funnel-bar {
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    position: relative;
+  }
+  .funnel-bar.muted { background: var(--accent-tint); border: 1px solid var(--accent); }
+  .funnel-count {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    text-align: right;
+  }
+  .funnel-drop {
+    font-size: 10.5px;
+    color: var(--red);
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .funnel-drop.tiny { color: var(--text-light); }
+
+  /* trend chart */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 10px; height: 2px; border-radius: 2px; }
+
+  /* lists */
+  .list { display: flex; flex-direction: column; }
+  .list-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .list-row:last-child { border-bottom: 0; }
+  .severity {
+    width: 6px; align-self: stretch;
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+  .sev-info     { background: var(--accent); }
+  .sev-warn     { background: var(--amber); }
+  .sev-critical { background: var(--red); }
+  .sev-blocker  { background: var(--text); }
+  .list-main { flex: 1; min-width: 0; }
+  .list-title {
+    font-size: 12.5px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .list-meta {
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+  .age-pill {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--text-mid);
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  .b-pending     { background: var(--surface-sunk); color: var(--text-mid); }
+  .b-progress    { background: var(--accent-tint);  color: var(--accent); }
+  .b-done        { background: var(--green-tint);   color: var(--green); }
+  .b-overdue     { background: var(--red-tint);     color: var(--red); }
+  .b-info        { background: var(--accent-tint);  color: var(--accent); }
+  .b-warn        { background: var(--amber-tint);   color: var(--amber); }
+  .b-critical    { background: var(--red-tint);     color: var(--red); }
+  .b-blocker     { background: #e8e2d5; color: var(--text); }
+
+  .sparte {
+    display: inline-block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    background: var(--surface-sunk);
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+
+  /* avatars */
+  .avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .avatar.gold  { background: var(--gold-tint);  color: #8c6a2c; }
+  .avatar.green { background: var(--green-tint); color: var(--green); }
+  .avatar.amber { background: var(--amber-tint); color: var(--amber); }
+  .avatar.red   { background: var(--red-tint);   color: var(--red); }
+
+  /* heatmap */
+  .heatmap {
+    display: grid;
+    grid-template-columns: 110px repeat(7, 1fr);
+    gap: 3px;
+    margin-top: 6px;
+  }
+  .heatmap .hm-head, .heatmap .hm-name {
+    font-size: 10.5px;
+    color: var(--text-light);
+    padding: 4px 6px;
+  }
+  .heatmap .hm-head {
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .heatmap .hm-name {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .heatmap .hm-cell {
+    aspect-ratio: 1.6 / 1;
+    border-radius: 2px;
+    background: var(--surface-sunk);
+    display: grid; place-items: center;
+    font-size: 10px;
+    color: transparent;
+    transition: color .12s;
+  }
+  .heatmap .hm-cell:hover { color: var(--text); }
+  .hm-legend {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 12px;
+    font-size: 10.5px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+  .hm-legend .gradient {
+    flex: 0 0 100px;
+    height: 6px;
+    background: linear-gradient(to right, var(--surface-sunk), var(--accent));
+    border-radius: 2px;
+  }
+
+  /* horiz bars */
+  .hbars { display: flex; flex-direction: column; gap: 9px; margin-top: 6px; }
+  .hbar-row { display: grid; grid-template-columns: 40px 1fr 70px; gap: 10px; align-items: center; font-size: 11.5px; }
+  .hbar-row .lab { font-family: "JetBrains Mono", monospace; color: var(--text-mid); }
+  .hbar-track { height: 14px; background: var(--surface-sunk); border-radius: 2px; overflow: hidden; }
+  .hbar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #2a8694);
+  }
+  .hbar-row .val { font-family: "Libre Baskerville", serif; font-weight: 700; color: var(--text); text-align: right; font-size: 12.5px; }
+
+  /* role tabs (top-right of dashboard) */
+  .role-tabs {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px;
+    background: var(--surface);
+    font-size: 11.5px;
+  }
+  .role-tabs button {
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: var(--text-mid);
+  }
+  .role-tabs button.active {
+    background: var(--text); color: var(--bg); font-weight: 500;
+  }
+
+  /* FAB */
+  .fab {
+    position: fixed;
+    right: 32px; bottom: 32px;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(25, 103, 116, 0.35);
+    display: none;
+    place-items: center;
+    z-index: 50;
+  }
+  body.customize .fab { display: grid; }
+  .fab:hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+  /* svg icon helper */
+  .ico { width: 14px; height: 14px; stroke-width: 1.6; }
+  .ico-sm { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  /* footer line */
+  .footer-line {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Mobile */
+  @media (max-width: 960px) {
+    main { padding: 16px 18px 48px; }
+    .snapshot { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: repeat(6, 1fr); }
+    .tile.span-3, .tile.span-4 { grid-column: span 3; }
+    .tile.span-6, .tile.span-8 { grid-column: span 6; }
+    .role-tabs { display: none; }
+    .filterbar { overflow-x: auto; flex-wrap: nowrap; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Page Header -->
-<div class="page-head">
-  <h1>Performance · Dashboard</h1>
-  <div class="sub">Tile-Grid · Anpassbar · Rollen-Default + User-Override · Locked Compliance-Tiles</div>
-</div>
+<!-- ============== APP BAR (nur Standalone) ============== -->
+<div class="app-bar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div>
+      <div class="brand-name">Arkadium</div>
+      <div class="brand-sub">CRM · Performance</div>
+    </div>
+  </div>
 
-<!-- Snapshot-Bar (6 Slots) -->
-<div class="snap-bar">
-  <div class="snap-tile">
-    <div class="lbl">Health-Score</div>
-    <div class="val">87</div>
-    <div class="delta up">▲ 3 vs. Vorwoche</div>
+  <div class="modules">
+    <button class="mod">CRM</button>
+    <button class="mod">HR</button>
+    <button class="mod">Commission</button>
+    <button class="mod">Zeit</button>
+    <button class="mod">Billing</button>
+    <button class="mod active">Performance</button>
+    <button class="mod">E-Learning</button>
   </div>
-  <div class="snap-tile red">
-    <div class="lbl">Insights offen</div>
-    <div class="val">7</div>
-    <div class="delta down">▲ 2 critical</div>
-  </div>
-  <div class="snap-tile amber">
-    <div class="lbl">Massnahmen überfällig</div>
-    <div class="val">3</div>
-    <div class="delta">2 mit Wirkungsmessung</div>
-  </div>
-  <div class="snap-tile green">
-    <div class="lbl">Goal-Erreichung MTD</div>
-    <div class="val">94%</div>
-    <div class="delta up">▲ 6% vs. Plan</div>
-  </div>
-  <div class="snap-tile">
-    <div class="lbl">Compliance</div>
-    <div class="val">96%</div>
-    <div class="delta">E-Learning · AGB · Reminder</div>
-  </div>
-  <div class="snap-tile gold">
-    <div class="lbl">Forecast Q-Ende</div>
-    <div class="val">CHF 480k</div>
-    <div class="delta">±18% Konfidenz</div>
+
+  <div class="app-bar-right">
+    <div class="search-pill">
+      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>Suche</span>
+      <span class="mono" style="margin-left:14px;">⌘K</span>
+    </div>
+    <div class="user-pill">
+      <div class="user-dot">PW</div>
+      <span>Peter W. · Admin</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Theme umschalten">
+      <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </div>
 </div>
 
-<!-- Placeholder-Banner -->
-<div class="ph-banner">
-  <div class="ic">🎨</div>
-  <div>
-    <h2>Mockup in Bearbeitung · Claude-Design-Workflow</h2>
-    <p>Dieses Dashboard wird via <code>claude.ai/design</code> erstellt (Schritt 1 + 2). Bundle wird anschliessend hier eingebaut und an ARK-Pattern angepasst (Schritt 3).</p>
-    <p>Snapshot-Bar oben · Filter-Bar darunter · Tile-Grid (12-Spalten, customizable) folgt. Für Spec-Detail siehe <code>specs/ARK_PERFORMANCE_TOOL_INTERACTIONS_v0_1.md §2.2</code>.</p>
-  </div>
-</div>
+<main>
 
-<!-- Filter-Bar -->
-<div class="filter-bar">
-  <span class="filter-chip active">Dieser Monat</span>
-  <span class="filter-chip">Letzte 7 Tage</span>
-  <span class="filter-chip">Quartal</span>
-  <span class="filter-chip">YTD</span>
-  <span class="filter-chip">Alle Sparten</span>
-  <span class="filter-chip">vs. Vorperiode</span>
-  <span class="filter-spacer"></span>
-  <button class="filter-action">Filter zurücksetzen</button>
-  <button class="filter-action primary">Anpassen</button>
-</div>
-
-<!-- Tile-Grid Placeholder (Default-Layout für Rolle "admin") -->
-<div class="tile-grid">
-
-  <div class="tile-ph span-3">
-    <div class="tile-head">
-      <div class="tile-title">Pipeline-Wert (gesamt)</div>
-      <div class="tile-tag">KPI-Card</div>
+  <!-- ============== PAGE HEAD ============== -->
+  <header class="page-head">
+    <div>
+      <div class="crumb">Performance · Modul</div>
+      <h1 class="serif">Performance · Dashboard</h1>
+      <div class="subtitle">
+        Tile-Grid <span class="dot">·</span> Anpassbar <span class="dot">·</span> Rollen-Default + User-Override
+      </div>
     </div>
-    <div class="tile-body">CHF 2.4M · Trend-Sparkline</div>
-  </div>
-
-  <div class="tile-ph span-3">
-    <div class="tile-head">
-      <div class="tile-title">Goal-Erreichung Team</div>
-      <div class="tile-tag">Goal-Progress</div>
+    <div class="page-head-actions">
+      <div class="role-tabs" role="tablist" aria-label="Rolle">
+        <button>AM</button>
+        <button>CM</button>
+        <button>Researcher</button>
+        <button>Head</button>
+        <button class="active">Admin</button>
+      </div>
+      <a class="link-btn" href="#">Filter zurücksetzen</a>
+      <button class="toggle" id="customizeToggle" aria-pressed="false">
+        <span class="switch"></span>
+        <span>Anpassen</span>
+      </button>
     </div>
-    <div class="tile-body">94% · 17/18 MA on track</div>
-  </div>
+  </header>
 
-  <div class="tile-ph span-3 lock">
-    <div class="tile-head">
-      <div class="tile-title">Compliance-Score</div>
-      <div class="tile-tag">KPI · Locked</div>
+  <!-- ============== SNAPSHOT BAR ============== -->
+  <section class="snapshot" aria-label="Snapshot">
+    <div class="snap" style="--accent-color: var(--accent);">
+      <div class="label">Health-Score</div>
+      <div class="value serif">87<span class="unit">/100</span></div>
+      <div class="delta"><span class="arrow-up">▲</span> 3 vs. Vorwoche</div>
     </div>
-    <div class="tile-body">96% · E-Learning · AGB · Reminder</div>
-  </div>
 
-  <div class="tile-ph span-3">
-    <div class="tile-head">
-      <div class="tile-title">Forecast Q-Ende</div>
-      <div class="tile-tag">Forecast-Card</div>
+    <div class="snap" style="--accent-color: var(--red);">
+      <div class="label">Insights offen</div>
+      <div class="value serif">7</div>
+      <div class="delta"><span class="arrow-up" style="color:var(--red);">▲</span> 2 critical</div>
     </div>
-    <div class="tile-body">CHF 480k · Markov · Top-5-Drill</div>
-  </div>
 
-  <div class="tile-ph span-6">
-    <div class="tile-head">
-      <div class="tile-title">Pipeline-Funnel (live)</div>
-      <div class="tile-tag">Funnel-Chart</div>
+    <div class="snap" style="--accent-color: var(--amber);">
+      <div class="label">Massnahmen überfällig</div>
+      <div class="value serif">3</div>
+      <div class="delta"><span class="arrow-neutral">·</span> 2 mit Wirkungsmessung</div>
     </div>
-    <div class="tile-body">9 Stages · Drop-Off-Analysis · Drill auf Stage</div>
-  </div>
 
-  <div class="tile-ph span-6">
-    <div class="tile-head">
-      <div class="tile-title">Revenue-Trend (12 Mt)</div>
-      <div class="tile-tag">Trend-Chart</div>
+    <div class="snap" style="--accent-color: var(--green);">
+      <div class="label">Goal-Erreichung MTD</div>
+      <div class="value serif">94<span class="unit">%</span></div>
+      <div class="delta"><span class="arrow-up">▲</span> 6 % vs. Plan</div>
     </div>
-    <div class="tile-body">Linie pro Sparte · vs. Vorjahr-Overlay</div>
-  </div>
 
-  <div class="tile-ph span-4">
-    <div class="tile-head">
-      <div class="tile-title">Anomalien-Liste</div>
-      <div class="tile-tag">Anomaly-List</div>
+    <div class="snap" style="--accent-color: var(--accent);">
+      <div class="label">Compliance</div>
+      <div class="value serif">96<span class="unit">%</span></div>
+      <div class="delta"><span class="arrow-neutral">·</span> E-Learning · AGB · Reminder</div>
     </div>
-    <div class="tile-body">7 offen · 2 critical · 1 blocker</div>
-  </div>
 
-  <div class="tile-ph span-4">
-    <div class="tile-head">
-      <div class="tile-title">Massnahmen-Liste</div>
-      <div class="tile-tag">Action-List</div>
+    <div class="snap" style="--accent-color: var(--gold);">
+      <div class="label">Forecast Q-Ende</div>
+      <div class="value serif">CHF 480k</div>
+      <div class="delta"><span class="arrow-neutral">·</span> ± 18 % Konfidenz</div>
     </div>
-    <div class="tile-body">3 überfällig · 5 in Bearbeitung · 12 done (30d)</div>
-  </div>
+  </section>
 
-  <div class="tile-ph span-4">
-    <div class="tile-head">
-      <div class="tile-title">Coverage-Kritisch</div>
-      <div class="tile-tag">Top-N-List</div>
+  <!-- ============== FILTER BAR ============== -->
+  <section class="filterbar" aria-label="Filter">
+    <span class="filter-group-label">Zeitraum</span>
+    <button class="chip active">Dieser Monat</button>
+    <button class="chip">Letzte 7 Tage</button>
+    <button class="chip">Quartal</button>
+    <button class="chip">YTD</button>
+
+    <span class="chip-sep"></span>
+
+    <span class="filter-group-label">Sicht</span>
+    <button class="chip">Alle Sparten</button>
+    <button class="chip">vs. Vorperiode</button>
+
+    <div class="filterbar-right">
+      <a class="link-btn" href="#">Filter zurücksetzen</a>
+      <button class="btn-primary" id="customizePrimary">Anpassen</button>
     </div>
-    <div class="tile-body">12 Kandidaten · 4 Accounts · Sparte ARC dominant</div>
+  </section>
+
+  <!-- ============== TILE GRID ============== -->
+  <section class="grid" id="grid">
+
+    <!-- 1. Pipeline-Wert -->
+    <article class="tile span-3">
+      <div class="tile-head">
+        <span class="tile-title">Pipeline-Wert · gesamt</span>
+        <span class="tile-badge">KPI</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle" title="Verschieben"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon" title="Einstellungen"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        </span>
+      </div>
+      <div class="big-num serif">CHF 2.4<span class="unit">M</span></div>
+      <div class="kpi-sub">412 aktive Prozesse · ⌀ CHF 5.8k</div>
+      <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sg1" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,30 L20,28 L40,24 L60,26 L80,18 L100,22 L120,14 L140,17 L160,10 L180,12 L200,6 L200,40 L0,40 Z" fill="url(#sg1)"/>
+        <path d="M0,30 L20,28 L40,24 L60,26 L80,18 L100,22 L120,14 L140,17 L160,10 L180,12 L200,6" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+      </svg>
+    </article>
+
+    <!-- 2. Goal Erreichung -->
+    <article class="tile span-3">
+      <div class="tile-head">
+        <span class="tile-title">Goal-Erreichung · Team</span>
+        <span class="tile-badge">Goal</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle" title="Verschieben"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon" title="Einstellungen"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M22 12h-3M5 12H2M19 5l-2 2M7 17l-2 2M19 19l-2-2M7 7 5 5"/></svg></button>
+        </span>
+      </div>
+      <div class="big-num serif">94<span class="unit">%</span></div>
+      <div class="kpi-sub">17 von 18 MA on track</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+      <div class="kpi-sub" style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span>Plan: 88 %</span><span>Stretch: 100 %</span>
+      </div>
+    </article>
+
+    <!-- 3. Compliance LOCKED -->
+    <article class="tile span-3 locked">
+      <div class="tile-head">
+        <span class="tile-title">Compliance-Score</span>
+        <span class="tile-badge">KPI</span>
+        <span class="tile-icons">
+          <span class="tile-ic lock-ic" title="Gesperrt">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </span>
+        </span>
+      </div>
+      <div class="big-num serif">96<span class="unit">%</span></div>
+      <div class="kpi-sub">Stand 24.04. · Pflicht für Heads</div>
+      <div class="sub-bars">
+        <div class="sub-bar">
+          <div class="sb-row"><span>E-Learning</span><span class="mono">98</span></div>
+          <div class="sb-track"><div class="sb-fill" style="width:98%"></div></div>
+        </div>
+        <div class="sub-bar">
+          <div class="sb-row"><span>AGB</span><span class="mono">92</span></div>
+          <div class="sb-track"><div class="sb-fill" style="width:92%;background:var(--amber);"></div></div>
+        </div>
+        <div class="sub-bar">
+          <div class="sb-row"><span>Reminder</span><span class="mono">99</span></div>
+          <div class="sb-track"><div class="sb-fill" style="width:99%;background:var(--green);"></div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. Forecast -->
+    <article class="tile span-3">
+      <div class="tile-head">
+        <span class="tile-title">Forecast Q-Ende</span>
+        <span class="tile-badge">Forecast</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle" title="Verschieben"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon" title="Einstellungen"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M22 12h-3M5 12H2"/></svg></button>
+        </span>
+      </div>
+      <div class="big-num serif">CHF 480<span class="unit">k</span></div>
+      <div class="kpi-sub">Median · 68 % Wahrscheinlichkeit</div>
+      <div class="conf-bar">
+        <div class="conf-track"></div>
+        <div class="conf-fill" style="left:30%;right:20%;"></div>
+        <div class="conf-marker" style="left:55%;"></div>
+      </div>
+      <div class="conf-labels">
+        <span>200k</span><span>380k</span><span>580k</span><span>650k</span>
+      </div>
+    </article>
+
+    <!-- 5. Funnel -->
+    <article class="tile span-6">
+      <div class="tile-head">
+        <span class="tile-title">Pipeline-Funnel · live</span>
+        <span class="tile-badge">Funnel</span>
+        <span class="tile-icons" style="color:var(--text-light);font-size:11px;">
+          <span style="margin-right:8px;">240 → 8 · Conversion 3.3 %</span>
+          <button class="tile-ic drag-handle" title="Verschieben"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon" title="Einstellungen"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </article>
+
+    <!-- 6. Revenue Trend -->
+    <article class="tile span-6">
+      <div class="tile-head">
+        <span class="tile-title">Revenue-Trend · 12 Monate · nach Sparte</span>
+        <span class="tile-badge">Trend</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle" title="Verschieben"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon" title="Einstellungen"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <svg id="trendChart" viewBox="0 0 600 180" width="100%" height="180" preserveAspectRatio="none" style="display:block;"></svg>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#196774;"></span>ARC</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#dcb479;"></span>GT</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#2d8659;"></span>ING</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#c98e2c;"></span>PUR</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#b94545;"></span>REM</span>
+      </div>
+    </article>
+
+    <!-- 7. Anomalien -->
+    <article class="tile span-4">
+      <div class="tile-head">
+        <span class="tile-title">Anomalien</span>
+        <span class="tile-badge">Liste · 5</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="list">
+        <div class="list-row">
+          <div class="severity sev-critical"></div>
+          <div class="list-main">
+            <div class="list-title">CV-Sent → TI Conversion bricht ein</div>
+            <div class="list-meta">Sparte ING · −38 % vs. 8-Wochen-Mittel <span class="badge b-critical" style="margin-left:6px;">Critical</span></div>
+          </div>
+          <div class="age-pill">2 d</div>
+        </div>
+
+        <div class="list-row">
+          <div class="severity sev-critical"></div>
+          <div class="list-main">
+            <div class="list-title">Schutzfrist Lara Roth in 7 Tagen</div>
+            <div class="list-meta">Amstein+Walthert · Claim-Risiko <span class="badge b-critical" style="margin-left:6px;">Critical</span></div>
+          </div>
+          <div class="age-pill">1 d</div>
+        </div>
+
+        <div class="list-row">
+          <div class="severity sev-warn"></div>
+          <div class="list-main">
+            <div class="list-title">3 Reminder ohne Owner-Reaktion</div>
+            <div class="list-meta">Frech-Berger · Pöyri · BG-Ingenieure <span class="badge b-warn" style="margin-left:6px;">Warn</span></div>
+          </div>
+          <div class="age-pill">4 d</div>
+        </div>
+
+        <div class="list-row">
+          <div class="severity sev-blocker"></div>
+          <div class="list-main">
+            <div class="list-title">Forecast-Drift Sparte PUR</div>
+            <div class="list-meta">Plan-Ist Δ &gt; 25 % · Eskalation an Head <span class="badge b-blocker" style="margin-left:6px;">Blocker</span></div>
+          </div>
+          <div class="age-pill">3 d</div>
+        </div>
+
+        <div class="list-row">
+          <div class="severity sev-info"></div>
+          <div class="list-main">
+            <div class="list-title">Coverage-Lücke ARC-Kandidatenbank</div>
+            <div class="list-meta">14 Tage ohne Research-Touch <span class="badge b-info" style="margin-left:6px;">Info</span></div>
+          </div>
+          <div class="age-pill">6 d</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8. Massnahmen -->
+    <article class="tile span-4">
+      <div class="tile-head">
+        <span class="tile-title">Massnahmen</span>
+        <span class="tile-badge">Liste · 5</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="list">
+        <div class="list-row">
+          <div class="avatar">PW</div>
+          <div class="list-main">
+            <div class="list-title">CV-Quality-Workshop ING</div>
+            <div class="list-meta">Owner · Peter W. <span class="badge b-overdue" style="margin-left:6px;">Überfällig</span></div>
+          </div>
+          <div class="age-pill">19.04.</div>
+        </div>
+
+        <div class="list-row">
+          <div class="avatar gold">SN</div>
+          <div class="list-main">
+            <div class="list-title">Schutzfrist-Brief Lara Roth aufsetzen</div>
+            <div class="list-meta">Owner · Sabine N. <span class="badge b-progress" style="margin-left:6px;">In Arbeit</span></div>
+          </div>
+          <div class="age-pill">26.04.</div>
+        </div>
+
+        <div class="list-row">
+          <div class="avatar green">MB</div>
+          <div class="list-main">
+            <div class="list-title">Backoffice-Close KW 17</div>
+            <div class="list-meta">Owner · Marius B. <span class="badge b-done" style="margin-left:6px;">Erledigt</span></div>
+          </div>
+          <div class="age-pill">23.04.</div>
+        </div>
+
+        <div class="list-row">
+          <div class="avatar amber">DH</div>
+          <div class="list-main">
+            <div class="list-title">Forecast-Re-Forecast PUR</div>
+            <div class="list-meta">Owner · Daniel H. <span class="badge b-pending" style="margin-left:6px;">Geplant</span></div>
+          </div>
+          <div class="age-pill">02.05.</div>
+        </div>
+
+        <div class="list-row">
+          <div class="avatar red">JK</div>
+          <div class="list-main">
+            <div class="list-title">Reminder-Backlog REM aufräumen</div>
+            <div class="list-meta">Owner · Julia K. <span class="badge b-overdue" style="margin-left:6px;">Überfällig</span></div>
+          </div>
+          <div class="age-pill">21.04.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 9. Coverage Kritisch -->
+    <article class="tile span-4">
+      <div class="tile-head">
+        <span class="tile-title">Coverage · kritisch</span>
+        <span class="tile-badge">Top 5</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="list">
+        <div class="list-row">
+          <div class="avatar">HS</div>
+          <div class="list-main">
+            <div class="list-title">Halter AG · Account</div>
+            <div class="list-meta">Letzter Touch · 31 Tage <span class="sparte" style="margin-left:6px;">REM</span></div>
+          </div>
+          <div class="age-pill">31 d</div>
+        </div>
+        <div class="list-row">
+          <div class="avatar gold">FA</div>
+          <div class="list-main">
+            <div class="list-title">F. Aebi · Senior PM</div>
+            <div class="list-meta">Kandidat · 24 Tage <span class="sparte" style="margin-left:6px;">ARC</span></div>
+          </div>
+          <div class="age-pill">24 d</div>
+        </div>
+        <div class="list-row">
+          <div class="avatar amber">PE</div>
+          <div class="list-main">
+            <div class="list-title">Pöyri Schweiz · Account</div>
+            <div class="list-meta">Letzter Touch · 22 Tage <span class="sparte" style="margin-left:6px;">ING</span></div>
+          </div>
+          <div class="age-pill">22 d</div>
+        </div>
+        <div class="list-row">
+          <div class="avatar">RM</div>
+          <div class="list-main">
+            <div class="list-title">R. Müller · Bauleiter</div>
+            <div class="list-meta">Kandidat · 19 Tage <span class="sparte" style="margin-left:6px;">GT</span></div>
+          </div>
+          <div class="age-pill">19 d</div>
+        </div>
+        <div class="list-row">
+          <div class="avatar green">IB</div>
+          <div class="list-main">
+            <div class="list-title">IBG Engineering · Account</div>
+            <div class="list-meta">Letzter Touch · 18 Tage <span class="sparte" style="margin-left:6px;">PUR</span></div>
+          </div>
+          <div class="age-pill">18 d</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10. Heatmap -->
+    <article class="tile span-8">
+      <div class="tile-head">
+        <span class="tile-title">Activity-Heatmap · Team × Wochentag</span>
+        <span class="tile-badge">Heatmap</span>
+        <span class="tile-icons" style="color:var(--text-light);font-size:11px;">
+          <span style="margin-right:8px;">KW 17 · 12 MA · Touches/Tag</span>
+          <button class="tile-ic drag-handle"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="hm-legend">
+        <span>0</span>
+        <span class="gradient"></span>
+        <span>≥ 24</span>
+        <span style="margin-left:auto;">⌀ 11.4 / Tag · Spitze Mi</span>
+      </div>
+    </article>
+
+    <!-- 11. Sparten Vergleich -->
+    <article class="tile span-4">
+      <div class="tile-head">
+        <span class="tile-title">Sparten · Revenue MTD</span>
+        <span class="tile-badge">Bar</span>
+        <span class="tile-icons">
+          <button class="tile-ic drag-handle"><svg class="ico-sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></button>
+          <button class="tile-ic gear-icon"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg></button>
+        </span>
+      </div>
+      <div class="hbars" id="hbars"></div>
+    </article>
+
+  </section>
+
+  <div class="footer-line">
+    <span>Quelle · ARK Performance-Warehouse · Stand 24.04.2026 14:32</span>
+    <span>Layout · admin.default.v3 · 11 Tiles</span>
   </div>
 
-  <div class="tile-ph span-8">
-    <div class="tile-head">
-      <div class="tile-title">Activity-Heatmap (Team × Wochentag)</div>
-      <div class="tile-tag">Heatmap</div>
-    </div>
-    <div class="tile-body">Calls · Meetings · Briefings · Drill auf MA</div>
-  </div>
+</main>
 
-  <div class="tile-ph span-4">
-    <div class="tile-head">
-      <div class="tile-title">Sparten-Vergleich Revenue</div>
-      <div class="tile-tag">Bar-Chart</div>
-    </div>
-    <div class="tile-body">ARC · GT · ING · PUR · REM</div>
-  </div>
-
-</div>
+<button class="fab" title="Tile hinzufügen" aria-label="Tile hinzufügen">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+</button>
 
 <script>
-  // Theme-Sync vom Hub-Frame
+  // ---------- iframe-Detection (App-Bar conditional) ----------
+  if (window.self !== window.top) {
+    document.body.classList.add('in-iframe');
+  }
+
+  // ---------- Customize toggle ----------
+  const toggle = document.getElementById('customizeToggle');
+  const primary = document.getElementById('customizePrimary');
+  function setCustomize(on) {
+    document.body.classList.toggle('customize', on);
+    toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  toggle.addEventListener('click', () => setCustomize(!document.body.classList.contains('customize')));
+  primary.addEventListener('click', () => setCustomize(!document.body.classList.contains('customize')));
+
+  // ---------- Theme toggle (Standalone) ----------
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    drawTrend();
+  }
+  const themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+  }
+
+  // ---------- Theme-Sync vom Hub-Frame (postMessage) ----------
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'ark-theme') {
-      document.documentElement.setAttribute('data-theme', e.data.value);
+      applyTheme(e.data.value);
     }
   });
-</script>
 
+  // ---------- Funnel ----------
+  const funnelStages = [
+    {name: 'Research',  count: 240},
+    {name: 'Briefing',  count: 180},
+    {name: 'CV Sent',   count: 45},
+    {name: 'TI',        count: 32},
+    {name: '1st',       count: 24},
+    {name: '2nd',       count: 18},
+    {name: '3rd',       count: 12},
+    {name: 'Offer',     count: 9},
+    {name: 'Placement', count: 8},
+  ];
+  const max = funnelStages[0].count;
+  const funnelEl = document.getElementById('funnel');
+  funnelStages.forEach((s, i) => {
+    const w = (s.count / max) * 100;
+    const prev = i > 0 ? funnelStages[i-1].count : null;
+    const dropPct = prev ? Math.round((1 - s.count/prev)*100) : null;
+    const last = i === funnelStages.length - 1;
+    const row = document.createElement('div');
+    row.className = 'funnel-row';
+    row.innerHTML = `
+      <div class="stage">${s.name}</div>
+      <div class="funnel-bar${last ? ' muted' : ''}" style="width:${w}%;"></div>
+      <div class="funnel-count serif">${s.count}</div>
+      <div class="funnel-drop ${dropPct !== null && dropPct < 15 ? 'tiny' : ''}">${dropPct !== null ? '−' + dropPct + '%' : ''}</div>
+    `;
+    funnelEl.appendChild(row);
+  });
+
+  // ---------- Trend chart ----------
+  function drawTrend() {
+    const css = getComputedStyle(document.documentElement);
+    const colors = {
+      ARC: css.getPropertyValue('--accent').trim() || '#196774',
+      GT:  '#dcb479',
+      ING: css.getPropertyValue('--green').trim() || '#2d8659',
+      PUR: css.getPropertyValue('--amber').trim() || '#c98e2c',
+      REM: css.getPropertyValue('--red').trim()   || '#b94545',
+    };
+    const border = css.getPropertyValue('--border').trim() || '#e8e2d5';
+    const textLight = css.getPropertyValue('--text-light').trim() || '#8a8a8a';
+
+    const series = {
+      ARC: [42, 48, 55, 52, 60, 58, 64, 70, 68, 72, 78, 82],
+      GT:  [28, 30, 26, 32, 36, 38, 35, 40, 44, 42, 46, 50],
+      ING: [55, 60, 64, 70, 66, 72, 68, 64, 70, 76, 80, 78],
+      PUR: [34, 38, 36, 40, 42, 38, 36, 32, 30, 34, 36, 40],
+      REM: [22, 24, 28, 26, 30, 32, 30, 34, 36, 32, 34, 30],
+    };
+    const months = ['Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez','Jan','Feb','Mär','Apr'];
+    const W = 600, H = 180, padL = 36, padR = 12, padT = 12, padB = 26;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+    const all = Object.values(series).flat();
+    const yMax = Math.ceil(Math.max(...all) / 10) * 10;
+    const yMin = 0;
+
+    const xAt = i => padL + (i / 11) * innerW;
+    const yAt = v => padT + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
+
+    let svg = '';
+    for (let g = 0; g <= 4; g++) {
+      const v = yMin + (g / 4) * (yMax - yMin);
+      const y = yAt(v);
+      svg += `<line x1="${padL}" x2="${W-padR}" y1="${y}" y2="${y}" stroke="${border}" stroke-width="1"/>`;
+      svg += `<text x="${padL - 6}" y="${y + 3}" text-anchor="end" font-size="9" font-family="JetBrains Mono, monospace" fill="${textLight}">${Math.round(v)}k</text>`;
+    }
+    months.forEach((m, i) => {
+      svg += `<text x="${xAt(i)}" y="${H - 8}" text-anchor="middle" font-size="9" font-family="DM Sans, sans-serif" fill="${textLight}">${m}</text>`;
+    });
+    Object.entries(series).forEach(([k, vals]) => {
+      const d = vals.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xAt(i)} ${yAt(v)}`).join(' ');
+      svg += `<path d="${d}" fill="none" stroke="${colors[k]}" stroke-width="1.6" stroke-linejoin="round"/>`;
+      vals.forEach((v, i) => {
+        if (i === vals.length - 1)
+          svg += `<circle cx="${xAt(i)}" cy="${yAt(v)}" r="2.5" fill="${colors[k]}"/>`;
+      });
+    });
+
+    document.getElementById('trendChart').innerHTML = svg;
+  }
+  drawTrend();
+
+  // ---------- Heatmap ----------
+  const members = [
+    'Peter W.', 'Sabine N.', 'Marius B.', 'Lara R.',
+    'Daniel H.', 'Julia K.', 'Felix A.', 'Anna S.',
+    'Rico M.', 'Tina B.', 'Jonas E.', 'Eva L.'
+  ];
+  const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  function val(r, c) {
+    const seed = (r * 17 + c * 31 + 7) % 100;
+    if (c >= 5) return Math.max(0, Math.round(seed / 30) - 1);
+    const midBias = c === 2 ? 1.4 : c === 1 || c === 3 ? 1.2 : 1.0;
+    return Math.max(1, Math.round((seed % 22) * midBias / 1.1));
+  }
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML = '';
+  hm.innerHTML += `<div class="hm-name"></div>` + days.map(d => `<div class="hm-head">${d}</div>`).join('');
+  members.forEach((m, r) => {
+    hm.innerHTML += `<div class="hm-name">${m}</div>`;
+    for (let c = 0; c < 7; c++) {
+      const v = val(r, c);
+      const t = Math.min(1, v / 24);
+      const bg = t === 0
+        ? 'var(--surface-sunk)'
+        : `color-mix(in oklab, var(--accent) ${Math.round(t*100)}%, var(--surface-sunk))`;
+      hm.innerHTML += `<div class="hm-cell" style="background:${bg};color:${t > 0.55 ? '#fff' : 'var(--text)'};">${v}</div>`;
+    }
+  });
+
+  // ---------- Sparten bars ----------
+  const sparten = [
+    {code: 'ARC', val: 142, chf: 'CHF 142k'},
+    {code: 'ING', val: 118, chf: 'CHF 118k'},
+    {code: 'GT',  val:  86, chf: 'CHF 86k'},
+    {code: 'PUR', val:  64, chf: 'CHF 64k'},
+    {code: 'REM', val:  42, chf: 'CHF 42k'},
+  ];
+  const maxS = Math.max(...sparten.map(s => s.val));
+  const hbars = document.getElementById('hbars');
+  hbars.innerHTML = sparten.map(s => `
+    <div class="hbar-row">
+      <div class="lab">${s.code}</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${(s.val/maxS)*100}%;"></div></div>
+      <div class="val serif">${s.chf}</div>
+    </div>
+  `).join('');
+
+</script>
 </body>
 </html>
