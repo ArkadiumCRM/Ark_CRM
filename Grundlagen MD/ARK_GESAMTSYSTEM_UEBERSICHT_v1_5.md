@@ -1,10 +1,11 @@
-# ARK CRM/ERP — Gesamtsystem-Übersicht v1.4
+# ARK CRM/ERP — Gesamtsystem-Übersicht v1.5
 
-**Stand:** 2026-04-24
+**Stand:** 2026-04-25
 **Autor:** Peter Wiederkehr (Produkt-Owner) + Claude (Architektur)
 **Zweck:** Vollständige Beschreibung des ARK-Systems für neue Entwickler, Reviewer und Stakeholder
-**Vorgänger:** v1.3.5 (2026-04-17 · Reminders-Vollansicht intern) / v1.3 (2026-04-14) / v1.2 (2026-03-30)
-**Scope v1.4:** E-Learning-Modul Sub A/B/C/D (vollständig) · Topbar-Toggle CRM↔ERP · Multi-Tenant-Pattern-Einführung
+**Vorgänger:** v1.4 (2026-04-24 · E-Learning + HR) / v1.3.5 (2026-04-17 · Reminders) / v1.3 (2026-04-14) / v1.2 (2026-03-30)
+**Scope v1.5:** Performance-Modul (TEIL 26 · Cross-Modul-Analytics-Hub · 8 Architektur-Entscheidungen 2026-04-25 · ~33 Metriken · Markov-Forecast v0.1 · PowerBI-View-Layer · ETL-Worker-Architektur · Reuse Sparten/MA/Stage-Stammdaten)
+**Scope v1.4:** E-Learning-Modul Sub A/B/C/D + Topbar-Toggle CRM↔ERP + HR-Modul (TEIL 25)
 
 ## Änderungen v1.2 → v1.3
 
@@ -1069,4 +1070,125 @@ Tabellen gesamt:    ~215  (204 + 11)
 - **Mobile-App-Gate:** falls später Mobile-App, Gate-Middleware dort ebenfalls (Phase-3)
 - **Override-Request-Workflow:** MA beantragt Override, Head approved? MVP: nur Head/Admin legt direkt an. Phase-2 Request-Flow
 - **Emergency-Bypass-SLA:** Admin setzt Bypass → wirksam mit nächstem Request (Cache-Invalidation sofort)
+
+---
+
+## TEIL 26 · Performance-Modul (v1.5 · 2026-04-25)
+
+**Kernidee:** Cross-Modul-Analytics-Hub. Liest aggregiert aus CRM, Billing, Commission, Zeit, E-Learning und HR — schreibt nur in eigene Tabellen. Vollständiger Patch: `specs/ARK_GESAMTSYSTEM_PATCH_v1_4_to_v1_5_performance.md`. Detail-Specs: `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md` + `specs/ARK_PERFORMANCE_TOOL_INTERACTIONS_v0_1.md`. Memory: `project_performance_modul_decisions.md`.
+
+### 26.1 Modul-Charakteristik
+
+- **NICHT** HR-Reviews — die leben im HR-Modul (`ark_hr.fact_performance_reviews` u.a.)
+- **NICHT** E-Learning — das ist Single-Source via Sub A-D
+- **NICHT** Zeit/Commission/Billing — alles eigene Module
+- **IST** der zentrale Analytics-Hub: KPIs, Insights, Goals, Reports, Forecast über alle Module hinweg
+- **Read-only** auf alle Quell-Module via Live-Views + Materialized Views (Power-BI Layer)
+
+### 26.2 Reuse vs. Eigenes
+
+**Reuses Stammdaten (keine Duplikation):**
+- Sparten ARC/GT/ING/PUR/REM (`§8`)
+- MA-Kürzel (`dim_user.label_de`, 2-Buchstaben-Display)
+- Process-Stages aus `dim_process_stages` (mit neuen Spalten `funnel_relevance`, `avg_days_target`)
+- Mandat-Typen Target/Taskforce/Time (`dim_mandate.business_model`)
+- Activity-Types aus `dim_activity_types` (Touch-Frequenz aus `fact_history`)
+- Roles MA/Head/Admin/BO (`dim_user.role_code`)
+- Honorar-Settings (Commission-Engine)
+
+**Eigene Stammdaten (neu in v1.6):**
+- 33 Default-Metriken (`dim_metric_definition`)
+- 15 Anomaly-Thresholds (`dim_anomaly_threshold`)
+- 15 Tile-Types (`dim_dashboard_tile_type`)
+- 5 Report-Templates (`dim_report_template`)
+- 8 PowerBI-Views (`dim_powerbi_view`)
+
+### 26.3 Cross-Modular Daten-Flüsse
+
+| Quelle | Konsumiert von Performance via |
+|--------|-------------------------------|
+| CRM (`fact_process`, `fact_history`, `fact_placement`) | `v_pipeline_funnel`, `v_candidate_coverage`, `v_account_coverage`, `v_mandate_kpi_status`, `v_activity_heatmap` |
+| Billing (`fact_invoice`) | `v_revenue_attribution` |
+| Commission (`fact_commission_ledger`) | `v_commission_run_rate`, `v_revenue_attribution` |
+| Zeit (`fact_time_entries`, `fact_absences`) | `v_zeit_utilization` |
+| E-Learning (`fact_elearn_attempt`, `fact_elearn_assignment`, `fact_elearn_certificate`) | `v_elearn_compliance` |
+| HR (`fact_performance_reviews`, `fact_competency_ratings`) | `v_hr_review_summary` |
+
+### 26.4 8 Architektur-Entscheidungen 2026-04-25
+
+| ID | Entscheidung | Wert |
+|----|--------------|------|
+| Q1 | HR-Performance-Reviews vs. Performance-Modul | C — alle Reviews ins HR-Modul (8 Tabellen migriert aus DB §19) |
+| Q2 | Goals — operativ oder strategisch? | C — operative Performance-Goals im Performance-Modul (`fact_perf_goal`); strategische Karriere-Goals im HR (`fact_development_plans`) |
+| Q3 | Anomaly-Detector-Default | Y — 15 Default-Schwellen seeded; Admin pflegt Sparten-/Rollen-Overrides |
+| Q4 | PowerBI-Refresh-Strategie | D — 8 Default-Views mit per-View-Cron in `dim_powerbi_view.refresh_cron`; ETL-Worker `powerbi-view-refresh.worker` per BullMQ |
+| Q5 | Tile-Customization | X — 15 Default-Tile-Types; User-Custom-Layout via `dim_dashboard_layout` (scope='user_custom'); Reset → Rollen-Default |
+| Q6 | Closed-Loop-Insight-Workflow | D — Saga: Insight → Action-Item → Action-Outcome (verzögert via `action-outcome-measurer.worker`); resolve oder Folge-Action |
+| Q7 | Report-Templates | D — 5 Default-Templates (weekly_ma/weekly_head/monthly_business/quarterly_exec/yearly_review); Bundle-Spec via `data_bundle_spec_jsonb`; Email via individuelles Outlook-Token (Sender konfigurierbar) |
+| Q8 | Forecast-Method | E — Markov-Stage-Model v0.1 (Conversion-Rate × Time-Decay); Konfidenz ±25%; ML-Upgrade Phase 3+ |
+
+Memory-Verweis: `project_performance_modul_decisions.md`.
+
+### 26.5 Statistik
+
+```
+Performance ENUMs:           11 neue
+Performance Tabellen:        14 (ark_perf.*) + 7 HR-Performance (ark_hr.*) − 3 gestrichen
+Live-Views:                  10 (ark_perf.v_*)
+Materialized Views:           8 (ark_perf.mv_*)
+Default-Seeds:               76 Rows (33 Metric-Defs + 15 Thresholds + 15 Tiles + 5 Templates + 8 PowerBI)
+Endpoints:                  ~50 (Performance) + ~30 (HR-Reviews-Erweiterung) + 2 (Power-BI-Bridge)
+Worker:                      12 Performance + 1 HR-Cycle
+Events:                      10 Performance + 5 HR-Reviews
+WS-Channels:                  5 Performance + 2 HR
+Sagas:                        3 (Closed-Loop · Pre-Built-Report · Review-Cycle)
+Mockup-Pages:                10 (1 Hub + 9 Sub-Pages, alle ohne App-Bar)
+```
+
+### 26.6 Routing-Übersicht (UI)
+
+```
+Topbar-Toggle: CRM ↔ ERP
+
+ERP-Workspace:
+  /erp/zeit/*           → Zeit-Modul
+  /erp/billing/*        → Billing-Modul
+  /erp/elearn/*         → E-Learning-Modul (Sub A-D)
+  /erp/hr/*             → HR-Modul (inkl. Performance-Reviews)
+  /erp/performance/*    → Performance-Modul (NEU v1.5)
+    ├── /dashboard      Performance-Cockpit
+    ├── /insights       Insight-Loop-Inbox
+    ├── /funnel         Pipeline-Funnel-Drilldown
+    ├── /coverage       Schweizer Geo-Heatmap (TopoJSON-CDN)
+    ├── /mitarbeiter    MA-Profil mit Reviews-Tab
+    ├── /team           Team-Aggregat (Head)
+    ├── /revenue        Revenue-Attribution
+    ├── /business       Business-Dashboard
+    ├── /reports        Report-Templates + Run-Audit
+    └── /admin          6-Sub-Tab Admin-Konfiguration
+```
+
+### 26.7 Markov-Forecast v0.1
+
+Pro aktivem Prozess:
+```
+P(placement) = ∏ conversion_rate(stage_i → stage_i+1) × time_decay
+time_decay   = exp(-days_in_current_stage / avg_days_current_stage)
+expected_revenue = honorar(expected_salary) × P(placement)
+confidence_interval = expected_revenue × [0.75, 1.25]
+```
+
+`forecast-recompute.worker` läuft täglich 05:00, berechnet Conversion-Raten neu (12-Mt-Lookback per Sparte/Business-Model), dann pro Prozess + Aggregate (User/Sparte/Global). ML-Upgrade (logistic regression, gradient boosting) ab Phase 3+.
+
+### 26.8 Data-Pipeline (PowerBI als ETL-Source)
+
+PowerBI-Materialized-Views in `ark_perf.mv_*` sind ETL-Source-of-Truth für externe BI-Tools. Refresh via `powerbi-view-refresh.worker` (per-View-Cron). 3 Critical-Views (`pipeline_today` · `goal_drift_critical` · `coverage_critical`) refreshen hourly, andere daily/weekly/monthly. Power-BI-Service-Account authentifiziert via X-API-Key (separate Auth, nicht JWT) → `GET /api/powerbi/views`.
+
+### 26.9 Referenzen
+
+- Detail-Schema: `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md`
+- Detail-Interactions: `specs/ARK_PERFORMANCE_TOOL_INTERACTIONS_v0_1.md`
+- Mockup-Plan: `specs/ARK_PERFORMANCE_TOOL_MOCKUP_PLAN.md`
+- Patches: `specs/ARK_*_PATCH_*_performance.md` (Stammdaten · DB · Backend · Frontend · Gesamtsystem)
+- Memory: `project_performance_modul_decisions.md` · `feedback_phase3_modules_separate.md` · `project_phase3_erp_standalone.md`
 

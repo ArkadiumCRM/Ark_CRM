@@ -13,3 +13,21 @@
 ## Hinweis
 
 Für volle Regeneration (statt targeted Updates) Agent mit Task: „Regenerate digest X from `Grundlagen MD/ARK_<FILE>_v<VERSION>.md` · verlustfrei alle Enums/Kataloge · lossy Prosa". Targeted Updates sind schneller, aber bei grösseren Grundlagen-Refactors volle Regeneration bevorzugen.
+- [2026-04-25 2026-04-25 13:36] `database-schema-digest.md` stale -- source `ARK_DATABASE_SCHEMA_v1_5.md` edited (session-7da21068)
+- [2026-04-25 2026-04-25 13:36] `backend-architecture-digest.md` stale -- source `ARK_BACKEND_ARCHITECTURE_v2_7.md` edited (session-7da21068)
+- [2026-04-25 2026-04-25 13:37] `stammdaten-digest.md` stale -- source `ARK_STAMMDATEN_EXPORT_v1_5.md` edited (session-7da21068)
+- [2026-04-25 2026-04-25 13:38] `frontend-freeze-digest.md` stale -- source `ARK_FRONTEND_FREEZE_v1_12.md` edited (session-7da21068)
+- [2026-04-25 2026-04-25 13:38] `gesamtsystem-digest.md` stale -- source `ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` edited (session-7da21068)
+
+## [2026-04-25 21:15] Performance-Patches gemerged — Digest-Regen nötig
+
+- Performance-Modul Patches in alle 5 Grundlagen gemerged (TEIL §97, §98, Q, R, 26)
+- Grundlagen versions: v1.6 / v1.6 / v2.8 / v1.13 / v1.5 (Stammdaten/DB/Backend/Frontend/Gesamtsystem)
+- HR-Tool: v0.1 → v0.2 (Performance-Reviews-Migration)
+- Alle 5 Digests stale → vollständige Regeneration empfohlen (nicht targeted Update — Performance-Modul ist grosser Block, ~225 neue Tabellen total / 33 Metriken / 12 Worker / 50 Endpoints)
+- Source-Files (neue Pfade nach git mv):
+  - `Grundlagen MD/ARK_STAMMDATEN_EXPORT_v1_6.md` (~3500 Zeilen)
+  - `Grundlagen MD/ARK_DATABASE_SCHEMA_v1_6.md` (~3300 Zeilen)
+  - `Grundlagen MD/ARK_BACKEND_ARCHITECTURE_v2_8.md` (~4600 Zeilen)
+  - `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_13.md` (~4700 Zeilen)
+  - `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md` (~1200 Zeilen)

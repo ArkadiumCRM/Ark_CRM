@@ -1,10 +1,11 @@
-# ARK Frontend Architecture – v1.12
+# ARK Frontend Architecture – v1.13
 
-**Stand:** 2026-04-24
-**Status:** Review-Reif (Ergänzung v1.11)
-**Referenzen:** ARK Backend v2.7 · ARK Datenbank Schema v1.5 · ARK Stammdaten-Export v1.5 · ARK Gesamtsystem-Übersicht v1.4
-**Vorgänger:** v1.11 (2026-04-19 · Zeit-Modul intern) / v1.10 (2026-04-14) / v1.9 (2026-03-30)
-**Scope v1.12:** E-Learning-Modul Sub A/B/C/D · CRM↔ERP-Topbar-Toggle · ERP-Workspace · 25+ neue Pages · Gate-Middleware-Interceptor
+**Stand:** 2026-04-25
+**Status:** Review-Reif (Ergänzung v1.12)
+**Referenzen:** ARK Backend v2.8 · ARK Datenbank Schema v1.6 · ARK Stammdaten-Export v1.6 · ARK Gesamtsystem-Übersicht v1.5
+**Vorgänger:** v1.12 (2026-04-24 · E-Learning + HR) / v1.11 (2026-04-19 · Zeit) / v1.10 (2026-04-14) / v1.9 (2026-03-30)
+**Scope v1.13:** Performance-Modul (TEIL Q · Routes `/performance/*` · Hub-Pattern via `mockups/ERP Tools/performance/performance.html` · Sub-Pages-iframe-Embed ohne App-Bar · 6-Slot-Snapshot-Bar · 540px Drawer-Default · TopoJSON-CDN Schweizer Geo-Heatmap · 6-Sub-Tab-Layout für Admin-Page · Tab-Pattern gold-strong)
+**Scope v1.12:** E-Learning-Modul Sub A/B/C/D + CRM↔ERP-Topbar-Toggle + HR-Modul (TEIL P)
 
 ## Änderungen v1.9 → v1.10
 
@@ -4556,3 +4557,117 @@ interceptors.response.use(
 | `hr-academy-dashboard.html` | Durch E-Learning-Modul (`/erp/elearn`) ersetzt |
 | `hr-absence-calendar.html` | Gehört zu Zeit-Modul (`/erp/zeit`) |
 - **Shared `_shared/theme-sync.js`** vorhanden, noch nicht referenziert — Umstellung Folge-Session
+
+---
+
+## TEIL Q · Performance-Modul (v1.13 · 2026-04-25)
+
+**Scope:** Cross-Modul-Analytics-Hub im ERP-Workspace (analog HR/Zeit/E-Learning). Hub-Page `mockups/ERP Tools/performance/performance.html` lädt Sub-Pages via iframe. Vollständiger Patch: `specs/ARK_FRONTEND_FREEZE_PATCH_v1_12_to_v1_13_performance.md`.
+
+### Q.1 Routes (`/performance/*`)
+
+| Route | Page | Audience |
+|-------|------|----------|
+| `/performance/dashboard` | Performance-Cockpit (Default-Tiles + User-Override) | alle |
+| `/performance/insights` | Insight-Loop-Inbox (offene Insights, Acknowledge/Dismiss/Convert) | alle |
+| `/performance/funnel` | Pipeline-Funnel-Drilldown | alle |
+| `/performance/coverage` | Schweizer Geo-Heatmap (TopoJSON) + Coverage-State-Tabelle | alle |
+| `/performance/mitarbeiter` | MA-Profil-Page (Goals · Activities · Reviews-Tab via `v_hr_review_summary`) | self / head / admin |
+| `/performance/team` | Team-Aggregat (Head-View) | head / admin |
+| `/performance/revenue` | Revenue-Attribution-Drilldown | head / admin |
+| `/performance/business` | Business-Dashboard (Sparte/Modell-Vergleich) | head / admin |
+| `/performance/reports` | Report-Templates + Run-Audit | alle (eigene Templates) / admin (alle) |
+| `/performance/admin` | Admin-Konfiguration (6-Sub-Tab-Layout) | admin only |
+
+### Q.2 Hub-Pattern (analog HR/Zeit/E-Learning)
+
+`mockups/ERP Tools/performance/performance.html` liefert die Topbar (CRM↔ERP-Toggle + ERP-Sidebar) und lädt Sub-Pages via `<iframe src="performance-<tab>.html">` ohne eigene App-Bar pro Sub-Page.
+
+**Konsequenz für Sub-Page-Mockups:**
+- Sub-Pages haben **KEINE** App-Bar / Topbar / ERP-Sidebar (alles vom Hub geliefert)
+- Sub-Pages starten direkt mit Snapshot-Bar + Tab-Header + Content
+- Theme-Sync via `_shared/theme-sync.js` (Topbar-Theme-Toggle propagiert in iframes)
+
+Memory-Regel: `feedback_claude_design_no_app_bar.md`.
+
+### Q.3 Snapshot-Bar (6-Slot-Pattern)
+
+Jede Performance-Sub-Page mit Snapshot-Bar:
+
+```
+┌─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ Slot 1  │ Slot 2  │ Slot 3  │ Slot 4  │ Slot 5  │ Slot 6  │
+│ KPI     │ KPI     │ KPI     │ KPI     │ Anomaly │ Drift   │
+│ aktuell │ vs Ziel │ Trend   │ Forecast│ Count   │ /Action │
+└─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+```
+
+**Position:** `top:0`, `z-index:50` (Freeze §6-Konvention gilt auch für ERP-Module).
+
+### Q.4 Drawer-Default (540px slide-in)
+
+CRUD, Bestätigungen, Mehrschritt-Eingaben **immer als Drawer 540px slide-in** (CLAUDE.md Drawer-Default-Regel). Modal nur für kurze Confirms / Blocker / System-Notifications. Performance-spezifische Drawer:
+- `drawer-insight-detail` (Insight + Related Actions)
+- `drawer-action-create` (Action-Item aus Insight)
+- `drawer-goal-set` (Goal-Setzung Head→MA oder Self)
+- `drawer-report-generate` (Template + Period + Recipients)
+- `drawer-tile-customize` (User-Custom-Layout pro Tile)
+- `drawer-anomaly-threshold-edit` (Admin)
+- `drawer-metric-definition-edit` (Admin)
+- `drawer-forecast-override` (Head/Admin · manuelle Markov-Override)
+
+### Q.5 Schweizer Geo-Heatmap (Coverage)
+
+`/performance/coverage` zeigt Schweizer Karte mit Kanton-Aggregaten (Kandidaten/Account-Coverage-Score). TopoJSON via CDN: `https://cdn.jsdelivr.net/npm/swiss-maps@4/swiss.json` (oder gleichwertige Quelle). Render via D3.js + d3-geo. Click auf Kanton → Drill-Down-Drawer mit Kandidaten-/Account-Liste.
+
+### Q.6 6-Sub-Tab-Layout für Admin-Page (`/performance/admin`)
+
+| Sub-Tab | Inhalt |
+|---------|--------|
+| Stammdaten | `dim_metric_definition` CRUD |
+| Schwellen | `dim_anomaly_threshold` CRUD |
+| Tiles | `dim_dashboard_tile_type` + Default-Layouts pro Rolle |
+| Reports | `dim_report_template` + Cron-Editor |
+| Power-BI | `dim_powerbi_view` + Refresh-Status + Manuell-Refresh-Trigger |
+| System | Snapshot-Lag-Monitor + Worker-Health + Forecast-Config + Manueller Recompute-Trigger |
+
+### Q.7 Tab-Pattern (gold-strong active-underline)
+
+Alle Sub-Pages mit Tab-Header verwenden das CRM-Standard-Tab-Pattern:
+- Active-Tab: gold-strong (`#C4995A`) underline 2px
+- Inactive: text-secondary, kein Underline
+- Hover: text-primary, underline 1px gray-300
+- ARIA: `role="tab"` / `aria-selected` / `aria-controls`
+
+### Q.8 Mockup-Inventar
+
+Hub: `mockups/ERP Tools/performance/performance.html` (App-Shell mit Tab-Router-iframe).
+
+Sub-Pages (alle ohne App-Bar):
+- `performance-dashboard.html`
+- `performance-insights.html`
+- `performance-funnel.html`
+- `performance-coverage.html` (TopoJSON-CDN)
+- `performance-mitarbeiter.html`
+- `performance-team.html`
+- `performance-revenue.html`
+- `performance-business.html`
+- `performance-reports.html`
+- `performance-admin.html` (6 Sub-Tabs)
+
+### Q.9 RBAC (UI-Sichtbarkeit)
+
+| Element | MA | HEAD | ADMIN | BO |
+|---------|-----|------|-------|-----|
+| `/performance/dashboard`, `/insights` (own), `/mitarbeiter` (self) | ✓ | ✓ | ✓ | ✓ |
+| `/performance/team`, `/revenue`, `/business` | ✗ | Team | ✓ | Read |
+| `/performance/funnel`, `/coverage` | own | Team | ✓ | Read |
+| `/performance/admin` | ✗ | ✗ | ✓ | ✗ |
+| Tile-Customize | ✓ (own) | ✓ (own) | ✓ (own + role-default) | ✗ |
+
+### Q.10 Theme + Tokens
+
+Wie CRM-Standard: gold-strong `#C4995A` für Active-States, Surface-Card `#F8F6F3`, Border-Default `#E5E1DA`. Performance-spezifische Token:
+- Severity-Colors: `info=#0B6BCB`, `warn=#E0A412`, `critical=#D14343`, `blocker=#7A1D1D`
+- Coverage-State-Colors: `ok=#1B7A47`, `overdue=#E0A412`, `critical=#D14343`, `never_touched=#6B6258`
+- Tile-Background: Surface-Card mit 1px Border-Default, 8px Padding, 6px Radius

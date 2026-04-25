@@ -1,10 +1,11 @@
-# ARK Datenbank – Schema v1.5
+# ARK Datenbank – Schema v1.6
 
-**Stand:** 2026-04-24
+**Stand:** 2026-04-25
 **System:** Greenfield – komplett neuer Aufbau, keine Altlasten
-**Status:** Review-Reif (Ergänzung v1.4)
-**Vorgänger:** v1.4 (2026-04-19 · Zeit-Modul intern) / v1.3 (2026-04-14)
-**Scope v1.5:** E-Learning-Modul Sub A/B/C/D (28 neue Tabellen + pgvector + Cert-Erweiterung + RLS-Policies)
+**Status:** Review-Reif (Ergänzung v1.5)
+**Vorgänger:** v1.5 (2026-04-24 · E-Learning + HR) / v1.4 (2026-04-19) / v1.3 (2026-04-14)
+**Scope v1.6:** Performance-Modul (TEIL Q · 14 Tabellen im `ark_perf`-Schema + 7 HR-Performance-Tabellen im `ark_hr` + 10 Live-Views + 8 Materialized Views + RLS + 3 Rollen) · §19 Streichungen (8 Performance-Stubs migriert ins HR-Modul, 3 Stubs gestrichen ↦ E-Learning Single-Source) · `dim_process_stages` + `dim_user` erweitert
+**Scope v1.5:** E-Learning-Modul Sub A/B/C/D + HR-Modul (TEIL M)
 
 ## Änderungen v1.2 → v1.3
 
@@ -3093,4 +3094,228 @@ Supabase-Adapter: `fn_current_user_id()` SECURITY DEFINER mit `auth.uid()`
 11. Grants (ark_role_ma/head/admin/bo)
 12. Supabase Auth Adapter
 ```
+
+---
+
+## TEIL Q · Performance-Modul (v1.6 · 2026-04-25)
+
+**Scope:** Cross-Modul-Analytics-Hub. 14 neue Tabellen im `ark_perf`-Schema + 7 HR-Performance-Tabellen im `ark_hr` (Q1=C Migration aus DB §19) + 10 Live-Views + 8 Materialized Views + RLS-Policies + 3 neue Rollen. Vollständiger Patch: `specs/ARK_DATABASE_SCHEMA_PATCH_v1_5_to_v1_6_performance.md`. Detailliertes Tabellen-DDL: `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md`.
+
+### Q.1 Streichungen aus DB §19 (Phase-2-Scaffold)
+
+Folgende Stubs werden aus dem Phase-2-Scaffold-Block entfernt:
+
+```diff
+-PERFORMANCE: fact_performance_reviews · fact_360_feedback · dim_feedback_questions · dim_feedback_cycles
+-ENTWICKLUNG: fact_development_plans · fact_learning_progress · dim_learning_modules ·
+-             dim_skill_certifications · fact_competency_ratings · dim_competency_framework
+```
+
+**Migration:**
+- 7 Tabellen (`fact_performance_reviews` · `fact_360_feedback` · `dim_feedback_questions` · `dim_feedback_cycles` · `fact_competency_ratings` · `dim_competency_framework` · `fact_development_plans`) → ins HR-Modul (`ark_hr.*`, siehe HR-Patch §2-§9)
+- 3 Tabellen gestrichen (`fact_learning_progress` · `dim_learning_modules` · `dim_skill_certifications`) → E-Learning Sub-A (`fact_elearn_attempt` · `dim_elearn_course` · `fact_elearn_certificate`) ist Single-Source
+
+**§19 wird neu strukturiert:**
+
+```
+PERFORMANCE-MODUL (eigenes ERP-Modul · siehe ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md):
+  Snapshot-Layer:    fact_metric_snapshot_hourly/daily/weekly/monthly/quarterly/yearly
+  Insight-Loop:      fact_insight · fact_action_item · fact_action_outcome
+  Goals:             fact_perf_goal
+  Reports:           dim_report_template · fact_report_run
+  Forecast:          dim_forecast_conversion_rate · fact_forecast_snapshot
+  Dashboards:        dim_dashboard_layout · dim_dashboard_tile_type · fact_dashboard_view_log
+  Power-BI:          dim_powerbi_view
+  Stammdaten:        dim_metric_definition · dim_anomaly_threshold
+
+HR-PERFORMANCE-REVIEWS (im HR-Modul · siehe ARK_HR_TOOL_SCHEMA_v0_2.md):
+  Cycles:            dim_feedback_cycles
+  Questions:         dim_feedback_questions
+  Reviews:           fact_performance_reviews · fact_360_feedback
+  Competency:        dim_competency_framework · fact_competency_ratings
+  Development:       fact_development_plans
+
+E-LEARNING (existiert · Sub A-D):
+  E-Learning ist Single-Source für Lern-Daten.
+  Performance-Modul liest nur via v_elearn_compliance.
+```
+
+### Q.2 Erweiterungen bestehender Tabellen
+
+**`dim_process_stages`** (siehe §13 Stammdaten-Patch):
+- ADD COLUMN `funnel_relevance VARCHAR(20) NOT NULL DEFAULT 'standard' CHECK (... IN ('standard', 'major_milestone', 'drop_off_risk', 'terminal'))`
+- ADD COLUMN `avg_days_target SMALLINT NULL`
+- Seeds-Updates für 9 Stage-Codes (siehe Stammdaten-Patch §97.7)
+
+**`dim_user`**:
+- ADD COLUMN `performance_visibility_scope VARCHAR(20) NOT NULL DEFAULT 'self' CHECK (... IN ('self', 'team', 'tenant', 'admin'))`
+- Seeds-Updates: MA/Researcher/CM/AM/RA = `self`, Head = `team`, Admin = `admin`
+
+### Q.3 Performance-Modul-Tabellen (`ark_perf`-Schema)
+
+```sql
+CREATE SCHEMA IF NOT EXISTS ark_perf;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS btree_gin;
+
+-- 11 ENUMs (siehe Performance-Schema §3 + Stammdaten-Patch §97.1)
+
+-- 6 Stammdaten-Tabellen
+CREATE TABLE ark_perf.dim_metric_definition (...);
+CREATE TABLE ark_perf.dim_anomaly_threshold (...);
+CREATE TABLE ark_perf.dim_dashboard_tile_type (...);
+CREATE TABLE ark_perf.dim_dashboard_layout (...);
+CREATE TABLE ark_perf.dim_report_template (...);
+CREATE TABLE ark_perf.dim_powerbi_view (...);
+CREATE TABLE ark_perf.dim_forecast_conversion_rate (...);
+
+-- 6 Snapshot-Tabellen — partitioniert nach Monat (RANGE auf snapshot_at)
+CREATE TABLE ark_perf.fact_metric_snapshot_hourly (...) PARTITION BY RANGE (snapshot_at);
+CREATE TABLE ark_perf.fact_metric_snapshot_daily (...);
+CREATE TABLE ark_perf.fact_metric_snapshot_weekly (...);
+CREATE TABLE ark_perf.fact_metric_snapshot_monthly (...);
+CREATE TABLE ark_perf.fact_metric_snapshot_quarterly (...);
+CREATE TABLE ark_perf.fact_metric_snapshot_yearly (...);
+
+-- Insight-Loop + Goals + Reports + Telemetrie
+CREATE TABLE ark_perf.fact_perf_goal (...);
+CREATE TABLE ark_perf.fact_insight (...);
+CREATE TABLE ark_perf.fact_action_item (...);
+CREATE TABLE ark_perf.fact_action_outcome (...);
+CREATE TABLE ark_perf.fact_report_run (...);
+CREATE TABLE ark_perf.fact_forecast_snapshot (...);
+CREATE TABLE ark_perf.fact_dashboard_view_log (...);
+
+-- Initial-Partitionen für laufenden + nächsten Monat (hourly)
+CREATE TABLE ark_perf.fact_metric_snapshot_hourly_2026_04 PARTITION OF ark_perf.fact_metric_snapshot_hourly
+    FOR VALUES FROM ('2026-04-01') TO ('2026-05-01');
+-- weitere Partitionen via partition-creator.worker (monatlicher Cron für nächste 3 Mt)
+```
+
+### Q.4 HR-Performance-Tabellen (`ark_hr`-Schema)
+
+7 Tabellen migriert aus DB §19 ins HR-Modul. Vollständige DDL: `specs/ARK_HR_TOOL_SCHEMA_v0_2.md` §2-§8. Siehe auch §98 im Stammdaten-Export.
+
+### Q.5 Live-Views (10 Views, READ-only für Performance)
+
+Alle Live (kein Snapshot — für Drill-Downs + ad-hoc Queries):
+
+| View | Zweck | Quellen |
+|------|-------|---------|
+| `v_pipeline_funnel` | Stage-Counts + Conversion-Rates pro tenant/owner/team/sparte/business_model | `fact_process` × `dim_process_stages` × `dim_user` × `fact_mandate` |
+| `v_candidate_coverage` | Days-since-touch + coverage_state (`ok`/`overdue`/`critical`/`never_touched`) + score | `fact_history` × `dim_candidate` (12 Mt Lookback) |
+| `v_account_coverage` | Days-since-touch + coverage_state nach `purchase_potential` (★/★★/★★★) | `fact_history` × `dim_account` |
+| `v_mandate_kpi_status` | Ident-Target/Actual · Call-Target/Actual · Shortlist · Placements · Revenue | `fact_mandate` × `fact_process` × `fact_history` × `fact_placement` × `fact_invoice` |
+| `v_revenue_attribution` | Revenue pro placement_id mit Commission-Refs (cm/am/researcher) | `fact_invoice` × `fact_placement` × `fact_process` × `fact_mandate` × `fact_commission_ledger` |
+| `v_activity_heatmap` | Activity-Counts pro user × DOW × Hour-of-Day × activity_type | `fact_history` × `dim_activity_types` |
+| `v_elearn_compliance` | Pflicht-Kurs-Compliance% + Newsletter-Quizzes + Active Certs | `dim_user` × `ark_elearn.*` |
+| `v_zeit_utilization` | Hours-worked vs target_hours_monthly (Pensum-basiert) + Sick/Vacation-Days | `fact_time_entries` × `fact_absences` × `dim_user` |
+| `v_hr_review_summary` | Aggregat-View über Performance-Reviews (HR-Patch-Brücke) | `ark_hr.*` |
+| `v_commission_run_rate` | Commission-Sums pro user × month × role | `fact_commission_ledger` |
+
+### Q.6 Materialized Views (8 Views für Power-BI)
+
+Per `dim_powerbi_view.refresh_cron` getriggert via `powerbi-view-refresh.worker`. UNIQUE-Index für `REFRESH MATERIALIZED VIEW CONCURRENTLY`.
+
+| View | Cadence | Critical |
+|------|---------|----------|
+| `mv_perf_pipeline_today` | hourly | ✓ |
+| `mv_perf_goal_drift_critical` | hourly | ✓ |
+| `mv_perf_coverage_critical` | hourly | ✓ |
+| `mv_perf_revenue_monthly` | monthly | ✗ |
+| `mv_perf_pipeline_funnel_daily` | daily | ✗ |
+| `mv_perf_cohort_hunt_vintage` | weekly | ✗ |
+| `mv_perf_activity_heatmap_weekly` | weekly | ✗ |
+| `mv_perf_elearn_compliance_daily` | daily | ✗ |
+
+### Q.7 RLS-Policies
+
+Alle `fact_perf_*` · `fact_insight` · `fact_action_*` · `fact_report_run` · `fact_forecast_*` · `dim_dashboard_layout` · `fact_metric_snapshot_*` · `fact_dashboard_view_log` sowie alle 7 HR-Performance-Tabellen:
+
+```sql
+ALTER TABLE <table> ENABLE ROW LEVEL SECURITY;
+ALTER TABLE <table> FORCE ROW LEVEL SECURITY;  -- forciert RLS auch für Owner-Rolle
+CREATE POLICY <name>_tenant_isolation ON <table>
+    USING (tenant_id = current_setting('app.tenant_id')::uuid);
+CREATE POLICY <name>_worker_bypass ON <table>
+    TO ark_worker_service
+    USING (TRUE) WITH CHECK (TRUE);
+```
+
+Visibility-Scope-Filter (additiv):
+- `self`: nur eigene Rows (`user_id = current_user`)
+- `team`: Rows wo `user_id IN fn_team_user_ids()`
+- `tenant`: alle Rows im Tenant
+- `admin`: tenant + cross-tenant (Super-Admin only)
+
+### Q.8 Berechtigungs-Rollen (3 neue Rollen)
+
+```sql
+-- Power-BI Read-Only (über X-API-Key auth)
+CREATE ROLE powerbi_reader NOLOGIN;
+GRANT USAGE ON SCHEMA ark_perf TO powerbi_reader;
+GRANT SELECT ON ALL MATERIALIZED VIEWS IN SCHEMA ark_perf TO powerbi_reader;
+
+-- Performance-Modul-Reader (Live-Views + cross-Modul-Reads)
+CREATE ROLE ark_perf_reader NOLOGIN;
+GRANT USAGE ON SCHEMA ark_perf TO ark_perf_reader;
+GRANT SELECT ON ALL TABLES IN SCHEMA ark_perf TO ark_perf_reader;
+GRANT SELECT ON ark_hr.v_hr_review_summary TO ark_perf_reader;
+GRANT SELECT ON ark.fact_history, ark.fact_process, ark.fact_mandate,
+                ark.fact_invoice, ark.fact_placement, ark.fact_commission_ledger,
+                ark.dim_candidate, ark.dim_account, ark.dim_user,
+                ark.fact_time_entries, ark.fact_absences,
+                ark_elearn.fact_elearn_attempt, ark_elearn.fact_elearn_assignment,
+                ark_elearn.fact_elearn_certificate
+                TO ark_perf_reader;
+
+-- Worker-Service (Snapshot-Writes mit RLS-Bypass)
+CREATE ROLE ark_worker_service NOLOGIN;
+GRANT USAGE ON SCHEMA ark_perf TO ark_worker_service;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA ark_perf TO ark_worker_service;
+```
+
+### Q.9 Migration-Reihenfolge (Production-Deploy)
+
+```
+1. Backup
+2. CREATE EXTENSIONS (idempotent: pgcrypto, btree_gin)
+3. CREATE SCHEMA ark_perf, ark_hr (oder bestehend)
+4. CREATE alle ENUMs (Performance + HR-Patch)
+5. CREATE Stammdaten-Tabellen (Performance + HR)
+6. CREATE Snapshot-Tabellen + Initial-Partitionen
+7. CREATE Goal/Insight/Action/Report/Forecast/Telemetrie-Tabellen
+8. CREATE HR-Performance-Tabellen (Reviews, 360°, Competency, Dev-Plans)
+9. CREATE Live-Views (10)
+10. CREATE Materialized Views (8) + UNIQUE-Indizes
+11. ALTER dim_process_stages + dim_user + Seeds-Updates
+12. INSERT Stammdaten-Seeds (Stammdaten-Patch §97 — 76 Default-Rows)
+13. ENABLE RLS + CREATE Policies
+14. CREATE Roles (powerbi_reader, ark_perf_reader, ark_worker_service)
+15. GRANT Permissions
+16. Verify: SELECT count(*) für alle Seeds, EXPLAIN auf alle Views, Initial-Refresh aller MVs
+17. Drop alte Phase-2-Stubs aus DB §19 (sofern als CREATE TABLE existiert)
+```
+
+### Q.10 Performance-Erwägungen
+
+- **Partitionierung:** monatliche RANGE-Partitions, automatische Erstellung via `partition-creator.worker` (monatlicher Cron für die nächsten 3 Monate)
+- **Snapshot-Volumen:** ~33 Metriken × ~500 Scopes × 365 Tage = ~6 Mio Rows/Jahr für daily — vertretbar
+- **Hourly:** nur Critical-Views, ~10 Metriken × ~50 Scopes × 24h × 365 = ~4 Mio Rows/Jahr
+- **MV-Refresh:** CONCURRENT (kein Lock auf Read), Worker-koordiniert
+- **Retention:** wöchentlicher Cleaner via `snapshot-retention-cleaner.worker` löscht gemäss `retention_until`
+
+### Q.11 Tabellen-Count aktualisiert
+
+```
+v1.5: ~215 Tabellen (204 E-Learning + 11 HR)
+v1.6 Performance:
+  - +14 ark_perf.* Tabellen
+  - +7 ark_hr.* Performance-Reviews-Tabellen (migriert aus §19)
+  - −3 gestrichen (fact_learning_progress, dim_learning_modules, dim_skill_certifications)
+  - +10 Live-Views (ark_perf.v_*)
+  - +8 Materialized Views (ark_perf.mv_*)
+v1.6 total: ~225 Tabellen + ~30 Views (inkl. MV)
+```
+
 - **Audit-Log-Volumen `fact_elearn_gate_event`:** ~150k Events/Monat/MA → Partitionieren/Archivieren nach 12 Monaten

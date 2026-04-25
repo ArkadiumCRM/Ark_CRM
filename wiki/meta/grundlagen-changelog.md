@@ -28,6 +28,28 @@ Jede Änderung an einer der 5 Grundlagen-Dateien wird hier mit Timestamp + Sessi
 
 <!-- Neue Einträge werden nach diesem Kommentar appended. Älteste oben (chronologisch). -->
 
+## [2026-04-25 21:15] Performance-Modul Sync
+
+- Status: resolved
+- Patches applied: 4 (Stammdaten, DB-Schema, Backend, HR-Tool) + 2 created (Frontend-Freeze, Gesamtsystem)
+- Grundlagen versions bumped:
+  - `ARK_STAMMDATEN_EXPORT_v1_5.md` → `v1_6.md` (TEIL §97 Performance + §98 HR-Performance-Reviews)
+  - `ARK_DATABASE_SCHEMA_v1_5.md` → `v1_6.md` (TEIL Q · 14 ark_perf-Tabellen + 7 ark_hr-Performance + 10 Live-Views + 8 MVs)
+  - `ARK_BACKEND_ARCHITECTURE_v2_7.md` → `v2_8.md` (TEIL R · 50 Endpoints + 12 Worker + 1 HR-Cycle-Worker + 10 Events + 5 WS-Channels + 3 Sagas)
+  - `ARK_FRONTEND_FREEZE_v1_12.md` → `v1_13.md` (TEIL Q · `/performance/*` Routes + Hub-Pattern + Snapshot-Bar 6-Slot + Drawer 540px + TopoJSON-Heatmap + 6-Sub-Tab Admin)
+  - `ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` → `v1_5.md` (TEIL 26 · 8 Architektur-Entscheidungen + Reuse + Markov-Forecast)
+  - `ARK_HR_TOOL_SCHEMA_v0_1.md` → `v0_2.md` (Performance-Reviews-Migration aus DB §19 · 7 Tabellen + 7 Enums + Anti-Sandbagging-Hook)
+- Backups: `backups/ARK_*_2026-04-25-2115.bak` (6 Dateien · 6 Files insgesamt)
+- Patches CREATED (waren noch nicht vorhanden):
+  - `specs/ARK_FRONTEND_FREEZE_PATCH_v1_12_to_v1_13_performance.md`
+  - `specs/ARK_GESAMTSYSTEM_PATCH_v1_4_to_v1_5_performance.md`
+- Patches APPLIED (existierten):
+  - `specs/ARK_STAMMDATEN_PATCH_v1_5_to_v1_6_performance.md`
+  - `specs/ARK_DATABASE_SCHEMA_PATCH_v1_5_to_v1_6_performance.md`
+  - `specs/ARK_BACKEND_ARCHITECTURE_PATCH_v2_7_to_v2_8_performance.md`
+  - `specs/ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md`
+- Pending: 5 Digests müssen regeneriert werden (`stammdaten` · `database-schema` · `backend-architecture` · `frontend-freeze` · `gesamtsystem`) — Phase-3 separate Task
+
 ### 2026-04-19 · Zeit-Modul v0.1 Grundlagen-Sync
 
 - **File:** `ARK_STAMMDATEN_EXPORT_v1_3.md` → v1.4 (append §90 Zeit-Modul-Stammdaten)
@@ -764,3 +786,83 @@ Alle 5 Grundlagen-Dateien mit HR-Modul synchronisiert. Direkte Sync-Session (Edi
 - `ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` → TEIL 25 (Modul-Übersicht · Kennzahlen · Legal-Basis · Status)
 
 **Digest-Stale:** alle 5 Digests stale → in Folge-Session regenerieren via parallele Subagents.
+
+## [2026-04-25 21:16] session-53f982ef
+- **File:** ARK_STAMMDATEN_EXPORT_v1_6.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:16] session-53f982ef
+- **File:** ARK_DATABASE_SCHEMA_v1_6.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:16] session-53f982ef
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_8.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:16] session-53f982ef
+- **File:** ARK_FRONTEND_FREEZE_v1_13.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:16] session-53f982ef
+- **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:18] session-53f982ef
+- **File:** ARK_STAMMDATEN_EXPORT_v1_6.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:19] session-53f982ef
+- **File:** ARK_DATABASE_SCHEMA_v1_6.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:21] session-53f982ef
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_8.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:23] session-53f982ef
+- **File:** ARK_FRONTEND_FREEZE_v1_13.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
+
+## [2026-04-25 21:24] session-53f982ef
+- **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md
+- **Tool:** Edit
+- **Status:** unresolved
+- **Sync-Check:** -- pending --
+- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)

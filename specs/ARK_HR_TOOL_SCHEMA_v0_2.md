@@ -1,8 +1,8 @@
 ---
-title: "ARK HR-Modul · Schema v0.1"
+title: "ARK HR-Modul · Schema v0.2"
 type: spec
 module: hr
-version: 0.1
+version: 0.2
 created: 2026-04-25
 updated: 2026-04-25
 status: draft
@@ -1277,4 +1277,84 @@ $$;
 -- 11. RLS-Policies
 -- 12. Rollen + Grants (§12.7)
 -- 13. Supabase Auth Adapter falls Supabase-Deployment (§12.8)
+```
+
+---
+
+# Patch v0.1 → v0.2 · Performance-Reviews-Migration (2026-04-25)
+
+**Anlass:** Q1=C aus Performance-Modul-Scoping. 8 Performance-Schema-Stubs aus DB §19 werden voll ins HR-Modul migriert. `fact_learning_progress` wird gestrichen (E-Learning Sub-A `fact_elearn_attempt` ist Single-Source). Konsolidierter Volltext des Patches: `specs/ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md`.
+
+## v0.2 §1 Migrierte Tabellen (vorher in DB §19, jetzt in HR `ark_hr.*`)
+
+1. `fact_performance_reviews` — Periodische Reviews (Self + Manager + optional 360°-Aggregat)
+2. `fact_360_feedback` — Peer/Direct-Reports/Manager/Self-Feedback einzelner Quellen
+3. `dim_feedback_questions` — Question-Bank rolle/sparte-spezifisch
+4. `dim_feedback_cycles` — Review-Zyklen (Quartal/Halbjahr/Jahr/Probation/AdHoc)
+5. `fact_competency_ratings` — Skill-Bewertungen pro MA × Competency
+6. `dim_competency_framework` — Skill-Matrix pro Rolle
+7. `fact_development_plans` — Karriere-/Entwicklungspläne (lang)
+8. ~~`fact_learning_progress`~~ — **gestrichen** (E-Learning Sub-A `fact_elearn_attempt` ist Single-Source)
+
+**Konsequenz für Performance-Modul:** liest `v_hr_review_summary` (Aggregat-View) für Performance-Mitarbeiter-Page-Tab "Reviews". Schreibt nichts ins HR.
+
+## v0.2 §2 Neue HR-ENUMs (7)
+
+`review_cycle_cadence` (`quarterly`/`biannual`/`annual`/`probation`/`ad_hoc`) · `review_state` (`draft`/`self_pending`/`manager_pending`/`meeting_scheduled`/`meeting_done`/`signed`/`cancelled`) · `feedback_source_role` (`self`/`manager`/`peer`/`direct_report`/`cross_func`/`external`) · `question_type` (`rating_1_5`/`rating_1_10`/`multi_choice`/`free_text`/`yes_no`/`boolean_explain`) · `competency_level` (`novice`/`developing`/`proficient`/`advanced`/`expert`) · `development_plan_state` (`draft`/`agreed`/`in_progress`/`milestone_due`/`completed`/`archived`/`cancelled`).
+
+## v0.2 §3 7 neue Tabellen-DDLs (Volltext im Patch)
+
+`dim_feedback_cycles` · `dim_feedback_questions` · `fact_performance_reviews` · `fact_360_feedback` · `dim_competency_framework` · `fact_competency_ratings` · `fact_development_plans`. Jede Tabelle mit RLS + Indizes + Audit-Trail-JSONB. Vollständige DDLs: siehe Patch-Spec `ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md` §2-§8.
+
+## v0.2 §4 `v_hr_review_summary` View
+
+Aggregat-View für Performance-Modul (read-only). Liefert pro `(tenant_id, user_id, cycle_id)`: state, scores (self/manager/consensus), 360°-Aggregat, competency-Average, dev-plan-state. `GRANT SELECT TO ark_perf_reader`.
+
+## v0.2 §5 Anti-Sandbagging-Hook
+
+Goals (Performance-Modul `fact_perf_goal`) und HR-Reviews (Manager-Bewertung) sind verknüpft via `v_hr_review_summary`. Wenn Goals systematisch unterschritten werden bei "advanced/expert"-Bewertung, generiert Anomaly-Detector ein Insight (`severity='warn'`) für Head/Admin. Implementation:
+- View-Spalte `goal_achievement_avg_pct` (aggregiert aus `fact_perf_goal` für reviewed user)
+- Anomaly-Threshold: `metric_code='goal_drift_pct'` × `scope_type='user'` × Director: review-state='signed' AND consensus_score >= 4.0 → `direction='below'`, threshold breached at -25%.
+
+## v0.2 §6 Saga: HR-Review-Cycle-Lifecycle (7 Steps)
+
+1. Admin aktiviert Cycle (`POST /api/v1/hr/review-cycles/:id/activate` → emit `hr_review_cycle_activated`)
+2. `review-cycle-lifecycle.worker` erstellt für jeden Target-MA Reviews + Reminders (`hr_review_cycle_started`)
+3. MA submittet Self-Assessment (`POST /api/v1/hr/reviews/:id/self-assessment` → `hr_review_self_assessment_completed`, Reminder an Head)
+4. Head submittet Manager-Assessment (state → `manager_pending`)
+5. (optional) 360°-Feedback eingeholt (peer/direct_report/cross_func)
+6. Meeting-Notes hinterlegt (`POST /api/v1/hr/reviews/:id/meeting-notes`, state → `meeting_done`)
+7. Beide unterschreiben (`POST /api/v1/hr/reviews/:id/sign` zweimal: Self + Manager → `hr_review_signed`, Dok-Generator-Trigger für unterschriebenes PDF)
+
+Cron-Eskalation: `0 8 * * *` prüft überfällige Reviews → Reminder an Head + Notification.
+
+## v0.2 §7 ~30 neue Endpoints `/api/v1/hr/*`
+
+Cycles · Reviews · 360° · Question-Bank · Competency-Framework · Competency-Ratings · Development-Plans · Read-Only-View für Performance-Modul. Vollständige Liste: Patch-Spec §13.
+
+## v0.2 §8 Streichungen aus DB §19
+
+- `fact_learning_progress` → ersetzt durch `fact_elearn_attempt`
+- `dim_skill_certifications` → ersetzt durch `fact_elearn_certificate`
+- `dim_learning_modules` → ersetzt durch `dim_elearn_course`
+
+## v0.2 §9 Default-Seeds (separater Stammdaten-Patch)
+
+- ~25 Question-Bank-Fragen (6 Kategorien: communication · leadership · technical · collaboration · self_management · business_impact)
+- ~15 Competency-Framework-Einträge pro Rolle
+- 1 Default-Cycle pro Tenant (`q3_2026_pilot`)
+
+## v0.2 §10 Acceptance Criteria
+
+- [ ] 7 neue Tabellen erstellt (RLS + Indizes + ENUMs)
+- [ ] `v_hr_review_summary` View + GRANT für Performance-Modul
+- [ ] 5 neue Mockup-HTMLs (Reviews, Cycles, Questions, Competencies, Dev-Plans)
+- [ ] Sidebar in `hr.html` erweitert
+- [ ] ~15 neue Drawer in HR-Modul
+- [ ] 2 Sagas implementiert (Review-Cycle-Lifecycle, Probezeit-Auto-Trigger)
+- [ ] ~30 neue Endpoints
+- [ ] Question-Bank-Default-Seeds (~25 Fragen)
+- [ ] Competency-Framework-Default-Seeds (~15 Competencies)
+- [ ] Streichungen: `fact_learning_progress` + `dim_skill_certifications` aus DB §19
+- [ ] HR-Lint grün (Stammdaten, DB-Tech, Drawer-Default, Datum, Umlaute)
 ```

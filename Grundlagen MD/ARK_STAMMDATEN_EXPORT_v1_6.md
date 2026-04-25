@@ -1,8 +1,9 @@
-# ARK CRM — Stammdaten-Export v1.5
+# ARK CRM — Stammdaten-Export v1.6
 
-**Stand:** 2026-04-24
-**Vorgänger:** v1.4 (2026-04-19 · Zeit-Modul intern) / v1.3 (2026-04-14)
-**Scope v1.5:** Activity-Types-Patch (v1.4) + E-Learning-Modul A/B/C/D
+**Stand:** 2026-04-25
+**Vorgänger:** v1.5 (2026-04-24 · E-Learning + HR) / v1.4 (2026-04-19) / v1.3 (2026-04-14)
+**Scope v1.6:** Performance-Modul-Stammdaten (TEIL §97 · Cross-Modul-Analytics-Hub · ~33 Metric-Defs · 15 Anomaly-Thresholds · 15 Tile-Types · 5 Report-Templates · 8 PowerBI-Views · `dim_process_stages`+`dim_user`-Erweiterungen)
+**Scope v1.5:** Activity-Types-Patch + E-Learning-Modul A/B/C/D + HR-Modul (TEIL §96)
 
 ## Änderungen v1.2 → v1.3
 
@@ -3305,3 +3306,158 @@ HR Views:               4  (active_employees · onboarding_progress · disciplin
 Tabellen total:       ~215 (204 E-Learning + 11 HR)
 ```
 - **Feature-Catalog-Auto-Discovery:** Script scannt bei jedem Deploy alle `@gate_feature`-Decorators und synct `FEATURE_CATALOG.ts` → Source-of-Truth lebt im Code
+
+---
+
+## §97 Performance-Modul-Stammdaten (v1.6 · 2026-04-25)
+
+**Scope:** Cross-Modul-Analytics-Hub. Liest aus CRM/Billing/Commission/Zeit/E-Learning/HR aggregiert (Snapshot-Layer + Live-Views), schreibt nur in eigene `ark_perf.*`-Tabellen + `dim_dashboard_layout` für User-Custom-Layouts. Vollständiger Patch-Quelltext: `specs/ARK_STAMMDATEN_PATCH_v1_5_to_v1_6_performance.md`.
+
+### §97.1 Neue ENUMs (§F Performance · 11 ENUMs)
+
+- `perf_cadence` — `hourly` · `daily` · `weekly` · `monthly` · `quarterly` · `yearly`
+- `anomaly_severity` — `info` · `warn` · `critical` · `blocker`
+- `insight_state` — `open` · `acknowledged` · `action_planned` · `resolved` · `false_positive` · `archived`
+- `action_item_state` — `pending` · `in_progress` · `done` · `cancelled` · `overdue`
+- `outcome_effect` — `improved` · `partially_improved` · `no_change` · `worsened` · `inconclusive`
+- `tile_type` — 15 Werte (siehe §97.4)
+- `forecast_method` — `markov_stage` · `linear_trend` · `ml_regression` · `manual`
+- `metric_aggregation` — `count` · `sum` · `avg` · `median` · `min` · `max` · `p95` · `p99` · `rate` · `ratio` · `ytd` · `mtd` · `wtd`
+- `report_cadence` — `on_demand` · `weekly` · `monthly` · `quarterly` · `yearly`
+- `report_run_state` — `queued` · `rendering` · `sent` · `failed` · `cancelled`
+- `powerbi_view_state` — `fresh` · `stale` · `refreshing` · `failed`
+
+### §97.2 `dim_metric_definition` (~33 Default-Metriken in 7 Kategorien)
+
+| Kategorie | Anzahl | Codes (Auszug) |
+|-----------|--------|----------------|
+| Pipeline | 8 | `pipeline_velocity_days` · `time_to_hire_days` · `cv_to_placement_rate` · `briefing_to_go_rate` · `interview_to_offer_rate` · `monthly_placements` · `pipeline_value_chf` · `active_processes` |
+| Revenue | 6 | `revenue_ytd_chf` · `revenue_mtd_chf` · `commission_run_rate_chf` · `forecast_pipeline_q_chf` · `placement_avg_value_chf` · `mandate_conversion_rate` |
+| Coverage | 7 | `candidate_days_since_touch` · `candidate_coverage_score` · `account_days_since_touch` · `account_coverage_score` · `untouched_candidates_count` · `untouched_accounts_count` · `hunt_rate_weekly` |
+| Compliance | 5 | `elearn_compliance_pct` · `reminder_backlog_count` · `ai_confirmation_rate` · `unclassified_calls_count` · `agb_pending_accounts` |
+| Activity | 4 | `daily_calls_count` · `weekly_meetings_count` · `weekly_briefings_count` · `time_utilization_pct` |
+| Forecast | 4 | `forecast_placement_probability` · `forecast_revenue_q_chf` · `goal_achievement_pct` · `goal_drift_pct` |
+| Meta | 4 | `snapshot_lag_minutes` · `powerbi_view_stale_count` · `failed_reports_30d` · `data_quality_score` |
+
+Spalten: `code` · `label_de` · `category` · `aggregation` · `unit` · `source_module` · `source_table` · `target_default` · `target_direction` (`higher`/`lower`) · `drill_down` · `cadence_default` · `active`. Admin kann via `/performance/admin/metric-definitions` erweitern.
+
+### §97.3 `dim_anomaly_threshold` (15 Default-Schwellen)
+
+Schwellen-Tupel pro Metric: `info` / `warn` / `critical` / `blocker`. Spalten: `metric_code` · `scope_type` (`global`/`role`/`sparte`/`user`) · `direction` (`above`/`below`) · `window_days` · `min_sample_size` · `cooldown_hours`. Beispiele:
+- `candidate_days_since_touch` (above): 14/30/60/120, cooldown 24h
+- `account_days_since_touch` (above): 30/60/90/180, cooldown 24h
+- `goal_drift_pct` (below): -10/-20/-35/-50, cooldown 24h
+- `pipeline_velocity_days` (above): 75/90/120/180, cooldown 168h (1 Wo)
+- `elearn_compliance_pct` (role=ma, below): 90/80/70/60, cooldown 168h
+- `snapshot_lag_minutes` (above): 30/60/240/1440, cooldown 1h
+- `data_quality_score` (below): 95/90/80/70
+
+Sparten-spezifische Overrides (z.B. `account_days_since_touch` für ARC mit anderen Schwellen) per UI nachpflegen.
+
+### §97.4 `dim_dashboard_tile_type` (15 Tile-Types)
+
+`kpi_card` · `kpi_card_compare` · `trend_chart` · `bar_chart` · `funnel` · `heatmap` · `coverage_map` · `goal_progress` · `top_n_list` · `anomaly_list` · `action_list` · `forecast_card` · `cohort_chart` · `sparkline_grid` · `iframe_powerbi`.
+
+Spalten: `code` · `label_de` · `min_w/h` · `default_w/h` · `requires_metric` · `requires_drill_down` · `config_schema_jsonb` (verfügbare Filter pro Tile, z.B. `compare_to: 'previous_period' | 'target' | 'last_year' | 'none'`).
+
+### §97.5 `dim_report_template` (5 Default-Templates)
+
+| code | cadence | audience | cron |
+|------|---------|----------|------|
+| `weekly_ma_report` | weekly | ma_self | `0 6 * * 1` |
+| `weekly_head_report` | weekly | head_team | `0 7 * * 1` |
+| `monthly_business_report` | monthly | admin | `0 6 1 * *` |
+| `quarterly_exec_report` | quarterly | exec | `0 6 1 1,4,7,10 *` |
+| `yearly_review_pack` | yearly | admin | `0 6 1 1 *` (initial inactive) |
+
+`data_bundle_spec_jsonb` definiert Template-spezifisch welche Metriken/Snapshots/Views ins Bundle kommen. Email-Templates (`perf_*_email`) im Email-Modul. **Sender:** Default `dim_user.role_code='admin'` (Nenad), konfigurierbar pro Template.
+
+### §97.6 `dim_powerbi_view` (8 Default-Views)
+
+| code | refresh_cadence | is_critical |
+|------|-----------------|-------------|
+| `v_perf_pipeline_today` | hourly | TRUE |
+| `v_perf_goal_drift_critical` | hourly | TRUE |
+| `v_perf_coverage_critical` | hourly | TRUE |
+| `v_perf_revenue_monthly` | monthly | FALSE |
+| `v_perf_pipeline_funnel_daily` | daily | FALSE |
+| `v_perf_cohort_hunt_vintage` | weekly | FALSE |
+| `v_perf_activity_heatmap_weekly` | weekly | FALSE |
+| `v_perf_elearn_compliance_daily` | daily | FALSE |
+
+`sql_definition` jeder View vollständig im Schema-Patch. **Visibility-Roles:** `{admin}` für alle Power-BI-Views (Power-BI = Admin-Tool). MA-Views direkt via Performance-UI, nicht via Power-BI-Embed.
+
+### §97.7 Erweiterungen bestehender Stammdaten
+
+**§13 `dim_process_stages`** — neue Spalten:
+- `funnel_relevance` (`standard` · `major_milestone` · `drop_off_risk` · `terminal`)
+- `avg_days_target` (Soll-Verweildauer pro Stage in Tagen, für Stage-Velocity-KPI)
+
+Seeds: `expose=drop_off_risk/5` · `cv_sent=major_milestone/7` · `ti/1st/2nd=drop_off_risk/14` · `3rd=drop_off_risk/21` · `assessment=standard/14` · `offer=major_milestone/7` · `placement=terminal/0`.
+
+**§10 `dim_user`** — neue Spalte:
+- `performance_visibility_scope` (`self` · `team` · `tenant` · `admin`)
+
+Seeds: MA/Researcher/CM/AM/RA = `self`, Head = `team`, Admin = `admin`.
+
+**§14 Activity-Types:** keine Änderung — Performance liest `fact_history` aggregiert, Stammdaten unverändert.
+
+### §97.8 Statistik nach Performance-Modul (v1.6 kumulativ)
+
+```
+Performance ENUMs:           11
+Performance Dimension-Tab.:   6 (dim_metric_definition · dim_anomaly_threshold · dim_dashboard_tile_type · dim_dashboard_layout · dim_report_template · dim_powerbi_view + dim_forecast_conversion_rate)
+Performance Fact-Tabellen:   ~10 (fact_metric_snapshot_*hourly/daily/weekly/monthly/quarterly/yearly + fact_perf_goal · fact_insight · fact_action_item · fact_action_outcome · fact_report_run · fact_forecast_snapshot · fact_dashboard_view_log)
+Live-Views:                  10 (v_pipeline_funnel · v_candidate_coverage · v_account_coverage · v_mandate_kpi_status · v_revenue_attribution · v_activity_heatmap · v_elearn_compliance · v_zeit_utilization · v_hr_review_summary · v_commission_run_rate)
+Materialized Views:           8 (mv_perf_*)
+Default-Seeds:               33 Metric-Defs + 15 Anomaly-Thresholds + 15 Tile-Types + 5 Report-Templates + 8 PowerBI-Views = 76 Default-Stammdaten-Rows
+Tabellen total:           ~225 (215 v1.5 + 14 ark_perf + 7 ark_hr Performance-Reviews − 3 gestrichen [fact_learning_progress, dim_learning_modules, dim_skill_certifications])
+```
+
+### §97.9 Lint-Konformität
+
+- **Stammdaten-Wording:** Alle Labels deutsch. Etablierte Fachterme (KPI, Pipeline, Forecast, Funnel) bleiben englisch.
+- **Umlaute:** echte Umlaute (ä ö ü ß) in `label_de`.
+- **DB-Tech-Details:** `code`-Spalten technisch (snake_case), `label_de` für UI immer sprechend ("Pipeline-Geschwindigkeit (Tage)", nicht "pipeline_velocity_days").
+
+---
+
+## §98 HR-Performance-Reviews-Stammdaten (v1.6 · 2026-04-25 · Q1=C-Migration)
+
+**Scope:** Q1=C aus Performance-Scoping (2026-04-25). 8 Performance-Schema-Stubs aus DB §19 vollständig ins HR-Modul migriert. Performance-Modul liest read-only via `v_hr_review_summary`. Vollständiger Patch: `specs/ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md`.
+
+### §98.1 Neue HR-ENUMs (7)
+
+- `review_cycle_cadence` — `quarterly` · `biannual` · `annual` · `probation` · `ad_hoc`
+- `review_state` — `draft` · `self_pending` · `manager_pending` · `meeting_scheduled` · `meeting_done` · `signed` · `cancelled`
+- `feedback_source_role` — `self` · `manager` · `peer` · `direct_report` · `cross_func` · `external`
+- `question_type` — `rating_1_5` · `rating_1_10` · `multi_choice` · `free_text` · `yes_no` · `boolean_explain`
+- `competency_level` — `novice`(1) · `developing`(2) · `proficient`(3) · `advanced`(4) · `expert`(5)
+- `development_plan_state` — `draft` · `agreed` · `in_progress` · `milestone_due` · `completed` · `archived` · `cancelled`
+
+### §98.2 HR-Tabellen (7 migriert + 0 neu)
+
+Migriert aus DB §19 (vorher Phase-2-Stub) in HR-Modul (`ark_hr.*`):
+1. `dim_feedback_cycles` — Review-Zyklen pro Tenant (Quartal/Halbjahr/Jahr/Probation/AdHoc)
+2. `dim_feedback_questions` — Question-Bank rolle/sparte-spezifisch
+3. `fact_performance_reviews` — Periodische Reviews (Self + Manager + optional 360°-Aggregat)
+4. `fact_360_feedback` — Peer/Direct-Reports/Manager/Self-Feedback-Einzelquellen
+5. `dim_competency_framework` — Skill-Matrix pro Rolle
+6. `fact_competency_ratings` — Skill-Bewertungen pro MA × Competency
+7. `fact_development_plans` — Karriere-/Entwicklungspläne
+
+**Gestrichen:** `fact_learning_progress` (E-Learning Sub-A `fact_elearn_attempt` ist Single-Source).
+
+### §98.3 Anti-Sandbagging-Hook
+
+Goals (Performance-Modul `fact_perf_goal`) und HR-Reviews (Manager-Bewertung) sind verknüpft via View `v_hr_review_summary`. Wenn Goals systematisch unterschritten werden bei "advanced/expert"-Bewertung, generiert Anomaly-Detector ein Insight (`severity='warn'`) für Head/Admin. Detail in HR-Patch §11.
+
+### §98.4 Statistik
+
+```
+HR-Review-ENUMs:        7
+HR-Review-Tabellen:     7 (3 dim + 4 fact)
+HR-Review-Views:        1 (v_hr_review_summary, Performance liest)
+```
+
+
