@@ -424,6 +424,31 @@
   }
   .drawer-foot .spacer { flex: 1; }
 
+  /* ─── Functional Drawer (slide-in) ─── */
+  .drawer-fn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90; opacity: 0;
+    transition: opacity .2s ease-out;
+    pointer-events: none;
+  }
+  .drawer-fn-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer.drawer-fn {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 540px; max-height: none;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .25s ease-out;
+    border-radius: 0;
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer.drawer-fn::before { display: none; }
+  .drawer.drawer-fn.open { transform: translateX(0); }
+  .drawer.drawer-fn .drawer-body { flex: 1; max-height: none; overflow-y: auto; }
+  body.drawer-fn-locked { overflow: hidden; }
+
   .sec-title {
     font-size: 10.5px; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--text-light);
@@ -688,14 +713,14 @@
 
   <!-- Drawer previews -->
   <h2 class="drawer-section-title">
-    Drawer-States
-    <span class="hint">Slide-in von rechts · 540 px · überdeckt die rechte Spalte</span>
+    Drawer-Previews · Visual-Reference
+    <span class="hint">Live triggern: Click auf Stage-Row / Cohort-Analyse-Button im Page-Body</span>
   </h2>
 
   <div class="drawer-row">
 
     <!-- Drawer A: Stage Detail -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="funnel-stage">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Stage · TI · 45 Prozesse · Periode 90 Tage</div>
         <div class="drawer-head-top">
@@ -789,7 +814,7 @@
     </aside>
 
     <!-- Drawer B: Cohort -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="funnel-cohort">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Cohort-Analyse · Hunt-Vintage · 12 Monate</div>
         <div class="drawer-head-top">
@@ -852,6 +877,10 @@
   </div>
 
 </main>
+
+<!-- ============== FUNCTIONAL DRAWER (slide-in) ============== -->
+<div class="drawer-fn-overlay" id="drawerFnOverlay"></div>
+<aside class="drawer drawer-fn" id="drawerFn" aria-hidden="true"></aside>
 
 <script>
   // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
@@ -941,14 +970,64 @@
     r.addEventListener('click', () => setActive(r.dataset.idx));
   });
 
-  // Drawer tabs
-  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
-    tabs.querySelectorAll('.drawer-tab').forEach(t => {
-      t.addEventListener('click', () => {
-        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
+  // Drawer tabs (template + functional)
+  function bindDrawerTabs(scope) {
+    (scope || document).querySelectorAll('.drawer-tabs').forEach(tabs => {
+      tabs.querySelectorAll('.drawer-tab').forEach(t => {
+        t.addEventListener('click', () => {
+          tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+        });
       });
     });
+  }
+  bindDrawerTabs(document);
+
+  // ─── Functional Drawer (slide-in) ───
+  const drawerFn = document.getElementById('drawerFn');
+  const drawerFnOverlay = document.getElementById('drawerFnOverlay');
+
+  function openDrawerByKey(key) {
+    const tpl = document.querySelector('[data-drawer-key="' + key + '"]') || document.getElementById('drawer-' + key);
+    if (!tpl) return;
+    drawerFn.innerHTML = tpl.innerHTML;
+    drawerFnOverlay.classList.add('open');
+    void drawerFn.offsetWidth;
+    drawerFn.classList.add('open');
+    drawerFn.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('drawer-fn-locked');
+    drawerFn.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', closeDrawerFn));
+    bindDrawerTabs(drawerFn);
+  }
+  function closeDrawerFn() {
+    drawerFn.classList.remove('open');
+    drawerFnOverlay.classList.remove('open');
+    drawerFn.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('drawer-fn-locked');
+    setTimeout(() => {
+      if (!drawerFn.classList.contains('open')) drawerFn.innerHTML = '';
+    }, 260);
+  }
+  drawerFnOverlay.addEventListener('click', closeDrawerFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawerFn.classList.contains('open')) closeDrawerFn();
+  });
+
+  // ─── Trigger-Bindings ───
+  // Stage-Row click + Detail-Table-Row click → funnel-stage
+  document.querySelectorAll('.stage-row').forEach(r => {
+    r.style.cursor = 'pointer';
+    r.addEventListener('click', () => openDrawerByKey('funnel-stage'));
+  });
+  document.querySelectorAll('#detBody tr').forEach(r => {
+    r.style.cursor = 'pointer';
+    r.addEventListener('click', () => openDrawerByKey('funnel-stage'));
+  });
+  // Cohort-Analyse Button → funnel-cohort
+  document.querySelectorAll('button').forEach(b => {
+    if ((b.textContent || '').trim() === 'Cohort-Analyse') {
+      b.addEventListener('click', () => openDrawerByKey('funnel-cohort'));
+    }
   });
 
   // Cohort heatmap — Months + Stage-Namen aus shared sample-data.

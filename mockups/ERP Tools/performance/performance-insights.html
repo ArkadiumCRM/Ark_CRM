@@ -620,6 +620,33 @@
   }
   .drawer-foot .spacer { flex: 1; }
 
+  /* ─── Functional Drawer (slide-in) ─── */
+  .drawer-fn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90;
+    opacity: 0;
+    transition: opacity .2s ease-out;
+    pointer-events: none;
+  }
+  .drawer-fn-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer.drawer-fn {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 540px; max-height: none;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .25s ease-out;
+    border-radius: 0;
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer.drawer-fn::before { display: none; }
+  .drawer.drawer-fn.open { transform: translateX(0); }
+  .drawer.drawer-fn .drawer-body { flex: 1; max-height: none; overflow-y: auto; }
+  body.drawer-fn-locked { overflow: hidden; }
+  .drawer-trigger { cursor: pointer; }
+
   .sec-title {
     font-size: 10.5px; letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -1307,16 +1334,16 @@
 
   </section>
 
-  <!-- ============== DRAWER PREVIEWS (static side-by-side for spec) ============== -->
+  <!-- ============== DRAWER PREVIEWS (static side-by-side for spec + Live-Templates) ============== -->
   <h2 class="drawer-section-title">
-    Drawer-States
-    <span class="hint">Slide-in von rechts · überdeckt 540 px der Hauptansicht</span>
+    Drawer-Previews · Visual-Reference
+    <span class="hint">Live triggern: Click auf Insight-Card / Massnahme-Link / Wirkung-Button im Page-Body</span>
   </h2>
 
   <div class="drawer-row">
 
     <!-- Drawer A: Insight Detail -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="insight-detail">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Insight · #INS-2026-0241 · ARC</div>
         <div class="drawer-head-top">
@@ -1451,7 +1478,7 @@
     </aside>
 
     <!-- Drawer B: Outcome Confirm -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="outcome-confirm">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Wirkung · Massnahme #ACT-1186 · zu Insight #INS-2026-0241</div>
         <div class="drawer-head-top">
@@ -1549,14 +1576,21 @@
 
 </main>
 
+<!-- ============== FUNCTIONAL DRAWER (slide-in) ============== -->
+<div class="drawer-fn-overlay" id="drawerFnOverlay"></div>
+<aside class="drawer drawer-fn" id="drawerFn" aria-hidden="true"></aside>
+
 <script>
   // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
 
   // Insight selection (highlight + would update right panel in full app)
   document.querySelectorAll('#insightList .insight').forEach(el => {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (e) => {
+      // Skip if click was on a link/button inside (those have their own handlers)
+      if (e.target.closest('.link-action, .link-quiet, .menu-btn')) return;
       document.querySelectorAll('#insightList .insight').forEach(x => x.classList.remove('active'));
       el.classList.add('active');
+      openDrawerByKey('insight-detail');
     });
   });
 
@@ -1570,13 +1604,66 @@
     });
   });
 
-  // drawer tabs
-  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
-    tabs.querySelectorAll('.drawer-tab').forEach(t => {
-      t.addEventListener('click', () => {
-        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
+  // drawer tabs (template + functional)
+  function bindDrawerTabs(scope) {
+    (scope || document).querySelectorAll('.drawer-tabs').forEach(tabs => {
+      tabs.querySelectorAll('.drawer-tab').forEach(t => {
+        t.addEventListener('click', () => {
+          tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+        });
       });
+    });
+  }
+  bindDrawerTabs(document);
+
+  // ─── Functional Drawer (slide-in) ───
+  const drawerFn = document.getElementById('drawerFn');
+  const drawerFnOverlay = document.getElementById('drawerFnOverlay');
+
+  function openDrawerByKey(key) {
+    const tpl = document.querySelector('[data-drawer-key="' + key + '"]');
+    if (!tpl) return;
+    drawerFn.innerHTML = tpl.innerHTML;
+    drawerFn.setAttribute('data-active-key', key);
+    drawerFnOverlay.classList.add('open');
+    // Force reflow for transition
+    void drawerFn.offsetWidth;
+    drawerFn.classList.add('open');
+    drawerFn.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('drawer-fn-locked');
+    // Bind close + tabs inside cloned content
+    drawerFn.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', closeDrawerFn));
+    bindDrawerTabs(drawerFn);
+  }
+  function closeDrawerFn() {
+    drawerFn.classList.remove('open');
+    drawerFnOverlay.classList.remove('open');
+    drawerFn.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('drawer-fn-locked');
+    setTimeout(() => {
+      if (!drawerFn.classList.contains('open')) {
+        drawerFn.innerHTML = '';
+        drawerFn.removeAttribute('data-active-key');
+      }
+    }, 260);
+  }
+  drawerFnOverlay.addEventListener('click', closeDrawerFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawerFn.classList.contains('open')) closeDrawerFn();
+  });
+
+  // ─── Trigger-Bindings ───
+  // "→ Massnahme erstellen" → insight-detail (closest drawer with action-button at foot)
+  document.querySelectorAll('.insight-foot .link-action').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const txt = link.textContent || '';
+      if (txt.includes('Wirkung bestätigen')) {
+        openDrawerByKey('outcome-confirm');
+      } else {
+        openDrawerByKey('insight-detail');
+      }
     });
   });
 </script>

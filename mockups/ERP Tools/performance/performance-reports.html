@@ -605,6 +605,29 @@
     display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
   }
 
+  /* ─── Functional Drawer (slide-in) ─── */
+  .drawer-fn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90; opacity: 0;
+    transition: opacity .2s ease-out;
+    pointer-events: none;
+  }
+  .drawer-fn-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer.drawer-fn {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 540px; max-height: none;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .25s ease-out;
+    border-radius: 0;
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 24px -12px rgba(0,0,0,0.06);
+  }
+  .drawer.drawer-fn::before { display: none; }
+  .drawer.drawer-fn.open { transform: translateX(0); }
+  body.drawer-fn-locked { overflow: hidden; }
+
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
@@ -709,8 +732,8 @@
   <!-- DRAWERS -->
   <section class="drawers-section">
     <div class="drawers-section-head">
-      <span class="drawers-section-meta">Drawer-Previews ·</span>
-      <h2 class="drawers-section-title">Statisch nebeneinander gerendert · 540 px slide-in von rechts</h2>
+      <span class="drawers-section-meta">Drawer-Previews · Visual-Reference ·</span>
+      <h2 class="drawers-section-title">Live triggern: Click auf "Manuell generieren"-Button / Run-Row im Tab Runs</h2>
     </div>
     <div class="drawers-row">
 
@@ -899,6 +922,10 @@
 
 </div>
 
+<!-- ============== FUNCTIONAL DRAWER (slide-in) ============== -->
+<div class="drawer-fn-overlay" id="drawerFnOverlay"></div>
+<aside class="drawer drawer-fn" id="drawerFn" aria-hidden="true"></aside>
+
 <script>
 // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
 
@@ -1036,6 +1063,67 @@ document.querySelectorAll('.drawer-tabs').forEach(tabBar => {
     tg.textContent = open ? 'Stack-Trace anzeigen ▾' : 'Stack-Trace ausblenden ▴';
   });
 })();
+
+/* ─────────── FUNCTIONAL DRAWER (slide-in) ─────────── */
+const drawerFn = document.getElementById('drawerFn');
+const drawerFnOverlay = document.getElementById('drawerFnOverlay');
+
+function bindDrawerTabsScoped(scope) {
+  scope.querySelectorAll('.drawer-tabs').forEach(tabBar => {
+    tabBar.addEventListener('click', e => {
+      const btn = e.target.closest('.drawer-tab');
+      if (!btn) return;
+      const tab = btn.dataset.tab;
+      tabBar.querySelectorAll('.drawer-tab').forEach(b => b.classList.toggle('active', b === btn));
+      const drawerEl = tabBar.closest('.drawer') || scope;
+      drawerEl.querySelectorAll('.tab-pane').forEach(p => {
+        p.classList.toggle('active', p.dataset.pane === tab);
+      });
+    });
+  });
+}
+
+function openDrawerByKey(key) {
+  const tpl = document.querySelector('[data-drawer-key="' + key + '"]') || document.getElementById('drawer-' + key);
+  if (!tpl) return;
+  drawerFn.innerHTML = tpl.innerHTML;
+  drawerFnOverlay.classList.add('open');
+  void drawerFn.offsetWidth;
+  drawerFn.classList.add('open');
+  drawerFn.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('drawer-fn-locked');
+  drawerFn.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', closeDrawerFn));
+  bindDrawerTabsScoped(drawerFn);
+}
+function closeDrawerFn() {
+  drawerFn.classList.remove('open');
+  drawerFnOverlay.classList.remove('open');
+  drawerFn.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('drawer-fn-locked');
+  setTimeout(() => {
+    if (!drawerFn.classList.contains('open')) drawerFn.innerHTML = '';
+  }, 260);
+}
+drawerFnOverlay.addEventListener('click', closeDrawerFn);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && drawerFn.classList.contains('open')) closeDrawerFn();
+});
+
+/* ─────────── TRIGGER-BINDINGS ─────────── */
+// "Manuell generieren"-Button → drawer-trigger
+document.querySelectorAll('button').forEach(b => {
+  if ((b.textContent || '').trim() === 'Manuell generieren') {
+    b.addEventListener('click', () => openDrawerByKey('trigger'));
+  }
+});
+// Run-Row click (Tab Runs) → drawer-run-detail
+document.querySelectorAll('#runsBody tr').forEach(r => {
+  r.style.cursor = 'pointer';
+  r.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    openDrawerByKey('run-detail');
+  });
+});
 </script>
 </body>
 </html>

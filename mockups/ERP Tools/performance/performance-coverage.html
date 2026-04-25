@@ -456,6 +456,31 @@
   }
   .drawer-foot .spacer { flex: 1; }
 
+  /* ─── Functional Drawer (slide-in) ─── */
+  .drawer-fn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90; opacity: 0;
+    transition: opacity .2s ease-out;
+    pointer-events: none;
+  }
+  .drawer-fn-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer.drawer-fn {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 540px; max-height: none;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .25s ease-out;
+    border-radius: 0;
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer.drawer-fn::before { display: none; }
+  .drawer.drawer-fn.open { transform: translateX(0); }
+  .drawer.drawer-fn .drawer-body { flex: 1; max-height: none; overflow-y: auto; }
+  body.drawer-fn-locked { overflow: hidden; }
+
   .sec-title {
     font-size: 10.5px; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--text-light);
@@ -794,14 +819,14 @@
 
   <!-- Drawer previews -->
   <h2 class="drawer-section-title">
-    Drawer-States
-    <span class="hint">Slide-in von rechts · 540 px · überdeckt die rechte Spalte</span>
+    Drawer-Previews · Visual-Reference
+    <span class="hint">Live triggern: Click auf Critical-List-Row / Massenaktion-Button im Page-Body</span>
   </h2>
 
   <div class="drawer-row">
 
     <!-- Drawer A: Kandidaten Detail -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="coverage-candidate">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Kandidat · RM · ARC · Owner PW · Stage TI</div>
         <div class="drawer-head-top">
@@ -895,7 +920,7 @@
     </aside>
 
     <!-- Drawer B: Bulk Action -->
-    <aside class="drawer">
+    <aside class="drawer" data-drawer-key="coverage-bulk-action">
       <div class="drawer-head">
         <div class="drawer-eyebrow">Bulk-Aktion · 3 Kandidaten ausgewählt · Coverage &lt; 50 %</div>
         <div class="drawer-head-top">
@@ -1008,6 +1033,10 @@
   </div>
 
 </main>
+
+<!-- ============== FUNCTIONAL DRAWER (slide-in) ============== -->
+<div class="drawer-fn-overlay" id="drawerFnOverlay"></div>
+<aside class="drawer drawer-fn" id="drawerFn" aria-hidden="true"></aside>
 
 <script>
   // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
@@ -1278,15 +1307,74 @@
   // Schweiz-Karte (TopoJSON) jetzt laden — nachdem cantons + critList + renderCrit verfuegbar sind.
   loadCantonsMap();
 
-  // Drawer tabs
-  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
-    tabs.querySelectorAll('.drawer-tab').forEach(t => {
-      t.addEventListener('click', () => {
-        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
+  // Drawer tabs (template + functional)
+  function bindDrawerTabs(scope) {
+    (scope || document).querySelectorAll('.drawer-tabs').forEach(tabs => {
+      tabs.querySelectorAll('.drawer-tab').forEach(t => {
+        t.addEventListener('click', () => {
+          tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+        });
       });
     });
+  }
+  bindDrawerTabs(document);
+
+  // ─── Functional Drawer (slide-in) ───
+  const drawerFn = document.getElementById('drawerFn');
+  const drawerFnOverlay = document.getElementById('drawerFnOverlay');
+
+  function openDrawerByKey(key) {
+    const tpl = document.querySelector('[data-drawer-key="' + key + '"]') || document.getElementById('drawer-' + key);
+    if (!tpl) return;
+    drawerFn.innerHTML = tpl.innerHTML;
+    drawerFnOverlay.classList.add('open');
+    void drawerFn.offsetWidth;
+    drawerFn.classList.add('open');
+    drawerFn.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('drawer-fn-locked');
+    drawerFn.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', closeDrawerFn));
+    bindDrawerTabs(drawerFn);
+  }
+  function closeDrawerFn() {
+    drawerFn.classList.remove('open');
+    drawerFnOverlay.classList.remove('open');
+    drawerFn.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('drawer-fn-locked');
+    setTimeout(() => {
+      if (!drawerFn.classList.contains('open')) drawerFn.innerHTML = '';
+    }, 260);
+  }
+  drawerFnOverlay.addEventListener('click', closeDrawerFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawerFn.classList.contains('open')) closeDrawerFn();
   });
+
+  // ─── Trigger-Bindings ───
+  // Critical-List Row-Click → coverage-candidate (only outside checkbox-cell)
+  function bindCritRowDrawers() {
+    document.querySelectorAll('#critBody tr').forEach(tr => {
+      tr.style.cursor = 'pointer';
+      tr.addEventListener('click', (e) => {
+        if (e.target.closest('.cb, .action-link')) return;
+        if (e.target.closest('td')?.cellIndex === 0) return; // checkbox column
+        openDrawerByKey('coverage-candidate');
+      }, { capture: false });
+    });
+  }
+  // Initial + after re-render hook
+  bindCritRowDrawers();
+  const _origRenderCrit = typeof renderCrit === 'function' ? renderCrit : null;
+  if (_origRenderCrit) {
+    window.renderCrit = function(c) {
+      _origRenderCrit(c);
+      bindCritRowDrawers();
+    };
+  }
+  // Massenaktion-Button → coverage-bulk-action
+  if (typeof bulkBtn !== 'undefined' && bulkBtn) {
+    bulkBtn.addEventListener('click', () => openDrawerByKey('coverage-bulk-action'));
+  }
 </script>
 </body>
 </html>
