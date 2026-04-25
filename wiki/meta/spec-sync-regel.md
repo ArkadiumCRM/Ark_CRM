@@ -26,11 +26,12 @@ tags: [governance, spec-sync, regel, konsistenz]
 **Entity-Detailmasken (9):** Je Entity eine Schema- + eine Interactions-Datei in `specs/`:
 Kandidat · Account · Firmengruppe · Mandat · Job · Prozess · Assessment · Scraper · Projekt
 
-**Tool-Masken (4):** Operative Tools ohne Entity-Bindung, mit Schema + Interactions:
+**Tool-Masken (5):** Operative Tools ohne Entity-Bindung, mit Schema + Interactions:
 - **Dok-Generator** (`/operations/dok-generator`) — `specs/ARK_DOK_GENERATOR_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` (+ Plan/IMPL)
 - **Email & Kalender** (`/operations/email-kalender`) — `specs/ARK_EMAIL_KALENDER_DETAILMASKE_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md`
 - **Reminders** (`/reminders`) — `specs/ARK_REMINDERS_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` (+ Plan) — neu 2026-04-17
 - **Dashboard-Templates-Editor** (`/admin/dashboards`) — siehe Admin-Vollansicht Tab 8 + `specs/ARK_DASHBOARD_CUSTOMIZATION_SCHEMA_v1.md`
+- **Performance-Tool** (`/operations/performance`) — `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `_MOCKUP_PLAN.md` — neu 2026-04-25
 
 **System-Vollansichten (1 Admin + zukünftig HR):**
 - **Admin-Vollansicht** (`/admin`) — `specs/ARK_ADMIN_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (als Tab 9 eingebunden) — neu 2026-04-17

@@ -720,7 +720,7 @@
         <!--
           26-Kantone-Schweiz-Karte · echte kartografische Grenzen via swiss-maps@4 (TopoJSON).
           Quelle: https://unpkg.com/swiss-maps@4/2021/ch-combined.json
-          Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT.
+          Datenbasis: Bundesamt für Statistik (BFS), GEOSTAT.
           ViewBox: 0 0 960 500 (entspricht swiss-maps@4 Default-Projektion, CH1903 vorprojiziert).
           Pfade + Centroid-Labels werden zur Laufzeit von loadCantonsMap() erzeugt.
         -->
@@ -1171,7 +1171,7 @@
         });
         svg.appendChild(p);
 
-        // Centroid-Label (ueberspringe sehr kleine Kantone wie AI fuer Lesbarkeit)
+        // Centroid-Label (überspringe sehr kleine Kantone wie AI für Lesbarkeit)
         const [cx, cy] = pathGen.centroid(f);
         if (Number.isFinite(cx) && Number.isFinite(cy)) {
           const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
