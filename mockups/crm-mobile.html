@@ -307,7 +307,10 @@ function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme');
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  document.getElementById('themeBtn').textContent = next === 'dark' ? '☾' : '☀';
+  const themeBtn = document.getElementById('themeBtn');
+  if (themeBtn) {
+    themeBtn.textContent = next === 'dark' ? '☾' : '☀';
+  }
   localStorage.setItem('ark-theme', next);
   // Iframes Theme mitziehen
   document.querySelectorAll('iframe').forEach(f => {
@@ -319,7 +322,10 @@ function toggleTheme() {
 (function(){
   const saved = localStorage.getItem('ark-theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
-  document.getElementById('themeBtn').textContent = saved === 'dark' ? '☾' : '☀';
+  const themeBtn = document.getElementById('themeBtn');
+  if (themeBtn) {
+    themeBtn.textContent = saved === 'dark' ? '☾' : '☀';
+  }
 })();
 
 // Section-Switch
