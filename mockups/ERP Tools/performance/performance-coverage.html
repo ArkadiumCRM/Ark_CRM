@@ -1135,7 +1135,9 @@
         throw new Error('TopoJSON-Layer "cantons" nicht gefunden');
       }
       const fc = topojson.feature(topo, topo.objects.cantons);
-      const pathGen = d3.geoPath().projection(null); // bereits projiziert (CH1903)
+      // TopoJSON ist in WGS84 lat/lon — Mercator-Projektion auf 960x500-Viewport
+      const projection = d3.geoMercator().fitSize([960, 500], fc);
+      const pathGen = d3.geoPath(projection);
 
       if (loadingEl) loadingEl.remove();
 
