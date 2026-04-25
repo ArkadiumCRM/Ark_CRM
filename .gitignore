@@ -72,6 +72,9 @@ Unbenannt.canvas
 playwright-report/
 test-results/
 
+# Codex-safe worktrees (transient)
+.git/codex-worktrees/
+
 # Superpowers plugin local state
 .superpowers/
 

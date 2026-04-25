@@ -59,6 +59,29 @@ async function collectErrors(page: Page): Promise<string[]> {
   return errors;
 }
 
+// Mojibake patterns from cp1252-as-UTF8 double-encoding
+const MOJIBAKE_RE = /â€[œ"™–]|Ã[¤¶¼Ÿœ"]|Â[·°§¶]/;
+const BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
+
+test.describe('ARK Mockups · Encoding integrity', () => {
+  for (const mockup of mockups) {
+    test(`encoding: ${mockup}`, () => {
+      const abs = path.join(MOCKUPS_DIR, mockup);
+      const buf = fs.readFileSync(abs);
+      expect(
+        buf.subarray(0, 3).equals(BOM),
+        `${mockup} has UTF-8 BOM (0xEF 0xBB 0xBF) — strip it`,
+      ).toBe(false);
+      const text = buf.toString('utf8');
+      const m = text.match(MOJIBAKE_RE);
+      expect(
+        m,
+        `${mockup} has mojibake (double-encoded UTF-8): ${m ? `"${m[0]}" near "...${text.substring(Math.max(0, (m.index ?? 0) - 30), (m.index ?? 0) + 30)}..."` : ''}`,
+      ).toBeNull();
+    });
+  }
+});
+
 test.describe('ARK Mockups · Smoke', () => {
   for (const mockup of mockups) {
     test(`loads: ${mockup}`, async ({ page }) => {
