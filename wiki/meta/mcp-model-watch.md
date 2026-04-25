@@ -47,4 +47,9 @@
 
 **Zwei Hot-Items diese Woche:** DeepSeek V4 Flash/Pro wurde gestern (24.04.) released — MCP-Server-Kompatibilität prüfen. Claude Opus 4.7 ist seit 16.04. verfügbar aber noch nicht explizit verifiziert im AI-SDK. Alle npm-Packages sind auf aktuellem Stand.
 
+### Push-Log
+
+- Zwei parallele Sessions (session_01EhXZg4tnpn1fuw45EfZd1a + session_01RYKqESP5vzksaFg6xF9jDX) haben denselben Report unabhängig erstellt. Konflikt beim Rebase aufgelöst: Remote-Version (detailliertere Tabelle) übernommen, Push-Log ergänzt.
+
 ---
+
