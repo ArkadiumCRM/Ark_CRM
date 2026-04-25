@@ -498,3 +498,25 @@ Bei jeder User-Entscheidung von Tragweite (neue Regel, Architektur-Wahl, Scope-C
 - Kurz halten: Kontext + Entscheidung + Konsequenz reichen meist.
 - Alternativen nur ausfuehren wenn nicht-trivial verworfen (bildungsrelevant für spätere Revisits).
 - NICHT eintragen: einzelne Variable-Names, CSS-Pixel, typo-fixes, one-off-Commits.
+
+## [2026-04-26] PO-Review-Entscheidungen Performance-Modul-Abschluss
+
+- **Kontext:** PO-Review nach Performance-Modul Mockup-Phase-Abschluss (11/11 P0+P1 Seiten fertig, 5 Grundlagen synced, Spec-Mockup-Sync-Report geprüft). 4 Entscheidungen zur Priorisierung Phase-3-ERP-Roadmap.
+- **Entscheidungen:**
+  1. **Account-Tab9 Group-Scope weiter aufgeschoben.** Account-Detailseite zeigt Hierarchie-Struktur (Parent/Child-Accounts) bislang nur as Label/Display. Echte UI-Scope für Tab 9 (Filter nach Group, Edit-Drawer für Group-Assignment) bleibt offen in `wiki/meta/detailseiten-nachbearbeitung.md` als **KRITISCH P0 · Original-Erfassung 2026-04-13**. Grund: höherere Priorität haben Publishing + Messaging Phase-3-Mockups (entgegen ursprünglicher Planung). Revisit nach publishing+messaging fertig.
+  2. **Performance-Backend-Implementation aufgeschoben.** Backend-Code für Performance-Modul startet NACH Mockup-Vollständigkeit für weitere Phase-3-ERP-Module (Publishing, Messaging, ggf. elearn-Tiefe). Grund: Peter will erst Mockup-Skelett aller 5 Module sichtbar haben, bevor Backend parallel läuft. Parallel-Dev würde zu Drift führen (Spec-Async).
+  3. **Sample-Data-File-Pattern auf andere ERP-Module rückportieren.** Performance-Modul nutzt zentrale `mockups/_shared/perf-sample-data.js` mit `window.ARK_PERF.*`-Namespace für Demo-Daten. Pattern bewährt (einfach zentral editierbar, keine Makro-Templates in HTML nötig). Soll auf HR, Commission, Zeit, Billing **rückportiert werden** (eigene Session, ~2-3h Multi-File-Refactor mit Backups). Aufgeschoben auf separate Task `project_sample_data_rollout_pending.md` (Memory).
+  4. **CSS-Comment-UMLAUT-Fixes deployed.** 9 Performance-Mockups hatte Sub-Agent `fuer` statt `für` in CSS-Comments hinterlassen (kosmetisch, kein funktional/UI-Impact). Alle 9 gefixt: performance-admin, performance-business, performance-coverage, performance-funnel, performance-insights, performance-mitarbeiter, performance-reports, performance-revenue, performance-team. Auch 9 unresolved Changelog-Einträge (Grundlagen-Syncs 2026-04-25) markiert als `resolved (2026-04-25 · Performance-Modul-Sync)`.
+- **Alternativen verworfen:**
+  - Backend-Implementation JETZT starten mit Mockup-Parallel-Sprints → verworfen (Peter will erst Mockup-Vollständigkeit).
+  - Sample-Data-Rollout erst bei nächster Touch-Iteration je Modul → verworfen (gleichzeitige Migration einfacher zu reviewen in einer Session).
+  - Account-Tab9 Group-Scope JETZT bauen statt Publishing/Messaging → verworfen (strategische Prio-Verschiebung).
+- **Konsequenz:**
+  - Phase-3-ERP Mockup-Roadmap: 5 Module geplant (HR, Zeit, Commission, Billing, E-Learning teilweise, **Performance fertig**). Nächste Mockups: **Publishing** + **Messaging**. Nach Vollständigkeit: Backend-Implementation + Sample-Data-Rollout parallel.
+  - Account-Tab9 Group-Scope → Backlog, Nachbearbeitung nach Publishing+Messaging.
+  - Sample-Data-Rollout Pending-Task → Memory `project_sample_data_rollout_pending.md` created · Session-TODO für nach Publishing+Messaging.
+  - Changelog + decisions.md updated (PO-Review 2026-04-26).
+- **Revisit:**
+  - Nach Publishing + Messaging Mockup-Abschluss (geschätzt nächste 2 Sessions) → Backend-Implementation starten.
+  - Sample-Data-Rollout eigene Session (2-3h) nach Mockup-Vollständigkeit.
+  - Account-Tab9 Group-Scope wenn Detailseiten-Nachbearbeitung auf Agenda kommt (ursprünglich P0 — neu 2026-04-26 aufgeschoben, nicht gestrichen).

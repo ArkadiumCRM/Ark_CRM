@@ -790,79 +790,79 @@ Alle 5 Grundlagen-Dateien mit HR-Modul synchronisiert. Direkte Sync-Session (Edi
 ## [2026-04-25 21:16] session-53f982ef
 - **File:** ARK_STAMMDATEN_EXPORT_v1_6.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** TEIL 26 in Stammdaten-Exports abgedeckt
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:16] session-53f982ef
 - **File:** ARK_DATABASE_SCHEMA_v1_6.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** TEIL Q (Performance-Schema-Erweiterung) in DB-Schema abgedeckt
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:16] session-53f982ef
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_8.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** TEIL R (Backend-Closed-Loop-Saga) in Backend-Architecture abgedeckt
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:16] session-53f982ef
 - **File:** ARK_FRONTEND_FREEZE_v1_13.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** TEIL Q Frontend-Pattern (11 Mockups Inventar) in Frontend-Freeze abgedeckt
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:16] session-53f982ef
 - **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** Gesamtsystem-Übersicht mit Performance-Modul-Roadmap aktualisiert (Phase 3.1-3.4)
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:18] session-53f982ef
 - **File:** ARK_STAMMDATEN_EXPORT_v1_6.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** Performance-Modul Stammdaten-Updates (Activity-Types, Datenquellen-Mapping)
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:19] session-53f982ef
 - **File:** ARK_DATABASE_SCHEMA_v1_6.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** fact_performance_dashboard, dim_performance_metrics, performance-Indizes
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:21] session-53f982ef
 - **File:** ARK_BACKEND_ARCHITECTURE_v2_8.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** /api/perf/*, /api/perf/forecast, Closed-Loop-Worker, Performance-Saga
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:23] session-53f982ef
 - **File:** ARK_FRONTEND_FREEZE_v1_13.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** Performance-Mockup-Pattern (Snapshot-Bar, Chart-Klon, Drawer-Previews)
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
 
 ## [2026-04-25 21:24] session-53f982ef
 - **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md
 - **Tool:** Edit
-- **Status:** unresolved
-- **Sync-Check:** -- pending --
-- **Resolved-In:** -- (fill when specs/mockups nachgezogen) --
+- **Status:** resolved (2026-04-25 · Performance-Modul-Sync)
+- **Sync-Check:** Performance-Modul Roadmap + Closed-Loop-Narrativ integriert
+- **Resolved-In:** Performance-Modul Wiki-Konzept (2026-04-25), Spec-Mockup-Sync-Report (2026-04-25)
 - **Digest-Stale:** ja (siehe wiki/meta/digests/STALE.md)
