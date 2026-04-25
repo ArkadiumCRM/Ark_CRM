@@ -581,6 +581,7 @@
     .charts-row, .markt-row, .topflop-row { grid-template-columns: 1fr; }
   }
 </style>
+<script src="../../_shared/perf-sample-data.js"></script>
 </head>
 <body>
 <div class="page">
@@ -1267,15 +1268,9 @@ function drawConvChart() {
   const cw = W - ML - MR;
   const ch = H - MT - MB;
 
-  const quarters = ['Q1','Q2','Q3','Q4'];
-  // pct values
-  const data = {
-    ARC: [4.8, 5.1, 5.3, 5.2],
-    ING: [2.7, 2.9, 3.0, 3.1],
-    PUR: [2.4, 1.8, 1.9, 2.0],
-    REM: [3.6, 4.2, 4.4, 4.5],
-    GT:  [3.5, 3.8, 3.6, 4.1],
-  };
+  const quarters = window.ARK_PERF.sparten_conversion_quarters.quarters;
+  // pct values — shared sample-data.
+  const data = window.ARK_PERF.sparten_conversion_quarters.series;
   const colors = {
     ARC: cssVar('--sp-arc'),
     ING: cssVar('--sp-ing'),
@@ -1309,8 +1304,9 @@ function drawConvChart() {
     svg.appendChild(lbl);
   });
 
-  // Median line at 3.3%
-  const medY = y(3.3);
+  // Median line — shared sample-data.
+  const medianPct = window.ARK_PERF.sparten_conversion_quarters.median;
+  const medY = y(medianPct);
   const med = document.createElementNS(NS, 'line');
   med.setAttribute('x1', ML); med.setAttribute('x2', W - MR);
   med.setAttribute('y1', medY); med.setAttribute('y2', medY);
@@ -1324,7 +1320,7 @@ function drawConvChart() {
   medLbl.setAttribute('font-family','JetBrains Mono, monospace');
   medLbl.setAttribute('font-size','9.5');
   medLbl.setAttribute('fill', colorTextMid);
-  medLbl.textContent = 'Median 3.3%';
+  medLbl.textContent = 'Median ' + medianPct + '%';
   svg.appendChild(medLbl);
 
   // X labels
@@ -1379,11 +1375,11 @@ function drawDonut() {
   const NS = 'http://www.w3.org/2000/svg';
   const cx = 70, cy = 70, r = 50, ir = 32;
 
-  const segs = [
-    { v: 60, c: cssVar('--sp-arc') },
-    { v: 28, c: cssVar('--sp-ing') },
-    { v: 12, c: cssVar('--sp-rem') },
-  ];
+  // Donut-Segmente — shared sample-data (Sparten-Anteile).
+  const segs = window.ARK_PERF.sparten_donut.map(d => ({
+    v: d.value,
+    c: cssVar('--sp-' + d.code.toLowerCase()),
+  }));
 
   let acc = -90;
   segs.forEach(s => {

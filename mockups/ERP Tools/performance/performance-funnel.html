@@ -512,6 +512,7 @@
     font-family: "JetBrains Mono", monospace;
   }
 </style>
+<script src="../../_shared/perf-sample-data.js"></script>
 </head>
 <body>
 
@@ -855,18 +856,11 @@
 <script>
   // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
 
-  // Funnel data
-  const stages = [
-    { name: 'Expose',     count: 240, conv: 38,  days: 4,  drop: 149 },
-    { name: 'CV Sent',    count:  91, conv: 49,  days: 6,  drop:  46 },
-    { name: 'TI',         count:  45, conv: 29,  days: 9,  drop:  32, danger: true },
-    { name: '1st',        count:  13, conv: 62,  days: 7,  drop:   5 },
-    { name: '2nd',        count:   8, conv: 75,  days: 8,  drop:   2 },
-    { name: '3rd',        count:   6, conv: 83,  days: 6,  drop:   1 },
-    { name: 'Assessment', count:   5, conv: 80,  days: 12, drop:   1 },
-    { name: 'Offer',      count:   4, conv: 100, days: 3,  drop:   0 },
-    { name: 'Placement',  count:   4, conv: null, days: null, drop: null },
-  ];
+  // Funnel data — via window.ARK_PERF.stages (mockups/_shared/perf-sample-data.js).
+  // Schluessel `code` wird hier als `name` gespiegelt fuer Render-Kompatibilitaet.
+  const stages = window.ARK_PERF.stages.map(s => ({
+    name: s.code, count: s.count, conv: s.conv, days: s.days, drop: s.drop, danger: s.danger,
+  }));
   const max = stages[0].count;
 
   // Render funnel
@@ -957,17 +951,17 @@
     });
   });
 
-  // Cohort heatmap
-  const months = ['Mai 25','Jun 25','Jul 25','Aug 25','Sep 25','Okt 25','Nov 25','Dez 25','Jan 26','Feb 26','Mär 26','Apr 26'];
-  const stageNames = ['Expose','CV Sent','TI','1st','2nd','3rd','Assessment','Offer','Placement'];
+  // Cohort heatmap — Months + Stage-Namen aus shared sample-data.
+  const months = window.ARK_PERF.stages_cohort.months;
+  const stageNames = window.ARK_PERF.stages.map(s => s.code);
   const cohortEl = document.getElementById('cohort');
 
   // header row
   let html = '<div class="row-lab"></div>';
   stageNames.forEach(n => html += `<div class="h">${n}</div>`);
 
-  // base curve (rough conversion at each stage from Expose=100)
-  const base = [100, 38, 18.6, 5.4, 3.4, 2.8, 2.2, 1.8, 1.6];
+  // base curve (rough conversion at each stage from Expose=100) — shared sample-data.
+  const base = window.ARK_PERF.stages_cohort.base_curve;
 
   function colorFor(pct) {
     // pct 0..6+ → red→amber→green

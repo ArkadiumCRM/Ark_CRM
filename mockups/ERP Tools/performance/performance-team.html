@@ -982,6 +982,7 @@
     .charts-grid { grid-template-columns: 1fr; }
   }
 </style>
+<script src="../../_shared/perf-sample-data.js"></script>
 </head>
 <body>
 <div class="page">
@@ -1682,11 +1683,7 @@ document.getElementById('driftSlider')?.addEventListener('input', e => {
 /* ─────────── VERTEILUNGS-RADIO + PREVIEW ─────────── */
 (function(){
   const radios = document.querySelectorAll('#verteilungRadios .radio');
-  const presets = {
-    gleich:        { PW: '4 Placements', JV: '4 Placements', LR: '4 Placements', MR: '4 Placements' },
-    proportional:  { PW: '6 Placements', JV: '4 Placements', LR: '2 Placements', MR: '3 Placements' },
-    manuell:       { PW: '— manuell —',  JV: '— manuell —',  LR: '— manuell —',  MR: '— manuell —' },
-  };
+  const presets = window.ARK_PERF.goal_distribution_presets;
   radios.forEach(r => {
     r.addEventListener('click', e => {
       radios.forEach(x => x.classList.toggle('active', x === r));

@@ -615,6 +615,7 @@
 <!-- TopoJSON + d3-geo: runtime conversion echter Schweiz-Kantons-Geometrien (swiss-maps@4 / BFS GEOSTAT) -->
 <script src="https://unpkg.com/topojson-client@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="../../_shared/perf-sample-data.js"></script>
 </head>
 <body>
 
@@ -1020,36 +1021,8 @@
   }));
 
   // ── SVG Schweiz-Karte · 26 Kantone ───────────────
-  // Stammdaten-Patch v1.6→v1.7 für dim_canton (26 Schweizer Kantone) ausstehend.
-  // Canton-Codes hier hardcoded für Mockup.
-  const cantons = [
-    { code:'ZH', name:'Zürich',                 score:92, contacted:51, total:55 },
-    { code:'BE', name:'Bern',                   score:74, contacted:28, total:38 },
-    { code:'LU', name:'Luzern',                 score:68, contacted:13, total:19 },
-    { code:'UR', name:'Uri',                    score:35, contacted: 2, total: 6 },
-    { code:'SZ', name:'Schwyz',                 score:52, contacted: 6, total:12 },
-    { code:'OW', name:'Obwalden',               score:41, contacted: 3, total: 7 },
-    { code:'NW', name:'Nidwalden',              score:48, contacted: 4, total: 8 },
-    { code:'GL', name:'Glarus',                 score:38, contacted: 3, total: 8 },
-    { code:'ZG', name:'Zug',                    score:88, contacted:14, total:16 },
-    { code:'FR', name:'Freiburg',               score:62, contacted:11, total:18 },
-    { code:'SO', name:'Solothurn',              score:71, contacted:12, total:17 },
-    { code:'BS', name:'Basel-Stadt',            score:84, contacted:21, total:25 },
-    { code:'BL', name:'Basel-Landschaft',       score:78, contacted:18, total:23 },
-    { code:'SH', name:'Schaffhausen',           score:65, contacted: 8, total:13 },
-    { code:'AR', name:'Appenzell Ausserrhoden', score:43, contacted: 3, total: 7 },
-    { code:'AI', name:'Appenzell Innerrhoden',  score:25, contacted: 1, total: 4 },
-    { code:'SG', name:'St. Gallen',             score:69, contacted:18, total:26 },
-    { code:'GR', name:'Graubünden',             score:34, contacted: 7, total:21 },
-    { code:'AG', name:'Aargau',                 score:81, contacted:24, total:30 },
-    { code:'TG', name:'Thurgau',                score:67, contacted:11, total:16 },
-    { code:'TI', name:'Tessin',                 score:43, contacted: 6, total:14 },
-    { code:'VD', name:'Waadt',                  score:76, contacted:32, total:42 },
-    { code:'VS', name:'Wallis',                 score:48, contacted: 9, total:19 },
-    { code:'NE', name:'Neuenburg',              score:58, contacted: 8, total:14 },
-    { code:'GE', name:'Genf',                   score:82, contacted:24, total:29 },
-    { code:'JU', name:'Jura',                   score:31, contacted: 3, total:10 },
-  ];
+  // Daten via window.ARK_PERF.kantone (siehe mockups/_shared/perf-sample-data.js).
+  const cantons = window.ARK_PERF.kantone;
 
   // INVERTED color scale: dark red = high coverage (gut), light cream = low coverage (schlecht)
   function scoreColor(pct) {
@@ -1086,12 +1059,7 @@
   }
 
   // BFS-Kantonsnummer (TopoJSON id) → ISO 3166-2:CH 2-Buchstaben-Code
-  const cantonIdToCode = {
-    1:'ZH',  2:'BE',  3:'LU',  4:'UR',  5:'SZ',  6:'OW',  7:'NW',  8:'GL',
-    9:'ZG', 10:'FR', 11:'SO', 12:'BS', 13:'BL', 14:'SH', 15:'AR', 16:'AI',
-   17:'SG', 18:'GR', 19:'AG', 20:'TG', 21:'TI', 22:'VD', 23:'VS', 24:'NE',
-   25:'GE', 26:'JU'
-  };
+  const cantonIdToCode = window.ARK_PERF.kanton_id_to_code;
 
   // Active canton state — handler & DOM refs hier hochgezogen, da loadCantonsMap() asynchron
   const hmInfoCell  = document.getElementById('hmInfoCell');
@@ -1209,18 +1177,7 @@
   // Aufruf weiter unten, nachdem critList + renderCrit definiert sind.
 
   // ── Critical list · 26-Kantone-Verteilung ────────
-  const critList = [
-    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false, canton:'AI' },
-    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true,  canton:'ZH' },
-    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true,  canton:'JU' },
-    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false, canton:'GR' },
-    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true,  canton:'ZH' },
-    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false, canton:'TI' },
-    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false, canton:'UR' },
-    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false, canton:'GE' },
-    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false, canton:'AR' },
-    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false, canton:'VS' },
-  ];
+  const critList = window.ARK_PERF.critical_candidates;
 
   function scoreClass(s) {
     if (s < 40) return 'bad';

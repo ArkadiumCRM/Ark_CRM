@@ -869,6 +869,7 @@
     .drawer { width: 100%; }
   }
 </style>
+<script src="../../_shared/perf-sample-data.js"></script>
 </head>
 <body>
 <div class="page">
@@ -1512,15 +1513,12 @@ function drawRevenueChart() {
   const cw = W - ML - MR;
   const ch = H - MT - MB;
 
-  const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-  // Ist 2026: Jan..Mar full, Apr partial
-  const ist  = [320, 280, 410, 250, null, null, null, null, null, null, null, null];
-  // Forecast (dashed) for Apr remainder + May..Dec
-  const fcst = [null, null, null, 90, 290, 310, 280, 250, 270, 320, 340, 360];
-  // Vorjahr 2025
-  const vor  = [240, 260, 290, 270, 250, 280, 260, 230, 270, 300, 320, 310];
-
-  const ymax = 400;
+  // Revenue-Daten via shared sample-data.
+  const months = window.ARK_PERF.revenue_chart.months;
+  const ist    = window.ARK_PERF.revenue_chart.ist;
+  const fcst   = window.ARK_PERF.revenue_chart.forecast;
+  const vor    = window.ARK_PERF.revenue_chart.vorjahr;
+  const ymax   = window.ARK_PERF.revenue_chart.ymax;
   const colorAccent = cssVar('--accent');
   const colorGold   = cssVar('--gold');
   const colorTextLight = cssVar('--text-light');
@@ -1533,8 +1531,8 @@ function drawRevenueChart() {
   const bw = (cw / months.length) * 0.46;
   const y = (v) => MT + ch - (v / ymax) * ch;
 
-  // Y grid lines
-  const ygrid = [0, 100, 200, 300, 400];
+  // Y grid lines — shared sample-data.
+  const ygrid = window.ARK_PERF.revenue_chart.ygrid;
   ygrid.forEach(g => {
     const yy = y(g);
     const ln = document.createElementNS(NS, 'line');
