@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>Business-View · Sparten · ARK Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  :root {
+    --bg: #F4F5F7;
+    --surface: #FFFFFF;
+    --surface-alt: #EDEFF3;
+    --surface-sunk: #E5E7EC;
+    --text: #1A1F2E;
+    --text-mid: #4A5568;
+    --text-light: #8A95A8;
+    --border: #E2E5EA;
+    --border-strong: #CDD2DA;
+    --accent: #1A3A5C;
+    --accent-soft: rgba(26, 58, 92, 0.08);
+    --gold: #B8860B;
+    --gold-strong: #9B7009;
+    --gold-soft: rgba(184, 134, 11, 0.10);
+    --green: #1A6B4A;
+    --green-soft: rgba(26, 107, 74, 0.10);
+    --amber: #D97706;
+    --amber-soft: rgba(217, 119, 6, 0.10);
+    --red: #C0392B;
+    --red-soft: rgba(192, 57, 43, 0.10);
+
+    --sp-arc: #1A3A5C;
+    --sp-ing: #4D7299;
+    --sp-pur: #B8860B;
+    --sp-rem: #6B9B7A;
+    --sp-gt:  #9B7B5C;
+
+    --serif: "Libre Baskerville", Georgia, serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+    --radius: 5px;
+    --radius-sm: 3px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0E1116;
+    --surface: #161B22;
+    --surface-alt: #1D242D;
+    --surface-sunk: #0B0E12;
+    --text: #E6EDF3;
+    --text-mid: #B0BAC8;
+    --text-light: #7A869A;
+    --border: #2A323D;
+    --border-strong: #3A4350;
+    --accent: #7CB5E8;
+    --accent-soft: rgba(124, 181, 232, 0.12);
+    --gold: #D4A84B;
+    --gold-strong: #E5BC5E;
+    --gold-soft: rgba(212, 168, 75, 0.14);
+    --green: #3FB950;
+    --green-soft: rgba(63, 185, 80, 0.14);
+    --amber: #D29922;
+    --amber-soft: rgba(210, 153, 34, 0.14);
+    --red: #F85149;
+    --red-soft: rgba(248, 81, 73, 0.14);
+    --sp-arc: #7CB5E8;
+    --sp-ing: #5B7E9F;
+    --sp-pur: #D4A84B;
+    --sp-rem: #6BAE7E;
+    --sp-gt:  #B89478;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  .page { max-width: 1440px; margin: 0 auto; padding: 32px 36px 48px; }
+
+  /* HEADER */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 8px;
+  }
+  .h1 {
+    font-family: var(--serif); font-weight: 400; font-size: 34px;
+    color: var(--accent); letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 13px; }
+  .subtitle .sep { color: var(--border-strong); margin: 0 8px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    font-family: var(--sans); font-size: 12.5px; padding: 8px 14px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text); cursor: pointer;
+    font-weight: 500; transition: all 0.12s;
+  }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold-strong); }
+  .btn-gold:hover { background: var(--gold-strong); }
+  [data-theme="dark"] .btn-gold { color: #1A1F2E; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="dark"] .btn-primary { color: #0E1116; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text-mid); }
+  .link-btn {
+    background: none; border: 0; color: var(--accent); font-size: 12.5px;
+    cursor: pointer; padding: 8px 6px; text-decoration: underline;
+    text-decoration-color: var(--border-strong); text-underline-offset: 4px;
+    font-family: var(--sans);
+  }
+  .link-btn:hover { text-decoration-color: var(--accent); }
+  .theme-toggle {
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-mid); margin-left: 4px;
+  }
+  .theme-toggle svg { width: 14px; height: 14px; }
+
+  /* SNAPSHOT */
+  .snapshot {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--surface); padding: 16px 18px 14px;
+    display: flex; flex-direction: column; min-height: 118px;
+  }
+  .kpi-label {
+    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: var(--serif); font-size: 23px; line-height: 1.1;
+    color: var(--text); font-weight: 400; margin-bottom: 2px;
+  }
+  .kpi-value .num-large { font-family: var(--mono); font-weight: 500; }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-value.gold { color: var(--gold-strong); }
+  [data-theme="dark"] .kpi-value.gold { color: var(--gold); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-delta {
+    margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+    padding-top: 10px; font-size: 11.5px; color: var(--text-mid);
+  }
+  .delta-pos { color: var(--green); font-weight: 500; }
+  .delta-neg { color: var(--red); font-weight: 500; }
+  .delta-warn { color: var(--amber); font-weight: 500; }
+
+  /* FILTERS */
+  .filters {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px 7px 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px;
+    font-size: 12px; color: var(--text); cursor: pointer; font-family: var(--sans);
+  }
+  .filter-pill .lbl { color: var(--text-light); font-weight: 500; }
+  .filter-pill .val { font-weight: 500; }
+  .filter-pill .caret { font-size: 9px; color: var(--text-light); margin-left: 2px; }
+  .filter-pill:hover { background: var(--surface-alt); }
+  .filter-pill.active-sparte {
+    border-color: var(--accent); background: var(--accent-soft);
+  }
+  .filter-meta {
+    margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-light);
+  }
+
+  /* PANEL */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .panel-head {
+    padding: 16px 20px 14px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .panel-title {
+    font-family: var(--serif); font-size: 16px; font-weight: 400; color: var(--text);
+  }
+  .panel-meta {
+    font-size: 11px; color: var(--text-light); letter-spacing: 0.05em; font-family: var(--mono);
+  }
+  .panel-body { padding: 18px 20px 20px; }
+
+  /* SPARTEN-TABLE */
+  .table-panel { margin-bottom: 24px; }
+  .sparten-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+  }
+  .sparten-table thead th {
+    text-align: left; padding: 12px 14px; background: var(--surface-alt);
+    font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+  }
+  .sparten-table thead th.right { text-align: right; }
+  .sparten-table tbody td {
+    padding: 14px; border-bottom: 1px solid var(--border); color: var(--text);
+  }
+  .sparten-table tbody tr { cursor: pointer; transition: background 0.1s; }
+  .sparten-table tbody tr:last-child td { border-bottom: 0; }
+  .sparten-table tbody tr:hover { background: var(--surface-alt); }
+  .sparten-table tbody tr.active {
+    background: var(--accent-soft);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .sparten-table tbody td.right { text-align: right; font-family: var(--mono); }
+  .sparten-table tbody .sp-cell {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-weight: 600; letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .sp-swatch { width: 10px; height: 10px; border-radius: 2px; }
+  .sp-swatch.s-arc { background: var(--sp-arc); }
+  .sp-swatch.s-ing { background: var(--sp-ing); }
+  .sp-swatch.s-pur { background: var(--sp-pur); }
+  .sp-swatch.s-rem { background: var(--sp-rem); }
+  .sp-swatch.s-gt  { background: var(--sp-gt); }
+
+  .v-good { color: var(--green); font-weight: 500; }
+  .v-warn { color: var(--amber); font-weight: 500; }
+  .v-bad  { color: var(--red); font-weight: 500; }
+
+  /* TWO-COL CHARTS */
+  .charts-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 24px;
+  }
+
+  /* Stacked bar (Revenue/Quartal) */
+  .qbar-wrap { display: flex; flex-direction: column; gap: 14px; }
+  .qbar-canvas {
+    display: grid;
+    grid-template-columns: 36px 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    align-items: end;
+    height: 220px;
+    padding: 4px 0 8px;
+    position: relative;
+  }
+  .qbar-yaxis {
+    position: relative;
+    height: 100%;
+    border-right: 1px solid var(--border);
+  }
+  .qbar-ytick {
+    position: absolute;
+    right: 6px;
+    transform: translateY(50%);
+    font-family: var(--mono); font-size: 9.5px; color: var(--text-light);
+  }
+  .qbar-col {
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    position: relative;
+  }
+  .qbar-stack {
+    width: 56%;
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .qbar-stack.forecast {
+    border: 1px dashed var(--text-light);
+    background: transparent;
+  }
+  .qbar-seg { width: 100%; }
+  .qbar-seg.s-arc { background: var(--sp-arc); }
+  .qbar-seg.s-ing { background: var(--sp-ing); }
+  .qbar-seg.s-pur { background: var(--sp-pur); }
+  .qbar-seg.s-rem { background: var(--sp-rem); }
+  .qbar-seg.s-gt  { background: var(--sp-gt); }
+  .qbar-stack.forecast .qbar-seg { opacity: 0.5; background-color: transparent; border-top: 1px dashed; }
+  .qbar-stack.forecast .qbar-seg.s-arc { border-top-color: var(--sp-arc); background: rgba(26,58,92,0.10); }
+  .qbar-stack.forecast .qbar-seg.s-ing { border-top-color: var(--sp-ing); background: rgba(77,114,153,0.10); }
+  .qbar-stack.forecast .qbar-seg.s-pur { border-top-color: var(--sp-pur); background: rgba(184,134,11,0.10); }
+  .qbar-stack.forecast .qbar-seg.s-rem { border-top-color: var(--sp-rem); background: rgba(107,155,122,0.10); }
+  .qbar-stack.forecast .qbar-seg.s-gt  { border-top-color: var(--sp-gt);  background: rgba(155,123,92,0.10); }
+  .qbar-x {
+    margin-top: 8px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--text-mid);
+    text-align: center;
+  }
+  .qbar-total {
+    font-family: var(--mono); font-size: 10px; color: var(--text-light);
+  }
+  .qbar-x .total { display:block; color: var(--text); font-weight: 600; margin-top: 2px; }
+  .qbar-heute-line {
+    position: absolute;
+    top: 0; bottom: 24px;
+    width: 0; border-left: 1.5px dashed var(--red);
+    opacity: 0.55;
+  }
+  .qbar-heute-lbl {
+    position: absolute;
+    top: 0;
+    font-family: var(--mono); font-size: 9.5px; color: var(--red);
+    background: var(--surface); padding: 0 4px;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    font-size: 11px; color: var(--text-mid);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .legend-key { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-sw { width: 10px; height: 10px; border-radius: 2px; }
+  .legend-line {
+    width: 18px; height: 2px;
+    background: repeating-linear-gradient(to right, var(--text-mid) 0 4px, transparent 4px 7px);
+  }
+
+  /* MARKT INDICATORS (3 col) */
+  .markt-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px; margin-bottom: 24px;
+  }
+
+  /* Donut */
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; font-size: 11.5px; }
+  .donut-leg-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .donut-leg-row .swatch { width: 10px; height: 10px; border-radius: 2px; }
+  .donut-leg-row .pct { font-family: var(--mono); font-weight: 500; color: var(--text); }
+
+  /* Mandat-Typen-Mix */
+  .mtmix-list { display: flex; flex-direction: column; gap: 14px; }
+  .mtmix-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 64px;
+    gap: 10px;
+    align-items: center;
+  }
+  .mtmix-name { font-family: var(--mono); font-weight: 600; color: var(--text); font-size: 11.5px; }
+  .mtmix-stack { height: 18px; display: flex; border-radius: 2px; overflow: hidden; background: var(--surface-sunk); }
+  .mtmix-seg { height: 100%; }
+  .mtmix-seg.target    { background: var(--accent); }
+  .mtmix-seg.taskforce { background: var(--gold); }
+  .mtmix-seg.time      { background: var(--text-light); }
+  .mtmix-vals { font-family: var(--mono); font-size: 11px; color: var(--text-mid); text-align: right; }
+  .mtmix-vals .total { color: var(--text); font-weight: 600; }
+
+  /* AGB list */
+  .agb-list { display: flex; flex-direction: column; gap: 8px; }
+  .agb-row {
+    display: grid;
+    grid-template-columns: 36px 22px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--surface-alt);
+    border-radius: 3px;
+    font-size: 11.5px;
+  }
+  .agb-icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--mono);
+  }
+  .agb-icon.ok    { background: var(--green-soft); color: var(--green); }
+  .agb-icon.warn  { background: var(--amber-soft); color: var(--amber); }
+  .agb-icon.crit  { background: var(--red-soft); color: var(--red); }
+  .agb-status { color: var(--text); }
+  .agb-status.warn { color: var(--amber); }
+  .agb-status.crit { color: var(--red); }
+  .agb-counter { font-family: var(--mono); font-size: 11px; color: var(--text-mid); }
+
+  /* TOP/FLOP */
+  .topflop-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 24px;
+  }
+  .tf-list { display: flex; flex-direction: column; }
+  .tf-item {
+    display: grid;
+    grid-template-columns: 22px 1fr auto auto;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    cursor: pointer;
+    font-size: 12.5px;
+  }
+  .tf-item:last-child { border-bottom: 0; }
+  .tf-item:hover { background: var(--surface-alt); }
+  .tf-rank { font-family: var(--mono); font-size: 11px; color: var(--text-light); font-weight: 600; }
+  .tf-name { color: var(--text); font-weight: 500; }
+  .tf-name .tf-meta { color: var(--text-light); margin-left: 6px; font-weight: 400; }
+  .tf-amt { font-family: var(--mono); font-weight: 600; color: var(--text); font-size: 12.5px; }
+  .tf-detail { font-family: var(--mono); font-size: 11px; color: var(--text-mid); }
+  .tf-detail.bad { color: var(--red); }
+
+  /* CROSS-LINKS */
+  .crosslinks {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    font-size: 12px;
+  }
+  .crosslinks .cx-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .crosslinks .cx-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 11px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 11.5px;
+  }
+  .crosslinks .cx-link:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .crosslinks .cx-link::after { content: "→"; font-family: var(--mono); margin-left: 2px; }
+  .crosslinks .cx-spcode {
+    font-family: var(--mono); font-weight: 600; color: var(--accent); padding: 0 4px;
+  }
+
+  /* DRAWERS */
+  .drawers-section {
+    margin-top: 12px; padding-top: 28px; border-top: 1px dashed var(--border-strong);
+  }
+  .drawers-section-head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+  }
+  .drawers-section-title { font-family: var(--serif); font-size: 16px; color: var(--text); }
+  .drawers-section-meta {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light);
+  }
+  .drawers-row {
+    display: grid; grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: center;
+  }
+  .drawer {
+    width: 540px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: -8px 0 24px -12px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (max-width: 1280px) {
+    .drawers-row { grid-template-columns: 1fr; }
+    .drawer { width: 100%; }
+  }
+  .drawer-head { padding: 18px 22px 16px; border-bottom: 1px solid var(--border); position: relative; }
+  .drawer-eyebrow {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 8px;
+  }
+  .drawer-title {
+    font-family: var(--serif); font-size: 19px; color: var(--text);
+    font-weight: 400; line-height: 1.2;
+  }
+  .drawer-close {
+    position: absolute; top: 16px; right: 18px;
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-light); cursor: pointer; background: none; border: 0;
+    font-size: 18px; border-radius: 3px;
+  }
+  .drawer-close:hover { background: var(--surface-alt); }
+
+  .drawer-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 22px; background: var(--surface);
+  }
+  .drawer-tab {
+    padding: 11px 0; margin-right: 22px;
+    font-size: 12px; color: var(--text-mid); font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; background: none; border-top: 0; border-left: 0; border-right: 0;
+    font-family: var(--sans);
+  }
+  .drawer-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .drawer-body { padding: 20px 22px; overflow-y: auto; max-height: 720px; }
+  .drawer-section { margin-bottom: 22px; }
+  .drawer-section:last-child { margin-bottom: 0; }
+  .drawer-section-title {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .drawer-section-meta { color: var(--text-light); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: none; }
+
+  .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kv-table td { padding: 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .kv-table tr:last-child td { border-bottom: 0; }
+  .kv-table td.k { color: var(--text-light); width: 40%; }
+  .kv-table td.v { color: var(--text); font-family: var(--mono); font-weight: 500; }
+  .kv-table td.v .meta { color: var(--text-light); margin-left: 6px; font-weight: 400; }
+  .kv-table td.v.warn-v { color: var(--amber); }
+  .kv-table td.v.crit-v { color: var(--red); }
+  .kv-table td.v.good-v { color: var(--green); }
+
+  .insight-card {
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 12px 14px; margin-bottom: 8px;
+    border-left: 3px solid; background: var(--surface);
+  }
+  .insight-card:last-child { margin-bottom: 0; }
+  .insight-card.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .insight-card.crit { border-left-color: var(--red); background: var(--red-soft); }
+  .insight-tag {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.16em; font-weight: 600; margin-bottom: 4px;
+  }
+  .insight-tag.warn { color: var(--amber); }
+  .insight-tag.crit { color: var(--red); }
+  .insight-title { font-size: 12.5px; color: var(--text); font-weight: 500; }
+  .insight-meta { font-size: 11px; color: var(--text-mid); margin-top: 2px; font-family: var(--mono); }
+
+  .callout {
+    padding: 14px 16px; border-radius: 3px;
+    font-size: 12px; line-height: 1.55;
+    border-left: 3px solid;
+  }
+  .callout-gold { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+  .callout-gold strong { color: var(--gold-strong); }
+  [data-theme="dark"] .callout-gold strong { color: var(--gold); }
+
+  .drawer-foot {
+    padding: 14px 22px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Conversion line chart container */
+  .convchart svg { display: block; width: 100%; height: 240px; }
+
+  @media (max-width: 1280px) {
+    .page { padding: 24px 24px 40px; }
+    .snapshot { grid-template-columns: repeat(3, 1fr); }
+    .charts-row, .markt-row, .topflop-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">CRM · Performance</div>
+      <h1 class="h1">Business-View · Sparten</h1>
+      <div class="subtitle">Strategische Sicht<span class="sep">·</span>5 Sparten<span class="sep">·</span>Periode YTD 2026 vs Vorjahr</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-gold">Strategic-Report exportieren</button>
+      <button class="link-btn">Drill zu Funnel / Revenue / Coverage</button>
+      <!-- Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window. -->
+    </div>
+  </header>
+
+  <!-- SNAPSHOT -->
+  <section class="snapshot">
+    <div class="kpi">
+      <div class="kpi-label">Revenue YTD · alle Sparten</div>
+      <div class="kpi-value accent"><span class="num-large">CHF 1.84</span> Mio</div>
+      <div class="kpi-delta"><span><span class="delta-pos">↗ +12%</span> vs Vorjahr</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Top-Sparte Revenue</div>
+      <div class="kpi-value gold">ARC · <span class="num-large" style="font-size:20px;">CHF 720k</span></div>
+      <div class="kpi-delta"><span><span class="num">39%</span> Anteil</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Bottom-Sparte Revenue</div>
+      <div class="kpi-value red">GT · <span class="num-large" style="font-size:20px;">CHF 140k</span></div>
+      <div class="kpi-delta"><span><span class="num">7%</span> · <span class="delta-neg">↘ −18%</span> vs Vj</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Markt-Coverage Ø</div>
+      <div class="kpi-value amber"><span class="num-large">72</span>%</div>
+      <div class="kpi-delta"><span>Median über <span class="num">5</span> Sparten</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Aktive Mandate Total</div>
+      <div class="kpi-value"><span class="num-large">38</span></div>
+      <div class="kpi-delta"><span><span class="num">12</span> Target · <span class="num">18</span> Taskforce · <span class="num">8</span> Time</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Pipeline-Wert offen</div>
+      <div class="kpi-value green"><span class="num-large">CHF 2.41</span> Mio</div>
+      <div class="kpi-delta"><span><span class="num">1.31x</span> Soll-Coverage Q4</span></div>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="filters">
+    <button class="filter-pill"><span class="lbl">Periode</span><span class="val">YTD 2026</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Vergleich</span><span class="val">Vorjahr</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Mandat-Typ</span><span class="val">Alle</span><span class="caret">▾</span></button>
+    <button class="filter-pill"><span class="lbl">Cluster</span><span class="val">Alle</span><span class="caret">▾</span></button>
+    <button class="filter-pill active-sparte" id="spartePill" style="display:none;"><span class="lbl">Sparte</span><span class="val" id="sparteVal">ARC</span><span class="caret">×</span></button>
+    <span class="filter-meta">Stand: 25.04.2026</span>
+  </section>
+
+  <!-- SPARTEN-TABLE -->
+  <section class="panel table-panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Sparten-Vergleich · YTD 2026</h2>
+      <span class="panel-meta">5 SPARTEN · KLICK FÜR FOKUS</span>
+    </div>
+    <table class="sparten-table" id="sparteTable">
+      <thead>
+        <tr>
+          <th>Sparte</th>
+          <th class="right">Revenue YTD</th>
+          <th class="right">vs Vj</th>
+          <th class="right">Conversion</th>
+          <th class="right">Coverage</th>
+          <th class="right">Aktive Mandate</th>
+          <th class="right">Pipeline-Wert</th>
+          <th class="right">Forecast YE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-sparte="ARC">
+          <td><span class="sp-cell"><span class="sp-swatch s-arc"></span>ARC</span></td>
+          <td class="right">720k</td>
+          <td class="right v-good">+18%</td>
+          <td class="right">5.1%</td>
+          <td class="right">78%</td>
+          <td class="right">12</td>
+          <td class="right">980k</td>
+          <td class="right">1.20 Mio</td>
+        </tr>
+        <tr data-sparte="ING">
+          <td><span class="sp-cell"><span class="sp-swatch s-ing"></span>ING</span></td>
+          <td class="right">510k</td>
+          <td class="right v-good">+8%</td>
+          <td class="right">2.9%</td>
+          <td class="right">71%</td>
+          <td class="right">9</td>
+          <td class="right">640k</td>
+          <td class="right">820k</td>
+        </tr>
+        <tr data-sparte="PUR">
+          <td><span class="sp-cell"><span class="sp-swatch s-pur"></span>PUR</span></td>
+          <td class="right">290k</td>
+          <td class="right v-warn">−3%</td>
+          <td class="right v-bad">1.8%</td>
+          <td class="right v-bad">52%</td>
+          <td class="right">7</td>
+          <td class="right">360k</td>
+          <td class="right">480k</td>
+        </tr>
+        <tr data-sparte="REM">
+          <td><span class="sp-cell"><span class="sp-swatch s-rem"></span>REM</span></td>
+          <td class="right">180k</td>
+          <td class="right v-good">+22%</td>
+          <td class="right">4.2%</td>
+          <td class="right">79%</td>
+          <td class="right">6</td>
+          <td class="right">280k</td>
+          <td class="right">360k</td>
+        </tr>
+        <tr data-sparte="GT">
+          <td><span class="sp-cell"><span class="sp-swatch s-gt"></span>GT</span></td>
+          <td class="right">140k</td>
+          <td class="right v-bad">−18%</td>
+          <td class="right">3.8%</td>
+          <td class="right v-warn">68%</td>
+          <td class="right">4</td>
+          <td class="right">150k</td>
+          <td class="right">200k</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- TWO-COL CHARTS -->
+  <section class="charts-row">
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Revenue pro Sparte · 4 Quartale</h3>
+        <span class="panel-meta">CHF · Q1 IST · Q2 LAUFEND · Q3/Q4 FORECAST</span>
+      </div>
+      <div class="panel-body">
+        <div class="qbar-canvas">
+          <div class="qbar-yaxis">
+            <span class="qbar-ytick" style="top:0%;">800k</span>
+            <span class="qbar-ytick" style="top:25%;">600k</span>
+            <span class="qbar-ytick" style="top:50%;">400k</span>
+            <span class="qbar-ytick" style="top:75%;">200k</span>
+            <span class="qbar-ytick" style="top:100%;">0</span>
+          </div>
+          <div class="qbar-col">
+            <div class="qbar-stack" style="height:58%;">
+              <div class="qbar-seg s-arc" style="height:38%;" title="ARC 180k"></div>
+              <div class="qbar-seg s-ing" style="height:28%;" title="ING 130k"></div>
+              <div class="qbar-seg s-pur" style="height:16%;" title="PUR 75k"></div>
+              <div class="qbar-seg s-rem" style="height:11%;" title="REM 50k"></div>
+              <div class="qbar-seg s-gt"  style="height:7%;"  title="GT 35k"></div>
+            </div>
+          </div>
+          <div class="qbar-col" style="position:relative;">
+            <div class="qbar-stack" style="height:78%;">
+              <div class="qbar-seg s-arc" style="height:39%;" title="ARC 240k"></div>
+              <div class="qbar-seg s-ing" style="height:27%;" title="ING 170k"></div>
+              <div class="qbar-seg s-pur" style="height:15%;" title="PUR 95k"></div>
+              <div class="qbar-seg s-rem" style="height:11%;" title="REM 70k"></div>
+              <div class="qbar-seg s-gt"  style="height:8%;"  title="GT 45k"></div>
+            </div>
+          </div>
+          <div class="qbar-col" style="position:relative;">
+            <div class="qbar-heute-line" style="left:-8px;"></div>
+            <div class="qbar-heute-lbl"  style="left:-30px;">heute</div>
+            <div class="qbar-stack forecast" style="height:67%;">
+              <div class="qbar-seg s-arc" style="height:39%;"></div>
+              <div class="qbar-seg s-ing" style="height:27%;"></div>
+              <div class="qbar-seg s-pur" style="height:15%;"></div>
+              <div class="qbar-seg s-rem" style="height:11%;"></div>
+              <div class="qbar-seg s-gt"  style="height:8%;"></div>
+            </div>
+          </div>
+          <div class="qbar-col">
+            <div class="qbar-stack forecast" style="height:96%;">
+              <div class="qbar-seg s-arc" style="height:39%;"></div>
+              <div class="qbar-seg s-ing" style="height:27%;"></div>
+              <div class="qbar-seg s-pur" style="height:15%;"></div>
+              <div class="qbar-seg s-rem" style="height:11%;"></div>
+              <div class="qbar-seg s-gt"  style="height:8%;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:36px 1fr 1fr 1fr 1fr;gap:8px;margin-top:4px;">
+          <div></div>
+          <div class="qbar-x">Q1<span class="total">470k</span></div>
+          <div class="qbar-x">Q2 *<span class="total">620k</span></div>
+          <div class="qbar-x">Q3 ⌐<span class="total" style="color:var(--gold-strong);">540k</span></div>
+          <div class="qbar-x">Q4 ⌐<span class="total" style="color:var(--gold-strong);">770k</span></div>
+        </div>
+        <div class="legend" style="margin-top:14px;">
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-arc);"></span>ARC</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-ing);"></span>ING</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-pur);"></span>PUR</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-rem);"></span>REM</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-gt);"></span>GT</span>
+          <span class="legend-key" style="margin-left:auto;"><span class="legend-sw" style="border:1px dashed var(--text-light);background:transparent;"></span>Forecast</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Conversion pro Sparte · 4 Quartale</h3>
+        <span class="panel-meta">% PLACEMENTS / EXPOSE · MEDIAN 3.3%</span>
+      </div>
+      <div class="panel-body convchart">
+        <svg id="convChart" viewBox="0 0 480 240" preserveAspectRatio="none"></svg>
+        <div class="legend" style="margin-top:14px;">
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-arc);"></span>ARC</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-ing);"></span>ING</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-pur);"></span>PUR</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-rem);"></span>REM</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--sp-gt);"></span>GT</span>
+          <span class="legend-key" style="margin-left:auto;"><span class="legend-line"></span>Median 3.3%</span>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- MARKT INDIKATOREN -->
+  <section class="markt-row">
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Cluster-Verteilung · ARC</h3>
+        <span class="panel-meta">SPARTE → CLUSTER</span>
+      </div>
+      <div class="panel-body">
+        <div class="donut-wrap">
+          <svg id="donutChart" viewBox="0 0 140 140" width="140" height="140"></svg>
+          <div class="donut-legend">
+            <div class="donut-leg-row"><span class="swatch" style="background:var(--sp-arc);"></span><span>Hochbau</span><span class="pct">60%</span></div>
+            <div class="donut-leg-row"><span class="swatch" style="background:var(--sp-ing);"></span><span>Tiefbau</span><span class="pct">28%</span></div>
+            <div class="donut-leg-row"><span class="swatch" style="background:var(--sp-rem);"></span><span>Innenausbau</span><span class="pct">12%</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;font-size:11px;color:var(--text-light);font-family:var(--mono);">Klick auf Cluster setzt Filter · Daten bezogen auf aktive Mandate</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Mandat-Typen-Mix pro Sparte</h3>
+        <span class="panel-meta">TARGET · TASKFORCE · TIME</span>
+      </div>
+      <div class="panel-body">
+        <div class="mtmix-list">
+          <div class="mtmix-row">
+            <span class="mtmix-name">ARC</span>
+            <div class="mtmix-stack">
+              <div class="mtmix-seg target"    style="width:42%"></div>
+              <div class="mtmix-seg taskforce" style="width:33%"></div>
+              <div class="mtmix-seg time"      style="width:25%"></div>
+            </div>
+            <span class="mtmix-vals">5/4/3 <span class="total">12</span></span>
+          </div>
+          <div class="mtmix-row">
+            <span class="mtmix-name">ING</span>
+            <div class="mtmix-stack">
+              <div class="mtmix-seg target"    style="width:33%"></div>
+              <div class="mtmix-seg taskforce" style="width:45%"></div>
+              <div class="mtmix-seg time"      style="width:22%"></div>
+            </div>
+            <span class="mtmix-vals">3/4/2 <span class="total">9</span></span>
+          </div>
+          <div class="mtmix-row">
+            <span class="mtmix-name">PUR</span>
+            <div class="mtmix-stack">
+              <div class="mtmix-seg target"    style="width:29%"></div>
+              <div class="mtmix-seg taskforce" style="width:43%"></div>
+              <div class="mtmix-seg time"      style="width:28%"></div>
+            </div>
+            <span class="mtmix-vals">2/3/2 <span class="total">7</span></span>
+          </div>
+          <div class="mtmix-row">
+            <span class="mtmix-name">REM</span>
+            <div class="mtmix-stack">
+              <div class="mtmix-seg target"    style="width:33%"></div>
+              <div class="mtmix-seg taskforce" style="width:50%"></div>
+              <div class="mtmix-seg time"      style="width:17%"></div>
+            </div>
+            <span class="mtmix-vals">2/3/1 <span class="total">6</span></span>
+          </div>
+          <div class="mtmix-row">
+            <span class="mtmix-name">GT</span>
+            <div class="mtmix-stack">
+              <div class="mtmix-seg taskforce" style="width:100%"></div>
+            </div>
+            <span class="mtmix-vals">0/4/0 <span class="total">4</span></span>
+          </div>
+        </div>
+        <div class="legend" style="margin-top:18px;">
+          <span class="legend-key"><span class="legend-sw" style="background:var(--accent);"></span>Target</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--gold);"></span>Taskforce</span>
+          <span class="legend-key"><span class="legend-sw" style="background:var(--text-light);"></span>Time</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">AGB-Status pro Sparte</h3>
+        <span class="panel-meta">RAHMENVERTRÄGE</span>
+      </div>
+      <div class="panel-body">
+        <div class="agb-list">
+          <div class="agb-row">
+            <span class="sp-cell"><span class="sp-swatch s-arc"></span><span style="font-family:var(--mono);font-weight:600;">ARC</span></span>
+            <span class="agb-icon ok">✓</span>
+            <span class="agb-status">aktiv</span>
+            <span class="agb-counter">2 Mandanten ohne</span>
+          </div>
+          <div class="agb-row">
+            <span class="sp-cell"><span class="sp-swatch s-ing"></span><span style="font-family:var(--mono);font-weight:600;">ING</span></span>
+            <span class="agb-icon ok">✓</span>
+            <span class="agb-status">aktiv</span>
+            <span class="agb-counter">1 Mandant ohne</span>
+          </div>
+          <div class="agb-row">
+            <span class="sp-cell"><span class="sp-swatch s-pur"></span><span style="font-family:var(--mono);font-weight:600;">PUR</span></span>
+            <span class="agb-icon warn">⚠</span>
+            <span class="agb-status warn">läuft ab Q3</span>
+            <span class="agb-counter">1 Mandant ohne</span>
+          </div>
+          <div class="agb-row">
+            <span class="sp-cell"><span class="sp-swatch s-rem"></span><span style="font-family:var(--mono);font-weight:600;">REM</span></span>
+            <span class="agb-icon ok">✓</span>
+            <span class="agb-status">aktiv</span>
+            <span class="agb-counter">0 ohne</span>
+          </div>
+          <div class="agb-row">
+            <span class="sp-cell"><span class="sp-swatch s-gt"></span><span style="font-family:var(--mono);font-weight:600;">GT</span></span>
+            <span class="agb-icon crit">✗</span>
+            <span class="agb-status crit">keine AGB</span>
+            <span class="agb-counter">4 Mandanten ohne</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- TOP/FLOP -->
+  <section class="topflop-row">
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Top-3 · Anchor-Mandanten YTD</h3>
+        <span class="panel-meta">REVENUE-DRIVER</span>
+      </div>
+      <div class="tf-list">
+        <div class="tf-item" data-mandant="SwissTech">
+          <span class="tf-rank">01</span>
+          <span class="tf-name">SwissTech AG <span class="tf-meta">· ARC</span></span>
+          <span class="tf-amt">CHF 320k</span>
+          <span class="tf-detail">5 Mandate</span>
+        </div>
+        <div class="tf-item" data-mandant="Helvetia">
+          <span class="tf-rank">02</span>
+          <span class="tf-name">Helvetia Bau <span class="tf-meta">· ARC</span></span>
+          <span class="tf-amt">CHF 240k</span>
+          <span class="tf-detail">3 Mandate</span>
+        </div>
+        <div class="tf-item" data-mandant="AlpenIngenieur">
+          <span class="tf-rank">03</span>
+          <span class="tf-name">AlpenIngenieur <span class="tf-meta">· ING</span></span>
+          <span class="tf-amt">CHF 180k</span>
+          <span class="tf-detail">4 Mandate</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="panel-title">Flop-3 · Mandanten unter Erwartung</h3>
+        <span class="panel-meta">RISIKO / STALE</span>
+      </div>
+      <div class="tf-list">
+        <div class="tf-item" data-mandant="PurusGroup">
+          <span class="tf-rank">01</span>
+          <span class="tf-name">PurusGroup <span class="tf-meta">· PUR</span></span>
+          <span class="tf-amt">CHF 30k</span>
+          <span class="tf-detail bad">1 Mandat · Vj 90k · ↘ −67%</span>
+        </div>
+        <div class="tf-item" data-mandant="GartenTec">
+          <span class="tf-rank">02</span>
+          <span class="tf-name">GartenTec <span class="tf-meta">· GT</span></span>
+          <span class="tf-amt">CHF 20k</span>
+          <span class="tf-detail bad">0 aktive Mandate · sleeping</span>
+        </div>
+        <div class="tf-item" data-mandant="RomandiaServ">
+          <span class="tf-rank">03</span>
+          <span class="tf-name">RomandiaServ <span class="tf-meta">· GT</span></span>
+          <span class="tf-amt">CHF 15k</span>
+          <span class="tf-detail bad">1 Mandat · stale 60d+</span>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- CROSS-LINKS -->
+  <section class="crosslinks">
+    <span class="cx-label">Drill-Down ·</span>
+    <span style="color:var(--text-mid);font-size:11.5px;">Ausgewählte Sparte: <span class="cx-spcode" id="activeSparteCode">ARC</span></span>
+    <a class="cx-link" id="cx-funnel" href="performance-funnel.html?sparte=ARC">Funnel</a>
+    <a class="cx-link" id="cx-coverage" href="performance-coverage.html?sparte=ARC">Coverage</a>
+    <a class="cx-link" id="cx-revenue" href="performance-revenue.html?sparte=ARC">Revenue</a>
+    <span style="margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--text-light);">Sparten-Klick oben setzt Filter · href wird mit ?sparte=… ergänzt</span>
+  </section>
+
+  <!-- DRAWERS -->
+  <section class="drawers-section">
+    <div class="drawers-section-head">
+      <span class="drawers-section-meta">Drawer-Previews ·</span>
+      <h2 class="drawers-section-title">Statisch nebeneinander gerendert · 540 px slide-in von rechts</h2>
+    </div>
+    <div class="drawers-row">
+
+      <!-- DRAWER A · Mandant -->
+      <div class="drawer" id="drawer-business-mandant">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Mandant · PurusGroup · Sparte PUR · Cluster Industrie</div>
+          <div class="drawer-title">PurusGroup AG</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="mandant">
+          <button class="drawer-tab active" data-tab="uebersicht">Übersicht</button>
+          <button class="drawer-tab" data-tab="mandate">Mandate</button>
+          <button class="drawer-tab" data-tab="aktivitaet">Aktivität</button>
+          <button class="drawer-tab" data-tab="risiko">Risiko</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="uebersicht">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Übersicht</div>
+              <table class="kv-table">
+                <tr><td class="k">Branche / Cluster</td><td class="v">Industrie <span class="meta">(Verpackung)</span></td></tr>
+                <tr><td class="k">Sparte</td><td class="v">PUR</td></tr>
+                <tr><td class="k">Aktive AGB</td><td class="v good-v">ja <span class="meta">gültig bis 31.12.2026</span></td></tr>
+                <tr><td class="k">Revenue YTD</td><td class="v crit-v">CHF 30k <span class="meta">Vj CHF 90k · ↘ −67%</span></td></tr>
+                <tr><td class="k">Aktive Mandate</td><td class="v">1 <span class="meta">MAN-2026-088 · CV Sent</span></td></tr>
+                <tr><td class="k">Letzter Touch</td><td class="v warn-v">vor 18 Tagen <span class="meta">LR · Reminder fällig</span></td></tr>
+              </table>
+            </div>
+
+            <div class="drawer-section">
+              <div class="drawer-section-title">Risiko-Indikatoren <span class="drawer-section-meta">3 offen</span></div>
+              <div class="insight-card warn">
+                <div class="insight-tag warn">REVENUE</div>
+                <div class="insight-title">Revenue-Rückgang −67% YoY</div>
+                <div class="insight-meta">Vj CHF 90k → YTD CHF 30k</div>
+              </div>
+              <div class="insight-card warn">
+                <div class="insight-tag warn">TOUCH-FREQUENZ</div>
+                <div class="insight-title">Touch-Frequenz unter Soll</div>
+                <div class="insight-meta">18 Tage ohne Touch · Soll: ≤14 Tage</div>
+              </div>
+              <div class="insight-card warn">
+                <div class="insight-tag warn">PIPELINE</div>
+                <div class="insight-title">Pipeline-Volumen reduziert</div>
+                <div class="insight-meta">1 aktives Mandat · Vj 4 aktive</div>
+              </div>
+            </div>
+
+            <div class="drawer-section">
+              <div class="drawer-section-title">Empfehlung</div>
+              <div class="callout callout-gold">
+                <strong>Strategie-Review nötig:</strong> Re-Engagement-Plan oder Account-Closure-Entscheidung. Termin mit Sparten-Head LR vorschlagen.
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="mandate">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Aktive Mandate <span class="drawer-section-meta">1 von 5 historisch</span></div>
+              <table class="kv-table">
+                <tr><td class="k" style="font-family:var(--mono);color:var(--accent);">MAN-2026-088</td><td class="v">CV Sent <span class="meta">CHF 30k · Owner LR</span></td></tr>
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Historie · 2024 / 2025</div>
+              <table class="kv-table">
+                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-204</td><td class="v">Placement <span class="meta">CHF 38k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-118</td><td class="v">Placement <span class="meta">CHF 28k</span></td></tr>
+                <tr><td class="k" style="font-family:var(--mono);color:var(--text-light);">MAN-2025-066</td><td class="v">Placement <span class="meta">CHF 24k</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="aktivitaet">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Touches letzte 90 Tage</div>
+              <table class="kv-table">
+                <tr><td class="k">Kontaktberührung</td><td class="v">3</td></tr>
+                <tr><td class="k">Erreicht</td><td class="v">1</td></tr>
+                <tr><td class="k">Emailverkehr</td><td class="v">7</td></tr>
+                <tr><td class="k">Briefing</td><td class="v">1</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="risiko">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Risiko-Score</div>
+              <table class="kv-table">
+                <tr><td class="k">Gesamt-Risiko</td><td class="v crit-v">HOCH <span class="meta">3 von 4 Indikatoren rot</span></td></tr>
+                <tr><td class="k">Revenue-Trend</td><td class="v crit-v">−67% YoY</td></tr>
+                <tr><td class="k">Pipeline-Volumen</td><td class="v warn-v">−75% YoY</td></tr>
+                <tr><td class="k">Touch-Frequenz</td><td class="v warn-v">unter Soll</td></tr>
+                <tr><td class="k">AGB-Status</td><td class="v good-v">ok bis 31.12.2026</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn">Reminder erstellen</button>
+          <button class="btn btn-primary">Zur CRM-Vollansicht</button>
+        </div>
+      </div>
+
+      <!-- DRAWER B · Sparte-Overview -->
+      <div class="drawer" id="drawer-sparte-overview">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Sparte · PUR · 7 aktive Mandate · 4 Mandanten</div>
+          <div class="drawer-title">PUR · Detail-Sicht</div>
+          <button class="drawer-close" aria-label="Schliessen">×</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="sparte">
+          <button class="drawer-tab active" data-tab="kpis">KPIs</button>
+          <button class="drawer-tab" data-tab="mandanten">Mandanten</button>
+          <button class="drawer-tab" data-tab="mitarbeiter">Mitarbeiter</button>
+          <button class="drawer-tab" data-tab="strategie">Strategie</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="kpis">
+            <div class="drawer-section">
+              <div class="drawer-section-title">KPIs · YTD 2026</div>
+              <table class="kv-table">
+                <tr><td class="k">Revenue YTD</td><td class="v warn-v">CHF 290k <span class="meta">−3% vs Vj</span></td></tr>
+                <tr><td class="k">Conversion</td><td class="v crit-v">1.8% <span class="meta">Median 3.3%</span></td></tr>
+                <tr><td class="k">Coverage</td><td class="v crit-v">52% <span class="meta">niedrigste der 5</span></td></tr>
+                <tr><td class="k">Pipeline offen</td><td class="v">CHF 360k <span class="meta">1.24x Q4-Soll</span></td></tr>
+                <tr><td class="k">Forecast YE</td><td class="v">CHF 480k</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="mandanten">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Mandanten <span class="drawer-section-meta">4</span></div>
+              <table class="kv-table">
+                <tr><td class="k">PurusGroup AG</td><td class="v crit-v">CHF 30k <span class="meta">1 aktiv · Risiko</span></td></tr>
+                <tr><td class="k">SwissPolymer</td><td class="v">CHF 95k <span class="meta">3 aktiv · stabil</span></td></tr>
+                <tr><td class="k">HelvetIndustries</td><td class="v good-v">CHF 110k <span class="meta">2 aktiv · Wachstum</span></td></tr>
+                <tr><td class="k">PurusBau</td><td class="v">CHF 55k <span class="meta">1 aktiv · neu Q1</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="mitarbeiter">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Coverage durch MA</div>
+              <table class="kv-table">
+                <tr><td class="k">LR <span class="meta">primär</span></td><td class="v">4 Mandate</td></tr>
+                <tr><td class="k">MR <span class="meta">sekundär</span></td><td class="v">3 Mandate</td></tr>
+                <tr><td class="k">Coverage-Score LR×PUR</td><td class="v crit-v">42% <span class="meta">→ Drill: Coverage-Page</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="strategie">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Strategie-Empfehlung</div>
+              <div class="callout callout-gold">
+                <strong>Sparte Underperformance:</strong> Coverage und Conversion beide unter Median. Re-Allocation eines weiteren MA zur PUR-Sparte empfohlen. Optional: Cluster-Fokus auf Verpackungs-Industrie reduzieren, statt Breite verfolgen.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Optionen</div>
+              <div class="insight-card">
+                <div class="insight-tag" style="color:var(--accent);">OPTION A</div>
+                <div class="insight-title">+1 MA zur PUR-Sparte (z.B. ST 50% Allokation)</div>
+                <div class="insight-meta">Erwartete Coverage-Steigerung +18 pp</div>
+              </div>
+              <div class="insight-card">
+                <div class="insight-tag" style="color:var(--accent);">OPTION B</div>
+                <div class="insight-title">Cluster-Fokus auf Verpackungs-Industrie</div>
+                <div class="insight-meta">Conversion-Steigerung erwartet · Volumen sinkt</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn">Drill: Coverage PUR</button>
+          <button class="btn">Drill: Funnel PUR</button>
+          <button class="btn btn-primary">Strategic-Report PDF</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+// Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
+
+/* DRAWER TABS */
+document.querySelectorAll('.drawer-tabs').forEach(tabBar => {
+  const drawerEl = tabBar.parentElement;
+  tabBar.addEventListener('click', e => {
+    const btn = e.target.closest('.drawer-tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    tabBar.querySelectorAll('.drawer-tab').forEach(b => b.classList.toggle('active', b === btn));
+    drawerEl.querySelectorAll('.tab-pane').forEach(p => {
+      p.classList.toggle('active', p.dataset.pane === tab);
+    });
+  });
+});
+
+/* SPARTE-ROW HIGHLIGHT + CROSS-LINK PRE-APPLY */
+(function() {
+  const rows = document.querySelectorAll('#sparteTable tbody tr');
+  const pill = document.getElementById('spartePill');
+  const pillVal = document.getElementById('sparteVal');
+  const codeEl = document.getElementById('activeSparteCode');
+  const cxFunnel = document.getElementById('cx-funnel');
+  const cxCoverage = document.getElementById('cx-coverage');
+  const cxRevenue = document.getElementById('cx-revenue');
+
+  function setActive(sparte) {
+    rows.forEach(r => r.classList.toggle('active', r.dataset.sparte === sparte));
+    pill.style.display = 'inline-flex';
+    pillVal.textContent = sparte;
+    codeEl.textContent = sparte;
+    cxFunnel.href   = 'performance-funnel.html?sparte='   + sparte;
+    cxCoverage.href = 'performance-coverage.html?sparte=' + sparte;
+    cxRevenue.href  = 'performance-revenue.html?sparte='  + sparte;
+  }
+  rows.forEach(r => {
+    r.addEventListener('click', () => setActive(r.dataset.sparte));
+  });
+  pill.addEventListener('click', () => {
+    rows.forEach(r => r.classList.remove('active'));
+    pill.style.display = 'none';
+    codeEl.textContent = '—';
+    cxFunnel.href   = 'performance-funnel.html';
+    cxCoverage.href = 'performance-coverage.html';
+    cxRevenue.href  = 'performance-revenue.html';
+  });
+  // Default ARC
+  setActive('ARC');
+})();
+
+/* CONVERSION LINE CHART */
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function drawConvChart() {
+  const svg = document.getElementById('convChart');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 480, H = 240;
+  const ML = 36, MR = 16, MT = 12, MB = 28;
+  const cw = W - ML - MR;
+  const ch = H - MT - MB;
+
+  const quarters = ['Q1','Q2','Q3','Q4'];
+  // pct values
+  const data = {
+    ARC: [4.8, 5.1, 5.3, 5.2],
+    ING: [2.7, 2.9, 3.0, 3.1],
+    PUR: [2.4, 1.8, 1.9, 2.0],
+    REM: [3.6, 4.2, 4.4, 4.5],
+    GT:  [3.5, 3.8, 3.6, 4.1],
+  };
+  const colors = {
+    ARC: cssVar('--sp-arc'),
+    ING: cssVar('--sp-ing'),
+    PUR: cssVar('--sp-pur'),
+    REM: cssVar('--sp-rem'),
+    GT:  cssVar('--sp-gt'),
+  };
+  const ymax = 6;
+  const x = i => ML + (cw / (quarters.length - 1)) * i;
+  const y = v => MT + ch - (v / ymax) * ch;
+
+  const colorBorder = cssVar('--border');
+  const colorTextLight = cssVar('--text-light');
+  const colorTextMid = cssVar('--text-mid');
+
+  // Y grid
+  [0,1,2,3,4,5,6].forEach(g => {
+    const yy = y(g);
+    const ln = document.createElementNS(NS, 'line');
+    ln.setAttribute('x1', ML); ln.setAttribute('x2', W - MR);
+    ln.setAttribute('y1', yy); ln.setAttribute('y2', yy);
+    ln.setAttribute('stroke', colorBorder);
+    svg.appendChild(ln);
+    const lbl = document.createElementNS(NS, 'text');
+    lbl.setAttribute('x', ML - 6); lbl.setAttribute('y', yy + 3);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-family','JetBrains Mono, monospace');
+    lbl.setAttribute('font-size','9.5');
+    lbl.setAttribute('fill', colorTextLight);
+    lbl.textContent = g + '%';
+    svg.appendChild(lbl);
+  });
+
+  // Median line at 3.3%
+  const medY = y(3.3);
+  const med = document.createElementNS(NS, 'line');
+  med.setAttribute('x1', ML); med.setAttribute('x2', W - MR);
+  med.setAttribute('y1', medY); med.setAttribute('y2', medY);
+  med.setAttribute('stroke', colorTextMid);
+  med.setAttribute('stroke-dasharray', '4,3');
+  med.setAttribute('opacity', '0.7');
+  svg.appendChild(med);
+  const medLbl = document.createElementNS(NS, 'text');
+  medLbl.setAttribute('x', W - MR - 4); medLbl.setAttribute('y', medY - 4);
+  medLbl.setAttribute('text-anchor', 'end');
+  medLbl.setAttribute('font-family','JetBrains Mono, monospace');
+  medLbl.setAttribute('font-size','9.5');
+  medLbl.setAttribute('fill', colorTextMid);
+  medLbl.textContent = 'Median 3.3%';
+  svg.appendChild(medLbl);
+
+  // X labels
+  quarters.forEach((q, i) => {
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', x(i)); t.setAttribute('y', H - 10);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-family','JetBrains Mono, monospace');
+    t.setAttribute('font-size','10');
+    t.setAttribute('fill', colorTextLight);
+    t.textContent = q;
+    svg.appendChild(t);
+  });
+
+  // Lines
+  Object.keys(data).forEach(k => {
+    const pts = data[k].map((v,i) => `${i===0?'M':'L'} ${x(i)} ${y(v)}`).join(' ');
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', pts);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', colors[k]);
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(path);
+    // dots
+    data[k].forEach((v,i) => {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', x(i)); c.setAttribute('cy', y(v));
+      c.setAttribute('r', 2.5);
+      c.setAttribute('fill', colors[k]);
+      svg.appendChild(c);
+    });
+    // end label
+    const last = data[k].length - 1;
+    const lbl = document.createElementNS(NS, 'text');
+    lbl.setAttribute('x', x(last) + 6); lbl.setAttribute('y', y(data[k][last]) + 3);
+    lbl.setAttribute('font-family','JetBrains Mono, monospace');
+    lbl.setAttribute('font-size','9.5');
+    lbl.setAttribute('fill', colors[k]);
+    lbl.setAttribute('font-weight', '600');
+    lbl.textContent = k;
+    svg.appendChild(lbl);
+  });
+}
+
+/* DONUT */
+function drawDonut() {
+  const svg = document.getElementById('donutChart');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const NS = 'http://www.w3.org/2000/svg';
+  const cx = 70, cy = 70, r = 50, ir = 32;
+
+  const segs = [
+    { v: 60, c: cssVar('--sp-arc') },
+    { v: 28, c: cssVar('--sp-ing') },
+    { v: 12, c: cssVar('--sp-rem') },
+  ];
+
+  let acc = -90;
+  segs.forEach(s => {
+    const a0 = acc * Math.PI / 180;
+    const a1 = (acc + s.v * 3.6) * Math.PI / 180;
+    const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+    const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    const xi0 = cx + ir * Math.cos(a0), yi0 = cy + ir * Math.sin(a0);
+    const xi1 = cx + ir * Math.cos(a1), yi1 = cy + ir * Math.sin(a1);
+    const large = s.v > 50 ? 1 : 0;
+    const d = `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${ir} ${ir} 0 ${large} 0 ${xi0} ${yi0} Z`;
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    p.setAttribute('fill', s.c);
+    p.setAttribute('stroke', cssVar('--surface'));
+    p.setAttribute('stroke-width', '1.5');
+    svg.appendChild(p);
+    acc += s.v * 3.6;
+  });
+
+  // Center label
+  const t1 = document.createElementNS(NS, 'text');
+  t1.setAttribute('x', cx); t1.setAttribute('y', cy - 3);
+  t1.setAttribute('text-anchor', 'middle');
+  t1.setAttribute('font-family', 'Libre Baskerville, serif');
+  t1.setAttribute('font-size', '15');
+  t1.setAttribute('fill', cssVar('--text'));
+  t1.textContent = 'ARC';
+  svg.appendChild(t1);
+  const t2 = document.createElementNS(NS, 'text');
+  t2.setAttribute('x', cx); t2.setAttribute('y', cy + 12);
+  t2.setAttribute('text-anchor', 'middle');
+  t2.setAttribute('font-family', 'JetBrains Mono, monospace');
+  t2.setAttribute('font-size', '9');
+  t2.setAttribute('fill', cssVar('--text-light'));
+  t2.setAttribute('letter-spacing', '0.1em');
+  t2.textContent = '12 MANDATE';
+  svg.appendChild(t2);
+}
+
+drawConvChart();
+drawDonut();
+
+/* TF clicks → drawer-business-mandant */
+document.querySelectorAll('.tf-item').forEach(el => {
+  el.addEventListener('click', () => {
+    document.getElementById('drawer-business-mandant').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+});
+</script>
+</body>
+</html>
