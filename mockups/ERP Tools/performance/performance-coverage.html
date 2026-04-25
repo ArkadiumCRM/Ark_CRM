@@ -636,6 +636,11 @@
     font-size: 11px; color: var(--text-light);
     font-family: "JetBrains Mono", monospace;
   }
+
+  /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon via querySelector('[data-drawer-key]') */
+  h2.drawer-section-title,
+  .drawer-row { display: none !important; }
+
 </style>
 <!-- TopoJSON + d3-geo: runtime conversion echter Schweiz-Kantons-Geometrien (swiss-maps@4 / BFS GEOSTAT) -->
 <script src="https://unpkg.com/topojson-client@3"></script>
