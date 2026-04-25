@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Coverage — ARK CRM Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/editorial.css" />
+<style>
+  :root, [data-theme="light"] {
+    --accent: #1A3A5C; --accent-tint: #E8F0F8;
+    --gold: #B8860B; --gold-tint: #FDF6E3; --gold-strong: #9B7009;
+    --green: #1A6B4A; --green-tint: #E8F5EF;
+    --amber: #D97706; --amber-tint: #FEF3E2;
+    --red: #C0392B; --red-tint: #FDF0EE;
+    --info: #2D5F8A; --info-tint: #E8F0F8;
+
+    --bg: #F4F5F7; --surface: #FFFFFF; --surface-alt: #EDEFF3; --surface-sunk: #E5E7EC;
+    --text: #1A1F2E; --text-mid: #4A5568; --text-light: #8A95A8;
+    --border: #E2E5EA; --border-strong: #C8CDD6;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow:    0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.05);
+
+    --r-sm: 4px; --r: 6px;
+  }
+  [data-theme="dark"] {
+    --accent: #7CB5E8; --accent-tint: rgba(124,181,232,0.12);
+    --gold: #D4A84B; --gold-tint: rgba(212,168,75,0.12); --gold-strong: #D4A84B;
+    --green: #3FB950; --green-tint: rgba(63,185,80,0.12);
+    --amber: #D29922; --amber-tint: rgba(210,153,34,0.12);
+    --red: #F85149; --red-tint: rgba(248,81,73,0.12);
+    --info: #58A6FF; --info-tint: rgba(88,166,255,0.12);
+
+    --bg: #0E1116; --surface: #161B22; --surface-alt: #1D242D; --surface-sunk: #0E1116;
+    --text: #E6EDF3; --text-mid: #B6C0CC; --text-light: #8A95A8;
+    --border: #2A3340; --border-strong: #3A4454;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-md: 0 12px 32px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: "Libre Baskerville", Georgia, serif; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  /* App bar */
+  .app-bar {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 24px;
+    font-size: 12px; color: var(--text-mid);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 22px; height: 22px;
+    background: var(--text); color: var(--bg);
+    display: grid; place-items: center;
+    font-family: "Libre Baskerville", serif; font-weight: 700;
+    font-size: 13px; border-radius: 2px;
+  }
+  .brand-name { font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+  .brand-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+  .modules { display: flex; gap: 2px; margin-left: 20px; }
+  .mod {
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .mod.active { background: var(--text); color: var(--bg); font-weight: 600; }
+  .app-bar-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  .user-pill { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; }
+  .user-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 11px;
+  }
+  .theme-toggle {
+    width: 26px; height: 26px;
+    border: 1px solid var(--border); border-radius: 50%;
+    display: grid; place-items: center; color: var(--text-mid);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .ico { width: 14px; height: 14px; stroke-width: 1.6; }
+  .ico-sm { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  main { padding: 22px 32px 64px; max-width: 1440px; margin: 0 auto; }
+
+  /* Page head */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+  }
+  .page-head h1 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 28px;
+    color: var(--accent); letter-spacing: -0.005em;
+  }
+  .crumb {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-mid); font-size: 12.5px; margin-top: 6px; }
+  .subtitle .dot { color: var(--border-strong); margin: 0 7px; }
+  .page-head-actions { display: flex; align-items: center; gap: 10px; }
+
+  .btn {
+    padding: 6px 12px; border-radius: var(--r-sm);
+    font-size: 12.5px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--text);
+  }
+  .btn:hover { border-color: var(--border-strong); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-gold { background: var(--gold-strong); color: #fff; border-color: var(--gold-strong); font-weight: 500; }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-mid); }
+  .btn-ghost:hover { color: var(--text); }
+
+  /* Snapshot */
+  .snapshot { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+  .snap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 12px 14px;
+    box-shadow: var(--shadow-sm); position: relative;
+  }
+  .snap .label {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .snap .dot-color { width: 6px; height: 6px; border-radius: 50%; background: var(--text-light); }
+  .snap .value {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 24px; line-height: 1;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .snap .value .unit { font-size: 13px; color: var(--text-mid); margin-left: 2px; font-weight: 400; }
+  .snap .delta { margin-top: 6px; font-size: 11px; color: var(--text-mid); display: flex; align-items: center; gap: 6px; }
+  .spark { width: 100%; height: 22px; margin-top: 4px; display: block; }
+
+  /* Filter bar */
+  .filterbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--r);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .field {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 999px; padding: 5px 10px;
+    font-size: 12px; color: var(--text-mid);
+  }
+  .field .lab { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-light); }
+  .field .val { color: var(--text); font-weight: 500; white-space: nowrap; }
+  .field svg { color: var(--text-light); }
+  .filterbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  /* Tab switcher */
+  .tabs-pill {
+    display: inline-flex; align-items: center;
+    border: 1px solid var(--border); background: var(--surface-alt);
+    border-radius: 999px; padding: 3px;
+  }
+  .tabs-pill button {
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 12px; color: var(--text-mid);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tabs-pill button.active {
+    background: var(--surface); color: var(--text); font-weight: 600;
+    box-shadow: var(--shadow-sm);
+  }
+  .tabs-pill .count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px; color: var(--text-light);
+    padding: 1px 5px; border-radius: 2px;
+    background: var(--surface-sunk);
+  }
+  .tabs-pill button.active .count { color: var(--accent); }
+
+  /* Panels */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel + .panel { margin-top: 14px; }
+  .panel-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-head h2 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 15px; color: var(--text);
+  }
+  .panel-head .meta { font-size: 11px; color: var(--text-light); }
+  .panel-head .right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .scope-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; padding: 2px 6px; border-radius: 2px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+
+  /* Heatmap */
+  .heatmap-wrap { padding: 22px 24px 24px; display: grid; grid-template-columns: 1fr 200px; gap: 28px; align-items: start; }
+  .heatmap {
+    display: grid;
+    grid-template-columns: 80px repeat(5, 1fr) 80px;
+    gap: 4px;
+    font-size: 11px;
+  }
+  .hm-corner { }
+  .hm-col-h, .hm-row-h {
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600;
+    display: grid; place-items: center;
+    padding: 6px 0;
+  }
+  .hm-row-h { justify-content: end; padding-right: 12px; color: var(--text); }
+  .hm-cell {
+    aspect-ratio: 2 / 1;
+    min-height: 52px;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 2px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    position: relative;
+    border: 1px solid transparent;
+    transition: transform .12s, border-color .12s;
+    white-space: nowrap;
+  }
+  .hm-cell:hover {
+    transform: scale(1.02);
+    border-color: var(--text-mid);
+  }
+  .hm-cell.active {
+    border-color: var(--gold-strong);
+    box-shadow: 0 0 0 2px var(--gold-strong);
+    z-index: 2;
+  }
+  .hm-cell.dark-text { color: #fff; }
+  .hm-cell .pct-unit { font-size: 11px; color: inherit; opacity: 0.7; margin-left: 1px; }
+  .hm-cell.dark-text .pct-unit { opacity: 0.85; }
+
+  .hm-summary {
+    color: var(--text-mid);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+    background: var(--surface-alt);
+    border-radius: 3px;
+    display: grid; place-items: center;
+    aspect-ratio: 2 / 1;
+    min-height: 52px;
+  }
+  .hm-summary.row-end { justify-self: stretch; }
+  .hm-foot-h { /* "Sparte Ø" axis label */
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); font-weight: 600;
+    padding: 6px 0; text-align: right; padding-right: 12px;
+  }
+
+  /* Heatmap legend column */
+  .hm-legend { padding-top: 8px; }
+  .hm-legend h4 {
+    margin: 0 0 10px 0; font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light); font-weight: 600;
+  }
+  .hm-legend p { font-size: 11.5px; color: var(--text-mid); margin: 0 0 14px; line-height: 1.5; }
+  .hm-scale {
+    width: 100%; height: 10px;
+    background: linear-gradient(to right, #C0392B, #FDF0EE, #FEF3E2, #E8F5EF, #1A6B4A);
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+  .hm-scale-labels { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-light); }
+  .hm-active-info {
+    margin-top: 18px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    font-size: 11.5px;
+  }
+  .hm-active-info .key {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 4px;
+  }
+  .hm-active-info .val {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 14px; color: var(--text);
+  }
+  .hm-active-info .ln + .ln { margin-top: 10px; }
+
+  /* Critical list table */
+  .ktable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ktable th, .ktable td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+  }
+  .ktable th {
+    font-weight: 500;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    background: var(--surface-alt);
+  }
+  .ktable td.num, .ktable th.num {
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .ktable td.center, .ktable th.center { text-align: center; }
+  .ktable tbody tr { cursor: pointer; }
+  .ktable tbody tr:hover { background: var(--surface-alt); }
+  .ktable tbody tr.checked { background: var(--gold-tint); }
+  [data-theme="dark"] .ktable tbody tr.checked { background: rgba(220,180,121,0.07); }
+  .ktable .cand-cell { display: inline-flex; align-items: center; gap: 9px; }
+  .ktable .stage-tag {
+    font-family: "JetBrains Mono", monospace; font-size: 10.5px;
+    color: var(--text-mid);
+    padding: 1px 6px; border-radius: 2px;
+    background: var(--surface-sunk);
+    letter-spacing: 0.04em;
+  }
+  .ktable .days-num.bad { color: var(--red); font-weight: 600; }
+  .ktable .days-num.warn { color: var(--amber); font-weight: 600; }
+  .ktable .action-link {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+    color: var(--accent);
+  }
+  .ktable .action-link:hover { color: var(--gold-strong); }
+
+  .score-badge {
+    display: inline-block; padding: 3px 9px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px; font-weight: 600;
+    border-radius: 3px;
+    min-width: 50px; text-align: center;
+  }
+  .score-badge.bad { background: var(--red-tint); color: var(--red); }
+  .score-badge.warn { background: var(--amber-tint); color: var(--amber); }
+  .score-badge.good { background: var(--green-tint); color: var(--green); }
+  .score-badge.neutral { background: var(--surface-sunk); color: var(--text-mid); }
+
+  /* Checkboxes */
+  .cb {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 3px;
+    display: inline-grid; place-items: center;
+    background: var(--surface);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .cb.checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .cb.checked::after {
+    content: ""; width: 8px; height: 4px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(0px, -1px);
+  }
+
+  .table-foot {
+    padding: 10px 14px;
+    font-size: 11.5px; color: var(--text-light);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface-alt);
+    border-top: 1px solid var(--border);
+    border-bottom-left-radius: var(--r);
+    border-bottom-right-radius: var(--r);
+  }
+  .table-foot a { color: var(--accent); font-family: "JetBrains Mono", monospace; }
+
+  .filter-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 7px 2px 9px;
+    background: var(--surface-sunk); color: var(--text-mid);
+    border-radius: 999px; font-size: 11px;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .filter-chip .x { color: var(--text-light); cursor: pointer; }
+  .filter-chip.gold { background: var(--gold-tint); color: var(--gold-strong); }
+
+  .bulk-action-btn {
+    background: var(--gold-strong); color: #fff;
+    padding: 5px 11px; border-radius: var(--r-sm);
+    font-size: 12px; font-weight: 500;
+    border: 1px solid var(--gold-strong);
+  }
+  .bulk-action-btn:hover { filter: brightness(1.06); }
+
+  /* Drawer */
+  .drawer-section-title {
+    margin: 36px 0 12px 0;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .drawer-section-title .hint { font-size: 11px; letter-spacing: normal; text-transform: none; color: var(--text-light); margin-left: auto; font-weight: 400; }
+
+  .drawer-row {
+    display: grid;
+    grid-template-columns: 540px 540px;
+    gap: 24px; justify-content: start;
+  }
+  @media (max-width: 1200px) { .drawer-row { grid-template-columns: 1fr; } }
+
+  .drawer {
+    width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-md);
+    overflow: hidden; position: relative;
+  }
+  .drawer::before {
+    content: "Drawer · 540 px · slide-in von rechts";
+    position: absolute; top: -22px; left: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--text-light);
+  }
+  .drawer-head { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .drawer-eyebrow { font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+  .drawer-head-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .drawer-head h3 {
+    margin: 0; font-family: "Libre Baskerville", serif;
+    font-weight: 700; font-size: 16px; color: var(--text);
+  }
+  .drawer-close {
+    margin-left: auto; width: 26px; height: 26px;
+    display: grid; place-items: center;
+    color: var(--text-light); border-radius: 4px;
+  }
+  .drawer-tabs {
+    display: flex; gap: 0;
+    margin: 12px -18px 0 -18px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-tab {
+    padding: 8px 0; margin-right: 18px;
+    font-size: 12px; color: var(--text-mid);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .drawer-tab.active { color: var(--text); border-color: var(--accent); font-weight: 600; }
+
+  .drawer-body {
+    padding: 18px;
+    display: flex; flex-direction: column;
+    gap: 22px; max-height: 720px; overflow: auto;
+  }
+  .drawer-foot {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    background: var(--surface-alt);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .drawer-foot .spacer { flex: 1; }
+
+  .sec-title {
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 0 0 10px 0; font-weight: 600;
+  }
+
+  .badge {
+    display: inline-block; padding: 2px 7px;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.12em; border-radius: 3px;
+    text-transform: uppercase; font-variant: small-caps;
+  }
+  .b-stage { background: var(--accent-tint); color: var(--accent); }
+
+  .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-tint); color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .avatar.gold { background: var(--gold-tint); color: var(--gold-strong); }
+  .avatar.green { background: var(--green-tint); color: var(--green); }
+  .avatar.amber { background: var(--amber-tint); color: var(--amber); }
+  .avatar.red { background: var(--red-tint); color: var(--red); }
+  .avatar.lg { width: 36px; height: 36px; font-size: 13px; }
+  .avatar.sm { width: 20px; height: 20px; font-size: 9.5px; }
+
+  /* KV table in drawer */
+  .kv {
+    display: grid; grid-template-columns: 132px 1fr;
+    gap: 8px 14px; font-size: 12.5px;
+    border-top: 1px solid var(--border);
+  }
+  .kv > div {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .kv .k { color: var(--text-light); font-size: 11.5px; }
+  .kv .v { color: var(--text); }
+  .kv .v .mono { font-size: 12px; }
+
+  /* Touch timeline */
+  .touch-timeline {
+    height: 50px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .touch-timeline .gridline {
+    position: absolute; top: 0; bottom: 0; width: 1px;
+    background: var(--border);
+  }
+  .touch-timeline .gap {
+    position: absolute; top: 0; bottom: 0;
+    background: rgba(185, 69, 69, 0.08);
+    border-left: 1px dashed var(--red);
+    border-right: 1px dashed var(--red);
+  }
+  .touch-timeline .dot {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .touch-timeline .now {
+    position: absolute; top: 0; bottom: 0; right: 0;
+    width: 1px; background: var(--text);
+  }
+  .touch-timeline .now-lbl {
+    position: absolute; right: 4px; top: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px; color: var(--text-light);
+  }
+  .touch-axis {
+    display: flex; justify-content: space-between;
+    margin-top: 4px; font-size: 10px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text-light);
+  }
+
+  .mini-bars { display: flex; flex-direction: column; gap: 6px; }
+  .mini-bar-row { display: grid; grid-template-columns: 110px 1fr 80px; gap: 12px; align-items: center; font-size: 12px; }
+  .mini-bar-row .lab { color: var(--text-mid); }
+  .mini-bar-track { height: 10px; background: var(--surface-sunk); border-radius: 2px; overflow: hidden; position: relative; }
+  .mini-bar-fill { height: 100%; background: var(--accent); }
+  .mini-bar-row .num { font-family: "JetBrains Mono", monospace; color: var(--text); text-align: right; font-weight: 500; }
+
+  .callout {
+    border: 1px solid var(--amber);
+    background: var(--amber-tint);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .callout.gold { border-color: var(--gold); background: var(--gold-tint); }
+  [data-theme="dark"] .callout.gold { background: rgba(220,180,121,0.08); }
+  .callout .ico-warn { color: var(--amber); flex-shrink: 0; margin-top: 1px; }
+  .callout.gold .ico-warn { color: var(--gold-strong); }
+
+  /* Bulk-Action drawer */
+  .bulk-list {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+  }
+  .bulk-list-row {
+    display: grid;
+    grid-template-columns: 26px 1fr 50px 50px 70px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .bulk-list-row + .bulk-list-row { border-top: 1px solid var(--border); }
+  .bulk-list-row .name { font-weight: 500; color: var(--text); }
+  .bulk-list-row .meta { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--text-mid); }
+
+  .form-row {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 10px; align-items: center;
+    margin-bottom: 10px;
+  }
+  .form-row .lab {
+    font-size: 11px; color: var(--text-light);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .form-input {
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 7px 10px; border-radius: var(--r-sm);
+    font-size: 12.5px; color: var(--text);
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+  }
+  .form-input.textarea {
+    align-items: flex-start; min-height: 60px;
+    color: var(--text-light); font-style: italic; font-size: 12px;
+    cursor: text;
+  }
+  .form-input svg { color: var(--text-light); }
+
+  /* Footer */
+  .footer-line {
+    margin-top: 28px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- App-Bar entfernt: Hub-Topbar (performance.html) liefert Brand + Module-Tabs + Theme-Toggle. Sub-Pages enthalten ausschliesslich Content (analog hr-dashboard.html, zeit-dashboard.html). -->
+
+<main>
+
+  <header class="page-head">
+    <div>
+      <div class="crumb">CRM · Performance</div>
+      <h1 class="serif">Coverage</h1>
+      <div class="subtitle">Kandidaten- + Kunden-Vernachlässigung <span class="dot">·</span> Owner × Sparte</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-gold">Massenaktion</button>
+      <button class="btn">
+        <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin-right:4px;"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Export
+      </button>
+    </div>
+  </header>
+
+  <!-- Snapshot -->
+  <section class="snapshot">
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--red);"></span>Kandidaten unter-touched</div>
+      <div class="value serif" style="color:var(--red);">47</div>
+      <div class="delta"><span style="color:var(--red);">↗</span> +8 vs. Vorwoche</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,16 L14,15 L28,13 L42,12 L56,11 L70,9 L84,7 L100,4" fill="none" stroke="var(--red)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label"><span class="dot-color" style="background:var(--amber);"></span>Kunden vernachlässigt</div>
+      <div class="value serif" style="color:var(--amber);">12</div>
+      <div class="delta"><span style="color:var(--text-light);">→</span> 0 vs. Vorwoche</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,11 L14,10 L28,12 L42,11 L56,11 L70,12 L84,11 L100,11" fill="none" stroke="var(--amber)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Coverage-Score Ø</div>
+      <div class="value serif">68<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--red);">↘</span> −4 pp vs. Vorperiode</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,4 L14,5 L28,6 L42,8 L56,10 L70,11 L84,13 L100,14" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Anteil kontaktiert 30d</div>
+      <div class="value serif">73<span class="unit">%</span></div>
+      <div class="delta"><span style="color:var(--text-light);">·</span> Median 80 %</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,9 L14,8 L28,10 L42,9 L56,11 L70,10 L84,12 L100,11" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Top-vernachlässigte Sparte</div>
+      <div class="value serif" style="color:var(--red);">PUR <span class="unit">52 %</span></div>
+      <div class="delta"><span style="color:var(--red);">·</span> 18 pp unter Median</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,8 L14,9 L28,10 L42,12 L56,13 L70,15 L84,16 L100,17" fill="none" stroke="var(--red)" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="snap">
+      <div class="label">Hunt-Rate</div>
+      <div class="value serif" style="color:var(--gold-strong);">14<span class="unit"> / Woche</span></div>
+      <div class="delta"><span style="color:var(--green);">↗</span> +3 vs. Vorwoche</div>
+      <svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none">
+        <path d="M0,15 L14,13 L28,12 L42,10 L56,11 L70,8 L84,6 L100,4" fill="none" stroke="var(--gold-strong)" stroke-width="1.4"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Filter bar -->
+  <section class="filterbar">
+    <div class="field"><span class="lab">Periode</span><span class="val">Letzte 30 Tage</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Sparte</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Owner</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Stage</span><span class="val">Alle</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="field"><span class="lab">Coverage-Schwelle</span><span class="val">&lt; 70 %</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="filterbar-right">
+      <div class="tabs-pill">
+        <button class="active" id="tabKand">Kandidaten <span class="count">47</span></button>
+        <button id="tabAcc">Accounts <span class="count">12</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Heatmap -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Coverage-Heatmap</h2>
+      <span class="meta">Owner × Sparte · Kandidaten · Score = % aktiv kontaktiert (30d)</span>
+      <div class="right">
+        <span class="scope-chip">5 × 5 · 25 Zellen</span>
+      </div>
+    </div>
+
+    <div class="heatmap-wrap">
+      <div class="heatmap" id="heatmap"></div>
+
+      <aside class="hm-legend">
+        <h4>Skala</h4>
+        <p>Score = Anteil Kandidaten der Owner × Sparte-Zelle, der in den letzten 30 Tagen mind. einen Touch erhalten hat.</p>
+        <div class="hm-scale"></div>
+        <div class="hm-scale-labels">
+          <span>0 %</span>
+          <span>50 %</span>
+          <span>100 %</span>
+        </div>
+        <div class="hm-active-info" id="hmInfo">
+          <div class="ln">
+            <div class="key">Aktive Zelle</div>
+            <div class="val" id="hmInfoCell">LR × PUR</div>
+          </div>
+          <div class="ln">
+            <div class="key">Coverage</div>
+            <div class="val mono" id="hmInfoScore" style="color:var(--red);">42 %</div>
+          </div>
+          <div class="ln">
+            <div class="key">Kontaktiert · Total</div>
+            <div class="val mono" id="hmInfoCount" style="font-size:13px;">8 / 19 Kandidaten</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Kritisch-Liste -->
+  <section class="panel" style="margin-top:14px;">
+    <div class="panel-head">
+      <h2>Kritisch unter-touched</h2>
+      <span class="meta">47 Kandidaten unter Schwelle</span>
+      <div class="right">
+        <span class="filter-chip" id="critFilter">alle <span class="x" id="critFilterX">×</span></span>
+        <button class="bulk-action-btn" id="bulkBtn" style="display:none;">Massenaktion (<span id="bulkCount">0</span> markiert)</button>
+      </div>
+    </div>
+
+    <table class="ktable">
+      <thead>
+        <tr>
+          <th class="center" style="width:38px;"><span class="cb" id="cbAll"></span></th>
+          <th>Kandidat</th>
+          <th>Sparte</th>
+          <th>Owner</th>
+          <th class="num">Letzter Touch</th>
+          <th class="num">Soll-Frequenz</th>
+          <th class="num">Score</th>
+          <th class="num" style="width:90px;">Aktion</th>
+        </tr>
+      </thead>
+      <tbody id="critBody"></tbody>
+    </table>
+
+    <div class="table-foot">
+      <span>10 von 47 angezeigt</span>
+      <a href="#">Alle anzeigen →</a>
+    </div>
+  </section>
+
+  <!-- Drawer previews -->
+  <h2 class="drawer-section-title">
+    Drawer-States
+    <span class="hint">Slide-in von rechts · 540 px · überdeckt die rechte Spalte</span>
+  </h2>
+
+  <div class="drawer-row">
+
+    <!-- Drawer A: Kandidaten Detail -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Kandidat · RM · ARC · Owner PW · Stage TI</div>
+        <div class="drawer-head-top">
+          <div class="avatar gold lg">RM</div>
+          <h3>R. M. <span style="color:var(--text-light); font-weight:400; font-size:13px;">(anonym, ID-105)</span></h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Coverage</button>
+          <button class="drawer-tab">Touch-Verlauf</button>
+          <button class="drawer-tab">Aktion</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Coverage-Status</h4>
+          <div class="kv">
+            <div class="k">Soll-Frequenz</div>
+            <div class="v">alle 14 Tage</div>
+            <div class="k">Letzter Touch</div>
+            <div class="v">vor 26 Tagen <span class="score-badge bad" style="margin-left:8px;">32 %</span></div>
+            <div class="k">Stage</div>
+            <div class="v"><span class="badge b-stage">TI</span> <span style="color:var(--text-mid); margin-left:6px;">seit 22 Tagen</span></div>
+            <div class="k">Mandat-Bezug</div>
+            <div class="v"><span class="mono">MAN-2026-104</span> <span class="scope-chip" style="margin-left:6px;">ARC</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Touch-Verlauf · letzte 90 Tage</h4>
+          <div class="touch-timeline">
+            <div class="gridline" style="left:33.3%;"></div>
+            <div class="gridline" style="left:66.6%;"></div>
+            <!-- gap region: last 26d (no touches) -->
+            <div class="gap" style="left:71%; right:0;"></div>
+            <!-- 5 touches within first 64 days -->
+            <div class="dot" style="left:7%;"></div>
+            <div class="dot" style="left:21%;"></div>
+            <div class="dot" style="left:38%;"></div>
+            <div class="dot" style="left:54%;"></div>
+            <div class="dot" style="left:71%;"></div>
+            <div class="now"></div>
+            <div class="now-lbl">heute</div>
+          </div>
+          <div class="touch-axis">
+            <span>−90 d</span><span>−60 d</span><span>−30 d</span><span>0</span>
+          </div>
+          <div style="margin-top:10px; font-size:11.5px; color:var(--text-mid);">
+            5 Touches in 90 Tagen · letzte <strong style="color:var(--red);">3 Wochen ohne Aktivität</strong>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Owner-Soll · 90 Tage</h4>
+          <div class="mini-bars">
+            <div class="mini-bar-row">
+              <span class="lab">Erwartet</span>
+              <div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%; background:var(--text-light);"></div></div>
+              <span class="num">6 Touches</span>
+            </div>
+            <div class="mini-bar-row">
+              <span class="lab">Real</span>
+              <div class="mini-bar-track"><div class="mini-bar-fill" style="width:50%; background:var(--red);"></div></div>
+              <span class="num">3 Touches</span>
+            </div>
+          </div>
+          <div style="margin-top:8px; font-size:11.5px; color:var(--text-mid); font-family:'JetBrains Mono',monospace;">
+            Soll-Erfüllung · 50 % · Lücke 3 Touches
+          </div>
+        </section>
+
+        <div class="callout">
+          <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 2 21h20L12 3zM12 10v6M12 18v.01"/></svg>
+          <div>
+            <strong>Risiko Stage-Stillstand</strong> — 22 Tage in TI ohne Aktivität. Median in dieser Stage: 9 Tage. Drop-Off-Wahrscheinlichkeit erhöht.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Reminder erstellen</button>
+        <button class="btn">Touch protokollieren</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer B: Bulk Action -->
+    <aside class="drawer">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Bulk-Aktion · 3 Kandidaten ausgewählt · Coverage &lt; 50 %</div>
+        <div class="drawer-head-top">
+          <h3>Massenaktion</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Reminder</button>
+          <button class="drawer-tab">Reassign</button>
+          <button class="drawer-tab">Touch-Plan</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Auswahl · 3 Kandidaten</h4>
+          <div class="bulk-list">
+            <div class="bulk-list-row">
+              <div class="avatar gold sm">RM</div>
+              <div>
+                <div class="name">R. M.</div>
+                <div class="meta">ID-105 · Stage TI · seit 22 d</div>
+              </div>
+              <div class="meta" style="text-align:center;">ARC</div>
+              <div class="meta" style="text-align:center;">PW</div>
+              <div style="text-align:right;"><span class="score-badge bad">32 %</span></div>
+            </div>
+            <div class="bulk-list-row">
+              <div class="avatar red sm">BL</div>
+              <div>
+                <div class="name">B. L.</div>
+                <div class="meta">ID-217 · Stage 1st · seit 18 d</div>
+              </div>
+              <div class="meta" style="text-align:center;">PUR</div>
+              <div class="meta" style="text-align:center;">LR</div>
+              <div style="text-align:right;"><span class="score-badge bad">38 %</span></div>
+            </div>
+            <div class="bulk-list-row">
+              <div class="avatar sm">SK</div>
+              <div>
+                <div class="name">S. K.</div>
+                <div class="meta">ID-302 · Stage TI · seit 14 d</div>
+              </div>
+              <div class="meta" style="text-align:center;">ARC</div>
+              <div class="meta" style="text-align:center;">PW</div>
+              <div style="text-align:right;"><span class="score-badge bad">45 %</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Reminder-Konfiguration</h4>
+          <div class="form-row">
+            <span class="lab">Fällig in</span>
+            <div class="form-input">
+              <span>3 Tagen <span style="color:var(--text-light); margin-left:8px;">· 28.04.2026</span></span>
+              <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Owner</span>
+            <div class="form-input">
+              <span>Aktueller Owner <span style="color:var(--text-light); margin-left:8px;">· je Kandidat</span></span>
+              <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Vorlage</span>
+            <div class="form-input">
+              <span>Standard-Reaktivierung</span>
+              <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="form-row" style="align-items:flex-start;">
+            <span class="lab" style="margin-top:9px;">Notiz</span>
+            <div class="form-input textarea">
+              Bitte zeitnah kontaktieren — Coverage unter Schwelle
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Auswirkung</h4>
+          <div class="callout gold">
+            <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div>
+              <strong>3 Reminder</strong> werden erstellt, fällig <strong>28.04.2026</strong>. Owners (PW · LR) erhalten Notification. Reminder erscheinen im Mitarbeiter-Inbox sowie im Kandidaten-Dossier.
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">3 Reminder erstellen</button>
+        <button class="btn">Vorschau</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="footer-line">
+    <span>Quelle · ARK Performance-Warehouse · Stand 25.04.2026 09:14</span>
+    <span>Layout · coverage.v1 · Periode 30 Tage</span>
+  </div>
+
+</main>
+
+<script>
+  // Theme-Toggle entfernt: Hub-Topbar steuert das Theme via parent-Window.
+
+  // ── Tab switcher (Kandidaten/Accounts) ───────────
+  const tabKand = document.getElementById('tabKand');
+  const tabAcc  = document.getElementById('tabAcc');
+  [tabKand, tabAcc].forEach(b => b.addEventListener('click', () => {
+    [tabKand, tabAcc].forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+
+  // ── Heatmap ──────────────────────────────────────
+  const owners  = ['PW','JV','LR','ST','MR'];
+  const sparten = ['ARC','GT','ING','PUR','REM'];
+  // rows = owners, cols = sparten
+  const matrix = [
+    [80, 72, 68, 45, 78],   // PW
+    [88, 76, 82, 58, 71],   // JV
+    [62, 85, 77, 42, 69],   // LR
+    [74, 90, 73, 65, 83],   // ST
+    [91, 68, 79, 55, 76],   // MR
+  ];
+  // contacted / total per cell (for tooltip + active-info)
+  const counts = [
+    [12,15], [13,18], [11,16], [9,20], [14,18],
+    [15,17], [13,17], [14,17], [11,19], [12,17],
+    [8,13],  [17,20], [10,13], [8,19],  [9,13],
+    [11,15], [18,20], [11,15], [13,20], [10,12],
+    [10,11], [11,16], [11,14], [11,20], [13,17],
+  ];
+  const colHdrAvg = ['79','78','76','53','75'];   // sparte Ø
+  const rowHdrAvg = ['69','75','67','77','74'];   // owner Ø
+
+  function lerpHex(a, b, k) {
+    const ah = a.replace('#',''); const bh = b.replace('#','');
+    const ar = parseInt(ah.substr(0,2),16), ag = parseInt(ah.substr(2,2),16), ab = parseInt(ah.substr(4,2),16);
+    const br = parseInt(bh.substr(0,2),16), bg = parseInt(bh.substr(2,2),16), bb = parseInt(bh.substr(4,2),16);
+    const r = Math.round(ar + (br-ar)*k);
+    const g = Math.round(ag + (bg-ag)*k);
+    const bl = Math.round(ab + (bb-ab)*k);
+    return `rgb(${r},${g},${bl})`;
+  }
+  // Calm 5-stop scale: red → red-tint → amber-tint → green-tint → green
+  // 0..40 red→red-tint ; 40..55 red-tint→amber-tint ; 55..70 amber-tint→green-tint ; 70..90 green-tint→green ; 90+ green
+  function scoreColor(pct) {
+    const t = Math.max(0, Math.min(100, pct));
+    if (t < 40) {
+      const k = t / 40;
+      return { bg: lerpHex('#C0392B', '#FDF0EE', k), dark: k < 0.45 };
+    } else if (t < 55) {
+      const k = (t - 40) / 15;
+      return { bg: lerpHex('#FDF0EE', '#FEF3E2', k), dark: false };
+    } else if (t < 70) {
+      const k = (t - 55) / 15;
+      return { bg: lerpHex('#FEF3E2', '#E8F5EF', k), dark: false };
+    } else if (t < 90) {
+      const k = (t - 70) / 20;
+      return { bg: lerpHex('#E8F5EF', '#1A6B4A', k), dark: k > 0.55 };
+    } else {
+      return { bg: '#1A6B4A', dark: true };
+    }
+  }
+
+  const heatmap = document.getElementById('heatmap');
+  let html = '';
+  // top-left corner
+  html += '<div class="hm-corner"></div>';
+  // column headers
+  sparten.forEach(s => html += `<div class="hm-col-h">${s}</div>`);
+  // owner Ø header (right)
+  html += '<div class="hm-col-h" style="color:var(--text-mid);">Owner Ø</div>';
+
+  // rows
+  matrix.forEach((row, ri) => {
+    html += `<div class="hm-row-h">${owners[ri]}</div>`;
+    row.forEach((pct, ci) => {
+      const { bg, dark } = scoreColor(pct);
+      const [a,b] = counts[ri*5 + ci];
+      const cls = `hm-cell${dark ? ' dark-text' : ''}`;
+      html += `<div class="${cls}" data-r="${ri}" data-c="${ci}" data-pct="${pct}" data-a="${a}" data-b="${b}" style="background:${bg};" title="${owners[ri]} × ${sparten[ci]} · ${a} von ${b} Kandidaten kontaktiert · ${pct} % Coverage"><span>${pct}</span><span class="pct-unit">%</span></div>`;
+    });
+    // owner average
+    html += `<div class="hm-summary">${rowHdrAvg[ri]} %</div>`;
+  });
+
+  // bottom row: sparte averages
+  html += '<div class="hm-foot-h">Sparte Ø</div>';
+  colHdrAvg.forEach(v => {
+    html += `<div class="hm-summary">${v} %</div>`;
+  });
+  html += '<div class="hm-summary" style="background:var(--surface-sunk); color:var(--text);">72 %</div>';
+
+  heatmap.innerHTML = html;
+
+  // active cell (LR × PUR by default — the worst red zone matching the spec)
+  const hmInfoCell  = document.getElementById('hmInfoCell');
+  const hmInfoScore = document.getElementById('hmInfoScore');
+  const hmInfoCount = document.getElementById('hmInfoCount');
+  const critFilter  = document.getElementById('critFilter');
+
+  function setActiveCell(cell) {
+    document.querySelectorAll('.hm-cell.active').forEach(x => x.classList.remove('active'));
+    cell.classList.add('active');
+    const r = +cell.dataset.r, c = +cell.dataset.c;
+    const pct = +cell.dataset.pct, a = +cell.dataset.a, b = +cell.dataset.b;
+    const owner = owners[r], sparte = sparten[c];
+    hmInfoCell.textContent = `${owner} × ${sparte}`;
+    hmInfoScore.textContent = `${pct} %`;
+    hmInfoScore.style.color = pct < 55 ? 'var(--red)' : pct < 70 ? 'var(--amber)' : 'var(--green)';
+    hmInfoCount.textContent = `${a} / ${b} Kandidaten`;
+    critFilter.firstChild.textContent = `${owner} × ${sparte} · ` + (function(){
+      // count rows in critList matching
+      const matches = critList.filter(r2 => r2.owner === owner && r2.sparte === sparte).length;
+      return `${matches} Treffer`;
+    })() + ' ';
+    critFilter.classList.add('gold');
+  }
+
+  document.querySelectorAll('.hm-cell').forEach(c => {
+    c.addEventListener('click', () => setActiveCell(c));
+  });
+
+  // ── Critical list ────────────────────────────────
+  const critList = [
+    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false },
+    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true  },
+    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true  },
+    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false },
+    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true  },
+    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false },
+    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false },
+    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false },
+    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false },
+    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false },
+  ];
+
+  function scoreClass(s) {
+    if (s < 40) return 'bad';
+    if (s < 65) return 'warn';
+    if (s < 80) return 'neutral';
+    return 'good';
+  }
+  function daysClass(last, soll) {
+    if (last >= soll * 1.5) return 'bad';
+    if (last >= soll) return 'warn';
+    return '';
+  }
+
+  const critBody = document.getElementById('critBody');
+  function renderCrit() {
+    let html = '';
+    critList.forEach((r, i) => {
+      const sc = scoreClass(r.score);
+      const dc = daysClass(r.last, r.soll);
+      html += `
+        <tr class="${r.checked ? 'checked' : ''}" data-i="${i}">
+          <td class="center">
+            <span class="cb ${r.checked ? 'checked' : ''}" data-cb="${i}"></span>
+          </td>
+          <td>
+            <span class="cand-cell">
+              <span class="avatar ${r.avatar} sm">${r.id}</span>
+              <span style="font-weight:500;">${r.id}</span>
+            </span>
+          </td>
+          <td><span class="stage-tag">${r.sparte}</span></td>
+          <td><span class="avatar sm">${r.owner}</span></td>
+          <td class="num"><span class="days-num ${dc}">${r.last} d</span></td>
+          <td class="num" style="color:var(--text-mid);">alle ${r.soll} Tage</td>
+          <td class="num"><span class="score-badge ${sc}">${r.score} %</span></td>
+          <td class="num"><a class="action-link" href="#">→ Profil</a></td>
+        </tr>`;
+    });
+    critBody.innerHTML = html;
+    bindRowEvents();
+    updateBulkBtn();
+  }
+
+  function bindRowEvents() {
+    document.querySelectorAll('#critBody tr').forEach(tr => {
+      tr.addEventListener('click', (e) => {
+        // ignore clicks on action-link
+        if (e.target.closest('.action-link')) return;
+        const i = +tr.dataset.i;
+        const cbEl = e.target.closest('.cb');
+        // toggle checkbox if cb clicked, OR row click on the checkbox-cell area
+        if (cbEl || e.target.closest('td')?.cellIndex === 0) {
+          critList[i].checked = !critList[i].checked;
+          renderCrit();
+        }
+      });
+    });
+  }
+
+  const bulkBtn = document.getElementById('bulkBtn');
+  const bulkCount = document.getElementById('bulkCount');
+  function updateBulkBtn() {
+    const n = critList.filter(r => r.checked).length;
+    if (n > 0) {
+      bulkBtn.style.display = '';
+      bulkCount.textContent = n;
+    } else {
+      bulkBtn.style.display = 'none';
+    }
+  }
+
+  // header checkbox
+  const cbAll = document.getElementById('cbAll');
+  cbAll.addEventListener('click', () => {
+    const allChecked = critList.every(r => r.checked);
+    critList.forEach(r => r.checked = !allChecked);
+    cbAll.classList.toggle('checked', !allChecked);
+    renderCrit();
+  });
+
+  // critFilter clear
+  document.getElementById('critFilterX').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.hm-cell.active').forEach(x => x.classList.remove('active'));
+    critFilter.firstChild.textContent = 'alle ';
+    critFilter.classList.remove('gold');
+  });
+
+  renderCrit();
+
+  // Drawer tabs
+  document.querySelectorAll('.drawer-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.drawer-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  });
+</script>
+</body>
+</html>
