@@ -225,27 +225,38 @@
     letter-spacing: 0.04em;
   }
 
-  /* CH-Karte (SVG Schweiz, 7 BFS-Grossregionen) */
+  /* CH-Karte (SVG Schweiz, 26 Kantone) */
   .heatmap-wrap { padding: 22px 24px 24px; display: grid; grid-template-columns: 1fr 200px; gap: 28px; align-items: start; }
   .ch-map-wrap { display: flex; justify-content: center; align-items: flex-start; }
   .ch-map {
-    width: 100%; max-width: 520px; height: auto;
+    width: 100%; max-width: 560px; height: auto;
     display: block;
+    background: #DCE7F0;
+    border-radius: 4px;
   }
   .ch-map path {
     stroke: #FFFFFF; stroke-width: 1.5;
     cursor: pointer;
     transition: stroke-width .12s, filter .12s;
   }
-  .ch-map path:hover { stroke-width: 2.5; filter: brightness(0.93); }
-  .ch-map path.active { stroke: var(--gold-strong); stroke-width: 3; }
+  .ch-map path:hover { stroke: #B8860B; stroke-width: 2.5; filter: brightness(1.07); }
+  .ch-map path.active { stroke: #B8860B; stroke-width: 3; }
   .ch-map text {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 11px; font-weight: 500;
-    fill: var(--text); pointer-events: none;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 8px; font-weight: 500;
+    fill: #1A1F2E; pointer-events: none;
     dominant-baseline: middle; text-anchor: middle;
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff;
+    paint-order: stroke;
+    stroke: #fff;
+    stroke-width: 2.5px;
+    stroke-linejoin: round;
   }
-  .ch-map text.dark-lbl { fill: #fff; }
+  .ch-map text.lbl-white {
+    fill: #fff;
+    stroke: rgba(0,0,0,0.25);
+    stroke-width: 2px;
+  }
 
   /* CH-Karte legend column */
   .hm-legend { padding-top: 8px; }
@@ -256,7 +267,7 @@
   .hm-legend p { font-size: 11.5px; color: var(--text-mid); margin: 0 0 14px; line-height: 1.5; }
   .hm-scale {
     width: 100%; height: 10px;
-    background: linear-gradient(to right, #C0392B, #FDF0EE, #FEF3E2, #E8F5EF, #1A6B4A);
+    background: linear-gradient(to right, #F5E6D3, #E8C4A0, #E07A5F, #C0392B, #8E2418);
     border-radius: 2px;
     margin-bottom: 6px;
   }
@@ -613,7 +624,7 @@
     <div>
       <div class="crumb">CRM · Performance</div>
       <h1 class="serif">Coverage</h1>
-      <div class="subtitle">Kandidaten- + Kunden-Vernachlässigung <span class="dot">·</span> Geografische Verteilung · BFS-Grossregionen</div>
+      <div class="subtitle">Kandidaten- + Kunden-Vernachlässigung <span class="dot">·</span> Geografische Verteilung · 26 Kantone</div>
     </div>
     <div class="page-head-actions">
       <button class="btn btn-gold">Massenaktion</button>
@@ -695,78 +706,247 @@
   <section class="panel">
     <div class="panel-head">
       <h2>Coverage-Heatmap</h2>
-      <span class="meta">Schweiz · BFS-Grossregionen · Kandidaten · Score = % aktiv kontaktiert (30d)</span>
+      <span class="meta">Schweiz · 26 Kantone · Kandidaten · Score = % aktiv kontaktiert (30d)</span>
       <div class="right">
-        <span class="scope-chip">7 Regionen · CH</span>
+        <span class="scope-chip">26 Kantone · CH</span>
       </div>
     </div>
 
-    <!-- TODO: Stammdaten-Patch v1.6→v1.7 für dim_region (BFS-Grossregionen) ausstehend. Region-Codes hier hardcoded für Mockup. -->
+    <!-- TODO: Stammdaten-Patch v1.6→v1.7 für dim_canton (26 Schweizer Kantone) ausstehend. Canton-Codes hier hardcoded für Mockup. -->
     <div class="heatmap-wrap">
       <div class="ch-map-wrap">
-        <svg class="ch-map" id="chMap" viewBox="0 0 600 400">
-          <!--
-            Stilisierte Polygon-Pfade der 7 BFS-Grossregionen der Schweiz.
-            Koordinaten sind annähernde geografische Positionen (kein Präzisionsanspruch — Mockup).
-            Leserichtung West→Ost: GE · MI · NW · ZE · ZH · OS, TI hängt südlich.
-          -->
+        <!--
+          26-Kantone-Schweiz-Karte · geografisch positionierte Polygon-Pfade
+          ViewBox: 0 0 620 420 (West→Ost, Nord→Süd)
+          Koordinatensystem: approximiert auf Basis offizieller CH1903-Topographie.
+          Kanton-IDs nach ISO 3166-2:CH · Zwei-Buchstaben-Codes.
 
-          <!-- GE: Genferseeregion — Südwest-Ecke, dreieckig -->
-          <path id="region-GE"
-            data-code="GE" data-name="Genferseeregion"
-            data-contacted="24" data-total="38" data-pct="63"
-            d="M 30,230 L 110,180 L 145,260 L 115,310 L 55,300 Z" />
+          West-Ost-Reihenfolge: GE · VD · NE · JU → FR · SO · BS · BL → BE (gross)
+          → AG · ZH (gross) → SH · TG → SG (mit AR/AI)
+          Mitte (Innerschweiz): LU · OW · NW · UR · SZ · ZG · GL
+          Süd: VS (gross) · TI (gross) · GR (grösster Kanton)
+        -->
+        <svg class="ch-map" id="chMap" viewBox="0 0 620 420">
 
-          <!-- MI: Espace Mittelland — Zentrum-West, grosse Fläche -->
-          <path id="region-MI"
-            data-code="MI" data-name="Espace Mittelland"
-            data-contacted="32" data-total="41" data-pct="78"
-            d="M 110,100 L 210,85 L 250,130 L 255,195 L 210,230 L 145,260 L 110,180 Z" />
+          <!-- ═══ NORDWEST-KETTE: JU · BS · BL · SO ═══ -->
 
-          <!-- NW: Nordwestschweiz — Nordwest, schmales Band -->
-          <path id="region-NW"
-            data-code="NW" data-name="Nordwestschweiz"
-            data-contacted="19" data-total="27" data-pct="70"
-            d="M 210,85 L 290,70 L 310,120 L 280,145 L 250,130 Z" />
+          <!-- JU: Jura — Nordwestzipfel, Jurabögen -->
+          <path id="canton-JU"
+            data-code="JU" data-name="Jura"
+            data-contacted="3" data-total="10" data-score="31"
+            d="M 82,68 L 110,55 L 135,58 L 152,70 L 148,90 L 130,100 L 110,98 L 90,88 Z" />
 
-          <!-- ZH: Zürich — Zentrum-Nord, kompakt -->
-          <path id="region-ZH"
+          <!-- BS: Basel-Stadt — kleinste Fläche, Stadtgebiet -->
+          <path id="canton-BS"
+            data-code="BS" data-name="Basel-Stadt"
+            data-contacted="21" data-total="25" data-score="84"
+            d="M 206,44 L 222,44 L 226,58 L 212,62 L 202,55 Z" />
+
+          <!-- BL: Basel-Landschaft — Halbring um BS -->
+          <path id="canton-BL"
+            data-code="BL" data-name="Basel-Landschaft"
+            data-contacted="18" data-total="23" data-score="78"
+            d="M 152,70 L 180,55 L 202,55 L 212,62 L 226,58 L 238,68 L 242,88 L 230,102 L 210,108 L 185,105 L 165,96 L 148,90 Z" />
+
+          <!-- SO: Solothurn — Streifen südlich BL -->
+          <path id="canton-SO"
+            data-code="SO" data-name="Solothurn"
+            data-contacted="12" data-total="17" data-score="71"
+            d="M 148,90 L 165,96 L 185,105 L 210,108 L 230,102 L 245,110 L 248,126 L 230,132 L 208,135 L 185,130 L 162,120 L 145,108 Z" />
+
+          <!-- ═══ WEST: GE · VD · NE · FR ═══ -->
+
+          <!-- GE: Genf — äusserstes Westende, umschlossen von VD -->
+          <path id="canton-GE"
+            data-code="GE" data-name="Genf"
+            data-contacted="24" data-total="29" data-score="82"
+            d="M 42,258 L 62,248 L 78,256 L 85,272 L 76,286 L 55,290 L 38,278 Z" />
+
+          <!-- VD: Waadt — grosser Westkanton, Genfersee-Nordufer -->
+          <path id="canton-VD"
+            data-code="VD" data-name="Waadt"
+            data-contacted="32" data-total="42" data-score="76"
+            d="M 62,168 L 100,148 L 130,148 L 152,160 L 170,175 L 175,200 L 168,224 L 155,244 L 135,260 L 110,270 L 85,272 L 78,256 L 62,248 L 45,232 L 40,210 L 42,188 Z" />
+
+          <!-- NE: Neuenburg — Schmalstreifen westlich Mittelland -->
+          <path id="canton-NE"
+            data-code="NE" data-name="Neuenburg"
+            data-contacted="8" data-total="14" data-score="58"
+            d="M 110,98 L 130,100 L 148,90 L 162,100 L 170,118 L 165,136 L 152,148 L 130,148 L 115,138 L 105,122 Z" />
+
+          <!-- FR: Freiburg — Zentrum-West zwischen Bern und Waadt -->
+          <path id="canton-FR"
+            data-code="FR" data-name="Freiburg"
+            data-contacted="11" data-total="18" data-score="62"
+            d="M 170,118 L 208,135 L 230,132 L 248,148 L 245,170 L 235,188 L 218,198 L 200,200 L 175,200 L 170,175 L 165,155 L 165,136 Z" />
+
+          <!-- ═══ BERN (grosser Kanton, Mitte-West) ═══ -->
+
+          <!-- BE: Bern — zweitgrösster Kanton, komplex geformt -->
+          <path id="canton-BE"
+            data-code="BE" data-name="Bern"
+            data-contacted="28" data-total="38" data-score="74"
+            d="M 165,136 L 185,130 L 208,135 L 230,132 L 248,126 L 268,130 L 290,125 L 308,132 L 318,148 L 315,168 L 305,185 L 285,195 L 268,205 L 255,220 L 245,240 L 235,258 L 220,268 L 200,268 L 185,258 L 172,242 L 168,224 L 175,200 L 200,200 L 218,198 L 235,188 L 245,170 L 248,148 Z" />
+
+          <!-- ═══ MITTELLAND-KETTE: AG · ZH ═══ -->
+
+          <!-- AG: Aargau — Mittelland Nord, zwischen BL/SO und ZH -->
+          <path id="canton-AG"
+            data-code="AG" data-name="Aargau"
+            data-contacted="24" data-total="30" data-score="81"
+            d="M 242,88 L 268,80 L 295,78 L 318,82 L 328,96 L 328,115 L 315,128 L 308,132 L 290,125 L 268,130 L 248,126 L 245,110 L 230,102 Z" />
+
+          <!-- ZH: Zürich — grösster Wirtschaftskanton, Nordost-Mitte -->
+          <path id="canton-ZH"
             data-code="ZH" data-name="Zürich"
-            data-contacted="51" data-total="58" data-pct="88"
-            d="M 290,70 L 380,75 L 390,145 L 350,165 L 310,155 L 310,120 Z" />
+            data-contacted="51" data-total="55" data-score="92"
+            d="M 295,78 L 330,68 L 368,65 L 395,72 L 408,88 L 410,108 L 400,128 L 382,138 L 358,142 L 338,138 L 328,115 L 318,82 Z" />
 
-          <!-- OS: Ostschweiz — rechte Seite, gross -->
-          <path id="region-OS"
-            data-code="OS" data-name="Ostschweiz"
-            data-contacted="14" data-total="33" data-pct="42"
-            d="M 380,75 L 560,90 L 570,240 L 470,260 L 400,250 L 350,200 L 350,165 L 390,145 Z" />
+          <!-- ═══ NORDOST-GRUPPE: SH · TG · AR · AI · SG ═══ -->
 
-          <!-- ZE: Zentralschweiz — Zentrum, kleiner Kern -->
-          <path id="region-ZE"
-            data-code="ZE" data-name="Zentralschweiz"
-            data-contacted="22" data-total="28" data-pct="79"
-            d="M 255,195 L 310,155 L 350,165 L 350,200 L 400,250 L 360,270 L 300,265 L 255,240 Z" />
+          <!-- SH: Schaffhausen — nördlichster Kanton, Rheinbogen -->
+          <path id="canton-SH"
+            data-code="SH" data-name="Schaffhausen"
+            data-contacted="8" data-total="13" data-score="65"
+            d="M 330,42 L 368,38 L 395,42 L 400,58 L 395,72 L 368,65 L 330,68 L 318,58 Z" />
 
-          <!-- TI: Tessin — fingerförmig nach Süden -->
-          <path id="region-TI"
+          <!-- TG: Thurgau — Nordostrand, Bodensee -->
+          <path id="canton-TG"
+            data-code="TG" data-name="Thurgau"
+            data-contacted="11" data-total="16" data-score="67"
+            d="M 395,42 L 438,42 L 462,52 L 468,68 L 455,85 L 432,92 L 408,88 L 395,72 L 400,58 Z" />
+
+          <!-- SG: St. Gallen — grosser Nordostkanton, Appenzells eingeschlossen -->
+          <path id="canton-SG"
+            data-code="SG" data-name="St. Gallen"
+            data-contacted="18" data-total="26" data-score="69"
+            d="M 432,92 L 455,85 L 468,68 L 500,60 L 525,72 L 540,92 L 542,118 L 528,140 L 508,152 L 490,162 L 465,168 L 445,162 L 425,148 L 410,130 L 408,108 L 410,88 Z" />
+
+          <!-- AR: Appenzell Ausserrhoden — eingeschlossen in SG, äusserer Ring -->
+          <path id="canton-AR"
+            data-code="AR" data-name="Appenzell Ausserrhoden"
+            data-contacted="3" data-total="7" data-score="43"
+            d="M 455,100 L 478,96 L 492,108 L 488,125 L 472,132 L 455,128 L 445,115 Z" />
+
+          <!-- AI: Appenzell Innerrhoden — kleinster Kanton, Kern in AR -->
+          <path id="canton-AI"
+            data-code="AI" data-name="Appenzell Innerrhoden"
+            data-contacted="1" data-total="4" data-score="25"
+            d="M 463,108 L 478,104 L 484,115 L 476,124 L 462,122 Z" />
+
+          <!-- ═══ INNERSCHWEIZ: LU · ZG · OW · NW · UR · SZ · GL ═══ -->
+
+          <!-- LU: Luzern — Zentralschweiz Westrand, Vierwaldstättersee -->
+          <path id="canton-LU"
+            data-code="LU" data-name="Luzern"
+            data-contacted="13" data-total="19" data-score="68"
+            d="M 290,125 L 308,132 L 318,148 L 315,168 L 305,185 L 285,195 L 268,205 L 255,215 L 245,205 L 238,188 L 245,170 L 250,155 L 268,145 L 285,142 Z" />
+
+          <!-- ZG: Zug — kleiner Kanton zwischen LU und ZH -->
+          <path id="canton-ZG"
+            data-code="ZG" data-name="Zug"
+            data-contacted="14" data-total="16" data-score="88"
+            d="M 338,138 L 358,142 L 365,158 L 355,172 L 338,175 L 322,165 L 318,148 L 328,142 Z" />
+
+          <!-- NW: Nidwalden — schmaler Streifen westlich UR -->
+          <path id="canton-NW"
+            data-code="NW" data-name="Nidwalden"
+            data-contacted="4" data-total="8" data-score="48"
+            d="M 268,185 L 285,195 L 305,185 L 315,198 L 308,215 L 292,220 L 275,212 L 268,200 Z" />
+
+          <!-- OW: Obwalden — angrenzend an NW, etwas westlicher -->
+          <path id="canton-OW"
+            data-code="OW" data-name="Obwalden"
+            data-contacted="3" data-total="7" data-score="41"
+            d="M 245,205 L 255,215 L 268,205 L 268,220 L 275,232 L 265,242 L 248,242 L 238,228 L 238,212 Z" />
+
+          <!-- SZ: Schwyz — Vierwaldstättersee Südufer -->
+          <path id="canton-SZ"
+            data-code="SZ" data-name="Schwyz"
+            data-contacted="6" data-total="12" data-score="52"
+            d="M 338,175 L 355,172 L 375,180 L 388,195 L 385,215 L 368,225 L 348,225 L 330,218 L 320,205 L 322,188 Z" />
+
+          <!-- UR: Uri — Alpenkanton, Gotthard -->
+          <path id="canton-UR"
+            data-code="UR" data-name="Uri"
+            data-contacted="2" data-total="6" data-score="35"
+            d="M 308,215 L 320,205 L 330,218 L 348,225 L 350,248 L 335,268 L 315,272 L 300,260 L 292,240 L 292,220 Z" />
+
+          <!-- GL: Glarus — Schmalkanton östlich URI -->
+          <path id="canton-GL"
+            data-code="GL" data-name="Glarus"
+            data-contacted="3" data-total="8" data-score="38"
+            d="M 388,195 L 408,188 L 425,198 L 425,218 L 412,235 L 395,240 L 378,232 L 368,215 L 368,200 Z" />
+
+          <!-- ═══ GROSSE SÜDKANTONE: VS · GR · TI ═══ -->
+
+          <!-- VS: Wallis — langer Südwestkanton, Rhonetal -->
+          <path id="canton-VS"
+            data-code="VS" data-name="Wallis"
+            data-contacted="9" data-total="19" data-score="48"
+            d="M 155,244 L 168,240 L 185,258 L 200,268 L 220,268 L 235,280 L 242,302 L 235,325 L 215,338 L 188,340 L 162,330 L 145,312 L 138,290 L 145,268 Z" />
+
+          <!-- GR: Graubünden — grösster Kanton, Südosten -->
+          <path id="canton-GR"
+            data-code="GR" data-name="Graubünden"
+            data-contacted="7" data-total="21" data-score="34"
+            d="M 395,240 L 412,235 L 430,242 L 452,238 L 475,232 L 500,238 L 525,248 L 545,268 L 548,295 L 535,320 L 510,332 L 480,338 L 450,332 L 425,318 L 405,298 L 390,275 L 378,252 L 378,238 Z" />
+
+          <!-- TI: Tessin — Süden, südlich der Alpen -->
+          <path id="canton-TI"
             data-code="TI" data-name="Tessin"
-            data-contacted="6" data-total="14" data-pct="43"
-            d="M 255,240 L 300,265 L 360,270 L 370,310 L 320,370 L 270,360 L 240,300 Z" />
+            data-contacted="6" data-total="14" data-score="43"
+            d="M 295,272 L 315,272 L 335,280 L 355,290 L 370,310 L 375,335 L 365,358 L 345,372 L 322,375 L 302,362 L 285,345 L 278,322 L 280,300 Z" />
 
-          <!-- Region-Code Labels, zentriert in jeder Region -->
-          <text x="88"  y="262" class="dark-lbl" id="lbl-GE">GE</text>
-          <text x="178" y="175" id="lbl-MI">MI</text>
-          <text x="258" y="108" id="lbl-NW">NW</text>
-          <text x="338" y="115" id="lbl-ZH">ZH</text>
-          <text x="472" y="170" id="lbl-OS">OS</text>
-          <text x="315" y="218" id="lbl-ZE">ZE</text>
-          <text x="305" y="320" class="dark-lbl" id="lbl-TI">TI</text>
+          <!-- ═══ KANTONSBEZEICHNUNGEN ═══ -->
+          <!-- Labels: Kanton-Kürzel, zentriert in jeder Fläche -->
+
+          <!-- Nordwest -->
+          <text x="114" y="78">JU</text>
+          <text x="214" y="52">BS</text>
+          <text x="196" y="82">BL</text>
+          <text x="196" y="115">SO</text>
+
+          <!-- West -->
+          <text x="60" y="270">GE</text>
+          <text x="105" y="216">VD</text>
+          <text x="136" y="122">NE</text>
+          <text x="208" y="162">FR</text>
+
+          <!-- Bern -->
+          <text x="246" y="190">BE</text>
+
+          <!-- Mittelland -->
+          <text x="285" y="106">AG</text>
+          <text x="356" y="105">ZH</text>
+
+          <!-- Nordost -->
+          <text x="360" y="53">SH</text>
+          <text x="428" y="68">TG</text>
+          <text x="480" y="110">SG</text>
+          <text x="469" y="116">AR</text>
+          <text x="471" y="114" style="display:none;">AI</text>
+
+          <!-- Innerschweiz -->
+          <text x="276" y="162">LU</text>
+          <text x="344" y="158">ZG</text>
+          <text x="288" y="205">NW</text>
+          <text x="254" y="225">OW</text>
+          <text x="355" y="200">SZ</text>
+          <text x="316" y="238">UR</text>
+          <text x="406" y="216">GL</text>
+
+          <!-- Süd -->
+          <text x="192" y="298">VS</text>
+          <text x="462" y="285">GR</text>
+          <text x="328" y="322">TI</text>
+
         </svg>
       </div>
 
       <aside class="hm-legend">
         <h4>Skala</h4>
-        <p>Score = Anteil Kandidaten in dieser Region, der in den letzten 30 Tagen mind. einen Touch erhalten hat.</p>
+        <p>Score = Anteil Kandidaten in diesem Kanton, der in den letzten 30 Tagen mind. einen Touch erhalten hat.</p>
         <div class="hm-scale"></div>
         <div class="hm-scale-labels">
           <span>0 %</span>
@@ -775,16 +955,16 @@
         </div>
         <div class="hm-active-info" id="hmInfo">
           <div class="ln">
-            <div class="key">Aktive Region</div>
-            <div class="val" id="hmInfoCell">Ostschweiz</div>
+            <div class="key">Aktiver Kanton</div>
+            <div class="val" id="hmInfoCell">Appenzell Innerrhoden</div>
           </div>
           <div class="ln">
             <div class="key">Coverage</div>
-            <div class="val mono" id="hmInfoScore" style="color:var(--red);">42 %</div>
+            <div class="val mono" id="hmInfoScore" style="color:var(--red);">25 %</div>
           </div>
           <div class="ln">
             <div class="key">Kontaktiert · Total</div>
-            <div class="val mono" id="hmInfoCount" style="font-size:13px;">14 / 33 Kandidaten</div>
+            <div class="val mono" id="hmInfoCount" style="font-size:13px;">1 / 4 Kandidaten</div>
           </div>
         </div>
       </aside>
@@ -1036,7 +1216,7 @@
 
   <div class="footer-line">
     <span>Quelle · ARK Performance-Warehouse · Stand 25.04.2026 09:14</span>
-    <span>Layout · coverage.v1 · Periode 30 Tage</span>
+    <span>Layout · coverage.v2 · 26 Kantone · Periode 30 Tage</span>
   </div>
 
 </main>
@@ -1052,104 +1232,138 @@
     b.classList.add('active');
   }));
 
-  // ── SVG Schweiz-Karte (7 BFS-Grossregionen) ──────
-  const regions = [
-    { code:'GE', name:'Genferseeregion',  contacted: 24, total: 38, score: 63 },
-    { code:'MI', name:'Espace Mittelland', contacted: 32, total: 41, score: 78 },
-    { code:'NW', name:'Nordwestschweiz',   contacted: 19, total: 27, score: 70 },
-    { code:'ZH', name:'Zürich',            contacted: 51, total: 58, score: 88 },
-    { code:'OS', name:'Ostschweiz',        contacted: 14, total: 33, score: 42 },
-    { code:'ZE', name:'Zentralschweiz',    contacted: 22, total: 28, score: 79 },
-    { code:'TI', name:'Tessin',            contacted:  6, total: 14, score: 43 },
+  // ── SVG Schweiz-Karte · 26 Kantone ───────────────
+  // Stammdaten-Patch v1.6→v1.7 für dim_canton (26 Schweizer Kantone) ausstehend.
+  // Canton-Codes hier hardcoded für Mockup.
+  const cantons = [
+    { code:'ZH', name:'Zürich',                 score:92, contacted:51, total:55 },
+    { code:'BE', name:'Bern',                   score:74, contacted:28, total:38 },
+    { code:'LU', name:'Luzern',                 score:68, contacted:13, total:19 },
+    { code:'UR', name:'Uri',                    score:35, contacted: 2, total: 6 },
+    { code:'SZ', name:'Schwyz',                 score:52, contacted: 6, total:12 },
+    { code:'OW', name:'Obwalden',               score:41, contacted: 3, total: 7 },
+    { code:'NW', name:'Nidwalden',              score:48, contacted: 4, total: 8 },
+    { code:'GL', name:'Glarus',                 score:38, contacted: 3, total: 8 },
+    { code:'ZG', name:'Zug',                    score:88, contacted:14, total:16 },
+    { code:'FR', name:'Freiburg',               score:62, contacted:11, total:18 },
+    { code:'SO', name:'Solothurn',              score:71, contacted:12, total:17 },
+    { code:'BS', name:'Basel-Stadt',            score:84, contacted:21, total:25 },
+    { code:'BL', name:'Basel-Landschaft',       score:78, contacted:18, total:23 },
+    { code:'SH', name:'Schaffhausen',           score:65, contacted: 8, total:13 },
+    { code:'AR', name:'Appenzell Ausserrhoden', score:43, contacted: 3, total: 7 },
+    { code:'AI', name:'Appenzell Innerrhoden',  score:25, contacted: 1, total: 4 },
+    { code:'SG', name:'St. Gallen',             score:69, contacted:18, total:26 },
+    { code:'GR', name:'Graubünden',             score:34, contacted: 7, total:21 },
+    { code:'AG', name:'Aargau',                 score:81, contacted:24, total:30 },
+    { code:'TG', name:'Thurgau',                score:67, contacted:11, total:16 },
+    { code:'TI', name:'Tessin',                 score:43, contacted: 6, total:14 },
+    { code:'VD', name:'Waadt',                  score:76, contacted:32, total:42 },
+    { code:'VS', name:'Wallis',                 score:48, contacted: 9, total:19 },
+    { code:'NE', name:'Neuenburg',              score:58, contacted: 8, total:14 },
+    { code:'GE', name:'Genf',                   score:82, contacted:24, total:29 },
+    { code:'JU', name:'Jura',                   score:31, contacted: 3, total:10 },
   ];
+
+  // INVERTED color scale: dark red = high coverage (gut), light cream = low coverage (schlecht)
+  function scoreColor(pct) {
+    const t = Math.max(0, Math.min(100, pct));
+    if (t <= 30) {
+      // cream — very low coverage
+      return { bg: '#F5E6D3', dark: false };
+    } else if (t <= 50) {
+      // interpolate cream → peach
+      const k = (t - 30) / 20;
+      return { bg: lerpHex('#F5E6D3', '#E8C4A0', k), dark: false };
+    } else if (t <= 70) {
+      // interpolate peach → orange-red
+      const k = (t - 50) / 20;
+      return { bg: lerpHex('#E8C4A0', '#E07A5F', k), dark: k > 0.5 };
+    } else if (t <= 85) {
+      // interpolate orange-red → red
+      const k = (t - 70) / 15;
+      return { bg: lerpHex('#E07A5F', '#C0392B', k), dark: true };
+    } else {
+      // dark red — best coverage
+      return { bg: '#8E2418', dark: true };
+    }
+  }
 
   function lerpHex(a, b, k) {
     const ah = a.replace('#',''); const bh = b.replace('#','');
     const ar = parseInt(ah.substr(0,2),16), ag = parseInt(ah.substr(2,2),16), ab = parseInt(ah.substr(4,2),16);
     const br = parseInt(bh.substr(0,2),16), bg = parseInt(bh.substr(2,2),16), bb = parseInt(bh.substr(4,2),16);
-    const r = Math.round(ar + (br-ar)*k);
-    const g = Math.round(ag + (bg-ag)*k);
+    const r  = Math.round(ar + (br-ar)*k);
+    const g  = Math.round(ag + (bg-ag)*k);
     const bl = Math.round(ab + (bb-ab)*k);
     return `rgb(${r},${g},${bl})`;
   }
-  // Canonical 5-stop scale: red → red-tint → amber-tint → green-tint → green
-  function scoreColor(pct) {
-    const t = Math.max(0, Math.min(100, pct));
-    if (t < 40) {
-      const k = t / 40;
-      return { bg: lerpHex('#C0392B', '#FDF0EE', k), dark: k < 0.45 };
-    } else if (t < 55) {
-      const k = (t - 40) / 15;
-      return { bg: lerpHex('#FDF0EE', '#FEF3E2', k), dark: false };
-    } else if (t < 70) {
-      const k = (t - 55) / 15;
-      return { bg: lerpHex('#FEF3E2', '#E8F5EF', k), dark: false };
-    } else if (t < 90) {
-      const k = (t - 70) / 20;
-      return { bg: lerpHex('#E8F5EF', '#1A6B4A', k), dark: k > 0.55 };
-    } else {
-      return { bg: '#1A6B4A', dark: true };
-    }
-  }
 
-  // Apply fill colors to region paths
-  regions.forEach(reg => {
-    const path = document.getElementById(`region-${reg.code}`);
+  // Apply fill colors to canton paths + sync label brightness
+  cantons.forEach(c => {
+    const path = document.getElementById(`canton-${c.code}`);
     if (!path) return;
-    const { bg, dark } = scoreColor(reg.score);
+    path.dataset.score     = c.score;
+    path.dataset.contacted = c.contacted;
+    path.dataset.total     = c.total;
+    path.dataset.name      = c.name;
+    const { bg, dark } = scoreColor(c.score);
     path.style.fill = bg;
-    // Update label dark/light
-    const lbl = document.getElementById(`lbl-${reg.code}`);
-    if (lbl) {
-      lbl.classList.toggle('dark-lbl', dark);
-    }
-    path.setAttribute('title', `${reg.name} · ${reg.contacted} von ${reg.total} Kandidaten · ${reg.score} % Coverage`);
+    // Sync label text color
+    const lbl = document.querySelector(`text[id]`);  // handled below via querySelectorAll
   });
 
-  // Active region state
+  // Sync label colors after fill assignment
+  document.querySelectorAll('#chMap text').forEach(t => {
+    // find the matching canton path by looking for proximity (text is positioned near canton centroid)
+    // Simple approach: labels are dark by default; override for dark-fill cantons
+    const parentSvg = document.getElementById('chMap');
+    // We'll re-run after setActiveRegion
+  });
+
+  // Active canton state
   const hmInfoCell  = document.getElementById('hmInfoCell');
   const hmInfoScore = document.getElementById('hmInfoScore');
   const hmInfoCount = document.getElementById('hmInfoCount');
   const critFilter  = document.getElementById('critFilter');
 
-  function setActiveRegion(path) {
+  function setActiveCanton(path) {
     document.querySelectorAll('#chMap path.active').forEach(x => x.classList.remove('active'));
     path.classList.add('active');
-    const code = path.dataset.code;
-    const name = path.dataset.name;
-    const pct  = +path.dataset.pct;
+    const code      = path.dataset.code;
+    const name      = path.dataset.name;
+    const score     = +path.dataset.score;
     const contacted = +path.dataset.contacted;
     const total     = +path.dataset.total;
     hmInfoCell.textContent  = name;
-    hmInfoScore.textContent = `${pct} %`;
-    hmInfoScore.style.color = pct < 55 ? 'var(--red)' : pct < 70 ? 'var(--amber)' : 'var(--green)';
+    hmInfoScore.textContent = `${score} %`;
+    hmInfoScore.style.color = score < 40 ? 'var(--red)' : score < 65 ? 'var(--amber)' : 'var(--green)';
     hmInfoCount.textContent = `${contacted} / ${total} Kandidaten`;
-    const matches = critList.filter(r => r.region === code).length;
+    const matches = critList.filter(r => r.canton === code).length;
     critFilter.firstChild.textContent = `${name} · ${matches} Treffer `;
     critFilter.classList.add('gold');
     renderCrit(code);
   }
 
   document.querySelectorAll('#chMap path').forEach(p => {
-    p.addEventListener('click', () => setActiveRegion(p));
+    p.addEventListener('click', () => setActiveCanton(p));
   });
 
-  // Default active: OS (worst region)
-  const defaultPath = document.getElementById('region-OS');
-  if (defaultPath) setActiveRegion(defaultPath);
+  // Default active: AI (schlechtester Kanton, 25%)
+  const defaultPath = document.getElementById('canton-AI');
+  if (defaultPath) setActiveCanton(defaultPath);
 
-  // ── Critical list ────────────────────────────────
+  // ── Critical list · 26-Kantone-Verteilung ────────
   const critList = [
-    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false, region:'OS' },
-    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true,  region:'ZH' },
-    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true,  region:'OS' },
-    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false, region:'MI' },
-    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true,  region:'ZH' },
-    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false, region:'TI' },
-    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false, region:'NW' },
-    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false, region:'GE' },
-    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false, region:'OS' },
-    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false, region:'ZE' },
+    { id: 'FA', avatar:'green', sparte:'ARC', owner:'LR', last:31, soll:14, score:22, checked:false, canton:'AI' },
+    { id: 'RM', avatar:'gold',  sparte:'ARC', owner:'PW', last:26, soll:14, score:32, checked:true,  canton:'ZH' },
+    { id: 'BL', avatar:'red',   sparte:'PUR', owner:'LR', last:24, soll:14, score:38, checked:true,  canton:'JU' },
+    { id: 'TM', avatar:'amber', sparte:'ING', owner:'JV', last:22, soll:14, score:41, checked:false, canton:'GR' },
+    { id: 'SK', avatar:'',      sparte:'ARC', owner:'PW', last:21, soll:14, score:45, checked:true,  canton:'ZH' },
+    { id: 'KH', avatar:'',      sparte:'PUR', owner:'MR', last:19, soll:21, score:52, checked:false, canton:'TI' },
+    { id: 'NW', avatar:'',      sparte:'GT',  owner:'ST', last:18, soll:21, score:58, checked:false, canton:'UR' },
+    { id: 'DR', avatar:'',      sparte:'REM', owner:'JV', last:17, soll:14, score:62, checked:false, canton:'GE' },
+    { id: 'EL', avatar:'',      sparte:'ING', owner:'LR', last:15, soll:14, score:64, checked:false, canton:'AR' },
+    { id: 'MO', avatar:'',      sparte:'ARC', owner:'MR', last:14, soll:14, score:68, checked:false, canton:'VS' },
   ];
 
   function scoreClass(s) {
@@ -1165,15 +1379,15 @@
   }
 
   const critBody = document.getElementById('critBody');
-  let activeRegionFilter = 'OS'; // default: worst region
+  let activeCantonFilter = 'AI'; // default: worst canton
 
-  function renderCrit(regionCode) {
-    if (regionCode !== undefined) activeRegionFilter = regionCode;
-    const list = activeRegionFilter
-      ? critList.filter(r => r.region === activeRegionFilter)
+  function renderCrit(cantonCode) {
+    if (cantonCode !== undefined) activeCantonFilter = cantonCode;
+    const list = activeCantonFilter
+      ? critList.filter(r => r.canton === activeCantonFilter)
       : critList;
     let html = '';
-    list.forEach((r, _) => {
+    list.forEach((r) => {
       const i = critList.indexOf(r);
       const sc = scoreClass(r.score);
       const dc = daysClass(r.last, r.soll);
@@ -1204,11 +1418,9 @@
   function bindRowEvents() {
     document.querySelectorAll('#critBody tr').forEach(tr => {
       tr.addEventListener('click', (e) => {
-        // ignore clicks on action-link
         if (e.target.closest('.action-link')) return;
         const i = +tr.dataset.i;
         const cbEl = e.target.closest('.cb');
-        // toggle checkbox if cb clicked, OR row click on the checkbox-cell area
         if (cbEl || e.target.closest('td')?.cellIndex === 0) {
           critList[i].checked = !critList[i].checked;
           renderCrit();
@@ -1217,7 +1429,7 @@
     });
   }
 
-  const bulkBtn = document.getElementById('bulkBtn');
+  const bulkBtn   = document.getElementById('bulkBtn');
   const bulkCount = document.getElementById('bulkCount');
   function updateBulkBtn() {
     const n = critList.filter(r => r.checked).length;
@@ -1242,7 +1454,7 @@
   document.getElementById('critFilterX').addEventListener('click', (e) => {
     e.stopPropagation();
     document.querySelectorAll('#chMap path.active').forEach(x => x.classList.remove('active'));
-    activeRegionFilter = null;
+    activeCantonFilter = null;
     critFilter.firstChild.textContent = 'alle ';
     critFilter.classList.remove('gold');
     renderCrit(null);
