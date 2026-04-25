@@ -1,21 +1,22 @@
 ---
-title: "Backend Architecture Digest v2.7"
+title: "Backend Architecture Digest v2.8"
 type: meta
 created: 2026-04-17
-updated: 2026-04-24
-sources: ["ARK_BACKEND_ARCHITECTURE_v2_7.md"]
-tags: [digest, backend, architecture, events, worker, endpoints, sagas, elearning]
+updated: 2026-04-25
+sources: ["ARK_BACKEND_ARCHITECTURE_v2_8.md"]
+tags: [digest, backend, architecture, events, worker, endpoints, sagas, elearning, performance]
 ---
 
-# Backend Architecture Digest — v2.7 (Stand 2026-04-24)
+# Backend Architecture Digest — v2.8 (Stand 2026-04-25)
 
-Kompaktes Nachschlagewerk aus `Grundlagen MD/ARK_BACKEND_ARCHITECTURE_v2_7.md` (~4324 Zeilen; v2.5 + v2.5.4 Dok-Generator + v2.5.5 Outlook + v2.6 Zeit-Modul + v2.7 E-Learning-Modul Sub A/B/C/D). Events, Worker, Endpunkte, Sagas, WebSocket-Channels, Settings-Keys **verlustfrei**. Request-/Response-Shapes, Saga-Step-Internals, Prosa: weggelassen — siehe Volltext.
+Kompaktes Nachschlagewerk aus `Grundlagen MD/ARK_BACKEND_ARCHITECTURE_v2_8.md` (~4600 Zeilen; v2.5 + v2.5.4 Dok-Generator + v2.5.5 Outlook + v2.6 Zeit-Modul + v2.7 E-Learning-Modul Sub A/B/C/D + v2.8 Performance-Modul). Events, Worker, Endpunkte, Sagas, WebSocket-Channels, Settings-Keys **verlustfrei**. Request-/Response-Shapes, Saga-Step-Internals, Prosa: weggelassen — siehe Volltext.
 
 ## Versions-Changelog
 
 - **v2.5 (Outlook-Update 2026-04-17):** Individuelle User-Tokens (Shared-Mailbox verworfen)
 - **v2.6 (2026-04-19):** Zeit-Modul · 21 Endpoints · 12 Events · 9 Workers · 4 Sagas · 3 WS-Channels · Scanner-Integration · DSG-Audit-Worker
 - **v2.7 (2026-04-24):** E-Learning-Modul Sub A/B/C/D · 52 neue Events · 25 Workers · 80+ Endpoints · Gate-Middleware · pgvector-RAG · Python-Worker-Service · Multi-Tenant-RLS (28 Tabellen)
+- **v2.8 (2026-04-25):** Performance-Modul TEIL R · ~50 Endpoints `/api/v1/performance/*` + Power-BI-Bridge · 12 Performance-Worker + 1 HR-Cycle-Worker · 10 Performance-Events + 5 HR-Review-Events · 5 Performance-WS-Channels + 2 HR-WS-Channels · 3 Sagas (Closed-Loop · Pre-Built-Report · Review-Cycle) · §11 Aktivierung Performance-Namespace (ehemals 501-Stub)
 
 ## Architektur-Änderung v2.5.5 (2026-04-17)
 
@@ -38,6 +39,7 @@ Kompaktes Nachschlagewerk aus `Grundlagen MD/ARK_BACKEND_ARCHITECTURE_v2_7.md` (
 - **L. Dok-Generator-Endpoints** (NEU v2.5.4, 2026-04-17) — 9 Endpoints + Wrapper-Mapping + 3 Events
 - **M. Zeit-Modul** (NEU v2.6, 2026-04-19) — 21 Endpoints + 12 Events + 9 Workers + 4 Sagas + 3 WS-Channels
 - **N. E-Learning-Modul** (NEU v2.7, 2026-04-24) — 52 Events + 25 Workers + 80+ Endpoints + Gate-Middleware + RLS (28 Tabellen) · Sub A/B/C/D
+- **R. Performance-Modul** (NEU v2.8, 2026-04-25) — ~50 Endpoints + Power-BI-Bridge · 12 Performance-Worker + 1 HR-Cycle-Worker · 10 Performance-Events + 5 HR-Review-Events · 5 Perf-WS + 2 HR-WS · 3 Sagas (Closed-Loop · Report-Pipeline · Review-Cycle)
 
 **Teil v2.4 (Original, Zeilen 381-3716):**
 
@@ -1812,6 +1814,135 @@ Für Details nicht in diesem Digest die Grundlagendatei `Grundlagen MD/ARK_BACKE
 | Dok-Generator-Endpoints (9) + Wrapper + Events | §L | ~3755-3840 |
 | Zeit-Modul (Endpoints/Events/Workers/Sagas/WS/Settings) | §M | ~3842-3928 |
 | E-Learning (Events/Workers/Endpoints/Gate/RLS/Integrationen) | TEIL N | ~3932-4323 |
+
+---
+
+## TEIL R · Performance-Modul (v2.8 · 2026-04-25)
+
+**Scope:** Aktivierung des in v2.7 §11 als `501 Not Implemented` reservierten `/api/v1/performance/*`- und `/api/v1/development/*`-Namespace. Cross-Modul-Analytics-Hub mit ~50 Endpoints, 12 Performance-Worker, 1 HR-Cycle-Worker, 10 Performance-Events, 5 HR-Review-Events, 5 Performance-WS-Channels, 2 HR-WS-Channels, 3 Sagas. Vollständiger Patch: `specs/ARK_BACKEND_ARCHITECTURE_PATCH_v2_7_to_v2_8_performance.md`.
+
+### R.1 Endpoint-Inventar (~50 Performance + ~30 HR + 2 Power-BI)
+
+| Bereich | Endpoints (Auszug) | Anzahl |
+|---------|--------------------|--------|
+| Dashboard + Tiles | `GET/PATCH /performance/dashboard/:page_code` · `POST .../reset` · `GET /tiles/library` · `GET /tiles/:id/data` | 5 |
+| Metrics | `GET /performance/metrics` · `GET .../snapshot` · `GET .../drill-down` | 3 |
+| Goals (Q2=C operative Goals) | `GET /goals/me\|team` · `POST/PATCH/DELETE /goals/:id` | 5 |
+| Insights (Q6=D Closed-Loop) | `GET /insights[, /:id]` · `PATCH /:id/acknowledge\|dismiss` · `POST /:id/actions` | 5 |
+| Action-Items | `GET/PATCH /actions[/:id]` · `GET/POST /actions/:id/outcome\|confirm-outcome` | 4 |
+| Reports | `GET /reports/templates` · `POST /reports/generate` · `GET /reports/runs[/:id]` · `POST /reports/runs/:id/retry` | 5 |
+| Forecast (Q8=E Markov v0.1) | `GET /forecast/pipeline\|process/:id\|conversion-rates` · `POST /forecast/process/:id/override` | 4 |
+| Admin (CRUD Stammdaten) | `*/admin/metric-definitions` · `*/admin/anomaly-thresholds` · `*/admin/powerbi-views` · `*/admin/snapshot-lag` · `*/admin/dashboard-defaults` · `*/admin/forecast-config` · `POST /admin/forecast/recompute` | 17 |
+| Power-BI Bridge (X-API-Key) | `GET /api/powerbi/views` · `GET /api/powerbi/refresh-status` | 2 |
+| HR Reviews (Erweiterung) | Cycles · Reviews · 360° · Question-Bank · Competency · Development-Plans | ~30 |
+
+**Caching:**
+- `GET /performance/tiles/:id/data` → Redis 60s, invalidiert via Cron-Snapshot-Lauf
+- `GET /performance/metrics` → Redis 30min, invalidiert via Admin-CRUD
+- `GET /performance/forecast/conversion-rates` → Redis 24h, invalidiert via `forecast-recompute.worker`
+- `GET /performance/admin/snapshot-lag` → kein Cache (Live-Monitoring)
+
+### R.2 Worker-Architektur (12 Performance + 1 HR-Cycle + 2 Shared)
+
+| Worker | Cron / Trigger | Zweck |
+|--------|----------------|-------|
+| `metric-snapshot-hourly.worker` | `15 * * * *` | nur Metriken mit `cadence='hourly'` |
+| `metric-snapshot-daily.worker` | `0 2 * * *` | Vollschnitt + delta_vs_yesterday/last_week/last_month + Goal-Achievement-Update |
+| `metric-snapshot-weekly.worker` | `0 2 * * 1` | aggregiert aus daily |
+| `metric-snapshot-monthly.worker` | `0 2 1 * *` | analog |
+| `metric-snapshot-quarterly.worker` | `0 2 1 1,4,7,10 *` | analog |
+| `metric-snapshot-yearly.worker` | `0 2 1 1 *` | analog |
+| `anomaly-detector.worker` | `0 6 * * *` | Threshold-Verletzungen → emittiert `perf_insight_detected` (Cooldown-Logik) |
+| `action-outcome-measurer.worker` | event `perf_action_item_completed` (verzögert um `measure_after_days`, Default 7d) | misst Insight-Improvement nach Action |
+| `report-generator.worker` | event `perf_report_generate` | rendert PDF + Email via individuelles Outlook-Token |
+| `forecast-recompute.worker` | `0 5 * * *` | Markov-Conversion-Raten + Process-Forecast + Aggregate |
+| `powerbi-view-refresh.worker` | per-View-Cron aus `dim_powerbi_view.refresh_cron` (BullMQ Repeating) | `REFRESH MATERIALIZED VIEW CONCURRENTLY` |
+| `snapshot-retention-cleaner.worker` | `0 3 * * 0` | DELETE wo `retention_until < CURRENT_DATE` |
+| `partition-creator.worker` | `0 0 1 * *` | Snapshot-Partitionen für nächste 3 Monate |
+| `dashboard-telemetry-rollup.worker` | `0 4 * * 0` | Tile-Usage-Aggregat in `fact_metric_snapshot_weekly` |
+| `review-cycle-lifecycle.worker` (HR) | event `hr_review_cycle_activated` + Cron `0 8 * * *` | erstellt Reviews + Reminders, eskaliert überfällige |
+
+**Markov-Forecast v0.1:** `P(placement) = ∏ conversion_rate(stage_i → stage_i+1) × time_decay(days_in_stage / avg_days_current_stage)`. Konfidenz ±25%. ML-Upgrade Phase 3+.
+
+### R.3 Events (10 Performance + 5 HR-Reviews)
+
+**Performance-Events:**
+
+| Event | Trigger | Konsumenten |
+|-------|---------|-------------|
+| `perf_insight_detected` | `anomaly-detector.worker` | Reminders-Worker (critical+), WS `perf:insights` |
+| `perf_insight_acknowledged` | UI-Action | WS |
+| `perf_action_item_created` | UI / Insight-Convert | Reminders-Worker, WS `perf:actions` |
+| `perf_action_item_completed` | UI-Action | `action-outcome-measurer.worker` (queued + delayed) |
+| `perf_action_outcome_measured` | `action-outcome-measurer.worker` | WS `perf:actions` |
+| `perf_goal_drift_detected` | `anomaly-detector.worker` | Reminders bei warn+ |
+| `perf_report_generate` | UI / Cron | `report-generator.worker` |
+| `perf_report_generated` | `report-generator.worker` finished | WS `perf:reports`, Email-Service |
+| `perf_report_failed` | `report-generator.worker` errored | Reminders an Admin |
+| `perf_powerbi_view_refresh_failed` | `powerbi-view-refresh.worker` errored | Reminders an Admin (blocker) |
+| `perf_snapshot_lag_critical` | Snapshot-Worker > 30min hinter Schedule | Reminders an Admin (blocker) |
+
+**HR-Reviews-Events:**
+
+| Event | Trigger | Konsumenten |
+|-------|---------|-------------|
+| `hr_review_cycle_activated` | Admin aktiviert Cycle | `review-cycle-lifecycle.worker` |
+| `hr_review_cycle_started` | Worker hat alle Reviews erstellt | WS `hr:reviews` |
+| `hr_review_self_assessment_completed` | MA submittet Self | WS, Reminder an Head |
+| `hr_review_signed` | Beide unterschrieben | Performance (`v_hr_review_summary`-Refresh-Hint), WS |
+| `hr_probation_review_auto_triggered` | `fact_probation_milestones.milestone_type='probation_end'` | WS |
+
+### R.4 WebSocket-Channels (5 Performance + 2 HR)
+
+| Channel | Visibility | Inhalt |
+|---------|------------|--------|
+| `perf:insights` | tenant-weit, RBAC-gefiltert | Live-Insight-Stream |
+| `perf:actions` | tenant-weit, RBAC-gefiltert | Action-Item-Updates + Outcomes |
+| `perf:reports` | tenant-weit | Report-Run-Status |
+| `perf:goals:{user_id}` | Self + Head + Admin | Goal-Updates |
+| `perf:dashboard:{user_id}` | Self only | Tile-Refresh nach Snapshot-Lauf |
+| `hr:reviews` | RBAC (Self/Manager/Admin) | Cycle-Status + Review-State-Changes |
+| `hr:dev-plans:{user_id}` | Self + Mentor + Manager + Admin | Development-Plan-Updates |
+
+### R.5 Sagas (3)
+
+**R.5.1 Closed-Loop (Insight → Action → Outcome):**
+1. `anomaly-detector.worker` → `INSERT fact_insight` + emit `perf_insight_detected`
+2. `POST /insights/:id/actions` (atomare TX): `INSERT fact_action_item` → `UPDATE fact_insight state='action_planned'` → `INSERT fact_reminder` → `UPDATE fact_action_item.reminder_id`
+3. `PATCH /actions/:id state='done'` → emit `perf_action_item_completed` mit `measure_after_days`
+4. `action-outcome-measurer.worker` (verzögert) → `INSERT fact_action_outcome`
+5. `POST /actions/:id/confirm-outcome` → ggf. `UPDATE fact_insight state='resolved'` oder Folge-Action
+
+Failure Step 2: komplettes Rollback, Insight bleibt acknowledged. Failure Step 4: `effect='inconclusive'`.
+
+**R.5.2 Pre-Built-Report-Generation:** Cron-Trigger via BullMQ Repeating-Job, State-Machine `queued` → `rendering` → `sent` | `failed`, Failure → Admin-Reminder + Retry-Endpoint.
+
+**R.5.3 HR-Review-Cycle-Lifecycle:** 7-Step-Saga via `review-cycle-lifecycle.worker`. Detail: `specs/ARK_HR_TOOL_SCHEMA_v0_2.md` §12.1.
+
+### R.6 RBAC-Endpoints
+
+| Endpoint-Pattern | RBAC |
+|------------------|------|
+| `GET /performance/dashboard/*`, `/insights`, `/actions` | alle Rollen |
+| `GET /performance/goals/me` | Self |
+| `GET /performance/goals/team`, `/team/...` | head, admin |
+| `POST /performance/goals` (für andere) | head, admin |
+| `GET /performance/forecast/...` (Aggregate) | head, admin; MA nur eigene Prozesse |
+| `POST /performance/forecast/.../override` | head, admin |
+| `*/performance/admin/*` | admin only |
+| `GET /api/powerbi/*` | service-account (X-API-Key, separate Auth) |
+| `POST /hr/reviews/:id/sign` | Self oder Manager (je signing-step) |
+| `POST /hr/feedback-questions`, `/competency-framework` | admin only |
+| `POST /hr/development-plans` | head, admin |
+
+### R.7 Failure-Handling
+
+- **Worker:** retry × 3, exponential backoff → Dead-Letter-Queue + Admin-Reminder.
+- **MV-Lock:** CONCURRENT benötigt UNIQUE-Index — Fallback non-concurrent mit Lock-Warning.
+- **Email-Versand-Fehler:** `report_run.state='partial'`.
+- **Forecast-Sample zu klein:** Fallback `forecast_method='linear_trend'` oder `'manual'` mit Warning.
+
+---
 
 ## Related
 

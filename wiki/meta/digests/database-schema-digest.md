@@ -1,17 +1,17 @@
 ---
-title: "Database Schema Digest v1.5"
+title: "Database Schema Digest v1.6"
 type: meta
 created: 2026-04-17
-updated: 2026-04-24
-sources: ["ARK_DATABASE_SCHEMA_v1_5.md"]
+updated: 2026-04-25
+sources: ["ARK_DATABASE_SCHEMA_v1_6.md"]
 tags: [digest, schema, database, grundlagen]
 ---
 
-# Database-Schema Digest v1.5 (Stand 2026-04-24)
+# Database-Schema Digest v1.6 (Stand 2026-04-25)
 
-Kompakter Lookup-Digest des Grundlagendokuments `Grundlagen MD/ARK_DATABASE_SCHEMA_v1_5.md` (Stand 2026-04-24, ~3000 Zeilen; v1.3 Baseline + v1.3.4 Dok-Generator + v1.4 Zeit-Modul + v1.5 E-Learning). Dieser Digest ist **lossless für Tabellen-Liste + Kern-Relationen + ENUMs + CHECK-Constraints + Indizes**, lossy für Spalten-Detail-Typen, Migrationsprosa, offene Punkte. Für exakte DDL immer die Original-Datei lesen.
+Kompakter Lookup-Digest des Grundlagendokuments `Grundlagen MD/ARK_DATABASE_SCHEMA_v1_6.md` (Stand 2026-04-25, ~3300 Zeilen; v1.3 Baseline + v1.3.4 Dok-Generator + v1.4 Zeit-Modul + v1.5 E-Learning + v1.6 Performance-Modul). Dieser Digest ist **lossless für Tabellen-Liste + Kern-Relationen + ENUMs + CHECK-Constraints + Indizes**, lossy für Spalten-Detail-Typen, Migrationsprosa, offene Punkte. Für exakte DDL immer die Original-Datei lesen.
 
-**Tabellen-Count: ~204 Tabellen + 8 Views** (v1.2 Baseline + v1.3 +28 Tabellen + v1.4 Zeit +15 + v1.5 E-Learning +28).
+**Tabellen-Count: ~225 Tabellen + ~30 Views** (v1.2 Baseline + v1.3 +28 + v1.4 Zeit +15 + v1.5 E-Learning +28 + v1.6 Performance +14 ark_perf +7 ark_hr −3 gestrichen + 10 Live-Views + 8 Materialized Views).
 
 ---
 
@@ -51,6 +51,7 @@ Kompakter Lookup-Digest des Grundlagendokuments `Grundlagen MD/ARK_DATABASE_SCHE
 | 14.3 | Addendum v1.3.4 | `fact_assessment_order.status` ENUM-Fix (`invoiced` raus) |
 | v1.4 | Zeit-Modul (2026-04-19) | 15 Tables + 4 Views + 9 Enums + btree_gist |
 | v1.5 | E-Learning-Modul (2026-04-24) | 28 Tables Sub A/B/C/D + pgvector + RLS |
+| TEIL Q | Performance-Modul (2026-04-25) | 14 ark_perf-Tabellen + 7 ark_hr-Tabellen + 10 Live-Views + 8 Materialized Views + RLS + 3 Rollen |
 
 ---
 
@@ -717,6 +718,134 @@ Navigations-Hinweise:
 - **Widerspruchsfreiheits-Checkliste:** Z. 2430–2495
 - **v1.4 Zeit-Modul-Erweiterung:** Z. 2582–2660
 - **v1.5 E-Learning-Modul Sub A/B/C/D:** Z. 2663–2970
+
+---
+
+## TEIL Q · Performance-Modul (v1.6 · 2026-04-25)
+
+**Scope:** Cross-Modul-Analytics-Hub. 14 neue Tabellen im `ark_perf`-Schema + 7 HR-Performance-Tabellen im `ark_hr` (Q1=C Migration aus DB §19) + 10 Live-Views + 8 Materialized Views + RLS + 3 neue Rollen. Vollständiger Patch: `specs/ARK_DATABASE_SCHEMA_PATCH_v1_5_to_v1_6_performance.md`.
+
+### Q.1 Streichungen aus DB §19 (Phase-2-Scaffold)
+
+Aus Phase-2-Scaffold entfernt:
+```diff
+-PERFORMANCE: fact_performance_reviews · fact_360_feedback · dim_feedback_questions · dim_feedback_cycles
+-ENTWICKLUNG: fact_development_plans · fact_learning_progress · dim_learning_modules ·
+-             dim_skill_certifications · fact_competency_ratings · dim_competency_framework
+```
+
+Migration: 7 Tabellen → `ark_hr.*` (HR-Modul); 3 Tabellen gestrichen (E-Learning Sub-A ist Single-Source).
+
+### Q.2 Erweiterungen bestehender Tabellen
+
+**`dim_process_stages`:**
+- ADD COLUMN `funnel_relevance VARCHAR(20) NOT NULL DEFAULT 'standard' CHECK (IN ('standard', 'major_milestone', 'drop_off_risk', 'terminal'))`
+- ADD COLUMN `avg_days_target SMALLINT NULL`
+
+**`dim_user`:**
+- ADD COLUMN `performance_visibility_scope VARCHAR(20) NOT NULL DEFAULT 'self' CHECK (IN ('self', 'team', 'tenant', 'admin'))`
+
+### Q.3 Performance-Modul-Tabellen (`ark_perf`-Schema, 14 Tabellen + Partitionen)
+
+**6 Stammdaten-Tabellen:**
+- `ark_perf.dim_metric_definition` — ~33 Default-Metriken (code, label_de, category, aggregation, unit, source_module, source_table, target_default, target_direction, drill_down, cadence_default, active)
+- `ark_perf.dim_anomaly_threshold` — 15 Default-Schwellen (metric_code, scope_type, direction, window_days, min_sample_size, cooldown_hours, info/warn/critical/blocker)
+- `ark_perf.dim_dashboard_tile_type` — 15 Tile-Types (code, label_de, min_w/h, default_w/h, requires_metric, config_schema_jsonb)
+- `ark_perf.dim_dashboard_layout` — User-Custom-Layouts (user_id, page_code, scope, layout_jsonb)
+- `ark_perf.dim_report_template` — 5 Default-Templates (code, cadence, audience, cron, data_bundle_spec_jsonb, sender_user_id)
+- `ark_perf.dim_powerbi_view` — 8 Default-Views (code, refresh_cadence, refresh_cron, sql_definition, is_critical, state)
+- `ark_perf.dim_forecast_conversion_rate` — Markov-Conversion-Raten per Stage-Transition × Sparte × Business-Model
+
+**6 Snapshot-Tabellen (PARTITION BY RANGE auf snapshot_at):**
+- `ark_perf.fact_metric_snapshot_hourly` — nur Critical-Metriken, monatliche Partitionen
+- `ark_perf.fact_metric_snapshot_daily` — Vollschnitt + delta_vs_yesterday/last_week/last_month
+- `ark_perf.fact_metric_snapshot_weekly` — aggregiert aus daily
+- `ark_perf.fact_metric_snapshot_monthly`
+- `ark_perf.fact_metric_snapshot_quarterly`
+- `ark_perf.fact_metric_snapshot_yearly`
+
+Partitionen automatisch via `partition-creator.worker` (monatlicher Cron, nächste 3 Mt). Retention via `snapshot_retention_cleaner.worker`.
+
+**Insight-Loop / Goals / Reports / Forecast / Telemetrie (7 Tabellen):**
+- `ark_perf.fact_perf_goal` — operative Goals (user_id, metric_code, target_value, period, achievement_pct, state)
+- `ark_perf.fact_insight` — Anomaly-Insights (metric_code, severity, state, detected_at, acknowledged_by, resolved_at)
+- `ark_perf.fact_action_item` — Action-Items aus Insights (insight_id, owner_id, title, state, due_date, measure_after_days, reminder_id)
+- `ark_perf.fact_action_outcome` — Gemessene Outcomes (action_item_id, effect, measured_at, delta_before/after, confirmed_by)
+- `ark_perf.fact_report_run` — Report-Run-Log (template_id, state, triggered_by, sent_to_emails, failure_reason, pdf_url)
+- `ark_perf.fact_forecast_snapshot` — Pro-Prozess-Forecast (process_id, p_placement, expected_revenue_chf, confidence_low/high, method, computed_at)
+- `ark_perf.fact_dashboard_view_log` — Tile-Usage-Telemetrie (user_id, page_code, tile_code, viewed_at)
+
+### Q.4 HR-Performance-Tabellen (`ark_hr`-Schema, 7 Tabellen)
+
+Migriert aus DB §19. Vollständige DDL: `specs/ARK_HR_TOOL_SCHEMA_v0_2.md`.
+
+| Tabelle | Zweck |
+|---------|-------|
+| `ark_hr.dim_feedback_cycles` | Review-Zyklen pro Tenant (Quartal/Halbjahr/Jahr/Probation/AdHoc) |
+| `ark_hr.dim_feedback_questions` | Question-Bank rolle/sparte-spezifisch |
+| `ark_hr.fact_performance_reviews` | Periodische Reviews (Self + Manager + opt. 360°-Aggregat) |
+| `ark_hr.fact_360_feedback` | Peer/Direct-Report/Manager/Self-Feedback-Einzelquellen |
+| `ark_hr.dim_competency_framework` | Skill-Matrix pro Rolle |
+| `ark_hr.fact_competency_ratings` | Skill-Bewertungen pro MA × Competency |
+| `ark_hr.fact_development_plans` | Karriere-/Entwicklungspläne |
+
+### Q.5 Live-Views (10 Views, READ-only)
+
+| View | Quellen | Zweck |
+|------|---------|-------|
+| `v_pipeline_funnel` | `fact_process` × `dim_process_stages` × `dim_user` × `fact_mandate` | Stage-Counts + Conversion-Rates |
+| `v_candidate_coverage` | `fact_history` × `dim_candidate` (12 Mt Lookback) | Days-since-touch + coverage_state (ok/overdue/critical/never_touched) |
+| `v_account_coverage` | `fact_history` × `dim_account` | Days-since-touch nach purchase_potential (★/★★/★★★) |
+| `v_mandate_kpi_status` | `fact_mandate` × `fact_process` × `fact_history` × `fact_placement` × `fact_invoice` | Ident-Target/Actual · Call-Target/Actual · Shortlist · Placements |
+| `v_revenue_attribution` | `fact_invoice` × `fact_placement` × `fact_commission_ledger` | Revenue pro placement_id mit Commission-Refs |
+| `v_activity_heatmap` | `fact_history` × `dim_activity_types` | Activity-Counts pro user × DOW × Hour × activity_type |
+| `v_elearn_compliance` | `dim_user` × `ark_elearn.*` | Pflicht-Kurs-Compliance% + Newsletter-Quizzes + Active Certs |
+| `v_zeit_utilization` | `fact_time_entries` × `fact_absences` × `dim_user` | Hours-worked vs. target_hours_monthly (Pensum) |
+| `v_hr_review_summary` | `ark_hr.*` | Aggregat-View Performance-Reviews (HR-Patch-Brücke) |
+| `v_commission_run_rate` | `fact_commission_ledger` | Commission-Sums pro user × month × role |
+
+### Q.6 Materialized Views (8 Views für Power-BI)
+
+Per `dim_powerbi_view.refresh_cron` via `powerbi-view-refresh.worker`. UNIQUE-Index für CONCURRENT-Refresh.
+
+| View | Cadence | Critical |
+|------|---------|----------|
+| `mv_perf_pipeline_today` | hourly | ✓ |
+| `mv_perf_goal_drift_critical` | hourly | ✓ |
+| `mv_perf_coverage_critical` | hourly | ✓ |
+| `mv_perf_revenue_monthly` | monthly | ✗ |
+| `mv_perf_pipeline_funnel_daily` | daily | ✗ |
+| `mv_perf_cohort_hunt_vintage` | weekly | ✗ |
+| `mv_perf_activity_heatmap_weekly` | weekly | ✗ |
+| `mv_perf_elearn_compliance_daily` | daily | ✗ |
+
+### Q.7 RLS-Policies
+
+Alle `fact_perf_*` · `fact_insight` · `fact_action_*` · `fact_report_run` · `fact_forecast_*` · `dim_dashboard_layout` · `fact_metric_snapshot_*` · `fact_dashboard_view_log` + alle 7 HR-Performance-Tabellen: `ENABLE ROW LEVEL SECURITY` + tenant-isolation-Policy + worker-bypass-Policy.
+
+Visibility-Scope-Filter (additiv zu RLS): `self` · `team` (fn_team_user_ids()) · `tenant` · `admin`.
+
+### Q.8 Berechtigungs-Rollen (3 neue Rollen)
+
+| Rolle | Zweck | Grants |
+|-------|-------|--------|
+| `powerbi_reader` | Power-BI Read-Only (X-API-Key) | SELECT auf alle Materialized Views in `ark_perf` |
+| `ark_perf_reader` | Performance-Modul-Reader | SELECT auf alle `ark_perf.*`, `ark_hr.v_hr_review_summary`, cross-module-Tabellen |
+| `ark_worker_service` | Snapshot-Writes mit RLS-Bypass | INSERT/UPDATE/DELETE auf alle `ark_perf.*` |
+
+### Q.9 Migration-Reihenfolge
+
+1. Backup · 2. CREATE EXTENSIONS (pgcrypto, btree_gin) · 3. CREATE SCHEMA ark_perf, ark_hr · 4. CREATE alle ENUMs (11 Performance + 7 HR) · 5. CREATE Stammdaten-Tabellen · 6. CREATE Snapshot-Tabellen + Initial-Partitionen · 7. CREATE Goal/Insight/Action/Report/Forecast/Telemetrie-Tabellen · 8. CREATE HR-Performance-Tabellen · 9. CREATE Live-Views (10) · 10. CREATE Materialized Views (8) + UNIQUE-Indizes · 11. ALTER `dim_process_stages` + `dim_user` + Seeds-Updates · 12. INSERT 76 Default-Seeds · 13. ENABLE RLS + CREATE Policies · 14. CREATE Roles + GRANT · 15. Verify + Initial-MV-Refresh · 16. Drop alte §19-Stubs.
+
+### Q.10 Tabellen-Count v1.6
+
+```
+v1.5: ~215 Tabellen
+v1.6: +14 ark_perf.* +7 ark_hr.* −3 gestrichen = ~225 Tabellen
+      +10 Live-Views +8 Materialized Views = ~30 Views gesamt
+```
+
+---
 
 **Related:**
 - [[ARK_STAMMDATEN_EXPORT_v1_3]] — Enum-Werte, dim_*-Inhalte

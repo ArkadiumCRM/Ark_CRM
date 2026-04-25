@@ -1,15 +1,15 @@
 ---
-title: "Gesamtsystem-Übersicht Digest v1.4"
+title: "Gesamtsystem-Übersicht Digest v1.5"
 type: meta
 created: 2026-04-17
-updated: 2026-04-24
-sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md"]
-tags: [digest, gesamtsystem, architektur, changelog, elearning]
+updated: 2026-04-25
+sources: ["ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md"]
+tags: [digest, gesamtsystem, architektur, changelog, elearning, performance]
 ---
 
-# Gesamtsystem-Übersicht v1.4 — Digest (Stand 2026-04-24)
+# Gesamtsystem-Übersicht v1.5 — Digest (Stand 2026-04-25)
 
-Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` (v1.3 + v1.3.4 Dok-Generator + v1.3.5 Reminders + v1.3.6 Mobile/Tablet + v1.4 E-Learning-Modul 2026-04-24). Big Picture, Module, Changelog. Für Prosa-Details vollständige Quelle lesen.
+Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_5.md` (v1.3 + v1.3.4 Dok-Generator + v1.3.5 Reminders + v1.3.6 Mobile/Tablet + v1.4 E-Learning-Modul 2026-04-24 + v1.5 Performance-Modul 2026-04-25). Big Picture, Module, Changelog. Für Prosa-Details vollständige Quelle lesen.
 
 ## TOC (Quell-Sektionen)
 
@@ -40,6 +40,7 @@ Kompaktes Digest von `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` (v1.3 +
 - **TEIL 23:** v1.3.5 Reminders-Vollansicht (2026-04-17)
 - **TEIL 24 (alt):** v1.3.6 Mobile/Tablet-Support Frontend-Rewrite (2026-04-17)
 - **TEIL 24 (neu):** v1.4 E-Learning-Modul (Sub A/B/C/D) (NEU 2026-04-24)
+- **TEIL 26:** v1.5 Performance-Modul (Cross-Modul-Analytics-Hub) (NEU 2026-04-25)
 
 ---
 
@@ -91,7 +92,7 @@ Kandidat  ── Briefing ──▶ Jobbasket ──▶ Prozess ──▶ Placem
 | 8 | Projekte | `/projects/[id]` | Schema v0.2 + Interactions v0.1 |
 | 9 | Scraper | `/scraper` | v0.1 |
 
-**Phase-3-ERP-Module (eigenes Produkt, via Topbar-Toggle CRM↔ERP):** Zeiterfassung · Buchhaltung/Billing · Payroll · Performance/HR · Messaging · Publishing · Doc-Generator · **E-Learning (Sub A/B/C/D, v1.4)**.
+**Phase-3-ERP-Module (eigenes Produkt, via Topbar-Toggle CRM↔ERP):** Zeiterfassung · Buchhaltung/Billing · Payroll · Performance/HR · Messaging · Publishing · Doc-Generator · **E-Learning (Sub A/B/C/D, v1.4)** · **Performance-Modul (Cross-Modul-Analytics-Hub, v1.5)**.
 
 **Sparten (5):** ING (Civil Engineering) · GT (Building Technology) · ARC (Architecture) · REM (Real Estate Management) · PUR (Procurement). Jeder Kandidat/Account/Job primär einer Sparte zugeordnet.
 
@@ -512,6 +513,116 @@ Für Prosa-Details jeweils Quelle lesen: `Grundlagen MD/ARK_GESAMTSYSTEM_UEBERSI
 - **Snapshot-Bar-Harmonisierung Slot-Belegung pro Entity + Dupe-Regel:** TEIL 20b
 - **Spec-Sync-Trigger-Matrix (vollständige Tabelle):** TEIL 21
 - **E-Learning Sub A/B/C/D komplett (Modul-Landkarte, Datenflüsse, Cert-Lifecycle, Multi-Tenant, Sub-Interop):** TEIL 24 (neu)
+- **Performance-Modul (Cross-Modul-Analytics-Hub, 8 Architektur-Entscheidungen, Markov-Forecast, Closed-Loop-Saga, PowerBI-ETL):** TEIL 26 (neu)
+
+---
+
+## TEIL 26 · Performance-Modul (v1.5 · 2026-04-25)
+
+**Kernidee:** Cross-Modul-Analytics-Hub. Liest aggregiert aus CRM, Billing, Commission, Zeit, E-Learning und HR — schreibt nur in eigene Tabellen. Vollständiger Patch: `specs/ARK_GESAMTSYSTEM_PATCH_v1_4_to_v1_5_performance.md`. Memory: `project_performance_modul_decisions.md`.
+
+### 26.1 Modul-Charakteristik
+
+- **NICHT** HR-Reviews (→ HR-Modul `ark_hr.fact_performance_reviews`)
+- **NICHT** E-Learning (→ Single-Source Sub A-D)
+- **NICHT** Zeit/Commission/Billing (→ eigene Module)
+- **IST** zentraler Analytics-Hub: KPIs, Insights, Goals, Reports, Forecast über alle Module hinweg
+- **Read-only** auf alle Quell-Module via Live-Views + Materialized Views (Power-BI Layer)
+
+### 26.2 Reuse vs. Eigenes
+
+**Reuses (keine Duplikation):** Sparten ARC/GT/ING/PUR/REM · MA-Kürzel (`dim_user.label_de`) · Process-Stages (`dim_process_stages` + neue Spalten `funnel_relevance`, `avg_days_target`) · Mandat-Typen Target/Taskforce/Time · Activity-Types (`fact_history`) · Roles MA/Head/Admin/BO · Honorar-Settings.
+
+**Eigene Stammdaten (neu in v1.6 Stammdaten):** 33 Default-Metriken · 15 Anomaly-Thresholds · 15 Tile-Types · 5 Report-Templates · 8 PowerBI-Views.
+
+### 26.3 Cross-Modular Daten-Flüsse
+
+| Quelle | Konsumiert via |
+|--------|---------------|
+| CRM (`fact_process`, `fact_history`, `fact_placement`) | `v_pipeline_funnel`, `v_candidate_coverage`, `v_account_coverage`, `v_mandate_kpi_status`, `v_activity_heatmap` |
+| Billing (`fact_invoice`) | `v_revenue_attribution` |
+| Commission (`fact_commission_ledger`) | `v_commission_run_rate`, `v_revenue_attribution` |
+| Zeit (`fact_time_entries`, `fact_absences`) | `v_zeit_utilization` |
+| E-Learning (`fact_elearn_attempt`, `fact_elearn_assignment`, `fact_elearn_certificate`) | `v_elearn_compliance` |
+| HR (`fact_performance_reviews`, `fact_competency_ratings`) | `v_hr_review_summary` |
+
+### 26.4 8 Architektur-Entscheidungen (2026-04-25)
+
+| ID | Entscheidung | Ergebnis |
+|----|--------------|---------|
+| Q1 | HR-Performance-Reviews vs. Performance-Modul | C — alle Reviews ins HR-Modul (8 Tabellen migriert aus DB §19) |
+| Q2 | Goals — operativ oder strategisch? | C — operative Performance-Goals im Performance-Modul (`fact_perf_goal`); strategische Karriere-Goals im HR (`fact_development_plans`) |
+| Q3 | Anomaly-Detector-Default | Y — 15 Default-Schwellen seeded; Admin pflegt Sparten-/Rollen-Overrides |
+| Q4 | PowerBI-Refresh-Strategie | D — 8 Default-Views mit per-View-Cron in `dim_powerbi_view.refresh_cron`; ETL-Worker `powerbi-view-refresh.worker` per BullMQ |
+| Q5 | Tile-Customization | X — 15 Default-Tile-Types; User-Custom-Layout via `dim_dashboard_layout` (scope='user_custom'); Reset → Rollen-Default |
+| Q6 | Closed-Loop-Insight-Workflow | D — Saga: Insight → Action-Item → Action-Outcome (verzögert via `action-outcome-measurer.worker`); resolve oder Folge-Action |
+| Q7 | Report-Templates | D — 5 Default-Templates; Bundle-Spec via `data_bundle_spec_jsonb`; Email via individuelles Outlook-Token |
+| Q8 | Forecast-Method | E — Markov-Stage-Model v0.1 (Conversion-Rate × Time-Decay); Konfidenz ±25%; ML-Upgrade Phase 3+ |
+
+Memory-Verweis: `project_performance_modul_decisions.md`.
+
+### 26.5 Statistik
+
+```
+Performance ENUMs:           11 neue
+Performance Tabellen:        14 (ark_perf.*) + 7 HR-Performance (ark_hr.*) − 3 gestrichen
+Live-Views:                  10 (ark_perf.v_*)
+Materialized Views:           8 (ark_perf.mv_*)
+Default-Seeds:               76 Rows (33 Metric-Defs + 15 Thresholds + 15 Tiles + 5 Templates + 8 PowerBI)
+Endpoints:                  ~50 (Performance) + ~30 (HR-Reviews) + 2 (Power-BI-Bridge)
+Worker:                      12 Performance + 1 HR-Cycle
+Events:                      10 Performance + 5 HR-Reviews
+WS-Channels:                  5 Performance + 2 HR
+Sagas:                        3 (Closed-Loop · Pre-Built-Report · Review-Cycle)
+Mockup-Pages:                11 (1 Hub + 10 Sub-Pages, alle ohne App-Bar)
+```
+
+### 26.6 Routing-Übersicht (UI)
+
+```
+Topbar-Toggle: CRM ↔ ERP
+ERP-Workspace:
+  /erp/zeit/*           → Zeit-Modul
+  /erp/billing/*        → Billing-Modul
+  /erp/elearn/*         → E-Learning-Modul (Sub A-D)
+  /erp/hr/*             → HR-Modul (inkl. Performance-Reviews)
+  /erp/performance/*    → Performance-Modul (NEU v1.5)
+    ├── /dashboard      Performance-Cockpit
+    ├── /insights       Insight-Loop-Inbox
+    ├── /funnel         Pipeline-Funnel-Drilldown
+    ├── /coverage       Schweizer Geo-Heatmap (TopoJSON-CDN)
+    ├── /mitarbeiter    MA-Profil mit Reviews-Tab
+    ├── /team           Team-Aggregat (Head)
+    ├── /revenue        Revenue-Attribution
+    ├── /business       Business-Dashboard
+    ├── /reports        Report-Templates + Run-Audit
+    └── /admin          6-Sub-Tab Admin-Konfiguration
+```
+
+### 26.7 Markov-Forecast v0.1
+
+```
+P(placement) = ∏ conversion_rate(stage_i → stage_i+1) × time_decay
+time_decay   = exp(-days_in_current_stage / avg_days_current_stage)
+expected_revenue = honorar(expected_salary) × P(placement)
+confidence_interval = expected_revenue × [0.75, 1.25]
+```
+
+`forecast-recompute.worker` täglich 05:00, 12-Mt-Lookback per Sparte/Business-Model. ML-Upgrade Phase 3+ (logistic regression / gradient boosting).
+
+### 26.8 Data-Pipeline (PowerBI als ETL-Source)
+
+`ark_perf.mv_*` = ETL-Source-of-Truth für externe BI-Tools. 3 Critical-Views (`pipeline_today` · `goal_drift_critical` · `coverage_critical`) hourly, andere daily/weekly/monthly. Power-BI-Service-Account via X-API-Key (separate Auth, nicht JWT) → `GET /api/powerbi/views`.
+
+### 26.9 Referenzen
+
+- `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md` — Detail-Schema
+- `specs/ARK_PERFORMANCE_TOOL_INTERACTIONS_v0_1.md` — Detail-Interactions
+- `specs/ARK_PERFORMANCE_TOOL_MOCKUP_PLAN.md` — Mockup-Plan
+- Patches: `specs/ARK_*_PATCH_*_performance.md` (Stammdaten · DB · Backend · Frontend · Gesamtsystem)
+- Memory: `project_performance_modul_decisions.md`
+
+---
 
 **Verwandte Wiki-Konzepte:**
 - [[status-enum-katalog]] · [[mandat-kuendigung]] · [[direkteinstellung-schutzfrist]] · [[optionale-stages]] · [[diagnostik-assessment]]

@@ -1,16 +1,16 @@
 ---
-title: "Frontend Freeze Digest v1.12"
+title: "Frontend Freeze Digest v1.13"
 type: meta
 created: 2026-04-17
-updated: 2026-04-24
-last_regen: 2026-04-24T00:00
-sources: ["ARK_FRONTEND_FREEZE_v1_12.md"]
-tags: [digest, frontend, freeze, routing, design-system, elearn, erp]
+updated: 2026-04-25
+last_regen: 2026-04-25T00:00
+sources: ["ARK_FRONTEND_FREEZE_v1_13.md"]
+tags: [digest, frontend, freeze, routing, design-system, elearn, erp, performance]
 ---
 
-# Frontend-Freeze v1.12 — Kompakt-Digest (Stand 2026-04-24)
+# Frontend-Freeze v1.13 — Kompakt-Digest (Stand 2026-04-25)
 
-Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_12.md` (~4475 Zeilen; v1.10 + v1.10.4 Dok-Generator-Addendum §4e + v1.10.5 Email-Kalender-Addendum §4f + v1.11 Responsive-Rewrite + v1.12 E-Learning-Modul TEIL O, 2026-04-24). Dieser Digest gibt Routing, Detailmasken-Inventar, Design-System-Regeln, Komponenten und Interaction-Pattern-Referenzen verlustfrei wieder. Pixel-/Padding-/Animation-Details sind bewusst weggelassen — bei Bedarf Original-§ lesen.
+Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_13.md` (~4700 Zeilen; v1.10 + v1.10.4 Dok-Generator-Addendum §4e + v1.10.5 Email-Kalender-Addendum §4f + v1.11 Responsive-Rewrite + v1.12 E-Learning-Modul TEIL O, 2026-04-24 + v1.13 Performance-Modul TEIL Q, 2026-04-25). Dieser Digest gibt Routing, Detailmasken-Inventar, Design-System-Regeln, Komponenten und Interaction-Pattern-Referenzen verlustfrei wieder. Pixel-/Padding-/Animation-Details sind bewusst weggelassen — bei Bedarf Original-§ lesen.
 
 ## TOC (§-Sections der Quelle)
 
@@ -98,6 +98,7 @@ Quelle: `Grundlagen MD/ARK_FRONTEND_FREEZE_v1_12.md` (~4475 Zeilen; v1.10 + v1.1
 26   Build-Reihenfolge (Wellen 1–4)
 27   Fazit
 TEIL O  E-Learning-Modul Frontend (NEU v1.12, 2026-04-24)
+TEIL Q  Performance-Modul Frontend (NEU v1.13, 2026-04-25)
 ```
 
 ---
@@ -784,7 +785,120 @@ Für folgende Details das Original-Dokument `Grundlagen MD/ARK_FRONTEND_FREEZE_v
 ---
 
 **Digest-Meta:**
-- Quelle: 4475 Zeilen, ~130 kTok
-- Digest: ca. 620 Zeilen, geschätzt 11–13 kTok
-- Lossless: Routing (CRM + ERP), Detailmasken+Tabs, Drawer-Regel 540px, Snapshot-Slots, Color-Tokens inkl. Sparte-Chip, Component-Inventory, Interaction-Pattern-§-Numbers, 22 Grundregeln (kurz), Keyboard-Shortcuts v1.10 + E-Learning, Build-Wellen, TEIL O (Topbar-Toggle, ERP-Sidebar, 25+ Page-Templates, Components + APIs, HTTP-Interceptor, Shortcut-Tabellen, Design-System-Konformität).
+- Quelle: 4700 Zeilen, ~135 kTok
+- Digest: ca. 790+ Zeilen, geschätzt 14–16 kTok
+- Lossless: Routing (CRM + ERP + /performance/*), Detailmasken+Tabs, Drawer-Regel 540px, Snapshot-Slots, Color-Tokens inkl. Sparte-Chip + Severity-Colors + Coverage-State-Colors, Component-Inventory, Interaction-Pattern-§-Numbers, 22 Grundregeln (kurz), Keyboard-Shortcuts v1.10 + E-Learning, Build-Wellen, TEIL O (E-Learning), TEIL Q (Performance-Hub, 10 Routes, Hub-Pattern, 6-Slot-Snapshot-Bar, 8 Drawer, TopoJSON-CDN, 6-Sub-Tab-Admin, RBAC, Token).
+
+---
+
+## TEIL Q · Performance-Modul (v1.13 · 2026-04-25)
+
+**Scope:** Cross-Modul-Analytics-Hub im ERP-Workspace (analog HR/Zeit/E-Learning). Hub-Page `mockups/ERP Tools/performance/performance.html` lädt Sub-Pages via iframe. Vollständiger Patch: `specs/ARK_FRONTEND_FREEZE_PATCH_v1_12_to_v1_13_performance.md`.
+
+### Q.1 Routes (`/performance/*`)
+
+| Route | Zweck | Audience |
+|-------|-------|----------|
+| `/performance/dashboard` | Performance-Cockpit (Default-Tiles + User-Override) | alle |
+| `/performance/insights` | Insight-Loop-Inbox (Acknowledge/Dismiss/Convert) | alle |
+| `/performance/funnel` | Pipeline-Funnel-Drilldown | alle |
+| `/performance/coverage` | Schweizer Geo-Heatmap (TopoJSON) + Coverage-State-Tabelle | alle |
+| `/performance/mitarbeiter` | MA-Profil-Page (Goals · Activities · Reviews-Tab via `v_hr_review_summary`) | self / head / admin |
+| `/performance/team` | Team-Aggregat (Head-View) | head / admin |
+| `/performance/revenue` | Revenue-Attribution-Drilldown | head / admin |
+| `/performance/business` | Business-Dashboard (Sparte/Modell-Vergleich) | head / admin |
+| `/performance/reports` | Report-Templates + Run-Audit | alle (eigene) / admin (alle) |
+| `/performance/admin` | Admin-Konfiguration (6-Sub-Tab-Layout) | admin only |
+
+### Q.2 Hub-Pattern (analog HR/Zeit/E-Learning)
+
+`mockups/ERP Tools/performance/performance.html` liefert Topbar (CRM↔ERP-Toggle + ERP-Sidebar) und lädt Sub-Pages via `<iframe src="performance-<tab>.html">` ohne eigene App-Bar pro Sub-Page.
+
+- Sub-Pages haben **KEINE** App-Bar / Topbar / ERP-Sidebar
+- Sub-Pages starten direkt mit Snapshot-Bar + Tab-Header + Content
+- Theme-Sync via `_shared/theme-sync.js`
+
+Memory-Regel: `feedback_claude_design_no_app_bar.md`.
+
+### Q.3 Snapshot-Bar (6-Slot-Pattern)
+
+```
+┌─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ Slot 1  │ Slot 2  │ Slot 3  │ Slot 4  │ Slot 5  │ Slot 6  │
+│ KPI     │ KPI     │ KPI     │ KPI     │ Anomaly │ Drift   │
+│ aktuell │ vs Ziel │ Trend   │ Forecast│ Count   │/Action  │
+└─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+```
+
+Position: `top:0`, `z-index:50` (Freeze §6-Konvention gilt auch für ERP-Module).
+
+### Q.4 Drawer-Default (540px slide-in)
+
+Performance-spezifische Drawer (alle 540px):
+- `drawer-insight-detail` — Insight + Related Actions
+- `drawer-action-create` — Action-Item aus Insight
+- `drawer-goal-set` — Goal-Setzung Head→MA oder Self
+- `drawer-report-generate` — Template + Period + Recipients
+- `drawer-tile-customize` — User-Custom-Layout pro Tile
+- `drawer-anomaly-threshold-edit` — Admin
+- `drawer-metric-definition-edit` — Admin
+- `drawer-forecast-override` — Head/Admin · manuelle Markov-Override
+
+### Q.5 Schweizer Geo-Heatmap (Coverage)
+
+`/performance/coverage`: Schweizer Karte mit Kanton-Aggregaten (Kandidaten/Account-Coverage-Score). TopoJSON via CDN: `https://cdn.jsdelivr.net/npm/swiss-maps@4/swiss.json`. Render via D3.js + d3-geo. Click auf Kanton → Drill-Down-Drawer.
+
+### Q.6 6-Sub-Tab-Layout für Admin-Page (`/performance/admin`)
+
+| Sub-Tab | Inhalt |
+|---------|--------|
+| Stammdaten | `dim_metric_definition` CRUD |
+| Schwellen | `dim_anomaly_threshold` CRUD |
+| Tiles | `dim_dashboard_tile_type` + Default-Layouts pro Rolle |
+| Reports | `dim_report_template` + Cron-Editor |
+| Power-BI | `dim_powerbi_view` + Refresh-Status + Manuell-Refresh-Trigger |
+| System | Snapshot-Lag-Monitor + Worker-Health + Forecast-Config + Manueller Recompute-Trigger |
+
+### Q.7 Tab-Pattern (gold-strong active-underline)
+
+- Active-Tab: gold-strong (`#C4995A`) underline 2px
+- Inactive: text-secondary, kein Underline
+- Hover: text-primary, underline 1px gray-300
+- ARIA: `role="tab"` / `aria-selected` / `aria-controls`
+
+### Q.8 Mockup-Inventar (11 Dateien)
+
+Hub: `mockups/ERP Tools/performance/performance.html` (App-Shell mit Tab-Router-iframe).
+
+Sub-Pages (alle ohne App-Bar):
+- `performance-dashboard.html`
+- `performance-insights.html`
+- `performance-funnel.html`
+- `performance-coverage.html` (TopoJSON-CDN via D3.js)
+- `performance-mitarbeiter.html`
+- `performance-team.html`
+- `performance-revenue.html`
+- `performance-business.html`
+- `performance-reports.html`
+- `performance-admin.html` (6 Sub-Tabs)
+
+### Q.9 RBAC (UI-Sichtbarkeit)
+
+| Element | MA | HEAD | ADMIN | BO |
+|---------|-----|------|-------|-----|
+| `/dashboard`, `/insights` (own), `/mitarbeiter` (self) | ✓ | ✓ | ✓ | ✓ |
+| `/team`, `/revenue`, `/business` | ✗ | Team | ✓ | Read |
+| `/funnel`, `/coverage` | own | Team | ✓ | Read |
+| `/admin` | ✗ | ✗ | ✓ | ✗ |
+| Tile-Customize | ✓ (own) | ✓ (own) | ✓ (own + role-default) | ✗ |
+
+### Q.10 Theme + Tokens
+
+Standard-CRM-Palette (gold-strong `#C4995A`, Surface-Card `#F8F6F3`, Border-Default `#E5E1DA`) + Performance-spezifische Token:
+
+| Token-Gruppe | Werte |
+|-------------|-------|
+| Severity-Colors | `info=#0B6BCB` · `warn=#E0A412` · `critical=#D14343` · `blocker=#7A1D1D` |
+| Coverage-State-Colors | `ok=#1B7A47` · `overdue=#E0A412` · `critical=#D14343` · `never_touched=#6B6258` |
+| Tile-Background | Surface-Card + 1px Border-Default + 8px Padding + 6px Radius |
 - Summiert: CSS-Pixel/Paddings/Animations/Prose-Erklärungen/Schema-SQL/Code-Beispiele/Dashboard-Copy.
