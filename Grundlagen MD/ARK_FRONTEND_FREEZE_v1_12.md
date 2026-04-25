@@ -4471,4 +4471,88 @@ interceptors.response.use(
 
 - **Topbar-Tab „E-Learning" 🎓** in alle 6 anderen Shells integriert (crm/hr/zeit/commission/billing/elearn)
 - **postMessage-Theme-Sync:** Broadcast in 6 Shells, Message-Listener in 65+ Content-Pages (ab E-Learning-Release 2026-04-24)
+
+---
+
+## TEIL P: HR-Modul (v1.12, 2026-04-25)
+
+**Route:** `/erp/hr` (ERP-Workspace, Topbar-Toggle CRM↔ERP)
+**Spec-Quelle:** `specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` (Stub) + `specs/ARK_HR_TOOL_SCHEMA_v0_1.md`
+**Feature-Flag:** `feature_hr_tool`
+
+### P.1 Seitenstruktur (7 Screens)
+
+| Datei | Route | Beschreibung |
+|-------|-------|-------------|
+| `hr.html` | `/erp/hr` | Shell: Sidebar-Navigation + Tool-Tab-Router |
+| `hr-dashboard.html` | `/erp/hr/dashboard` | KPIs, Alerts (5 Alert-Typen), Quick-Actions |
+| `hr-list.html` | `/erp/hr/employees` | MA-Tabelle mit Filter, In-Row-Actions |
+| `hr-mitarbeiter-self.html` | `/erp/hr/me` | Self-Service: Vertrag, Dokumente, Onboarding-Tasks, Akkreditierungen |
+| `hr-warnings-disciplinary.html` | `/erp/hr/disciplinary` | Disziplinar-Verwaltung (HEAD/ADMIN) |
+| `hr-onboarding-editor.html` | `/erp/hr/onboarding` | Onboarding-Templates + aktive Instanzen |
+| `hr-provisionsvertrag-editor.html` | `/erp/hr/provisions` | Praemium Victoria Konfiguration |
+
+> **Archiviert:** `hr-absence-calendar.html` → Zeit-Modul · `hr-academy-dashboard.html` → E-Learning-Modul
+
+### P.2 Drawer-Inventar (11 Drawers, 540px slide-in rechts)
+
+**Stammdaten-Bereich (4):**
+
+| Drawer-ID | Trigger | Schema-Entität |
+|-----------|---------|----------------|
+| `drawer-contract-new` | „+ Vertrag erfassen" | `fact_employment_contracts` |
+| `drawer-contract-view` | Klick auf Vertrag | `fact_employment_contracts` |
+| `drawer-contract-terminate` | „Kündigung erfassen" | `fact_employment_contracts` |
+| `drawer-document-sign` | „Dokument anfordern" | `fact_employment_attachments` |
+
+**Disziplinar-Bereich (3):**
+
+| Drawer-ID | Trigger | Schema-Entität |
+|-----------|---------|----------------|
+| `drawer-disciplinary-new` | „+ Verwarnung erfassen" | `fact_disciplinary_records` |
+| `drawer-disciplinary-view` | Klick auf Eintrag | `fact_disciplinary_records` |
+| `drawer-disciplinary-acknowledge` | „Kenntnisnahme erfassen" | `fact_disciplinary_records` |
+
+**Onboarding-Bereich (4):**
+
+| Drawer-ID | Trigger | Schema-Entität |
+|-----------|---------|----------------|
+| `drawer-onboarding-start` | „Onboarding starten" | `fact_onboarding_instances` |
+| `drawer-onboarding-task-edit` | Klick auf Task | `fact_onboarding_instance_tasks` |
+| `drawer-onboarding-template-edit` | „Template bearbeiten" | `fact_onboarding_templates` |
+| `drawer-probation-complete` | „Probezeit abschliessen" | `fact_probation_milestones` |
+
+**Self-Service-Drawers (2, in hr-mitarbeiter-self.html):**
+
+| Drawer-ID | Trigger | Inhalt |
+|-----------|---------|--------|
+| `drawer-training` | „Weiterbildung beantragen" | CHF-Budget, Anbieter, Typ, Begründung |
+| `drawer-cert` | „Akkreditierung erfassen" | Zertifikats-Typ (Scheelen-Gruppe), Datum, Dokument-Upload |
+
+### P.3 Layout-Prinzipien
+
+- **Shell:** Identisch ERP-Workspace-Pattern (TEIL O: Topbar + ERP-Sidebar + Tab-Router)
+- **HR-Sidebar:** 5 Nav-Items (Dashboard · Mitarbeitende · Disziplinar · Onboarding · Provisionsvertrag)
+- **HR-Dashboard:** KPI-Grid 2×3 + Alert-Strip + Quick-Actions-Grid (2×1)
+- **HR-List:** Sortierbare Tabelle + Filter-Bar (Rolle, Status, Sparte) + In-Row-Drawer-Actions
+- **Self-Service:** Hero-Card (Avatar, Rolle, Meta) + Quick-Actions-Grid (2col) + Widget-Grid + Dokument-Tabelle
+- **Snapshot-Bar:** `top:0, z-index:50` (Freeze §6-Konvention gilt auch für ERP-Module)
+
+### P.4 RBAC (UI-Sichtbarkeit)
+
+| Element | MA | HEAD | ADMIN | BO |
+|---------|-----|------|-------|-----|
+| HR-Dashboard | ✗ | ✓ | ✓ | ✓ |
+| MA-Liste (alle) | ✗ | Team | ✓ | ✓ |
+| Self-Service (`/erp/hr/me`) | ✓ | ✓ | ✓ | ✗ |
+| Disziplinar (schreiben) | ✗ | Team | ✓ | ✗ |
+| Onboarding-Editor | ✗ | ✓ | ✓ | ✗ |
+| Provisionsvertrag-Editor | ✗ | ✗ | ✓ | ✗ |
+
+### P.5 Archivierte Screens
+
+| Datei | Grund |
+|-------|-------|
+| `hr-academy-dashboard.html` | Durch E-Learning-Modul (`/erp/elearn`) ersetzt |
+| `hr-absence-calendar.html` | Gehört zu Zeit-Modul (`/erp/zeit`) |
 - **Shared `_shared/theme-sync.js`** vorhanden, noch nicht referenziert — Umstellung Folge-Session

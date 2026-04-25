@@ -4322,3 +4322,82 @@ Sub D liest `fact_elearn_newsletter_assignment.enforcement_mode_applied='hard'` 
 
 ---
 
+## TEIL O: HR-Modul (v2.7, 2026-04-25)
+
+**Spec-Quelle:** `specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` (Stub) + `specs/ARK_HR_TOOL_SCHEMA_v0_1.md`
+**Feature-Flag:** `feature_hr_tool` (locked bis Go-Live)
+**DB-Referenz:** TEIL M (ARK_DATABASE_SCHEMA_v1_5.md)
+
+### O.1 API-Endpunkte (17)
+
+| Method | Endpoint | Action |
+|--------|----------|--------|
+| GET | `/api/hr/employees` | MA-Liste mit Vertragsdaten (RLS-gefiltert) |
+| POST | `/api/hr/employees` | Neuer MA (`dim_user` + `fact_employment_contracts`) |
+| GET | `/api/hr/contracts/{id}` | Vertrags-Detail |
+| PATCH | `/api/hr/contracts/{id}` | Vertrag bearbeiten |
+| POST | `/api/hr/contracts/{id}/terminate` | Kündigung erfassen |
+| GET | `/api/hr/documents/{user_id}` | Dokument-Liste pro MA |
+| POST | `/api/hr/documents` | Dokument anfordern (triggert Dok-Generator-Worker) |
+| PATCH | `/api/hr/documents/{id}/sign` | Unterschrift erfassen (MA oder Admin) |
+| GET | `/api/hr/disciplinary` | Disziplinar-Einträge (RLS-gefiltert) |
+| POST | `/api/hr/disciplinary` | Neue Verwarnung |
+| PATCH | `/api/hr/disciplinary/{id}` | Status-Update (issued/acknowledged/resolved) |
+| GET | `/api/hr/onboarding` | Onboarding-Instanzen |
+| POST | `/api/hr/onboarding` | Neues Onboarding starten |
+| PATCH | `/api/hr/onboarding/{id}/probation-complete` | Probezeit abschliessen |
+| GET | `/api/hr/onboarding/templates` | Template-Liste |
+| POST | `/api/hr/onboarding/templates` | Template erstellen |
+| PATCH | `/api/hr/onboarding/tasks/{id}` | Task-Status setzen |
+| GET | `/api/hr/dashboard` | KPIs + Alerts |
+
+### O.2 Events (5)
+
+| Event-Code | Trigger | Consumer |
+|-----------|---------|---------|
+| `hr.document.ready.v1` | `fact_employment_attachments.doc_state → pending` | Dok-Generator-Worker → PDF rendern |
+| `hr.document.signed.v1` | `doc_state → signed` | HR-Dashboard-Alert-Worker (ausstehend-Liste löschen) |
+| `hr.onboarding.task.done.v1` | `task_type_code = TOOL_INTRO_ELEARN` + `task_state = done` | E-Learning-Modul → Pflicht-Kurs zuweisen |
+| `hr.commission.eligibility.changed.v1` | `fact_employment_contracts.has_provisions` UPDATE | Commission-Engine → Eligibility neu berechnen |
+| `hr.contract.terminated.v1` | `contract_state → terminated` | Retention-Worker → `retention_until = +10 J` setzen |
+
+### O.3 Workers (4)
+
+| Worker | Typ | Interval | Aufgabe |
+|--------|-----|---------|---------|
+| `hr-probation-alert.worker.ts` | Cron | Täglich 08:00 | Probezeit-Enden ≤ 14 Tage → Alert im Dashboard |
+| `hr-signature-reminder.worker.ts` | Cron | Täglich 09:00 | Pending-Signaturen ≥ 5 Tage → Admin-Alert |
+| `hr-onboarding-overdue.worker.ts` | Cron | Täglich 07:00 | Überfällige Tasks → `task_state = overdue` + Instanz-Update |
+| `hr-disciplinary-retention.worker.ts` | Cron | Wöchentlich | `resolved` Einträge > 2 J → `archived_at` setzen |
+
+### O.4 Alert-Schwellen (HR-Dashboard)
+
+| Alert | Quelle | Schwelle | Level |
+|-------|--------|----------|-------|
+| Probezeit endet bald | `v_hr_active_employees.probation_end` | ≤ 14 Tage | amber |
+| Ausstehende Unterschriften | `v_pending_signatures.days_pending` | ≥ 5 Tage | amber |
+| Offene Verwarnungen (Dispute) | `v_disciplinary_summary.has_dispute` | > 0 | red |
+| Onboarding überfällig | `v_onboarding_progress.overdue_tasks` | > 0 | red |
+| Befristeter Vertrag läuft aus | `fact_employment_contracts.contract_end` | ≤ 30 Tage | amber |
+
+### O.5 Cross-Module-Integration
+
+| Modul | Integration |
+|-------|------------|
+| Dok-Generator | `hr.document.ready.v1` → PDF-Render-Worker → `file_path` Update auf Attachment |
+| E-Learning | `hr.onboarding.task.done.v1` (TOOL_INTRO_ELEARN) → E-Learning-Enrollment automatisch |
+| Commission | `has_provisions` Toggle → `hr.commission.eligibility.changed.v1` → Commission-Engine |
+| Zeit-Modul | HR liest `fact_absence` read-only für Abwesenheits-KPIs (kein eigenes Absenz-Schema in HR) |
+| Supabase Auth | `fn_current_user_id()` SECURITY DEFINER via `auth.uid()` → RLS |
+
+### O.6 RBAC
+
+| Rolle | HR-Zugriff |
+|-------|-----------|
+| `MA` | Eigene Verträge/Dokumente lesen · Onboarding-Tasks (new_hire) erledigen |
+| `HEAD` | Team-MA lesen/schreiben · Verwarnungen erstellen · Probezeit abschliessen |
+| `ADMIN` | Vollzugriff · Vertragsabschluss · Kündigung · Onboarding-Templates |
+| `BO` | Read-only (Reporting) |
+
+---
+

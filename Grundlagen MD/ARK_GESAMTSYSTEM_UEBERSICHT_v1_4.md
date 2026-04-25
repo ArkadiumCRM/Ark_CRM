@@ -998,6 +998,66 @@ Activity-Kategorien:      19  (18 v1.4 + 1 elearning)
 Tabellen total:          ~204 (176 v1.4 + 28 E-Learning)
 ```
 
+## TEIL 25: HR-Modul (v1.5 / v2.7 / v1.12, 2026-04-25)
+
+**Spec:** `specs/ARK_HR_TOOL_SCHEMA_v0_1.md` + `specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` (Stub)
+**Route:** `/erp/hr` · **Feature-Flag:** `feature_hr_tool` (locked bis Go-Live)
+
+### 25.1 Modul-Übersicht
+
+Das HR-Modul ist ein eigenständiges Phase-3-ERP-Tool (kein Teil des CRM). Es verwaltet den Arbeitsvertrag-Lifecycle, HR-Dokumente (inkl. Arkadium-Reglemente), Disziplinarmassnahmen, Probezeit-Tracking und Onboarding-Checklisten.
+
+**Absenzenverwaltung lebt im Zeit-Modul** — HR zeigt nur read-only KPIs via Zeit-API.
+
+### 25.2 Kennzahlen
+
+```
+HR Screens:            7  (hr-shell · dashboard · list · self-service · disciplinary · onboarding · provisions)
+HR Drawers:           11  (4 Stammdaten · 3 Disziplinar · 4 Onboarding) + 2 Self-Service
+HR API-Endpoints:     18  (CRUD contracts · documents · disciplinary · onboarding · tasks · dashboard)
+HR Events:             5  (document.ready · document.signed · onboarding.task.done · commission.eligibility.changed · contract.terminated)
+HR Workers:            4  (probation-alert · signature-reminder · onboarding-overdue · disciplinary-retention)
+HR DB-Tabellen:       11  (3 dim · 8 fact)
+HR DB-Views:           4  (active_employees · onboarding_progress · disciplinary_summary · pending_signatures)
+HR ENUM-Types:        10
+Tabellen gesamt:    ~215  (204 + 11)
+```
+
+### 25.3 Kern-Entitäten
+
+| Entität | Tabelle | Lifecycle |
+|---------|---------|-----------|
+| Arbeitsvertrag | `fact_employment_contracts` | draft → pending_sig → active → terminated |
+| HR-Dokument | `fact_employment_attachments` | pending → signed (Arkadium-Reglemente) |
+| Verwarnung | `fact_disciplinary_records` | draft → issued → acknowledged/disputed → resolved → archived |
+| Probezeit-Meilenstein | `fact_probation_milestones` | 1-Mt-Gespräch · 2-Mt (opt.) · Abschluss · Verlängerung |
+| Onboarding-Instanz | `fact_onboarding_instances` | draft → active → completed/overdue/cancelled |
+
+### 25.4 Cross-Module-Abhängigkeiten
+
+| Integration | Richtung | Mechanismus |
+|------------|----------|-------------|
+| Dok-Generator | HR → Dok-Gen | `hr.document.ready.v1` → PDF-Worker |
+| E-Learning | HR → E-Learning | `hr.onboarding.task.done.v1` (TOOL_INTRO_ELEARN) → Enrollment |
+| Commission | HR → Commission | `has_provisions` Toggle → `hr.commission.eligibility.changed.v1` |
+| Zeit-Modul | Zeit → HR | `fact_absence` read-only für Abwesenheits-KPIs |
+| Treuhand Kunz | HR → Export | Salary-Statement-PDF + AHV-Bestätigung für Payroll |
+
+### 25.5 Legal-Basis
+
+- OR Art. 319–362 (Einzelarbeitsvertrag), Art. 335b (Probezeit max 3/6 Mt), Art. 335c (Kündigungsfristen), Art. 337c (fristlose Kündigung)
+- revDSG Art. 25 ff. (Auskunftsrecht), Retention-Policy per Tabelle (2–10 J)
+- Arkadium-Reglemente: Generalis Provisio · Progressus · Praemium Victoria · Tempus Passio 365 · Locus Extra
+
+### 25.6 Status (2026-04-25)
+
+- Mockups: 7 Screens ✓ (hr.html · hr-dashboard.html · hr-list.html · hr-mitarbeiter-self.html · hr-warnings-disciplinary.html · hr-onboarding-editor.html · hr-provisionsvertrag-editor.html)
+- Specs v0.1: Schema ✓ + Interactions (Stub) ✓
+- Grundlagen-Sync: ✓ (TEIL M DB · TEIL O Backend · §96 Stammdaten · TEIL P Freeze · TEIL 25 Gesamtsystem)
+- Implementation: Phase-3 (ausstehend)
+
+---
+
 ## 24.16 Offene Punkte / Follow-ups
 
 - **Implementation-Plan:** konsolidiert für A+B+C+D via `superpowers:writing-plans`

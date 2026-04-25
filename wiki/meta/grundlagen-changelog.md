@@ -704,3 +704,63 @@ Alle 10 Einträge aus session-63ae8c3a (2026-04-24 15:59–16:11) resolved.
 - ERP-Tools-Sektion neu (Zeit/Billing/E-Learning/HR/Provision)
 - Phasen-Plan Phase-3-Status aktualisiert
 - Nachträge v1.4 ergänzt
+
+## [2026-04-25 13:36] session-7da21068
+- **File:** ARK_DATABASE_SCHEMA_v1_5.md
+- **Tool:** Edit
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** HR-Modul-Sync — Dieser Edit IST der Sync (TEIL M append). Source: specs/ARK_HR_TOOL_SCHEMA_v0_1.md.
+- **Resolved-In:** ARK_DATABASE_SCHEMA_v1_5.md → TEIL M (9 ENUMs · 3 dim · 8 fact · 4 views · 8 triggers · RLS)
+- **Digest-Stale:** ja → regenerieren
+
+## [2026-04-25 13:36] session-7da21068
+- **File:** ARK_BACKEND_ARCHITECTURE_v2_7.md
+- **Tool:** Edit
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** HR-Modul-Sync — Dieser Edit IST der Sync (TEIL O append). Source: specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md.
+- **Resolved-In:** ARK_BACKEND_ARCHITECTURE_v2_7.md → TEIL O (18 Endpoints · 5 Events · 4 Workers · RBAC)
+- **Digest-Stale:** ja → regenerieren
+
+## [2026-04-25 13:37] session-7da21068
+- **File:** ARK_STAMMDATEN_EXPORT_v1_5.md
+- **Tool:** Edit
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** HR-Modul-Sync — Dieser Edit IST der Sync (§96 append). Source: specs/ARK_HR_TOOL_SCHEMA_v0_1.md §3/§4.
+- **Resolved-In:** ARK_STAMMDATEN_EXPORT_v1_5.md → §96 (10 ENUMs · 3 dim-Seeds · Activity-Type-Mapping · Statistik ~215 Tabellen)
+- **Digest-Stale:** ja → regenerieren
+
+## [2026-04-25 13:38] session-7da21068
+- **File:** ARK_FRONTEND_FREEZE_v1_12.md
+- **Tool:** Edit
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** HR-Modul-Sync — Dieser Edit IST der Sync (TEIL P append). Source: mockups/ERP Tools/hr/*.html + Interactions-Spec.
+- **Resolved-In:** ARK_FRONTEND_FREEZE_v1_12.md → TEIL P (7 Screens · 11+2 Drawers · Layout · RBAC)
+- **Digest-Stale:** ja → regenerieren
+
+## [2026-04-25 13:38] session-7da21068
+- **File:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md
+- **Tool:** Edit
+- **Status:** resolved
+- **Resolved:** 2026-04-25
+- **Sync-Check:** HR-Modul-Sync — Dieser Edit IST der Sync (TEIL 25 append). Source: alle HR-Specs + Kennzahlen.
+- **Resolved-In:** ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md → TEIL 25 (Kennzahlen · Kern-Entitäten · Cross-Module · Legal · Status)
+- **Digest-Stale:** ja → regenerieren
+
+## [2026-04-25] session-7da21068 | RESOLUTION ✓ (HR-Modul Grundlagen-Sync)
+
+Alle 5 Grundlagen-Dateien mit HR-Modul synchronisiert. Direkte Sync-Session (Edits = Resolution).
+
+**Synced from:** `specs/ARK_HR_TOOL_SCHEMA_v0_1.md` (v0.1 · v0.2) + `specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` (Stub)
+
+**Appended sections:**
+- `ARK_DATABASE_SCHEMA_v1_5.md` → TEIL M (9 ENUMs · 3 dim · 8 fact · 4 views · 8 triggers · RLS · ~215 Tabellen)
+- `ARK_BACKEND_ARCHITECTURE_v2_7.md` → TEIL O (18 Endpoints · 5 Events · 4 Workers · RBAC · Cross-Module)
+- `ARK_STAMMDATEN_EXPORT_v1_5.md` → §96 (10 HR-ENUMs · 3 dim-Seeds · Activity-Type-Mapping)
+- `ARK_FRONTEND_FREEZE_v1_12.md` → TEIL P (7 Screens · 11+2 Drawers · Layout-Prinzipien · RBAC)
+- `ARK_GESAMTSYSTEM_UEBERSICHT_v1_4.md` → TEIL 25 (Modul-Übersicht · Kennzahlen · Legal-Basis · Status)
+
+**Digest-Stale:** alle 5 Digests stale → in Folge-Session regenerieren via parallele Subagents.

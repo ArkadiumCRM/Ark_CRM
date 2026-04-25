@@ -2967,4 +2967,130 @@ CREATE POLICY <table>_tenant_isolation ON <tabelle>
 - **Gate-Middleware-Overhead:** < 1 ms mit Cache, 5-15 ms ohne Cache
 - **Compliance-Snapshot:** ~50 ms pro MA (Multi-JOIN), 30 MA Tenant → 1.5 s/Run
 - **Newsletter-Publish:** Bulk-Insert 150 Assignments (30 MA × 5 Sparten) in < 200 ms
+
+---
+
+## TEIL M: HR-Modul (v1.5, 2026-04-25)
+
+**Spec-Quelle:** `specs/ARK_HR_TOOL_SCHEMA_v0_1.md`
+**Scope:** Arbeitsverträge, HR-Dokumente, Disziplinarmassnahmen, Probezeit-Tracking, Onboarding-Checklisten. Absenzenverwaltung lebt in TEIL L (Zeit-Modul).
+
+### M.1 Extensions
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pgcrypto;  -- gen_random_uuid() (bereits vorhanden)
+```
+
+### M.2 ENUM-Types (9 neue)
+
+| ENUM | Werte |
+|------|-------|
+| `contract_state` | draft · pending_sig · active · terminated · expired · voided |
+| `employment_type` | permanent · fixed_term · intern · freelance |
+| `termination_reason` | resignation · dismissal · dismissal_immediate · mutual_agreement · end_fixed_term · retirement · death |
+| `hr_doc_state` | pending · signed · superseded · revoked |
+| `probation_milestone_type` | month_1_review · month_2_review · probation_end · probation_extended · probation_failed |
+| `disciplinary_level` | verbal_warning · written_warning · formal_warning · final_warning · suspension · dismissal_immediate |
+| `disciplinary_state` | draft · issued · acknowledged · disputed · resolved · archived |
+| `onboarding_state` | draft · active · completed · overdue · cancelled |
+| `onboarding_task_state` | pending · in_progress · done · skipped · overdue |
+| `onboarding_assignee_role` | new_hire · head_of · admin · it · buddy |
+
+### M.3 Dimension Tables (3)
+
+| Tabelle | PK | Seeds | Beschreibung |
+|---------|-----|-------|-------------|
+| `dim_hr_document_type` | `code VARCHAR(60)` | 13 Rows | Katalog HR-Dokument-Typen (Verträge, Reglemente, Bescheinigungen) |
+| `dim_disciplinary_offense_type` | `code VARCHAR(60)` | 13 Rows | Delikt-Katalog (attendance/conduct/performance/compliance/integrity) |
+| `dim_onboarding_task_template_type` | `code VARCHAR(80)` | 18 Rows | Wiederverwendbare Onboarding-Aufgaben-Vorlagen |
+
+**dim_hr_document_type Seeds:** EMPLOYMENT_CONTRACT · GENERALIS_PROVISIO · PROGRESSUS · PRAEMIUM_VICTORIA · TEMPUS_PASSIO_365 · LOCUS_EXTRA · DATENSCHUTZ_ERKLAERUNG · REFERENCE_LETTER · INTERIM_REFERENCE · SALARY_STATEMENT · AHV_CONFIRMATION · PROBATION_EXTENSION · OTHER
+
+**dim_disciplinary_offense_type Seeds:** REPEATED_LATENESS · UNEXCUSED_ABSENCE · INSUBORDINATION · MISCONDUCT_COLLEAGUE · MISCONDUCT_CLIENT · PERFORMANCE_DEFICIENCY · TARGET_MISS_REPEATED · DATA_BREACH_INTERNAL · CONFIDENTIALITY_BREACH · EXPENSE_FRAUD · COMPETITION_VIOLATION · HARASSMENT · OTHER
+
+**dim_onboarding_task_template_type Seeds:** WELCOME_MEETING · IT_EQUIPMENT_SETUP · EMAIL_SETUP · SIGN_GENERALIS_PROVISIO · SIGN_PROGRESSUS · SIGN_TEMPUS_PASSIO · SIGN_LOCUS_EXTRA · SIGN_PRAEMIUM_VICTORIA · SIGN_DATENSCHUTZ · AHV_REGISTRATION · BADGE_KEY · BANK_DETAILS · CRM_INTRO · TOOL_INTRO_ELEARN · BUDDY_INTRO · TEAM_LUNCH · MONTH_1_REVIEW · PROBATION_REVIEW
+
+### M.4 Fact Tables (8)
+
+| Tabelle | FK-Hauptreferenz | Unique-Constraint | Beschreibung |
+|---------|-----------------|-------------------|-------------|
+| `fact_employment_contracts` | `dim_user(id)` | 1 aktiver Vertrag/MA (`contract_state='active'`) | Arbeitsvertrag-Lifecycle |
+| `fact_employment_attachments` | `fact_employment_contracts(id)` + `dim_hr_document_type(code)` | — | Reglement-Signaturen + Vertragsbeilagen |
+| `fact_disciplinary_records` | `dim_user(id)` + `dim_disciplinary_offense_type(code)` | — | Verwarnungen + Disziplinarmassnahmen |
+| `fact_probation_milestones` | `dim_user(id)` + `fact_employment_contracts(id)` | — | Probezeit-Gespräche + Meilensteine |
+| `fact_onboarding_templates` | `dim_user(role_code)` NULL | 1 Default/Rolle | Wiederverwendbare Checklisten-Vorlagen |
+| `fact_onboarding_template_tasks` | `fact_onboarding_templates(id)` CASCADE | — | Aufgaben einer Vorlage |
+| `fact_onboarding_instances` | `dim_user(id)` + `fact_employment_contracts(id)` | 1 aktives Onboarding/MA | Onboarding-Prozess pro MA |
+| `fact_onboarding_instance_tasks` | `fact_onboarding_instances(id)` CASCADE | — | Einzelne Aufgaben im laufenden Onboarding |
+
+**Alle Fact-Tabellen:** UUID-PKs · `audit_trail_jsonb JSONB` append-only · `updated_at TIMESTAMPTZ` · Soft-Delete via `archived_at`
+
+**Retention:**
+
+| Tabelle | Retention | Rechtsgrundlage |
+|---------|-----------|----------------|
+| `fact_employment_contracts` | 10 J post Vertragsende | OR 127/128 |
+| `fact_employment_attachments` | 10 J post Vertragsende | Beweislast |
+| `fact_disciplinary_records` (ohne Folgen) | 2 J post Archivierung | EDÖB |
+| `fact_disciplinary_records` (mit Kündigung) | 10 J | OR 339/341 |
+| `fact_onboarding_instances` | 5 J post Austritt | Compliance |
+
+### M.5 Views (4)
+
+| View | Beschreibung |
+|------|-------------|
+| `v_hr_active_employees` | Aktive MA + Vertragsdaten (JOIN dim_user + fact_employment_contracts) |
+| `v_onboarding_progress` | Fortschritt + probation_passed aller aktiven Onboardings |
+| `v_disciplinary_summary` | Aktive Verwarnung-Zusammenfassung pro MA (open_records, highest_level, has_dispute) |
+| `v_pending_signatures` | Dokumente mit ausstehenden Unterschriften + days_pending |
+
+### M.6 Triggers (5 Funktionen)
+
+| Trigger | Tabelle | Funktion |
+|---------|---------|---------|
+| `trg_employment_contract_audit` | `fact_employment_contracts` | `fn_append_audit_trail()` — JSONB-Diff |
+| `trg_employment_attachment_audit` | `fact_employment_attachments` | `fn_append_audit_trail()` |
+| `trg_disciplinary_audit` | `fact_disciplinary_records` | `fn_append_audit_trail()` |
+| `trg_probation_milestone_audit` | `fact_probation_milestones` | `fn_append_audit_trail()` |
+| `trg_onboarding_instance_audit` | `fact_onboarding_instances` | `fn_append_audit_trail()` |
+| `trg_onboarding_task_state_changed` | `fact_onboarding_instance_tasks` | `fn_onboarding_task_state_change()` — Counters + State |
+| `trg_disciplinary_escalation` | `fact_disciplinary_records` | `fn_disciplinary_suggest_escalation()` — next_level |
+| `trg_employment_contract_termination` | `fact_employment_contracts` | `fn_employment_contract_termination()` — retention_until |
+
+### M.7 Row-Level Security
+
+RLS aktiviert auf: `fact_employment_contracts` · `fact_employment_attachments` · `fact_disciplinary_records` · `fact_probation_milestones` · `fact_onboarding_instances` · `fact_onboarding_instance_tasks`
+
+| Rolle | Zugriff |
+|-------|---------|
+| `ark_role_ma` | Read eigene Daten (Disziplinar: nur `state IN issued/acknowledged/disputed`) |
+| `ark_role_head` | Read+Write eigenes Team (`fn_team_user_ids()` via `team_lead_id`) |
+| `ark_role_admin` | Vollzugriff |
+| `ark_role_bo` | Read-only alle |
+
+Helper-Funktionen: `fn_current_user_id()` · `fn_current_role_code()` · `fn_team_user_ids()`
+Supabase-Adapter: `fn_current_user_id()` SECURITY DEFINER mit `auth.uid()`
+
+### M.8 Tabellen-Count aktualisiert
+
+**v1.5 + HR:** ~215 Tabellen + 12 Views (204 E-Learning-Stand + 11 HR-Tabellen)
+- 3 Dimension Tables · 8 Fact Tables = **11 neue Tabellen**
+- 4 neue Views
+
+### M.9 Migration-Reihenfolge HR
+
+```
+1. ENUMs (9 neue Typen)
+2. Dimension Tables + Seeds (dim_hr_document_type · dim_disciplinary_offense_type · dim_onboarding_task_template_type)
+3. Fact Tables (FK-Reihenfolge: contracts → attachments → disciplinary → probation → templates → template_tasks → instances → instance_tasks)
+4. Indexes
+5. Views (4)
+6. Trigger-Funktionen (fn_append_audit_trail · fn_onboarding_task_state_change · fn_disciplinary_suggest_escalation · fn_employment_contract_termination)
+7. Triggers (8)
+8. RLS aktivieren (6 Fact-Tabellen)
+9. Helper-Funktionen (fn_current_user_id · fn_current_role_code · fn_team_user_ids)
+10. RLS-Policies
+11. Grants (ark_role_ma/head/admin/bo)
+12. Supabase Auth Adapter
+```
 - **Audit-Log-Volumen `fact_elearn_gate_event`:** ~150k Events/Monat/MA → Partitionieren/Archivieren nach 12 Monaten

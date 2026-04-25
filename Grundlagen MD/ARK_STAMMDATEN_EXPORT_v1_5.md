@@ -3198,4 +3198,110 @@ Event-Types gesamt:   ~113  (~61 v1.4 + 52 E-Learning: 16+12+12+12)
 - **Refresher-Intervall-Presets:** frei `INT` in MVP; Enum-Vorschlag Phase-2 falls Pflege-Aufwand hoch
 - **Badge-Kriterien:** Code-hart in MVP; `dim_elearn_badge_rule` mit JSON-Kriterien Phase-2
 - **Sparte-Wert `uebergreifend`:** derzeit Sonder-Wert im Newsletter-Kontext; globaler Sparten-Katalog-Eintrag wenn cross-cutting in anderen Modulen auftaucht
+
+---
+
+## §96 HR-Modul Stammdaten (v1.5-HR, 2026-04-25)
+
+**Spec-Quelle:** `specs/ARK_HR_TOOL_SCHEMA_v0_1.md`
+
+### §96.1 HR-ENUM-Types (10)
+
+| ENUM-Name | Werte (PostgreSQL-Typ) |
+|-----------|----------------------|
+| `contract_state` | `draft` · `pending_sig` · `active` · `terminated` · `expired` · `voided` |
+| `employment_type` | `permanent` · `fixed_term` · `intern` · `freelance` |
+| `termination_reason` | `resignation` · `dismissal` · `dismissal_immediate` · `mutual_agreement` · `end_fixed_term` · `retirement` · `death` |
+| `hr_doc_state` | `pending` · `signed` · `superseded` · `revoked` |
+| `probation_milestone_type` | `month_1_review` · `month_2_review` · `probation_end` · `probation_extended` · `probation_failed` |
+| `disciplinary_level` | `verbal_warning` · `written_warning` · `formal_warning` · `final_warning` · `suspension` · `dismissal_immediate` |
+| `disciplinary_state` | `draft` · `issued` · `acknowledged` · `disputed` · `resolved` · `archived` |
+| `onboarding_state` | `draft` · `active` · `completed` · `overdue` · `cancelled` |
+| `onboarding_task_state` | `pending` · `in_progress` · `done` · `skipped` · `overdue` |
+| `onboarding_assignee_role` | `new_hire` · `head_of` · `admin` · `it` · `buddy` |
+
+### §96.2 `dim_hr_document_type` (13 Seeds)
+
+HR-Dokument-Typen: Verträge, Reglemente, Bescheinigungen.
+
+| code | label_de | sig | counter_sig | cat | retention_years |
+|------|----------|-----|-------------|-----|----------------|
+| `EMPLOYMENT_CONTRACT` | Arbeitsvertrag | ✓ | ✓ | vertrag | 10 |
+| `GENERALIS_PROVISIO` | Generalis Provisio (Allg. Anstellungsbedingungen) | ✓ | ✓ | reglement | 10 |
+| `PROGRESSUS` | Progressus (Stellenbeschreibung) | ✓ | ✓ | vertrag | 10 |
+| `PRAEMIUM_VICTORIA` | Praemium Victoria (Provisionsvertrag) | ✓ | ✓ | vertrag | 10 |
+| `TEMPUS_PASSIO_365` | Tempus Passio 365 (Arbeitszeitenreglement) | ✓ | ✓ | reglement | 10 |
+| `LOCUS_EXTRA` | Locus Extra (Mobiles Arbeiten) | ✓ | ✓ | reglement | 10 |
+| `DATENSCHUTZ_ERKLAERUNG` | Datenschutzerklärung (DSG-Einwilligung) | ✓ | ✓ | bescheinigung | 10 |
+| `REFERENCE_LETTER` | Arbeitszeugnis | ✓ | ✓ | bescheinigung | 10 |
+| `INTERIM_REFERENCE` | Zwischenzeugnis | ✓ | ✓ | bescheinigung | 10 |
+| `SALARY_STATEMENT` | Lohnausweis | ✗ | ✗ | bescheinigung | 10 |
+| `AHV_CONFIRMATION` | AHV-Bestätigung Anmeldung | ✗ | ✗ | bescheinigung | 5 |
+| `PROBATION_EXTENSION` | Probezeit-Verlängerung (OR 335b Abs. 2) | ✓ | ✓ | vertrag | 10 |
+| `OTHER` | Sonstiges Dokument | ✗ | ✗ | other | 10 |
+
+> **Hinweis lateinische Eigennamen:** Generalis Provisio / Progressus / Praemium Victoria / Tempus Passio 365 / Locus Extra sind Corporate-Brand-Namen (Latein) — keine Umlaut-Ersetzung.
+
+### §96.3 `dim_disciplinary_offense_type` (13 Seeds)
+
+| code | label_de | category | typical_level |
+|------|----------|----------|---------------|
+| `REPEATED_LATENESS` | Wiederholte Unpünktlichkeit | attendance | written_warning |
+| `UNEXCUSED_ABSENCE` | Unentschuldigtes Fernbleiben | attendance | written_warning |
+| `INSUBORDINATION` | Nichtbefolgung von Weisungen | conduct | written_warning |
+| `MISCONDUCT_COLLEAGUE` | Unangemessenes Verhalten gegenüber Kollegen | conduct | verbal_warning |
+| `MISCONDUCT_CLIENT` | Unangemessenes Verhalten gegenüber Kunden/Kandidaten | conduct | written_warning |
+| `PERFORMANCE_DEFICIENCY` | Wiederholte Leistungsmängel | performance | verbal_warning |
+| `TARGET_MISS_REPEATED` | Wiederholtes Verfehlen vereinbarter Ziele | performance | written_warning |
+| `DATA_BREACH_INTERNAL` | Verletzung Datenschutz intern | compliance | formal_warning |
+| `CONFIDENTIALITY_BREACH` | Bruch der Schweigepflicht (Kunden/Kandidaten) | compliance | formal_warning |
+| `EXPENSE_FRAUD` | Manipulation Spesenabrechnung | integrity | final_warning |
+| `COMPETITION_VIOLATION` | Verletzung Konkurrenzverbot | integrity | dismissal_immediate |
+| `HARASSMENT` | Belästigung / Diskriminierung | conduct | dismissal_immediate |
+| `OTHER` | Sonstiger Grund | conduct | verbal_warning |
+
+### §96.4 `dim_onboarding_task_template_type` (18 Seeds)
+
+| code | label_de | assignee | offset_days | mandatory | category |
+|------|----------|----------|-------------|-----------|---------|
+| `WELCOME_MEETING` | Willkommensgespräch mit Head of | head_of | 1 | ✓ | social |
+| `IT_EQUIPMENT_SETUP` | IT-Einrichtung (Laptop, Handy, Zugänge) | it | 1 | ✓ | it |
+| `EMAIL_SETUP` | E-Mail + Kalender-Einrichtung (Outlook) | it | 1 | ✓ | it |
+| `SIGN_GENERALIS_PROVISIO` | Generalis Provisio unterschreiben | new_hire | 1 | ✓ | compliance |
+| `SIGN_PROGRESSUS` | Progressus (Stellenbeschreibung) unterschreiben | new_hire | 3 | ✓ | compliance |
+| `SIGN_TEMPUS_PASSIO` | Tempus Passio 365 unterschreiben | new_hire | 3 | ✓ | compliance |
+| `SIGN_LOCUS_EXTRA` | Locus Extra unterschreiben | new_hire | 3 | ✓ | compliance |
+| `SIGN_PRAEMIUM_VICTORIA` | Praemium Victoria unterschreiben (Provisions-MA) | new_hire | 5 | ✗ | compliance |
+| `SIGN_DATENSCHUTZ` | Datenschutzerklärung unterzeichnen | new_hire | 1 | ✓ | compliance |
+| `AHV_REGISTRATION` | AHV-Anmeldung Treuhand | admin | 3 | ✓ | admin |
+| `BADGE_KEY` | Büroschlüssel / Badge aushändigen | admin | 1 | ✓ | admin |
+| `BANK_DETAILS` | Bankverbindung erfassen | new_hire | 3 | ✓ | admin |
+| `CRM_INTRO` | CRM-Einführung (ARK CRM Demo) | head_of | 5 | ✓ | role |
+| `TOOL_INTRO_ELEARN` | E-Learning Plattform Einführung | head_of | 7 | ✓ | role |
+| `BUDDY_INTRO` | Vorstellung Buddy / Paten | buddy | 1 | ✗ | social |
+| `TEAM_LUNCH` | Team-Mittagessen (erste Woche) | head_of | 5 | ✗ | social |
+| `MONTH_1_REVIEW` | 1-Monats-Feedback-Gespräch | head_of | 30 | ✓ | role |
+| `PROBATION_REVIEW` | Probezeit-Abschlussgespräch | head_of | 90 | ✓ | role |
+
+### §96.5 Activity-Types HR-Modul
+
+Das HR-Modul erzeugt keine neuen Activity-Type-Kategorien. HR-Aktionen werden in bestehenden Kategorien §14 erfasst:
+
+| HR-Aktion | Activity-Kategorie |
+|-----------|-------------------|
+| Vertragsunterzeichnung / Onboarding-Start | System (automatisch) |
+| Probezeit-Gespräch | Erfolgsbasis (manuell durch Head) |
+| Verwarnung erstellt/zugestellt | System (automatisch) + Erfolgsbasis |
+| Kündigung erfasst | System (automatisch) |
+| Dokument angefordert / unterschrieben | System (automatisch) |
+
+### §96.6 Statistik nach HR-Modul
+
+```
+HR ENUM-Types:         10  (neu in v1.5-HR)
+HR Dimension-Tabellen:  3  (dim_hr_document_type · dim_disciplinary_offense_type · dim_onboarding_task_template_type)
+HR Fact-Tabellen:       8  (contracts · attachments · disciplinary · probation · templates · template_tasks · instances · instance_tasks)
+HR Views:               4  (active_employees · onboarding_progress · disciplinary_summary · pending_signatures)
+Tabellen total:       ~215 (204 E-Learning + 11 HR)
+```
 - **Feature-Catalog-Auto-Discovery:** Script scannt bei jedem Deploy alle `@gate_feature`-Decorators und synct `FEATURE_CATALOG.ts` → Source-of-Truth lebt im Code
