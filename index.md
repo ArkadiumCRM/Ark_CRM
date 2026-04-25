@@ -145,8 +145,9 @@ updated: 2026-04-19
 - [[hr-konkurrenz-abwerbeverbot]] — 18 Mt Deutschschweiz + Karenzentschädigung (CHF 500/350) + Konventionalstrafen (CHF 80k min) + Disziplinar-Katalog
 - [[hr-ma-rollen-matrix]] — MA-Rollen aus Vertrags-Sicht (Researcher · Consultant · CM · AM · Team Leader · Head), Progressus-Mapping, §5.3-Praemium-Grace-Period
 
-## Analyses (8)
+## Analyses (9)
 
+- [[sync-report-2026-04-25]] — Spec-Mockup-Sync-Drift-Report nach Performance-Modul-Mockup-Phase · 5 stale Digests · 4 Performance-Patches NICHT in Grundlagen gemerged · 4 Mockup-Lint-Drifts · 43 Lint-Violations (7d)
 - [[sync-report-2026-04-24]] — Vollscan Drift-Report 2026-04-24 · 0 unresolved · 4 stale Digests · 18 Spec-Drift · 19 Mockup-Drift · 525 Lint-Violations (7d)
 - [[sync-report-2026-04-17]] — Drift-Scan nach Admin-Vollansicht-Specs · 9 unresolved Changelog · 2 stale Digests · 10 Sync-Schulden Admin ↔ Grundlagen
 - [[ungereimtheiten-report]] — Systematische Prüfung aller Widersprüche, Entscheidungen, Schema-Deltas, offene Specs

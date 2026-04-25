@@ -1,3 +1,9 @@
+## [2026-04-25] sync-report | Spec-Mockup-Sync-Report
+
+- created: wiki/analyses/sync-report-2026-04-25.md
+- updated: index.md
+- Hauptbefund: 4 Performance-Patches (STAMMDATEN/DB/BACKEND/HR-Patch v1.5→v1.6 etc.) NICHT in Grundlagen gemerged. 5 Digests stale. 9 Entity-Detail-Specs mit Stale-Source-Frontmatter. 4 Performance-Mockup-Drifts (UMLAUT-Substitute + Sub-Page-App-Bar).
+
 ## [2026-04-19] ingest | HR-Tier-2 (Einführungsordner + Academy-Module + Mitarbeiter-Tools)
 
 **Kontext:** Nach Spec-Triade Plan-v0.2 + Schema-v0.1 + Interactions-v0.1 Tier-2-Ingest zur Content-Erweiterung.
