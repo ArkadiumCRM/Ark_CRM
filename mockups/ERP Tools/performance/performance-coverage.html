@@ -243,12 +243,11 @@
   .ch-map path.active { stroke: #B8860B; stroke-width: 3; }
   .ch-map text {
     font-family: "DM Sans", system-ui, sans-serif;
-    font-size: 8px; font-weight: 500;
+    font-size: 11px; font-weight: 500;
     fill: #1A1F2E; pointer-events: none;
     dominant-baseline: middle; text-anchor: middle;
-    text-shadow: 0 0 3px #fff, 0 0 3px #fff;
     paint-order: stroke;
-    stroke: #fff;
+    stroke: #FFFFFF;
     stroke-width: 2.5px;
     stroke-linejoin: round;
   }
@@ -613,6 +612,9 @@
     font-family: "JetBrains Mono", monospace;
   }
 </style>
+<!-- TopoJSON + d3-geo: runtime conversion echter Schweiz-Kantons-Geometrien (swiss-maps@4 / BFS GEOSTAT) -->
+<script src="https://unpkg.com/topojson-client@3"></script>
+<script src="https://unpkg.com/d3-geo@3"></script>
 </head>
 <body>
 
@@ -712,235 +714,20 @@
       </div>
     </div>
 
-    <!-- TODO: Stammdaten-Patch v1.6→v1.7 für dim_canton (26 Schweizer Kantone) ausstehend. Canton-Codes hier hardcoded für Mockup. -->
+    <!-- Stammdaten-Patch v1.6→v1.7 für dim_canton (26 Schweizer Kantone) ausstehend; Canton-Geometrien werden zur Laufzeit von swiss-maps@4 (TopoJSON) geladen. -->
     <div class="heatmap-wrap">
       <div class="ch-map-wrap">
         <!--
-          26-Kantone-Schweiz-Karte · geografisch positionierte Polygon-Pfade
-          ViewBox: 0 0 620 420 (West→Ost, Nord→Süd)
-          Koordinatensystem: approximiert auf Basis offizieller CH1903-Topographie.
-          Kanton-IDs nach ISO 3166-2:CH · Zwei-Buchstaben-Codes.
-
-          West-Ost-Reihenfolge: GE · VD · NE · JU → FR · SO · BS · BL → BE (gross)
-          → AG · ZH (gross) → SH · TG → SG (mit AR/AI)
-          Mitte (Innerschweiz): LU · OW · NW · UR · SZ · ZG · GL
-          Süd: VS (gross) · TI (gross) · GR (grösster Kanton)
+          26-Kantone-Schweiz-Karte · echte kartografische Grenzen via swiss-maps@4 (TopoJSON).
+          Quelle: https://unpkg.com/swiss-maps@4/2021/ch-combined.json
+          Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT.
+          ViewBox: 0 0 960 500 (entspricht swiss-maps@4 Default-Projektion, CH1903 vorprojiziert).
+          Pfade + Centroid-Labels werden zur Laufzeit von loadCantonsMap() erzeugt.
         -->
-        <svg class="ch-map" id="chMap" viewBox="0 0 620 420">
-
-          <!-- ═══ NORDWEST-KETTE: JU · BS · BL · SO ═══ -->
-
-          <!-- JU: Jura — Nordwestzipfel, Jurabögen -->
-          <path id="canton-JU"
-            data-code="JU" data-name="Jura"
-            data-contacted="3" data-total="10" data-score="31"
-            d="M 82,68 L 110,55 L 135,58 L 152,70 L 148,90 L 130,100 L 110,98 L 90,88 Z" />
-
-          <!-- BS: Basel-Stadt — kleinste Fläche, Stadtgebiet -->
-          <path id="canton-BS"
-            data-code="BS" data-name="Basel-Stadt"
-            data-contacted="21" data-total="25" data-score="84"
-            d="M 206,44 L 222,44 L 226,58 L 212,62 L 202,55 Z" />
-
-          <!-- BL: Basel-Landschaft — Halbring um BS -->
-          <path id="canton-BL"
-            data-code="BL" data-name="Basel-Landschaft"
-            data-contacted="18" data-total="23" data-score="78"
-            d="M 152,70 L 180,55 L 202,55 L 212,62 L 226,58 L 238,68 L 242,88 L 230,102 L 210,108 L 185,105 L 165,96 L 148,90 Z" />
-
-          <!-- SO: Solothurn — Streifen südlich BL -->
-          <path id="canton-SO"
-            data-code="SO" data-name="Solothurn"
-            data-contacted="12" data-total="17" data-score="71"
-            d="M 148,90 L 165,96 L 185,105 L 210,108 L 230,102 L 245,110 L 248,126 L 230,132 L 208,135 L 185,130 L 162,120 L 145,108 Z" />
-
-          <!-- ═══ WEST: GE · VD · NE · FR ═══ -->
-
-          <!-- GE: Genf — äusserstes Westende, umschlossen von VD -->
-          <path id="canton-GE"
-            data-code="GE" data-name="Genf"
-            data-contacted="24" data-total="29" data-score="82"
-            d="M 42,258 L 62,248 L 78,256 L 85,272 L 76,286 L 55,290 L 38,278 Z" />
-
-          <!-- VD: Waadt — grosser Westkanton, Genfersee-Nordufer -->
-          <path id="canton-VD"
-            data-code="VD" data-name="Waadt"
-            data-contacted="32" data-total="42" data-score="76"
-            d="M 62,168 L 100,148 L 130,148 L 152,160 L 170,175 L 175,200 L 168,224 L 155,244 L 135,260 L 110,270 L 85,272 L 78,256 L 62,248 L 45,232 L 40,210 L 42,188 Z" />
-
-          <!-- NE: Neuenburg — Schmalstreifen westlich Mittelland -->
-          <path id="canton-NE"
-            data-code="NE" data-name="Neuenburg"
-            data-contacted="8" data-total="14" data-score="58"
-            d="M 110,98 L 130,100 L 148,90 L 162,100 L 170,118 L 165,136 L 152,148 L 130,148 L 115,138 L 105,122 Z" />
-
-          <!-- FR: Freiburg — Zentrum-West zwischen Bern und Waadt -->
-          <path id="canton-FR"
-            data-code="FR" data-name="Freiburg"
-            data-contacted="11" data-total="18" data-score="62"
-            d="M 170,118 L 208,135 L 230,132 L 248,148 L 245,170 L 235,188 L 218,198 L 200,200 L 175,200 L 170,175 L 165,155 L 165,136 Z" />
-
-          <!-- ═══ BERN (grosser Kanton, Mitte-West) ═══ -->
-
-          <!-- BE: Bern — zweitgrösster Kanton, komplex geformt -->
-          <path id="canton-BE"
-            data-code="BE" data-name="Bern"
-            data-contacted="28" data-total="38" data-score="74"
-            d="M 165,136 L 185,130 L 208,135 L 230,132 L 248,126 L 268,130 L 290,125 L 308,132 L 318,148 L 315,168 L 305,185 L 285,195 L 268,205 L 255,220 L 245,240 L 235,258 L 220,268 L 200,268 L 185,258 L 172,242 L 168,224 L 175,200 L 200,200 L 218,198 L 235,188 L 245,170 L 248,148 Z" />
-
-          <!-- ═══ MITTELLAND-KETTE: AG · ZH ═══ -->
-
-          <!-- AG: Aargau — Mittelland Nord, zwischen BL/SO und ZH -->
-          <path id="canton-AG"
-            data-code="AG" data-name="Aargau"
-            data-contacted="24" data-total="30" data-score="81"
-            d="M 242,88 L 268,80 L 295,78 L 318,82 L 328,96 L 328,115 L 315,128 L 308,132 L 290,125 L 268,130 L 248,126 L 245,110 L 230,102 Z" />
-
-          <!-- ZH: Zürich — grösster Wirtschaftskanton, Nordost-Mitte -->
-          <path id="canton-ZH"
-            data-code="ZH" data-name="Zürich"
-            data-contacted="51" data-total="55" data-score="92"
-            d="M 295,78 L 330,68 L 368,65 L 395,72 L 408,88 L 410,108 L 400,128 L 382,138 L 358,142 L 338,138 L 328,115 L 318,82 Z" />
-
-          <!-- ═══ NORDOST-GRUPPE: SH · TG · AR · AI · SG ═══ -->
-
-          <!-- SH: Schaffhausen — nördlichster Kanton, Rheinbogen -->
-          <path id="canton-SH"
-            data-code="SH" data-name="Schaffhausen"
-            data-contacted="8" data-total="13" data-score="65"
-            d="M 330,42 L 368,38 L 395,42 L 400,58 L 395,72 L 368,65 L 330,68 L 318,58 Z" />
-
-          <!-- TG: Thurgau — Nordostrand, Bodensee -->
-          <path id="canton-TG"
-            data-code="TG" data-name="Thurgau"
-            data-contacted="11" data-total="16" data-score="67"
-            d="M 395,42 L 438,42 L 462,52 L 468,68 L 455,85 L 432,92 L 408,88 L 395,72 L 400,58 Z" />
-
-          <!-- SG: St. Gallen — grosser Nordostkanton, Appenzells eingeschlossen -->
-          <path id="canton-SG"
-            data-code="SG" data-name="St. Gallen"
-            data-contacted="18" data-total="26" data-score="69"
-            d="M 432,92 L 455,85 L 468,68 L 500,60 L 525,72 L 540,92 L 542,118 L 528,140 L 508,152 L 490,162 L 465,168 L 445,162 L 425,148 L 410,130 L 408,108 L 410,88 Z" />
-
-          <!-- AR: Appenzell Ausserrhoden — eingeschlossen in SG, äusserer Ring -->
-          <path id="canton-AR"
-            data-code="AR" data-name="Appenzell Ausserrhoden"
-            data-contacted="3" data-total="7" data-score="43"
-            d="M 455,100 L 478,96 L 492,108 L 488,125 L 472,132 L 455,128 L 445,115 Z" />
-
-          <!-- AI: Appenzell Innerrhoden — kleinster Kanton, Kern in AR -->
-          <path id="canton-AI"
-            data-code="AI" data-name="Appenzell Innerrhoden"
-            data-contacted="1" data-total="4" data-score="25"
-            d="M 463,108 L 478,104 L 484,115 L 476,124 L 462,122 Z" />
-
-          <!-- ═══ INNERSCHWEIZ: LU · ZG · OW · NW · UR · SZ · GL ═══ -->
-
-          <!-- LU: Luzern — Zentralschweiz Westrand, Vierwaldstättersee -->
-          <path id="canton-LU"
-            data-code="LU" data-name="Luzern"
-            data-contacted="13" data-total="19" data-score="68"
-            d="M 290,125 L 308,132 L 318,148 L 315,168 L 305,185 L 285,195 L 268,205 L 255,215 L 245,205 L 238,188 L 245,170 L 250,155 L 268,145 L 285,142 Z" />
-
-          <!-- ZG: Zug — kleiner Kanton zwischen LU und ZH -->
-          <path id="canton-ZG"
-            data-code="ZG" data-name="Zug"
-            data-contacted="14" data-total="16" data-score="88"
-            d="M 338,138 L 358,142 L 365,158 L 355,172 L 338,175 L 322,165 L 318,148 L 328,142 Z" />
-
-          <!-- NW: Nidwalden — schmaler Streifen westlich UR -->
-          <path id="canton-NW"
-            data-code="NW" data-name="Nidwalden"
-            data-contacted="4" data-total="8" data-score="48"
-            d="M 268,185 L 285,195 L 305,185 L 315,198 L 308,215 L 292,220 L 275,212 L 268,200 Z" />
-
-          <!-- OW: Obwalden — angrenzend an NW, etwas westlicher -->
-          <path id="canton-OW"
-            data-code="OW" data-name="Obwalden"
-            data-contacted="3" data-total="7" data-score="41"
-            d="M 245,205 L 255,215 L 268,205 L 268,220 L 275,232 L 265,242 L 248,242 L 238,228 L 238,212 Z" />
-
-          <!-- SZ: Schwyz — Vierwaldstättersee Südufer -->
-          <path id="canton-SZ"
-            data-code="SZ" data-name="Schwyz"
-            data-contacted="6" data-total="12" data-score="52"
-            d="M 338,175 L 355,172 L 375,180 L 388,195 L 385,215 L 368,225 L 348,225 L 330,218 L 320,205 L 322,188 Z" />
-
-          <!-- UR: Uri — Alpenkanton, Gotthard -->
-          <path id="canton-UR"
-            data-code="UR" data-name="Uri"
-            data-contacted="2" data-total="6" data-score="35"
-            d="M 308,215 L 320,205 L 330,218 L 348,225 L 350,248 L 335,268 L 315,272 L 300,260 L 292,240 L 292,220 Z" />
-
-          <!-- GL: Glarus — Schmalkanton östlich URI -->
-          <path id="canton-GL"
-            data-code="GL" data-name="Glarus"
-            data-contacted="3" data-total="8" data-score="38"
-            d="M 388,195 L 408,188 L 425,198 L 425,218 L 412,235 L 395,240 L 378,232 L 368,215 L 368,200 Z" />
-
-          <!-- ═══ GROSSE SÜDKANTONE: VS · GR · TI ═══ -->
-
-          <!-- VS: Wallis — langer Südwestkanton, Rhonetal -->
-          <path id="canton-VS"
-            data-code="VS" data-name="Wallis"
-            data-contacted="9" data-total="19" data-score="48"
-            d="M 155,244 L 168,240 L 185,258 L 200,268 L 220,268 L 235,280 L 242,302 L 235,325 L 215,338 L 188,340 L 162,330 L 145,312 L 138,290 L 145,268 Z" />
-
-          <!-- GR: Graubünden — grösster Kanton, Südosten -->
-          <path id="canton-GR"
-            data-code="GR" data-name="Graubünden"
-            data-contacted="7" data-total="21" data-score="34"
-            d="M 395,240 L 412,235 L 430,242 L 452,238 L 475,232 L 500,238 L 525,248 L 545,268 L 548,295 L 535,320 L 510,332 L 480,338 L 450,332 L 425,318 L 405,298 L 390,275 L 378,252 L 378,238 Z" />
-
-          <!-- TI: Tessin — Süden, südlich der Alpen -->
-          <path id="canton-TI"
-            data-code="TI" data-name="Tessin"
-            data-contacted="6" data-total="14" data-score="43"
-            d="M 295,272 L 315,272 L 335,280 L 355,290 L 370,310 L 375,335 L 365,358 L 345,372 L 322,375 L 302,362 L 285,345 L 278,322 L 280,300 Z" />
-
-          <!-- ═══ KANTONSBEZEICHNUNGEN ═══ -->
-          <!-- Labels: Kanton-Kürzel, zentriert in jeder Fläche -->
-
-          <!-- Nordwest -->
-          <text x="114" y="78">JU</text>
-          <text x="214" y="52">BS</text>
-          <text x="196" y="82">BL</text>
-          <text x="196" y="115">SO</text>
-
-          <!-- West -->
-          <text x="60" y="270">GE</text>
-          <text x="105" y="216">VD</text>
-          <text x="136" y="122">NE</text>
-          <text x="208" y="162">FR</text>
-
-          <!-- Bern -->
-          <text x="246" y="190">BE</text>
-
-          <!-- Mittelland -->
-          <text x="285" y="106">AG</text>
-          <text x="356" y="105">ZH</text>
-
-          <!-- Nordost -->
-          <text x="360" y="53">SH</text>
-          <text x="428" y="68">TG</text>
-          <text x="480" y="110">SG</text>
-          <text x="469" y="116">AR</text>
-          <text x="471" y="114" style="display:none;">AI</text>
-
-          <!-- Innerschweiz -->
-          <text x="276" y="162">LU</text>
-          <text x="344" y="158">ZG</text>
-          <text x="288" y="205">NW</text>
-          <text x="254" y="225">OW</text>
-          <text x="355" y="200">SZ</text>
-          <text x="316" y="238">UR</text>
-          <text x="406" y="216">GL</text>
-
-          <!-- Süd -->
-          <text x="192" y="298">VS</text>
-          <text x="462" y="285">GR</text>
-          <text x="328" y="322">TI</text>
-
+        <svg class="ch-map" id="chMap" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
+          <text id="chMapLoading" x="480" y="250" text-anchor="middle"
+                font-family="DM Sans, sans-serif" font-size="14" fill="#8A95A8"
+                stroke="none">Lade Schweizkarte ...</text>
         </svg>
       </div>
 
@@ -1298,29 +1085,15 @@
     return `rgb(${r},${g},${bl})`;
   }
 
-  // Apply fill colors to canton paths + sync label brightness
-  cantons.forEach(c => {
-    const path = document.getElementById(`canton-${c.code}`);
-    if (!path) return;
-    path.dataset.score     = c.score;
-    path.dataset.contacted = c.contacted;
-    path.dataset.total     = c.total;
-    path.dataset.name      = c.name;
-    const { bg, dark } = scoreColor(c.score);
-    path.style.fill = bg;
-    // Sync label text color
-    const lbl = document.querySelector(`text[id]`);  // handled below via querySelectorAll
-  });
+  // BFS-Kantonsnummer (TopoJSON id) → ISO 3166-2:CH 2-Buchstaben-Code
+  const cantonIdToCode = {
+    1:'ZH',  2:'BE',  3:'LU',  4:'UR',  5:'SZ',  6:'OW',  7:'NW',  8:'GL',
+    9:'ZG', 10:'FR', 11:'SO', 12:'BS', 13:'BL', 14:'SH', 15:'AR', 16:'AI',
+   17:'SG', 18:'GR', 19:'AG', 20:'TG', 21:'TI', 22:'VD', 23:'VS', 24:'NE',
+   25:'GE', 26:'JU'
+  };
 
-  // Sync label colors after fill assignment
-  document.querySelectorAll('#chMap text').forEach(t => {
-    // find the matching canton path by looking for proximity (text is positioned near canton centroid)
-    // Simple approach: labels are dark by default; override for dark-fill cantons
-    const parentSvg = document.getElementById('chMap');
-    // We'll re-run after setActiveRegion
-  });
-
-  // Active canton state
+  // Active canton state — handler & DOM refs hier hochgezogen, da loadCantonsMap() asynchron
   const hmInfoCell  = document.getElementById('hmInfoCell');
   const hmInfoScore = document.getElementById('hmInfoScore');
   const hmInfoCount = document.getElementById('hmInfoCount');
@@ -1329,6 +1102,7 @@
   function setActiveCanton(path) {
     document.querySelectorAll('#chMap path.active').forEach(x => x.classList.remove('active'));
     path.classList.add('active');
+    path.setAttribute('stroke-width', '3');
     const code      = path.dataset.code;
     const name      = path.dataset.name;
     const score     = +path.dataset.score;
@@ -1338,19 +1112,99 @@
     hmInfoScore.textContent = `${score} %`;
     hmInfoScore.style.color = score < 40 ? 'var(--red)' : score < 65 ? 'var(--amber)' : 'var(--green)';
     hmInfoCount.textContent = `${contacted} / ${total} Kandidaten`;
-    const matches = critList.filter(r => r.canton === code).length;
+    const matches = (typeof critList !== 'undefined')
+      ? critList.filter(r => r.canton === code).length
+      : 0;
     critFilter.firstChild.textContent = `${name} · ${matches} Treffer `;
     critFilter.classList.add('gold');
-    renderCrit(code);
+    if (typeof renderCrit === 'function') renderCrit(code);
   }
 
-  document.querySelectorAll('#chMap path').forEach(p => {
-    p.addEventListener('click', () => setActiveCanton(p));
-  });
+  // Lade swiss-maps@4 TopoJSON, baue 26 Kantons-Pfade + Centroid-Labels zur Laufzeit
+  async function loadCantonsMap() {
+    const svg = document.getElementById('chMap');
+    const loadingEl = document.getElementById('chMapLoading');
+    try {
+      if (typeof topojson === 'undefined' || typeof d3 === 'undefined') {
+        throw new Error('topojson-client / d3-geo nicht geladen');
+      }
+      const res = await fetch('https://unpkg.com/swiss-maps@4/2021/ch-combined.json');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const topo = await res.json();
+      if (!topo.objects || !topo.objects.cantons) {
+        throw new Error('TopoJSON-Layer "cantons" nicht gefunden');
+      }
+      const fc = topojson.feature(topo, topo.objects.cantons);
+      const pathGen = d3.geoPath().projection(null); // bereits projiziert (CH1903)
 
-  // Default active: AI (schlechtester Kanton, 25%)
-  const defaultPath = document.getElementById('canton-AI');
-  if (defaultPath) setActiveCanton(defaultPath);
+      if (loadingEl) loadingEl.remove();
+
+      fc.features.forEach(f => {
+        const id   = f.id != null ? +f.id : (f.properties && +f.properties.id);
+        const code = cantonIdToCode[id];
+        if (!code) return;
+        const data = cantons.find(c => c.code === code);
+        if (!data) return;
+
+        // Pfad
+        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('id', `canton-${code}`);
+        p.setAttribute('d', pathGen(f));
+        const { bg } = scoreColor(data.score);
+        p.setAttribute('fill', bg);
+        p.setAttribute('stroke', '#FFFFFF');
+        p.setAttribute('stroke-width', '1');
+        p.dataset.code      = code;
+        p.dataset.name      = data.name;
+        p.dataset.contacted = data.contacted;
+        p.dataset.total     = data.total;
+        p.dataset.score     = data.score;
+        p.style.cursor = 'pointer';
+        p.addEventListener('click', () => setActiveCanton(p));
+        p.addEventListener('mouseenter', () => {
+          if (!p.classList.contains('active')) p.setAttribute('stroke-width', '2.5');
+        });
+        p.addEventListener('mouseleave', () => {
+          if (!p.classList.contains('active')) p.setAttribute('stroke-width', '1');
+        });
+        svg.appendChild(p);
+
+        // Centroid-Label (ueberspringe sehr kleine Kantone wie AI fuer Lesbarkeit)
+        const [cx, cy] = pathGen.centroid(f);
+        if (Number.isFinite(cx) && Number.isFinite(cy)) {
+          const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          t.setAttribute('x', cx);
+          t.setAttribute('y', cy);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('dominant-baseline', 'middle');
+          t.setAttribute('font-family', 'DM Sans, sans-serif');
+          t.setAttribute('font-size', '11');
+          t.setAttribute('font-weight', '500');
+          t.setAttribute('fill', '#1A1F2E');
+          t.setAttribute('paint-order', 'stroke');
+          t.setAttribute('stroke', '#FFFFFF');
+          t.setAttribute('stroke-width', '2.5');
+          t.setAttribute('stroke-linejoin', 'round');
+          t.style.pointerEvents = 'none';
+          t.textContent = code;
+          svg.appendChild(t);
+        }
+      });
+
+      // Default-Aktiv: AI (schlechtester Kanton, 25 %)
+      const aiPath = document.getElementById('canton-AI');
+      if (aiPath) setActiveCanton(aiPath);
+    } catch (err) {
+      console.error('Schweizkarte konnte nicht geladen werden:', err);
+      if (loadingEl) loadingEl.remove();
+      svg.insertAdjacentHTML('beforeend',
+        '<text x="480" y="240" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="14" fill="#8A95A8" stroke="none">Schweizkarte konnte nicht geladen werden</text>' +
+        '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#8A95A8" stroke="none">bitte Verbindung pruefen</text>'
+      );
+    }
+  }
+
+  // Aufruf weiter unten, nachdem critList + renderCrit definiert sind.
 
   // ── Critical list · 26-Kantone-Verteilung ────────
   const critList = [
@@ -1461,6 +1315,9 @@
   });
 
   renderCrit();
+
+  // Schweiz-Karte (TopoJSON) jetzt laden — nachdem cantons + critList + renderCrit verfuegbar sind.
+  loadCantonsMap();
 
   // Drawer tabs
   document.querySelectorAll('.drawer-tabs').forEach(tabs => {
