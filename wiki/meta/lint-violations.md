@@ -1700,3 +1700,376 @@
 |-------|-------|---------|-----|
 | SNAKE-CASE \| 123 \| <strong>Wie Curricula wirken:</strong> Beim MA-Einstellen zieht der Worker <code... \| -> sprechenden Begriff statt snake_case-Identifier |
 
+
+## [2026-04-25 18:04] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 195 \| .ueber-grid { \| -> über |
+| UMLAUT \| 741 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 750 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 18:05] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 743 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 752 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 18:12] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 743 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 752 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 18:12] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 743 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 752 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 18:24] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+
+
+## [2026-04-25 18:25] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+
+
+## [2026-04-25 18:25] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+
+
+## [2026-04-25 18:26] session-53f982ef | performance-coverage.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+| UMLAUT \| 1202 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 18:27] session-53f982ef | performance-coverage.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+| UMLAUT \| 1202 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 20:39] session-cb6f69fa | performance-coverage.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+| UMLAUT \| 1202 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 20:55] session-53f982ef | performance-coverage.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 723 \| Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT. \| -> für |
+| UMLAUT \| 1204 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:05] session-53f982ef | sync-report-2026-04-25.md (17 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 13 \| Drift-Analyse direkt nach Performance-Modul-Mockup-Phase-Abschluss (11/11 Mockup... \| -> für |
+| UMLAUT \| 13 \| Drift-Analyse direkt nach Performance-Modul-Mockup-Phase-Abschluss (11/11 Mockup... \| -> über |
+| UMLAUT \| 108 \| - ✗ Zeile 723: `Datenbasis: Bundesamt fuer Statistik (BFS), GEOSTAT.` → `für` \| -> für |
+| UMLAUT \| 114 \| - ✗ Zeile 197: `.ueber-grid {` (CSS-Klasse — könnte als JS-Identifier-Ausnahme d... \| -> über |
+| UMLAUT \| 115 \| - ✗ Zeile 743: `<button data-tab="ueber">Übersicht</button>` (data-tab-Wert) — U... \| -> über |
+| UMLAUT \| 116 \| - ✗ Zeile 752: `<section class="ueber-grid">` \| -> über |
+| UMLAUT \| 143 \| \| `performance-coverage.html` \| 11 \| UMLAUT (recurrent — `fuer`, `prufen`) \| \| -> für |
+| UMLAUT \| 144 \| \| `performance-mitarbeiter.html` \| 12 \| UMLAUT (`ueber*` als CSS/data-tab Identi... \| -> über |
+| UMLAUT \| 146 \| \| `commission-admin.html` / `commission-team.html` \| 8 \| UMLAUT (`kuerzel` als J... \| -> Kürzel |
+| UMLAUT \| 151 \| - **UMLAUT** (~30 violations) — am häufigsten in JS-Identifier/CSS-Klassen-Konte... \| -> für |
+| UMLAUT \| 151 \| - **UMLAUT** (~30 violations) — am häufigsten in JS-Identifier/CSS-Klassen-Konte... \| -> über |
+| UMLAUT \| 151 \| - **UMLAUT** (~30 violations) — am häufigsten in JS-Identifier/CSS-Klassen-Konte... \| -> Kürzel |
+| UMLAUT \| 151 \| - **UMLAUT** (~30 violations) — am häufigsten in JS-Identifier/CSS-Klassen-Konte... \| -> verfügb |
+| UMLAUT \| 158 \| - `performance-coverage.html` Zeile 723 `fuer` — 6× seit 18:24 ungelöst \| -> für |
+| UMLAUT \| 159 \| - `performance-mitarbeiter.html` Zeilen 197/743/752 `ueber` — 4× seit 18:04 unge... \| -> über |
+| UMLAUT \| 171 \| 4. **HIGH — `performance-coverage.html` UMLAUT-Fix.** Zeile 723 `fuer` → `für` u... \| -> für |
+| UMLAUT \| 173 \| 5. **MEDIUM — `performance-mitarbeiter.html` `.ueber-grid` umbenennen.** Entwede... \| -> über |
+
+
+## [2026-04-25 21:05] session-53f982ef | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 405 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 444 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 444 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 444 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 449 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-25 21:10] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1204 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:10] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1204 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:52] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1205 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:53] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1177 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:53] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1172 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:53] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1172 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 21:56] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 744 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 753 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 21:56] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 744 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 753 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 21:56] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 744 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 753 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 21:56] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 744 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 753 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:10] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1197 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:10] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1197 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:11] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1197 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:11] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1201 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:12] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1201 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:12] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 769 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 778 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:13] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 769 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 778 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:13] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 769 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 778 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:13] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 769 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 778 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:40] session-53f982ef | performance-insights.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 836 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-funnel.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 540 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-coverage.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 640 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+| UMLAUT \| 1206 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-mitarbeiter.html (4 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 690 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+| UMLAUT \| 774 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 783 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-team.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1008 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-revenue.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 895 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:41] session-53f982ef | performance-business.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 607 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:42] session-53f982ef | performance-reports.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 637 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:42] session-53f982ef | performance-admin.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 460 \| /* Drawer-Previews-Section visuell versteckt — Templates bleiben fuer JS-Klon vi... \| -> für |
+
+
+## [2026-04-25 23:53] session-53f982ef | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 424 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 463 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 463 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 463 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 468 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-26 00:19] session-53f982ef | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1206 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-26 00:19] session-53f982ef | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 774 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 783 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-26 00:20] session-53f982ef | decisions.md (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 509 \| 4. **CSS-Comment-UMLAUT-Fixes deployed.** 9 Performance-Mockups hatte Sub-Agent ... \| -> für |
+

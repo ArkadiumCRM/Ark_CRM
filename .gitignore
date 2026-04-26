@@ -20,6 +20,7 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+.env.brain
 
 # Build artifacts (future)
 dist/
@@ -91,3 +92,12 @@ raw/E-Learning/
 
 # Claude Preview launch config (local-only)
 .claude/launch.json
+
+# Tmp scratch
+tmp/
+
+# Brain-CLI metadata
+BRAIN.md
+
+# Wiki-chat sub-project (separate Next.js scaffold, eigenes Repo TBD)
+wiki-chat/
