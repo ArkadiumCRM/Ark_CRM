@@ -699,7 +699,7 @@ CREATE POLICY <table>_tenant_isolation ON <tabelle>
 
 Für exakte Definitionen (Spalten-Typen, Constraints, Indizes, Defaults, CHECKs, Views-DDL, Migrations-Reihenfolge) immer:
 
-**`C:/ARK CRM/Grundlagen MD/ARK_DATABASE_SCHEMA_v1_5.md`** (~3000 Zeilen)
+**`C:/Projects/Ark_CRM/Grundlagen MD/ARK_DATABASE_SCHEMA_v1_5.md`** (~3000 Zeilen)
 
 Navigations-Hinweise:
 - **v1.2→v1.3 Delta:** Zeilen 1–213

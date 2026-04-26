@@ -9,7 +9,7 @@ tags: [digest, stammdaten, enums, lookup]
 
 # Stammdaten-Digest v1.6 (Stand 2026-04-25)
 
-Kompakte Referenz zur vollständigen Quelle `C:\ARK CRM\Grundlagen MD\ARK_STAMMDATEN_EXPORT_v1_6.md` (v1.2 → v1.3 → v1.3.4 Dok-Generator → v1.4 Zeit-Modul/Activity-Patch → v1.5 E-Learning Sub A/B/C/D → v1.6 Performance-Modul §97/§98). **Enum-Werte lossless**, Prosa/Beispiele lossy. Für lange Listen (EDV, Funktionen, Ausbildung, Focus, Cluster) siehe TOC-Hinweis auf Original-§.
+Kompakte Referenz zur vollständigen Quelle `C:\Projects\Ark_CRM\Grundlagen MD\ARK_STAMMDATEN_EXPORT_v1_6.md` (v1.2 → v1.3 → v1.3.4 Dok-Generator → v1.4 Zeit-Modul/Activity-Patch → v1.5 E-Learning Sub A/B/C/D → v1.6 Performance-Modul §97/§98). **Enum-Werte lossless**, Prosa/Beispiele lossy. Für lange Listen (EDV, Funktionen, Ausbildung, Focus, Cluster) siehe TOC-Hinweis auf Original-§.
 
 ---
 
@@ -1582,7 +1582,7 @@ Event-Types gesamt:   ~113  (~61 v1.4 + 52 E-Learning: 16+12+12+12)
 ## Pointer to full source
 
 Für Details zu allen weggelassenen/gekürzten §-Sektionen:
-`C:\ARK CRM\Grundlagen MD\ARK_STAMMDATEN_EXPORT_v1_6.md §X`.
+`C:\Projects\Ark_CRM\Grundlagen MD\ARK_STAMMDATEN_EXPORT_v1_6.md §X`.
 
 **Besonders betroffen (lossy im Digest, bei Bedarf Original lesen):**
 - **§91.4** (33 v1.4-System-Activity-Types #70-#102: Namen vorhanden, für volle Spalten inkl. actor_type/source_system/is_notifiable/Beschreibung → Original bzw. `specs/ARK_STAMMDATEN_PATCH_v1_3_to_v1_4_ACTIVITY_TYPES.md`).

@@ -138,7 +138,7 @@ Alle Datum-/Zeit-Eingabefelder müssen **Kalender-Picker UND manuelle Tastatur-E
 
 **Backup-Ordner-Struktur:**
 ```
-C:/ARK CRM/backups/
+C:/Projects/Ark_CRM/backups/
   candidates.html.2026-04-15-1352.bak
   mandates.html.2026-04-15-0930.bak
   ...

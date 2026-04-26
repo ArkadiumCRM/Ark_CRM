@@ -7,7 +7,7 @@
 $ErrorActionPreference = 'Stop'
 
 try {
-    $digestDir = 'C:/ARK CRM/wiki/meta/digests'
+    $digestDir = 'C:/Projects/Ark_CRM/wiki/meta/digests'
 
     if (-not (Test-Path $digestDir)) {
         exit 0
@@ -23,7 +23,7 @@ try {
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine("Files: $($files.Count) Digests | Kontext-Kosten: ~42k Tokens")
     [void]$sb.AppendLine('Digests enthalten: alle Enums/Kataloge lossless, Prosa/Beispiele lossy.')
-    [void]$sb.AppendLine('Volltext: `C:/ARK CRM/Grundlagen MD/ARK_*.md` — Assistant fragt vor Read fuer Praezisions-Arbeit.')
+    [void]$sb.AppendLine('Volltext: `C:/Projects/Ark_CRM/Grundlagen MD/ARK_*.md` — Assistant fragt vor Read fuer Praezisions-Arbeit.')
     [void]$sb.AppendLine('Deaktivieren: SessionStart-Hook `load-grundlagen.ps1` aus `.claude/settings.json` entfernen.')
     [void]$sb.AppendLine('')
 
@@ -38,9 +38,9 @@ try {
 
     # --- Extra-Context: Anti-Patterns + Decisions + Mockup-Baseline ---
     $extraFiles = @(
-        @{ Path = 'C:/ARK CRM/wiki/meta/anti-patterns.md';    Label = 'ANTI-PATTERNS' },
-        @{ Path = 'C:/ARK CRM/wiki/meta/decisions.md';        Label = 'DECISION-LOG' },
-        @{ Path = 'C:/ARK CRM/wiki/meta/mockup-baseline.md';  Label = 'MOCKUP-BASELINE' }
+        @{ Path = 'C:/Projects/Ark_CRM/wiki/meta/anti-patterns.md';    Label = 'ANTI-PATTERNS' },
+        @{ Path = 'C:/Projects/Ark_CRM/wiki/meta/decisions.md';        Label = 'DECISION-LOG' },
+        @{ Path = 'C:/Projects/Ark_CRM/wiki/meta/mockup-baseline.md';  Label = 'MOCKUP-BASELINE' }
     )
     foreach ($ef in $extraFiles) {
         if (Test-Path $ef.Path) {
@@ -54,7 +54,7 @@ try {
     }
 
     # --- Stale-Digest-Warning ---
-    $stalePath = 'C:/ARK CRM/wiki/meta/digests/STALE.md'
+    $stalePath = 'C:/Projects/Ark_CRM/wiki/meta/digests/STALE.md'
     if (Test-Path $stalePath) {
         $staleContent = Get-Content $stalePath -Raw -Encoding UTF8
         if ($staleContent -match '- \[') {
@@ -69,7 +69,7 @@ try {
     }
 
     # --- Recent Lint-Violations (letzte 20) ---
-    $lintPath = 'C:/ARK CRM/wiki/meta/lint-violations.md'
+    $lintPath = 'C:/Projects/Ark_CRM/wiki/meta/lint-violations.md'
     if (Test-Path $lintPath) {
         $lintContent = Get-Content $lintPath -Raw -Encoding UTF8
         # Count sessions (## headers)

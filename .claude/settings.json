@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/pre-edit-hint.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/pre-edit-hint.ps1\"",
             "timeout": 5
           }
         ]
@@ -31,19 +31,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/grundlagen-changelog.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/grundlagen-changelog.ps1\"",
             "timeout": 10,
             "async": true
           },
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/ark-lint.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/ark-lint.ps1\"",
             "timeout": 10,
             "async": true
           },
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/mockup-smoke.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/mockup-smoke.ps1\"",
             "timeout": 30
           }
         ]
@@ -54,12 +54,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/session-overview.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/session-overview.ps1\"",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/load-grundlagen.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/load-grundlagen.ps1\"",
             "timeout": 20
           }
         ]
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/ARK CRM/.claude/hooks/post-compact-reminder.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Projects/Ark_CRM/.claude/hooks/post-compact-reminder.ps1\"",
             "timeout": 5
           }
         ]

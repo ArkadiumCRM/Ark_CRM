@@ -215,7 +215,7 @@ try {
     $sid = if ($json.session_id) { $json.session_id.Substring(0, [Math]::Min(8, $json.session_id.Length)) } else { 'unknown' }
     $fname = Split-Path -Leaf $path
 
-    $logPath = 'C:/ARK CRM/wiki/meta/lint-violations.md'
+    $logPath = 'C:/Projects/Ark_CRM/wiki/meta/lint-violations.md'
 
     $header = @"
 

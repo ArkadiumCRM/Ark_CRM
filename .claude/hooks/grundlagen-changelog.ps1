@@ -40,7 +40,7 @@ try {
     $sid = if ($json.session_id) { $json.session_id.Substring(0, [Math]::Min(8, $json.session_id.Length)) } else { 'unknown' }
 
     # --- 1. Append to grundlagen-changelog.md ---
-    $logPath = 'C:/ARK CRM/wiki/meta/grundlagen-changelog.md'
+    $logPath = 'C:/Projects/Ark_CRM/wiki/meta/grundlagen-changelog.md'
 
     $entry = @"
 
@@ -64,7 +64,7 @@ try {
         'ARK_GESAMTSYSTEM_UEBERSICHT' = 'gesamtsystem-digest.md'
     }
     $staleDigest = $digestMap[$matchedPrefix]
-    $stalePath = 'C:/ARK CRM/wiki/meta/digests/STALE.md'
+    $stalePath = 'C:/Projects/Ark_CRM/wiki/meta/digests/STALE.md'
 
     # Append stale-flag (deduplicate on same digest + same day)
     $today = Get-Date -Format 'yyyy-MM-dd'

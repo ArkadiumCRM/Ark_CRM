@@ -25,7 +25,7 @@ try {
 
     if ($isCritical -and (Test-Path $path)) {
         $fileName = [System.IO.Path]::GetFileName($path)
-        $backupDir = 'C:\ARK CRM\backups'
+        $backupDir = 'C:\Projects\Ark_CRM\backups'
         $recentBackup = $null
 
         if (Test-Path $backupDir) {

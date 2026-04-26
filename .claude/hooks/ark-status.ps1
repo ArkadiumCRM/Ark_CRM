@@ -4,7 +4,7 @@
 $ErrorActionPreference = 'Stop'
 
 try {
-    $projectRoot = 'C:/ARK CRM'
+    $projectRoot = 'C:/Projects/Ark_CRM'
 
     # --- Project-local Skills ---
     $skillsDir = Join-Path $projectRoot '.claude/skills'

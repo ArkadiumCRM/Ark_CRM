@@ -845,7 +845,7 @@ Manuell öffnen: `mockups/assessments.html`. Durchgehen:
 
 Bash:
 ```bash
-cd "C:/ARK CRM"
+cd "C:/Projects/Ark_CRM"
 git add mockups/assessments.html specs/ARK_ASSESSMENT_DETAILMASKE_MOCKUP_PLAN.md specs/ARK_ASSESSMENT_DETAILMASKE_MOCKUP_IMPL_v1.md backups/assessments.html.*-p1.bak
 git commit -m "$(cat <<'EOF'
 feat(mockup): Assessment-Detailmaske Phase 1 — Kern-Workflow
@@ -1229,7 +1229,7 @@ Skill: mockup-drift-check args="mockups/assessments.html"
 - [ ] **Step 3: Commit P2**
 
 ```bash
-cd "C:/ARK CRM"
+cd "C:/Projects/Ark_CRM"
 git add mockups/assessments.html backups/assessments.html.*-p2.bak
 git commit -m "$(cat <<'EOF'
 feat(mockup): Assessment-Detailmaske Phase 2 — Billing/Docs/Report-Upload
@@ -1563,7 +1563,7 @@ Expected: alle grün.
 - [ ] **Step 3: Commit P3**
 
 ```bash
-cd "C:/ARK CRM"
+cd "C:/Projects/Ark_CRM"
 git add mockups/assessments.html backups/assessments.html.*-p3.bak
 git commit -m "$(cat <<'EOF'
 feat(mockup): Assessment-Detailmaske Phase 3 — History/Polish/Cancel

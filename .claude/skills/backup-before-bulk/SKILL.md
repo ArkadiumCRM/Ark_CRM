@@ -19,8 +19,8 @@ Vor Edit/Write wenn **eins** zutrifft:
 
 1. **Vor Edit/Write:**
    ```bash
-   mkdir -p "C:/ARK CRM/backups"
-   cp "<original-path>" "C:/ARK CRM/backups/<filename>.<YYYY-MM-DD-HHMM>.bak"
+   mkdir -p "C:/Projects/Ark_CRM/backups"
+   cp "<original-path>" "C:/Projects/Ark_CRM/backups/<filename>.<YYYY-MM-DD-HHMM>.bak"
    ```
    Timestamp-Format: `2026-04-16-1453`
 
@@ -67,7 +67,7 @@ Write(file_path="candidates.html", content=...)
 ## Backup-Ordner-Struktur
 
 ```
-C:/ARK CRM/backups/
+C:/Projects/Ark_CRM/backups/
   candidates.html.2026-04-15-1352.bak
   candidates.html.2026-04-16-0912.bak
   mandates.html.2026-04-15-0930.bak
@@ -77,12 +77,12 @@ C:/ARK CRM/backups/
 **Rolling Retention:** max 10 pro Datei. Älteste löschen wenn 11. hinzugefügt wird:
 
 ```bash
-ls -t "C:/ARK CRM/backups/<filename>".*.bak | tail -n +11 | xargs rm -f
+ls -t "C:/Projects/Ark_CRM/backups/<filename>".*.bak | tail -n +11 | xargs rm -f
 ```
 
 ## Recovery
 
 Bei korrupter Datei:
 ```bash
-cp "C:/ARK CRM/backups/<filename>.<latest-ts>.bak" "<original-path>"
+cp "C:/Projects/Ark_CRM/backups/<filename>.<latest-ts>.bak" "<original-path>"
 ```

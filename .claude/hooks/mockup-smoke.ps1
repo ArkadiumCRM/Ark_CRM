@@ -21,7 +21,7 @@ try {
     # Skip archived/deprecated paths (broken on purpose, would always trigger)
     if ($filePath -match '/_archive/|/_deprecated/') { exit 0 }
 
-    $projectRoot = 'C:/ARK CRM'
+    $projectRoot = 'C:/Projects/Ark_CRM'
     $mockupsRoot = "$projectRoot/mockups/"
     $idx = $filePath.IndexOf($mockupsRoot)
     if ($idx -lt 0) { exit 0 }
@@ -59,7 +59,7 @@ SMOKE-TEST FAIL on ``$relMockup`` after edit.
 Playwright CLI scoped run (exit $($proc.ExitCode)):
 $errSnippet
 
-Investigate before continuing. Run again: ``cd "C:/ARK CRM" && npx playwright test tests/mockups-smoke.spec.ts --grep "$relMockup"``
+Investigate before continuing. Run again: ``cd "C:/Projects/Ark_CRM" && npx playwright test tests/mockups-smoke.spec.ts --grep "$relMockup"``
 "@
             $output = @{
                 systemMessage  = $msg
