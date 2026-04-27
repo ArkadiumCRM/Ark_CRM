@@ -2,6 +2,55 @@
 
 ---
 
+## 2026-04-27 · Model-Watch
+
+### Latest verfügbare Modelle
+
+| Provider | Latest Model | Released | In MCP/SDK exposed? |
+|----------|--------------|----------|---------------------|
+| Anthropic | claude-opus-4-7 | 2026-04-16 | ⚠ @ai-sdk/anthropic v3.0.71 — Enum-Check ausstehend |
+| Anthropic | claude-sonnet-4-6 | 2026-02-17 | ✓ via @ai-sdk/anthropic v3.0.71 |
+| Anthropic | claude-haiku-4-5 | 2025-10 (est.) | ✓ via @ai-sdk/anthropic v3.0.71 |
+| DeepSeek | deepseek-v4-pro | 2026-04-24 (Preview) | ⚠ @arikusi/deepseek-mcp-server v1.7.0 — V4-IDs noch nicht bestätigt |
+| DeepSeek | deepseek-v4-flash | 2026-04-24 (Preview) | ⚠ selbe Prüfung nötig |
+| OpenAI | gpt-5.5 | 2026-04 (est.) | ✓ via codex-mcp-server v1.4.10 |
+| OpenAI | o4-mini (Reasoning) | 2025-04-16 | ✓ |
+| Gemini | gemini-3.1-pro (Preview) | 2026-02-19 | ✓ |
+| Gemini | gemini-3-flash (Default) | 2026-03 (est.) | ✓ |
+| Mistral | mistral-small-4 | 2026-03-16 | ✓ via mistral-large-latest alias |
+| Mistral | mistral-large-3 | 2025-12 | ✓ |
+
+### MCP/SDK Package-Versionen
+
+> Kein `package.json` im Repo installiert — alle Werte = aktuell auf npm registry (Stand 2026-04-27).
+
+| Package | Installiert | Latest npm | Action |
+|---------|-------------|-----------|--------|
+| @arikusi/deepseek-mcp-server | N/A | 1.7.0 | unverändert — V4-Modell-IDs prüfen |
+| @anthropic-ai/sdk | N/A | 0.91.1 | unverändert |
+| @ai-sdk/anthropic | N/A | 3.0.71 | unverändert — Opus 4.7 Enum-Support prüfen |
+| ai (Vercel AI SDK) | N/A | 6.0.168 | unverändert |
+| codex-mcp-server | N/A | 1.4.10 | unverändert |
+| @perplexity-ai/mcp-server | N/A | 0.9.0 | unverändert |
+| @upstash/context7-mcp | N/A | 2.2.0 | unverändert |
+
+### Flags & Action-Items
+
+- ⚠ **Offener Carry-over von 2026-04-25:** DeepSeek V4 Flash/Pro (released 2026-04-24) — prüfen ob `@arikusi/deepseek-mcp-server v1.7.0` die neuen Modell-IDs `deepseek-v4-pro` und `deepseek-v4-flash` kennt. Preview = möglicherweise noch via V3.2-Alias erreichbar.
+- ⚠ **Offener Carry-over von 2026-04-25:** Claude Opus 4.7 — prüfen ob `@ai-sdk/anthropic v3.0.71` den Enum-Value `claude-opus-4-7` enthält.
+- ✅ Keine neuen Modell-Releases seit 2026-04-25 gefunden (2-Tage-Delta).
+- ✅ Kein Claude 5 angekündigt.
+- ✅ Kein DeepSeek V5 angekündigt.
+- ✅ Kein OpenAI o5 angekündigt — GPT-5.5 aktuell neuestes GPT-Modell.
+- ✅ Kein Gemini 4 angekündigt — Gemini 3.1 Pro Preview ist aktuell neueste Gemini-Version.
+- ✅ Alle npm-Packages: keine Version-Bumps seit letztem Report.
+
+### TL;DR
+
+Keine neuen Model-Releases seit 2026-04-25 — alle npm-Packages unverändert. Zwei Action-Items aus der Vorwoche bleiben offen: DeepSeek V4 MCP-Kompatibilität und Opus 4.7 AI-SDK-Enum-Support müssen manuell verifiziert werden.
+
+---
+
 ## 2026-04-25 · Model-Watch
 
 ### Latest verfügbare Modelle
