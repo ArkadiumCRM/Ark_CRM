@@ -105,3 +105,113 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 6. **🟢 Powershell-Hook** — `ark-status.ps1` läuft nur im Windows-Env. Für diesen Monday-Scan: N/A (Linux). Bash-Fallback oder Windows-Session verwenden.
 
 7. **🟢 `/ark-sync-report`** — ERP-Specs-Erstellung abgeschlossen (15 Specs). Vollständiger Sync-Report empfohlen.
+
+---
+
+## [2026-04-27] Weekly Drift Scan
+
+> **⚠ HIGH PRIORITY**
+> - DB-TECH=116 / SNAKE-CASE=189 / UMLAUT=170 — alle >50 (kumulativ). ERP-Tools-Lint-Pass seit 2026-04-20 ausstehend, 0 neue RESOLUTION-Blöcke diese Woche.
+> - Billing-Modul: 9 Mockups ohne Schema/Interactions-Spec (REVERSE DRIFT).
+
+### ark-status.ps1
+- **Status:** Nicht verfügbar — `powershell` nicht im PATH der Linux-Umgebung. Hook läuft nur im Windows-Dev-Environment.
+
+### Unresolved Changelog (grundlagen-changelog.md)
+- **Unresolved entries (`- [ ]`):** 0 — alle Einträge `resolved`
+- Letzter Eintrag: [2026-04-25 21:24] session-53f982ef → resolved (Performance-Modul-Sync)
+
+### Violations (wiki/meta/lint-violations.md — kumulativ inkl. gelöster)
+- **DB-TECH=116  SNAKE-CASE=189  ROUTE-TMPL=6  KEBAB-TECH=0  UMLAUT=170  STAMMDATEN=0**
+- 8 RESOLUTION ✓ Blöcke (unverändert gegenüber 2026-04-20 — keine neuen Resolutions diese Woche)
+- Netto-Neu seit letztem Scan: DB-TECH+3 · UMLAUT+9 · SNAKE-CASE+1
+- ERP-Tools-Mockups (billing · commission · elearn · hr · performance · zeit) wahrscheinliche Hauptquelle
+
+### Digests (wiki/meta/digests/STALE.md)
+- **Status:** Alle 5 Digests current — letzter Clean 2026-04-25 (Performance-Modul-Sync)
+  - `stammdaten-digest.md` — v1.6 (§97 Performance + §98 HR-Reviews)
+  - `database-schema-digest.md` — v1.6 (~225 Tabellen, TEIL Q Performance)
+  - `backend-architecture-digest.md` — v2.8 (TEIL R Performance, 50 Endpoints)
+  - `frontend-freeze-digest.md` — v1.13 (TEIL Q Performance, 10 Routes)
+  - `gesamtsystem-digest.md` — v1.5 (TEIL 26 Performance)
+- 2 Tage alt — kein Stale-Flag (Schwelle: >5 Tage)
+
+### Specs edited (7d): 95 Dateien (inkl. alt/)
+
+**Neue Module (vollständig):**
+- E-Learning Sub A/B/C/D: `ARK_E_LEARNING_SUB_{A,B,C,D}_{SCHEMA,INTERACTIONS}_v0_1.md` (8 Spec-Files)
+- Performance: `ARK_PERFORMANCE_TOOL_{SCHEMA,INTERACTIONS,MOCKUP_PLAN}_v0_1.md`
+- HR: `ARK_HR_TOOL_SCHEMA_v0_1.md` + `v0_2.md` + `ARK_HR_TOOL_INTERACTIONS_v0_1.md` + `ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md`
+- Zeit: `ARK_ZEIT_{SCHEMA,INTERACTIONS}_v0_1.md`
+- Billing: Grundlagen-Patches only (3 Patch-Docs — kein Entity-Spec)
+
+**Grundlagen-Patches (neue Woche):**
+- Backend: `PATCH_v2_5_to_v2_6` · `PATCH_v2_6_to_v2_7_billing` · `PATCH_v2_7_to_v2_8_performance`
+- DB-Schema: `PATCH_v1_3_to_v1_4` · `PATCH_v1_4_to_v1_5_billing` · `PATCH_v1_5_to_v1_6_performance`
+- Stammdaten: `PATCH_v1_3_to_v1_4_ACTIVITY_TYPES` · `PATCH_v1_4_to_v1_5_billing` · `PATCH_v1_5_to_v1_6_performance`
+- Frontend-Freeze: `PATCH_v1_12_to_v1_13_performance` + 4×E-Learning-Sub-Patches (kein Billing-Patch)
+- Gesamtsystem: `PATCH_v1_4_to_v1_5_performance` + 4×E-Learning-Sub-Patches (kein Billing-Patch)
+
+**Bestehende Masken (Updates):**
+- `ARK_KANDIDATENMASKE_SCHEMA/INTERACTIONS_v1_3`
+- `ARK_ACCOUNT_DETAILMASKE_SCHEMA_v0_2` / `INTERACTIONS_v0_3`
+- `ARK_MANDAT_DETAILMASKE_SCHEMA_v0_2` / `INTERACTIONS_v0_3`
+- `ARK_PROJEKT_DETAILMASKE_SCHEMA_v0_2` / `INTERACTIONS_v0_1`
+- `ARK_PROZESS_DETAILMASKE_SCHEMA/INTERACTIONS_v0_1`
+- `ARK_ASSESSMENT_DETAILMASKE_SCHEMA/INTERACTIONS_v0_3` + MOCKUP_IMPL + PLAN
+- `ARK_ADMIN_VOLLANSICHT_SCHEMA/INTERACTIONS_v0_1` + `ARK_ADMIN_DEBUG_SCHEMA_v1_0`
+- `ARK_FIRMENGRUPPE_DETAILMASKE_SCHEMA/INTERACTIONS_v0_1`
+- `ARK_JOB_DETAILMASKE_SCHEMA/INTERACTIONS_v0_1`
+- `ARK_EMAIL_KALENDER_DETAILMASKE_SCHEMA/INTERACTIONS_v0_1`
+- `ARK_REMINDERS_VOLLANSICHT_{PLAN,SCHEMA,INTERACTIONS}_v0_1`
+- `ARK_SCRAPER_MODUL_{SCHEMA,INTERACTIONS}_v0_1` + `PATCH_v0_1_to_v0_2`
+- `ARK_DOK_GENERATOR_{SCHEMA,INTERACTIONS,MOCKUP_IMPL,PLAN}_v0_1`
+- `ARK_PIPELINE_COMPONENT_v1_0` · `ARK_DASHBOARD_CUSTOMIZATION_SCHEMA_v1`
+- `ARK_STAMMDATEN_VOLLANSICHT_PLAN_v0_1`
+
+**Meta-Docs:** `ARK_GRUNDLAGEN_SYNC_v1_4` · `ARK_EVENT_TYPES_MAPPING_v1_4` · `ARK_SYSTEM_ACTIVITY_TYPES_{SCHEMA,DECISIONS}` · `PO_REVIEW_SESSION_v1_4` · 6 alt/-Specs
+
+### Mockups edited (7d): ~125 Dateien
+
+**ERP Tools:**
+- `billing/` — 9 HTMLs (billing-dashboard · debitoren · inkasso · mahnwesen · mwst · rechnungen · refunds · zahlungen · billing)
+- `commission/` — 6 HTMLs (admin · dashboard · my · my-researcher · team · commission)
+- `elearn/` — 21 HTMLs (dashboard · course · lesson · quiz · quiz-result · certificates · assignments · my-courses · my-compliance · team · team-compliance · newsletter · newsletter-issue · freitext-queue · admin-courses · admin-curriculum · admin-content-gen · admin-analytics · admin-imports · elearn)
+- `hr/` — 8 HTMLs (dashboard · list · mitarbeiter-self · provisionsvertrag-editor · onboarding-editor · warnings-disciplinary · academy-dashboard · hr)
+- `performance/` — 11 HTMLs (dashboard · business · revenue · coverage · funnel · insights · mitarbeiter · team · admin · reports · performance)
+- `zeit/` — 10 HTMLs (dashboard · list · meine-zeit · monat · team · saldi · export · abwesenheiten · admin · zeit)
+
+**Vollansichten:** accounts · admin · admin-dashboard-templates · assessments · candidates · dashboard · dok-generator · email-kalender · groups · jobs · mandates · processes · projects · reminders · scraper · stammdaten (16)
+
+**Listen:** accounts-list · assessments-list · candidates-list · groups-list · jobs-list · mandates-list · processes-list · projects-list (8)
+
+**Shared + Root:** `_shared/editorial.css` · `_shared/layout.js` · `_shared/perf-sample-data.js` · `_shared/theme-sync.js` · `crm.html` · `crm-mobile.html` · `dashboard-mobile.html` · `admin-mobile.html` · `vercel.json`
+
+### Drift Findings
+
+| Befund | Schwere | Detail |
+|--------|---------|--------|
+| **Billing: 9 Mockups ohne Schema/Interactions-Spec** | 🔴 HOCH | `billing-*.html` (9 Files) vorhanden, aber kein `ARK_BILLING_SCHEMA_v*.md` + `ARK_BILLING_INTERACTIONS_v*.md` in `specs/`. Nur 3 Grundlagen-Patch-Docs vorhanden. REVERSE DRIFT. |
+| **Billing: Fehlende Frontend-Freeze + Gesamtsystem Patches** | 🟡 MITTEL | Backend-/DB-/Stammdaten-Patches vorhanden, aber kein `ARK_FRONTEND_FREEZE_PATCH_*billing*` und kein `ARK_GESAMTSYSTEM_PATCH_*billing*`. Billing-UI-Patterns möglicherweise nicht in Freeze dokumentiert. |
+| **ERP-Tools ark-lint-Pass ausstehend** | 🟡 MITTEL | Seit 2026-04-20-Empfehlung kein Lint-Pass auf ERP-Tools-Mockups. Neue Violations: UMLAUT+9, DB-TECH+3, SNAKE-CASE+1. 8 RESOLUTION-Blöcke unverändert. |
+| **Stammdaten-Vollansicht: SCHEMA + INTERACTIONS fehlt** | 🟡 MITTEL | Plan-Spec + `stammdaten.html` vorhanden — kein SCHEMA/INTERACTIONS-Spec. (Carryover seit 2026-04-20) |
+| **Admin-Debug: Mockup fehlt** | 🟢 NIEDRIG | `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` ohne `admin-debug.html`. (Carryover) |
+| E-Learning Sub A/B/C/D aligned | ✅ SYNCED | Specs + Mockups (21 HTMLs) + 4×5 Grundlagen-Sub-Patches vollständig. |
+| Performance-Modul aligned | ✅ SYNCED | 3 Spec-Files + 11 Mockups + alle 5 Grundlagen-Patches. Digests regeneriert. |
+| HR-Modul aligned | ✅ SYNCED | Schema v0_2 + Interactions + Grundlagen-Sync + 8 Mockups. |
+| Zeit-Modul aligned | ✅ SYNCED | 2 Specs + 10 Mockups + Grundlagen-Patches. |
+| Grundlagen-Changelog | ✅ CLEAN | 0 unresolved entries |
+| Digests | ✅ CURRENT | Alle 5 Digests regeneriert 2026-04-25 (2 Tage alt) |
+| Detached-HEAD (2026-04-20) | ✅ RESOLVED | Recovery via Reflog abgeschlossen, main intakt. |
+
+### Action Items (für Peter)
+
+1. **🔴 `ark-lint` auf ERP-Tools-Mockups** — billing · commission · elearn · hr · performance · zeit. SNAKE-CASE=189 / UMLAUT=170 / DB-TECH=116 (alle >50). Lint-Pass ausstehend seit 2026-04-20. Gezielte Resolutions schreiben.
+
+2. **🔴 Billing-Spec erstellen** — `ARK_BILLING_SCHEMA_v0_1.md` + `ARK_BILLING_INTERACTIONS_v0_1.md`. 9 Mockups ohne Entity-Spec ist Reverse Drift. Vorlage: ARK_HR_TOOL_SCHEMA_v0_1.md.
+
+3. **🟡 Billing Frontend-Freeze + Gesamtsystem Grundlagen-Patches** — Analog zu Performance-Patches: `ARK_FRONTEND_FREEZE_PATCH_*billing*` + `ARK_GESAMTSYSTEM_PATCH_*billing*` erstellen, um Billing-UI-Patterns in Freeze zu dokumentieren.
+
+4. **🟡 Stammdaten-Vollansicht vervollständigen** — SCHEMA + INTERACTIONS-Spec schreiben. Mockup + Plan existieren. (Carryover seit 2026-04-20)
+
+5. **🟢 Admin-Debug Mockup** — `admin-debug.html` anlegen oder explizit in `admin.html` Scope-Note ergänzen. (Carryover)
