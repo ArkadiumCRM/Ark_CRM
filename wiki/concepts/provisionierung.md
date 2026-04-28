@@ -12,13 +12,13 @@ tags: [concept, provisionen, vergütung, payroll, crm-1.0, kern-usp, commission-
 Interne Vergütungssystematik für Arkadium-Mitarbeiter. Pro Rolle unterschiedliches Modell. Seit Peter-Entscheidung **2026-04-19 (Option D)** ist die Commission-Engine **Phase 1 Kern-USP des ARK-CRM** — nicht mehr vertagt auf CRM 2.0.
 
 > [!info] Scope-Update 2026-04-19 · Commission-Engine = CRM 1.0 Kern-USP
-> **Die frühere Regel "CRM 1.0 = Umsatz-Tracking / CRM 2.0 = Provisions-Engine" ist mit Option D aufgehoben.** Commission-Engine wird als Phase-1-Kern gebaut (Spec: `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`). Grund: Markt-Validierung — Bullhorn/Invenias/Salesforce haben keine native Commission-Split-Logik für Headhunting → ARKs Killer-USP für SaaS-Phase-2. Break-Even-Modellierung ab ~5 SaaS-Kunden Jahr 4-5.
+> **Die frühere Regel "CRM 1.0 = Umsatz-Tracking / CRM 2.0 = Provisions-Engine" ist mit Option D aufgehoben.** Commission-Engine wird als Phase-1-Kern gebaut (Spec: `specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`). Grund: Markt-Validierung — Bullhorn/Invenias/Salesforce haben keine native Commission-Split-Logik für Headhunting → ARKs Killer-USP für SaaS-Phase-2. Break-Even-Modellierung ab ~5 SaaS-Kunden Jahr 4-5.
 >
 > **Scope Phase 1 inkludiert**: Commission-Ledger, ZEG-Staffel-Engine, Quartals-Kumulation, 80/20-Split, Researcher-Pauschale, Head-of-Teambudget-Rollup, Bonus-Ermessens-Flow für Nicht-Berechtigte, CSV/Excel/XML-Export (kein aktiver Bexio-API-Call in Phase 1).
 >
 > **Weiterhin ausserhalb Phase 1**: Eigene Swissdec-Payroll, Brutto/Netto-Berechnung, AHV/ALV/BVG/UVG-Integration, Quellensteuer-Tarif-Engine, Lohnausweis-Generierung. Payroll-Export an Treuhänder/Bexio als CSV bleibt Standard bis Phase 3.
 >
-> **Verwandt**: Memory `project_commission_model.md` + `project_arkadium_roles_2026.md` · Handoff-Strategy `ERP Tools/specs/ARK_HR_STRATEGY_DECISION_v0_1.md`.
+> **Verwandt**: Memory `project_commission_model.md` + `project_arkadium_roles_2026.md` · Handoff-Strategy `specs/ARK_HR_STRATEGY_DECISION_v0_1.md`.
 
 ## Rollen-Modell
 

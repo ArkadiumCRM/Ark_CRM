@@ -6,7 +6,7 @@ created: 2026-04-20
 updated: 2026-04-20
 status: draft
 depends_on: [
-  "ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md (authoritative DDL source)"
+  "specs/ARK_BILLING_SCHEMA_v0_1.md (authoritative DDL source)"
 ]
 target: "raw/Ark_CRM_v2/ARK_DATABASE_SCHEMA_v1_4.md → v1.5"
 tags: [patch, database, schema, billing, phase-3, postgresql]
@@ -16,7 +16,7 @@ tags: [patch, database, schema, billing, phase-3, postgresql]
 
 **Status:** Draft · anzuwenden nach Peter-Freigabe Billing-Spec v0.1 Freeze.
 
-Vollständige DDL ist in `ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md` (~1100 Zeilen). Dieser Patch referenziert + listet Delta-Summary für Grundlagen-Integration.
+Vollständige DDL ist in `specs/ARK_BILLING_SCHEMA_v0_1.md` (~1100 Zeilen). Dieser Patch referenziert + listet Delta-Summary für Grundlagen-Integration.
 
 ---
 

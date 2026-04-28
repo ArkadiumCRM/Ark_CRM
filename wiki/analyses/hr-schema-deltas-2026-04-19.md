@@ -425,5 +425,5 @@ Plan hat 13 Event-Codes. **Ergänzungen aus Ingest:**
 
 - [[hr-arbeitsvertraege]] · [[hr-reglemente]] · [[hr-provisionsvertraege]] · [[hr-arbeitszeugnisse]] · [[hr-weiterbildungsvereinbarung]] · [[hr-stellenbeschreibung-progressus]] · [[hr-kuendigung-aufhebung]] · [[hr-austritt-versicherung-merkblaetter]]
 - [[hr-vertragswerk]] · [[hr-academy]] · [[hr-konkurrenz-abwerbeverbot]] · [[hr-ma-rollen-matrix]]
-- `ERP Tools/specs/ARK_HR_TOOL_PLAN_v0_1.md` (Plan der erweitert wird)
-- `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` (Commission-Engine für Praemium-Victoria-Integration)
+- `specs/ARK_HR_TOOL_PLAN_v0_1.md` (Plan der erweitert wird)
+- `specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` (Commission-Engine für Praemium-Victoria-Integration)

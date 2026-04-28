@@ -6,9 +6,9 @@ created: 2026-04-20
 updated: 2026-04-20
 status: draft
 depends_on: [
-  "ERP Tools/specs/ARK_BILLING_PLAN_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_INTERACTIONS_v0_1.md"
+  "specs/ARK_BILLING_PLAN_v0_1.md",
+  "specs/ARK_BILLING_SCHEMA_v0_1.md",
+  "specs/ARK_BILLING_INTERACTIONS_v0_1.md"
 ]
 target: "raw/Ark_CRM_v2/ARK_STAMMDATEN_EXPORT_v1_4.md → v1.5 (neuer §91)"
 tags: [patch, stammdaten, billing, phase-3]
@@ -24,7 +24,7 @@ Dieser Patch fügt §91 zu `ARK_STAMMDATEN_EXPORT_v1_4.md` hinzu. Alle Enum-Kata
 
 ## §91. Billing-Modul-Stammdaten (NEU v1.5 · 2026-04-20)
 
-Stammdaten-Kataloge für Rechnungsstellung, Mahnwesen, Refund, Zahlungen. Vollständige DDL in `ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md` §3.
+Stammdaten-Kataloge für Rechnungsstellung, Mahnwesen, Refund, Zahlungen. Vollständige DDL in `specs/ARK_BILLING_SCHEMA_v0_1.md` §3.
 
 ### §91.1 Rechnungs-Typen (`dim_invoice_types`)
 

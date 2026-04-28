@@ -6,8 +6,8 @@ created: 2026-04-20
 updated: 2026-04-20
 status: draft
 depends_on: [
-  "ERP Tools/specs/ARK_BILLING_INTERACTIONS_v0_1.md (authoritative Event/Worker/Endpoint source)",
-  "ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md (Commission-Integration · 2026-04-20-Patches)"
+  "specs/ARK_BILLING_INTERACTIONS_v0_1.md (authoritative Event/Worker/Endpoint source)",
+  "specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md (Commission-Integration · 2026-04-20-Patches)"
 ]
 target: "raw/Ark_CRM_v2/ARK_BACKEND_ARCHITECTURE_v2_6.md → v2.7 (neuer Abschnitt M. Billing-Modul)"
 tags: [patch, backend, architecture, billing, phase-3, events, worker, saga]

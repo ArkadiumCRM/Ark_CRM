@@ -12,6 +12,22 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-28] Resolution · ERP-Specs-Verzeichnis
+
+✅ **RESOLVED** Action Item #3 [2026-04-20]: ERP-Specs-Verzeichnis-Konsolidierung.
+
+- 19 Spec-Files via `git mv` von `ERP Tools/specs/` → `specs/` migriert
+- 2 Konflikt-Files gelöscht (`ARK_HR_TOOL_INTERACTIONS_v0_1.md` Legacy + `ARK_HR_TOOL_SCHEMA_v0_1.md` durch Patch-File ersetzt)
+- 14 Cross-Ref-Files mit Pfad-Update (`ERP Tools/specs/` → `specs/`)
+- `ERP Tools/specs/` Verzeichnis entfernt (leer)
+- Backup: `backups/erp-tools-specs.2026-04-28-1858/` (21 Files)
+
+**Begründung:** CLAUDE.md-Pattern erwartet `specs/ARK_*_SCHEMA_v*.md` als kanonischen Pfad. Single-Directory vereinfacht Spec-Sync-Hook. Phase-Trennung über Filename-Prefix (`ARK_HR_*`, `ARK_BILLING_*`, `ARK_ZEITERFASSUNG_*`).
+
+**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass · #4 Stammdaten-Vollansicht-Spec · #5 Admin-Debug-Mockup-Klärung.
+
+---
+
 ## [2026-04-20] Weekly Drift Scan
 
 > **⚠ HIGH PRIORITY**
@@ -81,7 +97,7 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 | Befund | Schwere | Detail |
 |--------|---------|--------|
 | **Git-Health: Detached-HEAD-Commit** | 🔴 HOCH | Commit `89b367b` (feat(erp-tools): HR/Commission/Zeit) war in detached HEAD State, nicht auf main verbunden. Wurde via Reflog recovered und via Merge-Commit in main integriert. Ursache prüfen. |
-| ERP-Specs in separatem Verzeichnis | 🟡 MITTEL | ERP-Tools-Specs liegen in `ERP Tools/specs/` statt `specs/` — 15 Spec-Dateien (Commission×2, HR×8, Zeiterfassung×2, Eval×2). Intentional (ERP-Phase-Trennung) oder Struktur-Drift? |
+| ERP-Specs in separatem Verzeichnis | 🟡 MITTEL | ERP-Tools-Specs liegen in `specs/` statt `specs/` — 15 Spec-Dateien (Commission×2, HR×8, Zeiterfassung×2, Eval×2). Intentional (ERP-Phase-Trennung) oder Struktur-Drift? |
 | Admin-Debug-Spec ohne Mockup | 🟡 MITTEL | `ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` in `specs/` — kein `admin-debug.html` in `mockups/Vollansichten/`. Admin.html berührt, aber kein Debug-spezifisches Mockup. |
 | Stammdaten-Vollansicht Plan-only | 🟡 MITTEL | `ARK_STAMMDATEN_VOLLANSICHT_PLAN_v0_1.md` vorhanden, `mockups/Vollansichten/stammdaten.html` existiert — aber kein SCHEMA/INTERACTIONS-Spec. |
 | Mockup-Reorganisation abgeschlossen | ✅ INFO | `mockups/` hat neue Subdirectory-Struktur: `Listen/` (8 Files) · `Vollansichten/` (16 Files) · `ERP Tools/` (16 Files). Root-Level nur noch 4 mobile/shell HTMLs. |
@@ -96,7 +112,7 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 2. **🔴 `ark-lint` auf ERP-Tools-Mockups** — 16 HTML-Files in `mockups/ERP Tools/` noch nie gelinted. Wahrscheinlich Hauptquelle der SNAKE-CASE=188 + UMLAUT=161 Kumulativ-Counts. Gezielten Lint-Pass starten.
 
-3. **🟡 ERP-Specs-Verzeichnis klären** — Intentional in `ERP Tools/specs/` (ERP-Phase-Trennung) oder nach `specs/` migrieren? Entscheidung dokumentieren, dann konsistent halten.
+3. **🟡 ERP-Specs-Verzeichnis klären** — Intentional in `specs/` (ERP-Phase-Trennung) oder nach `specs/` migrieren? Entscheidung dokumentieren, dann konsistent halten.
 
 4. **🟡 Stammdaten-Vollansicht vervollständigen** — Plan-Spec vorhanden, Mockup existiert (`stammdaten.html`) — SCHEMA + INTERACTIONS-Spec noch schreiben.
 

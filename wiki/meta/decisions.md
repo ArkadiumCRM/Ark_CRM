@@ -356,7 +356,7 @@ Bei jeder User-Entscheidung von Tragweite (neue Regel, Architektur-Wahl, Scope-C
 
 ## [2026-04-20] Commission-Engine ↔ Billing · Event-Schnittstelle · 5 Patches
 
-- **Kontext:** Cross-Check zwischen `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` und frisch erstellter `ARK_BILLING_INTERACTIONS_v0_1.md`. 7 Findings (5 Gaps + 2 Konsistenzen) identifiziert. Alle 5 Gaps gepatcht.
+- **Kontext:** Cross-Check zwischen `specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` und frisch erstellter `ARK_BILLING_INTERACTIONS_v0_1.md`. 7 Findings (5 Gaps + 2 Konsistenzen) identifiziert. Alle 5 Gaps gepatcht.
 
 - **Findings-Zusammenfassung:**
   - ✅ Konsistent: Quartals-Payout-Kadenz (Jan/Apr/Jul/Okt) · Time-Mandat-Commission-Ausschluss

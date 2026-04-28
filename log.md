@@ -1,3 +1,20 @@
+## [2026-04-28] update | ERP-Specs-Verzeichnis migriert nach specs/
+
+- moved: 19 Spec-Files von `ERP Tools/specs/` → `specs/` (`git mv`)
+  - Billing (×6): SCHEMA, INTERACTIONS, PLAN, RESEARCH_CLAUDE/GEMINI/GPT
+  - HR (×8): PLAN_v0_1/v0_2, RESEARCH_v0_1/v0_2, STRATEGY_DECISION_v0_1/v1_0, RESEARCH_SYNTHESE, COMMISSION_ABGLEICH_HANDOFF
+  - Zeiterfassung (×2): PLAN, RESEARCH_ADDENDUM
+  - Eval (×2): LUCCA, SWISSDECTX
+  - Commission (×1): ENGINE_SPEC_v0_1
+- removed: `ERP Tools/specs/ARK_HR_TOOL_INTERACTIONS_v0_1.md` (Legacy, ersetzt durch `specs/`-Version 2026-04-25)
+- removed: `ERP Tools/specs/ARK_HR_TOOL_SCHEMA_v0_1.md` (durch `ARK_HR_TOOL_SCHEMA_PATCH_v0_1_to_v0_2.md` + `_SCHEMA_v0_2.md` ersetzt)
+- removed: `ERP Tools/specs/` (leeres Verzeichnis)
+- updated path refs: log.md (this), wiki/meta/spec-sync-regel.md, wiki/meta/decisions.md, wiki/meta/drift-log.md, wiki/concepts/provisionierung.md, wiki/analyses/hr-schema-deltas-2026-04-19.md, specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md, specs/ARK_BILLING_*.md (×3), specs/ARK_BACKEND_ARCHITECTURE_PATCH_v2_6_to_v2_7_billing.md, specs/ARK_STAMMDATEN_PATCH_v1_4_to_v1_5_billing.md, specs/ARK_DATABASE_SCHEMA_PATCH_v1_4_to_v1_5_billing.md, specs/ARK_HR_TOOL_PLAN_v0_1/v0_2.md
+- backup: `backups/erp-tools-specs.2026-04-28-1858/` (21 Files)
+- resolution: drift-log.md Action Item #3 [2026-04-20] RESOLVED
+
+---
+
 ## [2026-04-25] create | Performance-Modul Wiki-Konzept
 
 - created: wiki/concepts/performance-modul.md

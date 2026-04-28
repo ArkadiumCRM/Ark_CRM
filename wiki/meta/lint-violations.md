@@ -2073,3 +2073,21 @@
 |-------|-------|---------|-----|
 | UMLAUT \| 509 \| 4. **CSS-Comment-UMLAUT-Fixes deployed.** 9 Performance-Mockups hatte Sub-Agent ... \| -> für |
 
+
+## [2026-04-28 19:00] session-c61a5b74 | decisions.md (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 509 \| 4. **CSS-Comment-UMLAUT-Fixes deployed.** 9 Performance-Mockups hatte Sub-Agent ... \| -> für |
+
+
+## [2026-04-28 19:01] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 441 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 480 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 480 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 480 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 485 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
