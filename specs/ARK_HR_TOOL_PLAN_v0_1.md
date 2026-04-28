@@ -752,8 +752,8 @@ WHERE fa.approval_status = 'pending';
 ## Related
 
 - `mockups/ERP Tools/hr.html` · `hr-list.html` — Aktuelle Mockups (Dashboard-First)
-- `ERP Tools/specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` — Schwester-Plan (Cross-Dependencies: Absenzen-Mirror, Mitarbeiter-Stammdaten)
-- `ERP Tools/specs/ARK_ZEITERFASSUNG_RESEARCH_ADDENDUM_v0_1.md` — DSG-Lessons-Learned (auch für HR relevant)
+- `specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` — Schwester-Plan (Cross-Dependencies: Absenzen-Mirror, Mitarbeiter-Stammdaten)
+- `specs/ARK_ZEITERFASSUNG_RESEARCH_ADDENDUM_v0_1.md` — DSG-Lessons-Learned (auch für HR relevant)
 - Memory `project_arkadium_role.md` — Arkadium-Touchpoints (Briefing/Coaching/Debriefing)
 - Memory `project_commission_model.md` — Provisions-Modell (für HR-Kompensation-Tab)
 - Memory `project_phase3_erp_standalone.md` — Standalone-Prinzip

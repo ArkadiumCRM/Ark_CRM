@@ -1375,13 +1375,13 @@ Keine weiteren offenen Fragen vor Schema-Implementierung identifiziert. Minor-En
 
 ### Specs + Mockups
 - `mockups/ERP Tools/hr.html` · `hr-list.html` — Aktuelle Mockups
-- `ERP Tools/specs/ARK_HR_TOOL_PLAN_v0_1.md` — Vorgänger (v0.2 supersedes)
-- `ERP Tools/specs/ARK_HR_TOOL_RESEARCH_v0_1.md` · `_v0_2.md` — Market Research
-- `ERP Tools/specs/ARK_HR_RESEARCH_SYNTHESE_v0_1.md`
-- `ERP Tools/specs/ARK_HR_STRATEGY_DECISION_v1_0.md` — Build-Strategy Freeze
-- `ERP Tools/specs/ARK_LUCCA_EVALUATION_v0_1.md` · `ARK_SWISSDECTX_EVALUATION_v0_1.md` — Build-vs-Buy
-- `ERP Tools/specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` — Schwester-Modul (Cross-Dep: Absenzen-Mirror)
-- `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` — Commission-Bridge
+- `specs/ARK_HR_TOOL_PLAN_v0_1.md` — Vorgänger (v0.2 supersedes)
+- `specs/ARK_HR_TOOL_RESEARCH_v0_1.md` · `_v0_2.md` — Market Research
+- `specs/ARK_HR_RESEARCH_SYNTHESE_v0_1.md`
+- `specs/ARK_HR_STRATEGY_DECISION_v1_0.md` — Build-Strategy Freeze
+- `specs/ARK_LUCCA_EVALUATION_v0_1.md` · `ARK_SWISSDECTX_EVALUATION_v0_1.md` — Build-vs-Buy
+- `specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` — Schwester-Modul (Cross-Dep: Absenzen-Mirror)
+- `specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md` — Commission-Bridge
 
 ### Wiki
 - Sources: [[hr-arbeitsvertraege]] · [[hr-reglemente]] · [[hr-provisionsvertraege]] · [[hr-arbeitszeugnisse]] · [[hr-weiterbildungsvereinbarung]] · [[hr-stellenbeschreibung-progressus]] · [[hr-kuendigung-aufhebung]] · [[hr-austritt-versicherung-merkblaetter]]

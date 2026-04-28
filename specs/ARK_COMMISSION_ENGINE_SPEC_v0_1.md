@@ -1039,8 +1039,8 @@ Commission-Berechnung berücksichtigt aktive Rolle pro Quartal (Q1-Q2 als CM · 
 - `wiki/sources/provisionssheet-peter.md`
 - `memory/project_commission_model.md` (Scope-Update)
 - `memory/project_arkadium_roles_2026.md` (MA-Matrix)
-- `ERP Tools/specs/ARK_COMMISSION_ABGLEICH_HANDOFF_v0_1.md` (Abgleich)
-- `ERP Tools/specs/ARK_HR_STRATEGY_DECISION_v0_1.md` (Option D · Draft)
+- `specs/ARK_COMMISSION_ABGLEICH_HANDOFF_v0_1.md` (Abgleich)
+- `specs/ARK_HR_STRATEGY_DECISION_v0_1.md` (Option D · Draft)
 - Künftig: `ARK_COMMISSION_ENGINE_SCHEMA_v0_1.md` (DB-Migration)
 - Künftig: `ARK_COMMISSION_ENGINE_INTERACTIONS_v0_1.md` (detaillierte Flow-Specs)
 - Künftig: Mockups `commission-my.html` · `commission-team.html` · `commission-admin.html` · `commission-bonus.html`

@@ -6,17 +6,17 @@ created: 2026-04-20
 updated: 2026-04-20
 status: draft
 depends_on: [
-  "ERP Tools/specs/ARK_BILLING_PLAN_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md"
+  "specs/ARK_BILLING_PLAN_v0_1.md",
+  "specs/ARK_BILLING_SCHEMA_v0_1.md"
 ]
 sources: [
-  "ERP Tools/specs/ARK_BILLING_PLAN_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_SCHEMA_v0_1.md",
+  "specs/ARK_BILLING_PLAN_v0_1.md",
+  "specs/ARK_BILLING_SCHEMA_v0_1.md",
   "raw/Ark_CRM_v2/ARK_BACKEND_ARCHITECTURE_v2_5.md (Events/Worker/Sagas-Pattern)",
   "raw/Ark_CRM_v2/ARK_FRONTEND_FREEZE_v1_10.md (UI-Pattern)",
   "wiki/meta/decisions.md (§2026-04-20 Billing-Batches 1–4 · AGB-Review · SIX-Fact-Check)",
   "wiki/meta/mockup-baseline.md (Drawer-540px · Editorial-Style)",
-  "ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md (Event-Kopplung)",
+  "specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md (Event-Kopplung)",
   "specs/ARK_EMAIL_KALENDER_DETAILMASKE_SCHEMA_v0_1.md (Outlook-Token-Pattern)",
   "specs/ARK_REMINDERS_VOLLANSICHT_SCHEMA_v0_1.md (Reminder-Integration)"
 ]

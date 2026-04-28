@@ -8,9 +8,9 @@ status: draft
 po_review_date: 2026-04-20
 po_review_status: "Batches 1–3 komplett (14/15) · Q4 System-of-Record + Q11 Team-Wechsel offen"
 sources: [
-  "ERP Tools/specs/ARK_BILLING_RESEARCH_CLAUDE_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_RESEARCH_GPT_v0_1.md",
-  "ERP Tools/specs/ARK_BILLING_RESEARCH_GEMINI_v0_1.md",
+  "specs/ARK_BILLING_RESEARCH_CLAUDE_v0_1.md",
+  "specs/ARK_BILLING_RESEARCH_GPT_v0_1.md",
+  "specs/ARK_BILLING_RESEARCH_GEMINI_v0_1.md",
   "raw/Ark_CRM_v2/Arkadium_AGB_FEB_2023.pdf",
   "raw/Ark_CRM_v2/ARK_DATABASE_SCHEMA_v1_3.md",
   "raw/Ark_CRM_v2/ARK_BACKEND_ARCHITECTURE_v2_5.md",
@@ -18,8 +18,8 @@ sources: [
   "raw/Ark_CRM_v2/ARK_FRONTEND_FREEZE_v1_10.md",
   "raw/Anhang - Provisionsstaffel CM.pdf",
   "raw/General/1_ Rechnungen & -sheets/ (PDF-Templates)",
-  "ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md",
-  "ERP Tools/specs/ARK_HR_TOOL_PLAN_v0_2.md (Vorbild-Struktur)",
+  "specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md",
+  "specs/ARK_HR_TOOL_PLAN_v0_2.md (Vorbild-Struktur)",
   "wiki/meta/decisions.md (§2026-04-20 Billing-Batches 1–3 · AGB-Review · SIX-Fact-Check)",
   "memory/project_commission_model.md",
   "memory/project_guarantee_protection.md",
@@ -72,7 +72,7 @@ Grundlage für `ARK_BILLING_SCHEMA_v0_1.md` + `ARK_BILLING_INTERACTIONS_v0_1.md`
 ### 1.3 Was das Billing-Modul NICHT ist
 
 - **Keine Payroll-Engine** — Lebt im HR-Tool + Treuhand Kunz
-- **Keine Commission-Berechnung** — Eigenes Commission-Engine-Modul (`ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`) · Billing liefert nur Zahlungs-Events
+- **Keine Commission-Berechnung** — Eigenes Commission-Engine-Modul (`specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`) · Billing liefert nur Zahlungs-Events
 - **Keine FIBU-Engine** — Buchhaltung bleibt bei Treuhand Kunz · Billing exportiert CSV
 - **Keine EU-Kunden-Fakturierung in MVP** — Reverse-Charge + EU-Pflichttexte vertagt (Feature-Flag `feature_eu_invoicing`)
 - **Keine Multi-Währung in MVP** — CHF-only (EUR-Variante vertagt)
@@ -421,7 +421,7 @@ Worker mwst-quarter-snapshot (Cron: 1. Tag nach Quartalsende)
 
 ### 8.8 Commission-Engine
 
-- Siehe `ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`
+- Siehe `specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md`
 - Events: `invoice_paid` · `invoice_partially_paid` · `refund_issued` · `refund_paid` · `invoice_written_off`
 - Trigger: nur `invoice_paid` mit `business_model = erfolgsbasis` ODER `stage_nr = 3` bei Mandat → Commission-Berechnung
 - Clawback: bei `refund_issued` → Rücklage-Reduktion oder negative Position in nächster MA-Abrechnung

@@ -5,12 +5,12 @@ phase: 3
 created: 2026-04-20
 updated: 2026-04-20
 status: draft
-depends_on: "ERP Tools/specs/ARK_BILLING_PLAN_v0_1.md"
+depends_on: "specs/ARK_BILLING_PLAN_v0_1.md"
 sources: [
-  "ERP Tools/specs/ARK_BILLING_PLAN_v0_1.md",
+  "specs/ARK_BILLING_PLAN_v0_1.md",
   "raw/Ark_CRM_v2/Arkadium_AGB_FEB_2023.pdf",
   "raw/Ark_CRM_v2/ARK_DATABASE_SCHEMA_v1_3.md (Grundlagen-Schema)",
-  "ERP Tools/specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md",
+  "specs/ARK_COMMISSION_ENGINE_SPEC_v0_1.md",
   "wiki/meta/decisions.md (§2026-04-20 Billing-Batches 1–4 · AGB-Review · SIX-Fact-Check)"
 ]
 grundlagen_sync_required: [
