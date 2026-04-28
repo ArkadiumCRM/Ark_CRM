@@ -101,3 +101,8 @@ BRAIN.md
 
 # Wiki-chat sub-project (separate Next.js scaffold, eigenes Repo TBD)
 wiki-chat/
+
+# graphify output (regenerable artifacts)
+graphify-out/cache/
+graphify-out/*.html
+graphify-out/merged-graph.json
