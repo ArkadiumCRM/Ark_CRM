@@ -1,8 +1,10 @@
-# ARK CRM — Admin-Debug-Tab Schema v1.0
+# ARK CRM — Admin-Debug-Tab Schema v1.1
 
-**Stand:** 17.04.2026
-**Status:** Review ausstehend (Erstversion)
+**Stand:** 28.04.2026 (v1.1 · Tab-Integration-Update — Filename bleibt `_v1_0.md` für Cross-Ref-Stabilität)
+**Status:** Implementiert als Tab 9 in `mockups/Vollansichten/admin.html`
 **Scope:** Admin-only Ansicht für Event-Queue-Audit, Saga-Traces, Dead-Letter-Monitoring, Rule-Execution-History
+
+**v1.0 → v1.1 Update (28.04.2026):** Architekturentscheidung — statt Single-Page-Route `/admin/event-log` ist Debug als **Tab 9 in `admin.html`** integriert (Sub-Tabs 9-1 Event-Log, 9-2 Saga-Traces, 9-3 Dead-Letter, 9-4 Circuit-Breaker, 9-5 Rules). Begründung: kohärente Admin-Cockpit-UX, KPI-Cross-Links, kein Context-Switch. Mockup war Spec voraus — Spec wurde an Implementierungs-Realität angeglichen.
 
 **Begleit-Dokumente:**
 - `specs/ARK_SYSTEM_ACTIVITY_TYPES_SCHEMA_v1.md` v1.2 §7.3 (UI-Impact Admin-Debug-Tab)
@@ -19,7 +21,7 @@
 
 ## 0. ZIELBILD
 
-Single-Page-Route `/admin/event-log` — Admin-only Cockpit für:
+**Tab 9 „Debug" in `admin.html`** (Route `/admin#tab=9`) — Admin-only Cockpit-Sektion mit 5 Sub-Tabs:
 
 1. **Event-Queue-Browser** — alle Events aus `fact_event_queue` mit Filtern, Paginierung, Detail-Drawer
 2. **Saga-Trace-Viewer** — gruppierte Ansicht aller Events einer `correlation_id` (z.B. Placement-Saga V1–V7)
@@ -67,18 +69,23 @@ Erbt aus `ARK_KANDIDATENMASKE_SCHEMA_v1_3.md` §0. Admin-Debug-spezifische Token
 
 ## 2. ROUTING
 
+Tab-Integration in `admin.html` — keine eigenen URL-Routen, stattdessen Sub-Tab-Hash-Navigation:
+
 ```
-GET /admin/event-log                    -- Haupt-Table-View
-GET /admin/event-log/saga/:correlation  -- Saga-Trace-View (gruppiert nach correlation_id)
-GET /admin/event-log/dead-letter        -- Dead-Letter-Queue-only-View
-GET /admin/event-log/circuit-breaker    -- Circuit-Breaker-Status-View
-GET /admin/event-log/rules              -- Rule-Execution-History-View
-GET /admin/event-log/event/:id          -- Single-Event-Detail (Drawer)
+/admin#tab=9        -- Tab 9 „Debug" (Eintrittspunkt, Default-Sub-Tab 9-1)
+/admin#tab=9-1      -- Sub-Tab Event-Log (Haupt-Table-View)
+/admin#tab=9-2      -- Sub-Tab Saga-Traces (gruppiert nach correlation_id)
+/admin#tab=9-3      -- Sub-Tab Dead-Letter-Queue
+/admin#tab=9-4      -- Sub-Tab Circuit-Breaker (in §13 als optional)
+/admin#tab=9-5      -- Sub-Tab Rule-Execution-History
 ```
 
-**Route-Guard:**
+Single-Event-Detail öffnet als **Drawer** (540px, Standard ARK-Pattern) über aktivem Sub-Tab.
+
+**Route-Guard:** erbt aus `admin.html` Page-Guard — Admin-Only-Zugriff bereits auf Page-Ebene erzwungen, kein zusätzlicher Tab-Guard nötig. Non-Admin sieht admin.html nicht (404).
+
 ```typescript
-// /src/pages/admin/_layout.tsx
+// /src/pages/admin.tsx
 export async function onBeforeRoute({ user }) {
   if (user.role !== 'Admin') {
     return { redirect: '/404' }
@@ -512,7 +519,7 @@ Dieser Spec ist **additiv** — keine Änderung an Grundlagen nötig:
 |------------------|----------|-------|
 | `ARK_DATABASE_SCHEMA_v1_3.md` | keine | Bestehende Tabellen reichen (fact_event_queue, fact_event_log, dim_event_types, dim_automation_rules) |
 | `ARK_BACKEND_ARCHITECTURE_v2_5.md` | v2.6 +Sektion „Admin-Debug-Endpoints" | GET-Only APIs für Tab-Data (separate Spec-Ergänzung) |
-| `ARK_FRONTEND_FREEZE_v1_*.md` | +Route `/admin/event-log` | Routing-Tabelle ergänzen |
+| `ARK_FRONTEND_FREEZE_v1_*.md` | Tab 9 in `admin.html` (Sub-Tabs 9-1..9-5) | Admin-Tab-Inventar dokumentieren |
 | `ARK_STAMMDATEN_EXPORT_v1_4.md` | keine | — |
 | `ARK_GESAMTSYSTEM_UEBERSICHT_v1_*.md` | Changelog-Eintrag | „v1.4 Admin-Debug-Tab eingeführt" |
 
@@ -520,7 +527,7 @@ Dieser Spec ist **additiv** — keine Änderung an Grundlagen nötig:
 
 ## 16. FERTIGSTELLUNGS-KRITERIEN v1.0
 
-- [ ] Route `/admin/event-log` aktiv, 404 für Non-Admin
+- [ ] Tab 9 in `admin.html` aktiv (Route `/admin#tab=9`), 404 auf admin.html für Non-Admin
 - [ ] Tab 1 (All Events) mit Filter + Pagination + CSV-Export
 - [ ] Tab 2 (Sagas) mit Correlation-Grouping + Admin-Saga-Drawer
 - [ ] Tab 3 (Dead-Letter) mit Retry-Flow

@@ -1,3 +1,13 @@
+## [2026-04-28] update | Admin-Debug-Schema v1.0 → v1.1 (Tab-Integration)
+
+- updated: `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (in-place, Filename behalten — 8 Cross-Refs würden brechen)
+- patches: §0 ZIELBILD (Single-Page-Route → Tab 9), §2 ROUTING (Hash-Routes), §15 Sync-Plan, §16 Fertigstellungs-Kriterium
+- Header: v1.1 + Update-Note erklärt Migration
+- Realität: Tab 9 „Debug" mit Sub-Tabs (Event-Log, Saga-Traces, Dead-Letter, Circuit-Breaker, Rules) seit längerem in `mockups/Vollansichten/admin.html` (Z. 2026+) implementiert
+- Drift-log: Action Item #5 [2026-04-20] Admin-Debug-Mockup-Klärung RESOLVED
+
+---
+
 ## [2026-04-28] update | ERP-Specs-Verzeichnis migriert nach specs/
 
 - moved: 19 Spec-Files von `ERP Tools/specs/` → `specs/` (`git mv`)

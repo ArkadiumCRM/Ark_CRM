@@ -24,7 +24,23 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 **Begründung:** CLAUDE.md-Pattern erwartet `specs/ARK_*_SCHEMA_v*.md` als kanonischen Pfad. Single-Directory vereinfacht Spec-Sync-Hook. Phase-Trennung über Filename-Prefix (`ARK_HR_*`, `ARK_BILLING_*`, `ARK_ZEITERFASSUNG_*`).
 
-**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass · #4 Stammdaten-Vollansicht-Spec · #5 Admin-Debug-Mockup-Klärung.
+**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass · #4 Stammdaten-Vollansicht-Spec.
+
+---
+
+## [2026-04-28] Resolution · Admin-Debug-Tab
+
+✅ **RESOLVED** Action Item #5 [2026-04-20] (Carryover): Admin-Debug-Mockup-Klärung.
+
+**Find:** Tab 9 „Debug" mit 5 Sub-Tabs (Event-Log, Saga-Traces, Dead-Letter, Circuit-Breaker, Rules) ist seit längerem in `mockups/Vollansichten/admin.html` (Zeile 2026+) implementiert — nicht „Mockup fehlt", sondern Spec-Realität-Drift: Spec definierte Single-Page-Route `/admin/event-log`, Mockup integrierte als Tab.
+
+**Resolution:** `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` von v1.0 → v1.1 in-place gepatched (Filename bleibt für Cross-Ref-Stabilität):
+- §0 ZIELBILD: Single-Page-Route → Tab 9 in `admin.html`
+- §2 ROUTING: 6 Routen `/admin/event-log/*` → Hash-Routes `/admin#tab=9-N`
+- §15 Sync-Plan: Frontend-Freeze-Zeile angepasst (Tab-Inventar statt Routing-Eintrag)
+- §16 Fertigstellungs-Kriterium: Route → Tab umformuliert
+
+**Begründung:** Mockup war Spec voraus. Tab-Integration ist kohärentere Admin-Cockpit-UX (KPI-Cross-Links, kein Context-Switch). Spec wurde an Implementierungs-Realität angeglichen statt Mockup zu zerlegen.
 
 ---
 
