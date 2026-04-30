@@ -21,7 +21,7 @@ tags: [governance, spec-sync, regel, konsistenz]
 | 4 | `raw/Ark_CRM_v2/ARK_FRONTEND_FREEZE_v1_x.md` | UI-Patterns, Design-System, Routing, Komponenten-Inventar |
 | 5 | `raw/Ark_CRM_v2/ARK_GESAMTSYSTEM_UEBERSICHT_v1_x.md` | Gesamtbild, strukturelle Entscheidungen, Changelog |
 
-## 9 Entity-Detailmasken + 4 Tool-Masken + 1 Admin-Vollansicht
+## 9 Entity-Detailmasken + 5 Tool-Masken + 2 System-Vollansichten
 
 **Entity-Detailmasken (9):** Je Entity eine Schema- + eine Interactions-Datei in `specs/`:
 Kandidat · Account · Firmengruppe · Mandat · Job · Prozess · Assessment · Scraper · Projekt
@@ -33,9 +33,10 @@ Kandidat · Account · Firmengruppe · Mandat · Job · Prozess · Assessment ·
 - **Dashboard-Templates-Editor** (`/admin/dashboards`) — siehe Admin-Vollansicht Tab 8 + `specs/ARK_DASHBOARD_CUSTOMIZATION_SCHEMA_v1.md`
 - **Performance-Tool** (`/operations/performance`) — `specs/ARK_PERFORMANCE_TOOL_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `_MOCKUP_PLAN.md` — neu 2026-04-25
 
-**System-Vollansichten (1 Admin + zukünftig HR):**
-- **Admin-Vollansicht** (`/admin`) — `specs/ARK_ADMIN_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (als Tab 9 eingebunden) — neu 2026-04-17
-- **HR-Tool** (Phase 3) — **Plan v0.2 (po-reviewed)** + **Schema v0.1 (draft)** + **Interactions v0.1 (draft)** in `specs/ARK_HR_TOOL_*` (2026-04-19) · 28 Tabellen · 4 Views · 19 Drawer · 13 Worker · 29 Event-Codes · 5 Lifecycle-Sagas · Feature-Flag `feature_hr_tool` locked bis Go-Live · **Mockup-Build ausstehend**
+**System-Vollansichten (2 + zukünftig HR):**
+- **Admin-Vollansicht** (`/admin`) — `specs/ARK_ADMIN_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (v1.1 · als Tab 9 eingebunden, Filename behält `_v1_0`) — neu 2026-04-17
+- **Stammdaten-Vollansicht** (`/stammdaten`) — `specs/ARK_STAMMDATEN_VOLLANSICHT_SCHEMA_v0_1.md` + `_INTERACTIONS_v0_1.md` + `_PLAN_v0_1.md` — neu 2026-04-30 · 8 Tabs · 67 Kataloge · ~5 365 Einträge · Browse + Edit-Modus (admin) · Reverse-engineered aus bestehendem Mockup
+- **HR-Tool** (Phase 3) — **Plan v0.2 (po-reviewed)** + **Schema v0.2 (draft)** + **Interactions v0.1 (draft)** in `specs/ARK_HR_TOOL_*` (2026-04-19/25) · 28 Tabellen · 4 Views · 19 Drawer · 13 Worker · 29 Event-Codes · 5 Lifecycle-Sagas · Feature-Flag `feature_hr_tool` locked bis Go-Live · **Mockup-Build ausstehend**
 
 **Sonder-Specs (nicht Entity, nicht Tool):**
 - `ARK_PIPELINE_COMPONENT_v1_0.md` — Shared UI-Komponente (9-Dot-Pipeline), referenziert von mehreren Detailmasken

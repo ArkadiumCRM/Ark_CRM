@@ -24,7 +24,27 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 **Begründung:** CLAUDE.md-Pattern erwartet `specs/ARK_*_SCHEMA_v*.md` als kanonischen Pfad. Single-Directory vereinfacht Spec-Sync-Hook. Phase-Trennung über Filename-Prefix (`ARK_HR_*`, `ARK_BILLING_*`, `ARK_ZEITERFASSUNG_*`).
 
-**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass · #4 Stammdaten-Vollansicht-Spec.
+**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass.
+
+---
+
+## [2026-04-30] Resolution · Stammdaten-Vollansicht Schema + Interactions
+
+✅ **RESOLVED** Action Item #4 [2026-04-20] (Carryover): Stammdaten-Vollansicht-Spec-Lücke.
+
+**Find:** Plan v0.1 + Mockup (3955 Zeilen) existierten seit 2026-04-18, aber Schema/Interactions-Specs fehlten. Drift-log markierte als 🟡 MITTEL.
+
+**Resolution:** Reverse-Engineering aus Plan v0.1 + Mockup-Validation:
+- `specs/ARK_STAMMDATEN_VOLLANSICHT_SCHEMA_v0_1.md` (~34 KB) — 15 Sections: ZIELBILD · Designsystem · Layout (Variant C) · Kategorie-Inventar (8 Tabs · 67 Kataloge) · Stat-Strip · Card-Grid · Drill-Down-Tabelle · Detail-Drawer · Browse/Edit-Modes · Suche+Filter · Routing · Permissions-Matrix · Cross-Links Admin · HR-Overlap-P2 · Sync-Plan · 8 offene Fragen
+- `specs/ARK_STAMMDATEN_VOLLANSICHT_INTERACTIONS_v0_1.md` (~32 KB) — 13 Sections: Funktionen pro Bereich · Browse-Flows · Edit-Flows (Inline-Edit · Konflikt-Resolution · Sort-Drag · Soft-Disable · Hard-Delete · Batch-Import) · CRUD-Endpoint-Matrix (~22 Endpoints) · Validation · Audit-Integration · Permissions-Matrix · Keyboard-Shortcuts · Empty/Error-States · State-Management · Events/WS-Channels · Cross-Modul-Integration · 8 offene Fragen
+- `wiki/meta/spec-sync-regel.md` aktualisiert: System-Vollansichten 1 → 2 (Admin + Stammdaten)
+
+**Sync-Bedarf (Folge-Sessions):**
+- `ARK_BACKEND_ARCHITECTURE_PATCH_v2_8_to_v2_9_stammdaten.md` — ~22 neue Endpoints
+- `ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_stammdaten.md` — Route `/stammdaten` + Sidebar
+- `ARK_GESAMTSYSTEM_PATCH_v1_5_to_v1_6_stammdaten.md` — Changelog-Eintrag
+
+**Begründung Reverse-Eng-Approach:** Mockup war Plan voraus (analog Admin-Debug-Resolution 2026-04-28). Spec dokumentiert Implementations-Realität statt von vorne zu erfinden.
 
 ---
 

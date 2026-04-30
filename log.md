@@ -1,3 +1,17 @@
+## [2026-04-30] create | Stammdaten-Vollansicht Schema + Interactions v0.1
+
+- created: `specs/ARK_STAMMDATEN_VOLLANSICHT_SCHEMA_v0_1.md` (~34 KB · 15 Sections)
+- created: `specs/ARK_STAMMDATEN_VOLLANSICHT_INTERACTIONS_v0_1.md` (~32 KB · 13 Sections)
+- updated: `wiki/meta/spec-sync-regel.md` — System-Vollansichten 1 → 2 (Admin + Stammdaten)
+- updated: `wiki/meta/drift-log.md` — Action Item #4 [2026-04-20] Stammdaten-Vollansicht-Spec RESOLVED
+- approach: Reverse-Engineering aus Plan v0.1 + Mockup (3955 Zeilen) — analog Admin-Debug-Resolution 2026-04-28
+- scope: 8 Tabs · 67 Kataloge · ~5 365 Einträge · Browse-Modus (alle Rollen) + Edit-Modus (admin · audit-pflichtig) · ~22 Endpoints
+- key features: Single-Truth-Pflege (`→ Admin`-Tag für Templates) · Locked/External-Catalogs · Multi-Lang DE/EN/FR · Konflikt-Resolution · Batch-Import-CSV · FK-Schutz · Optimistic-Update
+- pending: 3 Grundlagen-Patches (Backend v2.9, Frontend v1.14, Gesamt v1.6) — Folge-Session
+- offene Fragen Schema: 8 · Interactions: 8
+
+---
+
 ## [2026-04-28] update | Admin-Debug-Schema v1.0 → v1.1 (Tab-Integration)
 
 - updated: `specs/ARK_ADMIN_DEBUG_SCHEMA_v1_0.md` (in-place, Filename behalten — 8 Cross-Refs würden brechen)
