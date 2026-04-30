@@ -1,3 +1,18 @@
+## [2026-04-30] docs | E-Learning PO-Review-Prep-Doc (Subs A/B/C/D)
+
+- created: `wiki/meta/elearn-po-review-prep-2026-04-30.md` (~14 KB · 242 Z.)
+- approach: Subagent (general-purpose · Sonnet) las 16 E-Learning-Specs (8 Schema + 8 Interactions)
+- output:
+  - Pro Sub (A/B/C/D): Scope · Key-Decisions · Open-Questions · Cross-Module · Empfehlung
+  - Cross-Cutting: pgvector-RAG · Multi-Tenant-RLS · Python-Worker · LLM-Provider
+  - Workflow-Vorschlag (4 Schritte für PW)
+- Klassifizierung: 65% Approve-as-is · 25% Needs-Discussion · 10% Defer
+- Top-3 PW-Open-Questions: Embedding-Provider · LinkedIn-Scraper-Port-Scope · Cert-Major-Version
+- commit: `697d6a9`
+- pending: PW-Review-Session (~2h) + 30min-Decision-Session bei 3 Open-Questions, dann `draft → po-reviewed` Sed-Run
+
+---
+
 ## [2026-04-30] feat | Billing 2 Grundlagen-Patches (FE v1.14 + GS v1.6)
 
 - created: `specs/ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_billing.md` (27 KB · 499 Z.)

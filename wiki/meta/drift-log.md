@@ -28,6 +28,40 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · E-Learning PO-Review-Prep-Doc
+
+✅ **PARTIAL DONE** ERP-Audit-Gap: E-Learning hatte 16 Specs alle `status: draft`, kein PO-Review-Stempel. Subagent (general-purpose · Sonnet) erstellte PO-Review-Prep-Doc das PW efficiente Review enables.
+
+**Resolution:** `wiki/meta/elearn-po-review-prep-2026-04-30.md` (~14 KB · 242 Z.) mit strukturierter Sub-A/B/C/D-Analyse.
+
+**Decisions-Klassifizierung:**
+- ✅ **~23 Decisions Approve-as-is** (65%) · uncontroversial · brauchen kein PW-Time
+- 🟡 **~9 Decisions Needs-Discussion** (25%) · echte Decision-Points
+- ⏸ **~3 Decisions Defer** (10%) · gehören in spätere Phase
+
+**Top-3 Open Questions für PW (kritisch vor Implementation-Start):**
+
+1. **Sub B Embedding-Provider:** `VECTOR(1536)` impliziert OpenAI, aber kein expliziter Entscheid. DSGVO-Abwägung OpenAI vs lokal · Cost-Impact.
+2. **Sub B LinkedIn-Scraper-Port-Scope:** Port von `C:\Linkedin_Automatisierung` → `tools/elearn-content-gen/` · Effort 1h vs 2 Wochen unklar (PW kennt den Code).
+3. **Sub D Cert-Major-Version-Definition:** Wer triggert Major-Bump? Bekommt MA Vorankündigung vor Cert-Revocation? Spec schweigt.
+
+**Cross-Cutting-Findings:**
+- E-Learning ist **ARKs erstes konsequent Multi-Tenant-Modul** (28 Tabellen) · `ARK_BACKEND_ARCHITECTURE` muss nach PO-Approval um RLS-Policies ergänzt werden (Spec-Sync-Schritt)
+- Python-Worker-Service-Repo-Decision offen: `tools/elearn-content-gen/` in Ark_CRM-Repo oder separat · beeinflusst CI/CD
+- LLM-Strategie konsistent Anthropic-only (Sonnet 4.6 + Haiku 4.5) · nur Embedding-Provider ist ungeklärt
+
+**Workflow-Vorschlag:**
+1. PW liest „Übersicht" + „Cross-Cutting Themes" (~15 min)
+2. PW geht durch 4 Sub-Sektionen (je 10-15 min) · markiert ✅/🟡/🔴
+3. Bei 🔴: 30-min-Decision-Session mit Claude
+4. Nach Approval: alle 16 Specs `draft` → `po-reviewed` (1 Bash-Sed-Run)
+
+**Commit:** `697d6a9` · 1 neues File · pushed to origin/main.
+
+**Status:** Vor-Arbeit fertig. Echter PO-Stempel-Apply braucht ~2h PW-Time + 30min Decision-Session bei 3 Open-Questions.
+
+---
+
 ## [2026-04-30] Resolution · Billing 2 Grundlagen-Patches (FE v1.14 + GS v1.6)
 
 ✅ **DONE** Billing-Sync-Gap aus heutigem ERP-Audit: 3/5 → **5/5 Grundlagen-Sync-Patches**.
