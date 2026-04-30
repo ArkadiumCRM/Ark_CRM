@@ -132,8 +132,8 @@ Zugang via **Topbar-Toggle CRM ↔ ERP** (Frontend-Freeze v1.12 TEIL O). Feature
 
 ## Open Questions
 
-- Power BI Integration: Views stehen bereit, Dashboards werden manuell in Production erstellt
-- Outlook-Ausfallsicherheit: Health-Check Worker alle 5 Min, Fallback auf temporäres Outlook
+- ~~Power BI Integration: Views stehen bereit, Dashboards werden manuell in Production erstellt~~ → **Plan v0.1** (`specs/ARK_POWER_BI_INTEGRATION_PLAN_v0_1.md`, 2026-04-30) — 70% via Performance-Modul-Merge spec'd, 30% Greenfield (Workspace, RLS-DAX, Embed, Governance) für Stakeholder-Brainstorm
+- ~~Outlook-Ausfallsicherheit: Health-Check Worker alle 5 Min, Fallback auf temporäres Outlook~~ → **Konzept** (`wiki/concepts/outlook-failsafe.md`, 2026-04-30) — Send-Queue-Retry-Policy + Admin-Surface-Mapping
 
 ## Related
 

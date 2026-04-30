@@ -1,3 +1,24 @@
+## [2026-04-30] create | Power-BI-Integration Plan v0.1
+
+- created: `specs/ARK_POWER_BI_INTEGRATION_PLAN_v0_1.md` (~25 KB · 14 Sections)
+- updated: `wiki/meta/overview.md` — Open Questions Power-BI + Outlook strikethrough mit Spec-Refs
+- updated: `wiki/meta/drift-log.md` — Resolution-Block + Phase-1-A-Closing-Note
+- approach: Konsolidierung 70% (Performance-Modul-Merge 2026-04-25) + 30% Greenfield-Identifikation
+- Quellen-Inventar: 4 Layer (DB/Backend/Stammdaten/Frontend) mit File+Line-Refs
+- Greenfield-Areas: Workspace-Setup · RLS-DAX-Mapping · Gateway · Embed-Token-Flow · Governance · Monitoring
+- Phasen-Plan: 5 Phasen, Phase-0+1 ~3h Specs, Phase-2-3 ~8h Implementation
+- offene Fragen: 10 für PW + Nenad-Stakeholder-Review
+
+**Phase-1-A Closing — alle 6 Items abgeschlossen heute:**
+- A5 ERP-Specs Directory ✅
+- A2 Admin-Debug Spec ↔ Mockup-Alignment ✅
+- A1 Stammdaten-Vollansicht Schema + Interactions ✅
+- A3 Outlook-Failsafe-Konzept ✅
+- A6 Detached-HEAD-Hook ✅
+- A4 Power-BI-Integration Plan ✅
+
+---
+
 ## [2026-04-30] update | SessionStart-Hook · Detached-HEAD-Detection
 
 - updated: `.claude/hooks/session-overview.ps1` (+~50 Zeilen)

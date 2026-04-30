@@ -28,6 +28,35 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Power-BI-Integration Plan v0.1
+
+✅ **DOCUMENTED** (overview.md "Power BI Integration: Views stehen bereit, Dashboards werden manuell..."): Power-BI-Integration konsolidiert.
+
+**Find:** Der overview.md-Eintrag war veraltet. Performance-Modul-Merge am 2026-04-25 hat 70% der Power-BI-Integration bereits spec'd, ohne dass overview/drift-log das reflektierten:
+- 8 Materialized Views (`v_powerbi_*`) in DB-Schema v1.6
+- `dim_powerbi_view` Stammdaten-Katalog (8 Seeds in v1.6 §97.6)
+- `powerbi_reader` Read-Only-Role mit RLS in DB v1.6
+- Refresh-Worker `powerbi-view-refresh.worker` + Cron in Backend v2.8
+- Admin + Bridge-Endpoints (X-API-Key) in Performance-Spec
+- Event `perf_powerbi_view_refresh_failed`
+- Tile-Type `iframe_powerbi` in Stammdaten v1.6
+
+**Resolution:** `specs/ARK_POWER_BI_INTEGRATION_PLAN_v0_1.md` (~25 KB · 14 Sections) konsolidiert alle Pieces:
+- §1 Quellen-Inventar (was existiert in Backend/DB/Stammdaten/Frontend)
+- §2 Daten-Architektur mit Diagramm
+- §3 Refresh-Pipeline (Worker, Failure-Handling, Severity-Eskalation)
+- §4 API-Surface (Admin JWT + Bridge X-API-Key)
+- §5–10 Greenfield-Areas: Workspace-Setup, RLS-DAX-Mapping, Gateway, Embed-Token-Flow, Governance, Monitoring
+- §11 Phasen-Plan (5 Phasen, Phase-0+1 ~3h, Phase-2-3 ~8h)
+- §12 10 offene Fragen für PW + Nenad-Stakeholder-Review
+- §13 Sync-Plan (Backend + Frontend Patches Phase-3)
+
+**Greenfield-Anteil 30%:** Workspace-Modell (Single+DAX vs Pro-Tenant), Service-Principal-Auth, Iframe-Embed-Token-Lifecycle, View-SQL-Change-Workflow, Cost/Capacity-Strategie.
+
+**Phase-1-A ARK-CRM-Closing fertig** — alle 6 Phase-1-Items (A5/A2/A1/A3/A6/A4) abgeschlossen.
+
+---
+
 ## [2026-04-30] Resolution · Detached-HEAD-Detection im SessionStart-Hook
 
 ✅ **RESOLVED** Action Item #1 [2026-04-20]: Detached-HEAD-Schutz.
