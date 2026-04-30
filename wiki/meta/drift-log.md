@@ -28,6 +28,51 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Performance-Mockup P1-Drawers (Phase-3.1 vervollständigt)
+
+✅ **DONE** Phase-3-Branch B1a P1-High: 11 P1-Drawer in 6 Performance-Sub-Page-Mockups implementiert.
+
+**Resolution:** Subagent (general-purpose, Continuation nach Codex-Gate-Release) implementierte 11 P1-Drawer:
+
+| File | Vorher | Nachher | Drawer hinzugefügt |
+|------|--------|---------|----------------------|
+| `performance-funnel.html` | 1087 | 1177 | funnel-process |
+| `performance-coverage.html` | 1385 | 1507 | coverage-account |
+| `performance-revenue.html` | 1742 | 1917 | revenue-attribution · forecast-override (Duplicate-Pattern) |
+| `performance-mitarbeiter.html` | 1527 | 1621 | goal-edit |
+| `performance-reports.html` | 1133 | 1363 | template-config · template-new |
+| `performance-admin.html` | 1118 | 1457 | metric-new · anomaly-threshold · dashboard-default · snapshot-lag |
+
+**Total:** +1050 Zeilen, 6 Files modifiziert.
+
+**Wiring-Highlights:**
+- Funnel: `→ Profil`-Link in funnel-stage Process-Liste · close + reopen Pattern
+- Coverage: Account-Mode-Toggle bei tabAcc · Capture-Phase-Listener intercepted Account-Click
+- Revenue: forecast-override als standalone Duplicate (existing drawer-process Override-Tab untouched per Pre-Decision · safer als Refactor)
+- Mitarbeiter: 3× Goal-Edit-Buttons inline + 1× from goal-progress footer
+- Reports: Template-Card-Click + new "+ Template"-Button
+- Admin: rebound Threshold-Body, neuer Dashboard-Defaults-Body, Worker-Health-Card-Click
+
+**Lint-Verifikation:**
+- 0 Umlaute-Violations (ae/oe/ue/ss-Substitute)
+- 0 DB-Tech-Names in User-Text (1 pre-existing benign HTML-Kommentar in coverage.html Z. 748 ist Developer-Comment, nicht user-facing)
+- 540px Drawer-Width konsistent
+
+**Spec-Compliance-Update:** 59% → 91% (31/34 Drawer MATCH).
+
+**Backups:** `backups/performance-{funnel,coverage,revenue,mitarbeiter,reports,admin}.html.2026-04-30-<HHMM>.bak`
+
+**Commit:** `f9e9b93` pushed to origin/main.
+
+**Phase-3.1-Verdict:** **GO** — alle P0-Blocker + P1-High abgeschlossen. Customize-Dashboard-Flow + Closed-Loop-Flow + Admin-Config-Flow + Forecast-Drill-Flow alle unblocked.
+
+**Offen B1a (für eigene Folge-Session, niedrige Priorität):**
+- 3 Restdrawer aus 34: kleine Spec-Counting-Differenz · final 100% wenn nötig
+- Tier-2: Pattern-Konsistenz `data-drawer-key` vs `id=drawer-*` cross-file harmonisieren
+- Tier-3: Lint-Pass auf alle 11 Files (auch existierende), Test-Daten statt Placeholder
+
+---
+
 ## [2026-04-30] Resolution · Performance-Mockup P0-Drawers (Phase-3.1)
 
 ✅ **DONE** Phase-3-Branch B1a P0-Blocker: 8 P0-Drawer in Performance-Mockups implementiert.

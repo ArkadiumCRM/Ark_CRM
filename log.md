@@ -1,3 +1,28 @@
+## [2026-04-30] update | Performance-Mockup P1-Drawers (Phase-3-B1a Continuation)
+
+- updated: 6 Performance-Sub-Page-Mockups · +1050 Zeilen total
+  - performance-funnel.html (1087 → 1177)
+  - performance-coverage.html (1385 → 1507)
+  - performance-revenue.html (1742 → 1917)
+  - performance-mitarbeiter.html (1527 → 1621)
+  - performance-reports.html (1133 → 1363)
+  - performance-admin.html (1118 → 1457)
+- added: 11 P1-Drawer per Spec §4.2-§4.8
+  - funnel-process (Funnel · §4.2)
+  - coverage-account (Coverage · §4.3)
+  - revenue-attribution + forecast-override (Revenue · §4.4 · Duplicate-Pattern statt Extract)
+  - goal-edit (Mitarbeiter · §4.5)
+  - template-config + template-new (Reports · §4.7)
+  - metric-new + anomaly-threshold + dashboard-default + snapshot-lag (Admin · §4.8)
+- approach: Continuation-Subagent (general-purpose) nach Codex-Gate-Release
+- backups: `backups/performance-*.html.2026-04-30-<HHMM>.bak`
+- lint: 0 Umlaute · 0 DB-Tech · 540px Drawer-Width konsistent
+- spec-compliance: 59% → 91% (31/34 Drawer MATCH)
+- commit: `f9e9b93`
+- Phase-3.1-Verdict: **GO** — P0+P1 alle abgeschlossen, alle 4 Flow-Specs (§5.1-§5.5) unblocked
+
+---
+
 ## [2026-04-30] update | Performance-Mockup P0-Drawers (Phase-3-B1a)
 
 - updated: `mockups/ERP Tools/performance/performance-dashboard.html` (1297 → 2075 Zeilen, +778)
