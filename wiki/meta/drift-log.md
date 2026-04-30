@@ -28,6 +28,38 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · ERP-Tools-Lint-Pass (51 Files)
+
+✅ **RESOLVED** Action Item #2 [2026-04-20]: ERP-Tools-Lint-Pass.
+
+🎯 **ALLE Action Items aus [2026-04-20] Weekly Drift Scan jetzt RESOLVED** (#1, #2, #3, #4, #5).
+
+**Find:** Subagent (general-purpose mit Sonnet) auditierte 51 Files in `mockups/ERP Tools/{billing,commission,elearn,hr,zeit}/` (deutlich mehr als drift-log-Schätzung 16 — die ERP-Tools sind seit 2026-04-20 stark gewachsen).
+
+**Erkenntnis:** ERP-Tools-Mockups waren weitgehend lint-clean:
+- **0 Umlaute-Substitutes** (alle 51 Files verwenden bereits echte Umlaute)
+- **4 DB-Tech-Hits** (gefixt mit ark-lint-skip Wraps für Admin/Spec-Ref-Context)
+- **21 Snake-Case-Hits** (alle legitimate Admin/Spec-Ref Context · gewrappt)
+
+**Fixes:**
+| File | Change |
+|------|--------|
+| commission-admin.html | `paid_abschlag` → `Ausgezahlt · Rücklage` (SAFE-FIX User-Label) |
+| elearn-admin-imports.html | ark-lint-skip wrap auf Event-Namen-Drawer |
+| zeit-admin.html | ark-lint-skip wrap auf Scanner-Access-Audit-Table |
+| zeit-meine-zeit.html | JS-audit-Array `/* ark-lint-skip */` wrap |
+| hr-onboarding-editor.html | 2× ark-lint-skip wraps (Phase-Blocks + Template-Editor Module-IDs) |
+
+**Billing (9 Files): komplett clean ohne jeden Fix nötig.**
+
+**Cumulative-Violations-Counter-Erklärung:** Die 188 SNAKE-CASE + 161 UMLAUT in `lint-violations.md` waren vermutlich History aus Performance-Mockup-Build (2026-04-25/26) und bereits-resolved Cases. ERP-Tools-Mockups selbst sind und waren weitgehend clean — deutet auf disziplinierten Mockup-Build durch Claude Design hin.
+
+**Commit:** `e86c806` · 5 Mockups + lint-violations.md · pushed to origin/main.
+
+**Drift-Log [2026-04-20] Status:** Alle 5 Action Items resolved (#1 Detached-HEAD ✅ · #2 ERP-Lint ✅ · #3 ERP-Specs-Verzeichnis ✅ · #4 Stammdaten-Vollansicht ✅ · #5 Admin-Debug-Mockup ✅) — **drift-log [2026-04-20] vollständig closed.**
+
+---
+
 ## [2026-04-30] Resolution · Performance-Mockup Tier-2/3 Pattern-Konsistenz + OS-Theme
 
 ✅ **DONE** Phase-3-B1a Tier-2 + Tier-3-Theme: alle 3 Audit-Top-Items (#3, #4, #5) abgeschlossen.

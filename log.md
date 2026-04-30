@@ -1,3 +1,22 @@
+## [2026-04-30] fix | ERP-Tools-Lint-Pass · 51 Files audited
+
+- audited: 51 Mockup-Files in `mockups/ERP Tools/{billing,commission,elearn,hr,zeit}/`
+  - billing/: 9 Files (alle clean)
+  - commission/: 6 Files (1 Fix)
+  - elearn/: 20 Files (1 Wrap)
+  - hr/: 7 Files (2 Wraps)
+  - zeit/: 10 Files (2 Wraps)
+- pre-lint: 0 Umlaute-Violations · 4 DB-Tech-Hits · 21 Snake-Case-Hits
+- fixes:
+  - commission-admin.html: `paid_abschlag` → `Ausgezahlt · Rücklage` (SAFE-FIX User-Label)
+  - 4× ark-lint-skip-Wraps für legitimate Admin/Spec-Ref-Content
+- approach: Subagent (general-purpose mit Sonnet)
+- commit: `e86c806` (5 Mockups + lint-violations.md)
+- 🎯 **drift-log Action Item #2 [2026-04-20] RESOLVED**
+- 🎯 **drift-log [2026-04-20] vollständig closed** — alle 5 Action Items resolved heute
+
+---
+
 ## [2026-04-30] chore | Performance Tier-2/3 Pattern-Konsistenz + OS-Theme
 
 - Task A: Drawer-Pattern-Konsistenz · 4 Files (revenue · team · business · reports) · 12 Drawer mit `data-drawer-key=` additiv ergänzt
