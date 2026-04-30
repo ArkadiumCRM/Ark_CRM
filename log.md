@@ -1,3 +1,19 @@
+## [2026-04-30] update | Performance-Mockup P0-Drawers (Phase-3-B1a)
+
+- updated: `mockups/ERP Tools/performance/performance-dashboard.html` (1297 → 2075 Zeilen, +778)
+- updated: `mockups/ERP Tools/performance/performance-insights.html` (1675 → 2077 Zeilen, +402)
+- added: 8 P0-Drawer per Spec §4.1 + §4.6
+  - Dashboard: tile-add · tile-edit · tile-explain · tile-drill (Customize-Flow §5.1)
+  - Insights: action-create · action-detail · action-update · action-followup (Closed-Loop §5.2)
+- approach: Subagent (general-purpose) — Audit-Driven, additive-only, kein Codex (Encoding-Regression-History)
+- backups: `backups/performance-{dashboard,insights}.html.2026-04-30-1545.bak`
+- lint: 0 Umlaute-Violations · 0 DB-Tech in User-Text · 540px Drawer-Width konsistent
+- spec-compliance: 38% → 59% (20/34 Drawer MATCH)
+- commit: `7903d68`
+- offen: P1-High (10 Drawer) + Tier-2 (Konsistenz, Responsive) + Tier-3 (Lint-all-Files, Test-Daten) → Folge-Session
+
+---
+
 ## [2026-04-30] create | Power-BI-Integration Plan v0.1
 
 - created: `specs/ARK_POWER_BI_INTEGRATION_PLAN_v0_1.md` (~25 KB · 14 Sections)

@@ -28,6 +28,34 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Performance-Mockup P0-Drawers (Phase-3.1)
+
+✅ **DONE** Phase-3-Branch B1a P0-Blocker: 8 P0-Drawer in Performance-Mockups implementiert.
+
+**Find via Audit (2026-04-30):** Performance-Mockups (11 Files, 14'702 Zeilen) sind 38% Spec-Compliance — 12 von 34 Spec-Drawer als MATCH, 21 MISSING. P0-Blocker: Dashboard (0/4 Tile-Drawer) + Insights (4/6 Action-Loop-Drawer fehlen) blockieren Customize-Flow + Closed-Loop.
+
+**Resolution:** Subagent (general-purpose) implementierte 8 P0-Drawer in 2 Files:
+
+| File | Vorher | Nachher | Drawer hinzugefügt |
+|------|--------|---------|----------------------|
+| `mockups/ERP Tools/performance/performance-dashboard.html` | 1297 | 2075 | tile-add · tile-edit · tile-explain · tile-drill |
+| `mockups/ERP Tools/performance/performance-insights.html` | 1675 | 2077 | action-create · action-detail · action-update · action-followup |
+
+**Wiring:** FAB-Button + Gear-Icon + Auto-injected ?-Icon + Tile-Click → Dashboard-Drawers · Existing "Massnahme erstellen" CTA + Action-Card-Click + Update-Button + Outcome-Confirm-Followup → Insights-Drawers.
+
+**Lint-Verifikation:** 0 Umlaute-Violations · 0 DB-Techdetails in User-Text · 540px Drawer-Width konsistent · Backups in `backups/performance-*.2026-04-30-1545.bak`.
+
+**Spec-Compliance-Update:** 38% → 59% (20 von 34 MATCH).
+
+**Offen B1a (für Folge-Session):**
+- P1-High: 10 Drawer fehlen (admin 4, revenue 1, funnel 1, coverage 1, mitarbeiter 1, reports 2)
+- Tier-2: Pattern-Konsistenz `data-drawer-key` vs `id=drawer-*`, Responsive-Design, Theme-Toggle
+- Tier-3: Lint-Pass auf alle 11 Files, Test-Daten
+
+**Commit:** `7903d68` pushed to origin/main.
+
+---
+
 ## [2026-04-30] Resolution · Power-BI-Integration Plan v0.1
 
 ✅ **DOCUMENTED** (overview.md "Power BI Integration: Views stehen bereit, Dashboards werden manuell..."): Power-BI-Integration konsolidiert.
