@@ -28,6 +28,45 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · HR + Zeit Grundlagen-Sync (8 Patches in 1 Commit)
+
+✅ **DONE** ERP-Audit-Gaps für HR + Zeit-Modul: Sync-Coverage massiv erhöht.
+
+**Resolution:** 2 parallele Subagents (HR=Sonnet · Zeit=Opus für Diversity-Rotation) schrieben 8 Patches in 1 Bundle:
+
+### HR-Tool (4 Patches · ~104 KB)
+| Patch | Größe | Inhalt |
+|-------|-------|--------|
+| `ARK_DATABASE_SCHEMA_PATCH_v1_7_to_v1_8_hr.md` | 44 KB | 10 ENUMs · 3 Dims + Seeds · 8 Facts + Indizes · 4 Views · 4 Trigger-Funktionen + 8 Bindungen · 22 RLS-Policies · Retention · 21-Schritt-Migration |
+| `ARK_BACKEND_ARCHITECTURE_PATCH_v2_9_to_v2_10_hr.md` | 23 KB | 29 Endpoints in 6 Gruppen · 4 Worker (Onboarding/Disciplinary/Probation/Retention) · 16 Events · RBAC-Matrix · Integration-Hooks (Dok-Gen/E-Learning/Commission/Zeit) |
+| `ARK_STAMMDATEN_PATCH_v1_6_to_v1_7_hr.md` | 19 KB | 10 ENUMs · 5 Dim-Kataloge + 62 Seeds · 7 Activity-Types Kategorie 12 `hr` · 29 UI-Label-Mappings |
+| `ARK_FRONTEND_FREEZE_PATCH_v1_14_to_v1_15_hr.md` | 19 KB | 10 Routen + URL-State + Next.js-Komponenten · 7-Eintrag-Sidebar · 6 UI-Patterns · 11 Drawer · Permission-Matrix 4 Rollen × 10 Routen |
+
+### Zeit-Modul (4 Patches · ~110 KB)
+| Patch | Größe | Inhalt |
+|-------|-------|--------|
+| `ARK_DATABASE_SCHEMA_PATCH_v1_8_to_v1_9_zeit.md` | 41 KB | 9 ENUMs · 4 Dims + 11 Facts + firm_settings · 16 Indizes · 4 Views · 2 GIST-Overlap-Constraints · 36 RLS-Policies · Retention |
+| `ARK_STAMMDATEN_PATCH_v1_7_to_v1_8_zeit.md` | 21 KB | 87 Seed-Rows in 7 Kategorien (30 Absence-Types · 12 Categories · 5 Work-Models · 18 Skalen · 12 Feiertage 2026 · 8 Korrektur-Gründe · 22 firm_settings) · 5 Activity-Types · 7 UI-Mappings |
+| `ARK_FRONTEND_FREEZE_PATCH_v1_15_to_v1_16_zeit.md` | 27 KB | §4j Operations · Zeit · 10 Routen · 7-Eintrag-Sidebar · 5 UI-Patterns · 5 Drawer + 2 Modals · Permission-Matrix |
+| `ARK_GESAMTSYSTEM_PATCH_v1_6_to_v1_7_zeit.md` | 20 KB | Changelog v1.7 · Phase-3-Modul-Update (Zeit 5/5) · Cross-Module 4 Achsen (HR/Billing/Performance/Stammdaten) · 4 strategische Entscheidungen · Phase-Roadmap 3.0–3.4 |
+
+### Versions-Chain (parallel patched)
+- HR: DB v1.7→v1.8 · Backend v2.9→v2.10 · Stammdaten v1.6→v1.7 · FE v1.14→v1.15
+- Zeit: DB v1.8→v1.9 · Stammdaten v1.7→v1.8 · FE v1.15→v1.16 · Gesamtsystem v1.6→v1.7
+- Backend für Zeit existiert bereits (v2.5→v2.6 von 2026-04-19) · keine doppelte Sync nötig
+
+### Sync-Coverage-Update
+- **HR-Tool:** 1/5 → **5/5** ✅ (Backend v2.10 + DB v1.8 + Stammdaten v1.7 + FE v1.15 + interner Schema-Patch v0.2)
+- **Zeit-Modul:** 1/5 → **5/5** ✅ (Backend v2.6 bereits + DB v1.9 + Stammdaten v1.8 + FE v1.16 + Gesamtsystem v1.7)
+
+### Open Items
+- **HR-Gesamtsystem-Patch v1.7 → v1.8 noch offen** (Subagent fokussierte auf 4 Hauptpatches · Gesamtsystem-Aggregation Folge-Session)
+- **Ambiguity Zeit P2:** `dim_time_correction_reason`-Tabelle (8 Codes) — Schema v0.1 hat keine eigene Tabelle, P2 fügt sie hinzu · Klärung in HR-Sync-Run empfohlen
+
+**Subagent-Outputs Konsistenz-verifiziert:** Alle Endpoints/Tabellen/Routes aus Source-Specs übernommen · Pattern-Konsistenz mit den 4 heutigen Referenz-Patches gewährleistet · Eigennamen (Praemium Victoria · Generalis Provisio · Tempus Passio 365 · Locus Extra · Progressus) durchgängig korrekt erhalten.
+
+---
+
 ## [2026-04-30] Resolution · E-Learning PO-Review-Prep-Doc
 
 ✅ **PARTIAL DONE** ERP-Audit-Gap: E-Learning hatte 16 Specs alle `status: draft`, kein PO-Review-Stempel. Subagent (general-purpose · Sonnet) erstellte PO-Review-Prep-Doc das PW efficiente Review enables.

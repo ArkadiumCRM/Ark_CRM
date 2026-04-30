@@ -1,3 +1,23 @@
+## [2026-04-30] feat | HR + Zeit 8 Grundlagen-Sync-Patches (parallel Subagents)
+
+- created HR (4 Patches · ~104 KB):
+  - `specs/ARK_DATABASE_SCHEMA_PATCH_v1_7_to_v1_8_hr.md` (44 KB)
+  - `specs/ARK_BACKEND_ARCHITECTURE_PATCH_v2_9_to_v2_10_hr.md` (23 KB)
+  - `specs/ARK_STAMMDATEN_PATCH_v1_6_to_v1_7_hr.md` (19 KB)
+  - `specs/ARK_FRONTEND_FREEZE_PATCH_v1_14_to_v1_15_hr.md` (19 KB)
+- created Zeit (4 Patches · ~110 KB):
+  - `specs/ARK_DATABASE_SCHEMA_PATCH_v1_8_to_v1_9_zeit.md` (41 KB)
+  - `specs/ARK_STAMMDATEN_PATCH_v1_7_to_v1_8_zeit.md` (21 KB)
+  - `specs/ARK_FRONTEND_FREEZE_PATCH_v1_15_to_v1_16_zeit.md` (27 KB)
+  - `specs/ARK_GESAMTSYSTEM_PATCH_v1_6_to_v1_7_zeit.md` (20 KB)
+- approach: 2 parallele Subagents (HR=Sonnet · Zeit=Opus für Diversity) · DO-NOT-COMMIT-Instruction · Bundle-Commit
+- versions-chain: parallel-applied (HR-Pattern v1.x→v1.y · Zeit-Pattern v1.y→v1.z)
+- sync-coverage: HR 1/5 → 5/5 ✅ · Zeit 1/5 → 5/5 ✅
+- pending: HR-Gesamtsystem-Patch v1.7 → v1.8 (Folge-Session)
+- ambiguity: dim_time_correction_reason · 8 Codes · Schema v0.1 hat keine Tabelle, P2 fügt sie hinzu
+
+---
+
 ## [2026-04-30] docs | E-Learning PO-Review-Prep-Doc (Subs A/B/C/D)
 
 - created: `wiki/meta/elearn-po-review-prep-2026-04-30.md` (~14 KB · 242 Z.)
