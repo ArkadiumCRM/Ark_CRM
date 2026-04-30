@@ -28,6 +28,33 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · HR 2 fehlende Mockups gebaut
+
+✅ **DONE** Audit-Finding (HR-Mockup-Spec-Inkonsistenz aus heutigem ERP-Komplett-Audit): `hr-absence-calendar.html` + `hr-academy-dashboard.html` waren in `ARK_HR_TOOL_SCHEMA_v0_2.md` als sources referenziert (Z. 18-19), existierten aber nicht. Direkter Spec-Mockup-Widerspruch.
+
+**Resolution:** 2 Subagents (general-purpose mit Sonnet, sequential):
+
+| File | Lines | Drawer | Tabs/Views |
+|------|-------|--------|-----------|
+| `hr-absence-calendar.html` | 1062 | drawer-absence-detail (3 Tabs) | Heatmap-Calendar 12 MA × 31 Tage · 4 KPIs · Filter (Sparte/Type/Period) · April 2026 mit korrekten Wochenenden · Sechseläuten-Holiday markiert · Banner zu Zeit-Modul |
+| `hr-academy-dashboard.html` | 1476 | drawer-curriculum-edit + drawer-ma-compliance-detail (3+3 Tabs) | Compliance-Matrix 12 MA × 8 Pflicht-Kurse · Curriculum 6 Rollen-Cards · Akkreditierungen (Scheelen ASSESS 5.0 · MDI · Relief · EQ-i · DCV · ISO-27001 · DSGVO-DSB) · Banner zu E-Learning-Modul |
+
+**Sidebar-Update in hr.html:** neue Sektion "Übersichten" mit 2 Einträgen (📅 Abwesenheiten · 🎓 Akademie · Badge "8" für Pflicht-Kurse) eingefügt zwischen "HR-Tool" und "Prozesse".
+
+**Lint-Verifikation (beide Files):**
+- 0 Umlaute-Violations (echte ä ö ü ß durchgängig)
+- 0 DB-Tech-Violations
+- 540px Drawer-Width konsistent
+- Drawer-IDs kebab-case Spec-konform
+
+**Sample-Daten-Realismus:** 12 ARK-MA mit echten Kürzeln (PW/JV/LR/MR/FK/SR/NB/TK/AB/DW/SB/KH), Rollen-Mix (AM/CM/RA/BO/HoD/Admin), 3 überfällige MA, 2 Akkreditierungen im 90d-Renewal-Fenster, alle Zustände (done/progress/overdue/N/A) vertreten.
+
+**Total:** +2'538 Zeilen in 2 neuen Mockup-Files + Sidebar-Update.
+
+**HR-Tool-Status:** 7 → 9 Mockups · Spec-Mockup-Konsistenz wiederhergestellt · Phase-3-Reife verbessert.
+
+---
+
 ## [2026-04-30] Resolution · B3 HR-Tool Mockup-Refinement
 
 ✅ **DONE** B3: HR-Tool 5 Action-Items von 52% → 91% Spec-Compliance.

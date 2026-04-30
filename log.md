@@ -1,3 +1,25 @@
+## [2026-04-30] create | HR 2 fehlende Mockups · hr-absence-calendar + hr-academy-dashboard
+
+- created: `mockups/ERP Tools/hr/hr-absence-calendar.html` (1062 Z.)
+  - Heatmap-Kalender 12 MA × 31 Tage (April 2026)
+  - 4 KPIs · Filter (Sparte/Type/Period)
+  - drawer-absence-detail (3 Tabs)
+  - Cross-Module-Read-Layer von Zeit-Modul
+- created: `mockups/ERP Tools/hr/hr-academy-dashboard.html` (1476 Z.)
+  - Compliance-Matrix 12 MA × 8 Pflicht-Kurse
+  - Curriculum 6 Rollen-Cards
+  - Akkreditierungen-Tracker (Scheelen ASSESS · MDI · Relief · EQ-i · DCV · ISO-27001 · DSGVO-DSB)
+  - 2 Drawer (curriculum-edit Admin · ma-compliance-detail)
+  - Cross-Module-Read-Layer von E-Learning
+- updated: `mockups/ERP Tools/hr/hr.html` Sidebar — neue Sektion „Übersichten" mit 2 Einträgen
+- approach: 2 Subagents sequential (general-purpose mit Sonnet) nach Single-File-Briefing-Pattern (1. Versuch mit beiden Files parallel timed out)
+- lint: 0 Umlaute · 0 DB-Tech · 540px Drawer · kebab-case IDs
+- sample-Daten: 12 ARK-MA mit echten Kürzeln · 3 überfällig · 2 Akkreditierungen im 90d-Renewal-Fenster
+- total: +2538 Zeilen
+- Audit-Finding RESOLVED: Spec-Mockup-Inkonsistenz (Schema v0.2 referenzierte Files die nicht existierten)
+
+---
+
 ## [2026-04-30] feat | B3 HR-Tool Mockup-Refinement (5 AI · 8 Drawer · 4 Renames)
 
 - updated: 4 HR-Mockups · +829 Zeilen

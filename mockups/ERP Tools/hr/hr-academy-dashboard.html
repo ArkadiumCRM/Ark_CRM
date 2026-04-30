@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARK ERP — HR · Akademie · Compliance &amp; Curriculum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_shared/editorial.css">
+<style>
+  html, body { height:100%; margin:0; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); }
+  body.in-iframe .app-bar { display:none; }
+
+  .app-bar {
+    height:48px; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; padding:0 22px; gap:16px;
+    font-size:13px; font-weight:600; color:var(--text-light);
+  }
+  .app-bar .brand {
+    font-family:'Libre Baskerville', serif; font-size:15px;
+    font-weight:700; color:var(--accent); margin-right:8px;
+  }
+
+  .page { padding:22px 28px 60px; max-width:1500px; margin:0 auto; overflow-y:auto; }
+
+  /* Page Head */
+  .page-head { margin-bottom:18px; }
+  .page-head .crumb {
+    font-size:11px; text-transform:uppercase; letter-spacing:1.4px;
+    color:var(--text-light); font-weight:600; margin-bottom:6px;
+  }
+  .page-head h1 {
+    font-family:'Libre Baskerville', serif; font-size:24px;
+    color:var(--accent); font-weight:700; margin:0 0 5px;
+  }
+  .page-head .subtitle { font-size:13px; color:var(--text-light); }
+
+  /* KPI Strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  @media (max-width:900px) { .kpi-strip { grid-template-columns:repeat(2,1fr); } }
+  .kpi-card {
+    background:var(--surface); padding:15px 18px; border-radius:4px;
+    box-shadow:var(--shadow-sm); border-left:3px solid var(--accent);
+  }
+  .kpi-card.green { border-left-color:var(--green); }
+  .kpi-card.amber { border-left-color:var(--amber); }
+  .kpi-card.red   { border-left-color:var(--red); }
+  .kpi-card .lbl {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.3px;
+    color:var(--text-light); font-weight:600;
+  }
+  .kpi-card .big {
+    font-family:'Libre Baskerville', serif; font-size:26px;
+    font-weight:700; color:var(--accent); line-height:1; margin:6px 0 4px;
+  }
+  .kpi-card.green .big { color:var(--green); }
+  .kpi-card.amber .big { color:var(--amber); }
+  .kpi-card.red   .big { color:var(--red); }
+  .kpi-card .sub { font-size:11.5px; color:var(--text-mid); }
+
+  /* Tab Bar */
+  .tab-bar {
+    display:flex; gap:0; border-bottom:2px solid var(--border);
+    margin-bottom:20px;
+  }
+  .tab-bar .tab {
+    padding:9px 18px; font-size:13px; font-weight:600;
+    color:var(--text-light); border:none; background:transparent;
+    cursor:pointer; border-bottom:2px solid transparent;
+    margin-bottom:-2px; font-family:'DM Sans', sans-serif;
+    transition:color 0.15s, border-color 0.15s;
+  }
+  .tab-bar .tab:hover { color:var(--accent); }
+  .tab-bar .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* Tab Panes */
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Filter Bar */
+  .filter-bar {
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .filter-bar select, .filter-bar input {
+    padding:6px 10px; font-size:12.5px; border-radius:3px;
+    border:1px solid var(--border); background:var(--surface);
+    color:var(--text); font-family:'DM Sans', sans-serif;
+    cursor:pointer;
+  }
+  .filter-bar select:focus, .filter-bar input:focus {
+    outline:none; border-color:var(--accent);
+  }
+  .btn {
+    padding:7px 14px; font-size:12.5px; font-weight:600; border-radius:3px;
+    cursor:pointer; font-family:'DM Sans', sans-serif;
+    border:1px solid var(--border-strong); background:var(--surface);
+    color:var(--text); transition:all 0.1s;
+  }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .btn-primary:hover { filter:brightness(1.08); color:white; }
+  .btn-amber { background:color-mix(in srgb, var(--amber) 12%, var(--bg)); color:var(--amber); border-color:var(--amber); }
+  .btn-amber:hover { filter:brightness(0.92); }
+  .btn-sm { padding:5px 10px; font-size:11.5px; }
+
+  /* --- COMPLIANCE MATRIX TABLE --- */
+  .matrix-wrapper {
+    background:var(--surface); border-radius:4px;
+    box-shadow:var(--shadow-sm); overflow-x:auto;
+  }
+  .compliance-matrix { width:100%; border-collapse:collapse; font-size:12px; min-width:900px; }
+  .compliance-matrix th {
+    text-align:center; padding:9px 8px;
+    background:var(--bg); font-size:10px; text-transform:uppercase;
+    letter-spacing:1.1px; color:var(--text-light); font-weight:600;
+    border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  .compliance-matrix th.col-left { text-align:left; padding-left:14px; }
+  .compliance-matrix td {
+    padding:9px 8px; border-bottom:1px solid var(--border);
+    text-align:center; vertical-align:middle;
+  }
+  .compliance-matrix td.col-left { text-align:left; padding-left:14px; }
+  .compliance-matrix tbody tr:last-child td { border-bottom:none; }
+  .compliance-matrix tbody tr:hover { background:var(--bg); cursor:pointer; }
+
+  .ma-cell { display:flex; align-items:center; gap:9px; }
+  .ma-avatar {
+    width:26px; height:26px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Libre Baskerville', serif; font-size:10.5px; font-weight:700;
+    flex-shrink:0;
+  }
+  .ma-name { font-weight:600; color:var(--text); font-size:12.5px; }
+  .ma-role { font-size:11px; color:var(--text-light); }
+
+  .role-pill {
+    display:inline-block; padding:2px 7px; border-radius:2px;
+    font-size:10.5px; font-weight:600; background:var(--surface-alt); color:var(--text-mid);
+  }
+  .role-pill.admin { background:color-mix(in srgb,var(--accent) 12%,var(--bg)); color:var(--accent); }
+  .role-pill.hod   { background:color-mix(in srgb,var(--gold,#D4A017) 18%,var(--bg)); color:#8a6400; }
+  .role-pill.am    { background:color-mix(in srgb,var(--green) 12%,var(--bg)); color:var(--green); }
+  .role-pill.cm    { background:color-mix(in srgb,#7C4DFF 12%,var(--bg)); color:#5c2be0; }
+  .role-pill.ra    { background:color-mix(in srgb,var(--amber) 12%,var(--bg)); color:#a06000; }
+  .role-pill.bo    { background:color-mix(in srgb,var(--text-light) 14%,var(--bg)); color:var(--text-mid); }
+
+  /* Compliance-Cell States */
+  .cc { width:32px; height:26px; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; cursor:pointer; transition:filter 0.1s; }
+  .cc:hover { filter:brightness(0.88); }
+  .cc.done     { background:color-mix(in srgb,var(--green) 16%,var(--bg)); color:var(--green); }
+  .cc.progress { background:color-mix(in srgb,var(--amber) 16%,var(--bg)); color:#a06000; }
+  .cc.overdue  { background:color-mix(in srgb,var(--red) 14%,var(--bg)); color:var(--red); }
+  .cc.na       { background:transparent; color:var(--text-light); font-size:14px; }
+
+  /* Chip Sparte */
+  .chip-sparte { display:inline-block; padding:2px 7px; border-radius:10px; font-size:10.5px; font-weight:600; }
+  .chip-sparte.arc { background:#FCE4E4; color:#B42525; }
+  .chip-sparte.gt  { background:#E3F0FF; color:#1E5A9E; }
+  .chip-sparte.ing { background:#E3F5E3; color:#2F7D2F; }
+  .chip-sparte.pur { background:#F0E3F8; color:#6B2B8E; }
+  .chip-sparte.rem { background:#FFE8CC; color:#A85A0F; }
+
+  /* Overall-bar */
+  .overall-cell { display:flex; align-items:center; gap:8px; min-width:120px; }
+  .overall-cell .bar { flex:1; height:5px; background:var(--surface-alt); border-radius:3px; overflow:hidden; }
+  .overall-cell .fill { height:100%; border-radius:3px; }
+  .overall-cell .fill.green { background:var(--green); }
+  .overall-cell .fill.amber { background:var(--amber); }
+  .overall-cell .fill.red   { background:var(--red); }
+  .overall-cell .pct { font-family:'Libre Baskerville', serif; font-weight:700; font-size:12px; min-width:36px; text-align:right; }
+  .overall-cell .pct.green { color:var(--green); }
+  .overall-cell .pct.amber { color:var(--amber); }
+  .overall-cell .pct.red   { color:var(--red); }
+
+  /* Legend */
+  .matrix-legend {
+    display:flex; gap:14px; align-items:center; margin-top:12px;
+    font-size:11.5px; color:var(--text-light); flex-wrap:wrap;
+  }
+  .matrix-legend .li { display:flex; align-items:center; gap:5px; }
+
+  /* --- CURRICULUM GRID --- */
+  .curriculum-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+  @media (max-width:1100px) { .curriculum-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:720px)  { .curriculum-grid { grid-template-columns:1fr; } }
+
+  .curr-card {
+    background:var(--surface); border-radius:4px;
+    box-shadow:var(--shadow-sm); padding:16px 18px;
+    border-top:3px solid var(--accent);
+  }
+  .curr-card.am   { border-top-color:var(--green); }
+  .curr-card.cm   { border-top-color:#7C4DFF; }
+  .curr-card.ra   { border-top-color:var(--amber); }
+  .curr-card.bo   { border-top-color:var(--text-light); }
+  .curr-card.hod  { border-top-color:#D4A017; }
+  .curr-card.admin{ border-top-color:var(--accent); }
+
+  .curr-card h3 {
+    font-family:'Libre Baskerville', serif; font-size:14px;
+    color:var(--accent); font-weight:700; margin:0 0 10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .curr-card ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .curr-card ul li {
+    font-size:12px; color:var(--text); padding:6px 10px;
+    background:var(--bg); border-radius:3px;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+  }
+  .curr-card ul li .kurs-name { flex:1; font-weight:500; }
+  .curr-card ul li .kurs-meta { font-size:10.5px; color:var(--text-light); white-space:nowrap; }
+  .freq-pill {
+    display:inline-block; padding:1px 6px; border-radius:2px;
+    font-size:10px; font-weight:600;
+  }
+  .freq-pill.jaehrlich { background:color-mix(in srgb,var(--accent) 10%,var(--bg)); color:var(--accent); }
+  .freq-pill.einmalig  { background:color-mix(in srgb,var(--green) 12%,var(--bg)); color:var(--green); }
+  .freq-pill.two-yr    { background:color-mix(in srgb,var(--amber) 12%,var(--bg)); color:#a06000; }
+
+  .curr-footer {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:20px; padding-top:16px; border-top:1px solid var(--border);
+  }
+
+  /* --- AKKREDITIERUNGEN --- */
+  .table-card { background:var(--surface); border-radius:4px; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .accred-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .accred-table th {
+    text-align:left; padding:10px 14px; background:var(--bg);
+    font-size:10px; text-transform:uppercase; letter-spacing:1.2px;
+    color:var(--text-light); font-weight:600; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  .accred-table td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .accred-table tbody tr:last-child td { border-bottom:none; }
+  .accred-table tbody tr:hover { background:var(--bg); cursor:pointer; }
+
+  .status-active  { color:var(--green); font-weight:600; font-size:12px; }
+  .status-renewal { color:var(--amber); font-weight:600; font-size:12px; }
+  .status-expired { color:var(--red); font-weight:600; font-size:12px; }
+
+  .days-pill {
+    display:inline-block; padding:2px 8px; border-radius:10px;
+    font-size:11px; font-weight:600;
+  }
+  .days-pill.ok     { background:color-mix(in srgb,var(--green) 12%,var(--bg)); color:var(--green); }
+  .days-pill.warn   { background:color-mix(in srgb,var(--amber) 14%,var(--bg)); color:#a06000; }
+  .days-pill.danger { background:color-mix(in srgb,var(--red) 12%,var(--bg)); color:var(--red); }
+
+  /* Info Banner */
+  .info-banner {
+    margin-top:28px; padding:12px 18px; border-radius:4px;
+    background:color-mix(in srgb,var(--accent) 8%,var(--bg));
+    border:1px solid color-mix(in srgb,var(--accent) 20%,var(--bg));
+    font-size:12.5px; color:var(--text-light); line-height:1.55;
+  }
+  .info-banner a { color:var(--accent); text-decoration:none; font-weight:600; }
+  .info-banner a:hover { text-decoration:underline; }
+
+  /* Sec Head */
+  .sec-head { display:flex; justify-content:space-between; align-items:baseline; margin:24px 0 12px; }
+  .sec-head h2 { font-family:'Libre Baskerville', serif; font-size:17px; color:var(--accent); margin:0; font-weight:700; }
+  .sec-head .sub { font-size:12px; color:var(--text-light); }
+
+  /* --- DRAWERS --- */
+  .drawer-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.35);
+    z-index:900; opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .drawer-overlay.open { opacity:1; pointer-events:all; }
+
+  .drawer {
+    position:fixed; top:0; right:0; width:540px; max-width:100vw; height:100vh;
+    background:var(--surface); box-shadow:-4px 0 24px rgba(0,0,0,0.18);
+    z-index:901; transform:translateX(100%); transition:transform 0.22s cubic-bezier(.4,0,.2,1);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .drawer.open { transform:translateX(0); }
+
+  .drawer-head {
+    padding:18px 20px 14px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;
+  }
+  .drawer-head h3 { margin:0; font-family:'Libre Baskerville', serif; font-size:16px; color:var(--accent); font-weight:700; }
+  .drawer-head .sub { font-size:12px; color:var(--text-light); margin-top:3px; }
+  .drawer-close {
+    background:none; border:none; font-size:20px; cursor:pointer;
+    color:var(--text-light); padding:2px 6px; border-radius:3px;
+    line-height:1; transition:color 0.1s;
+  }
+  .drawer-close:hover { color:var(--accent); }
+
+  .drawer-tabs {
+    display:flex; border-bottom:1px solid var(--border); flex-shrink:0;
+    background:var(--bg); padding:0 18px;
+  }
+  .drawer-tabs .dtab {
+    padding:9px 14px; font-size:12.5px; font-weight:600; color:var(--text-light);
+    border:none; background:transparent; cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+    font-family:'DM Sans', sans-serif; transition:color 0.1s, border-color 0.1s;
+  }
+  .drawer-tabs .dtab:hover { color:var(--accent); }
+  .drawer-tabs .dtab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  .drawer-body { flex:1; overflow-y:auto; padding:18px 20px; }
+  .drawer-pane { display:none; }
+  .drawer-pane.active { display:block; }
+
+  .drawer-footer {
+    padding:14px 20px; border-top:1px solid var(--border);
+    display:flex; gap:8px; justify-content:flex-end; flex-shrink:0;
+  }
+
+  /* Form Elements (Drawer) */
+  .field-group { margin-bottom:16px; }
+  .field-group label { display:block; font-size:11.5px; font-weight:600; color:var(--text-light); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.8px; }
+  .field-group input[type=text], .field-group input[type=url],
+  .field-group textarea, .field-group select {
+    width:100%; padding:8px 10px; font-size:13px; border-radius:3px;
+    border:1px solid var(--border); background:var(--bg);
+    color:var(--text); font-family:'DM Sans', sans-serif; box-sizing:border-box;
+  }
+  .field-group input:focus, .field-group textarea:focus, .field-group select:focus {
+    outline:none; border-color:var(--accent);
+  }
+  .field-group textarea { resize:vertical; min-height:72px; }
+
+  .role-checkboxes { display:flex; flex-wrap:wrap; gap:8px; }
+  .role-checkboxes label {
+    display:flex; align-items:center; gap:5px;
+    font-size:12.5px; font-weight:500; color:var(--text);
+    padding:5px 10px; background:var(--bg); border:1px solid var(--border);
+    border-radius:3px; cursor:pointer; text-transform:none; letter-spacing:0;
+  }
+  .role-checkboxes input[type=checkbox] { accent-color:var(--accent); }
+  .role-checkboxes label.checked { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,var(--bg)); }
+
+  /* MA Compliance Detail Drawer */
+  .course-row {
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    background:var(--bg); border-radius:3px; margin-bottom:6px;
+    font-size:12.5px; cursor:pointer; transition:background 0.1s;
+  }
+  .course-row:hover { background:var(--surface-alt); }
+  .course-row .ico { font-size:16px; flex-shrink:0; }
+  .course-row .body { flex:1; }
+  .course-row .body strong { display:block; font-weight:600; color:var(--text); }
+  .course-row .body .meta { font-size:11px; color:var(--text-light); margin-top:1px; }
+  .course-row .status-tag { font-size:11px; font-weight:600; white-space:nowrap; }
+  .course-row .status-tag.done { color:var(--green); }
+  .course-row .status-tag.prog { color:var(--amber); }
+  .course-row .status-tag.over { color:var(--red); }
+  .course-row .status-tag.na   { color:var(--text-light); }
+
+  .history-row {
+    padding:9px 0; border-bottom:1px solid var(--border); font-size:12.5px;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .history-row:last-child { border-bottom:none; }
+  .history-row .date { font-size:11px; color:var(--text-light); white-space:nowrap; min-width:80px; }
+  .history-row .body { flex:1; }
+  .history-row .body strong { font-weight:600; color:var(--text); }
+  .history-row .body .note { font-size:11.5px; color:var(--text-light); }
+
+  .accred-row {
+    padding:9px 12px; background:var(--bg); border-radius:3px;
+    margin-bottom:6px; font-size:12.5px; display:flex; justify-content:space-between;
+    align-items:center; gap:10px;
+  }
+  .accred-row .body strong { display:block; font-weight:600; color:var(--text); font-size:12.5px; }
+  .accred-row .body .meta { font-size:11px; color:var(--text-light); }
+
+  /* dark mode */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) {
+      --bg: #131419; --surface: #1e1f26; --surface-alt: #272831;
+      --border: #2e2f3a; --border-strong: #45464f;
+      --text: #e8e9f0; --text-mid: #9a9aab; --text-light: #6d6e7d;
+      --accent: #7c8cf8; --accent-soft: rgba(124,140,248,0.12);
+      --green: #4ade80; --amber: #fbbf24; --red: #f87171;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+    }
+  }
+  [data-theme="dark"] {
+    --bg: #131419; --surface: #1e1f26; --surface-alt: #272831;
+    --border: #2e2f3a; --border-strong: #45464f;
+    --text: #e8e9f0; --text-mid: #9a9aab; --text-light: #6d6e7d;
+    --accent: #7c8cf8; --accent-soft: rgba(124,140,248,0.12);
+    --green: #4ade80; --amber: #fbbf24; --red: #f87171;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+<script>(function(){
+  var t=localStorage.getItem('ark-theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+  if(window.self!==window.top) document.body.classList.add('in-iframe');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.type==='ark-theme'){
+      document.documentElement.setAttribute('data-theme',e.data.value);
+      localStorage.setItem('ark-theme',e.data.value);
+    }
+  });
+})();</script>
+
+<!-- App-Bar (ausgeblendet im iframe via body.in-iframe) -->
+<div class="app-bar">
+  <span class="brand">ARK ERP</span>
+  <span>HR</span>
+  <span style="color:var(--border-strong)">›</span>
+  <span>Akademie</span>
+</div>
+
+<div class="page">
+
+  <!-- Page Head -->
+  <div class="page-head">
+    <div class="crumb">HR · Akademie</div>
+    <h1>HR-Akademie · Compliance &amp; Curriculum</h1>
+    <div class="subtitle">Read-Layer aus E-Learning-Modul · Kurs-Inhalte + Quiz-Logik in E-Learning</div>
+  </div>
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="lbl">Pflicht-Kurse aktiv</div>
+      <div class="big">8</div>
+      <div class="sub">Compliance-Curriculum 2026</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="lbl">MA on-track</div>
+      <div class="big">7/12</div>
+      <div class="sub">≥ 80 % Abdeckung</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="lbl">MA überfällig</div>
+      <div class="big">3</div>
+      <div class="sub">MR · TK · SB · offene Kurse</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="lbl">Akkreditierungen ablaufend (90d)</div>
+      <div class="big">2</div>
+      <div class="sub">Renewal bis 30.06.2026</div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab active" onclick="switchMainTab('compliance', this)">Compliance-Matrix</button>
+    <button class="tab" onclick="switchMainTab('curriculum', this)">Curriculum</button>
+    <button class="tab" onclick="switchMainTab('accreditations', this)">Akkreditierungen</button>
+  </nav>
+
+  <!-- ===== TAB 1: COMPLIANCE-MATRIX ===== -->
+  <div class="tab-pane active" id="pane-compliance">
+
+    <div class="filter-bar">
+      <select id="filter-sparte" onchange="applyFilters()">
+        <option value="">Sparte (Alle)</option>
+        <option>ARC</option>
+        <option>GT</option>
+        <option>ING</option>
+        <option>PUR</option>
+        <option>REM</option>
+      </select>
+      <select id="filter-role" onchange="applyFilters()">
+        <option value="">Rolle (Alle)</option>
+        <option>Admin</option>
+        <option>HoD</option>
+        <option>AM</option>
+        <option>CM</option>
+        <option>RA</option>
+        <option>BO</option>
+      </select>
+      <select id="filter-status" onchange="applyFilters()">
+        <option value="">Status (Alle)</option>
+        <option value="on-track">On-Track</option>
+        <option value="overdue">Überfällig</option>
+        <option value="complete">Komplett</option>
+      </select>
+      <button class="btn btn-amber btn-sm" onclick="alert('Reminder an 3 überfällige MA gesendet: MR · TK · SB')">
+        ⚠ Reminder senden an überfällige MA
+      </button>
+    </div>
+
+    <div class="matrix-wrapper">
+      <table class="compliance-matrix" id="compliance-table">
+        <thead>
+          <tr>
+            <th class="col-left" style="min-width:140px">MA</th>
+            <th class="col-left" style="min-width:60px">Rolle</th>
+            <th class="col-left" style="min-width:70px">Sparte</th>
+            <th title="DSGVO-Compliance 2026 · jährlich · alle Rollen">DSGVO<br>2026</th>
+            <th title="Headhunting-Methodik Update · jährlich · AM/CM/HoD">HH-<br>Update</th>
+            <th title="Praemium-Victoria Onboarding-Schulung · einmalig · alle neuen MA">Praemium<br>Onboard.</th>
+            <th title="Excel-Pivot Power-User · einmalig · BO/HoD/Admin">Excel<br>Pivot</th>
+            <th title="Active-Sourcing 2026 · jährlich · RA/CM">Active<br>Sourcing</th>
+            <th title="Stress-Test Kandidat-Interviews · einmalig · CM/AM">Interview<br>Stress-Test</th>
+            <th title="Mandats-Akquise &amp; Closing · jährlich · AM/HoD">Akquise<br>&amp; Closing</th>
+            <th title="ISO-27001 Security-Awareness · jährlich · alle Rollen">ISO-27001<br>Security</th>
+            <th style="min-width:130px">Gesamt</th>
+          </tr>
+        </thead>
+        <tbody id="matrix-body">
+
+          <!-- PW · Admin · ARC -->
+          <tr data-role="Admin" data-sparte="ARC" data-status="complete"
+              onclick="openMaDrawer('PW','Peter Wiederkehr','Admin','ARC')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">PW</div><span class="ma-name">Peter Wiederkehr</span></div></td>
+            <td class="col-left"><span class="role-pill admin">Admin</span></td>
+            <td class="col-left"><span class="chip-sparte arc">ARC</span></td>
+            <td><span class="cc done" title="Abgeschlossen 12.01.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 15.03.2025">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 08.11.2025">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 20.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:100%"></div></div>
+                <span class="pct green">100 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- JV · HoD · GT -->
+          <tr data-role="HoD" data-sparte="GT" data-status="complete"
+              onclick="openMaDrawer('JV','Jan Vogel','HoD','GT')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">Jan Vogel</span></div></td>
+            <td class="col-left"><span class="role-pill hod">HoD</span></td>
+            <td class="col-left"><span class="chip-sparte gt">GT</span></td>
+            <td><span class="cc done" title="Abgeschlossen 10.01.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 05.02.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 02.09.2024">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 14.11.2025">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 18.03.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 22.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:100%"></div></div>
+                <span class="pct green">100 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- LR · AM · ING -->
+          <tr data-role="AM" data-sparte="ING" data-status="on-track"
+              onclick="openMaDrawer('LR','Lucas Reber','AM','ING')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">LR</div><span class="ma-name">Lucas Reber</span></div></td>
+            <td class="col-left"><span class="role-pill am">AM</span></td>
+            <td class="col-left"><span class="chip-sparte ing">ING</span></td>
+            <td><span class="cc done" title="Abgeschlossen 14.01.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 28.02.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 15.07.2024">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 60 % · Frist 15.05.2026">⏳</span></td>
+            <td><span class="cc done" title="Abgeschlossen 10.04.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 25.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:86%"></div></div>
+                <span class="pct green">86 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- MR · CM · PUR — OVERDUE -->
+          <tr data-role="CM" data-sparte="PUR" data-status="overdue"
+              onclick="openMaDrawer('MR','Mara Reichlin','CM','PUR')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">MR</div><span class="ma-name">Mara Reichlin</span></div></td>
+            <td class="col-left"><span class="role-pill cm">CM</span></td>
+            <td class="col-left"><span class="chip-sparte pur">PUR</span></td>
+            <td><span class="cc overdue" title="Überfällig seit 28.02.2026 · 2. Reminder gesendet">✗</span></td>
+            <td><span class="cc done" title="Abgeschlossen 01.03.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 10.11.2024">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 22.02.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 08.04.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 30.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill amber" style="width:75%"></div></div>
+                <span class="pct amber">75 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- FK · AM · ARC -->
+          <tr data-role="AM" data-sparte="ARC" data-status="on-track"
+              onclick="openMaDrawer('FK','Fabian Kurz','AM','ARC')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">FK</div><span class="ma-name">Fabian Kurz</span></div></td>
+            <td class="col-left"><span class="role-pill am">AM</span></td>
+            <td class="col-left"><span class="chip-sparte arc">ARC</span></td>
+            <td><span class="cc done" title="Abgeschlossen 18.01.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 12.03.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 05.06.2024">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 20.04.2026">✓</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 40 % · Frist 30.05.2026">⏳</span></td>
+            <td><span class="cc done" title="Abgeschlossen 27.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:83%"></div></div>
+                <span class="pct green">83 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- SR · CM · GT -->
+          <tr data-role="CM" data-sparte="GT" data-status="on-track"
+              onclick="openMaDrawer('SR','Sofia Rütimann','CM','GT')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">SR</div><span class="ma-name">Sofia Rütimann</span></div></td>
+            <td class="col-left"><span class="role-pill cm">CM</span></td>
+            <td class="col-left"><span class="chip-sparte gt">GT</span></td>
+            <td><span class="cc done" title="Abgeschlossen 09.01.2026">✓</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 80 % · Frist 10.05.2026">⏳</span></td>
+            <td><span class="cc done" title="Abgeschlossen 20.08.2024">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 14.03.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 02.04.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 21.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:88%"></div></div>
+                <span class="pct green">88 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- NB · RA · ING -->
+          <tr data-role="RA" data-sparte="ING" data-status="on-track"
+              onclick="openMaDrawer('NB','Nina Bauer','RA','ING')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">NB</div><span class="ma-name">Nina Bauer</span></div></td>
+            <td class="col-left"><span class="role-pill ra">RA</span></td>
+            <td class="col-left"><span class="chip-sparte ing">ING</span></td>
+            <td><span class="cc done" title="Abgeschlossen 11.01.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 12.02.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 05.03.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 28.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:100%"></div></div>
+                <span class="pct green">100 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- TK · RA · ARC — OVERDUE -->
+          <tr data-role="RA" data-sparte="ARC" data-status="overdue"
+              onclick="openMaDrawer('TK','Thomas Kälin','RA','ARC')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">TK</div><span class="ma-name">Thomas Kälin</span></div></td>
+            <td class="col-left"><span class="role-pill ra">RA</span></td>
+            <td class="col-left"><span class="chip-sparte arc">ARC</span></td>
+            <td><span class="cc overdue" title="Überfällig seit 15.02.2026">✗</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 30 %">⏳</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 28.02.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc overdue" title="Überfällig seit 31.01.2026">✗</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill red" style="width:50%"></div></div>
+                <span class="pct red">50 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- AB · BO · GT -->
+          <tr data-role="BO" data-sparte="GT" data-status="on-track"
+              onclick="openMaDrawer('AB','Andrea Blum','BO','GT')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">AB</div><span class="ma-name">Andrea Blum</span></div></td>
+            <td class="col-left"><span class="role-pill bo">BO</span></td>
+            <td class="col-left"><span class="chip-sparte gt">GT</span></td>
+            <td><span class="cc done" title="Abgeschlossen 07.01.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 22.10.2024">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 03.12.2025">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 18.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:100%"></div></div>
+                <span class="pct green">100 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- DW · CM · REM -->
+          <tr data-role="CM" data-sparte="REM" data-status="on-track"
+              onclick="openMaDrawer('DW','Dominik Wirth','CM','REM')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">DW</div><span class="ma-name">Dominik Wirth</span></div></td>
+            <td class="col-left"><span class="role-pill cm">CM</span></td>
+            <td class="col-left"><span class="chip-sparte rem">REM</span></td>
+            <td><span class="cc done" title="Abgeschlossen 13.01.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 20.02.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 08.04.2025">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 11.03.2026">✓</span></td>
+            <td><span class="cc done" title="Abgeschlossen 25.04.2026">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc done" title="Abgeschlossen 24.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill green" style="width:100%"></div></div>
+                <span class="pct green">100 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- SB · AM · PUR — OVERDUE -->
+          <tr data-role="AM" data-sparte="PUR" data-status="overdue"
+              onclick="openMaDrawer('SB','Simon Brüggemann','AM','PUR')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">SB</div><span class="ma-name">Simon Brüggemann</span></div></td>
+            <td class="col-left"><span class="role-pill am">AM</span></td>
+            <td class="col-left"><span class="chip-sparte pur">PUR</span></td>
+            <td><span class="cc done" title="Abgeschlossen 16.01.2026">✓</span></td>
+            <td><span class="cc overdue" title="Überfällig seit 01.03.2026 · Reminder ausstehend">✗</span></td>
+            <td><span class="cc done" title="Abgeschlossen 30.11.2024">✓</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 20 %">⏳</span></td>
+            <td><span class="cc overdue" title="Überfällig seit 15.03.2026">✗</span></td>
+            <td><span class="cc done" title="Abgeschlossen 29.01.2026">✓</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill red" style="width:55%"></div></div>
+                <span class="pct red">55 %</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- KH · RA · ARC (neu ab 01.05.) -->
+          <tr data-role="RA" data-sparte="ARC" data-status="on-track"
+              onclick="openMaDrawer('KH','Kathrin Hofer','RA','ARC')">
+            <td class="col-left"><div class="ma-cell"><div class="ma-avatar">KH</div><span class="ma-name">Kathrin Hofer</span></div></td>
+            <td class="col-left"><span class="role-pill ra">RA</span></td>
+            <td class="col-left"><span class="chip-sparte arc">ARC</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 50 % · Frist 30.06.2026">⏳</span></td>
+            <td><span class="cc na" title="Nicht zutreffend (Rolle)">—</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 10 % · neu ab 01.05.">⏳</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc progress" title="Noch nicht gestartet · Frist 30.06.2026">⏳</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc na" title="Nicht zutreffend">—</span></td>
+            <td><span class="cc progress" title="In Bearbeitung · 40 %">⏳</span></td>
+            <td>
+              <div class="overall-cell">
+                <div class="bar"><div class="fill amber" style="width:20%"></div></div>
+                <span class="pct amber">20 %</span>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Legend -->
+    <div class="matrix-legend">
+      <div class="li"><span class="cc done" style="width:22px;height:20px;font-size:11px;">✓</span> Abgeschlossen</div>
+      <div class="li"><span class="cc progress" style="width:22px;height:20px;font-size:11px;">⏳</span> In Bearbeitung</div>
+      <div class="li"><span class="cc overdue" style="width:22px;height:20px;font-size:11px;">✗</span> Überfällig</div>
+      <div class="li"><span class="cc na" style="width:22px;height:20px;font-size:14px;">—</span> Nicht zutreffend (Rolle)</div>
+      <span style="margin-left:auto;">Klick auf Zeile → MA-Detail-Drawer</span>
+    </div>
+
+  </div><!-- /pane-compliance -->
+
+
+  <!-- ===== TAB 2: CURRICULUM ===== -->
+  <div class="tab-pane" id="pane-curriculum">
+
+    <div class="curriculum-grid">
+
+      <!-- AM -->
+      <div class="curr-card am">
+        <h3><span class="role-pill am">AM</span> Account Manager</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Headhunting-Methodik Update</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Stress-Test Kandidat-Interviews</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Mandats-Akquise &amp; Closing</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CM -->
+      <div class="curr-card cm">
+        <h3><span class="role-pill cm">CM</span> Consultant Manager</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Headhunting-Methodik Update</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Active-Sourcing 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Stress-Test Kandidat-Interviews</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- RA -->
+      <div class="curr-card ra">
+        <h3><span class="role-pill ra">RA</span> Researcher / Analyst</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Active-Sourcing 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- BO -->
+      <div class="curr-card bo">
+        <h3><span class="role-pill bo">BO</span> Back-Office</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Excel-Pivot Power-User</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- HoD -->
+      <div class="curr-card hod">
+        <h3><span class="role-pill hod">HoD</span> Head of Department</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Headhunting-Methodik Update</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Excel-Pivot Power-User</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Mandats-Akquise &amp; Closing</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Admin -->
+      <div class="curr-card admin">
+        <h3><span class="role-pill admin">Admin</span> Administration / GL</h3>
+        <ul>
+          <li>
+            <span class="kurs-name">DSGVO-Compliance 2026</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Praemium-Victoria Onboarding-Schulung</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">Excel-Pivot Power-User</span>
+            <span class="kurs-meta"><span class="freq-pill einmalig">einmalig</span> Pflicht</span>
+          </li>
+          <li>
+            <span class="kurs-name">ISO-27001 Security-Awareness</span>
+            <span class="kurs-meta"><span class="freq-pill jaehrlich">jährlich</span> Pflicht</span>
+          </li>
+        </ul>
+      </div>
+
+    </div><!-- /curriculum-grid -->
+
+    <div class="curr-footer">
+      <div style="font-size:12.5px; color:var(--text-light);">
+        Curriculum-Änderungen aktivieren E-Learning-Kurs-Zuweisungen im Modul · Kurs-Inhalte dort pflegen
+      </div>
+      <button class="btn btn-primary" onclick="openDrawer('drawer-curriculum-edit')">
+        + Curriculum-Update (Admin)
+      </button>
+    </div>
+
+  </div><!-- /pane-curriculum -->
+
+
+  <!-- ===== TAB 3: AKKREDITIERUNGEN ===== -->
+  <div class="tab-pane" id="pane-accreditations">
+
+    <div class="filter-bar" style="margin-bottom:14px;">
+      <select>
+        <option>Status (Alle)</option>
+        <option>Aktiv</option>
+        <option>Renewal pending</option>
+        <option>Abgelaufen</option>
+      </select>
+      <select>
+        <option>MA (Alle)</option>
+        <option>PW</option><option>JV</option><option>LR</option>
+        <option>MR</option><option>FK</option><option>SR</option>
+        <option>NB</option><option>TK</option><option>AB</option>
+        <option>DW</option><option>SB</option><option>KH</option>
+      </select>
+    </div>
+
+    <div class="table-card">
+      <table class="accred-table">
+        <thead>
+          <tr>
+            <th>MA</th>
+            <th>Akkreditierung</th>
+            <th>Erworben</th>
+            <th>Ablauf</th>
+            <th>Restlaufzeit</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr onclick="openMaDrawer('PW','Peter Wiederkehr','Admin','ARC')">
+            <td><div class="ma-cell"><div class="ma-avatar">PW</div><span class="ma-name">PW</span></div></td>
+            <td><strong>Scheelen ASSESS 5.0 Certified</strong></td>
+            <td>15.06.2025</td>
+            <td>14.06.2027</td>
+            <td><span class="days-pill ok">776 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('PW','Peter Wiederkehr','Admin','ARC')">
+            <td><div class="ma-cell"><div class="ma-avatar">PW</div><span class="ma-name">PW</span></div></td>
+            <td><strong>DSGVO-Datenschutzbeauftragten-Zertifikat</strong></td>
+            <td>22.03.2024</td>
+            <td>21.03.2026</td>
+            <td><span class="days-pill danger">Abgelaufen</span></td>
+            <td><span class="status-expired">✗ Abgelaufen</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Erneuern</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('JV','Jan Vogel','HoD','GT')">
+            <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">JV</span></div></td>
+            <td><strong>ISO-27001 Lead-Auditor</strong></td>
+            <td>10.09.2023</td>
+            <td>09.09.2026</td>
+            <td><span class="days-pill warn">132 Tage</span></td>
+            <td><span class="status-renewal">⟳ Renewal pending</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Renewal planen</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('JV','Jan Vogel','HoD','GT')">
+            <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">JV</span></div></td>
+            <td><strong>Scheelen MDI Certified Practitioner</strong></td>
+            <td>18.04.2024</td>
+            <td>17.04.2026</td>
+            <td><span class="days-pill danger">13 Tage</span></td>
+            <td><span class="status-renewal">⟳ Renewal pending</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Renewal planen</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('LR','Lucas Reber','AM','ING')">
+            <td><div class="ma-cell"><div class="ma-avatar">LR</div><span class="ma-name">LR</span></div></td>
+            <td><strong>Scheelen ASSESS 5.0 Certified</strong></td>
+            <td>20.11.2024</td>
+            <td>19.11.2026</td>
+            <td><span class="days-pill ok">568 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('MR','Mara Reichlin','CM','PUR')">
+            <td><div class="ma-cell"><div class="ma-avatar">MR</div><span class="ma-name">MR</span></div></td>
+            <td><strong>DCV Diagnostik-Lizenz</strong></td>
+            <td>05.02.2025</td>
+            <td>04.02.2028</td>
+            <td><span class="days-pill ok">1010 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('FK','Fabian Kurz','AM','ARC')">
+            <td><div class="ma-cell"><div class="ma-avatar">FK</div><span class="ma-name">FK</span></div></td>
+            <td><strong>Scheelen Relief Certified</strong></td>
+            <td>14.07.2024</td>
+            <td>13.07.2026</td>
+            <td><span class="days-pill warn">74 Tage</span></td>
+            <td><span class="status-renewal">⟳ Renewal pending</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Renewal planen</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('SR','Sofia Rütimann','CM','GT')">
+            <td><div class="ma-cell"><div class="ma-avatar">SR</div><span class="ma-name">SR</span></div></td>
+            <td><strong>DCV Diagnostik-Lizenz</strong></td>
+            <td>12.09.2024</td>
+            <td>11.09.2027</td>
+            <td><span class="days-pill ok">865 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('NB','Nina Bauer','RA','ING')">
+            <td><div class="ma-cell"><div class="ma-avatar">NB</div><span class="ma-name">NB</span></div></td>
+            <td><strong>Scheelen MDI Certified Practitioner</strong></td>
+            <td>30.10.2025</td>
+            <td>29.10.2027</td>
+            <td><span class="days-pill ok">912 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('AB','Andrea Blum','BO','GT')">
+            <td><div class="ma-cell"><div class="ma-avatar">AB</div><span class="ma-name">AB</span></div></td>
+            <td><strong>ISO-27001 Lead-Auditor</strong></td>
+            <td>08.06.2022</td>
+            <td>07.06.2025</td>
+            <td><span class="days-pill danger">Abgelaufen</span></td>
+            <td><span class="status-expired">✗ Abgelaufen</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Erneuern</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('DW','Dominik Wirth','CM','REM')">
+            <td><div class="ma-cell"><div class="ma-avatar">DW</div><span class="ma-name">DW</span></div></td>
+            <td><strong>Scheelen EQ i Certified</strong></td>
+            <td>03.01.2026</td>
+            <td>02.01.2028</td>
+            <td><span class="days-pill ok">977 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+          <tr onclick="openMaDrawer('JV','Jan Vogel','HoD','GT')">
+            <td><div class="ma-cell"><div class="ma-avatar">JV</div><span class="ma-name">JV</span></div></td>
+            <td><strong>DSGVO-Datenschutzbeauftragten-Zertifikat</strong></td>
+            <td>15.05.2025</td>
+            <td>14.05.2027</td>
+            <td><span class="days-pill ok">744 Tage</span></td>
+            <td><span class="status-active">● Aktiv</span></td>
+            <td><button class="btn btn-sm" onclick="event.stopPropagation()">Details</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /pane-accreditations -->
+
+  <!-- Info Banner -->
+  <div class="info-banner">
+    Kurs-Inhalte + Quiz-Logik im <a href="../elearn/elearn.html">E-Learning-Modul</a> ·
+    diese Ansicht ist der HR-fokussierte Compliance-View (Read-Layer).
+    Änderungen am Curriculum aktivieren Kurs-Zuweisungen im E-Learning-Modul automatisch.
+  </div>
+
+</div><!-- /page -->
+
+
+<!-- ===== DRAWER OVERLAY ===== -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+
+<!-- ===== DRAWER 1: CURRICULUM BEARBEITEN ===== -->
+<aside class="drawer" id="drawer-curriculum-edit">
+  <div class="drawer-head">
+    <div>
+      <h3>Curriculum bearbeiten</h3>
+      <div class="sub">Admin-Funktion · Änderungen aktivieren E-Learning-Zuweisungen</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <button class="dtab active" onclick="switchDrawerTab('curriculum-edit', 'kurs', this)">Kurs</button>
+    <button class="dtab" onclick="switchDrawerTab('curriculum-edit', 'zielgruppe', this)">Zielgruppe</button>
+    <button class="dtab" onclick="switchDrawerTab('curriculum-edit', 'frequenz', this)">Frequenz</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Kurs Tab -->
+    <div class="drawer-pane active" id="curriculum-edit-kurs">
+      <div class="field-group">
+        <label>Kurs-Titel</label>
+        <input type="text" value="DSGVO-Compliance 2026" placeholder="Kurs-Bezeichnung">
+      </div>
+      <div class="field-group">
+        <label>Beschreibung</label>
+        <textarea placeholder="Kurzbeschreibung des Pflicht-Kurses...">Jährliche Pflichtschulung zu Datenschutz-Grundlagen, DSGVO-Updates und praktischen Handlungsanweisungen für den Recruiting-Alltag.</textarea>
+      </div>
+      <div class="field-group">
+        <label>Verknüpfter E-Learning-Kurs</label>
+        <select>
+          <option selected>DSGVO-Compliance 2026 (elearn-course #14)</option>
+          <option>Headhunting-Methodik Update (elearn-course #7)</option>
+          <option>Active-Sourcing 2026 (elearn-course #12)</option>
+          <option>ISO-27001 Security-Awareness (elearn-course #3)</option>
+          <option>— kein E-Learning-Kurs verknüpft —</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>E-Learning-Kurs-Link (optional)</label>
+        <input type="url" placeholder="https://..." value="">
+      </div>
+      <div class="field-group">
+        <label>Priorität</label>
+        <select>
+          <option selected>Hoch · bei Überfälligkeit eskaliert</option>
+          <option>Mittel · Reminder ohne Eskalation</option>
+          <option>Niedrig · kein automatischer Reminder</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Zielgruppe Tab -->
+    <div class="drawer-pane" id="curriculum-edit-zielgruppe">
+      <p style="font-size:12.5px; color:var(--text-light); margin-bottom:14px;">
+        Welche Rollen müssen diesen Kurs absolvieren? Matrix-Cells für nicht-zutreffende Rollen werden als — angezeigt.
+      </p>
+      <div class="field-group">
+        <label>Pflicht für Rollen</label>
+        <div class="role-checkboxes">
+          <label class="checked"><input type="checkbox" checked> AM</label>
+          <label class="checked"><input type="checkbox" checked> CM</label>
+          <label class="checked"><input type="checkbox" checked> RA</label>
+          <label class="checked"><input type="checkbox" checked> BO</label>
+          <label class="checked"><input type="checkbox" checked> HoD</label>
+          <label class="checked"><input type="checkbox" checked> Admin</label>
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:14px;">
+        <label>Gilt auch für neue MA (Onboarding)</label>
+        <select>
+          <option selected>Ja · automatisch zugewiesen bei Eintritt</option>
+          <option>Nein · nur für bestehende MA</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Frequenz Tab -->
+    <div class="drawer-pane" id="curriculum-edit-frequenz">
+      <div class="field-group">
+        <label>Wiederholungs-Zyklus</label>
+        <select>
+          <option selected>Jährlich · Deadline jeweils 31.01.</option>
+          <option>Einmalig · kein Renewal</option>
+          <option>2-jährlich · alle 24 Monate</option>
+          <option>Quartalsweise</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Frist-Datum (aktueller Zyklus)</label>
+        <input type="date" value="2027-01-31">
+      </div>
+      <div class="field-group">
+        <label>Vorlauf-Reminder (Tage vor Frist)</label>
+        <select>
+          <option>30 Tage</option>
+          <option selected>60 Tage</option>
+          <option>90 Tage</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Eskalations-Schwelle (Tage nach Frist)</label>
+        <select>
+          <option>7 Tage</option>
+          <option selected>14 Tage → HoD/Admin benachrichtigt</option>
+          <option>30 Tage</option>
+        </select>
+      </div>
+    </div>
+
+  </div><!-- /drawer-body -->
+  <div class="drawer-footer">
+    <button class="btn" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn btn-primary" onclick="alert('Curriculum gespeichert · E-Learning-Zuweisungen aktualisiert.'); closeDrawer()">Speichern &amp; aktivieren</button>
+  </div>
+</aside><!-- /drawer-curriculum-edit -->
+
+
+<!-- ===== DRAWER 2: MA COMPLIANCE-DETAILS ===== -->
+<aside class="drawer" id="drawer-ma-compliance-detail">
+  <div class="drawer-head">
+    <div>
+      <h3 id="drawer-ma-name">MA Compliance-Details</h3>
+      <div class="sub" id="drawer-ma-meta">Rolle · Sparte</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <button class="dtab active" onclick="switchDrawerTab('ma-compliance', 'kurse', this)">Kurs-Liste</button>
+    <button class="dtab" onclick="switchDrawerTab('ma-compliance', 'history', this)">History</button>
+    <button class="dtab" onclick="switchDrawerTab('ma-compliance', 'akkred', this)">Akkreditierungen</button>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Kurs-Liste Tab -->
+    <div class="drawer-pane active" id="ma-compliance-kurse">
+      <div id="ma-kurs-list">
+        <div class="course-row">
+          <span class="ico">✅</span>
+          <div class="body">
+            <strong>DSGVO-Compliance 2026</strong>
+            <div class="meta">Abgeschlossen · 12.01.2026 · 100 % · Zertifikat vorhanden</div>
+          </div>
+          <span class="status-tag done">Abgeschlossen</span>
+        </div>
+        <div class="course-row">
+          <span class="ico">⏳</span>
+          <div class="body">
+            <strong>Headhunting-Methodik Update</strong>
+            <div class="meta">In Bearbeitung · 60 % · Frist 15.05.2026</div>
+          </div>
+          <span class="status-tag prog">In Bearbeitung</span>
+        </div>
+        <div class="course-row">
+          <span class="ico">✅</span>
+          <div class="body">
+            <strong>Praemium-Victoria Onboarding-Schulung</strong>
+            <div class="meta">Abgeschlossen · 15.03.2025 · einmalig · erledigt</div>
+          </div>
+          <span class="status-tag done">Abgeschlossen</span>
+        </div>
+        <div class="course-row">
+          <span class="ico">✅</span>
+          <div class="body">
+            <strong>Stress-Test Kandidat-Interviews</strong>
+            <div class="meta">Abgeschlossen · 08.04.2026 · einmalig · erledigt</div>
+          </div>
+          <span class="status-tag done">Abgeschlossen</span>
+        </div>
+        <div class="course-row">
+          <span class="ico">✅</span>
+          <div class="body">
+            <strong>Mandats-Akquise &amp; Closing</strong>
+            <div class="meta">Abgeschlossen · 10.04.2026 · jährlich</div>
+          </div>
+          <span class="status-tag done">Abgeschlossen</span>
+        </div>
+        <div class="course-row">
+          <span class="ico">✅</span>
+          <div class="body">
+            <strong>ISO-27001 Security-Awareness</strong>
+            <div class="meta">Abgeschlossen · 25.01.2026 · 100 %</div>
+          </div>
+          <span class="status-tag done">Abgeschlossen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div class="drawer-pane" id="ma-compliance-history">
+      <div class="history-row">
+        <span class="date">25.01.2026</span>
+        <div class="body">
+          <strong>ISO-27001 Security-Awareness abgeschlossen</strong>
+          <div class="note">Score 92 % · Zertifikat ausgestellt · E-Learning-Modul</div>
+        </div>
+      </div>
+      <div class="history-row">
+        <span class="date">12.01.2026</span>
+        <div class="body">
+          <strong>DSGVO-Compliance 2026 abgeschlossen</strong>
+          <div class="note">Score 100 % · Pflicht-Kurs erfüllt</div>
+        </div>
+      </div>
+      <div class="history-row">
+        <span class="date">10.04.2026</span>
+        <div class="body">
+          <strong>Mandats-Akquise &amp; Closing abgeschlossen</strong>
+          <div class="note">Jährlicher Kurs · Quiz bestanden (88 %)</div>
+        </div>
+      </div>
+      <div class="history-row">
+        <span class="date">08.04.2026</span>
+        <div class="body">
+          <strong>Stress-Test Kandidat-Interviews abgeschlossen</strong>
+          <div class="note">Einmalig · bestanden · Trainer-Bewertung: 8/10</div>
+        </div>
+      </div>
+      <div class="history-row">
+        <span class="date">15.03.2025</span>
+        <div class="body">
+          <strong>Praemium-Victoria Onboarding-Schulung abgeschlossen</strong>
+          <div class="note">Onboarding-Pflicht · einmalig · abgehakt</div>
+        </div>
+      </div>
+      <div class="history-row">
+        <span class="date">14.01.2026</span>
+        <div class="body">
+          <strong>Reminder: Headhunting-Methodik Update</strong>
+          <div class="note">Erster automatischer Reminder gesendet · Kurs gestartet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Akkreditierungen Tab -->
+    <div class="drawer-pane" id="ma-compliance-akkred">
+      <div class="accred-row">
+        <div class="body">
+          <strong>Scheelen ASSESS 5.0 Certified</strong>
+          <div class="meta">Erworben 15.06.2025 · Ablauf 14.06.2027 · 776 Tage</div>
+        </div>
+        <span class="status-active">● Aktiv</span>
+      </div>
+      <div class="accred-row">
+        <div class="body">
+          <strong>DSGVO-Datenschutzbeauftragten-Zertifikat</strong>
+          <div class="meta">Erworben 22.03.2024 · Abgelaufen 21.03.2026</div>
+        </div>
+        <span class="status-expired">✗ Abgelaufen</span>
+      </div>
+      <div style="margin-top:12px; text-align:center;">
+        <button class="btn btn-sm btn-primary" onclick="alert('Renewal-Prozess gestartet.')">+ Renewal erfassen</button>
+      </div>
+    </div>
+
+  </div><!-- /drawer-body -->
+  <div class="drawer-footer">
+    <button class="btn" onclick="closeDrawer()">Schliessen</button>
+    <button class="btn btn-amber" onclick="alert('Reminder an MA gesendet.')">Reminder senden</button>
+  </div>
+</aside><!-- /drawer-ma-compliance-detail -->
+
+
+<script>
+  /* ---- Tab Switcher (Main) ---- */
+  function switchMainTab(id, btn) {
+    document.querySelectorAll('.tab-bar .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('pane-' + id).classList.add('active');
+  }
+
+  /* ---- Drawer ---- */
+  function openDrawer(id) {
+    document.getElementById('drawer-overlay').classList.add('open');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer-overlay').classList.remove('open');
+    document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+
+  /* ---- MA Drawer (Compliance Detail) ---- */
+  function openMaDrawer(kuerzel, name, rolle, sparte) {
+    document.getElementById('drawer-ma-name').textContent = name + ' · Compliance-Details';
+    document.getElementById('drawer-ma-meta').textContent = rolle + ' · ' + sparte + ' · Akademie-Übersicht';
+    // Reset drawer tabs to first tab
+    switchDrawerTab('ma-compliance', 'kurse',
+      document.querySelector('#drawer-ma-compliance-detail .dtab'));
+    openDrawer('drawer-ma-compliance-detail');
+  }
+
+  /* ---- Drawer Tab Switcher ---- */
+  function switchDrawerTab(drawerId, tabId, btn) {
+    var drawer = document.getElementById('drawer-' + drawerId + '-detail') ||
+                 document.getElementById('drawer-' + drawerId);
+    if (!drawer) return;
+    drawer.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+    drawer.querySelectorAll('.drawer-pane').forEach(p => p.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    var pane = document.getElementById(drawerId.replace('-','') + '-' + tabId) ||
+               document.getElementById(drawerId + '-' + tabId);
+    if (pane) pane.classList.add('active');
+  }
+
+  /* ---- Filter Matrix ---- */
+  function applyFilters() {
+    var sparte = document.getElementById('filter-sparte').value.toLowerCase();
+    var role   = document.getElementById('filter-role').value.toLowerCase();
+    var status = document.getElementById('filter-status').value.toLowerCase();
+    document.querySelectorAll('#matrix-body tr').forEach(function(row) {
+      var rs = row.dataset.sparte ? row.dataset.sparte.toLowerCase() : '';
+      var rr = row.dataset.role   ? row.dataset.role.toLowerCase()   : '';
+      var rst= row.dataset.status ? row.dataset.status.toLowerCase() : '';
+      var show = true;
+      if (sparte && rs !== sparte) show = false;
+      if (role   && rr !== role)   show = false;
+      if (status && rst !== status) show = false;
+      row.style.display = show ? '' : 'none';
+    });
+  }
+
+  /* ---- Keyboard: Escape closes drawer ---- */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDrawer();
+  });
+</script>
+</body>
+</html>
