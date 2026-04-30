@@ -2324,3 +2324,147 @@
 | UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
 | UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
 
+
+## [2026-04-30 15:57] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 532 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 571 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 571 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 571 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 576 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 16:09] session-c61a5b74 | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1315 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-30 16:10] session-c61a5b74 | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1315 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-30 16:12] session-c61a5b74 | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 774 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 783 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-30 16:12] session-c61a5b74 | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 774 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 783 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-30 16:12] session-c61a5b74 | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 197 \| .ueber-grid { \| -> über |
+| UMLAUT \| 774 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 783 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-30 16:19] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 557 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 596 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 596 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 596 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 601 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 16:32] session-c61a5b74 | performance-dashboard.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 16:33] session-c61a5b74 | performance-dashboard.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 16:33] session-c61a5b74 | drift-log.md (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 38 \| - Z. 1376: "Multi-Serie ueber Zeit" (Tile-Type-Card-Description) \| -> über |
+| UMLAUT \| 39 \| - Z. 1531: "Werden Werte ueber-/unterschritten" (Anomaly-Detection-Hint) \| -> über |
+| UMLAUT \| 40 \| - Z. 1620: "ueber alle nicht-abgeschlossenen Prozesse" (Forecast-Formel) \| -> über |
+
+
+## [2026-04-30 16:33] session-c61a5b74 | log.md (6 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 4 \| - fix: 3× Umlaute-Substitut `ueber` → `über` (Z. 1376 Tile-Type-Desc, Z. 1531 An... \| -> über |
+| UMLAUT \| 567 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 606 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 606 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 606 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 611 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 16:56] session-c61a5b74 | performance-coverage.html (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1335 \| '<text x="480" y="262" text-anchor="middle" font-family="DM Sans, sans-serif" fo... \| -> prüfen |
+
+
+## [2026-04-30 16:57] session-c61a5b74 | performance-mitarbeiter.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 217 \| .ueber-grid { \| -> über |
+| UMLAUT \| 794 \| <button class="active" data-tab="ueber">Übersicht</button> \| -> über |
+| UMLAUT \| 803 \| <section class="ueber-grid"> \| -> über |
+
+
+## [2026-04-30 17:02] session-c61a5b74 | drift-log.md (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 80 \| - Z. 1376: "Multi-Serie ueber Zeit" (Tile-Type-Card-Description) \| -> über |
+| UMLAUT \| 81 \| - Z. 1531: "Werden Werte ueber-/unterschritten" (Anomaly-Detection-Hint) \| -> über |
+| UMLAUT \| 82 \| - Z. 1620: "ueber alle nicht-abgeschlossenen Prozesse" (Forecast-Formel) \| -> über |
+
+
+## [2026-04-30 17:02] session-c61a5b74 | log.md (6 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 16 \| - fix: 3× Umlaute-Substitut `ueber` → `über` (Z. 1376 Tile-Type-Desc, Z. 1531 An... \| -> über |
+| UMLAUT \| 579 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 618 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 618 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 618 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 623 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 17:45] session-c61a5b74 | commission-admin.html (2 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1240 \| function openLedgerDrawer(kuerzel, name, role) { \| -> Kürzel |
+| UMLAUT \| 1241 \| if (kuerzel) document.getElementById('ledDrawAvatar').textContent = kuerzel; \| -> Kürzel |
+
