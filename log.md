@@ -1,3 +1,13 @@
+## [2026-04-30] fix | Performance-Mockup P0-Lint-Fixes (Tier-3)
+
+- updated: `mockups/ERP Tools/performance/performance-dashboard.html`
+- fix: 3× Umlaute-Substitut `ueber` → `über` (Z. 1376 Tile-Type-Desc, Z. 1531 Anomaly-Hint, Z. 1620 Forecast-Formel)
+- audit: Sonnet-Subagent über 11 Perf-Files
+- audit-Korrektur: 2 vermutete DB-Tech-Violations (reports.html L878/884, admin.html L514) waren bereits in `ark-lint-skip`-Blöcken — Audit-Miscount
+- defer Tier-2: Drawer-Pattern-Konsistenz (4 Files mit `id=drawer-...` vs `data-drawer-key=`), data-open-drawer-Standardisierung, prefers-color-scheme, Mobile-Breakpoints — eigene Folge-Session
+
+---
+
 ## [2026-04-30] update | Performance-Mockup P1-Drawers (Phase-3-B1a Continuation)
 
 - updated: 6 Performance-Sub-Page-Mockups · +1050 Zeilen total

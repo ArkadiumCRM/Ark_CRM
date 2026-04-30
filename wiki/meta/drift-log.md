@@ -28,6 +28,31 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Performance-Mockup Tier-2/3 P0-Lint-Fixes
+
+✅ **DONE** Phase-3-B1a Tier-3 P0-Critical Lint-Violations fixed.
+
+**Audit-Find (Sonnet-Subagent):** 11 Performance-Mockup-Files auf ARK-Lint-Compliance + Pattern-Konsistenz audited. 3 echte CRITICAL-Violations entdeckt; 3 weitere Treffer waren bereits korrekt in `ark-lint-skip`-Blöcken gewrappt (Audit-Miscount korrigiert).
+
+**Resolution:** 3× Umlaute-Substitut `ueber` → `über` in `performance-dashboard.html`:
+- Z. 1376: "Multi-Serie ueber Zeit" (Tile-Type-Card-Description)
+- Z. 1531: "Werden Werte ueber-/unterschritten" (Anomaly-Detection-Hint)
+- Z. 1620: "ueber alle nicht-abgeschlossenen Prozesse" (Forecast-Formel)
+
+Alle waren in User-facing-Text, Pflicht-Fix per CLAUDE.md §Umlaute-Regel.
+
+**Audit-Report-Korrekturen:**
+- `reports.html` Z. 878+884 (`v_perf_forecast_q_audit`): bereits in `<!-- ark-lint-skip:begin reason=admin-error-diagnose -->` (Audit hat Skip-Marker übersehen)
+- `admin.html` Z. 514 (`fact_metric_snapshot_*`): bereits in `<!-- ark-lint-skip:begin reason=admin-table-spec -->` (Audit hat Skip-Marker übersehen)
+
+**Tier-2 / weitere Tier-3 (deferred zu Folge-Session):**
+- 4 Files mit Mixed-Drawer-Pattern (`id="drawer-..."` vs `data-drawer-key=`): revenue · team · business · reports — Konsolidierung ~30-45min
+- `data-open-drawer` only in funnel.html — Standardisierung ~20min
+- `prefers-color-scheme` media query in 0 Files — ~60min für alle 11
+- Mobile-Breakpoints (≤768px) fehlen in allen 11 Files — Mockup-Limitation, nicht Lint-blocker
+
+---
+
 ## [2026-04-30] Resolution · Performance-Mockup P1-Drawers (Phase-3.1 vervollständigt)
 
 ✅ **DONE** Phase-3-Branch B1a P1-High: 11 P1-Drawer in 6 Performance-Sub-Page-Mockups implementiert.
