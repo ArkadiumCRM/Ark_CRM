@@ -28,6 +28,26 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Outlook-Failsafe-Konzept
+
+✅ **DOCUMENTED** (overview.md "implementation status unclear"): Outlook-Failsafe-Strategie konsolidiert.
+
+**Find:** Failsafe-Mechanismen waren in mehreren Files verteilt (Email-Spec Token-Erneuern, Backend-v2.8 §42 + Runbook 4, email-system.md), aber kein Single-Source-Index. Send-Queue-Retry-Policy beim Email-Send fehlte komplett.
+
+**Resolution:**
+- `wiki/concepts/outlook-failsafe.md` (~10.5 KB) — Index + Send-Queue-Retry-Policy
+- 7 Failure-Modes klassifiziert (Token-Expiry · Token-Revoked · MS-Graph 5xx · 429 · Komplett-Outage · Network · Webhook-Loss)
+- Send-Queue-Architektur (`fact_email_send_queue`) + Worker (`email.send.worker.ts`) + Backoff-Schedules pro Error-Klasse
+- Admin-Surface-Mapping (Email-Modul Status-Card · Admin Tab 1 · Admin Tab 9 Sub-Tabs 9-1/9-2/9-3)
+- 5 offene Fragen für Folge-Diskussion
+
+**Sync-Bedarf (Folge-Session):**
+- `ARK_DATABASE_SCHEMA_PATCH_v1_6_to_v1_7_email_queue.md` — Tabelle `fact_email_send_queue`
+- `ARK_BACKEND_ARCHITECTURE_PATCH_v2_8_to_v2_9_email_failsafe.md` — Worker + Events
+- `ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_email_outbox.md` — Outbox-Indicator + Dead-Letter-Drawer
+
+---
+
 ## [2026-04-30] Resolution · Stammdaten-Vollansicht Schema + Interactions
 
 ✅ **RESOLVED** Action Item #4 [2026-04-20] (Carryover): Stammdaten-Vollansicht-Spec-Lücke.

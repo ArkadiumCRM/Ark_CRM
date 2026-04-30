@@ -1,3 +1,20 @@
+## [2026-04-30] create | Outlook-Failsafe-Konzept + Send-Queue-Retry-Policy
+
+- created: `wiki/concepts/outlook-failsafe.md` (~10.5 KB · 7 Sections)
+- approach: Index + Konsolidierung existierender Specs + neue Send-Queue-Retry-Policy
+- coverage:
+  - Token-Lifecycle (bereits spec'd in Email-Spec §Token-Erneuern + Backend-v2.8 §42)
+  - Admin-Surface-Mapping (Email-Modul · Admin Tab 1 · Admin Tab 9 Sub-Tabs 9-1/9-2/9-3)
+  - **Send-Queue-Retry-Policy NEU** — Failure-Klassifizierung (8 Error-Klassen), Backoff-Schedules, `fact_email_send_queue`-Tabelle, `email.send.worker.ts`
+  - Send-Queue-Drain bei Token-Reauth
+  - User-Surface (Compose-Toast · Outbox-Indicator · Dead-Letter-Drawer)
+  - MS-Graph Komplett-Outage-Verhalten (verlinkt zu Runbook 4)
+- Findings: 80% bereits spec'd, eigentliche Lücke war Send-Queue-Retry beim Email-Send (5xx/429/Timeout)
+- offene Fragen: 5 (Queue-Tabelle vs fact_event_queue, Webhook-Verlust-Watchdog, Slack-Notification, Banner-Scope, Retention)
+- pending Patches (Folge-Session): DB v1.6 → v1.7 (email_send_queue), Backend v2.8 → v2.9 (Failsafe), Frontend v1.13 → v1.14 (Outbox)
+
+---
+
 ## [2026-04-30] create | Stammdaten-Vollansicht Schema + Interactions v0.1
 
 - created: `specs/ARK_STAMMDATEN_VOLLANSICHT_SCHEMA_v0_1.md` (~34 KB · 15 Sections)
