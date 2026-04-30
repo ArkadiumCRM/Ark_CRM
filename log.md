@@ -1,3 +1,15 @@
+## [2026-04-30] revert | hr-absence-calendar.html entfernt (Redundanz mit Zeit-Modul)
+
+- removed: `mockups/ERP Tools/hr/hr-absence-calendar.html` (Peter-Decision · Abwesenheiten leben in Zeit-Modul)
+- updated: `specs/ARK_HR_TOOL_SCHEMA_v0_2.md` Z. 16 source-Reference entfernt
+- updated: `mockups/ERP Tools/hr/hr.html` Sidebar-Eintrag „Abwesenheiten" entfernt
+- backup: `backups/hr-absence-calendar.html.2026-04-30-2030-pre-delete.bak`
+- bleibt: `hr-academy-dashboard.html` (kein Konflikt mit E-Learning · HR-Compliance-View)
+- HR-Mockups: 9 → 8
+- Cross-Module-Pattern: HR-Sicht auf Abwesenheiten via Link zu `zeit-abwesenheiten.html`
+
+---
+
 ## [2026-04-30] create | HR 2 fehlende Mockups · hr-absence-calendar + hr-academy-dashboard
 
 - created: `mockups/ERP Tools/hr/hr-absence-calendar.html` (1062 Z.)

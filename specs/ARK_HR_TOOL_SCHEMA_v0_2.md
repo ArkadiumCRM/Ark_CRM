@@ -13,7 +13,6 @@ sources: [
   "mockups/ERP Tools/hr/hr-mitarbeiter-self.html",
   "mockups/ERP Tools/hr/hr-warnings-disciplinary.html",
   "mockups/ERP Tools/hr/hr-onboarding-editor.html",
-  "mockups/ERP Tools/hr/hr-absence-calendar.html",
   "mockups/ERP Tools/hr/hr-provisionsvertrag-editor.html",
   "mockups/ERP Tools/hr/hr-academy-dashboard.html",
   "specs/ARK_ZEIT_SCHEMA_v0_1.md"

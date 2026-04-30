@@ -28,6 +28,25 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Revert · hr-absence-calendar.html entfernt (Redundanz mit Zeit-Modul)
+
+❌ **REVERTED** Teil-Resolution: `hr-absence-calendar.html` (commit d8a5972) wieder gelöscht.
+
+**Begründung:** Peter-Decision 2026-04-30 — Abwesenheiten leben **bereits im Zeit-Modul** (`mockups/ERP Tools/zeit/zeit-abwesenheiten.html`). HR-eigener Kalender wäre redundant. Spec-Reference in `ARK_HR_TOOL_SCHEMA_v0_2.md` Z. 16 war ein Architektur-Fehler.
+
+**Korrekturen:**
+- `git rm "mockups/ERP Tools/hr/hr-absence-calendar.html"` (Backup: `backups/hr-absence-calendar.html.2026-04-30-2030-pre-delete.bak`)
+- `specs/ARK_HR_TOOL_SCHEMA_v0_2.md`: source-Reference entfernt (Z. 16)
+- `mockups/ERP Tools/hr/hr.html`: Sidebar-Eintrag „Abwesenheiten" entfernt · „Akademie" bleibt einziger Übersichten-Eintrag
+
+**Cross-Module-Pattern:** HR-Sicht auf Abwesenheiten erfolgt über Cross-Modul-Link zu `zeit-abwesenheiten.html` (Read-Only-View) statt eigener HR-Kalender-Mockup. Falls HR später spezifische Aggregat-Views braucht, bleibt das eine HR-Tab-Erweiterung in `zeit-abwesenheiten.html` (analog Performance-Modul-Cross-Reads).
+
+**Status nach Revert:**
+- HR-Mockups: 9 → **8**
+- `hr-academy-dashboard.html` bleibt (kein Redundanz-Konflikt mit E-Learning-Modul · HR-fokussierter Compliance-View)
+
+---
+
 ## [2026-04-30] Resolution · HR 2 fehlende Mockups gebaut
 
 ✅ **DONE** Audit-Finding (HR-Mockup-Spec-Inkonsistenz aus heutigem ERP-Komplett-Audit): `hr-absence-calendar.html` + `hr-academy-dashboard.html` waren in `ARK_HR_TOOL_SCHEMA_v0_2.md` als sources referenziert (Z. 18-19), existierten aber nicht. Direkter Spec-Mockup-Widerspruch.
