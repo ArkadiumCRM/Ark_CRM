@@ -12,6 +12,35 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · HR-Gesamtsystem-Patch v1.7 → v1.8 (HR-Sync 6/6 komplett)
+
+✅ **DONE** Folge-Item aus [2026-04-30] HR + Zeit 8-Patch-Bundle (Eintrag weiter unten): pending HR-Gesamtsystem v1.7 → v1.8 jetzt geschrieben.
+
+**Resolution:** Subagent (general-purpose, Sonnet) schrieb `specs/ARK_GESAMTSYSTEM_PATCH_v1_7_to_v1_8_hr.md` (28.5 KB · 402 Zeilen) nach Pattern-Vorlage `ARK_GESAMTSYSTEM_PATCH_v1_6_to_v1_7_zeit.md`.
+
+**Inhalt:**
+- Changelog v1.8 (HR-Modul Phase-3 v0.2)
+- Phase-3-ERP-Module-Liste-Update (HR „spec'd · 8 Mockups · 5/5 Sync" + Performance-Reviews-Migration ins HR-Modul)
+- Cross-Module-Integration · 6 Achsen (Zeit · Commission · E-Learning · Performance · Stammdaten · Billing)
+- 5 strategische Entscheidungen (Probezeit-Verlängerungs-Workflow · Praemium-Victoria-Renewal-Cycle · Onboarding-Editor-Pattern · Disciplinary-Warnings 6-Stufen-Eskalation · Domain-Owner-Prinzip)
+- Statistik-Block konsistent zu DB-Patch v1.8 (10 ENUMs · 11 Tabellen · 4 Views · 22 RLS · 29 Endpoints · 4 Worker · 16 Events · 11 Drawer)
+- Phase-Roadmap 3.HR.0 – 3.HR.4 + Phase 4/5 vertagt
+- Routing-Übersicht `/erp/hr/*` + Sidebar „Personal" mit 7 Einträgen
+
+**Sync-Coverage-Update:**
+- HR-Tool: 5/5 → **6/6** ✅ (DB v1.8 + Backend v2.10 + Stammdaten v1.7 + FE v1.15 + Gesamtsystem v1.8 + interner Schema-Patch v0.2)
+
+**Cross-Refs:**
+- Pattern-Vorlage: `specs/ARK_GESAMTSYSTEM_PATCH_v1_6_to_v1_7_zeit.md` (Zeit-Modul-Patch v1.7)
+- Source-Patches: 4 HR-Patches aus heutigem 8-Patch-Bundle + interner Schema-Patch v0.2
+- TBC offen: Phase-3.HR.3 Performance-Review-Integration · Phase-3.HR.4 Offboarding+Severance-Pay+Onboarding-Kostenverbuchung
+
+**Commit:** pending DIESER RUN
+
+**TBC offen:** 3 Acceptance-Items im Patch (Performance-Review-Integration · Offboarding-Billing-Scope · Severance-Pay-Modellierung) sind als Phase-3.HR.x markiert — keine Blocker für v1.8-Apply.
+
+---
+
 ## [2026-04-28] Resolution · ERP-Specs-Verzeichnis
 
 ✅ **RESOLVED** Action Item #3 [2026-04-20]: ERP-Specs-Verzeichnis-Konsolidierung.

@@ -1,3 +1,18 @@
+## [2026-04-30] feat | HR-Gesamtsystem-Patch v1.7 → v1.8 (schließt HR-Sync 6/6)
+
+- created: `specs/ARK_GESAMTSYSTEM_PATCH_v1_7_to_v1_8_hr.md` (28.5 KB · 402 Zeilen)
+- approach: Subagent (general-purpose · Sonnet) nach Pattern-Vorlage `ARK_GESAMTSYSTEM_PATCH_v1_6_to_v1_7_zeit.md`
+- output:
+  - 11 Sektionen (Zielbild · Changelog v1.8 · Phase-3-Modul-Update · Cross-Module 6 Achsen · 5 strategische Entscheidungen · Statistik · Phase-Roadmap 3.HR.0–3.HR.4 · Routing · Sync-Impact · Memory-Verweise · 14 Acceptance-Criteria)
+  - Cross-Module: HR ↔ Zeit · Commission · E-Learning · Performance · Stammdaten · Billing
+  - Strategische Entscheidungen: Probezeit-Verlängerung · Praemium-Victoria-Renewal · Onboarding-Editor · Disciplinary-Warnings · Domain-Owner-Prinzip
+  - TBC-Markierungen (3): Performance-Review-Integration · Offboarding+Billing · Severance-Pay
+- sync-coverage: HR-Tool 5/5 → **6/6** ✅ (Gesamtsystem nachgereicht)
+- updated: `wiki/meta/drift-log.md` (Resolution-Block oben)
+- pending: Apply-Reihenfolge in `Grundlagen MD/` — DB v1.8 → Backend v2.10 → Stammdaten v1.7 → FE v1.15 → Gesamtsystem v1.8
+
+---
+
 ## [2026-04-30] feat | HR + Zeit 8 Grundlagen-Sync-Patches (parallel Subagents)
 
 - created HR (4 Patches · ~104 KB):
