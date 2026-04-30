@@ -47,6 +47,27 @@
     --shadow-md: 0 12px 32px rgba(0,0,0,0.5);
   }
 
+  /* OS Dark-Mode-Detection (initial fallback) */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --accent: #7CB5E8; --accent-tint: rgba(124,181,232,0.12);
+      --gold: #D4A84B; --gold-tint: rgba(212,168,75,0.12); --gold-strong: #D4A84B;
+      --green: #3FB950; --green-tint: rgba(63,185,80,0.12);
+      --amber: #D29922; --amber-tint: rgba(210,153,34,0.12);
+      --red: #F85149; --red-tint: rgba(248,81,73,0.12);
+      --blocker: #F85149; --blocker-tint: rgba(248,81,73,0.18);
+      --info: #58A6FF; --info-tint: rgba(88,166,255,0.12);
+
+      --bg: #0E1116; --surface: #161B22; --surface-alt: #1D242D; --surface-sunk: #0E1116;
+      --text: #E6EDF3; --text-mid: #B6C0CC; --text-light: #8A95A8;
+      --border: #2A3340; --border-strong: #3A4454;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-md: 0 12px 32px rgba(0,0,0,0.5);
+    }
+  }
+
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {

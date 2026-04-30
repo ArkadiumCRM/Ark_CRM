@@ -62,6 +62,32 @@
     --red-soft: rgba(248, 81, 73, 0.14);
   }
 
+  /* OS Dark-Mode-Detection (initial fallback) */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E1116;
+      --surface: #161B22;
+      --surface-alt: #1D242D;
+      --surface-sunk: #0B0E12;
+      --text: #E6EDF3;
+      --text-mid: #B0BAC8;
+      --text-light: #7A869A;
+      --border: #2A323D;
+      --border-strong: #3A4350;
+      --accent: #7CB5E8;
+      --accent-soft: rgba(124, 181, 232, 0.12);
+      --gold: #D4A84B;
+      --gold-strong: #E5BC5E;
+      --gold-soft: rgba(212, 168, 75, 0.14);
+      --green: #3FB950;
+      --green-soft: rgba(63, 185, 80, 0.14);
+      --amber: #D29922;
+      --amber-soft: rgba(210, 153, 34, 0.14);
+      --red: #F85149;
+      --red-soft: rgba(248, 81, 73, 0.14);
+    }
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
@@ -1277,7 +1303,7 @@
     <div class="drawers-row">
 
       <!-- ─── DRAWER A · Forecast-Erklärung ─── -->
-      <div class="drawer" id="drawer-explain">
+      <div class="drawer" id="drawer-explain" data-drawer-key="explain">
         <div class="drawer-head">
           <div class="drawer-eyebrow">Forecast-Erklärung · Markov-Stage-Modell v0.1</div>
           <div class="drawer-title">Wie wird der Jahresende-Forecast berechnet?</div>
@@ -1378,7 +1404,7 @@
       </div>
 
       <!-- ─── DRAWER B · Forecast-Prozess ─── -->
-      <div class="drawer" id="drawer-process">
+      <div class="drawer" id="drawer-process" data-drawer-key="process">
         <div class="drawer-head">
           <div class="drawer-eyebrow">Prozess · MAN-2026-115 · Sparte ARC · Owner PW</div>
           <div class="drawer-title">Senior Architekt · Hochbau-Mandat Zürich</div>
@@ -1506,7 +1532,7 @@
       </div>
 
       <!-- ─── DRAWER C · Revenue-Attribution (Spec §4.4/130) ─── -->
-      <div class="drawer" id="drawer-attribution">
+      <div class="drawer" id="drawer-attribution" data-drawer-key="attribution">
         <div class="drawer-head">
           <div class="drawer-eyebrow">Revenue-Bar · Mai 2026 · CHF 248k · Sparte ARC</div>
           <div class="drawer-title">Revenue-Attribution Mai 2026</div>
@@ -1601,7 +1627,7 @@
       </div>
 
       <!-- ─── DRAWER D · Forecast-Override (Spec §4.4/133) — Standalone, separat von drawer-process Override-Tab ─── -->
-      <div class="drawer" id="drawer-forecast-override">
+      <div class="drawer" id="drawer-forecast-override" data-drawer-key="forecast-override">
         <div class="drawer-head">
           <div class="drawer-eyebrow">Forecast Jahresende · 31.12.2026 · Modell-Wert CHF 3.20 Mio</div>
           <div class="drawer-title">Forecast manuell &uuml;berschreiben</div>
