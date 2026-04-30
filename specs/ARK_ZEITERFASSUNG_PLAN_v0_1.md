@@ -537,13 +537,19 @@ GROUP BY mandate_id, billing_month, billing_year;
 
 ### 6.3 Neue Mockups
 
-| Mockup | Zweck | Priorität |
-|--------|-------|-----------|
-| `zeit-approvals.html` | Manager-Approval-Queue · batch-approve Wochen | P0 |
-| `zeit-billing.html` | Backoffice · Time-Mandat-Rechnungen generieren | P0 |
-| `zeit-reports.html` | Utilization-Report · Profit-per-Mandate · Trend-Charts | P1 |
-| `zeit-biometric-admin.html` | Scanner-Verwaltung + Enrollment-Termine | P2 |
-| `zeit-mobile.html` | Mobile Wochen-Quick-Entry (optional, hat Responsive schon) | P3 |
+**Update 2026-04-30:** Funktionen sind in existierende Mockups integriert worden (statt separate Files) — Pattern-Decision analog `hr-absence-calendar.html` (Cross-Modul-Funktion lebt in einem Hauptmockup).
+
+| Mockup (Plan) | Tatsächliche Realisierung | Status |
+|---------------|---------------------------|--------|
+| ~~`zeit-approvals.html` (P0)~~ | Integriert in `zeit-team.html` (H1 „Team · Zeit-Approvals" + Tab „Monats-Approvals" + Stempel-Antrag-Liste) | ✅ **integriert** |
+| ~~`zeit-billing.html` (P0)~~ | Integriert in **Billing-Modul** (`billing/billing-rechnungen.html` macht Time-Mandat-Rechnungen · Cross-Modul-Pattern: Billing ist Domain-Owner) | ✅ **integriert in Billing-Modul** |
+| ~~`zeit-reports.html` (P1)~~ | Teilweise integriert in `zeit-saldi.html` + `zeit-export.html` · Profit-per-Mandate + Trend-Charts überlappen mit Performance-Modul (`performance-revenue.html`) | 🟡 **teilweise** (Profit/Trend könnte zukünftig dediziert kommen) |
+| ~~`zeit-biometric-admin.html` (P2)~~ | Integriert in `zeit-admin.html` (Scanner-Access-Audit · 73b-Vereinbarungen · DSG-Audit revDSG Art. 5 Ziff. 4) | ✅ **integriert** |
+| ~~`zeit-mobile.html` (P3)~~ | Responsive bereits in existierenden Mockups (Plan-Notiz bestätigt) | ✅ **nicht nötig** |
+
+**Architektur-Pattern bestätigt:** Cross-Modul-Funktionen (Billing-Handover, Mobile-Responsive) leben in Domain-Owner-Mockups, nicht als duplicate Sub-Pages im Quell-Modul. Spart Wartungs-Aufwand und vermeidet Spec-Drift.
+
+**Verbleibende echte Lücke:** ggf. dediziertes `zeit-reports.html` für Profit-per-Mandate-Analytics — aber überlappt mit Performance-Modul, Bedarf Phase-3.2-Entscheidung.
 
 ---
 

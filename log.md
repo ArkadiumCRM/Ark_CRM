@@ -1,3 +1,12 @@
+## [2026-04-30] hygiene | Zeit-Plan-Spec §6.3 mit Realität-Marker aktualisiert
+
+- updated: `specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` §6.3 (Neue Mockups)
+- 5 Plan-Files strikethrough mit tatsächlicher Realisierungs-Map
+- Korrigiert ERP-Audit-Report-Aussage „4 P0/P1-Pages fehlen" — Funktionen sind in existierende Mockups integriert
+- Architektur-Pattern dokumentiert: Cross-Modul-Funktionen leben in Domain-Owner-Mockups
+
+---
+
 ## [2026-04-30] revert | hr-absence-calendar.html entfernt (Redundanz mit Zeit-Modul)
 
 - removed: `mockups/ERP Tools/hr/hr-absence-calendar.html` (Peter-Decision · Abwesenheiten leben in Zeit-Modul)

@@ -28,6 +28,30 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Hygiene · Zeit-Plan-Spec mit Realität-Marker aktualisiert
+
+✅ **DONE** Spec-Realität-Sync: `ARK_ZEITERFASSUNG_PLAN_v0_1.md` §6.3 aktualisiert.
+
+**Find:** ERP-Audit-Report (heute) flaggte 4 P0/P1/P2-Mockups als „missing" (zeit-approvals · zeit-billing · zeit-reports · zeit-biometric-admin · zeit-mobile). User-Klärung: Audit war zu literal — Funktionen sind bereits in existierende Mockups integriert worden (Pattern-Decision analog hr-absence-calendar-Revert).
+
+**Realität-Map (jetzt im Plan-Spec dokumentiert):**
+
+| Plan-File | Realisierung |
+|-----------|--------------|
+| ~~zeit-approvals.html~~ | `zeit-team.html` (H1 „Team · Zeit-Approvals") |
+| ~~zeit-billing.html~~ | `billing/billing-rechnungen.html` (Cross-Modul · Billing ist Domain-Owner) |
+| ~~zeit-reports.html~~ | Teilweise `zeit-saldi.html` + `zeit-export.html` · überlappt mit `performance-revenue.html` |
+| ~~zeit-biometric-admin.html~~ | `zeit-admin.html` (Scanner-Access-Audit · 73b · DSG) |
+| ~~zeit-mobile.html~~ | Responsive in existierenden Mockups |
+
+**Architektur-Pattern bestätigt:** Cross-Modul-Funktionen leben in Domain-Owner-Mockups, nicht als duplicate Sub-Pages. Spart Wartung + vermeidet Spec-Drift.
+
+**Audit-Methodik-Erkenntnis:** ERP-Audits sollten Funktional-Coverage-Check über alle Mockups einbeziehen, nicht nur Filename-vs-Plan-vergleichen. Selber Pattern wie hr-absence-calendar (gerade reverted).
+
+**Audit-Report-Korrektur (impliziert):** ERP-Module-Phase-Reife für Zeit ist NICHT „3 mit 4 fehlenden P0/P1-Pages", sondern „3 mit Cross-Modul-Pattern bestätigt".
+
+---
+
 ## [2026-04-30] Revert · hr-absence-calendar.html entfernt (Redundanz mit Zeit-Modul)
 
 ❌ **REVERTED** Teil-Resolution: `hr-absence-calendar.html` (commit d8a5972) wieder gelöscht.
