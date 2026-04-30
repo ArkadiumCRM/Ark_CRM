@@ -1,3 +1,15 @@
+## [2026-04-30] chore | Performance Tier-2/3 Pattern-Konsistenz + OS-Theme
+
+- Task A: Drawer-Pattern-Konsistenz · 4 Files (revenue · team · business · reports) · 12 Drawer mit `data-drawer-key=` additiv ergänzt
+- Task B: `data-open-drawer` Standardisierung · funnel.html · 5 HTML-Trigger entfernt, JS-Delegation behalten (sibling-conform)
+- Task C: `prefers-color-scheme` Media-Query · alle 11 Files · `:root:not([data-theme="light"])` Override-Pattern
+- approach: Subagent (general-purpose mit Sonnet) für Diversity-Rotation
+- lint: 0 Umlaute · 0 neue DB-Tech-Violations
+- commit: `6568897` · 11 Files · +287/-17 Zeilen
+- Phase-3-B1a komplett: 19 Drawer (P0+P1) + Tier-2/3-Polish abgeschlossen
+
+---
+
 ## [2026-04-30] fix | Performance-Mockup P0-Lint-Fixes (Tier-3)
 
 - updated: `mockups/ERP Tools/performance/performance-dashboard.html`

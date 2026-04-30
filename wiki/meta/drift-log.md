@@ -28,6 +28,48 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Performance-Mockup Tier-2/3 Pattern-Konsistenz + OS-Theme
+
+✅ **DONE** Phase-3-B1a Tier-2 + Tier-3-Theme: alle 3 Audit-Top-Items (#3, #4, #5) abgeschlossen.
+
+**Resolution:** Subagent (general-purpose mit Sonnet) implementierte 3 Tasks in einem Commit:
+
+**Task A — Drawer-Pattern-Konsistenz (4 Files · 12 Drawer):**
+| File | Drawer mit `data-drawer-key=` ergänzt |
+|------|----------------------------------------|
+| `performance-revenue.html` | 4 (explain · process · attribution · forecast-override) |
+| `performance-team.html` | 2 (team-member · goal-new) |
+| `performance-business.html` | 2 (business-mandant · sparte-overview) |
+| `performance-reports.html` | 4 (trigger · run-detail · template-config · template-new) |
+
+Additive: `id="drawer-..."` bleibt für Backward-Compat. JS-Lookup `data-drawer-key=` ODER `id=drawer-` funktioniert beide.
+
+**Task B — data-open-drawer Standardisierung:**
+- `performance-funnel.html`: 5× `data-open-drawer="funnel-process"`-Attribute entfernt (waren nur HTML-Trigger)
+- JS-Delegation auf Z. 1120 (`document.addEventListener('click', ...)`) bleibt — Pattern jetzt sibling-conform
+
+**Task C — prefers-color-scheme Media-Query (11 Files):**
+- Alle 11 Files bekommen `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }` Block
+- Override-Pattern: User-explizite `data-theme="light"` Wahl gewinnt über OS-Preference
+- Var-Set per File akkurat kopiert (3 Varianten erkannt: tint/shadow, soft, business + sparten, dashboard-eigene Naming)
+
+**Lint-Verifikation:**
+- 0 Umlaute-Violations
+- 0 neue DB-Tech-Violations (3 pre-existing in `ark-lint-skip` exempt)
+
+**Spec-Compliance bleibt:** 91% (Tier-2/3 ist Polish, keine neuen Drawer)
+
+**Commit:** `6568897` · 11 Files · +287/-17 Zeilen
+
+**B1a-Branch komplett abgeschlossen** — Phase-3.1-Performance-Mockup ist Production-Mockup-Quality:
+- ✅ 19 Drawer (P0+P1)
+- ✅ Alle 4 Spec-Flows unblocked
+- ✅ Lint-clean
+- ✅ Pattern-konsistent
+- ✅ OS-Dark-Mode-detection
+
+---
+
 ## [2026-04-30] Resolution · Performance-Mockup Tier-2/3 P0-Lint-Fixes
 
 ✅ **DONE** Phase-3-B1a Tier-3 P0-Critical Lint-Violations fixed.
