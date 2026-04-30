@@ -1,3 +1,16 @@
+## [2026-04-30] update | SessionStart-Hook · Detached-HEAD-Detection
+
+- updated: `.claude/hooks/session-overview.ps1` (+~50 Zeilen)
+- new: `git rev-parse`-Branch-Check + 4-fach-Klassifizierung (main/HEAD/?/other)
+- new: Branch-Status-Zeile in Session-Overview (`**Git-Branch:** ...`)
+- new: prominenter DETACHED-HEAD-Warnungs-Block mit Recovery-Anleitung
+- new: leichtgewichtiger Branch-Hinweis bei Non-Main-Branch (kein Hard-Block)
+- verifiziert: Hook-Run auf main produziert `main OK` im Output
+- drift-log: Action Item #1 [2026-04-20] RESOLVED
+- Variante H1 (SessionStart-Warning) gewählt statt H2 (PreToolUse-Block) wegen Edit-Performance
+
+---
+
 ## [2026-04-30] create | Outlook-Failsafe-Konzept + Send-Queue-Retry-Policy
 
 - created: `wiki/concepts/outlook-failsafe.md` (~10.5 KB · 7 Sections)

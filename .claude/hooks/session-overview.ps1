@@ -95,6 +95,51 @@ Tipp: ``/prime-ark`` fuehrt dich durch Sync-Review-Flow (Status a/b/c/d pro Eint
 "@
     }
 
+    # --- Git-Branch (Detached-HEAD-Detection per drift-log [2026-04-20] Action #1) ---
+    $gitBranch = '?'
+    try {
+        Push-Location $projectRoot
+        $gitBranch = (& git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+        Pop-Location
+        if (-not $gitBranch) { $gitBranch = '?' }
+    } catch {
+        try { Pop-Location } catch {}
+        $gitBranch = '?'
+    }
+
+    $branchInfo = switch -Wildcard ($gitBranch) {
+        'main'  { 'main OK' }
+        'HEAD'  { '!!! DETACHED HEAD - bitte ``git checkout main`` ausfuehren vor Edits' }
+        '?'     { '? (nicht erkennbar)' }
+        default { "WARN: ``$gitBranch`` (nicht main - sicher dass beabsichtigt?)" }
+    }
+
+    $gitBranchWarning = ''
+    if ($gitBranch -eq 'HEAD') {
+        $gitBranchWarning = @"
+
+
+### !!! DETACHED-HEAD-WARNUNG
+
+Aktueller Git-State: **detached HEAD** - Commits gehen nicht auf einen Branch und koennen verloren gehen.
+
+**Sofort ausfuehren vor jedem Edit:**
+``````
+git checkout main
+``````
+
+Hintergrund: 2026-04-20 ging Commit 89b367b in detached HEAD verloren. Recovery via Reflog erfolgreich, aber Wiederholung verhindern.
+"@
+    } elseif ($gitBranch -ne 'main' -and $gitBranch -ne '?') {
+        $gitBranchWarning = @"
+
+
+### Git-Branch-Hinweis
+
+Aktiver Branch: ``$gitBranch`` (nicht main). OK wenn beabsichtigte Feature-Arbeit, sonst ``git checkout main``.
+"@
+    }
+
     # --- Active Hooks (from project settings) ---
     $settingsPath = Join-Path $projectRoot '.claude/settings.json'
     $activeHooks = @()
@@ -122,7 +167,8 @@ Tipp: ``/prime-ark`` fuehrt dich durch Sync-Review-Flow (Status a/b/c/d pro Eint
 **Projekt-Skills (8):** $skillsList
 **Slash-Commands (projekt):** $cmdList
 **Aktive Hooks:** $hookList
-**Grundlagen-Changelog:** $unresolved unresolved$unresolvedDetail
+**Git-Branch:** $branchInfo
+**Grundlagen-Changelog:** $unresolved unresolved$unresolvedDetail$gitBranchWarning
 
 ### Quick-Reference
 

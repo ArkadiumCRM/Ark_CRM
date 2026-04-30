@@ -24,7 +24,26 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 **Begründung:** CLAUDE.md-Pattern erwartet `specs/ARK_*_SCHEMA_v*.md` als kanonischen Pfad. Single-Directory vereinfacht Spec-Sync-Hook. Phase-Trennung über Filename-Prefix (`ARK_HR_*`, `ARK_BILLING_*`, `ARK_ZEITERFASSUNG_*`).
 
-**Offen aus [2026-04-20] Action Items:** #1 Detached-HEAD-Hook · #2 ERP-Tools-Lint-Pass.
+**Offen aus [2026-04-20] Action Items:** #2 ERP-Tools-Lint-Pass.
+
+---
+
+## [2026-04-30] Resolution · Detached-HEAD-Detection im SessionStart-Hook
+
+✅ **RESOLVED** Action Item #1 [2026-04-20]: Detached-HEAD-Schutz.
+
+**Find:** 2026-04-20 ging Commit `89b367b` (feat(erp-tools): HR/Commission/Zeit) in detached-HEAD-State verloren. Recovery via Reflog war erfolgreich, aber kein Schutz gegen Wiederholung.
+
+**Resolution:** `.claude/hooks/session-overview.ps1` erweitert mit Git-Branch-Detection:
+- Liest `git rev-parse --abbrev-ref HEAD` bei Session-Start
+- 4 Branch-States klassifiziert: `main` (OK), `HEAD` (DETACHED-Warnung), `?` (silent), other (Info-Hinweis)
+- Detached-HEAD-Fall: prominente Warnung mit Recovery-Anleitung (`git checkout main`) + Hintergrund-Referenz auf 89b367b-Vorfall
+- Non-Main-Fall: Info-Hinweis (kein Hard-Block, OK für intentional Feature-Work)
+- Auto-Switch bewusst NICHT implementiert — würde Probleme verbergen
+
+**Verifiziert:** Hook-Run auf main produziert `**Git-Branch:** main OK` im Session-Overview.
+
+**Variante H1 gewählt** (statt H2 PreToolUse-Hook): Detached-HEAD passiert selten, PreToolUse wäre Overkill und slowt jeden Edit. SessionStart-Warnung reicht.
 
 ---
 
