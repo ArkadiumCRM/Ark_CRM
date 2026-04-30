@@ -28,6 +28,35 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · B4 Phase-3-Patches (DB v1.7 · Backend v2.9 · FE v1.14)
+
+✅ **DONE** B4: 3 Grundlagen-Sync-Patches für heutige Phase-1-A Specs.
+
+**Resolution:** Subagent (general-purpose mit Sonnet) erstellte 3 Patches in `specs/`:
+
+| Patch | Größe | Quelle |
+|-------|-------|--------|
+| `ARK_DATABASE_SCHEMA_PATCH_v1_6_to_v1_7_email_queue.md` | ~5.8 KB | Outlook-Failsafe-Konzept §3.1 (`fact_email_send_queue`) |
+| `ARK_BACKEND_ARCHITECTURE_PATCH_v2_8_to_v2_9_phase1a.md` | ~14.5 KB | Stammdaten-Interactions §4.1 + Outlook-Failsafe §3.2 + Power-BI-Plan §8.1 |
+| `ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_phase1a.md` | ~11.0 KB | Stammdaten-Schema §10 + Outlook-Failsafe §3.6 + Power-BI-Plan §8 |
+
+**Inhalt-Highlights:**
+- DB v1.7: `fact_email_send_queue` (20 Spalten · 3 Indizes · RLS · 2 neue Enums)
+- Backend v2.9: 22 Stammdaten-Endpoints + `email-send.worker.ts` (8 Failure-Klassen mit Backoff) + Power-BI-Embed-Token-Endpoint mit Service-Principal-Auth
+- FE v1.14: Route `/stammdaten` + 8 Kategorie-Slugs · Outbox-Indicator + Mini-Drawer + Dead-Letter-Banner · Power-BI-Iframe-Tile mit Token-Lifecycle (60 min TTL · 50 min Refresh)
+
+**Konsistenz-Verifikation:** 22/22 Endpoints aus Stammdaten-Interactions übernommen · Backoff-Schedules zwischen DB-Patch + Backend-Patch + Outlook-Failsafe-Konzept synchron · Token-TTL durchgängig konsistent.
+
+**NEEDS-USER-INPUT (2 offene Punkte):**
+1. **P2 §3.3 Power-BI Service-Principal:** Azure-AD-App-Registration für Power-BI noch nicht erstellt. `POWERBI_TENANT_ID` + `POWERBI_CLIENT_ID` fehlen. Endpoint gibt bis dahin 403 zurück. **Owner: Nenad.**
+2. **P3 §3.2 Token-Refresh:** Polling (setTimeout) vs WebSocket-Push für Embed-Token-Refresh. Subagent-Empfehlung: Polling für Phase-1. **Owner: PW.**
+
+**Commit:** `355155a` · 3 neue Files · 1470 Insertions · pushed to origin/main
+
+**Phase-1-A Specs-zu-Grundlagen-Sync komplett** — alle 4 heutigen Phase-1-A Specs (Stammdaten Schema+Interactions, Outlook-Failsafe, Power-BI-Plan) jetzt in Grundlagen-Sync-Patches dokumentiert.
+
+---
+
 ## [2026-04-30] Resolution · ERP-Tools-Lint-Pass (51 Files)
 
 ✅ **RESOLVED** Action Item #2 [2026-04-20]: ERP-Tools-Lint-Pass.

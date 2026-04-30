@@ -1,3 +1,23 @@
+## [2026-04-30] feat | B4 Phase-3-Patches (DB v1.7 · Backend v2.9 · FE v1.14)
+
+- created: `specs/ARK_DATABASE_SCHEMA_PATCH_v1_6_to_v1_7_email_queue.md` (~5.8 KB)
+  - `fact_email_send_queue` (20 Spalten · 3 Indizes · RLS · `worker_service` BYPASS)
+  - 2 neue Enums: `email_send_status` · `email_error_class` (9 Klassen)
+- created: `specs/ARK_BACKEND_ARCHITECTURE_PATCH_v2_8_to_v2_9_phase1a.md` (~14.5 KB)
+  - 22 Stammdaten-Vollansicht-Endpoints (13 Read · 9 Mutation · Konsistenz 22/22)
+  - `email-send.worker.ts` + `email-send-drain.worker.ts` (BullMQ · FOR UPDATE SKIP LOCKED · Batch-20)
+  - 8 Failure-Klassen mit Backoff-Schedules + 4 neue Events
+  - Power-BI-Embed-Token-Endpoint mit Service-Principal-Auth
+- created: `specs/ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_phase1a.md` (~11.0 KB)
+  - Route `/stammdaten` + 4 Sub-Patterns + 8 Kategorie-Slugs + Sidebar Group 3 „System"
+  - Outbox-Indicator + Mini-Drawer (540px) + Dead-Letter-Banner + TanStack-Polling 30s
+  - Power-BI-Iframe-Tile-Pattern + Token-Lifecycle (60 min TTL · 50 min Refresh) + 4 States
+- approach: Subagent (general-purpose mit Sonnet) für 3-Patch-Run · single commit
+- commit: `355155a` · 1470 Insertions
+- NEEDS-USER-INPUT (2): Azure-AD-App für Power-BI (Nenad) · Polling-vs-WS-Decision (PW)
+
+---
+
 ## [2026-04-30] fix | ERP-Tools-Lint-Pass · 51 Files audited
 
 - audited: 51 Mockup-Files in `mockups/ERP Tools/{billing,commission,elearn,hr,zeit}/`
