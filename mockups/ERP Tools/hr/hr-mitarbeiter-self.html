@@ -546,6 +546,16 @@
   <!-- DOKUMENTE -->
   <div class="widget" style="margin-bottom:24px;">
     <h3>Meine Dokumente <span class="small-link">Alle anzeigen →</span></h3>
+
+    <!-- Ausstehende Unterschriften -->
+    <div style="background:color-mix(in srgb,var(--amber) 8%,transparent);border:1px solid color-mix(in srgb,var(--amber) 35%,transparent);border-radius:4px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <strong style="color:var(--amber)">⏳ 1 Dokument wartet auf deine Unterschrift</strong>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px">Arbeitsvertrag-Nachtrag 2026 · angefordert von PW am 29.04.2026</div>
+      </div>
+      <button class="btn btn-sm" style="white-space:nowrap" onclick="openDrawer('drawer-document-sign')">Unterschreiben</button>
+    </div>
+
     <table class="doc-table">
       <thead>
         <tr>
@@ -557,6 +567,13 @@
         </tr>
       </thead>
       <tbody>
+        <tr style="background:color-mix(in srgb,var(--amber) 4%,transparent)">
+          <td><span class="type-chip">Arbeitsvertrag</span></td>
+          <td>Arbeitsvertrag-Nachtrag 2026 <span style="font-size:10px;color:var(--amber);font-weight:600;margin-left:4px">⏳ Unterschrift ausstehend</span></td>
+          <td>29.04.2026</td>
+          <td>—</td>
+          <td><span class="doc-action" onclick="openDrawer('drawer-document-sign')" style="cursor:pointer;color:var(--accent)">✍ Unterschreiben</span></td>
+        </tr>
         <tr>
           <td><span class="type-chip">Lohnausweis</span></td>
           <td>Lohnausweis 2025</td>
@@ -645,6 +662,65 @@
 </div>
 
 <div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
+
+<!-- ============================================================ -->
+<!-- DRAWER: Dokument unterzeichnen — Self-Service (§2.1 / F4)    -->
+<!-- Trigger: „Unterschreiben"-Button in Dokumente-Tabelle        -->
+<!-- ============================================================ -->
+<div class="drawer" id="drawer-document-sign">
+  <div class="drawer-head">
+    <h2>Dokument unterzeichnen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Unterschrift</div>
+  </div>
+  <div class="drawer-body">
+
+    <div style="background:color-mix(in srgb,var(--amber) 8%,transparent);border:1px solid color-mix(in srgb,var(--amber) 35%,transparent);border-radius:4px;padding:10px 14px;font-size:12px;margin-bottom:16px">
+      <strong>Arbeitsvertrag-Nachtrag 2026</strong><br>
+      <span style="color:var(--text-light)">Angefordert von PW · 29.04.2026 · Ausstehend seit 1 Tag</span>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:18px">
+      <div style="background:var(--surface-alt);padding:10px 14px;font-size:11px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;border-bottom:1px solid var(--border)">Dokument-Vorschau</div>
+      <div style="height:260px;background:linear-gradient(135deg,var(--surface),var(--surface-alt));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+        <div style="font-size:24px">📄</div>
+        <div style="font-size:13px;font-weight:600">Arbeitsvertrag-Nachtrag-2026.pdf</div>
+        <div style="font-size:11px;color:var(--text-light)">4 Seiten · 128 KB</div>
+        <button class="btn btn-sm" style="margin-top:4px">↓ Herunterladen</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block">Meine Unterschrift</label>
+      <div style="border:1px dashed var(--border-strong);border-radius:4px;height:110px;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer">
+        <div style="font-size:20px">✍</div>
+        <div style="font-size:11px;color:var(--text-light)">Unterschrift-Pad (Phase 3.2)</div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px">
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block">Art der Unterzeichnung</label>
+      <select style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:13px">
+        <option>Physisch (Original vorhanden)</option>
+        <option>Digital (qualifiziert, QES)</option>
+        <option>Digital (einfach, EES)</option>
+      </select>
+    </div>
+
+    <div style="background:color-mix(in srgb,var(--green) 6%,transparent);border:1px solid color-mix(in srgb,var(--green) 30%,transparent);border-radius:4px;padding:10px 14px;font-size:11px;color:var(--text-light);margin-top:14px">
+      <!-- ark-lint-skip:begin reason=admin-audit-trail -->
+      ℹ Deine Unterschrift wird in <code>fact_audit_log</code> erfasst · Dokument erhält Status «unterzeichnet» · Admin wird benachrichtigt
+      <!-- ark-lint-skip:end -->
+    </div>
+
+  </div>
+  <div class="drawer-foot" style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--border)">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary" onclick="if(confirm('Dokument verbindlich unterzeichnen?'))closeDrawer()">✓ Jetzt unterzeichnen</button>
+  </div>
+</div>
 
 <!-- DRAWER: Weiterbildung -->
 <div class="drawer" id="drawer-training">

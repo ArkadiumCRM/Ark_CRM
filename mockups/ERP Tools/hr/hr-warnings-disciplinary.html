@@ -390,7 +390,7 @@
     <span class="sub">Eskalations-Tracker nach OR 321a · Art. 337 OR</span>
     <div class="actions">
       <button class="btn-secondary">📊 Reports</button>
-      <button class="btn-primary" onclick="openDrawer('drawer-warning')">+ Verwarnung ausstellen</button>
+      <button class="btn-primary" onclick="openDrawer('drawer-disciplinary-new')">+ Verwarnung ausstellen</button>
       <button class="btn-primary" onclick="openDrawer('drawer-incident')">⚠ Disziplinar melden</button>
     </div>
   </div>
@@ -621,7 +621,7 @@
 
 <!-- DRAWER: Neue Verwarnung ausstellen -->
 <div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer-warning">
+<div class="drawer" id="drawer-disciplinary-new">
   <div class="drawer-head">
     <h2>Verwarnung ausstellen</h2>
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
@@ -769,6 +769,150 @@
   </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- DRAWER: Verwarnung Detail-Ansicht (§2.2)                     -->
+<!-- Trigger: Klick auf Zeile in Verwarnungs-Liste                -->
+<!-- ============================================================ -->
+<div class="drawer" id="drawer-disciplinary-view">
+  <div class="drawer-head">
+    <h2>Verwarnung ansehen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs" id="dv-tabs">
+    <div class="drawer-tab active" onclick="switchDVTab(0,this)">Übersicht</div>
+    <div class="drawer-tab" onclick="switchDVTab(1,this)">Verlauf</div>
+    <div class="drawer-tab" onclick="switchDVTab(2,this)">Verknüpft</div>
+  </div>
+  <div class="drawer-body">
+
+    <!-- Tab 0: Übersicht -->
+    <div id="dv-panel-0">
+      <div style="background:color-mix(in srgb,var(--red) 7%,transparent);border:1px solid color-mix(in srgb,var(--red) 30%,transparent);border-radius:4px;padding:10px 14px;font-size:12px;margin-bottom:16px">
+        <strong style="color:var(--red)">Anna Huber</strong> · Letzte schriftliche Verwarnung · <span style="font-weight:600">Final-Watch</span>
+      </div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 20px;font-size:13px">
+        <span style="color:var(--text-light)">Ausgestellt am</span><span>09.04.2026</span>
+        <span style="color:var(--text-light)">Ausgestellt von</span><span>Nenad Stoparanovic (Founder)</span>
+        <span style="color:var(--text-light)">Schwere</span><span><span style="background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">Letzte schriftliche Verwarnung</span></span>
+        <span style="color:var(--text-light)">Follow-up-Deadline</span><span style="color:var(--red);font-weight:600">23.04.2026 (überfällig)</span>
+        <span style="color:var(--text-light)">Status</span><span><span style="background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">Final-Watch</span></span>
+        <span style="color:var(--text-light)">Kenntnisnahme</span><span style="color:var(--amber)">⏳ Ausstehend</span>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-light);font-weight:600;margin-bottom:8px">Begründung</div>
+        <div style="font-size:13px;line-height:1.5;padding:10px 12px;background:var(--surface-alt);border-radius:4px">
+          Wiederholte Ausübung einer entgeltlichen Nebentätigkeit ohne vorgängige schriftliche Zustimmung. Trotz erster schriftlicher Verwarnung keine vollständige Offenlegung erhalten.
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span style="background:var(--surface-alt);padding:3px 10px;border-radius:10px;font-size:11px">OR 321a · Treuepflicht</span>
+        <span style="background:var(--surface-alt);padding:3px 10px;border-radius:10px;font-size:11px">Generalis Provisio §3.5.3</span>
+        <span style="background:var(--surface-alt);padding:3px 10px;border-radius:10px;font-size:11px">Disziplinarstrafe CHF 3'000</span>
+      </div>
+    </div>
+
+    <!-- Tab 1: Verlauf -->
+    <div id="dv-panel-1" style="display:none">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-light);font-weight:600;margin-bottom:12px">Eskalations-Chronologie</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="padding:12px 0;border-left:3px solid var(--text-light);padding-left:16px;margin-left:8px;position:relative">
+          <div style="position:absolute;left:-7px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--text-light);border:2px solid var(--surface)"></div>
+          <div style="font-size:11px;color:var(--text-light)">20.02.2026</div>
+          <div style="font-weight:600;font-size:13px;margin-top:2px">Mündliche Ermahnung</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px">NS · Hinweis auf Zustimmungspflicht</div>
+        </div>
+        <div style="padding:12px 0;border-left:3px solid var(--amber);padding-left:16px;margin-left:8px;position:relative">
+          <div style="position:absolute;left:-7px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--amber);border:2px solid var(--surface)"></div>
+          <div style="font-size:11px;color:var(--text-light)">05.03.2026</div>
+          <div style="font-weight:600;font-size:13px;margin-top:2px">Erste schriftliche Verwarnung</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px">NS · Dokument signiert · 30-Tage-Frist gesetzt</div>
+        </div>
+        <div style="padding:12px 0;border-left:3px solid var(--red);padding-left:16px;margin-left:8px;position:relative">
+          <div style="position:absolute;left:-7px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--red);border:2px solid var(--surface)"></div>
+          <div style="font-size:11px;color:var(--text-light)">09.04.2026</div>
+          <div style="font-weight:600;font-size:13px;margin-top:2px">Letzte schriftliche Verwarnung</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px">NS · Empfangsbestätigung ausstehend</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Verknüpft -->
+    <div id="dv-panel-2" style="display:none">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-light);font-weight:600;margin-bottom:12px">Verknüpfte Einträge</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:10px 12px;background:var(--surface-alt);border-radius:4px;font-size:12px">
+          <div style="font-weight:600;margin-bottom:2px">Onboarding</div>
+          <div style="color:var(--text-light)">Kein verknüpftes Onboarding (MA bereits etabliert)</div>
+        </div>
+        <div style="padding:10px 12px;background:var(--surface-alt);border-radius:4px;font-size:12px">
+          <div style="font-weight:600;margin-bottom:2px">Probezeit</div>
+          <div style="color:var(--text-light)">Probezeit abgeschlossen (bestanden 01.09.2024)</div>
+        </div>
+        <div style="padding:10px 12px;background:color-mix(in srgb,var(--red) 7%,transparent);border-radius:4px;font-size:12px;border:1px solid color-mix(in srgb,var(--red) 20%,transparent)">
+          <div style="font-weight:600;margin-bottom:2px;color:var(--red)">Disziplinar-Incident</div>
+          <div style="color:var(--text-light)">Nebentätigkeit ohne Zustimmung · Investigation läuft · GL-Review ausstehend</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="drawer-foot" style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--border)">
+    <button class="btn-ghost" onclick="closeDrawer()">Schliessen</button>
+    <button class="btn-primary" onclick="openDrawer('drawer-disciplinary-acknowledge')">Kenntnisnahme erfassen →</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- DRAWER: Kenntnisnahme erfassen (§2.2)                        -->
+<!-- Trigger: „Kenntnisnahme erfassen"-Button im drawer-view      -->
+<!-- ============================================================ -->
+<div class="drawer" id="drawer-disciplinary-acknowledge">
+  <div class="drawer-head">
+    <h2>Kenntnisnahme erfassen</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Kenntnisnahme</div>
+  </div>
+  <div class="drawer-body">
+
+    <div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:4px;padding:10px 14px;font-size:12px;margin-bottom:16px">
+      <strong>Anna Huber</strong> bestätigt die Kenntnisnahme der Letzten schriftlichen Verwarnung vom 09.04.2026.
+    </div>
+
+    <div class="field">
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block">Mitarbeiter-Unterschrift</label>
+      <div style="border:1px dashed var(--border-strong);border-radius:4px;height:120px;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer">
+        <div style="font-size:20px">✍</div>
+        <div style="font-size:11px;color:var(--text-light)">Unterschrift hier (Pad-Input · Phase 3.2)</div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px">
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block">Datum der Kenntnisnahme</label>
+      <div style="padding:10px 12px;background:var(--surface-alt);border-radius:4px;font-size:13px;font-weight:600">
+        30.04.2026 (heute)
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px">
+      <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block">Stellungnahme Mitarbeiter (optional)</label>
+      <textarea rows="4" placeholder="Anmerkungen oder Widerspruch des Mitarbeiters (wird im Verlauf festgehalten)" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:12px;resize:vertical"></textarea>
+    </div>
+
+    <div style="background:color-mix(in srgb,var(--green) 6%,transparent);border:1px solid color-mix(in srgb,var(--green) 30%,transparent);border-radius:4px;padding:10px 14px;font-size:11px;color:var(--text-light);margin-top:14px">
+      <!-- ark-lint-skip:begin reason=admin-audit-trail -->
+      ℹ Kenntnisnahme wird in <code>fact_audit_log</code> erfasst · Verwarnung erhält Status «anerkannt»
+      <!-- ark-lint-skip:end -->
+    </div>
+
+  </div>
+  <div class="drawer-foot" style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--border)">
+    <button class="btn-secondary" onclick="closeDrawer()">Abbrechen</button>
+    <button class="btn-primary" onclick="closeDrawer()">Kenntnisnahme speichern</button>
+  </div>
+</div>
+
 <script>
   function openDrawer(id) {
     document.getElementById('backdrop').classList.add('open');
@@ -784,6 +928,14 @@
   function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
+  }
+  function switchDVTab(index, el) {
+    document.querySelectorAll('#dv-tabs .drawer-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['dv-panel-0','dv-panel-1','dv-panel-2'].forEach((id, i) => {
+      const p = document.getElementById(id);
+      if (p) p.style.display = i === index ? 'block' : 'none';
+    });
   }
 </script>
 
