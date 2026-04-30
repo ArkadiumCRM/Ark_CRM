@@ -28,6 +28,38 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · B3 HR-Tool Mockup-Refinement
+
+✅ **DONE** B3: HR-Tool 5 Action-Items von 52% → 91% Spec-Compliance.
+
+**Audit (Sonnet-Subagent):** HR-Tool Mockups (7 Files) hatten 52% Spec-Compliance. NO-GO für Phase-3.2: 7 von 11 Spec-Drawer fehlten oder hatten falsche IDs. Core HR-Flows F1 (Mitarbeiter-Anlegen) + F4 (Dokument-Signatur) waren komplett blocked.
+
+**Resolution:** Subagent (general-purpose mit Sonnet) implementierte alle 5 Action-Items:
+
+| AI | File | Drawer/Action |
+|----|------|----------------|
+| 1 | hr-list.html (+440 Z.) | 4 Stammdaten-Drawer: contract-new · contract-view · contract-terminate · document-sign + 2 dead-buttons gewired |
+| 2 | hr-onboarding-editor.html + hr-warnings-disciplinary.html | 4 Drawer-ID-Renames zu Spec-kebab-case + closeAll() → closeDrawer() |
+| 3 | hr-warnings-disciplinary.html (+152 Z.) | drawer-disciplinary-view + drawer-disciplinary-acknowledge (Flow F2 complete) |
+| 4 | hr-mitarbeiter-self.html (+76 Z.) | drawer-document-sign + Dokumente-Section mit Sign-Request-Liste (Flow F4 für Self-Service) |
+| 5 | hr-onboarding-editor.html (+161 Z.) | drawer-onboarding-template-edit (3 Tabs: Tasks Sortable · Phasen · Settings) |
+
+**Total:** +829 Zeilen in 4 Files.
+
+**Lint-Verifikation:**
+- 0 Umlaute-Violations
+- 0 DB-Tech-Violations (alle `fact_audit_log`-Refs korrekt in `ark-lint-skip:begin reason=admin-audit-trail` gewrappt)
+
+**Spec-Compliance:** 52% → 91% (10/11 Drawer-IDs implementiert · Restliche 9% sind Signature-Pad Phase-3.2 mit echtem QES-Provider · by design Platzhalter)
+
+**Phase-3.2-Verdict: GO** — Core HR-Flows F1 (Mitarbeiter-Anlegen) · F2 (Disziplinar) · F4 (Dokument-Signatur) alle unblocked.
+
+**Spec-Ambiguität dokumentiert:** drawer-contract-view Trigger via `›`-Button (Quick-View) + Row-Click bleibt zu Self-Page (Vollansicht). Beide Wege erhalten.
+
+**Commit:** `9e233df` · 4 Files · +829 Zeilen · pushed to origin/main.
+
+---
+
 ## [2026-04-30] Resolution · B4 Phase-3-Patches (DB v1.7 · Backend v2.9 · FE v1.14)
 
 ✅ **DONE** B4: 3 Grundlagen-Sync-Patches für heutige Phase-1-A Specs.

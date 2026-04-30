@@ -1,3 +1,19 @@
+## [2026-04-30] feat | B3 HR-Tool Mockup-Refinement (5 AI · 8 Drawer · 4 Renames)
+
+- updated: 4 HR-Mockups · +829 Zeilen
+  - hr-list.html (408 → 848): 4 Stammdaten-Drawer (contract-new/view/terminate, document-sign) + 2 dead-button-Wirings
+  - hr-warnings-disciplinary.html (791 → 943): 2 neue Drawer (disciplinary-view + disciplinary-acknowledge) + 1 Rename
+  - hr-mitarbeiter-self.html (757 → 833): drawer-document-sign + Dokumente-Section
+  - hr-onboarding-editor.html (1067 → 1228): drawer-onboarding-template-edit + 3 Renames (camelCase → kebab-case) + closeAll() → closeDrawer()
+- audit (Phase 1): Sonnet-Subagent · 7 Mockups · 52% Compliance · NO-GO-Verdict
+- implementation (Phase 2): Sonnet-Subagent · 5 Action-Items
+- spec-compliance: 52% → 91% (10/11 Drawer-IDs MATCH)
+- lint: 0 Umlaute · 0 DB-Tech (alle audit-trail-Refs in ark-lint-skip)
+- commit: `9e233df`
+- Phase-3.2-Verdict: **GO** — Core HR-Flows F1/F2/F4 alle unblocked
+
+---
+
 ## [2026-04-30] feat | B4 Phase-3-Patches (DB v1.7 · Backend v2.9 · FE v1.14)
 
 - created: `specs/ARK_DATABASE_SCHEMA_PATCH_v1_6_to_v1_7_email_queue.md` (~5.8 KB)
