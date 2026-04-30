@@ -1,3 +1,22 @@
+## [2026-04-30] feat | Billing 2 Grundlagen-Patches (FE v1.14 + GS v1.6)
+
+- created: `specs/ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_billing.md` (27 KB · 499 Z.)
+  - §4i Operations · Billing (neuer Abschnitt)
+  - 11 Top-Level-Routen + URL-State + App-Router · Sidebar „Finanzen" 9 Sub-Items
+  - 7 UI-Patterns (KPI-Bar/Filter/Mahnstufen/Aging/Treuhand-RO/RLS/Cockpit)
+  - 10 Drawer + 1 Modal mit Cross-Ref zu Interactions
+  - Permission-Matrix (4 Rollen × 11 Routen × 12 Aktionen)
+- created: `specs/ARK_GESAMTSYSTEM_PATCH_v1_5_to_v1_6_billing.md` (17 KB · 306 Z.)
+  - Changelog v1.6 Billing-Modul · Phase-3-Modul-Liste-Update
+  - 7 Cross-Module-Integration-Achsen (Mandate/Time/Commission/Treuhand/Garantie/HR/Performance)
+  - Strategische Entscheidungen (Periodenabschluss-Lock · Mahnwesen · SIX v2.4 · AGB-Tracking · RLS)
+- approach: Opus-Subagent (Diversity-Rotation nach 5+ Sonnets)
+- konsistenz: 11/11 Routen + 10+1 Drawer + 9/9 Mockups verifiziert
+- commit: `de2c188` · 805 Insertions
+- **Billing-Sync 3/5 → 5/5 ✅** — Audit-Gap geschlossen
+
+---
+
 ## [2026-04-30] hygiene | Zeit-Plan-Spec §6.3 mit Realität-Marker aktualisiert
 
 - updated: `specs/ARK_ZEITERFASSUNG_PLAN_v0_1.md` §6.3 (Neue Mockups)

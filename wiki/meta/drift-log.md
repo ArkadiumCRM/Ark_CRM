@@ -28,6 +28,32 @@ Automatisch befüllt durch den Weekly Drift Scanner (montags 09:00 Europe/Zurich
 
 ---
 
+## [2026-04-30] Resolution · Billing 2 Grundlagen-Patches (FE v1.14 + GS v1.6)
+
+✅ **DONE** Billing-Sync-Gap aus heutigem ERP-Audit: 3/5 → **5/5 Grundlagen-Sync-Patches**.
+
+**Find:** ERP-Audit (heute, Sonnet-Subagent) flaggte Billing als 3/5 sync'd — DB v1.5, Backend v2.7, Stammdaten v1.5 vorhanden, aber FE-Freeze + Gesamtsystem-Patches fehlten (explizit als `[ ]` TODOs in `ARK_BILLING_SCHEMA_v0_1.md` Z. 1191-1195 markiert).
+
+**Resolution:** Subagent (general-purpose mit Opus, Diversity-Rotation nach 5+ Sonnets) erstellte 2 Patches:
+
+| Patch | Größe | Sektionen |
+|-------|-------|-----------|
+| `ARK_FRONTEND_FREEZE_PATCH_v1_13_to_v1_14_billing.md` | 27 KB · 499 Z. | §1 Routenmodell (11 Top-Level + URL-State + App-Router) · §2 Sidebar „Finanzen" · §3 UI-Patterns (7: KPI/Filter/Mahnstufen/Aging/Treuhand-RO/RLS/Cockpit) · §4 Drawer-Inventar (10 + 1 Modal) · §5 Permission-Matrix (4 Rollen × 11 Routen × 12 Aktionen) · §6-§10 Apply/Sync/Compat/AC/Memory |
+| `ARK_GESAMTSYSTEM_PATCH_v1_5_to_v1_6_billing.md` | 17 KB · 306 Z. | §1 Changelog v1.6 · §2 Phase-3-Modul-Update (9 Module · Billing 80%) · §3 Cross-Module-Integration (7 Achsen) · §4 Strategische Entscheidungen (Periodenabschluss-Lock · Mahnwesen 4-Stufen · SIX v2.4 · AGB · RLS) · §5 Statistik · §6 Phase-Roadmap · §7-§10 Routing/Sync/Memory/AC |
+
+**Konsistenz-Verifikation:**
+- Alle 11 Routen aus `ARK_BILLING_INTERACTIONS_v0_1.md` §1.1 übernommen
+- Sidebar „Finanzen" (User-Label, NICHT „Billing") aus §1.2
+- 10 Drawer + 1 Modal mit Cross-Ref zu Interactions §3.1-§3.10
+- Cross-Refs zu allen 4 vorhandenen Billing-Patches
+- Mockup-Inventar gegen Filesystem verifiziert (9/9 HTMLs existieren)
+
+**Commit:** `de2c188` · 2 neue Files · 805 Insertions · pushed to origin/main.
+
+**Billing-Sync-Status:** **5/5 ✅** (DB v1.5 · Backend v2.7 · Stammdaten v1.5 · FE v1.14 · GS v1.6).
+
+---
+
 ## [2026-04-30] Hygiene · Zeit-Plan-Spec mit Realität-Marker aktualisiert
 
 ✅ **DONE** Spec-Realität-Sync: `ARK_ZEITERFASSUNG_PLAN_v0_1.md` §6.3 aktualisiert.
