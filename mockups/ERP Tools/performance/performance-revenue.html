@@ -1096,6 +1096,9 @@
           </div>
 
           <a href="#drawer-explain" class="forecast-link" id="openExplain">Modell-Erklärung · Markov-Stage-Modell</a>
+          <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-gold" id="btnForecastOverride" title="Nur für Head/Admin">Manuell überschreiben</button>
+          </div>
         </div>
       </section>
 
@@ -1502,6 +1505,168 @@
         </div>
       </div>
 
+      <!-- ─── DRAWER C · Revenue-Attribution (Spec §4.4/130) ─── -->
+      <div class="drawer" id="drawer-attribution">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Revenue-Bar · Mai 2026 · CHF 248k · Sparte ARC</div>
+          <div class="drawer-title">Revenue-Attribution Mai 2026</div>
+        </div>
+        <div class="drawer-tabs" data-drawer="attribution">
+          <button class="drawer-tab active" data-tab="quelle">Quelle</button>
+          <button class="drawer-tab" data-tab="ma-anteile">Mitarbeiter-Anteile</button>
+          <button class="drawer-tab" data-tab="vergleich">Periode-Vergleich</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="quelle">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Decomposition · CHF 248k</div>
+              <div class="decomp-hero">
+                <div class="decomp-big"><span class="num-d">CHF 248k</span> realisierter Umsatz</div>
+                <div class="decomp-sub">3 Placements <span class="sep">·</span> 2 Mandats-Honorare <span class="sep">·</span> 1 Folge-Rechnung</div>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Quellen · Aufschlüsselung</div>
+              <table class="konv-table">
+                <thead><tr><th>Quelle</th><th>Mandat</th><th>Stage / Status</th><th class="right">Betrag</th></tr></thead>
+                <tbody>
+                  <tr><td>Placement-Honorar</td><td><span class="num">MAN-2026-099</span> · ING</td><td>Placement · 04.05.</td><td class="right"><span class="num">CHF 92k</span></td></tr>
+                  <tr><td>Placement-Honorar</td><td><span class="num">MAN-2026-091</span> · GT</td><td>Placement · 18.05.</td><td class="right"><span class="num">CHF 76k</span></td></tr>
+                  <tr><td>Placement-Honorar</td><td><span class="num">MAN-2026-118</span> · ARC</td><td>Placement · 28.05.</td><td class="right"><span class="num">CHF 48k</span></td></tr>
+                  <tr><td>Mandats-Retainer</td><td><span class="num">MAN-2026-104</span> · ARC</td><td>Target · monatlich</td><td class="right"><span class="num">CHF 18k</span></td></tr>
+                  <tr><td>Mandats-Retainer</td><td><span class="num">MAN-2026-076</span> · GT</td><td>Taskforce · monatlich</td><td class="right"><span class="num">CHF 12k</span></td></tr>
+                  <tr><td>Folge-Rechnung</td><td><span class="num">MAN-2026-061</span> · REM</td><td>Time · April-Stunden</td><td class="right"><span class="num">CHF 2k</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Sparten-Mix</div>
+              <div class="markov-list">
+                <div class="markov-row"><span class="markov-label">ING</span><span class="markov-val">CHF 92k · 37 %</span></div>
+                <div class="markov-row"><span class="markov-label">GT</span><span class="markov-val">CHF 88k · 35 %</span></div>
+                <div class="markov-row"><span class="markov-label">ARC</span><span class="markov-val">CHF 66k · 27 %</span></div>
+                <div class="markov-row"><span class="markov-label">REM</span><span class="markov-val">CHF 2k · 1 %</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="ma-anteile">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Mitarbeiter-Anteile (50/50 AM-CM Split)</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Honorar-Aufteilung gem&auml;ss Provisionsmodell · Account-Manager (Akquise) und Candidate-Manager (Lieferung) je 50 %, Researcher-Pauschale separat.</p>
+              <table class="konv-table">
+                <thead><tr><th>Mitarbeiter</th><th>Rolle</th><th>Mandate</th><th class="right">Anteil</th></tr></thead>
+                <tbody>
+                  <tr><td>PW</td><td>AM + CM</td><td>3 Mandate</td><td class="right"><span class="num">CHF 96k · 39 %</span></td></tr>
+                  <tr><td>JV</td><td>CM</td><td>MAN-2026-099, MAN-2026-091</td><td class="right"><span class="num">CHF 84k · 34 %</span></td></tr>
+                  <tr><td>LR</td><td>AM</td><td>MAN-2026-118</td><td class="right"><span class="num">CHF 24k · 10 %</span></td></tr>
+                  <tr><td>MR</td><td>Researcher (Pauschale)</td><td>3 Hunts</td><td class="right"><span class="num">CHF 12k · 5 %</span></td></tr>
+                  <tr><td>Team-Pool</td><td>ZEG-Staffel + Head-Budget</td><td>&mdash;</td><td class="right"><span class="num">CHF 32k · 13 %</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Hinweis</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0;">Endg&uuml;ltige Auszahlung erfolgt nach 80/20-Abschlag/R&uuml;cklage-Modell &uuml;ber das Provisionen-Tool.</p>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="vergleich">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Periode-Vergleich</div>
+              <table class="kv-table">
+                <tr><td class="k">Mai 2026 (aktuell)</td><td class="v"><span class="num">CHF 248k</span></td></tr>
+                <tr><td class="k">April 2026 (Vorperiode)</td><td class="v"><span class="num">CHF 192k</span> <span class="meta">+ 29 %</span></td></tr>
+                <tr><td class="k">Mai 2025 (Vorjahr)</td><td class="v"><span class="num">CHF 168k</span> <span class="meta">+ 48 %</span></td></tr>
+                <tr><td class="k">Plan Mai 2026</td><td class="v"><span class="num">CHF 220k</span> <span class="meta">+ 13 %</span></td></tr>
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Top-Treiber vs. Vorperiode</div>
+              <div class="markov-list">
+                <div class="markov-row"><span class="markov-label">+ Placement MAN-2026-099 (ING)</span><span class="markov-val highlight">+ CHF 92k</span></div>
+                <div class="markov-row"><span class="markov-label">+ Placement MAN-2026-091 (GT)</span><span class="markov-val highlight">+ CHF 76k</span></div>
+                <div class="markov-row"><span class="markov-label">&minus; Wegfall Retainer MAN-2025-088</span><span class="markov-val" style="color:var(--red);">&minus; CHF 14k</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn">Export PDF</button>
+          <button class="btn btn-primary">Drill auf Mandate-Liste</button>
+        </div>
+      </div>
+
+      <!-- ─── DRAWER D · Forecast-Override (Spec §4.4/133) — Standalone, separat von drawer-process Override-Tab ─── -->
+      <div class="drawer" id="drawer-forecast-override">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Forecast Jahresende · 31.12.2026 · Modell-Wert CHF 3.20 Mio</div>
+          <div class="drawer-title">Forecast manuell &uuml;berschreiben</div>
+        </div>
+        <div class="drawer-tabs" data-drawer="fcoverride">
+          <button class="drawer-tab active" data-tab="override">Override</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="override">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Periode</div>
+              <div class="form-row">
+                <label class="form-label">Forecast-Periode</label>
+                <select class="select">
+                  <option>Jahresende 2026 (31.12.2026)</option>
+                  <option>Q3 2026 (30.09.2026)</option>
+                  <option>Q4 2026 (31.12.2026)</option>
+                  <option>H2 2026 (01.07. &ndash; 31.12.)</option>
+                </select>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Werte</div>
+              <table class="kv-table">
+                <tr><td class="k">Modell-Wert (Markov)</td><td class="v"><span class="num">CHF 3.20 Mio</span> <span class="meta">Konfidenz 78 %</span></td></tr>
+                <tr><td class="k">YTD-Realisiert</td><td class="v"><span class="num">CHF 1.84 Mio</span></td></tr>
+                <tr><td class="k">Pipeline-erwartet</td><td class="v"><span class="num">CHF 1.04 Mio</span></td></tr>
+                <tr><td class="k">Net-New (heuristisch)</td><td class="v"><span class="num">CHF 0.32 Mio</span></td></tr>
+              </table>
+              <div class="form-row" style="margin-top:14px;">
+                <label class="form-label">Override-Wert (Total Jahresende)</label>
+                <input class="input" value="CHF 3.45 Mio" placeholder="z.B. CHF 3.45 Mio">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Delta zum Modell-Wert</label>
+                <div class="form-input"><span class="num" style="color:var(--gold-strong);">+ CHF 250k</span> <span style="color:var(--text-light); font-size:11px; margin-left:8px;">+ 7.8 %</span></div>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Begr&uuml;ndung <span style="color:var(--red);">*</span> <span class="drawer-section-meta">Pflicht</span></div>
+              <textarea class="textarea" placeholder="Warum weicht der manuelle Forecast vom Modell-Wert ab? (z.B. bekannter Auftragseingang, Mandat-Lock, Kunden-Pipeline ausserhalb Markov-Modell)" rows="4">Strategischer Mandat-Lock mit Kunde Hochbau Beteiligungs AG (3 Mandate, Q4-Start) ist im Markov-Modell noch nicht abgebildet, da Stage-Eintritt erst nach Vertragsunterzeichnung Anfang Juli erfolgt.</textarea>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Audit-Hinweis</div>
+              <div class="callout callout-amber">
+                <strong>Override wird auditiert.</strong> Eintrag in Forecast-Historie mit User, Timestamp und Begr&uuml;ndung. Sichtbar f&uuml;r alle Head- und Admin-Rollen. Override bleibt aktiv bis n&auml;chster Modell-Refresh oder manuelle R&uuml;cksetzung.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Berechtigung</div>
+              <div style="font-size:12px;color:var(--text-mid);line-height:1.6;">
+                Aktion verf&uuml;gbar nur f&uuml;r <strong style="color:var(--text);">Head- und Admin-Rolle</strong>.
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn">Auf Modell-Wert zur&uuml;cksetzen</button>
+          <button class="btn btn-primary">Override speichern</button>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1736,6 +1901,16 @@ document.querySelectorAll('.sparte-row, .top5-row, .data-table tbody tr').forEac
 document.getElementById('openExplain')?.addEventListener('click', e => {
   e.preventDefault();
   openDrawerByKey('explain');
+});
+// Forecast-Override-Button (Spec §4.4/133)
+document.getElementById('btnForecastOverride')?.addEventListener('click', () => {
+  openDrawerByKey('forecast-override');
+});
+// Revenue-Chart-Bar-Click → drawer-attribution (Spec §4.4/130)
+document.getElementById('revenueChart')?.addEventListener('click', e => {
+  const bar = e.target.closest('rect');
+  if (!bar) return;
+  openDrawerByKey('attribution');
 });
 </script>
 </body>

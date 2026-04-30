@@ -1104,7 +1104,7 @@
       <div class="goal-row">
         <div class="goal-head">
           <span class="goal-title">Q2 Placements <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
-          <span class="goal-pct green">75 % · On-Track</span>
+          <span class="goal-pct green">75 % · On-Track <button class="goal-edit" data-goal-edit style="margin-left:8px; background:transparent; border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:10px; color:var(--text-mid); cursor:pointer;">Bearbeiten</button></span>
         </div>
         <div class="goal-track"><div class="goal-fill" style="width:75%;"></div></div>
         <div class="goal-foot"><span>3 / 4 · 01.04. – 30.06.2026</span><span>Drift ±0 % · Schwelle ±15 %</span></div>
@@ -1112,7 +1112,7 @@
       <div class="goal-row">
         <div class="goal-head">
           <span class="goal-title">Q2 Calls <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
-          <span class="goal-pct green">95 % · On-Track</span>
+          <span class="goal-pct green">95 % · On-Track <button class="goal-edit" data-goal-edit style="margin-left:8px; background:transparent; border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:10px; color:var(--text-mid); cursor:pointer;">Bearbeiten</button></span>
         </div>
         <div class="goal-track"><div class="goal-fill" style="width:95%;"></div></div>
         <div class="goal-foot"><span>142 / 150 · 01.04. – 30.06.2026</span><span>Drift +3 %</span></div>
@@ -1120,7 +1120,7 @@
       <div class="goal-row">
         <div class="goal-head">
           <span class="goal-title">Annual Pipeline-Wert <span class="scope-chip" style="margin-left:8px;">aktiv</span></span>
-          <span class="goal-pct amber">40 % · Drift</span>
+          <span class="goal-pct amber">40 % · Drift <button class="goal-edit" data-goal-edit style="margin-left:8px; background:transparent; border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:10px; color:var(--text-mid); cursor:pointer;">Bearbeiten</button></span>
         </div>
         <div class="goal-track"><div class="goal-fill amber" style="width:40%;"></div></div>
         <div class="goal-foot"><span>CHF 480k / CHF 1.2 Mio · 01.01. – 31.12.2026</span><span>Drift −12 %</span></div>
@@ -1314,10 +1314,87 @@
       </div>
 
       <div class="drawer-foot">
-        <button class="btn btn-primary">Bearbeiten</button>
+        <button class="btn btn-primary" id="btnGoalEditFromProgress">Bearbeiten</button>
         <button class="btn">Archivieren</button>
         <span class="spacer"></span>
         <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer C · Goal-Edit (Spec §4.5/141) -->
+    <aside class="drawer" data-drawer-key="goal-edit">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Goal · Q2 Placements · MA PW · 75 % erreicht</div>
+        <div class="drawer-head-top">
+          <h3>Goal anpassen</h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Anpassen</button>
+          <button class="drawer-tab">Stornieren</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Goal-Definition</h4>
+          <div class="form-row">
+            <span class="lab">Goal-Typ</span>
+            <div class="form-input">
+              <span>Placements</span>
+              <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Aktueller Soll-Wert</span>
+            <div class="form-input num-input">
+              <span>4</span>
+              <span style="color:var(--text-light); font-size:11px; font-family:'DM Sans';">Placements</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Neuer Soll-Wert</span>
+            <div class="form-input num-input">
+              <span>5</span>
+              <span style="color:var(--text-light); font-size:11px; font-family:'DM Sans';">Placements</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Periode · Start</span>
+            <div class="form-input"><span>01.04.2026</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+          </div>
+          <div class="form-row">
+            <span class="lab">Periode · Ende</span>
+            <div class="form-input"><span>30.06.2026</span><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Begr&uuml;ndung <span style="color:var(--red);">*</span> <span style="color:var(--text-light); font-size:11px; margin-left:6px;">Pflicht</span></h4>
+          <div style="background:var(--surface-sunk); border:1px solid var(--border); border-radius:6px; padding:10px;">
+            <div contenteditable="true" style="min-height:70px; font-size:12.5px; color:var(--text); line-height:1.5; outline:none;">Pipeline hat sich Mitte Q2 stark gef&uuml;llt &mdash; 5 Placements realistisch. Stretch-Goal angepasst nach R&uuml;cksprache mit Head.</div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Auswirkung</h4>
+          <div class="callout">
+            <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div>
+              <strong>Goal-Anpassung wird auditiert</strong> &mdash; Audit-Trail h&auml;lt alten und neuen Wert, User, Timestamp und Begr&uuml;ndung fest. Drift-Berechnung startet ab Speicher-Zeitpunkt neu.
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Anpassung speichern</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
       </div>
     </aside>
 
@@ -1397,6 +1474,23 @@
     if (row.closest('.drawer-row')) return; // skip preview drawer rows
     row.style.cursor = 'pointer';
     row.addEventListener('click', () => openDrawerByKey('goal-progress'));
+  });
+  // Goal-Edit-Trigger (Spec §4.5/141)
+  // 1) "Bearbeiten"-Button im Goal-Progress-Footer
+  // 2) Top-level "Bearbeiten"-Buttons auf Goal-Cards (nicht im drawer-row)
+  document.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('#btnGoalEditFromProgress');
+    if (closeBtn) {
+      closeDrawerFn?.();
+      setTimeout(() => openDrawerByKey('goal-edit'), 280);
+      return;
+    }
+    const editBtn = e.target.closest('button.goal-edit, [data-goal-edit]');
+    if (editBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      openDrawerByKey('goal-edit');
+    }
   });
 
   // Context-switch demo: toggle read-only banner

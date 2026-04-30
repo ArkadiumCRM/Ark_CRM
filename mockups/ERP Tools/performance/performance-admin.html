@@ -878,6 +878,327 @@
         </div>
       </div>
 
+      <!-- DRAWER C · Metric-Neu (Spec §4.8/169) -->
+      <div class="drawer" data-drawer-key="metric-new">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Admin · Neue Kennzahl anlegen</div>
+          <div class="drawer-title">Neue Kennzahl</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="metricnew">
+          <button class="drawer-tab active" data-tab="def">Definition</button>
+          <button class="drawer-tab" data-tab="quelle">Quelle</button>
+          <button class="drawer-tab" data-tab="schwellen">Schwellen</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="def">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Definition</div>
+              <div class="form-row">
+                <label class="form-label">Code <span style="color:var(--text-light);">· Kleinbuchstaben + Underscore</span></label>
+                <!-- ark-lint-skip:begin reason=admin-metric-spec -->
+                <input class="input code" placeholder="z.B. mandate_acquisition_rate">
+                <!-- ark-lint-skip:end -->
+              </div>
+              <div class="form-row">
+                <label class="form-label">Label · Deutsch <span style="color:var(--red);">*</span></label>
+                <input class="input" placeholder="z.B. Mandats-Akquise-Rate">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Label · Englisch</label>
+                <input class="input" placeholder="z.B. Mandate Acquisition Rate">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Label · Französisch</label>
+                <input class="input" placeholder="z.B. Taux d'acquisition de mandats">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Beschreibung</label>
+                <textarea class="textarea" placeholder="Was misst diese Kennzahl? Welche Logik, welche Einheit?"></textarea>
+              </div>
+              <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                  <label class="form-label">Kategorie</label>
+                  <select class="select"><option>Coverage</option><option>Pipeline</option><option>Revenue</option><option>Goals</option><option>Activity</option><option>Compliance</option></select>
+                </div>
+                <div>
+                  <label class="form-label">Skala</label>
+                  <select class="select"><option>Prozent</option><option>Absolut</option><option>Index</option><option>CHF</option><option>Tage</option></select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="quelle">
+            <div class="drawer-section">
+              <div class="drawer-section-title">SQL-Quelle</div>
+              <div class="form-row">
+                <label class="form-label">Computation-Type</label>
+                <div class="radio-group">
+                  <label class="radio-row checked"><span class="radio"></span>PowerBI-View</label>
+                  <label class="radio-row"><span class="radio"></span>Direct-SQL (Custom-Snippet)</label>
+                  <label class="radio-row"><span class="radio"></span>Derived (Kombination bestehender Kennzahlen)</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">SQL-Source / View-Name</label>
+                <!-- ark-lint-skip:begin reason=admin-view-spec -->
+                <select class="select"><option>v_mandate_acquisition</option><option>v_candidate_coverage</option><option>v_revenue_attribution</option><option>v_pipeline_funnel</option></select>
+                <!-- ark-lint-skip:end -->
+              </div>
+              <div class="form-row">
+                <label class="form-label">Aggregat-Funktion</label>
+                <select class="select"><option>AVG</option><option>COUNT</option><option>SUM</option><option>MEDIAN</option><option>DERIVED</option></select>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Refresh-Cadence</label>
+                <select class="select"><option>Daily 03:00</option><option>Hourly</option><option>Every 4h</option><option>Weekly Mo 02:30</option></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="schwellen">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Default-Anomalie-Schwellen</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Werden bei der Anomalie-Detection verwendet, falls keine Scope-spezifische Schwelle gesetzt ist.</p>
+              <table class="kv-table">
+                <tr><td class="k">Info</td><td class="v"><input class="input code" value="0" style="max-width:80px;"> &nbsp; &Delta; in % vs. Vorperiode</td></tr>
+                <tr><td class="k">Warn</td><td class="v"><input class="input code" value="-10" style="max-width:80px;"> &nbsp; &Delta; in % vs. Vorperiode</td></tr>
+                <tr><td class="k">Critical</td><td class="v"><input class="input code" value="-25" style="max-width:80px;"> &nbsp; &Delta; in % vs. Vorperiode</td></tr>
+                <tr><td class="k">Blocker</td><td class="v"><input class="input code" value="-40" style="max-width:80px;"> &nbsp; &Delta; in % vs. Vorperiode</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn btn-primary">Kennzahl anlegen</button>
+        </div>
+      </div>
+
+      <!-- DRAWER D · Anomalie-Threshold (Spec §4.8/170) -->
+      <div class="drawer" data-drawer-key="anomaly-threshold">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Anomalie-Schwelle · Sparte ARC · Kandidaten-Coverage · Severity Critical</div>
+          <div class="drawer-title">Schwelle bearbeiten</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="anomthr">
+          <button class="drawer-tab active" data-tab="schwelle">Schwelle</button>
+          <button class="drawer-tab" data-tab="notif">Notification</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="schwelle">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verkn&uuml;pfung</div>
+              <div class="form-row">
+                <label class="form-label">Kennzahl</label>
+                <select class="select"><option>Kandidaten-Coverage</option><option>Account-Coverage</option><option>Pipeline-Wert</option><option>Forecast-Konfidenz</option><option>Goal-Erreichung</option></select>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Scope</label>
+                <select class="select"><option>Sparte / ARC</option><option>Sparte / GT</option><option>Sparte / ING</option><option>Sparte / PUR</option><option>Sparte / REM</option><option>Owner / *</option><option>Global</option></select>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Schwellen-Wert</div>
+              <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                  <label class="form-label">Wert</label>
+                  <input class="input code" value="50">
+                </div>
+                <div>
+                  <label class="form-label">Einheit</label>
+                  <select class="select"><option>%</option><option>Absolut</option><option>CHF</option><option>Tage</option></select>
+                </div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Direction</label>
+                <div class="radio-group">
+                  <label class="radio-row checked"><span class="radio"></span>Niedriger als Schwelle = Anomalie</label>
+                  <label class="radio-row"><span class="radio"></span>H&ouml;her als Schwelle = Anomalie</label>
+                  <label class="radio-row"><span class="radio"></span>Abweichung von Schwelle (beidseitig)</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Severity</label>
+                <div class="radio-group">
+                  <label class="radio-row"><span class="radio"></span>Info</label>
+                  <label class="radio-row"><span class="radio"></span>Warn</label>
+                  <label class="radio-row checked"><span class="radio"></span>Critical</label>
+                  <label class="radio-row"><span class="radio"></span>Blocker</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="notif">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Empfänger</div>
+              <label class="form-label">Direkt-Empfänger</label>
+              <div class="chip-input">
+                <span class="chip">Head ARC <span class="chip-x">×</span></span>
+                <span class="chip">PW <span class="chip-x">×</span></span>
+                <input class="chip-add" placeholder="Empfänger hinzufügen…">
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Kanal</div>
+              <div class="check-list">
+                <label class="check-row checked"><span class="cb"></span>In-App-Notification (Snapshot-Bar)</label>
+                <label class="check-row checked"><span class="cb"></span>Email</label>
+                <label class="check-row"><span class="cb"></span>Reminder im Reminders-Modul</label>
+                <label class="check-row"><span class="cb"></span>Auto-Insight (Performance-Insights-Page)</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn btn-gold">L&ouml;schen</button>
+          <button class="btn btn-primary">Speichern</button>
+        </div>
+      </div>
+
+      <!-- DRAWER E · Dashboard-Default (Spec §4.8/171) -->
+      <div class="drawer" data-drawer-key="dashboard-default">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Rollen-Default · Head · Dashboard · 11 Tiles</div>
+          <div class="drawer-title">Dashboard-Default Head</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="dashdef">
+          <button class="drawer-tab active" data-tab="layout">Layout</button>
+          <button class="drawer-tab" data-tab="locked">Locked-Tiles</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="layout">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Tile-Picker</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Drag &amp; Drop aus Picker auf Layout-Position. Aktive Tiles werden in der Reihenfolge eingef&uuml;gt.</p>
+              <div class="check-list">
+                <label class="check-row checked"><span class="cb"></span>Pipeline-Wert &middot; gesamt (KPI)</label>
+                <label class="check-row checked"><span class="cb"></span>Forecast Q-Ende (Forecast)</label>
+                <label class="check-row checked"><span class="cb"></span>Funnel &middot; aktiv (Funnel)</label>
+                <label class="check-row checked"><span class="cb"></span>Goal-Progress Q2 (Goal)</label>
+                <label class="check-row checked"><span class="cb"></span>Sparten-Vergleich Revenue (Bar)</label>
+                <label class="check-row checked"><span class="cb"></span>Top-5 Forecast-Prozesse (Liste)</label>
+                <label class="check-row checked"><span class="cb"></span>Coverage-Heatmap (Heatmap)</label>
+                <label class="check-row"><span class="cb"></span>Anomalie-Liste (Liste)</label>
+                <label class="check-row"><span class="cb"></span>Massnahmen-Liste (Liste)</label>
+                <label class="check-row"><span class="cb"></span>Compliance-Score (KPI)</label>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Position-Drag &middot; Layout-Reihenfolge</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0;">Aktive Reihenfolge: Pipeline-Wert &rarr; Forecast Q-Ende &rarr; Funnel &rarr; Goal-Progress &rarr; Sparten-Vergleich &rarr; Top-5 &rarr; Coverage-Heatmap. Drag-Handle zum Verschieben aktiv im Customize-Mode.</p>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="locked">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Locked-Tiles · non-editable für User</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Locked-Tiles erscheinen ohne Settings-Icon und Drag-Handle bei Usern dieser Rolle.</p>
+              <div class="check-list">
+                <label class="check-row checked"><span class="cb"></span>Pipeline-Wert &middot; gesamt &middot; Position 1 (Locked)</label>
+                <label class="check-row checked"><span class="cb"></span>Forecast Q-Ende &middot; Position 2 (Locked)</label>
+                <label class="check-row"><span class="cb"></span>Funnel &middot; aktiv (frei verschiebbar)</label>
+                <label class="check-row"><span class="cb"></span>Goal-Progress Q2 (frei verschiebbar)</label>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Hinweis</div>
+              <div class="callout callout-amber">
+                Lock-&Auml;nderung wirkt sich erst beim n&auml;chsten Page-Reload aller User mit dieser Rolle aus. User-Custom-Layouts werden nur dann ge&uuml;berschrieben, wenn der entsprechende Tile-Lock neu gesetzt wird.
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn">Layout zur&uuml;ck auf Standard</button>
+          <button class="btn btn-primary">Default speichern</button>
+        </div>
+      </div>
+
+      <!-- DRAWER F · Snapshot-Lag (Spec §4.8/173) -->
+      <div class="drawer" data-drawer-key="snapshot-lag">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Worker-Health · Snapshot-Lag · 4 Worker · 1 stale</div>
+          <div class="drawer-title">Snapshot-Lag &amp; Refresh-Status</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="snaplag">
+          <button class="drawer-tab active" data-tab="status">Status</button>
+          <button class="drawer-tab" data-tab="manuell">Manuell</button>
+          <button class="drawer-tab" data-tab="audit">Audit</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="status">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Per-Ansicht · Last-Refresh</div>
+              <table class="kv-table">
+                <!-- ark-lint-skip:begin reason=admin-view-spec -->
+                <tr><td class="k">Coverage-View</td><td class="v good-v">25.04.2026 03:18 <span class="meta">✓ fresh · 14 min lag</span></td></tr>
+                <tr><td class="k">Pipeline-Funnel-View</td><td class="v good-v">25.04.2026 03:22 <span class="meta">✓ fresh · 18 min lag</span></td></tr>
+                <tr><td class="k">Revenue-Attribution-View</td><td class="v good-v">25.04.2026 03:30 <span class="meta">✓ fresh · 26 min lag</span></td></tr>
+                <tr><td class="k">Forecast-Audit-View</td><td class="v warn-v">⚠ stale · 7 days &middot; 18.04.2026 02:30 <span class="meta">threshold 24h</span></td></tr>
+                <!-- ark-lint-skip:end -->
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Worker-Status</div>
+              <table class="kv-table">
+                <tr><td class="k">metric-snapshot-daily</td><td class="v good-v">✓ ok · last 03:00 · 0 failures (30d)</td></tr>
+                <tr><td class="k">anomaly-detector</td><td class="v good-v">✓ ok · last 04:00 · 0 failures (30d)</td></tr>
+                <tr><td class="k">forecast-recompute</td><td class="v warn-v">⚠ slow · last 04:30 · 2 failures (30d)</td></tr>
+                <tr><td class="k">action-outcome-measurer</td><td class="v good-v">✓ ok · last 05:00 · 0 failures (30d)</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="manuell">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Force-Refresh pro Ansicht</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Manueller Refresh umgeht den Cron-Plan und f&uuml;hrt den Refresh sofort aus. Nur f&uuml;r Admin-Rolle.</p>
+              <table class="kv-table">
+                <!-- ark-lint-skip:begin reason=admin-view-spec -->
+                <tr><td class="k">Coverage-View</td><td class="v"><button class="btn btn-sm">Refresh jetzt</button></td></tr>
+                <tr><td class="k">Pipeline-Funnel-View</td><td class="v"><button class="btn btn-sm">Refresh jetzt</button></td></tr>
+                <tr><td class="k">Revenue-Attribution-View</td><td class="v"><button class="btn btn-sm">Refresh jetzt</button></td></tr>
+                <tr><td class="k">Forecast-Audit-View</td><td class="v"><button class="btn btn-sm btn-gold">Refresh jetzt (stale)</button></td></tr>
+                <!-- ark-lint-skip:end -->
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="audit">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Refresh-Historie · letzte 30 Tage</div>
+              <table class="kv-table">
+                <tr><td class="k mono">25.04. 03:18</td><td class="v good-v">✓ Coverage-View · 14 min</td></tr>
+                <tr><td class="k mono">25.04. 03:22</td><td class="v good-v">✓ Pipeline-Funnel-View · 18 min</td></tr>
+                <tr><td class="k mono">25.04. 03:30</td><td class="v good-v">✓ Revenue-Attribution-View · 26 min</td></tr>
+                <tr><td class="k mono">18.04. 02:30</td><td class="v warn-v">⚠ Forecast-Audit-View · cron-paused</td></tr>
+                <tr><td class="k mono">04.04. 02:32</td><td class="v warn-v">⚠ Coverage-View · 12s slow</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Schliessen</button>
+          <button class="btn btn-primary">Alle stale Views refreshen</button>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1090,12 +1411,12 @@ document.querySelectorAll('#metricsBody tr').forEach(r => {
     openDrawerByKey('metric-edit');
   });
 });
-// Schwelle-Row → metric-edit (Schwellen-Tab) — uses same metric-edit drawer
+// Schwelle-Row → anomaly-threshold (Spec §4.8/170)
 document.querySelectorAll('#schwellenBody tr').forEach(r => {
   r.style.cursor = 'pointer';
   r.addEventListener('click', (e) => {
     if (e.target.closest('a, button')) return;
-    openDrawerByKey('metric-edit');
+    openDrawerByKey('anomaly-threshold');
   });
 });
 // View-Row → powerbi-view
@@ -1106,11 +1427,29 @@ document.querySelectorAll('#viewsBody tr').forEach(r => {
     openDrawerByKey('powerbi-view');
   });
 });
-// "+ Neue Metric" / "+ Neue Schwelle" Buttons → metric-edit (placeholder for new)
+// Dashboard-Default-Row → dashboard-default (Spec §4.8/171)
+document.querySelectorAll('#dashboardDefaultsBody tr').forEach(r => {
+  r.style.cursor = 'pointer';
+  r.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    openDrawerByKey('dashboard-default');
+  });
+});
+// Worker-Row → snapshot-lag (Spec §4.8/173)
+document.querySelectorAll('#workersBody tr').forEach(r => {
+  r.style.cursor = 'pointer';
+  r.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    openDrawerByKey('snapshot-lag');
+  });
+});
+// Action-Buttons (+ Metric, + Threshold, + Default, etc.)
 document.querySelectorAll('button').forEach(b => {
   const t = (b.textContent || '').trim();
-  if (t === '+ Neue Metric' || t === '+ Neue Schwelle') {
-    b.addEventListener('click', () => openDrawerByKey('metric-edit'));
+  if (t === '+ Neue Metric' || t === '+ Metric') {
+    b.addEventListener('click', () => openDrawerByKey('metric-new'));
+  } else if (t === '+ Neue Schwelle' || t === '+ Threshold') {
+    b.addEventListener('click', () => openDrawerByKey('anomaly-threshold'));
   }
 });
 </script>

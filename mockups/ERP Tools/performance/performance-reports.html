@@ -701,6 +701,7 @@
       <button class="tab-sw-btn active" data-tab="templates">Templates <span class="count">6</span></button>
       <button class="tab-sw-btn" data-tab="runs">Runs <span class="count">24</span></button>
     </div>
+    <button class="btn btn-gold" id="btnTemplateNew" style="margin-left:auto;" title="Admin · Neues Template anlegen">+ Template</button>
   </section>
 
   <!-- TAB CONTENT — TEMPLATES -->
@@ -921,6 +922,224 @@
         </div>
       </div>
 
+      <!-- DRAWER C · Template-Config (Admin) (Spec §4.7/161) -->
+      <div class="drawer" id="drawer-template-config">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Admin · Template · Strategic Quarterly Report · aktiv</div>
+          <div class="drawer-title">Template-Konfiguration</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="tplconfig">
+          <button class="drawer-tab active" data-tab="tpl">Template</button>
+          <button class="drawer-tab" data-tab="empf">Empfänger</button>
+          <button class="drawer-tab" data-tab="periode">Periode</button>
+          <button class="drawer-tab" data-tab="audit">Audit</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="tpl">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Stammdaten</div>
+              <div class="form-row">
+                <label class="form-label">Titel</label>
+                <input class="input" value="Strategic Quarterly Report">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Beschreibung</label>
+                <textarea class="textarea">Quartals-Report f&uuml;r GL und Sparten-Heads. Enth&auml;lt Sparten-Vergleich, Revenue-Verlauf, Forecast Year-End und strategische Empfehlungen.</textarea>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Tag-Label</label>
+                <input class="input" value="Strategic">
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Body-HTML</div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 8px 0;">Email-Body und PDF-Cover werden aus der gleichen HTML-Vorlage gerendert.</p>
+              <textarea class="textarea" style="font-family:'JetBrains Mono',monospace;font-size:11px;height:120px;">&lt;h1&gt;{{title}}&lt;/h1&gt;
+&lt;p&gt;Quartal {{period_label}} &middot; Stand {{generated_at}}&lt;/p&gt;
+&lt;section&gt;{{sparten_vergleich}}&lt;/section&gt;
+&lt;section&gt;{{revenue_chart}}&lt;/section&gt;
+&lt;section&gt;{{forecast_summary}}&lt;/section&gt;
+&lt;section&gt;{{recommendations}}&lt;/section&gt;</textarea>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Inhalte (Modul-Bl&ouml;cke)</div>
+              <div class="check-list">
+                <label class="check-row checked"><span class="cb"></span>Sparten-Vergleich (alle 5)</label>
+                <label class="check-row checked"><span class="cb"></span>Revenue-Verlauf + Forecast YE</label>
+                <label class="check-row checked"><span class="cb"></span>Top/Flop-Mandanten</label>
+                <label class="check-row checked"><span class="cb"></span>Strategie-Empfehlungen</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="empf">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Default-Empfänger</div>
+              <label class="form-label">Direkt-Empfänger</label>
+              <div class="chip-input">
+                <span class="chip">PW <span class="chip-x">×</span></span>
+                <span class="chip">JV <span class="chip-x">×</span></span>
+                <span class="chip">LR <span class="chip-x">×</span></span>
+                <input class="chip-add" placeholder="Empfänger hinzufügen…">
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Subscribe-Optionen</div>
+              <div class="toggle-row">
+                <span>Aktive Subscription für GL-Verteiler</span>
+                <div class="switch on"></div>
+              </div>
+              <div class="toggle-row">
+                <span>BCC an Performance-Admin</span>
+                <div class="switch"></div>
+              </div>
+              <div class="toggle-row">
+                <span>Self-Subscribe via Email-Link erlauben</span>
+                <div class="switch on"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="periode">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Default-Frequenz</div>
+              <div class="form-row">
+                <label class="form-label">Cadence</label>
+                <select class="select">
+                  <option>Daily</option>
+                  <option>Weekly</option>
+                  <option>Monthly</option>
+                  <option selected>Quarterly</option>
+                  <option>Annual</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Cron-Expression</label>
+                <input class="input" value="0 6 1 1,4,7,10 *" style="font-family:'JetBrains Mono',monospace;">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Period-Selector (Daten-Periode)</label>
+                <select class="select">
+                  <option selected>Vorheriges Quartal</option>
+                  <option>Aktuelles Quartal (rolling)</option>
+                  <option>Year-to-Date</option>
+                  <option>Rolling 90 Tage</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="audit">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Audit-Trail</div>
+              <table class="kv-table">
+                <tr><td class="k">Erstellt</td><td class="v">12.01.2025 · PW</td></tr>
+                <tr><td class="k">Letzte Änderung</td><td class="v">22.04.2026 · PW <span class="meta">Empfänger erweitert</span></td></tr>
+                <tr><td class="k">Used-N-Times</td><td class="v">14 Runs <span class="meta">davon 13 erfolgreich</span></td></tr>
+                <tr><td class="k">Letzter Run</td><td class="v">06.04.2026 · ✓ delivered</td></tr>
+                <tr><td class="k">Nächster Run</td><td class="v">01.07.2026 06:00 (Cron)</td></tr>
+              </table>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">History · letzte 5 Änderungen</div>
+              <table class="kv-table">
+                <tr><td class="k mono">22.04.2026</td><td class="v">PW · Empfänger LR hinzugefügt</td></tr>
+                <tr><td class="k mono">15.03.2026</td><td class="v">PW · Cron-Cadence quarterly bestätigt</td></tr>
+                <tr><td class="k mono">28.01.2026</td><td class="v">JV · Body-HTML Strategie-Block überarbeitet</td></tr>
+                <tr><td class="k mono">12.01.2025</td><td class="v">PW · Template erstellt</td></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn">Pause-Toggle</button>
+          <button class="btn btn-primary">Speichern</button>
+        </div>
+      </div>
+
+      <!-- DRAWER D · Template-Neu (Admin) (Spec §4.7/162) -->
+      <div class="drawer" id="drawer-template-new">
+        <div class="drawer-head">
+          <div class="drawer-eyebrow">Admin · Neues Template anlegen</div>
+          <div class="drawer-title">Neues Report-Template</div>
+          <button class="drawer-close" aria-label="Schliessen">&times;</button>
+        </div>
+        <div class="drawer-tabs" data-drawer="tplnew">
+          <button class="drawer-tab active" data-tab="basis">Basis</button>
+          <button class="drawer-tab" data-tab="verkn">Verkn&uuml;pfung</button>
+        </div>
+        <div class="drawer-body">
+
+          <div class="tab-pane active" data-pane="basis">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Stammdaten</div>
+              <div class="form-row">
+                <label class="form-label">Titel</label>
+                <input class="input" placeholder="z.B. Weekly Sparten-Digest">
+              </div>
+              <div class="form-row">
+                <label class="form-label">Beschreibung</label>
+                <textarea class="textarea" placeholder="Wozu dient dieses Template? Welche Empfänger, welche Häufigkeit, welche Daten?"></textarea>
+              </div>
+              <div class="form-row">
+                <label class="form-label">Tag-Label</label>
+                <input class="input" placeholder="z.B. Operational, Strategic, Compliance">
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Body-Skeleton</div>
+              <label class="form-label">Vorlage</label>
+              <div class="radio-group">
+                <label class="radio-row checked"><span class="radio"></span>Leer (HTML von Grund auf)</label>
+                <label class="radio-row"><span class="radio"></span>Operational-Skeleton (Wochen-Digest)</label>
+                <label class="radio-row"><span class="radio"></span>Strategic-Skeleton (Quartals-Vergleich)</label>
+                <label class="radio-row"><span class="radio"></span>Compliance-Skeleton (Pflicht-Score + Lücken)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="verkn">
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verkn&uuml;pfte Kennzahl <span class="drawer-section-meta">optional</span></div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Kennzahl-Verkn&uuml;pfung erlaubt Auto-Trigger bei Anomalie-Detection oder Drift.</p>
+              <div class="form-row">
+                <label class="form-label">Linked-Metric</label>
+                <select class="select">
+                  <option>(keine Verkn&uuml;pfung)</option>
+                  <option>Kandidaten-Coverage</option>
+                  <option>Pipeline-Wert</option>
+                  <option>Forecast-Konfidenz</option>
+                  <option>Goal-Erreichung Quartal</option>
+                  <option>Compliance-Score</option>
+                </select>
+              </div>
+            </div>
+            <div class="drawer-section">
+              <div class="drawer-section-title">Verkn&uuml;pfter Activity-Type <span class="drawer-section-meta">optional</span></div>
+              <p style="font-size:12px;color:var(--text-mid);margin:0 0 10px 0;">Auto-Trigger bei bestimmten Aktivit&auml;ten (z.B. nach jedem Placement automatisch Report an GL).</p>
+              <div class="form-row">
+                <label class="form-label">Activity-Type</label>
+                <select class="select">
+                  <option>(kein Auto-Trigger)</option>
+                  <option>Placement</option>
+                  <option>Mandat-Akquise</option>
+                  <option>Quartals-Wechsel</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="drawer-foot">
+          <button class="btn btn-ghost">Abbrechen</button>
+          <button class="btn btn-primary">Template anlegen + zur Konfiguration</button>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1127,6 +1346,17 @@ document.querySelectorAll('#runsBody tr').forEach(r => {
     if (e.target.closest('a, button')) return;
     openDrawerByKey('run-detail');
   });
+});
+// Template-Card Click (Admin) → drawer-template-config (Spec §4.7/161)
+document.getElementById('templatesGrid')?.addEventListener('click', (e) => {
+  if (e.target.closest('a, button, .switch')) return;
+  const card = e.target.closest('.tpl-card');
+  if (!card) return;
+  openDrawerByKey('template-config');
+});
+// "+ Template"-Button (Admin) → drawer-template-new (Spec §4.7/162)
+document.getElementById('btnTemplateNew')?.addEventListener('click', () => {
+  openDrawerByKey('template-new');
 });
 </script>
 </body>

@@ -755,35 +755,35 @@
                 <td><span class="mono" style="font-size:11px;">MAN-2026-099</span> <span class="scope-chip">ING</span></td>
                 <td><span class="avatar" style="display:inline-grid;">LR</span></td>
                 <td class="num bad">31 d</td>
-                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#" data-open-drawer="funnel-process">→ Profil</a></td>
               </tr>
               <tr>
                 <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar gold">RM</span>RM</span></td>
                 <td><span class="mono" style="font-size:11px;">MAN-2026-104</span> <span class="scope-chip">ARC</span></td>
                 <td><span class="avatar" style="display:inline-grid;">JV</span></td>
                 <td class="num">22 d</td>
-                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#" data-open-drawer="funnel-process">→ Profil</a></td>
               </tr>
               <tr>
                 <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar green">FA</span>FA</span></td>
                 <td><span class="mono" style="font-size:11px;">MAN-2026-118</span> <span class="scope-chip">ARC</span></td>
                 <td><span class="avatar" style="display:inline-grid;">PW</span></td>
                 <td class="num">14 d</td>
-                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#" data-open-drawer="funnel-process">→ Profil</a></td>
               </tr>
               <tr>
                 <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar amber">TM</span>TM</span></td>
                 <td><span class="mono" style="font-size:11px;">MAN-2026-115</span> <span class="scope-chip">GT</span></td>
                 <td><span class="avatar" style="display:inline-grid;">JV</span></td>
                 <td class="num">11 d</td>
-                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#" data-open-drawer="funnel-process">→ Profil</a></td>
               </tr>
               <tr>
                 <td><span style="display:inline-flex;align-items:center;gap:8px;"><span class="avatar">SK</span>SK</span></td>
                 <td><span class="mono" style="font-size:11px;">MAN-2026-127</span> <span class="scope-chip">ARC</span></td>
                 <td><span class="avatar" style="display:inline-grid;">PW</span></td>
                 <td class="num">8 d</td>
-                <td class="num"><a class="mono" style="color:var(--accent);" href="#">→ Profil</a></td>
+                <td class="num"><a class="mono" style="color:var(--accent);" href="#" data-open-drawer="funnel-process">→ Profil</a></td>
               </tr>
             </tbody>
           </table>
@@ -869,6 +869,87 @@
       <div class="drawer-foot">
         <button class="btn btn-primary">Export PDF</button>
         <button class="btn">An Dok-Generator senden</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer C: Process Detail (Spec §4.2/115) -->
+    <aside class="drawer" data-drawer-key="funnel-process">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Prozess · MAN-2026-115 · Stage TI · Owner PW</div>
+        <div class="drawer-head-top">
+          <h3>R. M. <span style="color:var(--text-light); font-weight:400; font-size:13px;">Senior Architekt · ARC</span></h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Übersicht</button>
+          <button class="drawer-tab">Stage-Verlauf</button>
+          <button class="drawer-tab">Drop-Off-Risiko</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Übersicht</h4>
+          <div class="kv">
+            <div class="k">Kandidat</div>
+            <div class="v">R. M. <span style="color:var(--text-light); font-size:11px; margin-left:6px;">(anonym, ID-105)</span></div>
+            <div class="k">Mandat</div>
+            <div class="v"><span class="mono">MAN-2026-115</span></div>
+            <div class="k">Position</div>
+            <div class="v">Senior Architekt · Hochbau</div>
+            <div class="k">Aktuelle Stage</div>
+            <div class="v"><span class="badge b-stage">TI</span> <span style="color:var(--text-mid); margin-left:6px;">seit 22 Tagen</span></div>
+            <div class="k">Owner</div>
+            <div class="v">PW <span style="color:var(--text-light); font-size:11px; margin-left:6px;">Account-Manager</span></div>
+            <div class="k">Honorar erwartet</div>
+            <div class="v"><span class="num">CHF 32k</span> <span style="color:var(--text-light); font-size:11px; margin-left:6px;">22 % Fee</span></div>
+            <div class="k">Wahrscheinlichkeit</div>
+            <div class="v"><span class="score-badge warn" style="margin-left:0;">38 %</span> <span style="color:var(--text-mid); margin-left:6px;">Markov · Pfad TI → Placement</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Stage-Verlauf · 8 Schritte</h4>
+          <div class="mini-bars">
+            <div class="mini-bar-row"><span class="lab">Expose</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%; background:var(--green);"></div></div><span class="num">12.02.</span></div>
+            <div class="mini-bar-row"><span class="lab">CV Sent</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%; background:var(--green);"></div></div><span class="num">28.02.</span></div>
+            <div class="mini-bar-row"><span class="lab">TI</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:60%; background:var(--gold-strong);"></div></div><span class="num">10.03. · aktuell</span></div>
+            <div class="mini-bar-row"><span class="lab">1st</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;"></div></div><span class="num" style="color:var(--text-light);">offen</span></div>
+            <div class="mini-bar-row"><span class="lab">2nd</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;"></div></div><span class="num" style="color:var(--text-light);">offen</span></div>
+            <div class="mini-bar-row"><span class="lab">3rd</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;"></div></div><span class="num" style="color:var(--text-light);">offen</span></div>
+            <div class="mini-bar-row"><span class="lab">Offer</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;"></div></div><span class="num" style="color:var(--text-light);">offen</span></div>
+            <div class="mini-bar-row"><span class="lab">Placement</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;"></div></div><span class="num" style="color:var(--text-light);">offen</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Drop-Off-Risiko</h4>
+          <div class="kv">
+            <div class="k">Stalled-Since</div>
+            <div class="v"><span style="color:var(--red);">22 Tage in TI</span> <span style="color:var(--text-mid); font-size:11px; margin-left:6px;">Median 9 Tage</span></div>
+            <div class="k">Last-Activity</div>
+            <div class="v">vor 18 Tagen <span class="score-badge bad" style="margin-left:6px;">stale</span></div>
+            <div class="k">Owner-Workload</div>
+            <div class="v">42 aktive Prozesse <span style="color:var(--text-mid); font-size:11px; margin-left:6px;">Top-Quartil</span></div>
+          </div>
+          <div class="callout" style="margin-top:10px;">
+            <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 2 21h20L12 3zM12 10v6M12 18v.01"/></svg>
+            <div>
+              <strong>Risiko Stage-Stillstand</strong> &mdash; 2.4× über Median in TI. Nächster Schritt: Owner-Reminder oder Reassign empfohlen.
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Zur CRM-Vollansicht</button>
+        <button class="btn">Reminder erstellen</button>
         <span class="spacer"></span>
         <button class="btn btn-ghost">Schliessen</button>
       </div>
@@ -1033,6 +1114,15 @@
     if ((b.textContent || '').trim() === 'Cohort-Analyse') {
       b.addEventListener('click', () => openDrawerByKey('funnel-cohort'));
     }
+  });
+  // Process-Row in Stage-Drawer → funnel-process (Spec §4.2/115)
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-open-drawer="funnel-process"]');
+    if (!link) return;
+    e.preventDefault();
+    e.stopPropagation();
+    closeDrawerFn();
+    setTimeout(() => openDrawerByKey('funnel-process'), 280);
   });
 
   // Cohort heatmap — Months + Stage-Namen aus shared sample-data.

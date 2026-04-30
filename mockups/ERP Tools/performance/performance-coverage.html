@@ -1030,6 +1030,115 @@
       </div>
     </aside>
 
+    <!-- Drawer C: Account Detail (Spec §4.3/123) -->
+    <aside class="drawer" data-drawer-key="coverage-account">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Account · Klasse A · Sparte ARC · Owner PW · letzte Touch vor 38 d</div>
+        <div class="drawer-head-top">
+          <div class="avatar gold lg">HB</div>
+          <h3>Hochbau Beteiligungs AG <span style="color:var(--text-light); font-weight:400; font-size:13px;">CH-8001 Zürich</span></h3>
+          <button class="drawer-close">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Coverage</button>
+          <button class="drawer-tab">Mandate aktiv</button>
+          <button class="drawer-tab">Aktion</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Coverage-Status</h4>
+          <div class="kv">
+            <div class="k">Account-Klasse</div>
+            <div class="v"><span class="badge b-stage" style="background:var(--gold-tint); color:var(--gold-strong);">Klasse A</span> <span style="color:var(--text-mid); font-size:11px; margin-left:6px;">Strategischer Kunde</span></div>
+            <div class="k">Org-Funktion · Hauptkontakt</div>
+            <div class="v">VR-Mandat · Dr. M. Bühler</div>
+            <div class="k">Soll-Frequenz</div>
+            <div class="v">alle 21 Tage</div>
+            <div class="k">Letzter Touch</div>
+            <div class="v">vor 38 Tagen <span class="score-badge bad" style="margin-left:8px;">28 %</span></div>
+            <div class="k">Sparte-Bezug</div>
+            <div class="v"><span class="scope-chip">ARC</span> <span class="scope-chip" style="margin-left:4px;">GT</span></div>
+            <div class="k">Owner</div>
+            <div class="v">PW <span style="color:var(--text-light); font-size:11px; margin-left:6px;">Account-Manager</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Touch-Historie · letzte 90 Tage</h4>
+          <div class="touch-timeline">
+            <div class="gridline" style="left:33.3%;"></div>
+            <div class="gridline" style="left:66.6%;"></div>
+            <!-- gap: last 38 days -->
+            <div class="gap" style="left:58%; right:0;"></div>
+            <div class="dot" style="left:9%;"></div>
+            <div class="dot" style="left:23%;"></div>
+            <div class="dot" style="left:42%;"></div>
+            <div class="dot" style="left:58%;"></div>
+            <div class="now"></div>
+            <div class="now-lbl">heute</div>
+          </div>
+          <div class="touch-axis">
+            <span>−90 d</span><span>−60 d</span><span>−30 d</span><span>0</span>
+          </div>
+          <div style="margin-top:10px; font-size:11.5px; color:var(--text-mid);">
+            4 Touches in 90 Tagen · letzte <strong style="color:var(--red);">5 Wochen ohne Aktivität</strong>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Aktive Mandate · 3</h4>
+          <table class="det-table">
+            <thead><tr><th>Mandat</th><th>Position</th><th>Stage</th><th class="num">Tage</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mono" style="font-size:11px;">MAN-2026-104</span></td><td>Senior Architekt</td><td><span class="badge b-stage">2nd</span></td><td class="num">42 d</td></tr>
+              <tr><td><span class="mono" style="font-size:11px;">MAN-2026-118</span></td><td>Bauleiter Hochbau</td><td><span class="badge b-stage">CV Sent</span></td><td class="num">12 d</td></tr>
+              <tr><td><span class="mono" style="font-size:11px;">MAN-2026-127</span></td><td>Projektleiter Tiefbau</td><td><span class="badge b-stage">Expose</span></td><td class="num">5 d</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Owner-Soll · 90 Tage</h4>
+          <div class="mini-bars">
+            <div class="mini-bar-row">
+              <span class="lab">Erwartet</span>
+              <div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%; background:var(--text-light);"></div></div>
+              <span class="num">5 Touches</span>
+            </div>
+            <div class="mini-bar-row">
+              <span class="lab">Real</span>
+              <div class="mini-bar-track"><div class="mini-bar-fill" style="width:80%; background:var(--amber);"></div></div>
+              <span class="num">4 Touches</span>
+            </div>
+          </div>
+          <div style="margin-top:8px; font-size:11.5px; color:var(--text-mid); font-family:'JetBrains Mono',monospace;">
+            Soll-Erfüllung · 80 % · aktuell unter-touched seit 38 Tagen
+          </div>
+        </section>
+
+        <div class="callout">
+          <svg class="ico ico-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 2 21h20L12 3zM12 10v6M12 18v.01"/></svg>
+          <div>
+            <strong>Strategischer Kunde · Coverage-Risiko</strong> &mdash; 38 Tage ohne Touch trotz 3 aktiven Mandaten. Empfehlung: Reminder &uuml;ber Owner oder AM-Wechsel evaluieren.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Reminder erstellen</button>
+        <button class="btn">Touch protokollieren</button>
+        <button class="btn">AM-Wechsel anstossen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
   </div>
 
   <div class="footer-line">
@@ -1380,6 +1489,19 @@
   if (typeof bulkBtn !== 'undefined' && bulkBtn) {
     bulkBtn.addEventListener('click', () => openDrawerByKey('coverage-bulk-action'));
   }
+  // Account-Tab-Button → coverage-account (Spec §4.3/123) · Demo-Trigger:
+  //   Wenn Accounts-Tab aktiv, öffnet ein Click auf Critical-Row den Account-Detail-Drawer
+  let _accountMode = false;
+  if (tabAcc) tabAcc.addEventListener('click', () => { _accountMode = true; });
+  if (tabKand) tabKand.addEventListener('click', () => { _accountMode = false; });
+  document.addEventListener('click', (e) => {
+    if (!_accountMode) return;
+    const tr = e.target.closest('#critBody tr');
+    if (!tr) return;
+    if (e.target.closest('.cb, .action-link')) return;
+    e.stopPropagation();
+    openDrawerByKey('coverage-account');
+  }, true);
 </script>
 </body>
 </html>
