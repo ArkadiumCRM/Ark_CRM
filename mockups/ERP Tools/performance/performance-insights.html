@@ -1263,7 +1263,7 @@
         <h2>Massnahmen</h2>
         <span class="meta">2 verknüpft</span>
         <div class="right">
-          <button class="btn btn-primary">+ Neue Massnahme</button>
+          <button class="btn btn-primary js-action-create-trigger">+ Neue Massnahme</button>
         </div>
       </div>
 
@@ -1276,7 +1276,7 @@
       <div class="actions-list">
 
         <!-- Action 1: in_progress -->
-        <article class="action">
+        <article class="action js-action-card" data-action-id="ACT-1187">
           <div class="action-top">
             <span class="badge b-progress">In Arbeit</span>
             <span>· erstellt aus Insight #INS-2026-0241</span>
@@ -1298,7 +1298,7 @@
         </article>
 
         <!-- Action 2: done with outcome pending confirm -->
-        <article class="action">
+        <article class="action js-action-card" data-action-id="ACT-1186">
           <div class="action-top">
             <span class="badge b-done">Erledigt</span>
             <span>· abgeschlossen 24.04.2026</span>
@@ -1477,7 +1477,8 @@
         <button class="btn">Quittieren</button>
         <button class="btn btn-ghost">Verwerfen</button>
         <span class="spacer"></span>
-        <button class="btn btn-gold">Massnahme erstellen</button>
+        <!-- New CTA per Spec §4.6 — verbindet drawer-insight-detail mit drawer-action-create -->
+        <button class="btn btn-gold js-action-create-trigger">Massnahme erstellen</button>
       </div>
     </aside>
 
@@ -1565,9 +1566,333 @@
 
       <div class="drawer-foot">
         <button class="btn btn-green" style="font-weight:600;">Wirkung bestätigen → Insight resolven</button>
-        <button class="btn">Folge-Massnahme</button>
+        <button class="btn js-followup-trigger">Folge-Massnahme</button>
         <span class="spacer"></span>
         <button class="btn btn-ghost">Später</button>
+      </div>
+    </aside>
+
+    <!-- Drawer C: Action Create (Spec §4.6) — getriggert aus drawer-insight-detail "Massnahme erstellen" CTA -->
+    <aside class="drawer" data-drawer-key="action-create">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Massnahme · zu Insight #INS-2026-0241 · Coverage ARC kritisch</div>
+        <div class="drawer-head-top">
+          <h3>Neue Massnahme erstellen</h3>
+          <button class="drawer-close" title="Schliessen">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Massnahme</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Verknüpfte Insight</h4>
+          <div class="reco-box" style="background: var(--accent-tint); border-left:3px solid var(--accent); padding:10px 12px;">
+            <div style="font-weight:600; font-size:13px; color:var(--text);">Coverage ARC kritisch unter Soll</div>
+            <div style="font-size:11px; color:var(--text-mid); margin-top:3px;">
+              <span class="mono">#INS-2026-0241</span> · Critical · seit 23.04.2026 · Owner PW
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Massnahme · Stammdaten</h4>
+          <div class="drawer-form-row">
+            <label>Titel</label>
+            <input type="text" placeholder="Kurze, prägnante Bezeichnung" value="" />
+            <span class="hint">z.B. „8 vernachlässigte ARC-Kandidaten reaktivieren"</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Hypothese · Geplante Intervention</label>
+            <textarea placeholder="Was wird konkret unternommen? Welche Wirkung wird erwartet?"></textarea>
+            <span class="hint">Beschreibe Vorgehen + erwartete Wirkung in 2-4 Sätzen.</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Owner</label>
+            <select>
+              <option>PW · Peter Wiederkehr</option>
+              <option>JV · Joel Vögeli</option>
+              <option>LR · Luca Roduner</option>
+              <option>SN · Sabine Nyffeler</option>
+              <option>MB · Marius Brunner</option>
+              <option>DH · Daniel Häfeli</option>
+            </select>
+          </div>
+          <div class="drawer-form-row">
+            <label>Fällig am</label>
+            <input type="date" value="2026-05-07" />
+            <span class="hint">Kalender-Picker oder manuelle Eingabe (TT.MM.JJJJ).</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Priorität</label>
+            <select>
+              <option>Niedrig</option>
+              <option selected>Normal</option>
+              <option>Hoch</option>
+              <option>Kritisch</option>
+            </select>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Auto-Wirkungsmessung</h4>
+          <p style="font-size:12px; color:var(--text-mid); margin:0 0 6px 0;">
+            Nach Status „Done" misst das System automatisch nach 7 Tagen die Wirkung gegenüber der Baseline.
+          </p>
+          <div class="drawer-form-row">
+            <label>Mess-Fenster</label>
+            <select>
+              <option>3 Tage nach Done</option>
+              <option selected>7 Tage nach Done (Standard)</option>
+              <option>14 Tage nach Done</option>
+              <option>30 Tage nach Done</option>
+            </select>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Massnahme erstellen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer D: Action Detail (Spec §4.6) — getriggert aus Action-Card-Click in rechter Spalte -->
+    <aside class="drawer" data-drawer-key="action-detail">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Massnahme · #ACT-1187 · zu Insight #INS-2026-0241</div>
+        <div class="drawer-head-top">
+          <span class="badge b-progress">In Arbeit</span>
+          <h3>8 unter-touched ARC-Kandidaten reaktivieren</h3>
+          <button class="drawer-close" title="Schliessen">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Übersicht</button>
+          <button class="drawer-tab">Verlauf</button>
+          <button class="drawer-tab">Verknüpfte Insight</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Stammdaten</h4>
+          <table class="kv-table">
+            <tbody>
+              <tr><td>Titel</td><td>8 unter-touched ARC-Kandidaten reaktivieren</td></tr>
+              <tr><td>Owner</td><td><span class="avatar-chip"><span class="avatar">PW</span> PW · Peter Wiederkehr</span></td></tr>
+              <tr><td>Status</td><td><span class="badge b-progress">In Arbeit</span></td></tr>
+              <tr><td>Priorität</td><td>Hoch</td></tr>
+              <tr><td>Fällig am</td><td><span class="mono">28.04.2026</span> · noch 3 Tage</td></tr>
+              <tr><td>Erstellt am</td><td><span class="mono">25.04.2026 · 09:14</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Hypothese · Geplante Intervention</h4>
+          <p style="font-size:12.5px; color:var(--text); margin:0;">
+            Touch-Sweep über 8 Kandidaten ohne Aktivität in den letzten 21 Tagen. Erwartete Wirkung +6 bis +10 pp Coverage innerhalb 7 Tagen.
+          </p>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Auto-Wirkungsmessung</h4>
+          <div style="font-size:12px; color:var(--text-mid);">
+            Mess-Fenster · 7 Tage nach Done · noch nicht gestartet (Status ist „In Arbeit").
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verlauf</h4>
+          <div class="timeline">
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div>
+                <div class="tl-time">25.04.2026 · 09:14</div>
+                <div class="tl-title">Massnahme erstellt</div>
+                <div class="tl-desc">Owner PW · Fällig 28.04.2026 · aus Insight #INS-2026-0241</div>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div>
+                <div class="tl-time">25.04.2026 · 14:02</div>
+                <div class="tl-title">Status: pending → in_progress</div>
+                <div class="tl-desc">PW · Touch-Sweep gestartet (3 von 8 Kandidaten kontaktiert)</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verknüpfte Insight</h4>
+          <div class="reco-box" style="background: var(--accent-tint); border-left:3px solid var(--accent); padding:10px 12px;">
+            <div style="font-weight:600; font-size:13px; color:var(--text);">Coverage ARC kritisch unter Soll</div>
+            <div style="font-size:11px; color:var(--text-mid); margin-top:3px;">
+              <span class="mono">#INS-2026-0241</span> · Critical · 32 % aktuell · Threshold 35 % · seit 23.04.2026
+            </div>
+            <a href="#" class="js-open-insight-detail" style="font-size:11px; color:var(--accent); margin-top:6px; display:inline-block;">→ Insight öffnen</a>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary js-update-trigger">Updaten</button>
+        <button class="btn btn-green js-outcome-trigger">Wirkung bestätigen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Schliessen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer E: Action Update (Spec §4.6) — getriggert aus drawer-action-detail "Updaten" -->
+    <aside class="drawer" data-drawer-key="action-update">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Update · Massnahme #ACT-1187</div>
+        <div class="drawer-head-top">
+          <h3>Status / Notiz aktualisieren</h3>
+          <button class="drawer-close" title="Schliessen">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Update</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <section>
+          <h4 class="sec-title">Aktueller Status</h4>
+          <div style="display:flex; gap:8px; align-items:center; font-size:13px;">
+            <span class="badge b-progress">In Arbeit</span>
+            <span style="color:var(--text-mid);">seit 25.04.2026 · 14:02</span>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Status-Übergang</h4>
+          <div class="drawer-form-row">
+            <label>Neuer Status</label>
+            <select>
+              <option value="in_progress" selected>In Arbeit</option>
+              <option value="blocked">Blockiert</option>
+              <option value="done">Erledigt</option>
+              <option value="cancelled">Abgebrochen</option>
+            </select>
+            <span class="hint">Bei „Erledigt" startet die Auto-Wirkungsmessung nach 7 Tagen.</span>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Notiz</h4>
+          <div class="drawer-form-row">
+            <label>Kommentar zum Update</label>
+            <textarea placeholder="Was wurde gemacht? Welche Hindernisse? Welche Beobachtungen?"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Fälligkeit anpassen (optional)</h4>
+          <div class="drawer-form-row">
+            <label>Neue Fälligkeit</label>
+            <input type="date" value="2026-04-28" />
+            <span class="hint">Leer lassen, um aktuelle Fälligkeit beizubehalten.</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Begründung für Verschiebung</label>
+            <input type="text" placeholder="z.B. Owner ferienabwesend, Priorität reduziert" />
+          </div>
+        </section>
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Update speichern</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
+      </div>
+    </aside>
+
+    <!-- Drawer F: Action Followup (Spec §4.6) — getriggert aus drawer-outcome-confirm "Folge-Massnahme" -->
+    <aside class="drawer" data-drawer-key="action-followup">
+      <div class="drawer-head">
+        <div class="drawer-eyebrow">Folge-Massnahme · zu Massnahme #ACT-1186 · Insight #INS-2026-0241</div>
+        <div class="drawer-head-top">
+          <h3>Folge-Massnahme erstellen</h3>
+          <button class="drawer-close" title="Schliessen">
+            <svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active">Folge-Massnahme</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <section>
+          <h4 class="sec-title">Vorgänger-Massnahme</h4>
+          <div class="reco-box" style="background: var(--green-tint); border-left:3px solid var(--green); padding:10px 12px;">
+            <div style="font-weight:600; font-size:13px; color:var(--text);">ARC-Sparten-Briefing aktualisiert</div>
+            <div style="font-size:11px; color:var(--text-mid); margin-top:3px;">
+              <span class="mono">#ACT-1186</span> · Erledigt 24.04. · Wirkung +15 pp (Konfidenz 85 %)
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Folge-Massnahme · Details</h4>
+          <div class="drawer-form-row">
+            <label>Titel</label>
+            <input type="text" placeholder="Kurze, prägnante Bezeichnung" value="ARC-Briefing-Update auf weitere Sparten ausrollen" />
+            <span class="hint">Pre-filled mit Vorschlag basierend auf Vorgänger-Wirkung.</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Hypothese · Geplante Intervention</label>
+            <textarea>Briefing-Update auf GT + ING ausrollen. Erwartete Wirkung analog ARC: +10 bis +15 pp Coverage.</textarea>
+          </div>
+          <div class="drawer-form-row">
+            <label style="display:flex; gap:6px; align-items:center;">
+              <input type="checkbox" checked /> Hypothese, Owner und Mess-Fenster von Vorgänger übernehmen
+            </label>
+            <span class="hint">Wenn aktiv, werden Werte aus #ACT-1186 als Defaults gesetzt.</span>
+          </div>
+          <div class="drawer-form-row">
+            <label>Owner</label>
+            <select>
+              <option>JV · Joel Vögeli (Vorgänger-Owner)</option>
+              <option selected>PW · Peter Wiederkehr</option>
+              <option>LR · Luca Roduner</option>
+              <option>SN · Sabine Nyffeler</option>
+            </select>
+          </div>
+          <div class="drawer-form-row">
+            <label>Fällig am</label>
+            <input type="date" value="2026-05-08" />
+          </div>
+        </section>
+
+        <section>
+          <h4 class="sec-title">Verknüpfung</h4>
+          <div style="font-size:12px; color:var(--text-mid);">
+            Folge-Massnahme wird automatisch mit Insight <span class="mono">#INS-2026-0241</span> verknüpft (gleiche Quell-Insight) und referenziert <span class="mono">#ACT-1186</span> als Vorgänger.
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer-foot">
+        <button class="btn btn-primary">Folge-Massnahme erstellen</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost">Abbrechen</button>
       </div>
     </aside>
 
@@ -1670,6 +1995,83 @@
       }
     });
   });
+
+  // ─── Spec §4.6 — Action-Loop-Drawer-Triggers ───
+
+  // Trigger: "Massnahme erstellen" CTA (in drawer-insight-detail) UND "+ Neue Massnahme" Button (rechte Spalte)
+  // Delegated: weil drawer-insight-detail per JS-Klon dynamisch eingefuegt wird.
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.js-action-create-trigger');
+    if (!trigger) return;
+    e.preventDefault(); e.stopPropagation();
+    openDrawerByKey('action-create');
+  });
+
+  // Trigger: Action-Card click (rechte Spalte) → drawer-action-detail
+  document.querySelectorAll('.js-action-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', (e) => {
+      // Skip wenn auf Sub-Buttons innerhalb der Card geclickt
+      if (e.target.closest('button, a')) return;
+      openDrawerByKey('action-detail');
+    });
+  });
+
+  // Trigger: "Updaten" Button in drawer-action-detail (delegated)
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.js-update-trigger');
+    if (!trigger) return;
+    e.preventDefault(); e.stopPropagation();
+    openDrawerByKey('action-update');
+  });
+
+  // Trigger: "Wirkung bestätigen" Button in drawer-action-detail (delegated) → outcome-confirm
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.js-outcome-trigger');
+    if (!trigger) return;
+    e.preventDefault(); e.stopPropagation();
+    openDrawerByKey('outcome-confirm');
+  });
+
+  // Trigger: "Folge-Massnahme" Button in drawer-outcome-confirm (delegated) → action-followup
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.js-followup-trigger');
+    if (!trigger) return;
+    e.preventDefault(); e.stopPropagation();
+    openDrawerByKey('action-followup');
+  });
+
+  // Trigger: "Folge-Massnahme" Button auf Action-Card 2 (DOM-Markup: btn neben "Wirkung bestätigen")
+  // Erkennt Buttons mit Text "Folge-Massnahme" in action-foot, ohne neue Klasse zu setzen.
+  document.querySelectorAll('.action .action-foot button').forEach(btn => {
+    if ((btn.textContent || '').trim() === 'Folge-Massnahme') {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        openDrawerByKey('action-followup');
+      });
+    }
+    if ((btn.textContent || '').trim() === 'Wirkung bestätigen') {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        openDrawerByKey('outcome-confirm');
+      });
+    }
+    if ((btn.textContent || '').trim() === 'Status ändern') {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        openDrawerByKey('action-update');
+      });
+    }
+  });
+
+  // Trigger: "→ Insight öffnen" Link in drawer-action-detail (delegated)
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.js-open-insight-detail');
+    if (!trigger) return;
+    e.preventDefault(); e.stopPropagation();
+    openDrawerByKey('insight-detail');
+  });
+
 </script>
 </body>
 </html>

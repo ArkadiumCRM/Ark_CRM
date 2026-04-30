@@ -705,6 +705,191 @@
     .role-tabs { display: none; }
     .filterbar { overflow-x: auto; flex-wrap: nowrap; }
   }
+
+  /* ===== Functional Drawer (slide-in) — Drawer-Default-Regel 540px ===== */
+  .drawer-fn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90;
+    opacity: 0;
+    transition: opacity .2s ease-out;
+    pointer-events: none;
+  }
+  .drawer-fn-overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer.drawer-fn {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 540px; max-width: 96vw;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .25s ease-out;
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer.drawer-fn.open { transform: translateX(0); }
+  body.drawer-fn-locked { overflow: hidden; }
+
+  /* Drawer-internal layout (shared with insights file) */
+  .drawer-head {
+    padding: 16px 20px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .drawer-eyebrow {
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-light);
+    font-family: "JetBrains Mono", monospace;
+    margin-bottom: 6px;
+  }
+  .drawer-head-top {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .drawer-head-top h3 {
+    flex: 1; margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: 17px; font-weight: 700; color: var(--text);
+    line-height: 1.25;
+  }
+  .drawer-close {
+    background: none; border: 1px solid transparent; cursor: pointer;
+    color: var(--text-light); padding: 4px;
+    border-radius: var(--r-sm);
+  }
+  .drawer-close:hover { color: var(--text); background: var(--surface-alt); }
+  .drawer-tabs {
+    display: flex; gap: 4px;
+    border-top: none;
+  }
+  .drawer-tab {
+    background: none; border: none;
+    padding: 9px 12px;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-light); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    user-select: none;
+    font-family: "DM Sans", sans-serif;
+  }
+  .drawer-tab:hover { color: var(--text); }
+  .drawer-tab.active { color: var(--accent); border-bottom-color: var(--gold); }
+
+  .drawer-body {
+    flex: 1; overflow-y: auto;
+    padding: 16px 20px;
+  }
+  .drawer-body section { margin-bottom: 18px; }
+  .drawer-body section:last-child { margin-bottom: 0; }
+  .drawer-body .sec-title {
+    font-size: 10.5px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin: 0 0 8px 0;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+  }
+
+  .drawer-foot {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; gap: 8px; align-items: center;
+    flex-shrink: 0;
+  }
+  .drawer-foot .spacer { flex: 1; }
+  .btn-ghost {
+    background: none; border: 1px solid transparent;
+    color: var(--text-mid);
+  }
+  .btn-ghost:hover { background: var(--surface-alt); color: var(--text); }
+  .btn-gold {
+    background: var(--gold); color: #fff; border: 1px solid var(--gold);
+    font-weight: 600;
+  }
+  .btn-gold:hover { filter: brightness(1.06); }
+
+  /* Form-Rows in drawers */
+  .drawer-form-row { display: grid; gap: 6px; margin-bottom: 14px; }
+  .drawer-form-row label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-mid); text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .drawer-form-row input[type=text],
+  .drawer-form-row input[type=date],
+  .drawer-form-row input[type=number],
+  .drawer-form-row select,
+  .drawer-form-row textarea {
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 8px 10px;
+    font-size: 13px; font-family: inherit;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .drawer-form-row textarea { min-height: 70px; resize: vertical; }
+  .drawer-form-row .hint {
+    font-size: 11px; color: var(--text-light);
+  }
+
+  /* Tile-Type-Picker (drawer-tile-add) */
+  .tile-type-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .tile-type-card {
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 10px 12px;
+    cursor: pointer;
+    background: var(--surface);
+    transition: border-color .15s, background .15s;
+  }
+  .tile-type-card:hover { border-color: var(--accent); background: var(--accent-tint); }
+  .tile-type-card.selected { border-color: var(--accent); background: var(--accent-tint); }
+  .tile-type-card .tt-name { font-weight: 600; font-size: 12.5px; color: var(--text); }
+  .tile-type-card .tt-desc { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .tile-type-card .tt-badge {
+    display: inline-block; margin-top: 6px;
+    padding: 1px 6px; font-size: 10px; border-radius: 3px;
+    background: var(--surface-alt); color: var(--text-mid);
+  }
+
+  /* Drill-list rows */
+  .drill-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .drill-row:hover { background: var(--surface-alt); }
+  .drill-row .drill-main { flex: 1; }
+  .drill-row .drill-title { font-weight: 500; font-size: 12.5px; color: var(--text); }
+  .drill-row .drill-meta { font-size: 11px; color: var(--text-light); }
+  .drill-row .drill-arrow { color: var(--text-light); }
+
+  /* Threshold-row in drawer-tile-edit */
+  .thr-row {
+    display: grid; grid-template-columns: 100px 1fr 80px;
+    gap: 10px; align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .thr-row .thr-lbl { font-weight: 600; color: var(--text-mid); }
+  .thr-row .thr-input {
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 5px 8px; font-family: "JetBrains Mono", monospace;
+    text-align: right; font-size: 12px;
+  }
+
+  /* Templates: Drawer-Templates hidden until cloned via JS */
+  [data-drawer-key] {
+    display: none !important;
+  }
 </style>
 <script src="../../_shared/perf-sample-data.js"></script>
 </head>
@@ -1140,9 +1325,486 @@
 
 </main>
 
-<button class="fab" title="Tile hinzufügen" aria-label="Tile hinzufügen">
+<button class="fab" id="fabTileAdd" title="Tile hinzufügen" aria-label="Tile hinzufügen">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
 </button>
+
+<!-- ============== DRAWER-TEMPLATES (cloned via JS) — Spec §4.1 ============== -->
+
+<!-- Drawer 1: Tile-Add (Customize-Mode) -->
+<aside class="drawer" data-drawer-key="tile-add">
+  <div class="drawer-head">
+    <div class="drawer-eyebrow">Dashboard · Anpassen · Neue Tile</div>
+    <div class="drawer-head-top">
+      <h3>Tile hinzufügen</h3>
+      <button class="drawer-close" title="Schliessen" aria-label="Schliessen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active">Tile-Auswahl</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <section>
+      <h4 class="sec-title">Tile-Type · 12 verfügbar</h4>
+      <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen Tile-Type aus der Bibliothek. Die Konfiguration (Filter, Periode, Vergleichszeitraum) erfolgt im nächsten Schritt.</p>
+      <div class="tile-type-grid">
+        <div class="tile-type-card selected">
+          <div class="tt-name">KPI-Card</div>
+          <div class="tt-desc">Einzelne Kennzahl mit Sparkline</div>
+          <span class="tt-badge">KPI</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Goal-Progress</div>
+          <div class="tt-desc">Ziel mit Fortschrittsbalken</div>
+          <span class="tt-badge">Goal</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Funnel</div>
+          <div class="tt-desc">Pipeline-Stages live</div>
+          <span class="tt-badge">Funnel</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Forecast</div>
+          <div class="tt-desc">Q-Ende Markov-Prognose</div>
+          <span class="tt-badge">Forecast</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Trend-Linie</div>
+          <div class="tt-desc">Multi-Serie ueber Zeit</div>
+          <span class="tt-badge">Trend</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Bar-Chart</div>
+          <div class="tt-desc">Kategoriale Verteilung</div>
+          <span class="tt-badge">Bar</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Liste</div>
+          <div class="tt-desc">Top-N Records mit Drill-Down</div>
+          <span class="tt-badge">Liste</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Heatmap</div>
+          <div class="tt-desc">Matrix-Darstellung</div>
+          <span class="tt-badge">Heatmap</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Coverage</div>
+          <div class="tt-desc">Touch-Frequenz vs. Soll</div>
+          <span class="tt-badge">Coverage</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Anomalie-Liste</div>
+          <div class="tt-desc">Insights nach Severity</div>
+          <span class="tt-badge">Liste</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Massnahmen-Liste</div>
+          <div class="tt-desc">Action-Items mit Owner</div>
+          <span class="tt-badge">Liste</span>
+        </div>
+        <div class="tile-type-card">
+          <div class="tt-name">Compliance-Score</div>
+          <div class="tt-desc">Aggregierter Pflicht-Score</div>
+          <span class="tt-badge">KPI</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Position</h4>
+      <div class="drawer-form-row">
+        <label>Wo soll die Tile platziert werden?</label>
+        <select>
+          <option>Am Ende des Grids einfügen</option>
+          <option>Vor erster Tile (oben)</option>
+          <option>Manuell per Drag &amp; Drop platzieren</option>
+        </select>
+        <span class="hint">Nach dem Speichern kannst du die Tile per Drag-Handle verschieben.</span>
+      </div>
+      <div class="drawer-form-row">
+        <label>Tile-Breite</label>
+        <select>
+          <option>Schmal (3 Spalten)</option>
+          <option>Mittel (4 Spalten)</option>
+          <option selected>Breit (6 Spalten)</option>
+          <option>Voll (12 Spalten)</option>
+        </select>
+      </div>
+    </section>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Tile hinzufügen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost drawer-close">Abbrechen</button>
+  </div>
+</aside>
+
+<!-- Drawer 2: Tile-Edit (Settings-Icon) -->
+<aside class="drawer" data-drawer-key="tile-edit">
+  <div class="drawer-head">
+    <div class="drawer-eyebrow">Tile · Pipeline-Wert · gesamt · KPI</div>
+    <div class="drawer-head-top">
+      <h3>Tile bearbeiten</h3>
+      <button class="drawer-close" title="Schliessen" aria-label="Schliessen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active">Konfiguration</button>
+      <button class="drawer-tab">Schwellen</button>
+      <button class="drawer-tab">Anzeige</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <section>
+      <h4 class="sec-title">Filter</h4>
+      <div class="drawer-form-row">
+        <label>Sparte</label>
+        <select>
+          <option>Alle Sparten</option>
+          <option>ARC</option>
+          <option>GT</option>
+          <option>ING</option>
+          <option>PUR</option>
+          <option>REM</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Owner-Filter</label>
+        <select>
+          <option>Alle Mitarbeitenden</option>
+          <option>Nur eigenes Team</option>
+          <option>Nur ich</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Mandat-Typ</label>
+        <select>
+          <option>Alle Typen</option>
+          <option>Target</option>
+          <option>Taskforce</option>
+          <option>Time</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Periode</h4>
+      <div class="drawer-form-row">
+        <label>Zeitraum</label>
+        <select>
+          <option>Dieser Monat</option>
+          <option>Letzte 7 Tage</option>
+          <option selected>Aktuelles Quartal</option>
+          <option>Year-to-Date</option>
+          <option>Rolling 90 Tage</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Vergleich</label>
+        <select>
+          <option>Keine Vergleichsperiode</option>
+          <option selected>Vorperiode</option>
+          <option>Vorjahr (Year-over-Year)</option>
+          <option>Plan/Budget</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Granularität</label>
+        <select>
+          <option>Tag</option>
+          <option selected>Woche</option>
+          <option>Monat</option>
+          <option>Quartal</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Schwellen · Anomalie-Detection</h4>
+      <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Werte ueber-/unterschritten, generiert das System automatisch eine Insight.</p>
+      <div class="thr-row">
+        <span class="thr-lbl">Info</span>
+        <input class="thr-input" type="number" value="-10" />
+        <span style="font-size:11px; color:var(--text-light);">% vs. Vorperiode</span>
+      </div>
+      <div class="thr-row">
+        <span class="thr-lbl">Warn</span>
+        <input class="thr-input" type="number" value="-20" />
+        <span style="font-size:11px; color:var(--text-light);">% vs. Vorperiode</span>
+      </div>
+      <div class="thr-row">
+        <span class="thr-lbl">Critical</span>
+        <input class="thr-input" type="number" value="-35" />
+        <span style="font-size:11px; color:var(--text-light);">% vs. Vorperiode</span>
+      </div>
+      <div class="thr-row">
+        <span class="thr-lbl">Blocker</span>
+        <input class="thr-input" type="number" value="-50" />
+        <span style="font-size:11px; color:var(--text-light);">% vs. Vorperiode</span>
+      </div>
+      <div style="margin-top:10px; font-size:11px; color:var(--text-light);">
+        Hinweis · Schwellen werden vom Anomalie-Detection-Worker stündlich evaluiert.
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Anzeige · Visual-Type</h4>
+      <div class="drawer-form-row">
+        <label>Darstellung</label>
+        <select>
+          <option selected>KPI mit Sparkline</option>
+          <option>KPI ohne Sparkline</option>
+          <option>KPI mit Vergleichsbalken</option>
+          <option>Liniendiagramm</option>
+          <option>Balkendiagramm</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Farbschema</label>
+        <select>
+          <option selected>Standard (Akzent)</option>
+          <option>Gold (Highlight)</option>
+          <option>Grün (Positiv)</option>
+          <option>Rot (Warnung)</option>
+        </select>
+      </div>
+      <div class="drawer-form-row">
+        <label>Tile-Lock</label>
+        <select>
+          <option>Frei (User kann verschieben &amp; entfernen)</option>
+          <option>Position gesperrt (Admin-Default)</option>
+          <option>Tile gesperrt (kann nicht entfernt werden)</option>
+        </select>
+      </div>
+    </section>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Änderungen speichern</button>
+    <button class="btn">Tile entfernen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost drawer-close">Abbrechen</button>
+  </div>
+</aside>
+
+<!-- Drawer 3: Tile-Explain (?-Icon) -->
+<aside class="drawer" data-drawer-key="tile-explain">
+  <div class="drawer-head">
+    <div class="drawer-eyebrow">Tile · Erklärung · Pipeline-Wert · gesamt</div>
+    <div class="drawer-head-top">
+      <h3>Wie wird diese Kennzahl berechnet?</h3>
+      <button class="drawer-close" title="Schliessen" aria-label="Schliessen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active">Methodik</button>
+      <button class="drawer-tab">Quellen</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <section>
+      <h4 class="sec-title">Definition</h4>
+      <p style="font-size:13px; color:var(--text); margin:0 0 6px 0;">
+        <strong>Pipeline-Wert · gesamt</strong> ist die Summe aller erwarteten Honorare aller aktiven Prozesse, gewichtet nach Stage-Wahrscheinlichkeit.
+      </p>
+      <p style="font-size:12px; color:var(--text-mid); margin:0;">
+        Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrscheinlichkeit) ueber alle nicht-abgeschlossenen Prozesse.
+      </p>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Aggregation</h4>
+      <table style="width:100%; font-size:12px; border-collapse:collapse;">
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0; color:var(--text-mid);">Aggregations-Typ</td><td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">Summe</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0; color:var(--text-mid);">Aktualisierung</td><td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">stündlich</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0; color:var(--text-mid);">Snapshot-Cadence</td><td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">täglich 04:30</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0; color:var(--text-mid);">Letzter Refresh</td><td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">24.04. 14:32</td></tr>
+          <tr><td style="padding:6px 0; color:var(--text-mid);">Nächster Refresh</td><td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">24.04. 15:30</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Drill-Down-Pfad</h4>
+      <p style="font-size:12px; color:var(--text-mid); margin:0;">
+        Klick auf den Tile-Body öffnet eine Liste aller einbezogenen Prozesse. Klick auf einen Prozess führt zur Vollansicht im CRM.
+      </p>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Quell-Daten</h4>
+      <div style="font-size:12px;">
+        <div style="padding:6px 0; border-bottom:1px solid var(--border);">
+          <strong>Prozess-Stammdaten</strong>
+          <div style="color:var(--text-light); font-size:11px;">Aktive Prozesse mit TC-Gehalt + Honorar-Prozentsatz</div>
+        </div>
+        <div style="padding:6px 0; border-bottom:1px solid var(--border);">
+          <strong>Stage-Konversions-Modell</strong>
+          <div style="color:var(--text-light); font-size:11px;">Markov-Wahrscheinlichkeiten pro Stage (Sparte-spezifisch)</div>
+        </div>
+        <div style="padding:6px 0; border-bottom:1px solid var(--border);">
+          <strong>Mandats-Daten</strong>
+          <div style="color:var(--text-light); font-size:11px;">Honorar-Prozentsatz aus aktivem Mandat</div>
+        </div>
+        <div style="padding:6px 0;">
+          <strong>Zeitstempel-Historie</strong>
+          <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte für Aging-Berechnung</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Cross-Modul-Bezüge</h4>
+      <ul style="font-size:12px; color:var(--text-mid); padding-left:18px; margin:0;">
+        <li><a href="#" style="color:var(--accent);">Forecast Q-Ende</a> &mdash; nutzt dieselbe Pipeline als Basis</li>
+        <li><a href="#" style="color:var(--accent);">Funnel-Ansicht</a> &mdash; zeigt Stage-Verteilung der einbezogenen Prozesse</li>
+        <li><a href="#" style="color:var(--accent);">Goal-Erreichung</a> &mdash; vergleicht Pipeline gegen Quartals-Ziel</li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn">Methodik exportieren (PDF)</button>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost drawer-close">Schliessen</button>
+  </div>
+</aside>
+
+<!-- Drawer 4: Tile-Drill (Body-Click) -->
+<aside class="drawer" data-drawer-key="tile-drill">
+  <div class="drawer-head">
+    <div class="drawer-eyebrow">Tile · Drill-Down · Pipeline-Wert · gesamt</div>
+    <div class="drawer-head-top">
+      <h3>412 Prozesse · CHF 2.4M Pipeline</h3>
+      <button class="drawer-close" title="Schliessen" aria-label="Schliessen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active">Liste</button>
+      <button class="drawer-tab">Trend</button>
+      <button class="drawer-tab">Filter-Vergleich</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <section>
+      <h4 class="sec-title">Top-Prozesse · sortiert nach erwartetem Wert</h4>
+      <div class="drill-row">
+        <div class="drill-main">
+          <div class="drill-title">M. Bühler &middot; CFO &middot; Amstein+Walthert</div>
+          <div class="drill-meta">Stage 2nd &middot; ARC &middot; Owner PW &middot; CHF 32k expected</div>
+        </div>
+        <a href="../../Vollansichten/processes.html" class="drill-arrow" title="Zur Vollansicht">&rarr;</a>
+      </div>
+      <div class="drill-row">
+        <div class="drill-main">
+          <div class="drill-title">L. Roth &middot; Senior PM &middot; Frech-Berger</div>
+          <div class="drill-meta">Stage Offer &middot; ARC &middot; Owner JV &middot; CHF 28k expected</div>
+        </div>
+        <a href="../../Vollansichten/processes.html" class="drill-arrow" title="Zur Vollansicht">&rarr;</a>
+      </div>
+      <div class="drill-row">
+        <div class="drill-main">
+          <div class="drill-title">F. Aebi &middot; Bauleiter &middot; Pöyri</div>
+          <div class="drill-meta">Stage 1st &middot; ARC &middot; Owner PW &middot; CHF 24k expected</div>
+        </div>
+        <a href="../../Vollansichten/processes.html" class="drill-arrow" title="Zur Vollansicht">&rarr;</a>
+      </div>
+      <div class="drill-row">
+        <div class="drill-main">
+          <div class="drill-title">R. Müller &middot; Architekt &middot; BG-Ingenieure</div>
+          <div class="drill-meta">Stage TI &middot; ARC &middot; Owner LR &middot; CHF 22k expected</div>
+        </div>
+        <a href="../../Vollansichten/processes.html" class="drill-arrow" title="Zur Vollansicht">&rarr;</a>
+      </div>
+      <div class="drill-row">
+        <div class="drill-main">
+          <div class="drill-title">S. Kunz &middot; Projektleiterin &middot; Implenia</div>
+          <div class="drill-meta">Stage Assessment &middot; ING &middot; Owner JV &middot; CHF 21k expected</div>
+        </div>
+        <a href="../../Vollansichten/processes.html" class="drill-arrow" title="Zur Vollansicht">&rarr;</a>
+      </div>
+      <div style="margin-top:10px; text-align:center;">
+        <a href="../../Listen/processes-list.html" style="color:var(--accent); font-size:12px;">Alle 412 Prozesse anzeigen &rarr;</a>
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Trend &middot; 90 Tage</h4>
+      <svg viewBox="0 0 480 90" width="100%" height="90" preserveAspectRatio="none" style="display:block;">
+        <line x1="0" x2="480" y1="60" y2="60" stroke="var(--border)" stroke-dasharray="3 3"/>
+        <text x="6" y="56" font-size="9" fill="var(--text-light)" font-family="JetBrains Mono, monospace">CHF 2.0M Soll</text>
+        <path d="M0,76 L40,72 L80,68 L120,64 L160,60 L200,56 L240,50 L280,44 L320,38 L360,30 L400,24 L440,18 L480,14"
+              fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+        <circle cx="480" cy="14" r="3" fill="var(--accent)"/>
+      </svg>
+      <div style="font-size:11px; color:var(--text-light); margin-top:6px;">
+        Pipeline-Wert hat in den letzten 90 Tagen kontinuierlich zugenommen (+18 % vs. Periodenanfang).
+      </div>
+    </section>
+
+    <section>
+      <h4 class="sec-title">Filter-Vergleich &middot; Aktuell vs. Vorperiode</h4>
+      <table style="width:100%; font-size:12px; border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border); color:var(--text-light); text-align:left;">
+            <th style="padding:6px 0;">Metrik</th>
+            <th style="padding:6px 0; text-align:right;">Aktuell</th>
+            <th style="padding:6px 0; text-align:right;">Vorperiode</th>
+            <th style="padding:6px 0; text-align:right;">Diff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 0;">Pipeline-Wert</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">CHF 2.4M</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">CHF 2.0M</td>
+            <td style="padding:6px 0; text-align:right; color:var(--green); font-weight:600;">+20 %</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 0;">Aktive Prozesse</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">412</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">385</td>
+            <td style="padding:6px 0; text-align:right; color:var(--green); font-weight:600;">+27</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 0;">&Oslash; Honorar pro Prozess</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">CHF 5.8k</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">CHF 5.2k</td>
+            <td style="padding:6px 0; text-align:right; color:var(--green); font-weight:600;">+12 %</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;">Konfidenz</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">82 %</td>
+            <td style="padding:6px 0; text-align:right; font-family: 'JetBrains Mono', monospace;">78 %</td>
+            <td style="padding:6px 0; text-align:right; color:var(--green); font-weight:600;">+4 pp</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-primary">Liste exportieren (CSV)</button>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost drawer-close">Schliessen</button>
+  </div>
+</aside>
+
+<!-- Functional Drawer Container (slide-in target) -->
+<div class="drawer-fn-overlay" id="drawerFnOverlay"></div>
+<aside class="drawer drawer-fn" id="drawerFn" aria-hidden="true"></aside>
 
 <script>
   // ---------- iframe-Detection (App-Bar conditional) ----------
@@ -1291,6 +1953,122 @@
       <div class="val serif">${s.chf}</div>
     </div>
   `).join('');
+
+  // ============== Drawer-Wiring (Spec §4.1 — Tile-Drawers) ==============
+
+  // Inject "?" Explain-Icon in jede Tile-Head (immer sichtbar, vor tile-icons).
+  // Vermeidet manuelles Editieren aller 11 Tile-Markups.
+  document.querySelectorAll('#grid .tile').forEach(tile => {
+    const head = tile.querySelector('.tile-head');
+    const icons = tile.querySelector('.tile-icons');
+    if (!head || !icons || head.querySelector('.help-icon')) return;
+    const btn = document.createElement('button');
+    btn.className = 'tile-ic help-icon';
+    btn.title = 'Wie wird diese Kennzahl berechnet?';
+    btn.setAttribute('aria-label', 'Erklärung');
+    btn.innerHTML = '<svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.7M12 17v.01"/></svg>';
+    icons.insertBefore(btn, icons.firstChild);
+  });
+
+  // Drawer-Functional-Container Setup
+  const drawerFn = document.getElementById('drawerFn');
+  const drawerFnOverlay = document.getElementById('drawerFnOverlay');
+
+  function bindDrawerTabs(scope) {
+    (scope || document).querySelectorAll('.drawer-tabs').forEach(tabs => {
+      tabs.querySelectorAll('.drawer-tab').forEach(t => {
+        t.addEventListener('click', () => {
+          tabs.querySelectorAll('.drawer-tab').forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+        });
+      });
+    });
+  }
+
+  function openDrawerByKey(key) {
+    const tpl = document.querySelector('[data-drawer-key="' + key + '"]');
+    if (!tpl) return;
+    drawerFn.innerHTML = tpl.innerHTML;
+    drawerFn.setAttribute('data-active-key', key);
+    drawerFnOverlay.classList.add('open');
+    void drawerFn.offsetWidth;
+    drawerFn.classList.add('open');
+    drawerFn.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('drawer-fn-locked');
+    drawerFn.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', closeDrawerFn));
+    bindDrawerTabs(drawerFn);
+  }
+
+  function closeDrawerFn() {
+    drawerFn.classList.remove('open');
+    drawerFnOverlay.classList.remove('open');
+    drawerFn.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('drawer-fn-locked');
+    setTimeout(() => {
+      if (!drawerFn.classList.contains('open')) {
+        drawerFn.innerHTML = '';
+        drawerFn.removeAttribute('data-active-key');
+      }
+    }, 260);
+  }
+
+  drawerFnOverlay.addEventListener('click', closeDrawerFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawerFn.classList.contains('open')) closeDrawerFn();
+  });
+
+  // Trigger 1: FAB "+ Tile" → drawer-tile-add (Customize-Mode)
+  const fabAdd = document.getElementById('fabTileAdd');
+  if (fabAdd) {
+    fabAdd.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDrawerByKey('tile-add');
+    });
+  }
+
+  // Trigger 2: Gear-Icon → drawer-tile-edit
+  document.querySelectorAll('#grid .tile .gear-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openDrawerByKey('tile-edit');
+    });
+  });
+
+  // Trigger 3: "?" Help-Icon → drawer-tile-explain
+  document.querySelectorAll('#grid .tile .help-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openDrawerByKey('tile-explain');
+    });
+  });
+
+  // Trigger 4: Tile-Body Click → drawer-tile-drill (außer auf Icons)
+  document.querySelectorAll('#grid .tile').forEach(tile => {
+    tile.addEventListener('click', (e) => {
+      // Skip Customize-Mode (Drag/Reorder hat Vorrang)
+      if (document.body.classList.contains('customize')) return;
+      // Skip wenn Click auf Icon-Button im tile-head
+      if (e.target.closest('.tile-icons, .gear-icon, .help-icon, .drag-handle, .lock-ic')) return;
+      // Skip wenn Click auf interaktive Sub-Elemente (Links innerhalb der Tile)
+      if (e.target.closest('a, button')) return;
+      openDrawerByKey('tile-drill');
+    });
+    tile.style.cursor = 'pointer';
+  });
+
+  // Trigger 5: Reset-Layout (Filter zurücksetzen) → no-op + Hint
+  // TODO: Reset-Layout-Button findet sich aktuell als "Filter zurücksetzen" Link
+  // (Page-Head + Filterbar). In voller Implementation: triggert Layout-Reset auf Rollen-Default.
+  document.querySelectorAll('a.link-btn').forEach(link => {
+    if ((link.textContent || '').trim() === 'Filter zurücksetzen') {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        // No-op in mockup; in full app: dispatch reset-layout action.
+      });
+    }
+  });
 
 </script>
 </body>

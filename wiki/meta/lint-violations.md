@@ -2091,3 +2091,236 @@
 | UMLAUT \| 480 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
 | UMLAUT \| 485 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
 
+
+## [2026-04-30 14:34] session-c61a5b74 | ARK_STAMMDATEN_VOLLANSICHT_SCHEMA_v0_1.md (1 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 608 \| - Drill-Down: Tabelle mit `kuerzel` (PW/JV/LR/...), `display_name`, `sparten` (M... \| -> Kürzel |
+
+
+## [2026-04-30 14:38] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 465 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 504 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 504 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 504 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 509 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 14:46] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 482 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 521 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 521 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 521 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 526 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 14:58] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 495 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 534 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 534 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 534 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 539 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 15:09] session-c61a5b74 | log.md (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 516 \| - `wiki/meta/lint-violations.md` — 8 Violations (5 UMLAUT cal-emp-kuerzel CSS cl... \| -> Kürzel |
+| UMLAUT \| 555 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> für |
+| UMLAUT \| 555 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> über |
+| UMLAUT \| 555 \| - `.claude/hooks/ark-lint.ps1` — PostToolUse, scannt Edits auf `mockups/*.html`/... \| -> könn |
+| UMLAUT \| 560 \| - `.claude/commands/ark-sync-report.md` — Slash-Command fuer Spec-Mockup-Sync-Dr... \| -> für |
+
+
+## [2026-04-30 15:48] session-c61a5b74 | performance-dashboard.html (6 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1351 \| <h4 class="sec-title">Tile-Type · 12 verfuegbar</h4> \| -> verfügb |
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Waehle eine... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Waehle eine... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:49] session-c61a5b74 | performance-dashboard.html (5 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+| UMLAUT \| 1661 \| <div style="color:var(--text-light); font-size:11px;">Stage-Eintritts-Zeitpunkte... \| -> für |
+
+
+## [2026-04-30 15:50] session-c61a5b74 | performance-dashboard.html (4 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1352 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Wähle einen... \| -> nächst |
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:50] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:50] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:51] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:51] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:51] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:51] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:51] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
+
+## [2026-04-30 15:52] session-c61a5b74 | performance-dashboard.html (3 Violations)
+
+| Regel | Zeile | Snippet | Fix |
+|-------|-------|---------|-----|
+| UMLAUT \| 1376 \| <div class="tt-desc">Multi-Serie ueber Zeit</div> \| -> über |
+| UMLAUT \| 1531 \| <p style="font-size:12px; color:var(--text-mid); margin:0 0 10px 0;">Werden Wert... \| -> über |
+| UMLAUT \| 1620 \| Formel: &Sigma; (TC-Bruttogehalt &times; Honorar-Prozentsatz &times; Stage-Wahrs... \| -> über |
+
